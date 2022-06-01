@@ -13,7 +13,7 @@ const StyledInput = styled('input', {
   px: 16,
   py: 12,
   borderRadius: 8,
-  fontFamily: '$bodyFont',
+  fontFamily: '$body',
   fontSize: 16,
   color: '$gray12',
   backgroundColor: '$gray3',
@@ -28,12 +28,12 @@ const Input = forwardRef<
     icon?: ReactNode
     width?: number
   }
->(({ children, icon, width = 200, ...props }, forwardedRef) => (
+>(({ children, icon, width, ...props }, forwardedRef) => (
   <Flex css={{ w: width, position: 'relative' }}>
     {icon && (
       <div style={{ position: 'absolute', top: 16, left: 16 }}>{icon}</div>
     )}
-    <StyledInput css={{ pl: 48 }} ref={forwardedRef} {...props} />
+    <StyledInput css={{ pl: icon ? 48 : 16 }} ref={forwardedRef} {...props} />
   </Flex>
 ))
 

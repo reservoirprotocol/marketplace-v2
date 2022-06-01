@@ -1,11 +1,11 @@
 import { styled } from 'stitches.config'
 
-const StyledButton = styled('button', {
+const Button = styled('button', {
   py: '12px',
   px: '32px',
   fontWeight: 700,
   fontSize: '16px',
-  fontFamily: '$bodyFont',
+  fontFamily: '$body',
   transition: 'background-color 250ms linear',
   gap: '8px',
   display: 'inline-flex',
@@ -51,4 +51,4 @@ const StyledButton = styled('button', {
   },
 })
 
-export default StyledButton
+export default Button
