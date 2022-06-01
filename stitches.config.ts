@@ -82,7 +82,14 @@ export const { createTheme, keyframes, styled, globalCss } = createStitches({
       red11: '$crimson11',
       red12: '$crimson12',
     },
-    space: {},
+    space: {
+      1: '4px',
+      2: '8px',
+      3: '12px',
+      4: '16px',
+      5: '32px',
+      6: '64px',
+    },
     fontSizes: {},
     fontWeights: {},
     fonts: {
@@ -185,6 +192,8 @@ export const darkTheme = createTheme({
     ...indigoDark,
     ...indigoDarkA,
     ...slateDark,
+    ...whiteA,
+    ...blackA,
 
     //Aliases
 
