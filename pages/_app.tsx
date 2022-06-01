@@ -2,7 +2,6 @@ import 'fonts/inter.css'
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
 import { darkTheme, globalStyles } from 'stitches.config'
-import StyledSwitch from 'components/primitives/StyledSwitch'
 
 function MyApp({ Component, pageProps }: AppProps) {
   globalStyles()
@@ -16,7 +15,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <Component {...pageProps} />
-      <StyledSwitch />
     </ThemeProvider>
   )
 }
