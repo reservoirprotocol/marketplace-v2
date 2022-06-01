@@ -1,11 +1,17 @@
 import { styled } from '@stitches/react'
 import { Flex } from 'components/primitives/Flex'
-import { FC, InputHTMLAttributes } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  forwardRef,
+  ReactNode,
+} from 'react'
 
 const StyledInput = styled('input', {
   all: 'unset',
   width: '100%',
-  padding: '12px 16px',
+  px: 16,
+  py: 12,
   borderRadius: 8,
   fontFamily: '$bodyFont',
   fontSize: 16,
@@ -16,23 +22,19 @@ const StyledInput = styled('input', {
   '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },
 })
 
-type Props = {
-  icon?: JSX.Element
-  attributes?: InputHTMLAttributes<HTMLInputElement>
-  width?: string
-}
-
-const Input: FC<Props> = ({ icon, attributes, width = '200px' }) => {
-  return (
-    <Flex css={{ width: width, position: 'relative' }}>
-      {icon && (
-        <div style={{ position: 'absolute', top: '16px', left: '16px' }}>
-          {icon}
-        </div>
-      )}
-      <StyledInput css={{ paddingLeft: '48px' }} {...attributes} />
-    </Flex>
-  )
-}
+const Input = forwardRef<
+  ElementRef<typeof StyledInput>,
+  ComponentPropsWithoutRef<typeof StyledInput> & {
+    icon?: ReactNode
+    width?: number
+  }
+>(({ children, icon, width = 200, ...props }, forwardedRef) => (
+  <Flex css={{ w: width, position: 'relative' }}>
+    {icon && (
+      <div style={{ position: 'absolute', top: 16, left: 16 }}>{icon}</div>
+    )}
+    <StyledInput css={{ pl: 48 }} ref={forwardedRef} {...props} />
+  </Flex>
+))
 
 export default Input
