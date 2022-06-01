@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { styled } from 'stitches.config'
 import { Flex } from 'components/primitives/Flex'
 import {
   ComponentPropsWithoutRef,
