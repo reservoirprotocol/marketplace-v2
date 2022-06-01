@@ -3,6 +3,7 @@ import { styled } from 'stitches.config'
 const StyledButton = styled('button', {
   py: '12px',
   px: '32px',
+  outline: 'none',
   fontWeight: 700,
   fontSize: '16px',
   fontFamily: 'Inter',
@@ -10,6 +11,7 @@ const StyledButton = styled('button', {
   gap: '8px',
   display: 'inline-flex',
   alignItems: 'center',
+  $$focusColor: '$colors$gray12',
   variants: {
     color: {
       primary: {
@@ -19,7 +21,7 @@ const StyledButton = styled('button', {
           backgroundColor: '$primary10',
         },
         '&:focus': {
-          boxShadow: '0 0 0 1px $primary12',
+          boxShadow: '0 0 0 2px $$focusColor',
         },
       },
       secondary: {
@@ -29,7 +31,7 @@ const StyledButton = styled('button', {
           backgroundColor: '$secondary5',
         },
         '&:focus': {
-          boxShadow: '0 0 0 1px $primary12',
+          boxShadow: '0 0 0 2px $$focusColor',
         },
       },
       gradient: {

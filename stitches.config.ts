@@ -183,6 +183,8 @@ export const darkTheme = createTheme({
     ...indigoDark,
     ...indigoDarkA,
     ...slateDark,
+    ...whiteA,
+    ...blackA,
 
     //Aliases
 
