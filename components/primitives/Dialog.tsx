@@ -1,6 +1,11 @@
 import { styled, keyframes } from '@stitches/react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { FC } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  forwardRef,
+  ReactNode,
+} from 'react'
 
 const overlayShow = keyframes({
   '0%': { opacity: 0 },
@@ -12,7 +17,7 @@ const contentShow = keyframes({
   '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
 })
 
-const StyledOverlay = styled(DialogPrimitive.Overlay, {
+const Overlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: '$blackA9',
   position: 'fixed',
   inset: 0,
@@ -21,7 +26,7 @@ const StyledOverlay = styled(DialogPrimitive.Overlay, {
   },
 })
 
-const StyledContent = styled(DialogPrimitive.Content, {
+const Content = styled(DialogPrimitive.Content, {
   backgroundColor: '$gray3',
   borderRadius: 8,
   $$shadowColor: '$colors$blackA12',
@@ -30,8 +35,8 @@ const StyledContent = styled(DialogPrimitive.Content, {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: '90vw',
-  maxWidth: '450px',
+  minWidth: 500,
+  maxWidth: '90vw',
   maxHeight: '85vh',
   padding: 25,
   '@media (prefers-reduced-motion: no-preference)': {
@@ -41,26 +46,25 @@ const StyledContent = styled(DialogPrimitive.Content, {
 })
 
 type Props = {
-  trigger: JSX.Element
-  contentProps?: DialogPrimitive.DialogContentProps
+  trigger: ReactNode
   portalProps?: DialogPrimitive.PortalProps
 }
 
-const StyledDialog: FC<Props> = ({
-  trigger,
-  children,
-  contentProps,
-  portalProps,
-}) => (
-  <DialogPrimitive.Dialog>
+const Dialog = forwardRef<
+  ElementRef<typeof DialogPrimitive.Content>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & Props
+>(({ children, trigger, portalProps, ...props }, forwardedRef) => (
+  <DialogPrimitive.Root>
     <DialogPrimitive.DialogTrigger asChild>
       {trigger}
     </DialogPrimitive.DialogTrigger>
     <DialogPrimitive.DialogPortal {...portalProps}>
-      <StyledOverlay />
-      <StyledContent {...contentProps}>{children}</StyledContent>
+      <Overlay />
+      <Content ref={forwardedRef} {...props}>
+        {children}
+      </Content>
     </DialogPrimitive.DialogPortal>
-  </DialogPrimitive.Dialog>
-)
+  </DialogPrimitive.Root>
+))
 
-export default StyledDialog
+export { Dialog, Content, Overlay }
