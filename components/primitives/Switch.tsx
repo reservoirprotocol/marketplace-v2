@@ -1,7 +1,7 @@
 import { styled } from '@stitches/react'
 import * as SwitchPrimitive from '@radix-ui/react-switch'
 
-const Switch = styled(SwitchPrimitive.Root, {
+const StyledSwitch = styled(SwitchPrimitive.Root, {
   all: 'unset',
   width: 46,
   height: 24,
@@ -11,7 +11,7 @@ const Switch = styled(SwitchPrimitive.Root, {
   transition: 'background-color 250ms linear',
   $$focusColor: '$colors$gray12',
   '&[data-state="checked"]': { backgroundColor: '$primary9' },
-  '&:focus': {
+  '&:focus-visible': {
     boxShadow: '0 0 0 2px $$focusColor',
   },
 })
@@ -30,10 +30,10 @@ const Thumb = styled(SwitchPrimitive.Thumb, {
   '&[data-state="checked"]': { transform: 'translateX(22px)' },
 })
 
-const StyledSwitch = (props?: SwitchPrimitive.SwitchProps) => (
-  <Switch {...props}>
+const Switch = (props?: SwitchPrimitive.SwitchProps) => (
+  <StyledSwitch {...props}>
     <Thumb />
-  </Switch>
+  </StyledSwitch>
 )
 
-export default StyledSwitch
+export default Switch
