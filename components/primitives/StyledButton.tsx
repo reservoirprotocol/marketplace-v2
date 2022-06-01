@@ -7,11 +7,14 @@ const StyledButton = styled('button', {
   fontSize: '16px',
   fontFamily: 'Inter',
   transition: 'background-color 250ms linear',
+  gap: '8px',
+  display: 'inline-flex',
+  alignItems: 'center',
   variants: {
     color: {
       primary: {
         backgroundColor: '$primary9',
-        color: '$primary12',
+        color: 'white',
         '&:hover': {
           backgroundColor: '$primary10',
         },
@@ -29,15 +32,22 @@ const StyledButton = styled('button', {
           boxShadow: '0 0 0 1px $primary12',
         },
       },
+      gradient: {
+        background: 'linear-gradient(270deg, #BD00FF 0%, #0091FF 109.23%)',
+      },
     },
-    rounded: {
-      small: {
+    corners: {
+      rounded: {
         borderRadius: '8px',
       },
-      large: {
+      pill: {
         borderRadius: '99999px',
       },
     },
+  },
+  defaultVariants: {
+    color: 'primary',
+    corners: 'rounded',
   },
 })
 
