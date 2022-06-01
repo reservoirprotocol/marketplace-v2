@@ -85,7 +85,9 @@ export const { createTheme, keyframes, styled, globalCss } = createStitches({
     space: {},
     fontSizes: {},
     fontWeights: {},
-    fonts: {},
+    fonts: {
+      bodyFont: 'Inter',
+    },
     lineHeights: {},
     letterSpacings: {},
     sizes: {},

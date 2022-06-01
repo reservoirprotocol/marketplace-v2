@@ -5,7 +5,7 @@ const StyledButton = styled('button', {
   px: '32px',
   fontWeight: 700,
   fontSize: '16px',
-  fontFamily: 'Inter',
+  fontFamily: '$bodyFont',
   transition: 'background-color 250ms linear',
   gap: '8px',
   display: 'inline-flex',
