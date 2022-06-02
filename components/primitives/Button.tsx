@@ -11,6 +11,7 @@ const Button = styled('button', {
   gap: '8px',
   display: 'inline-flex',
   alignItems: 'center',
+  lineHeight: '20px',
   $$focusColor: '$colors$gray12',
   variants: {
     color: {
