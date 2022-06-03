@@ -13,6 +13,9 @@ const Button = styled('button', {
   alignItems: 'center',
   lineHeight: '20px',
   $$focusColor: '$colors$gray12',
+  '&:focus-visible': {
+    boxShadow: '0 0 0 2px $$focusColor',
+  },
   variants: {
     color: {
       primary: {
@@ -21,9 +24,6 @@ const Button = styled('button', {
         '&:hover': {
           backgroundColor: '$primary10',
         },
-        '&:focus': {
-          boxShadow: '0 0 0 2px $$focusColor',
-        },
       },
       secondary: {
         backgroundColor: '$secondary4',
@@ -31,12 +31,23 @@ const Button = styled('button', {
         '&:hover': {
           backgroundColor: '$secondary5',
         },
-        '&:focus': {
-          boxShadow: '0 0 0 2px $$focusColor',
-        },
       },
       gradient: {
         background: 'linear-gradient(270deg, #BD00FF 0%, #0091FF 109.23%)',
+      },
+      gray3: {
+        backgroundColor: '$gray3',
+        color: '$gray12',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+      },
+      gray4: {
+        backgroundColor: '$gray4',
+        color: '$gray12',
+        '&:hover': {
+          backgroundColor: '$gray5',
+        },
       },
     },
     corners: {
