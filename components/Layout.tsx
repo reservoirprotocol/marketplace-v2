@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { FC } from 'react'
+import Navbar from './Navbar'
 
 type Props = {
   title?: string
@@ -76,6 +77,7 @@ const Layout: FC<Props> = ({
         <meta property="og:image:height" content="640" />
         <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
       </Head>
+      <Navbar />
       <main>{children}</main>
     </>
   )
