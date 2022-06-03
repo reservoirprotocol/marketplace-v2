@@ -3,7 +3,7 @@ import { styled } from 'stitches.config'
 const Button = styled('button', {
   outline: 'none',
   fontWeight: 700,
-  fontSize: '16px',
+  fontSize: 16,
   fontFamily: '$button',
   transition: 'background-color 250ms linear',
   gap: '$space$2',
@@ -71,24 +71,24 @@ const Button = styled('button', {
     },
     size: {
       xs: {
-        p: 12,
+        p: '$space$3',
         lineHeight: '16px',
         minHeight: 40,
       },
       small: {
-        px: 12,
-        py: 16,
+        px: '$space$3',
+        py: '$space$4',
         lineHeight: '12px',
         minHeight: 44,
       },
       medium: {
-        py: 12,
-        px: 32,
+        py: '$space$3',
+        px: '$space$5',
         minHeight: 44,
       },
       large: {
-        py: 16,
-        px: 32,
+        py: '$space$4',
+        px: '$space$5',
         minHeight: 52,
       },
     },
