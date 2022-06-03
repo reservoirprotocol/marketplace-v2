@@ -41,10 +41,11 @@ const Content = styled(DialogPrimitive.Content, {
   position: 'fixed',
   top: '12.5%',
   left: '50%',
-  transform: 'translate(-50%, -50%)',
+  transform: 'translateX(-50%)',
   minWidth: 490,
   maxWidth: '90vw',
   maxHeight: '85vh',
+  overflowY: 'auto',
   '&:focus': { outline: 'none' },
 })
 
@@ -58,15 +59,15 @@ const AnimatedContent = forwardRef<
       transition={{ type: 'spring', duration: 0.5 }}
       initial={{
         opacity: 0,
-        top: '20%',
+        top: '14%',
       }}
       animate={{
         opacity: 1,
-        top: '12.5%',
+        top: '9%',
       }}
       exit={{
         opacity: 0,
-        top: '20%',
+        top: '14%',
       }}
     >
       {children}

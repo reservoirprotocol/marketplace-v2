@@ -1,14 +1,14 @@
 import { styled } from 'stitches.config'
 
 const Button = styled('button', {
-  py: '12px',
-  px: '32px',
+  py: 12,
+  px: 32,
   outline: 'none',
   fontWeight: 700,
-  fontSize: '16px',
+  fontSize: 16,
   fontFamily: '$body',
   transition: 'background-color 250ms linear',
-  gap: '8px',
+  gap: 8,
   display: 'inline-flex',
   alignItems: 'center',
   lineHeight: '20px',
@@ -41,10 +41,10 @@ const Button = styled('button', {
     },
     corners: {
       rounded: {
-        borderRadius: '8px',
+        borderRadius: 8,
       },
       pill: {
-        borderRadius: '99999px',
+        borderRadius: 99999,
       },
     },
   },
