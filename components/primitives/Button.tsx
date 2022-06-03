@@ -1,20 +1,26 @@
 import { styled } from 'stitches.config'
 
 const Button = styled('button', {
-  py: '12px',
-  px: '32px',
   outline: 'none',
   fontWeight: 700,
   fontSize: '16px',
-  fontFamily: '$body',
+  fontFamily: '$button',
   transition: 'background-color 250ms linear',
-  gap: '8px',
+  gap: '$space$2',
   display: 'inline-flex',
   alignItems: 'center',
   lineHeight: '20px',
   $$focusColor: '$colors$gray12',
   '&:focus-visible': {
     boxShadow: '0 0 0 2px $$focusColor',
+  },
+  '&:disabled': {
+    backgroundColor: '$gray8',
+    color: '$gray11',
+  },
+  '&:disabled:hover': {
+    backgroundColor: '$gray8',
+    color: '$gray11',
   },
   variants: {
     color: {
@@ -57,11 +63,78 @@ const Button = styled('button', {
       pill: {
         borderRadius: '99999px',
       },
+      circle: {
+        borderRadius: '99999px',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    },
+    size: {
+      xs: {
+        p: 12,
+        lineHeight: '16px',
+        minHeight: 40,
+      },
+      small: {
+        px: 12,
+        py: 16,
+        lineHeight: '12px',
+        minHeight: 44,
+      },
+      medium: {
+        py: 12,
+        px: 32,
+        minHeight: 44,
+      },
+      large: {
+        py: 16,
+        px: 32,
+        minHeight: 52,
+      },
     },
   },
+  compoundVariants: [
+    {
+      size: 'xs',
+      corners: 'circle',
+      css: {
+        height: 40,
+        width: 40,
+        p: 0,
+      },
+    },
+    {
+      size: 'small',
+      corners: 'circle',
+      css: {
+        height: 44,
+        width: 44,
+        p: 0,
+      },
+    },
+    {
+      size: 'medium',
+      corners: 'circle',
+      css: {
+        height: 44,
+        width: 44,
+        p: 0,
+      },
+    },
+    {
+      size: 'large',
+      corners: 'circle',
+      css: {
+        height: 52,
+        width: 52,
+        p: 0,
+      },
+    },
+  ],
   defaultVariants: {
     color: 'primary',
     corners: 'rounded',
+    size: 'medium',
   },
 })
 
