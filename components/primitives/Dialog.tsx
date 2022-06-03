@@ -1,49 +1,78 @@
-import { styled, keyframes } from '@stitches/react'
+import { styled } from '@stitches/react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import {
   ComponentPropsWithoutRef,
   ElementRef,
   forwardRef,
   ReactNode,
+  useState,
 } from 'react'
-
-const overlayShow = keyframes({
-  '0%': { opacity: 0 },
-  '100%': { opacity: 1 },
-})
-
-const contentShow = keyframes({
-  '0%': { opacity: 0, transform: 'translate(-50%, -48%) scale(.80)' },
-  '100%': { opacity: 1, transform: 'translate(-50%, -50%) scale(1)' },
-})
+import { AnimatePresence, motion } from 'framer-motion'
 
 const Overlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: '$blackA9',
   position: 'fixed',
   inset: 0,
-  '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${overlayShow} 300ms cubic-bezier(0.16, 1, 0.3, 1) forwards`,
-  },
 })
 
+const AnimatedOverlay = forwardRef<
+  ElementRef<typeof DialogPrimitive.Overlay>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+>(({ ...props }, forwardedRef) => (
+  <Overlay {...props} forceMount asChild>
+    <motion.div
+      ref={forwardedRef}
+      transition={{ duration: 0.5 }}
+      initial={{
+        opacity: 0,
+      }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    />
+  </Overlay>
+))
+
 const Content = styled(DialogPrimitive.Content, {
-  backgroundColor: '$gray3',
+  backgroundColor: '$gray2',
   borderRadius: 8,
-  $$shadowColor: '$colors$blackA12',
+  $$shadowColor: '$colors$gray7',
   boxShadow: 'box-shadow: 0px 2px 16px $$shadowColor',
+  border: '1px solid $gray7',
   position: 'fixed',
-  top: '50%',
+  top: '12.5%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  minWidth: 500,
+  minWidth: 490,
   maxWidth: '90vw',
   maxHeight: '85vh',
-  padding: 25,
-  '@media (prefers-reduced-motion: no-preference)': {
-    animation: `${contentShow} 500ms cubic-bezier(0.16, 1, 0.3, 1) forwards`,
-  },
   '&:focus': { outline: 'none' },
 })
+
+const AnimatedContent = forwardRef<
+  ElementRef<typeof DialogPrimitive.DialogContent>,
+  ComponentPropsWithoutRef<typeof DialogPrimitive.DialogContent>
+>(({ children, ...props }, forwardedRef) => (
+  <Content forceMount asChild {...props}>
+    <motion.div
+      ref={forwardedRef}
+      transition={{ type: 'spring', duration: 0.5 }}
+      initial={{
+        opacity: 0,
+        top: '20%',
+      }}
+      animate={{
+        opacity: 1,
+        top: '12.5%',
+      }}
+      exit={{
+        opacity: 0,
+        top: '20%',
+      }}
+    >
+      {children}
+    </motion.div>
+  </Content>
+))
 
 type Props = {
   trigger: ReactNode
@@ -53,18 +82,26 @@ type Props = {
 const Dialog = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & Props
->(({ children, trigger, portalProps, ...props }, forwardedRef) => (
-  <DialogPrimitive.Root>
-    <DialogPrimitive.DialogTrigger asChild>
-      {trigger}
-    </DialogPrimitive.DialogTrigger>
-    <DialogPrimitive.DialogPortal {...portalProps}>
-      <Overlay />
-      <Content ref={forwardedRef} {...props}>
-        {children}
-      </Content>
-    </DialogPrimitive.DialogPortal>
-  </DialogPrimitive.Root>
-))
+>(({ children, trigger, portalProps, ...props }, forwardedRef) => {
+  const [open, setOpen] = useState(false)
 
-export { Dialog, Content, Overlay }
+  return (
+    <DialogPrimitive.Root onOpenChange={setOpen} open={open}>
+      <DialogPrimitive.DialogTrigger asChild>
+        {trigger}
+      </DialogPrimitive.DialogTrigger>
+      <AnimatePresence>
+        {open && (
+          <DialogPrimitive.DialogPortal forceMount {...portalProps}>
+            <AnimatedOverlay />
+            <AnimatedContent ref={forwardedRef} {...props} forceMount>
+              {children}
+            </AnimatedContent>
+          </DialogPrimitive.DialogPortal>
+        )}
+      </AnimatePresence>
+    </DialogPrimitive.Root>
+  )
+})
+
+export { Dialog, Content, AnimatedContent, Overlay, AnimatedOverlay }
