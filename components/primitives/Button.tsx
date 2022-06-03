@@ -58,10 +58,10 @@ const Button = styled('button', {
     },
     corners: {
       rounded: {
-        borderRadius: '8px',
+        borderRadius: 8,
       },
       pill: {
-        borderRadius: '99999px',
+        borderRadius: 99999,
       },
       circle: {
         borderRadius: '99999px',
