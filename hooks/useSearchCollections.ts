@@ -1,28 +1,28 @@
-import { ApiResponse, TypedFetch } from 'openapi-typescript-fetch'
 import useSWR from 'swr'
 import { InferFetchedType } from 'types/superset'
 import { openApiSWRFetcher, searchCollections } from 'utils/fetcher'
+import { paramsToQueryString } from 'utils/params'
 
 type SearchCollectionsResponse = InferFetchedType<
   typeof searchCollections.execute
 >
 
-export default function useSearchCollections() {
-  const params: SearchCollectionsResponse['parameters']['query'] = {
-    name: 't',
-    limit: 6,
+export default function useSearchCollections(query: string, limit: number = 6) {
+  if (query.length === 0) {
+    return
   }
 
-  const queryString = Object.keys(params)
-    .map((key) => `${key}=${params[key]}`)
-    .join('&')
+  const params: SearchCollectionsResponse['parameters']['query'] = {
+    name: query,
+    limit: limit,
+  }
 
-  return useSWR<ApiResponse<SearchCollectionsResponse['responses']['200']>>(
-    `${searchCollections.path}?${queryString}`,
-    (url) =>
-      openApiSWRFetcher<SearchCollectionsResponse['responses']['200']>(
-        url,
-        searchCollections.execute
-      )
+  const queryString = paramsToQueryString(params)
+
+  return useSWR(`${searchCollections.path}?${queryString}`, (url) =>
+    openApiSWRFetcher<SearchCollectionsResponse['responses']['200']['schema']>(
+      url,
+      searchCollections.execute
+    )
   )
 }

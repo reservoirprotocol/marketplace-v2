@@ -7,10 +7,9 @@ fetcher.configure({
   baseUrl: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE,
 })
 
-// create fetch operations
 export const searchCollections = {
   execute: fetcher.path('/search/collections/v1').method('get').create(),
-  path: `/search/collections/v1`,
+  path: '/search/collections/v1',
 }
 
 export const openApiSWRFetcher = async <T>(
@@ -18,13 +17,5 @@ export const openApiSWRFetcher = async <T>(
   fetcher: TypedFetch<any>
 ) => {
   const query = new URLSearchParams(url.substring(url.indexOf('?')))
-
-  const res = (await fetcher(Object.fromEntries(query))) as ApiResponse<T>
-  return res
+  return (await fetcher(Object.fromEntries(query))) as ApiResponse<T>
 }
-// fetch
-// searchCollections({
-//   name: 'B',
-// }).then((data) => {
-//   console.log(data)
-// })
