@@ -2,7 +2,7 @@ import { styled } from 'stitches.config'
 
 export const Text = styled('span', {
   color: '$gray12',
-  fontFamily: 'Inter',
+  fontFamily: '$body',
   letterSpacing: 0,
 
   variants: {
