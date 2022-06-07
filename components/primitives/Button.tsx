@@ -1,18 +1,27 @@
 import { styled } from 'stitches.config'
 
 const Button = styled('button', {
-  py: '12px',
-  px: '32px',
   outline: 'none',
   fontWeight: 700,
-  fontSize: '16px',
-  fontFamily: '$body',
+  fontSize: 16,
+  fontFamily: '$button',
   transition: 'background-color 250ms linear',
-  gap: '8px',
+  gap: '$space$2',
   display: 'inline-flex',
   alignItems: 'center',
   lineHeight: '20px',
   $$focusColor: '$colors$gray12',
+  '&:focus-visible': {
+    boxShadow: '0 0 0 2px $$focusColor',
+  },
+  '&:disabled': {
+    backgroundColor: '$gray8',
+    color: '$gray11',
+  },
+  '&:disabled:hover': {
+    backgroundColor: '$gray8',
+    color: '$gray11',
+  },
   variants: {
     color: {
       primary: {
@@ -21,9 +30,6 @@ const Button = styled('button', {
         '&:hover': {
           backgroundColor: '$primary10',
         },
-        '&:focus': {
-          boxShadow: '0 0 0 2px $$focusColor',
-        },
       },
       secondary: {
         backgroundColor: '$secondary4',
@@ -31,26 +37,104 @@ const Button = styled('button', {
         '&:hover': {
           backgroundColor: '$secondary5',
         },
-        '&:focus': {
-          boxShadow: '0 0 0 2px $$focusColor',
-        },
       },
       gradient: {
         background: 'linear-gradient(270deg, #BD00FF 0%, #0091FF 109.23%)',
       },
+      gray3: {
+        backgroundColor: '$gray3',
+        color: '$gray12',
+        '&:hover': {
+          backgroundColor: '$gray4',
+        },
+      },
+      gray4: {
+        backgroundColor: '$gray4',
+        color: '$gray12',
+        '&:hover': {
+          backgroundColor: '$gray5',
+        },
+      },
     },
     corners: {
       rounded: {
-        borderRadius: '8px',
+        borderRadius: 8,
       },
       pill: {
+        borderRadius: 99999,
+      },
+      circle: {
         borderRadius: '99999px',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+    },
+    size: {
+      xs: {
+        p: '$space$3',
+        lineHeight: '16px',
+        minHeight: 40,
+      },
+      small: {
+        px: '$space$3',
+        py: '$space$4',
+        lineHeight: '12px',
+        minHeight: 44,
+      },
+      medium: {
+        py: '$space$3',
+        px: '$space$5',
+        minHeight: 44,
+      },
+      large: {
+        py: '$space$4',
+        px: '$space$5',
+        minHeight: 52,
       },
     },
   },
+  compoundVariants: [
+    {
+      size: 'xs',
+      corners: 'circle',
+      css: {
+        height: 40,
+        width: 40,
+        p: 0,
+      },
+    },
+    {
+      size: 'small',
+      corners: 'circle',
+      css: {
+        height: 44,
+        width: 44,
+        p: 0,
+      },
+    },
+    {
+      size: 'medium',
+      corners: 'circle',
+      css: {
+        height: 44,
+        width: 44,
+        p: 0,
+      },
+    },
+    {
+      size: 'large',
+      corners: 'circle',
+      css: {
+        height: 52,
+        width: 52,
+        p: 0,
+      },
+    },
+  ],
   defaultVariants: {
     color: 'primary',
     corners: 'rounded',
+    size: 'medium',
   },
 })
 
