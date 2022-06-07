@@ -53,8 +53,8 @@ const Navbar: FC<Props> = ({ isWalletConnected = false }) => {
           background: '$gray1',
           borderBottomColor: '$gray7',
           borderBottomWidth: 1,
-          px: 32,
-          py: 16,
+          px: '$space$5',
+          py: '$space$4',
           gap: 24,
         }}
       >

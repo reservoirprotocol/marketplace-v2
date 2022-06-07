@@ -29,7 +29,7 @@ const NavbarHamburgerMenu: FC<Props> = ({ open }) => {
           <Flex
             align="end"
             css={{
-              p: 16,
+              p: '$space$4',
               flex: 1,
               borderBottomColor: '$gray7',
               borderBottomWidth: 1,
@@ -39,7 +39,9 @@ const NavbarHamburgerMenu: FC<Props> = ({ open }) => {
               Connect Wallet
             </Button>
           </Flex>
-          <Flex css={{ px: 16, pt: 24, pb: 32, gap: 16 }}>
+          <Flex
+            css={{ px: '$space$4', pt: 24, pb: '$space$5', gap: '$space$4' }}
+          >
             <Button
               onClick={() => window.open('https://twitter.com/home', '_blank')}
               color="gray4"
