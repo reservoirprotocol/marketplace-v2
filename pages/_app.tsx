@@ -5,6 +5,7 @@ import { darkTheme, globalStyles } from 'stitches.config'
 
 function MyApp({ Component, pageProps }: AppProps) {
   globalStyles()
+
   return (
     <ThemeProvider
       attribute="class"
