@@ -1,6 +1,13 @@
 import { styled } from 'stitches.config'
 import * as AvatarPrimitive from '@radix-ui/react-avatar'
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  ComponentProps,
+  ElementRef,
+  forwardRef,
+} from 'react'
+
+type AvatarRootProps = ComponentProps<typeof AvatarRoot>
 
 const AvatarRoot = styled(AvatarPrimitive.Root, {
   display: 'inline-flex',
@@ -9,10 +16,38 @@ const AvatarRoot = styled(AvatarPrimitive.Root, {
   verticalAlign: 'middle',
   overflow: 'hidden',
   userSelect: 'none',
-  w: 35,
-  h: 35,
-  borderRadius: '100%',
   flexShrink: 0,
+  variants: {
+    size: {
+      xs: {
+        size: 16,
+      },
+      small: {
+        size: 24,
+      },
+      medium: {
+        size: 36,
+      },
+      large: {
+        size: 48,
+      },
+      xl: {
+        size: 56,
+      },
+    },
+    corners: {
+      rounded: {
+        borderRadius: 4,
+      },
+      circle: {
+        borderRadius: '100%',
+      },
+    },
+  },
+  defaultVariants: {
+    size: 'medium',
+    corners: 'circle',
+  },
 })
 
 const AvatarImage = styled(AvatarPrimitive.Image, {
@@ -35,10 +70,10 @@ export const Avatar = forwardRef<
   ElementRef<typeof AvatarImage>,
   ComponentPropsWithoutRef<typeof AvatarImage> & {
     fallback?: string
-    size?: number
+    size?: AvatarRootProps['size']
   }
 >(({ size, fallback, ...props }, forwardedRef) => (
-  <AvatarRoot css={{ w: size, h: size }}>
+  <AvatarRoot size={size}>
     <AvatarImage ref={forwardedRef} {...props} />
     <AvatarFallback delayMs={600}>{fallback}</AvatarFallback>
   </AvatarRoot>

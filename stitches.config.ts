@@ -153,11 +153,16 @@ export const { createTheme, keyframes, styled, globalCss } = createStitches({
     pr: (value: Stitches.PropertyValue<'padding'>) => ({
       paddingRight: value,
     }),
+
     // DIMENSIONS
     w: (value: Stitches.PropertyValue<'width'>) => ({
       width: value,
     }),
     h: (value: Stitches.PropertyValue<'height'>) => ({
+      height: value,
+    }),
+    size: (value: Stitches.PropertyValue<'width'>) => ({
+      width: value,
       height: value,
     }),
 

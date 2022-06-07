@@ -82,13 +82,13 @@ const Button = styled('button', {
         minHeight: 44,
       },
       medium: {
-        py: '$space$3',
         px: '$space$5',
+        py: '$space$3',
         minHeight: 44,
       },
       large: {
-        py: '$space$4',
         px: '$space$5',
+        py: '$space$4',
         minHeight: 52,
       },
     },

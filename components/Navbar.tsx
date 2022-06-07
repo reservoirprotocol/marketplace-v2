@@ -8,6 +8,8 @@ import { faMagnifyingGlass, faBars } from '@fortawesome/free-solid-svg-icons'
 import { Box } from './primitives/Box'
 import { useMediaQuery } from '@react-hookz/web'
 import Link from 'next/link'
+import { truncateAddress } from 'utils/truncate'
+import { Anchor } from 'components/primitives/Anchor'
 
 type Props = {
   isWalletConnected?: boolean
@@ -24,7 +26,19 @@ const HamburgerMenuIcon = () => (
 )
 
 const Navbar: FC<Props> = ({ isWalletConnected = false }) => {
-  const isSmallDevice = useMediaQuery('only screen and (max-width : 600px)')
+  const isSmallDevice = useMediaQuery('only screen and (max-width : 725px)')
+  const address = '0x0CccD55A5Ac261Ea29136831eeaA93bfE07f1231'
+
+  const links = isSmallDevice ? null : (
+    <>
+      <Link href="#">
+        <Anchor tabIndex={0}>Portfolio</Anchor>
+      </Link>
+      <Link href="#">
+        <Anchor tabIndex={0}>Sell</Anchor>
+      </Link>
+    </>
+  )
 
   return (
     <Flex
@@ -38,28 +52,39 @@ const Navbar: FC<Props> = ({ isWalletConnected = false }) => {
         gap: 24,
       }}
     >
-      <Flex align="center" css={{ gap: 24 }}>
-        <Avatar src="#" alt="" size={38} />
-        <Input placeholder="Search Collections" icon={<SearchIcon />} />
+      <Flex align="center" css={{ gap: 24, flex: 1 }}>
+        <Link href="/">
+          <a>
+            <img src="/superset.svg" alt="Navbar Logo" />
+          </a>
+        </Link>
+        <Input
+          containerCss={{ maxWidth: 420, width: '100%' }}
+          placeholder="Search Collections"
+          icon={<SearchIcon />}
+        />
       </Flex>
       <Flex justify="between" align="center" css={{ gap: 36 }}>
         {isSmallDevice ? (
-          <Button>
+          <Button color="gray3" size="xs">
             <HamburgerMenuIcon />
           </Button>
         ) : (
           <>
-            {isWalletConnected && (
+            {isWalletConnected ? (
               <>
-                <Link href="#">
-                  <a>Portfolio</a>
-                </Link>
-                <Link href="#">
-                  <a>Sell</a>
-                </Link>
+                {links}
+                <Button corners="pill" color="gray3">
+                  <Avatar
+                    size="small"
+                    src="https://lh3.googleusercontent.com/ak5vqxL5SBOu9m5zHYxydtBije8SKnnuynh8sSkIbBkabUE3CgKLoLzywf9Fp8iYZHhxpAGOtZxTU9eaDJjsV9ZBmQTHxdv1aTfMBEw=w140"
+                  />
+                  {truncateAddress(address)}
+                </Button>
               </>
+            ) : (
+              <Button corners="pill">Connect Wallet</Button>
             )}
-            <Button corners="pill">Connect Wallet</Button>
           </>
         )}
       </Flex>
