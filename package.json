@@ -11,6 +11,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.1.18",
     "@radix-ui/react-dialog": "^0.1.7",
+    "@radix-ui/react-dropdown-menu": "^0.1.6",
     "@radix-ui/react-switch": "^0.1.5",
     "@reservoir0x/client-sdk": "^0.0.32",
     "framer-motion": "^6.3.6",
