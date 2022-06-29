@@ -161,6 +161,10 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       h: (value: Stitches.PropertyValue<'height'>) => ({
         height: value,
       }),
+      size: (value: Stitches.PropertyValue<'width'>) => ({
+        width: value,
+        height: value,
+      }),
 
       // GRID
       colSpan: (value: number | 'full') => {
