@@ -1,8 +1,8 @@
+import { motion } from 'framer-motion'
 import { styled } from 'stitches.config'
 
-export const Flex = styled('div', {
+const flexCss = {
   display: 'flex',
-
   variants: {
     align: {
       start: {
@@ -61,4 +61,7 @@ export const Flex = styled('div', {
       },
     },
   },
-})
+}
+
+export const Flex = styled('div', flexCss)
+export const AnimatedFlex = styled(motion.div, flexCss)

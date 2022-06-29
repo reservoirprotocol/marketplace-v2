@@ -6,6 +6,7 @@ import {
   forwardRef,
   ReactNode,
 } from 'react'
+import { CSS } from '@stitches/react'
 
 const StyledInput = styled('input', {
   all: 'unset',
@@ -26,10 +27,10 @@ const Input = forwardRef<
   ElementRef<typeof StyledInput>,
   ComponentPropsWithoutRef<typeof StyledInput> & {
     icon?: ReactNode
-    width?: number
+    containerCss?: CSS
   }
->(({ children, icon, width, ...props }, forwardedRef) => (
-  <Flex css={{ w: width, position: 'relative' }}>
+>(({ children, icon, containerCss, ...props }, forwardedRef) => (
+  <Flex css={{ ...containerCss, position: 'relative' }}>
     {icon && (
       <div style={{ position: 'absolute', top: 16, left: 16 }}>{icon}</div>
     )}

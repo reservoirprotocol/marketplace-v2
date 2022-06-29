@@ -1,6 +1,7 @@
+import { ElementRef, forwardRef, ComponentPropsWithoutRef } from 'react'
 import { styled } from 'stitches.config'
 
-export const Anchor = styled('a', {
+export const StyledAnchor = styled('a', {
   cursor: 'pointer',
   fontFamily: '$body',
   fontSize: 16,
@@ -8,6 +9,7 @@ export const Anchor = styled('a', {
   '&:focus-visible': {
     color: '$gray12',
     outline: 'none',
+    borderRadius: 4,
     boxShadow: '0 0 0 2px $$focusColor',
   },
   variants: {
@@ -39,3 +41,12 @@ export const Anchor = styled('a', {
     weight: 'heavy',
   },
 })
+
+export const Anchor = forwardRef<
+  ElementRef<typeof StyledAnchor>,
+  ComponentPropsWithoutRef<typeof StyledAnchor>
+>(({ children, ...props }, forwardedRef) => (
+  <StyledAnchor ref={forwardedRef} {...props} tabIndex={0}>
+    {children}
+  </StyledAnchor>
+))
