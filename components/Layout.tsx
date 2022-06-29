@@ -77,7 +77,7 @@ const Layout: FC<Props> = ({
         <meta property="og:image:height" content="640" />
         <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
       </Head>
-      <Navbar isWalletConnected={false} />
+      <Navbar />
       <main>{children}</main>
     </>
   )
