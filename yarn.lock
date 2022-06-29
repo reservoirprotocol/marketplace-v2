@@ -1049,13 +1049,6 @@
     qrcode "1.5.0"
     react-remove-scroll "2.5.4"
 
-"@reservoir0x/client-sdk@^0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/client-sdk/-/client-sdk-0.0.32.tgz#d7f3477c03ebca838fc1f8c97988cf20a6136e1b"
-  integrity sha512-X/PLJADqXqk6JOHLSDZylxp+eFy4+K765kFWbbYLOPm6AnT/CtyPr5+EMti+okCfLVY/JaMSWM9LjGxhkxMr9g==
-  dependencies:
-    ethers "^5.6.1"
-
 "@react-hookz/deep-equal@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@react-hookz/deep-equal/-/deep-equal-1.0.2.tgz#4e8bdeda027379dcf8b62a42e5f75f0351b11b35"
@@ -1067,6 +1060,13 @@
   integrity sha512-6FeZHKV3FFOYnbSJMkkqXDoMuIX0HEFJlDF4LpHR7RsA3zrH2xzhtF8nSYZ+pG6fDIqYKID9yQuILFmbAWaqCQ==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.2"
+
+"@reservoir0x/client-sdk@^0.0.32":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/client-sdk/-/client-sdk-0.0.32.tgz#d7f3477c03ebca838fc1f8c97988cf20a6136e1b"
+  integrity sha512-X/PLJADqXqk6JOHLSDZylxp+eFy4+K765kFWbbYLOPm6AnT/CtyPr5+EMti+okCfLVY/JaMSWM9LjGxhkxMr9g==
+  dependencies:
+    ethers "^5.6.1"
 
 "@stitches/react@^1.2.8":
   version "1.2.8"
@@ -2603,6 +2603,11 @@ md5.js@^1.3.4:
     inherits "^2.0.1"
     safe-buffer "^5.1.2"
 
+mersenne-twister@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/mersenne-twister/-/mersenne-twister-1.1.0.tgz#f916618ee43d7179efcf641bec4531eb9670978a"
+  integrity sha512-mUYWsMKNrm4lfygPkL3OfGzOPTR2DBlTkBNHM//F6hGp8cLThY897crAlk3/Jo17LEOOjQUrNAx6DvgO77QJkA==
+
 microseconds@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/microseconds/-/microseconds-0.2.0.tgz#233b25f50c62a65d861f978a4a4f8ec18797dc39"
@@ -2921,6 +2926,13 @@ react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
+
+react-jazzicon@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-jazzicon/-/react-jazzicon-1.0.4.tgz#31e5f6908e042786ba93a9093b852dea1870e7a0"
+  integrity sha512-/3kWv5vtAhI18GBFoqjpxRTtL+EImuB73PAC02r/zJQ6E+PAUmoBx8edYvTCIYHwS01uFf6N3elTDqSrVPwg4w==
+  dependencies:
+    mersenne-twister "^1.1.0"
 
 react-query@^4.0.0-beta.23:
   version "4.0.0-beta.23"
