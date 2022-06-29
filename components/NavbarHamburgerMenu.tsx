@@ -4,6 +4,7 @@ import Button from 'components/primitives/Button'
 import { AnimatedFlex, Flex } from 'components/primitives/Flex'
 import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
 
 type Props = {
   open: boolean
@@ -35,9 +36,8 @@ const NavbarHamburgerMenu: FC<Props> = ({ open }) => {
               borderBottomWidth: 1,
             }}
           >
-            <Button css={{ flex: 1, justifyContent: 'center' }}>
-              Connect Wallet
-            </Button>
+            {/* style={{ flex: 1, justifyContent: 'center' }} */}
+            <ConnectWalletButton />
           </Flex>
           <Flex
             css={{ px: '$space$4', pt: 24, pb: '$space$5', gap: '$space$4' }}

@@ -1,5 +1,4 @@
 import { FC, useState } from 'react'
-import { Avatar } from './primitives/Avatar'
 import Button from './primitives/Button'
 import { Flex } from './primitives/Flex'
 import Input from './primitives/Input'
@@ -12,13 +11,9 @@ import {
 import { Box } from './primitives/Box'
 import { useMediaQuery } from '@react-hookz/web'
 import Link from 'next/link'
-import { truncateAddress } from 'utils/truncate'
 import { Anchor } from 'components/primitives/Anchor'
 import NavbarHamburgerMenu from 'components/NavbarHamburgerMenu'
-
-type Props = {
-  isWalletConnected?: boolean
-}
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
 
 const SearchIcon = () => (
   <Box css={{ color: '$gray10' }}>
@@ -37,13 +32,12 @@ const HamburgerIcon: FC<HamburgerIconProps> = ({ menuOpen }) => {
   return <FontAwesomeIcon icon={faBars} width={16} height={16} />
 }
 
-const Navbar: FC<Props> = ({ isWalletConnected = false }) => {
+const Navbar: FC = () => {
   const [hamburgerMenuOpen, setHamburgerMenuOpen] = useState(false)
   const isSmallDevice = useMediaQuery(
     'only screen and (max-width : 725px)',
     true
   )
-  const address = '0x0CccD55A5Ac261Ea29136831eeaA93bfE07f1231'
 
   return (
     <>
@@ -70,7 +64,12 @@ const Navbar: FC<Props> = ({ isWalletConnected = false }) => {
             icon={<SearchIcon />}
           />
         </Flex>
-        <Flex justify="between" align="center" css={{ gap: 36 }}>
+        <Flex
+          justify="between"
+          align="center"
+          css={{ gap: 36 }}
+          className="connect-wrapper"
+        >
           {isSmallDevice ? (
             <Button
               color="gray3"
@@ -80,19 +79,7 @@ const Navbar: FC<Props> = ({ isWalletConnected = false }) => {
               <HamburgerIcon menuOpen={hamburgerMenuOpen} />
             </Button>
           ) : (
-            <>
-              {isWalletConnected ? (
-                <Button corners="pill" color="gray3">
-                  <Avatar
-                    size="small"
-                    src="https://lh3.googleusercontent.com/ak5vqxL5SBOu9m5zHYxydtBije8SKnnuynh8sSkIbBkabUE3CgKLoLzywf9Fp8iYZHhxpAGOtZxTU9eaDJjsV9ZBmQTHxdv1aTfMBEw=w140"
-                  />
-                  {truncateAddress(address)}
-                </Button>
-              ) : (
-                <Button corners="pill">Connect Wallet</Button>
-              )}
-            </>
+            <ConnectWalletButton />
           )}
         </Flex>
       </Flex>

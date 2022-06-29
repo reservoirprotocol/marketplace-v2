@@ -1,7 +1,7 @@
 import 'fonts/inter.css'
 import type { AppProps } from 'next/app'
 import { ThemeProvider } from 'next-themes'
-import { darkTheme, globalStyles } from 'stitches.config'
+import { darkTheme, globalReset } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
 import {
   RainbowKitProvider,
@@ -28,7 +28,7 @@ const wagmiClient = createClient({
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-  globalStyles()
+  globalReset()
 
   return (
     <ThemeProvider
@@ -40,7 +40,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider theme={rainbowDarkTheme()} chains={chains}>
+        <RainbowKitProvider
+          theme={rainbowDarkTheme({
+            accentColor: 'var(--colors-primary9)',
+            accentColorForeground: 'white',
+            borderRadius: 'large',
+          })}
+          chains={chains}
+        >
           <Component {...pageProps} />
         </RainbowKitProvider>
       </WagmiConfig>
