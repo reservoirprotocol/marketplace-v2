@@ -162,7 +162,7 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
-"@coinbase/wallet-sdk@^3.2.0":
+"@coinbase/wallet-sdk@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@coinbase/wallet-sdk/-/wallet-sdk-3.3.0.tgz#e77383bce1388e5367dc35f8309702e73be47503"
   integrity sha512-Prmxs5eYRxe5i+kDSsny97oPG4Pa5PhLmNDx8f7UQrvlPowGy5Tg0gHOqCie6ck2shVMdW8sKJ+RCLIRZ9kIjA==
@@ -1036,10 +1036,10 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@rainbow-me/rainbowkit@^0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@rainbow-me/rainbowkit/-/rainbowkit-0.3.5.tgz#dac8c36909f3bd62c9057ad4a3b193825ce4af19"
-  integrity sha512-i/axWYRptIYU11AJjdHDxUoHlLzNtkRcGdWGaXz58jyvz5sp6cxIV/6YEfbBL1jQ0KgMW2chkPvdQpyvf8AYeA==
+"@rainbow-me/rainbowkit@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@rainbow-me/rainbowkit/-/rainbowkit-0.4.0.tgz#e6afe915be07bbce66c7af4a85db0b75282e81bb"
+  integrity sha512-oJzC84zoq6Q1fbU9dt79coMskVTheGmAvSJx48ILKpPE53MEBVDyd6isvYqYX+UBZruwe6Vd1m4HYexTgWAgjw==
   dependencies:
     "@vanilla-extract/css" "1.7.0"
     "@vanilla-extract/dynamic" "2.0.2"
@@ -1156,10 +1156,10 @@
   resolved "https://registry.yarnpkg.com/@vanilla-extract/sprinkles/-/sprinkles-1.4.1.tgz#8c8703ddedaac355c1187db909119816c0fc771c"
   integrity sha512-aW6CfMMToX4a+baLuVxwcT0FSACjX3xrNt8wdi/3LLRlLAfhyue8OK7kJxhcYNZfydBeWTP59aRy8p5FUTIeew==
 
-"@wagmi/core@^0.3.8":
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.3.8.tgz#7f2d13a25f6d86e5ddcb31ec1d1c9af7efaa4736"
-  integrity sha512-9wsd8YGW2ivjFwpkgAETn7cRbKOAddZz91vuh2VmIP2bWGiDuFA6RXy5/KLV/tGpvIIiCyGFO0JXpx+n4hFhgQ==
+"@wagmi/core@^0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.4.4.tgz#6640299647f8841aab7f18d1c37b3942adfbb120"
+  integrity sha512-F5GDev6ylp3ZhvLnZriQYPrT0aHGlgcxahMozraO4snQizyMp6CTJ7gJHyL/7at+rDXDqI6Kb5Yy09GGfoaQFA==
   dependencies:
     eventemitter3 "^4.0.7"
     zustand "^4.0.0-rc.1"
@@ -3396,13 +3396,13 @@ util@^0.12.4:
     safe-buffer "^5.1.2"
     which-typed-array "^1.1.2"
 
-wagmi@^0.4.12:
-  version "0.4.12"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.4.12.tgz#c79be680ceb17ab071c713ddc86e61fc01145522"
-  integrity sha512-YfpRAJyGL9YvtecYDf6cUT6yaIBksHK9JZyq3WlVMUfeTleFmsqCiIaIaKhlPcE+NZxSsUHz1jbZw8KLWTcwvA==
+wagmi@^0.5.5:
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.5.5.tgz#8a91b4db74cd58fff1185a1f56954076d6aa23f1"
+  integrity sha512-nCp3o9RNrIjFBSIUvOD3M9CEWR3IW7Y21mpLtsWcbr0oNociAzWIrPg9dZcAc/FD0HtFOdP1l0eWfIMUyX3Dag==
   dependencies:
-    "@coinbase/wallet-sdk" "^3.2.0"
-    "@wagmi/core" "^0.3.8"
+    "@coinbase/wallet-sdk" "^3.3.0"
+    "@wagmi/core" "^0.4.4"
     "@walletconnect/ethereum-provider" "^1.7.8"
     react-query "^4.0.0-beta.23"
     use-sync-external-store "^1.1.0"
