@@ -71,9 +71,10 @@ export const Avatar = forwardRef<
   ComponentPropsWithoutRef<typeof AvatarImage> & {
     fallback?: string
     size?: AvatarRootProps['size']
+    corners?: AvatarRootProps['corners']
   }
->(({ size, fallback, ...props }, forwardedRef) => (
-  <AvatarRoot size={size}>
+>(({ size, corners, fallback, ...props }, forwardedRef) => (
+  <AvatarRoot size={size} corners={corners}>
     <AvatarImage ref={forwardedRef} {...props} />
     <AvatarFallback delayMs={600}>{fallback}</AvatarFallback>
   </AvatarRoot>
