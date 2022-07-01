@@ -7,12 +7,14 @@ import { Text } from './primitives/Text'
 type Props = {
   amount: BigNumberish | null | undefined
   maximumFractionDigits?: number
+  css?: Parameters<typeof Text>['0']['css']
   children?: React.ReactNode
 }
 
 const FormatCurrency: FC<Props> = ({
   amount,
   maximumFractionDigits = 4,
+  css,
   children,
 }) => {
   const value = formatBN(amount, maximumFractionDigits)
@@ -20,7 +22,9 @@ const FormatCurrency: FC<Props> = ({
   return (
     <Flex align="center" css={{ gap: '$1' }}>
       {value !== '-' ? children : null}
-      <Text style="subtitle2">{value}</Text>
+      <Text style="subtitle2" css={css}>
+        {value}
+      </Text>
     </Flex>
   )
 }

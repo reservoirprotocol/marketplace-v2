@@ -11,9 +11,11 @@ const FormatWEth: FC<Props> = ({
   amount,
   maximumFractionDigits,
   logoWidth = 8,
+  css,
 }) => {
   return (
     <FormatCurrency
+      css={css}
       amount={amount}
       maximumFractionDigits={maximumFractionDigits}
     >
