@@ -63,5 +63,5 @@ const flexCss = {
   },
 }
 
-export const Flex = styled('div', flexCss)
+export default styled('div', flexCss)
 export const AnimatedFlex = styled(motion.div, flexCss)

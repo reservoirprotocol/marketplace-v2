@@ -18,6 +18,7 @@ export const reset = {
 */
 
   html: {
+    height: '100%',
     lineHeight: 1.5 /* 1 */,
     '-webkit-text-size-adjust': '100%' /* 2 */,
     '-moz-tab-size': 4 /* 3 */,
@@ -33,6 +34,8 @@ export const reset = {
   body: {
     margin: 0 /* 1 */,
     lineHeight: 'inherit' /* 2 */,
+    height: '100%',
+    width: '100%',
   },
 
   /*

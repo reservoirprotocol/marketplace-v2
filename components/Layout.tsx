@@ -1,85 +1,125 @@
-import Head from 'next/head'
-import { FC } from 'react'
-import Navbar from './Navbar'
+import { useEffect, useRef } from 'react'
+import Box from './primitives/Box'
+import Text from './primitives/Text'
+import Flex from './primitives/Flex'
+import GlobalSearch from './GlobalSearch'
 
-type Props = {
-  title?: string
-  keywords?: string
-  description?: string
-  favicon?: string
-  twitterImage?: string
-  twitterSiteDomain?: string
-  twitterUrl?: string
-  twitterTitle?: string
-  twitterDescription?: string
-  twitterSite?: string
-  ogTitle?: string
-  ogDescription?: string
-  ogSiteName?: string
-  ogUrl?: string
-  ogImage?: string
-  ogImageAlt?: string
-}
+import { useRouter } from 'next/router'
 
-const Layout: FC<Props> = ({
-  title = 'Superset',
-  keywords = 'Superset, Reservoir, API, Marketplace',
-  description = 'Superset',
-  favicon = '/favicon.ico',
-  twitterImage,
-  twitterSiteDomain,
-  twitterUrl,
-  twitterTitle = 'Superset',
-  twitterDescription = 'Superset',
-  twitterSite,
-  ogTitle = 'Superset',
-  ogDescription = 'Superset',
-  ogSiteName = 'Superset',
-  ogUrl,
-  ogImage,
-  ogImageAlt = 'Superset',
-  children,
-}) => {
+import { useShortcutCallback } from 'react-key-shortcuts'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
+import {
+  faEllipsisH,
+  faInbox,
+  faShoppingCart,
+} from '@fortawesome/free-solid-svg-icons'
+
+const NavItem = ({ active, ...props }) => (
+  <Text
+    {...props}
+    css={{
+      color: active ? '$gray12' : '$gray10',
+      cursor: 'pointer',
+      '&:hover': {
+        color: '$gray11',
+      },
+    }}
+    as="p"
+    style="subtitle1"
+  />
+)
+
+import { ConnectKitButton } from 'connectkit'
+import Link from 'next/link'
+
+const Layout = ({ children }) => {
+  let searchRef = useRef()
+
+  const router = useRouter()
+  useShortcutCallback('search', () => {
+    if (searchRef?.current) {
+      searchRef?.current?.focus()
+    }
+  })
+
   return (
-    <>
-      <Head>
-        <title>{title}</title>
-        <meta name="keywords" content={keywords} />
-        <meta name="description" content={description} />
-        <link rel="shortcut icon" type="image/svg" href={favicon} />
-        {/* Twitter */}
-        {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
-        <meta name="twitter:image" content={twitterImage} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site:domain" content={twitterSiteDomain} />
-        <meta name="twitter:url" content={twitterUrl} />
-        {/* should be between 30-60 characters, with a maximum of 70 */}
-        <meta name="twitter:title" content={twitterTitle} />
-        {/* should be between 55 and 200 characters long */}
-        <meta name="twitter:description" content={twitterDescription} />
-        <meta name="twitter:site" content={twitterSite} />
+    <Box css={{ background: '$slate1', height: '100%', pt: 80 }}>
+      <Flex
+        css={{
+          py: '$4',
+          px: '$5',
+          width: '100%',
+          borderBottom: '1px solid $gray4',
+          zIndex: 999,
+          background: '$slate1',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+        }}
+        align="center"
+        justify="between"
+      >
+        <Box css={{ flex: 1 }}>
+          <Flex align="center">
+            <Box css={{ width: 32, mr: '$5' }}>
+              <img src="/reservoirLogo.svg" style={{ width: '100%' }} />
+            </Box>
+            <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
+              <Link href="/">
+                <NavItem active={router.pathname == '/'}>Explore</NavItem>
+              </Link>
+              <Link href="/portfolio">
+                <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              </Link>
+              <NavItem>Developers</NavItem>
+            </Flex>
+          </Flex>
+        </Box>
 
-        {/* OG - https://ogp.me/ */}
-        {/* https://www.opengraph.xyz/ */}
-        {/* should be between 30-60 characters, with a maximum of 90 */}
-        <meta name="og:title" content={ogTitle} />
-        <meta property="og:type" content="website" />
-        <meta property="og:determiner" content="the" />
-        <meta property="og:locale" content="en" />
-        {/* Make sure the important part of your description is within the first 110 characters, so it doesn't get cut off on mobile. */}
-        <meta property="og:description" content={ogDescription} />
-        <meta property="og:site_name" content={ogSiteName} />
-        <meta property="og:url" content={ogUrl} />
-        {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content="1280" />
-        <meta property="og:image:height" content="640" />
-        <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
-      </Head>
-      <Navbar />
+        <Box css={{ flex: 1, px: '$5' }}>
+          <GlobalSearch
+            inputRef={searchRef}
+            placeholder="search collections"
+            containerCss={{ width: '100%' }}
+          />
+        </Box>
+        <Flex css={{ flex: 1, gap: '$5' }} justify="end" align="center">
+          <Box
+            css={{
+              color: '$gray11',
+            }}
+          >
+            <FontAwesomeIcon icon={faEllipsisH} size="lg" />
+          </Box>
+
+          <Box
+            css={{
+              color: '$gray11',
+            }}
+          >
+            <FontAwesomeIcon icon={faInbox} size="lg" />
+          </Box>
+          <ConnectKitButton
+            customTheme={{
+              '--ck-border-radius': 8,
+            }}
+          />
+
+          <Box
+            css={{
+              color: '$gray11',
+              mr: '$2',
+            }}
+          >
+            <FontAwesomeIcon icon={faShoppingCart} size="lg" />
+          </Box>
+        </Flex>
+      </Flex>
       <main>{children}</main>
-    </>
+    </Box>
   )
 }
 

@@ -1,5 +1,5 @@
 import { styled } from 'stitches.config'
-import { Flex } from 'components/primitives/Flex'
+import Flex from 'components/primitives/Flex'
 import {
   ComponentPropsWithoutRef,
   ElementRef,
@@ -17,9 +17,9 @@ const StyledInput = styled('input', {
   fontFamily: '$body',
   fontSize: 16,
   color: '$gray12',
-  backgroundColor: '$gray3',
+  backgroundColor: '$gray7',
   $$focusColor: '$colors$primary8',
-  '&:placeholder': { color: '$gray11' },
+  '&::placeholder': { color: '$gray10' },
   '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },
 })
 

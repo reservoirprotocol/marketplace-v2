@@ -1,6 +1,6 @@
 import { styled } from 'stitches.config'
 
-export const Text = styled('span', {
+export default styled('span', {
   color: '$gray12',
   fontFamily: '$body',
   letterSpacing: 0,
