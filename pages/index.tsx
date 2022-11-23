@@ -103,11 +103,7 @@ const IndexPage: NextPage = () => {
               ecosystem
             </Text>
             <Flex css={{ gap: '$4', pt: '$4', pb: '$5' }} justify="center">
-              <Button
-                css={{ background: '#7000FF' }}
-                corners="pill"
-                size="large"
-              >
+              <Button corners="pill" size="large">
                 Connect Your Wallet
               </Button>
               <Button

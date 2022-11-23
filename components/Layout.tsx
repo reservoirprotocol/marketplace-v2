@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import Box from './primitives/Box'
 import Text from './primitives/Text'
 import Flex from './primitives/Flex'
@@ -31,11 +31,11 @@ const NavItem = ({ active, ...props }) => (
   />
 )
 
-import { ConnectKitButton } from 'connectkit'
 import Link from 'next/link'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
 
 const Layout = ({ children }) => {
-  let searchRef = useRef()
+  let searchRef = useRef<any>()
 
   const router = useRouter()
   useShortcutCallback('search', () => {
@@ -74,7 +74,7 @@ const Layout = ({ children }) => {
               <Link href="/portfolio">
                 <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
               </Link>
-              <NavItem>Developers</NavItem>
+              <NavItem active={false}>Developers</NavItem>
             </Flex>
           </Flex>
         </Box>
@@ -102,11 +102,7 @@ const Layout = ({ children }) => {
           >
             <FontAwesomeIcon icon={faInbox} size="lg" />
           </Box>
-          <ConnectKitButton
-            customTheme={{
-              '--ck-border-radius': 8,
-            }}
-          />
+          <ConnectWalletButton />
 
           <Box
             css={{

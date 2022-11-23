@@ -1,7 +1,7 @@
 import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Button from 'components/primitives/Button'
-import { AnimatedFlex, Flex } from 'components/primitives/Flex'
+import { AnimatedFlex, default as Flex } from 'components/primitives/Flex'
 import { AnimatePresence } from 'framer-motion'
 import { FC } from 'react'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'

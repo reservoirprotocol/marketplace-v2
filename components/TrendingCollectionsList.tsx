@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import Box from './primitives/Box'
 import Flex from './primitives/Flex'
@@ -6,34 +5,39 @@ import Text from './primitives/Text'
 import FormatEth from './FormatEth'
 import { formatNumber } from '../lib/numbers'
 
-const CollectionRow = ({ rank, collection }) => {
+type CollectionRowProps = {
+  rank: string | number
+  collection: ReturnType<typeof useCollections>['data'][0]
+}
+
+const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
   return (
     <Flex align="center">
       <Box css={{ width: 32, mr: '$4' }}>
         <Text style="h5">{rank}</Text>
       </Box>
       <Box css={{ width: 60, height: 60 }}>
-        <img src={collection.image} style={{ borderRadius: 8 }} />
+        <img src={collection?.image} style={{ borderRadius: 8 }} />
       </Box>
       <Box css={{ ml: '$4', flex: 1 }}>
         <Text css={{ mb: 4 }} style="subtitle1" as="p">
-          {collection.name}
+          {collection?.name}
         </Text>
         <Flex>
           <Text css={{ mr: '$1', color: '$gray11' }} as="p" style="body2">
             Floor
           </Text>
-          <FormatEth amount={collection.floorAsk.price.amount.native} />
+          <FormatEth amount={collection?.floorAsk?.price?.amount?.native} />
         </Flex>
       </Box>
 
       <Flex css={{ ml: '$4', mr: '$5' }} direction="column" align="end">
         <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
-          {formatNumber(collection.volumeChange['7day'])}%
+          {formatNumber(collection?.volumeChange['7day'])}%
         </Text>
 
         <FormatEth
-          amount={collection.volume['7day']}
+          amount={collection?.volume['7day']}
           maximumFractionDigits={1}
         />
       </Flex>
@@ -41,10 +45,10 @@ const CollectionRow = ({ rank, collection }) => {
   )
 }
 
-const TrendingCollectionsList = ({ ...props }) => {
-  const [timePeriod, setTimePeriod] = useState('7DayVolume')
-
-  const { data: collections } = useCollections({})
+const TrendingCollectionsList = () => {
+  const { data: collections } = useCollections({
+    limit: 20,
+  })
 
   return (
     <Box

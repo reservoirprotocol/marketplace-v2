@@ -1,6 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Avatar } from 'components/primitives/Avatar'
-import { Box } from 'components/primitives/Box'
+import Box from 'components/primitives/Box'
 import Button from 'components/primitives/Button'
 import { FC } from 'react'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'

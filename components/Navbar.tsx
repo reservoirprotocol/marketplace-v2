@@ -1,6 +1,6 @@
 import { FC, useState } from 'react'
 import Button from './primitives/Button'
-import { Flex } from './primitives/Flex'
+import Flex from './primitives/Flex'
 import Input from './primitives/Input'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -8,7 +8,7 @@ import {
   faBars,
   faClose,
 } from '@fortawesome/free-solid-svg-icons'
-import { Box } from './primitives/Box'
+import Box from './primitives/Box'
 import { useMediaQuery } from '@react-hookz/web'
 import Link from 'next/link'
 import { Anchor } from 'components/primitives/Anchor'

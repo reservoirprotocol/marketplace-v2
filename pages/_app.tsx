@@ -12,23 +12,21 @@ import { WagmiConfig, createClient, configureChains, chain } from 'wagmi'
 
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
-
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-
 import { KeyShortcutProvider } from 'react-key-shortcuts'
-
-import { ConnectKitProvider } from 'connectkit'
 
 import {
   ReservoirKitProvider,
   darkTheme as resKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
-
-console.log(process.env.NEXT_PUBLIC_ALCHEMY_ID)
+import { FC } from 'react'
 
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.rinkeby],
-  [alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID })]
+  [
+    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    publicProvider(),
+  ]
 )
 
 const { connectors } = getDefaultWallets({
@@ -49,8 +47,14 @@ const theme = resKitTheme({
   primaryHoverColor: '#644fc1',
 })
 
+const rainbowKitTheme = rainbowDarkTheme({
+  borderRadius: 'small',
+})
+
 function MyApp({ Component, pageProps }: AppProps) {
   globalReset()
+
+  const FunctionalComponent = Component as FC
 
   return (
     <KeyShortcutProvider
@@ -69,22 +73,19 @@ function MyApp({ Component, pageProps }: AppProps) {
         <WagmiConfig client={wagmiClient}>
           <ReservoirKitProvider
             options={{
-              apiBase: process.env.NEXT_PUBLIC_API_BASE as string,
+              apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
               apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
             }}
             theme={theme}
           >
             <Tooltip.Provider>
-              <ConnectKitProvider
-                mode="dark"
-                customTheme={{
-                  '--ck-accent-color': '#7000FF',
-                  '--ck-accent-text-color': '#ffffff',
-                  '--ck-border-radius': 8,
-                }}
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
               >
-                <Component {...pageProps} />
-              </ConnectKitProvider>
+                <FunctionalComponent {...pageProps} />
+              </RainbowKitProvider>
             </Tooltip.Provider>
           </ReservoirKitProvider>
         </WagmiConfig>

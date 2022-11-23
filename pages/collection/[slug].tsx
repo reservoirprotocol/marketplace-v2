@@ -3,7 +3,6 @@ import Box from '../../components/primitives/Box'
 import Flex from '../../components/primitives/Flex'
 import Switch from 'components/primitives/Switch'
 import Text from '../../components/primitives/Text'
-import Button from '../../components/primitives/Button'
 import {
   useCollections,
   useTokens,
@@ -12,10 +11,8 @@ import {
 import { formatNumber } from 'lib/numbers'
 
 import truncateEthAddress from 'truncate-eth-address'
-import useTraits from 'hooks/useTraits'
 
 import Layout from 'components/Layout'
-import { useAccount } from 'wagmi'
 import { useRouter } from 'next/router'
 import FormatEth from 'components/FormatEth'
 import FormatWEth from 'components/FormatWEth'
@@ -25,10 +22,7 @@ import {
   faCheck,
   faGlobe,
   faRefresh,
-  faShare,
   faArrowUpRightFromSquare,
-  faFilter,
-  faBoltLightning,
   faFlag,
   faChevronUp,
   faChevronDown,
@@ -182,13 +176,11 @@ const TokenCard = ({ token }) => (
 )
 
 const IndexPage: NextPage = () => {
-  const account = useAccount()
-
   const router = useRouter()
   const { slug } = router.query
 
   const { data: collections } = useCollections({
-    slug: slug,
+    id: slug as string,
     includeTopBid: true,
   })
 

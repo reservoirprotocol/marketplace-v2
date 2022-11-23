@@ -7,7 +7,7 @@ const { format: formatDollar } = new Intl.NumberFormat('en-US', {
 })
 
 function formatNumber(
-  amount: number | null | undefined,
+  amount: number | null | undefined | string,
   maximumFractionDigits: number = 2
 ) {
   const { format } = new Intl.NumberFormat('en-US', {
@@ -16,7 +16,7 @@ function formatNumber(
   if (!amount) {
     return '-'
   }
-  return format(amount)
+  return format(+amount)
 }
 
 /**
