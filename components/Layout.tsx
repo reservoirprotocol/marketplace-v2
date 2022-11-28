@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { ComponentPropsWithoutRef, forwardRef, ReactNode, useRef } from 'react'
 import Box from './primitives/Box'
 import Text from './primitives/Text'
 import Flex from './primitives/Flex'
@@ -16,9 +16,18 @@ import {
   faShoppingCart,
 } from '@fortawesome/free-solid-svg-icons'
 
-const NavItem = ({ active, ...props }) => (
+type NavItemProps = {
+  active?: boolean
+  children: ReactNode
+}
+
+const NavItem = forwardRef<
+  HTMLParagraphElement,
+  ComponentPropsWithoutRef<typeof Text> & NavItemProps
+>(({ children, active, ...props }, forwardedRef) => (
   <Text
     {...props}
+    ref={forwardedRef}
     css={{
       color: active ? '$gray12' : '$gray10',
       cursor: 'pointer',
@@ -28,14 +37,16 @@ const NavItem = ({ active, ...props }) => (
     }}
     as="p"
     style="subtitle1"
-  />
-)
+  >
+    {children}
+  </Text>
+))
 
 import Link from 'next/link'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 
 const Layout = ({ children }) => {
-  let searchRef = useRef<any>()
+  let searchRef = useRef<HTMLInputElement>()
 
   const router = useRouter()
   useShortcutCallback('search', () => {
@@ -81,7 +92,7 @@ const Layout = ({ children }) => {
 
         <Box css={{ flex: 1, px: '$5' }}>
           <GlobalSearch
-            inputRef={searchRef}
+            ref={searchRef}
             placeholder="search collections"
             containerCss={{ width: '100%' }}
           />

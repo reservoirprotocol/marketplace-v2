@@ -3,13 +3,18 @@ import Text from './primitives/Text'
 import Flex from './primitives/Flex'
 import Input from './primitives/Input'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faMagnifyingGlass,
-  faRightToBracket,
-  faCopy,
-} from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faCopy } from '@fortawesome/free-solid-svg-icons'
 
-import { useEffect, useState, useRef } from 'react'
+import {
+  useEffect,
+  useState,
+  useRef,
+  RefObject,
+  MutableRefObject,
+  forwardRef,
+  ElementRef,
+  ComponentPropsWithoutRef,
+} from 'react'
 import { formatNumber } from 'lib/numbers'
 
 import { useDebounce } from 'usehooks-ts'
@@ -100,7 +105,10 @@ const SearchResult = ({ result }) => {
   }[result.type]()
 }
 
-const GlobalSearch = (props) => {
+const GlobalSearch = forwardRef<
+  ElementRef<typeof Input>,
+  ComponentPropsWithoutRef<typeof Input>
+>(({ children, ...props }, forwardedRef) => {
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
   const [results, setResults] = useState(null)
@@ -171,7 +179,7 @@ const GlobalSearch = (props) => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         css={{ pl: 48 }}
-        ref={props.inputRef}
+        ref={forwardedRef}
       />
 
       {showSearchBox && search.length > 3 && (results || searching) && (
@@ -202,6 +210,6 @@ const GlobalSearch = (props) => {
       )}
     </Box>
   )
-}
+})
 
 export default GlobalSearch
