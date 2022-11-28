@@ -9,15 +9,6 @@ import AppsList from 'components/AppsList'
 
 import Layout from 'components/Layout'
 import { useAccount } from 'wagmi'
-// function that takes an array of dates and returns the closest date to another given date
-const getClosestDate = (dates: Date[], date: Date) => {
-  return dates.reduce((prev, curr) => {
-    return Math.abs(curr.getTime() - date.getTime()) <
-      Math.abs(prev.getTime() - date.getTime())
-      ? curr
-      : prev
-  })
-}
 
 const IndexPage: NextPage = () => {
   const account = useAccount()
