@@ -3,7 +3,7 @@ import Box from './primitives/Box'
 import Flex from './primitives/Flex'
 import Text from './primitives/Text'
 import FormatEth from './FormatEth'
-import { formatNumber } from '../lib/numbers'
+import { formatNumber } from '../utils/numbers'
 
 type CollectionRowProps = {
   rank: string | number

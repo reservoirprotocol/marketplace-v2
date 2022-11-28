@@ -1,17 +1,11 @@
 import { NextPage } from 'next'
-import Box from '../../components/primitives/Box'
-import Flex from '../../components/primitives/Flex'
-import Switch from 'components/primitives/Switch'
-import Text from '../../components/primitives/Text'
+import { Text, Switch, Flex, Box } from '../../components/primitives'
 import {
   useCollections,
   useTokens,
   useAttributes,
 } from '@reservoir0x/reservoir-kit-ui'
-import { formatNumber } from 'lib/numbers'
-
-import truncateEthAddress from 'truncate-eth-address'
-
+import { formatNumber } from 'utils/numbers'
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
 import FormatEth from 'components/FormatEth'
@@ -30,6 +24,7 @@ import {
 
 import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useState } from 'react'
+import { truncateAddress } from 'utils/truncate'
 
 const AttributeSelector = ({ attribute }) => {
   const [open, setOpen] = useState(false)
@@ -229,7 +224,7 @@ const IndexPage: NextPage = () => {
                   )}
                 </Flex>
                 <Text style="body2" css={{ color: '$gray11' }} as="p">
-                  {truncateEthAddress(collection.id)}
+                  {truncateAddress(collection.id)}
                 </Text>
               </Box>
             </Flex>

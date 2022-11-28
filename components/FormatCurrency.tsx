@@ -1,5 +1,5 @@
 import { BigNumberish } from 'ethers'
-import { formatBN } from 'lib/numbers'
+import { formatBN } from 'utils/numbers'
 import { FC } from 'react'
 import Flex from './primitives/Flex'
 import Text from './primitives/Text'

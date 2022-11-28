@@ -1,4 +1,4 @@
-import { paths } from '@reservoir0x/client-sdk'
+import { paths } from '@reservoir0x/reservoir-kit-client'
 import { ApiResponse, Fetcher, TypedFetch } from 'openapi-typescript-fetch'
 
 export const fetcher = Fetcher.for<paths>()

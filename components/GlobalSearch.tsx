@@ -15,7 +15,7 @@ import {
   ElementRef,
   ComponentPropsWithoutRef,
 } from 'react'
-import { formatNumber } from 'lib/numbers'
+import { formatNumber } from 'utils/numbers'
 
 import { useDebounce } from 'usehooks-ts'
 

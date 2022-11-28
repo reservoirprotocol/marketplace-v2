@@ -3,7 +3,6 @@ const PAGE_SIZE = 20
 import { omitBy, isNil } from 'lodash'
 
 import useSWRInfinite from 'swr/infinite'
-import { isCommunityResourcable } from '@ethersproject/providers'
 
 const api = async (url: any, data: any = {}) => {
   let response = await fetch(
