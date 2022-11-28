@@ -1,50 +1,18 @@
 import { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import Box from '../components/primitives/Box'
-import Flex from '../components/primitives/Flex'
-import Text from '../components/primitives/Text'
-import Button from '../components/primitives/Button'
-
+import { useState } from 'react'
+import { Text, Box, Flex } from '../components/primitives'
 import Davatar from '@davatar/react'
-
 import { head } from 'lodash'
-import {
-  useAccount,
-  useEnsAddress,
-  useEnsAvatar,
-  useEnsName,
-  useProvider,
-} from 'wagmi'
-import ActivityFeed from '../components/ActivityFeed'
-import CollectionTable from '../components/CollectionTable'
-
-import TokenTable from '../components/TokenTable'
+import { useAccount, useEnsAddress, useEnsName } from 'wagmi'
+import ActivityFeed from '../components/portfolio/ActivityFeed'
+import CollectionTable from '../components/portfolio/CollectionTable'
+import TokenTable from '../components/portfolio/TokenTable'
 import Layout from 'components/Layout'
 
-function useIsMounted() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
-  return mounted
-}
-
-const IndexPage2 = () => {
-  let isMounted = useIsMounted()
-
-  if (isMounted) {
-  }
-
-  return null
-}
-
 const IndexPage: NextPage = () => {
-  const [search, setSearch] = useState('')
-  const [loading, setLoading] = useState(true)
   const [selectedTab, setSelectedTab] = useState('Tokens')
   const { address: me } = useAccount()
-  const provider = useProvider()
   const router = useRouter()
   const { address: addressQuery } = router.query
 
@@ -58,7 +26,6 @@ const IndexPage: NextPage = () => {
     (routeAddress && /.*\.eth$/.test(routeAddress)
       ? ensAddress
       : routeAddress) || me
-  const isMe = address == me
 
   const { data: ensName } = useEnsName({
     address: me,
@@ -66,11 +33,6 @@ const IndexPage: NextPage = () => {
     onSettled: console.log,
   })
 
-  console.log(ensName)
-
-  const { data: avatar } = useEnsAvatar({
-    addressOrName: address,
-  })
   if (!address) {
     return null
   }

@@ -1,17 +1,10 @@
 import { useState, useEffect } from 'react'
-import { styled } from '../stitches.config'
-import useUserCollections from '../hooks/useUserCollections'
+import { styled } from '../../stitches.config'
+import useUserCollections from '../../hooks/useUserCollections'
 import { useUserTopBids } from '@reservoir0x/reservoir-kit-ui'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useMediaQuery } from 'react-responsive'
-import {
-  Flex,
-  Box,
-  Text,
-  Value,
-  Button,
-  Tooltip,
-} from '../components/primitives'
+import { Flex, Box, Text, Value, Button, Tooltip } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBoltLightning,
@@ -22,7 +15,7 @@ import {
   faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons'
 import { Table, Thead, TR } from './CollectionTable'
-import round from '../utils/round'
+import round from '../../utils/round'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -505,7 +498,11 @@ const TokenTable = ({ address }: any) => {
     fetchNextPage,
     hasNextPage,
     isFetchingPage,
-  } = useUserTopBids(address, selectedCollection?.collection?.id)
+  } = useUserTopBids(address, {
+    sortDirection: 'desc',
+    collection: selectedCollection?.collection?.id,
+    limit: 20,
+  })
 
   const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
 

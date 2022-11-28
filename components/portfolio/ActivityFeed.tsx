@@ -1,4 +1,4 @@
-import { Text, Flex, Box } from '../components/primitives'
+import { Text, Flex, Box } from '../primitives'
 import {
   faArrowRight,
   faHand,
@@ -7,7 +7,7 @@ import {
   faTag,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useUserActivity from '../hooks/useUserActivity'
+import useUserActivity from '../../hooks/useUserActivity'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import useTimeSince from 'hooks/useTimeSince'
 
