@@ -24,7 +24,7 @@ import { FC } from 'react'
 const { chains, provider } = configureChains(
   [chain.mainnet, chain.rinkeby],
   [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
     publicProvider(),
   ]
 )
