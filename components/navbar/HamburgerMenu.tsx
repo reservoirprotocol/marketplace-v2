@@ -3,7 +3,6 @@ import { Box, Button, Flex } from 'components/primitives'
 import { Dialog } from 'components/primitives/Dialog'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useTheme } from 'next-themes'
 import Link from 'next/link'
 
 const HamburgerMenu = () => {

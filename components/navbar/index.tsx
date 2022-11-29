@@ -13,7 +13,7 @@ import { useMediaQuery } from 'react-responsive'
 
 const Navbar = () => {
   const { theme } = useTheme()
-  const isMobile = useMediaQuery({ query: '(max-width: 820px)' })
+  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   let searchRef = useRef<HTMLInputElement>()
 
@@ -105,9 +105,11 @@ const Navbar = () => {
         </Flex>
       </Box>
 
-      <Flex css={{ gap: '$5', maxWidth: '185px' }} justify="end" align="center">
+      <Flex css={{ gap: '$5' }} justify="end" align="center">
         <ThemeSwitcher />
-        <ConnectWalletButton />
+        <Box css={{ maxWidth: '185px' }}>
+          <ConnectWalletButton />
+        </Box>
       </Flex>
     </Flex>
   )

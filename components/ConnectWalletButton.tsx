@@ -59,7 +59,6 @@ export const ConnectWalletButton: FC<Props> = () => {
                       seed={jsNumberForAddress(account.address)}
                     />
                   )}
-                  {/* {account.displayName} */}
                 </Button>
               )
             })()}
