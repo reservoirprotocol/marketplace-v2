@@ -10,10 +10,12 @@ import ThemeSwitcher from './ThemeSwitcher'
 import { useTheme } from 'next-themes'
 import HamburgerMenu from './HamburgerMenu'
 import { useMediaQuery } from 'react-responsive'
+import { useMounted } from '../../hooks'
 
 const Navbar = () => {
   const { theme } = useTheme()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
+  const isMounted = useMounted()
 
   let searchRef = useRef<HTMLInputElement>()
 
@@ -23,6 +25,10 @@ const Navbar = () => {
       searchRef?.current?.focus()
     }
   })
+
+  if (!isMounted) {
+    return null
+  }
 
   return isMobile ? (
     <Flex
