@@ -1,5 +1,11 @@
 import { NextPage } from 'next'
-import { Text, Switch, Flex, Box } from '../../components/primitives'
+import {
+  Text,
+  Switch,
+  Flex,
+  Box,
+  FormatCryptoCurrency,
+} from '../../components/primitives'
 import {
   useCollections,
   useTokens,
@@ -8,8 +14,6 @@ import {
 import { formatNumber } from 'utils/numbers'
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
-import FormatEth from 'components/FormatEth'
-import FormatWEth from 'components/FormatWEth'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCertificate,
@@ -21,7 +25,6 @@ import {
   faChevronUp,
   faChevronDown,
 } from '@fortawesome/free-solid-svg-icons'
-
 import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
@@ -151,10 +154,11 @@ const TokenCard = ({ token }) => (
 
       <Flex align="center" css={{ gap: '$2' }}>
         <Box css={{ flex: 1 }}>
-          <FormatEth
+          <FormatCryptoCurrency
             logoWidth={11}
             css={{ fontSize: 16, fontWeight: 600, color: 'white' }}
-            amount={token.market?.floorAsk?.price?.amount.native}
+            amount={token.market?.floorAsk?.price?.amount?.decimal}
+            address={token.market?.floorAsk?.price?.currency?.contract}
           />
         </Box>
         <img
@@ -240,18 +244,22 @@ const IndexPage: NextPage = () => {
                 }}
               >
                 <StatBox label="Floor">
-                  <FormatEth
-                    amount={collection?.floorAsk?.price?.amount?.native}
+                  <FormatCryptoCurrency
+                    amount={collection?.floorAsk?.price?.amount?.decimal}
+                    address={collection?.floorAsk?.price?.currency.contract}
+                    decimals={collection?.floorAsk?.price?.currency.decimals}
                     logoWidth={10}
-                    css={{ fontSize: 16 }}
+                    textStyle={'body1'}
                   />
                 </StatBox>
 
                 <StatBox label="Top Bid">
-                  <FormatWEth
-                    amount={collection?.topBid?.price?.amount?.native}
+                  <FormatCryptoCurrency
+                    amount={collection?.topBid?.price?.amount?.decimal}
+                    address={collection?.topBid?.price?.currency.contract}
+                    decimals={collection?.topBid?.price?.currency.decimals}
                     logoWidth={10}
-                    css={{ fontSize: 16 }}
+                    textStyle={'body1'}
                   />
                 </StatBox>
 
