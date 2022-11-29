@@ -44,8 +44,6 @@ export const ConnectWalletButton: FC<Props> = () => {
                 <Button
                   css={{
                     justifyContent: 'center',
-                    width: '44px',
-                    height: '44px',
                   }}
                   corners="circle"
                   onClick={openAccountModal}

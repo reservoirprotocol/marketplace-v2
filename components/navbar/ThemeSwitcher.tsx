@@ -8,28 +8,19 @@ const ThemeSwitcher = () => {
 
   return (
     <Box>
-      {theme == 'dark' && (
-        <Button
-          css={{ justifyContent: 'center', width: '44px', height: '44px' }}
-          type="button"
-          onClick={() => setTheme('light')}
-          size="small"
-          color="gray3"
-        >
+      <Button
+        css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+        type="button"
+        onClick={() => (theme == 'dark' ? setTheme('light') : setTheme('dark'))}
+        size="small"
+        color="gray3"
+      >
+        {theme == 'dark' ? (
           <FontAwesomeIcon icon={faMoon} width={16} height={16} />
-        </Button>
-      )}
-      {theme == 'light' && (
-        <Button
-          css={{ justifyContent: 'center', width: '44px', height: '44px' }}
-          type="button"
-          onClick={() => setTheme('dark')}
-          size="small"
-          color="gray3"
-        >
+        ) : (
           <FontAwesomeIcon icon={faSun} width={16} height={16} />
-        </Button>
-      )}
+        )}
+      </Button>
     </Box>
   )
 }

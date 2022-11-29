@@ -106,7 +106,9 @@ const Navbar = () => {
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
-            <NavItem active={false}>Docs</NavItem>
+            <Link href="https://docs.reservoir.tools/docs">
+              <NavItem active={false}>Docs</NavItem>
+            </Link>
           </Flex>
         </Flex>
       </Box>

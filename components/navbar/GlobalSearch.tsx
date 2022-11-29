@@ -1,7 +1,4 @@
-import Box from '../primitives/Box'
-import Text from '../primitives/Text'
-import Flex from '../primitives/Flex'
-import Input from '../primitives/Input'
+import { Box, Text, Flex, Input } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faCopy } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,8 +6,6 @@ import {
   useEffect,
   useState,
   useRef,
-  RefObject,
-  MutableRefObject,
   forwardRef,
   ElementRef,
   ComponentPropsWithoutRef,
