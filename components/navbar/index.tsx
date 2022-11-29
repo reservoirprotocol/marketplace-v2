@@ -28,7 +28,7 @@ const Navbar = () => {
     <Flex
       css={{
         py: '$4',
-        px: '$5',
+        px: '$4',
         width: '100%',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
