@@ -35,7 +35,7 @@ const envChain = allChains.find(
 const { chains, provider } = configureChains(
   [envChain],
   [
-    alchemyProvider({ alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
     publicProvider(),
   ]
 )

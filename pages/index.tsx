@@ -3,27 +3,27 @@ import Box from '../components/primitives/Box'
 import Flex from '../components/primitives/Flex'
 import Text from '../components/primitives/Text'
 import Button from 'components/primitives/Button'
-
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
-import AppsList from 'components/home/AppsList'
-
 import Layout from 'components/Layout'
 import { useAccount } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { useMounted } from 'hooks'
 
 const IndexPage: NextPage = () => {
-  const account = useAccount()
+  const { isConnected } = useAccount()
+  const mounted = useMounted()
 
   return (
     <Layout>
       <Box css={{ padding: '$6', height: '100%' }}>
-        {account && account.address ? (
+        {mounted && isConnected && (
           <Flex css={{ textAlign: 'center' }} align="center" direction="column">
             <Text style="h2" css={{ mb: '$4', mt: '$4', fontSize: 42 }} as="h2">
               Discover, Buy, and Sell NFTs
             </Text>
           </Flex>
-        ) : (
+        )}
+        {mounted && !isConnected && (
           <Flex css={{ textAlign: 'center' }} align="center" direction="column">
             <Text style="h2" css={{ mb: '$4', mt: '$6', fontSize: 58 }} as="h2">
               Discover, Buy, and Sell NFTs
@@ -57,13 +57,6 @@ const IndexPage: NextPage = () => {
             Trending Collections
           </Text>
           <TrendingCollectionsList />
-        </Box>
-
-        <Box css={{ pb: '$6' }}>
-          <Text style="h4" as="h4" css={{ mb: '$5' }}>
-            Featured Apps
-          </Text>
-          <AppsList />
         </Box>
       </Box>
     </Layout>

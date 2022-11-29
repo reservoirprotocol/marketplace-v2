@@ -13,7 +13,11 @@ export const ConnectWalletButton: FC<Props> = () => {
       {({ account, chain, openAccountModal, openConnectModal, mounted }) => {
         return (
           <Box
-            style={{ flex: '1', display: 'flex', justifyContent: 'flex' }}
+            style={{
+              flex: '1',
+              display: 'flex',
+              justifyContent: 'flex',
+            }}
             {...(!mounted && {
               'aria-hidden': true,
               style: {
@@ -38,9 +42,10 @@ export const ConnectWalletButton: FC<Props> = () => {
               }
               return (
                 <Button
-                  css={{ flex: 1, justifyContent: 'center' }}
-                  corners="pill"
-                  color="gray3"
+                  css={{
+                    justifyContent: 'center',
+                  }}
+                  corners="circle"
                   onClick={openAccountModal}
                   type="button"
                 >
@@ -48,11 +53,10 @@ export const ConnectWalletButton: FC<Props> = () => {
                     <Avatar size="small" src={account.ensAvatar} />
                   ) : (
                     <Jazzicon
-                      diameter={24}
+                      diameter={44}
                       seed={jsNumberForAddress(account.address)}
                     />
                   )}
-                  {account.displayName}
                 </Button>
               )
             })()}

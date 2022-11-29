@@ -154,7 +154,7 @@ const TokenCard = ({ token }) => (
           <FormatEth
             logoWidth={11}
             css={{ fontSize: 16, fontWeight: 600, color: 'white' }}
-            amount={token.market.floorAsk.price.amount.native}
+            amount={token.market?.floorAsk?.price?.amount.native}
           />
         </Box>
         <img

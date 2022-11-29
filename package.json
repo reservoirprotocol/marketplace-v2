@@ -8,16 +8,16 @@
   },
   "dependencies": {
     "@davatar/react": "^1.11.1",
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-brands-svg-icons": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
-    "@fortawesome/react-fontawesome": "^0.1.18",
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@radix-ui/react-dialog": "^0.1.7",
     "@radix-ui/react-dropdown-menu": "^0.1.6",
     "@radix-ui/react-switch": "^0.1.5",
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "^0.7.1",
-    "@reservoir0x/reservoir-kit-ui": "^0.5.8",
+    "@reservoir0x/reservoir-kit-ui": "0.6.1",
     "@types/lodash": "^4.14.189",
     "dayjs": "^1.11.6",
     "ethers": "^5.6.9",
@@ -33,7 +33,7 @@
     "react-responsive": "^9.0.0",
     "swr": "2.0.0-rc.3",
     "usehooks-ts": "^2.9.1",
-    "wagmi": "^0.5.5"
+    "wagmi": "^0.7"
   },
   "prettier": {
     "semi": false,

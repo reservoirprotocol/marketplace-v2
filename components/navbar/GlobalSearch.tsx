@@ -1,7 +1,4 @@
-import Box from './primitives/Box'
-import Text from './primitives/Text'
-import Flex from './primitives/Flex'
-import Input from './primitives/Input'
+import { Box, Text, Flex, Input } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faCopy } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,8 +6,6 @@ import {
   useEffect,
   useState,
   useRef,
-  RefObject,
-  MutableRefObject,
   forwardRef,
   ElementRef,
   ComponentPropsWithoutRef,
@@ -152,6 +147,8 @@ const GlobalSearch = forwardRef<
           position: 'absolute',
           top: '50%',
           left: '$4',
+          width: '16px',
+          height: '16px',
           zIndex: 2,
           transform: 'translate(0, -50%)',
           color: '$gray11',
