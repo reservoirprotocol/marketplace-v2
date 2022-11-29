@@ -59,15 +59,15 @@ const AnimatedContent = forwardRef<
       transition={{ type: 'spring', duration: 0.5 }}
       initial={{
         opacity: 0,
-        top: '14%',
+        // top: '14%',
       }}
       animate={{
         opacity: 1,
-        top: '9%',
+        // top: '9%',
       }}
       exit={{
         opacity: 0,
-        top: '14%',
+        // top: '14%',
       }}
     >
       {children}

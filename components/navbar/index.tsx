@@ -8,9 +8,13 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
 import { useTheme } from 'next-themes'
+import HamburgerMenu from './HamburgerMenu'
+import { useMediaQuery } from 'react-responsive'
 
 const Navbar = () => {
   const { theme } = useTheme()
+  const isMobile = useMediaQuery({ query: '(max-width: 820px)' })
+
   let searchRef = useRef<HTMLInputElement>()
 
   const router = useRouter()
@@ -20,7 +24,38 @@ const Navbar = () => {
     }
   })
 
-  return (
+  return isMobile ? (
+    <Flex
+      css={{
+        py: '$4',
+        px: '$5',
+        width: '100%',
+        borderBottom: '1px solid $gray4',
+        zIndex: 999,
+        background: '$slate1',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+      }}
+      align="center"
+      justify="between"
+    >
+      <Box css={{ flex: 1 }}>
+        <Flex align="center">
+          <Link href="/">
+            <Box css={{ width: 34, cursor: 'pointer' }}>
+              <img src="/reservoirLogo.svg" style={{ width: '100%' }} />
+            </Box>
+          </Link>
+        </Flex>
+      </Box>
+      <Flex align="center" css={{ gap: '$4' }}>
+        <ThemeSwitcher />
+        <HamburgerMenu />
+      </Flex>
+    </Flex>
+  ) : (
     <Flex
       css={{
         py: '$4',
@@ -44,7 +79,10 @@ const Navbar = () => {
               {theme == 'dark' ? (
                 <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
               ) : (
-                <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
+                <img
+                  src="/reservoirMarketLogoLight.svg"
+                  style={{ width: '100%' }}
+                />
               )}
             </Box>
           </Link>
