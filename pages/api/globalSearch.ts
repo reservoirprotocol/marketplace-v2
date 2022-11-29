@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 
-import api from '../../lib/api'
+import api from '../../utils/api'
 
 export const config = {
   runtime: 'experimental-edge',

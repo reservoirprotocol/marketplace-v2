@@ -23,22 +23,22 @@ type Props = {
 }
 
 const Layout: FC<Props> = ({
-  title = 'Superset',
-  keywords = 'Superset, Reservoir, API, Marketplace',
-  description = 'Superset',
+  title = 'Reservoir Hub',
+  keywords = 'Reservoir, API, Marketplace, NFT',
+  description = 'Discover, Buy, and Sell NFTs',
   favicon = '/favicon.ico',
   twitterImage,
   twitterSiteDomain,
   twitterUrl,
-  twitterTitle = 'Superset',
-  twitterDescription = 'Superset',
+  twitterTitle = 'Reservoir',
+  twitterDescription = 'Reservoir',
   twitterSite,
-  ogTitle = 'Superset',
-  ogDescription = 'Superset',
-  ogSiteName = 'Superset',
+  ogTitle = 'Reservoir',
+  ogDescription = 'Reservoir',
+  ogSiteName = 'Reservoir',
   ogUrl,
   ogImage,
-  ogImageAlt = 'Superset',
+  ogImageAlt = 'Reservoir',
   children,
 }) => {
   return (

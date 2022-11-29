@@ -8,7 +8,14 @@ import {
   getDefaultWallets,
   darkTheme as rainbowDarkTheme,
 } from '@rainbow-me/rainbowkit'
-import { WagmiConfig, createClient, configureChains, chain } from 'wagmi'
+import {
+  WagmiConfig,
+  createClient,
+  configureChains,
+  chain,
+  allChains,
+  chainId,
+} from 'wagmi'
 
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
@@ -21,8 +28,12 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC } from 'react'
 
+const envChain = allChains.find(
+  (chain) => chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || chainId.mainnet)
+)
+
 const { chains, provider } = configureChains(
-  [chain.mainnet, chain.rinkeby],
+  [envChain],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
     publicProvider(),
@@ -30,7 +41,7 @@ const { chains, provider } = configureChains(
 )
 
 const { connectors } = getDefaultWallets({
-  appName: 'Superset',
+  appName: 'Reservoir Hub',
   chains,
 })
 
@@ -75,6 +86,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             options={{
               apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
               apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
+              source: 'reservoir.hub',
             }}
             theme={theme}
           >

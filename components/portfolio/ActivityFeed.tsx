@@ -1,19 +1,15 @@
-import { Text, Flex, Box } from '../components/primitives'
-import moment from 'moment'
-
+import { Text, Flex, Box } from '../primitives'
 import {
   faArrowRight,
   faHand,
-  faLayerGroup,
   faMoneyBillWave,
-  faRemove,
   faStar,
   faTag,
-  faTimes,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useUserActivity from '../hooks/useUserActivity'
+import useUserActivity from '../../hooks/useUserActivity'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
+import useTimeSince from 'hooks/useTimeSince'
 
 const shortenAddress = (address: string) => {
   return address.slice(0, 4) + '...' + address.slice(-4 - 1)
@@ -173,7 +169,7 @@ const Activity = ({ activity, address }: any) => {
           </Box>
         </Flex>
         <Text css={{ color: '$gray11' }} style="body2">
-          {moment.unix(activity.timestamp).fromNow()}
+          {useTimeSince(activity.timestamp)}
         </Text>
       </Box>
     </Flex>

@@ -1,30 +1,21 @@
 import { useState, useEffect } from 'react'
-
-import { styled } from '../stitches.config'
-import useUserCollections from '../hooks/useUserCollections'
-import useUserTopBids from '../hooks/useUserTopBids'
+import { styled } from '../../stitches.config'
+import useUserCollections from '../../hooks/useUserCollections'
+import { useUserTopBids } from '@reservoir0x/reservoir-kit-ui'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useMediaQuery } from 'react-responsive'
-import {
-  Flex,
-  Box,
-  Text,
-  Value,
-  Button,
-  Tooltip,
-} from '../components/primitives'
+import { Flex, Box, Text, Value, Button, Tooltip } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBoltLightning,
   faEllipsisH,
   faInfoCircle,
   faRemove,
-  faTag,
   faCircleMinus,
   faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons'
 import { Table, Thead, TR } from './CollectionTable'
-import round from '../lib/round'
+import round from '../../utils/round'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 
 import {
@@ -375,53 +366,9 @@ const TokenRow = ({ token, owner, topBid, isMe }: any) => {
     </TR>
   ) : null
 }
-const formatImage = async (image: string, banner: string) => {
-  if (/(.)+\.svg$/g.test(image)) {
-    return banner
-  } else {
-    return image
-  }
-}
 
 const CollectionBlock = ({ collection: data, onSelect, isSelected }: any) => {
-  const [imageOverride, setImageOverride] = useState('')
   const { collection, ownership } = data
-
-  useEffect(() => {
-    const checkImage = async () => {
-      let cachedImage = localStorage.getItem('imageOverride:' + collection.id)
-      cachedImage = null
-
-      if (cachedImage) {
-        return setImageOverride(cachedImage)
-      }
-
-      if (collection.image) {
-        try {
-          const { url: imageHref } = await fetch(collection.image)
-
-          let url = new URL(imageHref)
-          // Optimize google images
-          if (url.host === 'lh3.googleusercontent.com') {
-            let newUrl = null
-            if (imageHref.includes('=s') || imageHref.includes('=w')) {
-              let newImage = imageHref.split('=')
-              newUrl = `${newImage[0]}=w${320}-rp`
-            } else {
-              newUrl = `${imageHref}=w${320}-rp`
-            }
-
-            localStorage.setItem('imageOverride:' + collection.id, newUrl)
-            setImageOverride(newUrl)
-          }
-        } catch (err) {
-          console.log(err)
-        }
-      }
-    }
-
-    //checkImage();
-  }, [])
 
   return (
     <Flex
@@ -458,7 +405,7 @@ const CollectionBlock = ({ collection: data, onSelect, isSelected }: any) => {
 
       <Box css={{ p: '$3' }}>
         <img
-          src={imageOverride || collection.image}
+          src={collection.image}
           style={{
             width: 40,
             height: 40,
@@ -547,12 +494,15 @@ const TokenTable = ({ address }: any) => {
   const isMe = me === address
   const {
     data: tokens,
-    setSize,
-    size,
-    isFinished,
-    isLoading,
     mutate,
-  } = useUserTopBids(address, selectedCollection?.collection?.id)
+    fetchNextPage,
+    hasNextPage,
+    isFetchingPage,
+  } = useUserTopBids(address, {
+    sortDirection: 'desc',
+    collection: selectedCollection?.collection?.id,
+    limit: 20,
+  })
 
   const isMobile = useMediaQuery({ query: '(max-width: 720px)' })
 
@@ -560,10 +510,10 @@ const TokenTable = ({ address }: any) => {
 
   const [sentryRef] = useInfiniteScroll({
     rootMargin: '0px 0px 800px 0px',
-    loading: isLoading,
-    hasNextPage: !isFinished,
+    loading: isFetchingPage,
+    hasNextPage,
     onLoadMore: () => {
-      setSize(size + 1)
+      fetchNextPage()
     },
   } as any)
 
@@ -578,23 +528,20 @@ const TokenTable = ({ address }: any) => {
     <>
       <Box>
         {tokens &&
-          tokens
-
-            //.filter(token => !!token.token.image && !!token.token.name)
-            .map((token: any) => {
-              return (
-                <TokenListItem
-                  key={token.token.tokenId + token.token.contract}
-                  token={token}
-                  topBid={token?.value}
-                  owner={address}
-                  isMe={isMe}
-                />
-              )
-            })}
+          tokens.map((token: any) => {
+            return (
+              <TokenListItem
+                key={token.token.tokenId + token.token.contract}
+                token={token}
+                topBid={token?.value}
+                owner={address}
+                isMe={isMe}
+              />
+            )
+          })}
       </Box>
 
-      {!isLoading && !isFinished && (
+      {isFetchingPage && (
         <div ref={sentryRef}>
           <div className="flex justify-center">loading</div>
         </div>
@@ -774,24 +721,21 @@ const TokenTable = ({ address }: any) => {
         </Thead>
         <tbody>
           {tokens &&
-            tokens
-
-              //.filter(token => !!token.token.image && !!token.token.name)
-              .map((token: any) => {
-                return (
-                  <TokenRow
-                    key={token.token.tokenId + token.token.contract}
-                    token={token}
-                    topBid={token?.price}
-                    owner={address}
-                    isMe={isMe}
-                  />
-                )
-              })}
+            tokens.map((token: any) => {
+              return (
+                <TokenRow
+                  key={token.token.tokenId + token.token.contract}
+                  token={token}
+                  topBid={token?.price}
+                  owner={address}
+                  isMe={isMe}
+                />
+              )
+            })}
         </tbody>
       </Table>
 
-      {!isLoading && !isFinished && (
+      {isFetchingPage && (
         <div ref={sentryRef}>
           <div className="flex justify-center">loading</div>
         </div>

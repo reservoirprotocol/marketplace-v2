@@ -1,6 +1,5 @@
-import useSWR from 'swr'
 import { omitBy, isNil } from 'lodash'
-import api from '../lib/api'
+import api from '../utils/api'
 
 import useSWRInfinite from 'swr/infinite'
 const PAGE_SIZE = 20

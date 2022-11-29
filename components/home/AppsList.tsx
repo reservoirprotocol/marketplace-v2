@@ -1,7 +1,7 @@
 import React from 'react'
-import Box from './primitives/Box'
-import Flex from './primitives/Flex'
-import Text from './primitives/Text'
+import Box from '../primitives/Box'
+import Flex from '../primitives/Flex'
+import Text from '../primitives/Text'
 
 const AppBlock = ({ image, logo, description }) => (
   <Flex
