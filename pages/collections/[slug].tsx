@@ -11,23 +11,18 @@ import {
   useTokens,
   useAttributes,
 } from '@reservoir0x/reservoir-kit-ui'
-import { formatNumber } from 'utils/numbers'
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faCertificate,
-  faCheck,
-  faGlobe,
-  faRefresh,
-  faArrowUpRightFromSquare,
   faFlag,
   faChevronUp,
   faChevronDown,
 } from '@fortawesome/free-solid-svg-icons'
-import { faTwitter, faDiscord } from '@fortawesome/free-brands-svg-icons'
 import { useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
+import StatHeader from 'components/collections/StatHeader'
+import CollectionActions from 'components/collections/CollectionActions'
 
 const AttributeSelector = ({ attribute }) => {
   const [open, setOpen] = useState(false)
@@ -77,21 +72,6 @@ const AttributeSelector = ({ attribute }) => {
     </Box>
   )
 }
-
-const StatBox = ({ label, children }) => (
-  <Box
-    css={{
-      px: '$3',
-      py: '$2',
-      minWidth: 110,
-    }}
-  >
-    <Text style="body2" css={{ color: '$gray11', mb: 2 }} as="p">
-      {label}
-    </Text>
-    {children}
-  </Box>
-)
 
 const TokenCard = ({ token }) => (
   <Box
@@ -189,141 +169,33 @@ const IndexPage: NextPage = () => {
     collection: collection?.id,
   })
 
-  //const { data: traits } = useTraits(collection?.id)
   let { data: attributes } = useAttributes(collection?.id)
 
   return (
     <Layout>
       {collection ? (
         <Box css={{ p: '$5', pb: 0 }}>
-          <Flex align="center">
-            <Flex css={{ gap: '$4', flex: 1 }} align="center">
-              <img
-                src={collection.image}
-                style={{ width: 60, height: 60, borderRadius: 8 }}
-              />
-              <Box>
-                <Flex align="center">
-                  <Text style="h5" as="h6">
-                    {collection.name}
+          <Flex justify="between">
+            <Flex direction="column" css={{ gap: '$4' }}>
+              <Flex css={{ gap: '$4', flex: 1 }} align="center">
+                <img
+                  src={collection.image}
+                  style={{ width: 64, height: 64, borderRadius: 8 }}
+                />
+                <Box>
+                  <Flex align="center">
+                    <Text style="h5" as="h6">
+                      {collection.name}
+                    </Text>
+                  </Flex>
+                  <Text style="body2" css={{ color: '$gray11' }} as="p">
+                    {truncateAddress(collection.id)}
                   </Text>
-                  {collection.openseaVerificationStatus === 'verified' && (
-                    <Box
-                      css={{ color: '$accent', ml: '$2', position: 'relative' }}
-                    >
-                      <FontAwesomeIcon icon={faCertificate} />
-                      <Box
-                        css={{
-                          color: 'white',
-                          position: 'absolute',
-                          left: '50%',
-                          top: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          fontSize: 14,
-                        }}
-                      >
-                        <FontAwesomeIcon icon={faCheck} size="xs" />
-                      </Box>
-                    </Box>
-                  )}
-                </Flex>
-                <Text style="body2" css={{ color: '$gray11' }} as="p">
-                  {truncateAddress(collection.id)}
-                </Text>
-              </Box>
-            </Flex>
-
-            <Flex css={{ flex: 1 }} align="center" justify="center">
-              <Flex
-                css={{
-                  background: '$gray4',
-                  borderRadius: 8,
-                  '& > div': {
-                    borderRight: '1px solid $gray1',
-                  },
-                }}
-              >
-                <StatBox label="Floor">
-                  <FormatCryptoCurrency
-                    amount={collection?.floorAsk?.price?.amount?.decimal}
-                    address={collection?.floorAsk?.price?.currency.contract}
-                    decimals={collection?.floorAsk?.price?.currency.decimals}
-                    logoWidth={10}
-                    textStyle={'body1'}
-                  />
-                </StatBox>
-
-                <StatBox label="Top Bid">
-                  <FormatCryptoCurrency
-                    amount={collection?.topBid?.price?.amount?.decimal}
-                    address={collection?.topBid?.price?.currency.contract}
-                    decimals={collection?.topBid?.price?.currency.decimals}
-                    logoWidth={10}
-                    textStyle={'body1'}
-                  />
-                </StatBox>
-
-                <StatBox label="Count">
-                  <Text style="subtitle1">
-                    {formatNumber(collection?.tokenCount)}
-                  </Text>
-                </StatBox>
-
-                <StatBox label="On Sale">
-                  <Text style="subtitle1">
-                    {formatNumber(collection?.onSaleCount)}
-                  </Text>
-                </StatBox>
-
-                <StatBox label="Royalties">
-                  <Text style="subtitle1">
-                    {(Number(collection?.royalties?.bps) || 0) / 100 + '%'}
-                  </Text>
-                </StatBox>
-
-                <StatBox label="7D Change">
-                  <Text style="subtitle1">
-                    {formatNumber(collection.volumeChange['7day'], 1) + '%'}
-                  </Text>
-                </StatBox>
+                </Box>
               </Flex>
+              <StatHeader collection={collection} />
             </Flex>
-            <Flex
-              css={{
-                flex: 1,
-                gap: '$4',
-                color: '$gray11',
-                '& > div': {
-                  cursor: 'pointer',
-                  transition: 'color 200ms ease-in-out',
-                },
-
-                '& > div:hover': {
-                  color: '$gray12',
-                },
-              }}
-              justify="end"
-            >
-              <Box>
-                <FontAwesomeIcon icon={faTwitter} size="lg" />
-              </Box>
-
-              <Box>
-                <FontAwesomeIcon icon={faDiscord} size="lg" />
-              </Box>
-
-              <Box>
-                <FontAwesomeIcon icon={faGlobe} size="lg" />
-              </Box>
-              <Text css={{ color: '$gray9' }}>|</Text>
-              <Box>
-                <FontAwesomeIcon icon={faArrowUpRightFromSquare} size="lg" />
-              </Box>
-
-              <Box>
-                <FontAwesomeIcon icon={faRefresh} size="lg" />
-              </Box>
-            </Flex>
+            <CollectionActions collection={collection} />
           </Flex>
 
           <Flex
