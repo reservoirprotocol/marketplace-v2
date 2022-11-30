@@ -13,7 +13,7 @@ const FormatCurrency: FC<ComponentPropsWithoutRef<typeof Text> & Props> = ({
   currency = 'USD',
   ...props
 }) => {
-  const [formattedValue, setFormattedValue] = useState('')
+  const [formattedValue, setFormattedValue] = useState('-')
 
   useEffect(() => {
     if (amount) {
@@ -23,7 +23,7 @@ const FormatCurrency: FC<ComponentPropsWithoutRef<typeof Text> & Props> = ({
       }).format(+amount)
       setFormattedValue(formatted)
     } else {
-      setFormattedValue('')
+      setFormattedValue('-')
     }
   }, [amount, maximumFractionDigits])
 

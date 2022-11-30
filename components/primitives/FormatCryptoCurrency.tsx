@@ -4,7 +4,7 @@ import { constants } from 'ethers'
 import CryptoCurrencyIcon from './CryptoCurrencyIcon'
 
 type FormatCryptoCurrencyProps = {
-  logoWidth?: number
+  logoHeight?: number
   address?: string
 }
 
@@ -14,7 +14,7 @@ const FormatCryptoCurrency: FC<Props> = ({
   amount,
   address = constants.AddressZero,
   maximumFractionDigits,
-  logoWidth = 8,
+  logoHeight = 8,
   textStyle,
   css,
   textColor,
@@ -29,7 +29,7 @@ const FormatCryptoCurrency: FC<Props> = ({
       maximumFractionDigits={maximumFractionDigits}
       decimals={decimals}
     >
-      <CryptoCurrencyIcon css={{ height: logoWidth }} address={address} />
+      <CryptoCurrencyIcon css={{ height: logoHeight }} address={address} />
     </FormatCrypto>
   )
 }

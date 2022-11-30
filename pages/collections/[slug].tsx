@@ -155,7 +155,7 @@ const TokenCard = ({ token }) => (
       <Flex align="center" css={{ gap: '$2' }}>
         <Box css={{ flex: 1 }}>
           <FormatCryptoCurrency
-            logoWidth={11}
+            logoHeight={11}
             css={{ fontSize: 16, fontWeight: 600, color: 'white' }}
             amount={token.market?.floorAsk?.price?.amount?.decimal}
             address={token.market?.floorAsk?.price?.currency?.contract}
@@ -248,7 +248,7 @@ const IndexPage: NextPage = () => {
                     amount={collection?.floorAsk?.price?.amount?.decimal}
                     address={collection?.floorAsk?.price?.currency.contract}
                     decimals={collection?.floorAsk?.price?.currency.decimals}
-                    logoWidth={10}
+                    logoHeight={10}
                     textStyle={'body1'}
                   />
                 </StatBox>
@@ -258,7 +258,7 @@ const IndexPage: NextPage = () => {
                     amount={collection?.topBid?.price?.amount?.decimal}
                     address={collection?.topBid?.price?.currency.contract}
                     decimals={collection?.topBid?.price?.currency.decimals}
-                    logoWidth={10}
+                    logoHeight={10}
                     textStyle={'body1'}
                   />
                 </StatBox>
