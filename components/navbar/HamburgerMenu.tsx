@@ -1,4 +1,3 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Box,
   Button,
@@ -20,6 +19,7 @@ import {
   faRightFromBracket,
   faCopy,
 } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import {
