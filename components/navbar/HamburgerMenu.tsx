@@ -166,6 +166,7 @@ const HamburgerMenu = () => {
             <FormatCryptoCurrency
               amount={balance?.value}
               textStyle="subtitle1"
+              logoHeight={14}
             />
           </Flex>
           <Flex
