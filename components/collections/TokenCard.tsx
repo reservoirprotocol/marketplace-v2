@@ -54,7 +54,7 @@ export default ({ token }: TokenCardProps) => (
       <Flex align="center" css={{ gap: '$2' }}>
         <Box css={{ flex: 1 }}>
           <FormatCryptoCurrency
-            logoWidth={11}
+            logoHeight={11}
             css={{ fontSize: 16, fontWeight: 600, color: 'white' }}
             amount={token.market?.floorAsk?.price?.amount?.decimal}
             address={token.market?.floorAsk?.price?.currency?.contract}

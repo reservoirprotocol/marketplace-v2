@@ -42,7 +42,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
           amount={collection?.floorAsk?.price?.amount?.decimal}
           address={collection?.floorAsk?.price?.currency.contract}
           decimals={collection?.floorAsk?.price?.currency.decimals}
-          logoWidth={18}
+          logoHeight={18}
           textStyle={'h6'}
         />
       </StatBox>
@@ -52,7 +52,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
           amount={collection?.topBid?.price?.amount?.decimal}
           address={collection?.topBid?.price?.currency.contract}
           decimals={collection?.topBid?.price?.currency.decimals}
-          logoWidth={18}
+          logoHeight={18}
           textStyle={'h6'}
         />
       </StatBox>
