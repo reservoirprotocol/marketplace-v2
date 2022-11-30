@@ -1,8 +1,5 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import Box from '../primitives/Box'
-import Flex from '../primitives/Flex'
-import Text from '../primitives/Text'
-import FormatEth from '../FormatEth'
+import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
 import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
 
@@ -29,7 +26,11 @@ const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
             <Text css={{ mr: '$1', color: '$gray11' }} as="p" style="body2">
               Floor
             </Text>
-            <FormatEth amount={collection?.floorAsk?.price?.amount?.native} />
+            <FormatCryptoCurrency
+              amount={collection?.floorAsk?.price?.amount?.decimal}
+              address={collection?.floorAsk?.price?.currency?.contract}
+              decimals={collection?.floorAsk?.price?.currency?.decimals}
+            />
           </Flex>
         </Box>
 
@@ -37,9 +38,8 @@ const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
           <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
             {formatNumber(collection?.volumeChange['7day'])}%
           </Text>
-
-          <FormatEth
-            amount={collection?.volume['7day']}
+          <FormatCryptoCurrency
+            amount={collection.volume['7day']}
             maximumFractionDigits={1}
           />
         </Flex>
