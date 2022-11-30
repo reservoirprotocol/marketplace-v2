@@ -11,6 +11,7 @@ import { useTheme } from 'next-themes'
 import HamburgerMenu from './HamburgerMenu'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
+import MobileSearch from './MobileSearch'
 
 const Navbar = () => {
   const { theme } = useTheme()
@@ -57,6 +58,7 @@ const Navbar = () => {
         </Flex>
       </Box>
       <Flex align="center" css={{ gap: '$4' }}>
+        <MobileSearch />
         <ThemeSwitcher />
         <HamburgerMenu />
       </Flex>
