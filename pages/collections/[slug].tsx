@@ -1,11 +1,5 @@
 import { NextPage } from 'next'
-import {
-  Text,
-  Switch,
-  Flex,
-  Box,
-  FormatCryptoCurrency,
-} from '../../components/primitives'
+import { Text, Switch, Flex, Box } from '../../components/primitives'
 import {
   useCollections,
   useTokens,
@@ -14,15 +8,12 @@ import {
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faFlag,
-  faChevronUp,
-  faChevronDown,
-} from '@fortawesome/free-solid-svg-icons'
+import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
+import TokenCard from 'components/collections/TokenCard'
 
 const AttributeSelector = ({ attribute }) => {
   const [open, setOpen] = useState(false)
@@ -73,87 +64,6 @@ const AttributeSelector = ({ attribute }) => {
   )
 }
 
-const TokenCard = ({ token }) => (
-  <Box
-    css={{
-      border: '1px solid $gray7',
-      borderRadius: 8,
-      overflow: 'hidden',
-      background: '$gray4',
-    }}
-  >
-    <img src={token.token.image} />
-    <Box css={{ p: '$3' }}>
-      <Flex css={{ mb: '$4' }}>
-        <Text
-          style="subtitle1"
-          as="p"
-          css={{
-            mb: '$1',
-            pr: '$1',
-            flex: 1,
-            overflow: 'hidden',
-            whiteSpace: 'pre',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {token.token.name || '#' + token.token.tokenId}{' '}
-        </Text>
-        {token.token.isFlagged ? (
-          <Flex
-            align="center"
-            css={{
-              border: '1px solid $gray9',
-              px: '$2',
-              py: '$1',
-              background: '$red9',
-
-              borderRadius: 8,
-            }}
-          >
-            <Box css={{ color: '$red12', fontSize: 10 }}>
-              <FontAwesomeIcon icon={faFlag} />
-            </Box>
-          </Flex>
-        ) : (
-          <Box
-            css={{
-              border: '1px solid $gray9',
-              px: '$2',
-              py: '$1',
-              background: '$gray6',
-              borderRadius: 8,
-            }}
-          >
-            <Text style="body2" as="p" css={{ fontWeight: 800 }}>
-              # {token.token.rarityRank}
-            </Text>
-          </Box>
-        )}
-      </Flex>
-
-      <Flex align="center" css={{ gap: '$2' }}>
-        <Box css={{ flex: 1 }}>
-          <FormatCryptoCurrency
-            logoWidth={11}
-            css={{ fontSize: 16, fontWeight: 600, color: 'white' }}
-            amount={token.market?.floorAsk?.price?.amount?.decimal}
-            address={token.market?.floorAsk?.price?.currency?.contract}
-          />
-        </Box>
-        <img
-          style={{
-            width: 20,
-            height: 20,
-            borderRadius: '50%',
-          }}
-          src={`https://api.reservoir.tools/redirect/sources/${token.market.floorAsk.source.name}/logo/v2`}
-        />
-      </Flex>
-    </Box>
-  </Box>
-)
-
 const IndexPage: NextPage = () => {
   const router = useRouter()
   const { slug } = router.query
@@ -202,27 +112,21 @@ const IndexPage: NextPage = () => {
             css={{
               borderBottom: '1px solid $gray5',
               mt: '$5',
-              mb: '$5',
+              mb: '$4',
               gap: '$5',
             }}
           >
             <Box css={{ pb: '$3', borderBottom: '1px solid $accent' }}>
-              <Text style="h6">Tokens</Text>
+              <Text style="h6">Items</Text>
             </Box>
 
             <Box>
               <Text style="h6">Activity</Text>
             </Box>
-            <Box>
-              <Text style="h6">Traits</Text>
-            </Box>
-            <Box>
-              <Text style="h6">Overview</Text>
-            </Box>
           </Flex>
 
           <Flex css={{ gap: '$5' }}>
-            <Box
+            {/* <Box
               css={{
                 width: 320,
                 background: '$gray3',
@@ -247,7 +151,7 @@ const IndexPage: NextPage = () => {
                     <AttributeSelector attribute={attribute} />
                   ))}
               </Box>
-            </Box>
+            </Box> */}
 
             <Box
               css={{
@@ -255,9 +159,6 @@ const IndexPage: NextPage = () => {
                 pb: '$5',
               }}
             >
-              <Text style="body2" as="p" css={{ mb: '$1', color: '$gray11' }}>
-                Floor Tokens
-              </Text>
               <Box
                 css={{
                   display: 'grid',
