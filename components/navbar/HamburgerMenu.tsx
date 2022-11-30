@@ -1,20 +1,46 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Box, Button, Flex, Text } from 'components/primitives'
+import {
+  Box,
+  Button,
+  Flex,
+  FormatCryptoCurrency,
+  Text,
+} from 'components/primitives'
 import { Content } from 'components/primitives/Dialog'
+import { Avatar } from 'components/primitives/Avatar'
 import {
   Root as DialogRoot,
   DialogTrigger,
   DialogPortal,
 } from '@radix-ui/react-dialog'
 import * as RadixDialog from '@radix-ui/react-dialog'
-import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBars,
+  faXmark,
+  faRightFromBracket,
+  faCopy,
+} from '@fortawesome/free-solid-svg-icons'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
-import { useAccount } from 'wagmi'
+import {
+  useAccount,
+  useBalance,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+} from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { useCopyToClipboard } from 'usehooks-ts'
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import { truncateAddress, truncateEns } from 'utils/truncate'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
+  const { data: balance } = useBalance({ addressOrName: address })
+  const { data: ensName } = useEnsName({ address: address })
+  const { data: ensAvatar } = useEnsAvatar({ addressOrName: address })
+  const { disconnect } = useDisconnect()
+  const [value, copy] = useCopyToClipboard()
 
   const children = (
     <Flex
@@ -68,6 +94,34 @@ const HamburgerMenu = () => {
             px: '$4',
           }}
         >
+          <Flex
+            css={{
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              cursor: 'pointer',
+              borderBottom: '1px solid $gray4',
+              pb: '$4',
+            }}
+            onClick={() => (ensName ? copy(ensName) : copy(address))}
+          >
+            <Flex css={{ alignItems: 'center' }}>
+              {ensAvatar ? (
+                <Avatar size="medium" src={ensAvatar} />
+              ) : (
+                <Jazzicon diameter={36} seed={jsNumberForAddress(address)} />
+              )}
+              <Text
+                style="subtitle1"
+                color="$gray11"
+                css={{ ml: '$2', color: '$gray11' }}
+              >
+                {ensName ? truncateEns(ensName) : truncateAddress(address)}
+              </Text>
+            </Flex>
+            <Box css={{ color: '$gray10' }}>
+              <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+            </Box>
+          </Flex>
           <Link href="/profile">
             <Text
               style="subtitle1"
@@ -109,6 +163,36 @@ const HamburgerMenu = () => {
             >
               Balance
             </Text>
+            <FormatCryptoCurrency
+              amount={balance?.value}
+              textStyle="subtitle1"
+            />
+          </Flex>
+          <Flex
+            css={{
+              justifyContent: 'space-between',
+              cursor: 'pointer',
+              alignItems: 'center',
+              borderBottom: '1px solid $gray4',
+            }}
+            onClick={() => disconnect()}
+          >
+            <Text
+              style="subtitle1"
+              css={{
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              Logout
+            </Text>
+            <Box css={{ color: '$gray10' }}>
+              <FontAwesomeIcon
+                icon={faRightFromBracket}
+                width={16}
+                height={16}
+              />
+            </Box>
           </Flex>
         </Flex>
       ) : (
