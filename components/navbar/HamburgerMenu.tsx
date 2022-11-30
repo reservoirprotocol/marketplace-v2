@@ -135,7 +135,7 @@ const HamburgerMenu = () => {
               Profile
             </Text>
           </Link>
-          <Link href="/sell">
+          <Link href="/portfolio">
             <Text
               style="subtitle1"
               css={{
@@ -165,6 +165,7 @@ const HamburgerMenu = () => {
             </Text>
             <FormatCryptoCurrency
               amount={balance?.value}
+              decimals={balance?.decimals}
               textStyle="subtitle1"
               logoHeight={14}
             />
@@ -221,7 +222,7 @@ const HamburgerMenu = () => {
           borderTop: '1px solid $gray4',
         }}
       >
-        <Link href="/">
+        <a href="https://twitter.com/reservoir0x" target="_blank">
           <Button
             css={{ justifyContent: 'center', width: '44px', height: '44px' }}
             type="button"
@@ -230,8 +231,8 @@ const HamburgerMenu = () => {
           >
             <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
           </Button>
-        </Link>
-        <Link href="/">
+        </a>
+        <a href="https://discord.gg/j5K9fESNwh" target="_blank">
           <Button
             css={{ justifyContent: 'center', width: '44px', height: '44px' }}
             type="button"
@@ -240,7 +241,7 @@ const HamburgerMenu = () => {
           >
             <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
           </Button>
-        </Link>
+        </a>
       </Flex>
     </Flex>
   )
