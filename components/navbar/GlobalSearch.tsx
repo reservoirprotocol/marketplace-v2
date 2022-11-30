@@ -1,6 +1,10 @@
-import { Box, Text, Flex, Input } from '../primitives'
+import { Box, Text, Flex, Input, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faCopy } from '@fortawesome/free-solid-svg-icons'
+import {
+  faMagnifyingGlass,
+  faCopy,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons'
 
 import {
   useEffect,
@@ -160,6 +164,26 @@ const GlobalSearch = forwardRef<
         >
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </Box>
+      )}
+
+      {isMobile && search.length > 0 && (
+        <Button
+          css={{
+            justifyContent: 'center',
+            width: '44px',
+            height: '44px',
+            position: 'absolute',
+            right: '$4',
+            zIndex: 2,
+            color: '$gray10',
+          }}
+          type="button"
+          size="small"
+          color="ghost"
+          onClick={() => setSearch('')}
+        >
+          <FontAwesomeIcon icon={faXmark} width={16} height={16} />
+        </Button>
       )}
 
       {!showSearchBox && !isMobile && (
