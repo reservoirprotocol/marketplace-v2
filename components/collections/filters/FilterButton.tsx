@@ -1,4 +1,4 @@
-import { faFilter } from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft, faFilter } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button } from 'components/primitives'
 import { FC } from 'react'
@@ -17,7 +17,11 @@ export const FilterButton: FC<Props> = ({ open, setOpen }) => {
       size="small"
       color="gray3"
     >
-      <FontAwesomeIcon icon={faFilter} width={16} height={16} />
+      <FontAwesomeIcon
+        icon={open ? faChevronLeft : faFilter}
+        width={16}
+        height={16}
+      />
     </Button>
   )
 }

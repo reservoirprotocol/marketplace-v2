@@ -2,7 +2,9 @@ import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
+import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
+import { toggleOffItem, toggleOnItem } from 'utils/router'
 
 type Props = {
   attribute: NonNullable<
@@ -11,20 +13,27 @@ type Props = {
 }
 
 export const AttributeSelector: FC<Props> = ({ attribute }) => {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
 
   return (
-    <Box css={{ pt: '$2', borderBottom: '1px solid $gray7' }}>
+    <Box
+      css={{ pt: '$3', borderBottom: '1px solid $gray7', cursor: 'pointer' }}
+    >
       <Flex
         align="center"
         justify="between"
         css={{ mb: '$3', cursor: 'pointer' }}
         onClick={() => setOpen(!open)}
       >
-        <Text as="h5" style="h6">
+        <Text as="h5" style="subtitle1">
           {attribute.key}
         </Text>
-        <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
+        <FontAwesomeIcon
+          icon={open ? faChevronUp : faChevronDown}
+          width={16}
+          height={16}
+        />
       </Flex>
       {open && (
         <Box css={{ maxHeight: 300, overflow: 'auto', pb: '$2' }}>
@@ -32,9 +41,6 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
             .sort((a, b) => b.count - a.count)
             .map((value) => (
               <Flex css={{ mb: '$3', gap: '$3' }} align="center">
-                <Flex align="center">
-                  <Switch />
-                </Flex>
                 <Text
                   style="body1"
                   css={{
@@ -51,6 +57,17 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
                 <Text style="body2" css={{ color: '$gray11' }}>
                   {value.count}
                 </Text>
+                <Flex align="center">
+                  <Switch
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        toggleOnItem(router, attribute.key, value.value)
+                      } else {
+                        toggleOffItem(router, attribute.key)
+                      }
+                    }}
+                  />
+                </Flex>
               </Flex>
             ))}
         </Box>

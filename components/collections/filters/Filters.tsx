@@ -1,38 +1,29 @@
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box } from 'components/primitives'
-import { FC, useState } from 'react'
+import { FC } from 'react'
 import { AttributeSelector } from './AttributeSelector'
-
 import * as Collapsible from '@radix-ui/react-collapsible'
+import { CollapsibleContent } from 'components/primitives/Collapsible'
 
 type Props = {
   open: boolean
+  setOpen: (boolean) => void
   attributes: NonNullable<
     ReturnType<typeof useAttributes>['response']['attributes']
   >
 }
 
-export const Filters: FC<Props> = ({ attributes, open }) => {
-  // const [open, setOpen] = useState(false)
-
+export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
   return (
-    <Collapsible.Root
-      className="CollapsibleRoot"
-      open={open}
-      // onOpenChange={setOpen}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+    <Collapsible.Root open={open} onOpenChange={setOpen}>
+      <CollapsibleContent
+        css={{
+          width: 320,
+          position: 'sticky',
+          top: 16 + 80,
+          height: 'calc(100vh - 81px - 32px)',
         }}
       >
-        <Collapsible.Trigger asChild>
-          <button className="IconButton">{open ? 'close' : 'open'}</button>
-        </Collapsible.Trigger>
-      </div>
-      <Collapsible.Content>
         <Box
           css={{
             width: 320,
@@ -59,7 +50,7 @@ export const Filters: FC<Props> = ({ attributes, open }) => {
               ))}
           </Box>
         </Box>
-      </Collapsible.Content>
+      </CollapsibleContent>
     </Collapsible.Root>
   )
 }

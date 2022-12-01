@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { Text, Switch, Flex, Box } from '../../components/primitives'
+import { Text, Flex, Box } from '../../components/primitives'
 import {
   useCollections,
   useTokens,
@@ -77,15 +77,17 @@ const IndexPage: NextPage = () => {
             </Box>
           </Flex>
 
-          <Flex css={{ gap: '$5' }}>
-            <Filters attributes={attributes} open={open} />
+          <Flex css={{ gap: open && '$5' }}>
+            <Filters attributes={attributes} open={open} setOpen={setOpen} />
             <Box
               css={{
                 flex: 1,
                 pb: '$5',
               }}
             >
-              <FilterButton open={open} setOpen={setOpen} />
+              <Flex justify="between" css={{ marginBottom: '$4' }}>
+                <FilterButton open={open} setOpen={setOpen} />
+              </Flex>
               <Box
                 css={{
                   display: 'grid',
@@ -93,8 +95,8 @@ const IndexPage: NextPage = () => {
                   gap: '$4',
                 }}
               >
-                {tokens.map((token) => (
-                  <TokenCard token={token} />
+                {tokens.map((token, i) => (
+                  <TokenCard token={token} key={i} />
                 ))}
               </Box>
             </Box>
