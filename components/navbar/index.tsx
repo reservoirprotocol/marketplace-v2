@@ -16,7 +16,7 @@ import { ProfileDropdown } from './ProfileDropdown'
 
 const Navbar = () => {
   const { theme } = useTheme()
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
 
