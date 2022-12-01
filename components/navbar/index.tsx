@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { createRef } from 'react'
 import { Box, Flex } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
@@ -17,7 +17,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
 
-  let searchRef = useRef<HTMLInputElement>()
+  let searchRef = createRef<HTMLInputElement>()
 
   const router = useRouter()
   useShortcutCallback('search', () => {

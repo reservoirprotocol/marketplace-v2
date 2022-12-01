@@ -17,13 +17,15 @@ type CollectionActionsProps = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
 }
 
-const CollectionAction = styled(Box, {
+const CollectionAction = styled(Flex, {
   px: '$4',
   py: '$3',
   color: '$gray12',
   background: '$gray3',
   cursor: 'pointer',
   transition: 'background 0.25s ease-in',
+  height: 48,
+  alignItems: 'center',
   '&:hover': {
     background: '$gray4',
   },

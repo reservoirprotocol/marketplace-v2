@@ -14,6 +14,7 @@ import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
+import { Grid } from 'components/primitives/Grid'
 
 const AttributeSelector = ({ attribute }) => {
   const [open, setOpen] = useState(false)
@@ -75,11 +76,16 @@ const IndexPage: NextPage = () => {
 
   let collection = collections && collections[0]
 
-  const { data: tokens } = useTokens({
+  const { data: tokens, mutate } = useTokens({
     collection: collection?.id,
   })
 
   let { data: attributes } = useAttributes(collection?.id)
+
+  const rarityEnabledCollection =
+    collection?.tokenCount &&
+    +collection.tokenCount >= 2 &&
+    attributes?.length >= 2
 
   return (
     <Layout>
@@ -159,17 +165,21 @@ const IndexPage: NextPage = () => {
                 pb: '$5',
               }}
             >
-              <Box
+              <Grid
                 css={{
-                  display: 'grid',
                   gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
                   gap: '$4',
                 }}
               >
-                {tokens.map((token) => (
-                  <TokenCard token={token} />
+                {tokens.map((token, i) => (
+                  <TokenCard
+                    key={i}
+                    token={token}
+                    mutate={mutate}
+                    rarityEnabled={rarityEnabledCollection}
+                  />
                 ))}
-              </Box>
+              </Grid>
             </Box>
           </Flex>
         </Box>

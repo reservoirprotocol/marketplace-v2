@@ -17,13 +17,11 @@ const FormatCryptoCurrency: FC<Props> = ({
   logoHeight = 8,
   textStyle,
   css,
-  textColor,
   decimals,
 }) => {
   return (
     <FormatCrypto
       css={css}
-      textColor={textColor}
       textStyle={textStyle}
       amount={amount}
       maximumFractionDigits={maximumFractionDigits}
