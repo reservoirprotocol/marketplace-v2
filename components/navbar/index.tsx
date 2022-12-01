@@ -11,9 +11,12 @@ import { useTheme } from 'next-themes'
 import HamburgerMenu from './HamburgerMenu'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
+import { useAccount } from 'wagmi'
+import { ProfileDropdown } from './ProfileDropdown'
 
 const Navbar = () => {
   const { theme } = useTheme()
+  const { address, isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
 
@@ -115,9 +118,13 @@ const Navbar = () => {
 
       <Flex css={{ gap: '$5' }} justify="end" align="center">
         <ThemeSwitcher />
-        <Box css={{ maxWidth: '185px' }}>
-          <ConnectWalletButton />
-        </Box>
+        {isConnected ? (
+          <ProfileDropdown />
+        ) : (
+          <Box css={{ maxWidth: '185px' }}>
+            <ConnectWalletButton />
+          </Box>
+        )}
       </Flex>
     </Flex>
   )
