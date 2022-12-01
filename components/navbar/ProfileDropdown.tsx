@@ -52,7 +52,7 @@ export const ProfileDropdown: FC = () => {
       <DropdownMenuItem
         onClick={() => (ensName ? copy(ensName) : copy(address))}
       >
-        <Flex css={{ justifyContent: 'space-between' }}>
+        <Flex justify="between">
           <Text style="subtitle1" color="$gray11" css={{ color: '$gray11' }}>
             {ensName ? truncateEns(ensName) : truncateAddress(address)}
           </Text>
@@ -65,11 +65,7 @@ export const ProfileDropdown: FC = () => {
         <DropdownMenuItem>Profile</DropdownMenuItem>
       </Link>
       <DropdownMenuItem css={{ cursor: 'text' }}>
-        <Flex
-          css={{
-            justifyContent: 'space-between',
-          }}
-        >
+        <Flex justify="between">
           Balance
           <FormatCryptoCurrency
             amount={balance?.value}
@@ -81,10 +77,10 @@ export const ProfileDropdown: FC = () => {
       </DropdownMenuItem>
       <DropdownMenuItem>
         <Flex
+          justify="between"
+          align="center"
           css={{
-            justifyContent: 'space-between',
             cursor: 'pointer',
-            alignItems: 'center',
           }}
           onClick={() => disconnect()}
         >
