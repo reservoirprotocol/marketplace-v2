@@ -13,6 +13,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
+import MobileSearch from './MobileSearch'
 
 const Navbar = () => {
   const { theme } = useTheme()
@@ -60,6 +61,7 @@ const Navbar = () => {
         </Flex>
       </Box>
       <Flex align="center" css={{ gap: '$4' }}>
+        <MobileSearch />
         <ThemeSwitcher />
         <HamburgerMenu />
       </Flex>

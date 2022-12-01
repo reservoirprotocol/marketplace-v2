@@ -1,6 +1,10 @@
-import { Box, Text, Flex, Input } from '../primitives'
+import { Box, Text, Flex, Input, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMagnifyingGlass, faCopy } from '@fortawesome/free-solid-svg-icons'
+import {
+  faMagnifyingGlass,
+  faCopy,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons'
 
 import {
   useEffect,
@@ -13,6 +17,7 @@ import {
 import { formatNumber } from 'utils/numbers'
 
 import { useDebounce } from 'usehooks-ts'
+import { useMediaQuery } from 'react-responsive'
 
 import { useCopyToClipboard } from 'usehooks-ts'
 import Link from 'next/link'
@@ -111,6 +116,8 @@ const GlobalSearch = forwardRef<
 
   const debouncedSearch = useDebounce(search, 500)
 
+  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
+
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
@@ -142,22 +149,44 @@ const GlobalSearch = forwardRef<
       css={{ position: 'relative', width: '100%' }}
       onFocus={() => setShowSearchBox(true)}
     >
-      <Box
-        css={{
-          position: 'absolute',
-          top: '50%',
-          left: '$4',
-          width: '16px',
-          height: '16px',
-          zIndex: 2,
-          transform: 'translate(0, -50%)',
-          color: '$gray11',
-        }}
-      >
-        <FontAwesomeIcon icon={faMagnifyingGlass} />
-      </Box>
+      {!isMobile && (
+        <Box
+          css={{
+            position: 'absolute',
+            top: '50%',
+            left: '$4',
+            width: '16px',
+            height: '16px',
+            zIndex: 2,
+            transform: 'translate(0, -50%)',
+            color: '$gray11',
+          }}
+        >
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </Box>
+      )}
 
-      {!showSearchBox && (
+      {isMobile && search.length > 0 && (
+        <Button
+          css={{
+            justifyContent: 'center',
+            width: '44px',
+            height: '44px',
+            position: 'absolute',
+            right: '$4',
+            zIndex: 2,
+            color: '$gray10',
+          }}
+          type="button"
+          size="small"
+          color="ghost"
+          onClick={() => setSearch('')}
+        >
+          <FontAwesomeIcon icon={faXmark} width={16} height={16} />
+        </Button>
+      )}
+
+      {!showSearchBox && !isMobile && (
         <Box
           css={{
             position: 'absolute',
@@ -175,36 +204,45 @@ const GlobalSearch = forwardRef<
         {...props}
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        css={{ pl: 48 }}
+        css={{
+          pl: isMobile ? 80 : 48,
+          backgroundColor: isMobile && 'transparent',
+          borderRadius: isMobile && '$0',
+          borderBottom: isMobile && '1px solid $gray4',
+          pb: isMobile && '24px',
+          $$focusColor: isMobile && 'none',
+        }}
         ref={forwardedRef}
       />
 
-      {showSearchBox && search.length > 3 && (results || searching) && (
-        <Box
-          css={{
-            position: 'absolute',
-            top: '100%',
-            left: 0,
-            right: 0,
-            background: '$gray3',
-            borderRadius: 8,
-            zIndex: 4,
-            mt: '$2',
-            border: '1px solid $gray7',
+      {(showSearchBox || (isMobile && !searching)) &&
+        search.length > 3 &&
+        (results || searching) && (
+          <Box
+            css={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              right: 0,
+              background: isMobile ? 'transparent' : '$gray3',
+              borderRadius: isMobile ? 0 : 8,
+              zIndex: 4,
+              mt: '$2',
+              border: isMobile ? '' : '1px solid $gray7',
 
-            '& div:not(:last-of-type)': {
-              borderBottom: '1px solid $gray7',
-            },
-          }}
-        >
-          {results &&
-            results
-              .slice(0, 8)
-              .map((result) => <SearchResult result={result} />)}
+              '& div:not(:last-of-type)': {
+                borderBottom: isMobile ? '' : '1px solid $gray7',
+              },
+            }}
+          >
+            {results &&
+              results
+                .slice(0, 8)
+                .map((result) => <SearchResult result={result} />)}
 
-          {searching && <Box css={{ p: '$4' }}>loading</Box>}
-        </Box>
-      )}
+            {searching && <Box css={{ p: '$4' }}>loading</Box>}
+          </Box>
+        )}
     </Box>
   )
 })
