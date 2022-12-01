@@ -2,7 +2,13 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { TokenMedia, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import BuyNow from 'components/buttons/BuyNow'
-import { Box, Flex, FormatCryptoCurrency, Text } from 'components/primitives'
+import {
+  Box,
+  Flex,
+  FormatCryptoCurrency,
+  Text,
+  Tooltip,
+} from 'components/primitives'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 
@@ -51,13 +57,15 @@ export default ({ token, rarityEnabled = true, mutate }: TokenCardProps) => {
                 {token?.token?.name || '#' + token?.token?.tokenId}{' '}
               </Text>
               {token?.token?.isFlagged && (
-                <Text css={{ color: '$red10' }}>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    width={16}
-                    height={16}
-                  />
-                </Text>
+                <Tooltip content={'Not tradeable on OpenSea'}>
+                  <Text css={{ color: '$red10' }}>
+                    <FontAwesomeIcon
+                      icon={faCircleExclamation}
+                      width={16}
+                      height={16}
+                    />
+                  </Text>
+                </Tooltip>
               )}
             </Flex>
           </Link>

@@ -1,91 +1,120 @@
-import { NextPage } from 'next'
-import { Text, Switch, Flex, Box } from '../../components/primitives'
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from 'next'
+import { Text, Flex, Box } from '../../components/primitives'
 import {
   useCollections,
   useTokens,
   useAttributes,
 } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@reservoir0x/reservoir-kit-client'
 import Layout from 'components/Layout'
-import { useRouter } from 'next/router'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { Grid } from 'components/primitives/Grid'
+import { useIntersectionObserver } from 'usehooks-ts'
+import fetcher from 'utils/fetcher'
 
-const AttributeSelector = ({ attribute }) => {
-  const [open, setOpen] = useState(false)
+// const AttributeSelector = ({ attribute }) => {
+//   const [open, setOpen] = useState(false)
 
-  return (
-    <Box css={{ pt: '$2', borderBottom: '1px solid $gray7' }}>
-      <Flex
-        align="center"
-        justify="between"
-        css={{ mb: '$3', cursor: 'pointer' }}
-        onClick={() => setOpen(!open)}
-      >
-        <Text as="h5" style="h6">
-          {attribute.key}
-        </Text>
-        <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
-      </Flex>
-      {open && (
-        <Box css={{ maxHeight: 300, overflow: 'auto', pb: '$2' }}>
-          {attribute.values
-            .sort((a, b) => b.count - a.count)
-            .map((value) => (
-              <Flex css={{ mb: '$3', gap: '$3' }} align="center">
-                <Flex align="center">
-                  <Switch />
-                </Flex>
-                <Text
-                  style="body1"
-                  css={{
-                    color: '$gray11',
-                    flex: 1,
-                    whiteSpace: 'pre',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {value.value}
-                </Text>
+//   return (
+//     <Box css={{ pt: '$2', borderBottom: '1px solid $gray7' }}>
+//       <Flex
+//         align="center"
+//         justify="between"
+//         css={{ mb: '$3', cursor: 'pointer' }}
+//         onClick={() => setOpen(!open)}
+//       >
+//         <Text as="h5" style="h6">
+//           {attribute.key}
+//         </Text>
+//         <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
+//       </Flex>
+//       {open && (
+//         <Box css={{ maxHeight: 300, overflow: 'auto', pb: '$2' }}>
+//           {attribute.values
+//             .sort((a, b) => b.count - a.count)
+//             .map((value) => (
+//               <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+//                 <Flex align="center">
+//                   <Switch />
+//                 </Flex>
+//                 <Text
+//                   style="body1"
+//                   css={{
+//                     color: '$gray11',
+//                     flex: 1,
+//                     whiteSpace: 'pre',
+//                     textOverflow: 'ellipsis',
+//                     overflow: 'hidden',
+//                   }}
+//                 >
+//                   {value.value}
+//                 </Text>
 
-                <Text style="body2" css={{ color: '$gray11' }}>
-                  {value.count}
-                </Text>
-              </Flex>
-            ))}
-        </Box>
-      )}
-    </Box>
-  )
-}
+//                 <Text style="body2" css={{ color: '$gray11' }}>
+//                   {value.count}
+//                 </Text>
+//               </Flex>
+//             ))}
+//         </Box>
+//       )}
+//     </Box>
+//   )
+// }
 
-const IndexPage: NextPage = () => {
-  const router = useRouter()
-  const { slug } = router.query
+type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-  const { data: collections } = useCollections({
-    id: slug as string,
-    includeTopBid: true,
+const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+  const loadMoreRef = useRef<HTMLDivElement>()
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
+    rootMargin: '0px 0px 300px 0px',
   })
+
+  const { data: collections } = useCollections(
+    {
+      id,
+      includeTopBid: true,
+    },
+    {
+      fallback: ssr.collection,
+    }
+  )
 
   let collection = collections && collections[0]
+  const {
+    data: tokens,
+    mutate,
+    fetchNextPage,
+  } = useTokens(
+    {
+      collection: id,
+    },
+    {
+      fallback: ssr.tokens,
+    }
+  )
 
-  const { data: tokens, mutate } = useTokens({
-    collection: collection?.id,
-  })
-
-  let { data: attributes } = useAttributes(collection?.id)
+  let { data: attributes } = useAttributes()
 
   const rarityEnabledCollection =
     collection?.tokenCount &&
     +collection.tokenCount >= 2 &&
     attributes?.length >= 2
+
+  useEffect(() => {
+    const isVisible = !!loadMoreObserver?.isIntersecting
+    if (isVisible) {
+      fetchNextPage()
+    }
+  }, [loadMoreObserver?.isIntersecting])
 
   return (
     <Layout>
@@ -179,6 +208,7 @@ const IndexPage: NextPage = () => {
                     rarityEnabled={rarityEnabledCollection}
                   />
                 ))}
+                <div ref={loadMoreRef}></div>
               </Grid>
             </Box>
           </Flex>
@@ -188,6 +218,52 @@ const IndexPage: NextPage = () => {
       )}
     </Layout>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps<{
+  collectionId?: string
+  ssr: {
+    collection: paths['/collections/v5']['get']['responses']['200']['schema']
+    tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+  }
+  id: string | undefined
+}> = async ({ params }) => {
+  const id = params?.slug?.toString()
+
+  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+    {
+      id,
+      includeTopBid: true,
+    }
+
+  const collection: Props['ssr']['collection'] = await fetcher(
+    '/collectins/v5',
+    collectionQuery
+  )
+
+  let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
+    collection: id,
+    sortBy: 'floorAskPrice',
+    includeTopBid: false,
+    limit: 20,
+  }
+
+  const tokens: Props['ssr']['tokens'] = await fetcher(
+    '/tokens/v5',
+    tokensQuery
+  )
+
+  return {
+    props: { ssr: { collection, tokens }, id },
+    revalidate: 20,
+  }
 }
 
 export default IndexPage

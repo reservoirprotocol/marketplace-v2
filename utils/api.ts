@@ -1,4 +1,4 @@
-const api = async (url: any, data: any = {}) => {
+const api = async (url: string, data: any = {}) => {
   let response = await fetch(
     `${process.env.NEXT_PUBLIC_RESERVOIR_API_BASE}/${url}`,
     {

@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
-
-import api from '../../utils/api'
+import fetcher from 'utils/fetcher'
 
 export const config = {
   runtime: 'experimental-edge',
@@ -14,7 +13,7 @@ export default async function handler(req) {
   let isAddress = ethers.utils.isAddress(q)
 
   if (isAddress) {
-    let { collections } = await api(`collections/v5?contract=${q}`)
+    let { collections } = await fetcher(`collections/v5?contract=${q}`)
 
     if (collections.length) {
       searchResults = [
@@ -57,7 +56,7 @@ export default async function handler(req) {
       ]
     }
   } else {
-    let { collections } = await api(`collections/v5?name=${q}`)
+    let { collections } = await fetcher(`collections/v5?name=${q}`)
 
     searchResults = collections.map((collection) => ({
       type: 'collection',
