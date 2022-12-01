@@ -7,62 +7,11 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronUp, faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
-
-const AttributeSelector = ({ attribute }) => {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <Box css={{ pt: '$2', borderBottom: '1px solid $gray7' }}>
-      <Flex
-        align="center"
-        justify="between"
-        css={{ mb: '$3', cursor: 'pointer' }}
-        onClick={() => setOpen(!open)}
-      >
-        <Text as="h5" style="h6">
-          {attribute.key}
-        </Text>
-        <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
-      </Flex>
-      {open && (
-        <Box css={{ maxHeight: 300, overflow: 'auto', pb: '$2' }}>
-          {attribute.values
-            .sort((a, b) => b.count - a.count)
-            .map((value) => (
-              <Flex css={{ mb: '$3', gap: '$3' }} align="center">
-                <Flex align="center">
-                  <Switch />
-                </Flex>
-                <Text
-                  style="body1"
-                  css={{
-                    color: '$gray11',
-                    flex: 1,
-                    whiteSpace: 'pre',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {value.value}
-                </Text>
-
-                <Text style="body2" css={{ color: '$gray11' }}>
-                  {value.count}
-                </Text>
-              </Flex>
-            ))}
-        </Box>
-      )}
-    </Box>
-  )
-}
+import { Filters } from 'components/collections/filters/Filters'
 
 const IndexPage: NextPage = () => {
   const router = useRouter()
@@ -126,33 +75,7 @@ const IndexPage: NextPage = () => {
           </Flex>
 
           <Flex css={{ gap: '$5' }}>
-            {/* <Box
-              css={{
-                width: 320,
-                background: '$gray3',
-                border: '1px solid $gray5',
-                position: 'sticky',
-                top: 16 + 80,
-                borderRadius: 8,
-                overflow: 'auto',
-                height: 'calc(100vh - 81px - 32px)',
-              }}
-            >
-              <Box
-                css={{
-                  p: '$4',
-                  '& > div:first-of-type': {
-                    pt: 0,
-                  },
-                }}
-              >
-                {attributes &&
-                  attributes.map((attribute) => (
-                    <AttributeSelector attribute={attribute} />
-                  ))}
-              </Box>
-            </Box> */}
-
+            <Filters attributes={attributes} />
             <Box
               css={{
                 flex: 1,
