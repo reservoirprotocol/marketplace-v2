@@ -12,8 +12,11 @@ import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { Filters } from 'components/collections/filters/Filters'
+import { FilterButton } from 'components/collections/filters/FilterButton'
+import { useState } from 'react'
 
 const IndexPage: NextPage = () => {
+  const [open, setOpen] = useState(false)
   const router = useRouter()
   const { slug } = router.query
 
@@ -75,13 +78,14 @@ const IndexPage: NextPage = () => {
           </Flex>
 
           <Flex css={{ gap: '$5' }}>
-            <Filters attributes={attributes} />
+            <Filters attributes={attributes} open={open} />
             <Box
               css={{
                 flex: 1,
                 pb: '$5',
               }}
             >
+              <FilterButton open={open} setOpen={setOpen} />
               <Box
                 css={{
                   display: 'grid',
