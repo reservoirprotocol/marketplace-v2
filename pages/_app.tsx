@@ -54,12 +54,12 @@ const wagmiClient = createClient({
   provider,
 })
 
-const resDarkTheme = reservoirDarkTheme({
-  headlineFont: 'Figtree',
-  font: 'Figtree',
+const reservoirKitThemeOverrides = {
+  headlineFont: 'Inter',
+  font: 'Inter',
   primaryColor: '#6E56CB',
   primaryHoverColor: '#644fc1',
-})
+}
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
@@ -92,14 +92,14 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     if (theme == 'dark') {
-      setReservoirKitTheme(resDarkTheme)
+      setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
         rainbowDarkTheme({
           borderRadius: 'small',
         })
       )
     } else {
-      setReservoirKitTheme(reservoirLightTheme())
+      setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
         rainbowLightTheme({
           borderRadius: 'small',
