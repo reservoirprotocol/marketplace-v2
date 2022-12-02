@@ -27,7 +27,6 @@ import {
   darkTheme as resKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC } from 'react'
-import { Box } from 'components/primitives'
 
 const envChain = allChains.find(
   (chain) => chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || chainId.mainnet)
@@ -97,7 +96,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 theme={rainbowKitTheme}
                 modalSize="compact"
               >
-                  <FunctionalComponent {...pageProps} />
+                <FunctionalComponent {...pageProps} />
               </RainbowKitProvider>
             </Tooltip.Provider>
           </ReservoirKitProvider>
