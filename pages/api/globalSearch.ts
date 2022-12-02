@@ -13,7 +13,7 @@ export default async function handler(req) {
   let isAddress = ethers.utils.isAddress(q)
 
   if (isAddress) {
-    let { collections } = await fetcher(`collections/v5?contract=${q}`)
+    let { data: collections } = await fetcher(`collections/v5?contract=${q}`)
 
     if (collections.length) {
       searchResults = [
@@ -56,7 +56,7 @@ export default async function handler(req) {
       ]
     }
   } else {
-    let { collections } = await fetcher(`collections/v5?name=${q}`)
+    let { data: collections } = await fetcher(`collections/v5?name=${q}`)
 
     searchResults = collections.map((collection) => ({
       type: 'collection',

@@ -122,30 +122,27 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   return (
     <Layout>
       {collection ? (
-        <Box css={{ p: '$5', pb: 0 }}>
-          <Flex justify="between">
-            <Flex direction="column" css={{ gap: '$4' }}>
+        <Flex direction="column" css={{ p: '$5', pb: 0 }}>
+          <Flex justify="between" css={{ mb: '$4' }}>
+            <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
                 <img
                   src={collection.image}
                   style={{ width: 64, height: 64, borderRadius: 8 }}
                 />
-                <Box>
-                  <Flex align="center">
-                    <Text style="h5" as="h6">
-                      {collection.name}
-                    </Text>
-                  </Flex>
+                <Box css={{ minWidth: 0 }}>
+                  <Text style="h5" as="h6" ellipsify>
+                    {collection.name}
+                  </Text>
                   <Text style="body2" css={{ color: '$gray11' }} as="p">
                     {truncateAddress(collection.id)}
                   </Text>
                 </Box>
               </Flex>
-              <StatHeader collection={collection} />
             </Flex>
             <CollectionActions collection={collection} />
           </Flex>
-
+          <StatHeader collection={collection} />
           <Flex
             css={{
               borderBottom: '1px solid $gray5',
@@ -229,7 +226,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
               </Grid>
             </Box>
           </Flex>
-        </Box>
+        </Flex>
       ) : (
         <Box />
       )}
@@ -260,10 +257,8 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collection: Props['ssr']['collection'] = await fetcher(
-    '/collectins/v5',
-    collectionQuery
-  )
+  const collectionsResponse = await fetcher('/collectins/v5', collectionQuery)
+  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     collection: id,
@@ -272,10 +267,9 @@ export const getStaticProps: GetStaticProps<{
     limit: 20,
   }
 
-  const tokens: Props['ssr']['tokens'] = await fetcher(
-    '/tokens/v5',
-    tokensQuery
-  )
+  const tokensResponse = await fetcher('/tokens/v5', tokensQuery)
+
+  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
   return {
     props: { ssr: { collection, tokens }, id },
