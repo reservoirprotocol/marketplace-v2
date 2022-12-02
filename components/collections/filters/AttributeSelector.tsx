@@ -5,6 +5,7 @@ import { Box, Flex, Switch, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 import {
+  addParam,
   toggleOffAttribute,
   toggleOffItem,
   toggleOnAttribute,
@@ -69,8 +70,25 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
                       value.value
                     }
                     onCheckedChange={(checked) => {
+                      console.log('Query ', router.query)
+                      // console.log(
+                      //   router.query[`attributes[${attribute.key}]`] !=
+                      //     undefined
+                      // )
                       if (checked) {
-                        toggleOnAttribute(router, attribute.key, value.value)
+                        // if (
+                        //   router.query[`attributes[${attribute.key}]`] !=
+                        //   undefined
+                        // )
+                        addParam(
+                          router,
+                          `attributes[${attribute.key}]`,
+                          value.value
+                        )
+                        // toggleOnAttribute(router, attribute.key, value.value)
+                        // else {
+                        //   toggleOnAttribute(router, attribute.key, value.value)
+                        // }
                       } else {
                         toggleOffAttribute(router, attribute.key)
                       }

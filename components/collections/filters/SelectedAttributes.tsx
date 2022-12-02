@@ -26,15 +26,24 @@ const SelectedAttributes: FC = () => {
     setFilters(
       // Convert the queries into the tokens format
       filters.map((key) => {
-        return {
-          key: key.slice(11, -1),
-          value: `${router.query[key]}`,
+        if (Array.isArray(router.query[key])) {
+          ;(router.query[key] as string[]).map((value) => {
+            console.log('key: ', key)
+            return {
+              key: key.slice(11, -1),
+              value: value,
+            }
+          })
+        } else {
+          console.log('key: ', key)
+          return {
+            key: key.slice(11, -1),
+            value: `${router.query[key]}`,
+          }
         }
       })
     )
   }, [router.query])
-
-  console.log(filters)
 
   if (filters.length === 0) return null
 
