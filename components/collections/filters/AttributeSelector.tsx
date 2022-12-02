@@ -4,7 +4,12 @@ import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
-import { toggleOffItem, toggleOnItem } from 'utils/router'
+import {
+  toggleOffAttribute,
+  toggleOffItem,
+  toggleOnAttribute,
+  toggleOnItem,
+} from 'utils/router'
 
 type Props = {
   attribute: NonNullable<
@@ -59,11 +64,15 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
                 </Text>
                 <Flex align="center">
                   <Switch
+                    defaultChecked={
+                      router.query[`attributes[${attribute.key}]`] ===
+                      value.value
+                    }
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        toggleOnItem(router, attribute.key, value.value)
+                        toggleOnAttribute(router, attribute.key, value.value)
                       } else {
-                        toggleOffItem(router, attribute.key)
+                        toggleOffAttribute(router, attribute.key)
                       }
                     }}
                   />

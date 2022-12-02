@@ -4,6 +4,7 @@ import {
   useCollections,
   useTokens,
   useAttributes,
+  BidModal,
 } from '@reservoir0x/reservoir-kit-ui'
 import Layout from 'components/Layout'
 import { useRouter } from 'next/router'
@@ -14,6 +15,7 @@ import TokenCard from 'components/collections/TokenCard'
 import { Filters } from 'components/collections/filters/Filters'
 import { FilterButton } from 'components/collections/filters/FilterButton'
 import { useState } from 'react'
+import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
 
 const IndexPage: NextPage = () => {
   const [open, setOpen] = useState(false)
@@ -88,6 +90,7 @@ const IndexPage: NextPage = () => {
               <Flex justify="between" css={{ marginBottom: '$4' }}>
                 <FilterButton open={open} setOpen={setOpen} />
               </Flex>
+              <SelectedAttributes />
               <Box
                 css={{
                   display: 'grid',
