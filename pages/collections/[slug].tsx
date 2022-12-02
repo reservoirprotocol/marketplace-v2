@@ -12,7 +12,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
@@ -73,6 +73,9 @@ import fetcher from 'utils/fetcher'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+  const [playingElement, setPlayingElement] = useState<
+    HTMLAudioElement | HTMLVideoElement | null
+  >()
   const loadMoreRef = useRef<HTMLDivElement>()
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
@@ -206,6 +209,20 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     token={token}
                     mutate={mutate}
                     rarityEnabled={rarityEnabledCollection}
+                    onMediaPlayed={(e) => {
+                      if (
+                        playingElement &&
+                        playingElement !== e.nativeEvent.target
+                      ) {
+                        playingElement.pause()
+                      }
+                      const element =
+                        (e.nativeEvent.target as HTMLAudioElement) ||
+                        (e.nativeEvent.target as HTMLVideoElement)
+                      if (element) {
+                        setPlayingElement(element)
+                      }
+                    }}
                   />
                 ))}
                 <div ref={loadMoreRef}></div>
