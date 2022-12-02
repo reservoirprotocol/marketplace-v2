@@ -45,6 +45,13 @@ export default styled('span', {
         fontStyle: 'italic',
       },
     },
+    ellipsify: {
+      true: {
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+      },
+    },
   },
 
   defaultVariants: {

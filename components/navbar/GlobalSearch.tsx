@@ -38,7 +38,7 @@ const CollectionItem = ({ collection }) => {
   }
 
   return (
-    <Link href={`/collection/${collection.slug}`}>
+    <Link href={`/collections/${collection.id}`}>
       <Flex
         css={{
           p: '$2',

@@ -1,7 +1,7 @@
 // your-tooltip.jsx
-import React from "react";
-import * as TooltipPrimitive from "@radix-ui/react-tooltip";
-import Box from "./Box";
+import React from 'react'
+import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import Box from './Box'
 
 const Tooltip = ({
   children,
@@ -16,6 +16,7 @@ const Tooltip = ({
       open={open}
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
+      delayDuration={250}
     >
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
       <TooltipPrimitive.Content
@@ -29,15 +30,15 @@ const Tooltip = ({
           css={{
             zIndex: 9999,
             boxShadow:
-              "0px 4px 12px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px $colors$primary4 ",
+              '0px 4px 12px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px $colors$primary4 ',
             borderRadius: 8,
-            overflow: "hidden",
+            overflow: 'hidden',
           }}
         >
           <Box
             css={{
-              background: "$gray1",
-              p: "$4",
+              background: '$gray1',
+              p: '$4',
             }}
           >
             {content}
@@ -45,7 +46,7 @@ const Tooltip = ({
         </Box>
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Root>
-  );
-};
+  )
+}
 
-export default Tooltip;
+export default Tooltip

@@ -61,6 +61,9 @@ const Button = styled('button', {
       },
     },
     corners: {
+      square: {
+        borderRadius: 0,
+      },
       rounded: {
         borderRadius: 8,
       },
