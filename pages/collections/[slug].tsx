@@ -12,7 +12,6 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 import Layout from 'components/Layout'
-import { useRouter } from 'next/router'
 import { useEffect, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
@@ -25,10 +24,12 @@ import { CollectionOffer } from 'components/collections/CollectionOffer'
 import { Grid } from 'components/primitives/Grid'
 import { useIntersectionObserver } from 'usehooks-ts'
 import fetcher from 'utils/fetcher'
+import { useRouter } from 'next/router'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+  const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
@@ -49,21 +50,34 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   )
 
   let collection = collections && collections[0]
+
+  let tokenQuery: Parameters<typeof useTokens>['0'] = {
+    limit: 20,
+    collection: id,
+    sortBy: 'floorAskPrice',
+    sortDirection: 'asc',
+  }
+
+  // Extract all queries of attribute type
+  Object.keys({ ...router.query }).map((key) => {
+    if (
+      key.startsWith('attributes[') &&
+      key.endsWith(']') &&
+      router.query[key] !== ''
+    ) {
+      tokenQuery[key] = router.query[key]
+    }
+  })
+
   const {
     data: tokens,
     mutate,
     fetchNextPage,
-  } = useTokens(
-    {
-      collection: id,
-    },
-    {
-      fallback: ssr.tokens,
-    }
-  )
+  } = useTokens(tokenQuery, {
+    fallback: ssr.tokens,
+  })
 
   let { data: attributes } = useAttributes(collection?.id)
-  console.log(attributes)
 
   const rarityEnabledCollection =
     collection?.tokenCount &&
