@@ -37,52 +37,53 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
       </Flex>
       {open && (
         <Box css={{ maxHeight: 300, overflow: 'auto', pb: '$2' }}>
-          {attribute.values
-            .sort((a, b) => b.count - a.count)
-            .map((value) => (
-              <Flex css={{ mb: '$3', gap: '$3' }} align="center">
-                <Text
-                  style="body1"
-                  css={{
-                    color: '$gray11',
-                    flex: 1,
-                    whiteSpace: 'pre',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {value.value}
-                </Text>
-
-                <Text style="body2" css={{ color: '$gray11' }}>
-                  {value.count}
-                </Text>
-                <Flex align="center">
-                  <Switch
-                    checked={hasParam(
-                      router,
-                      `attributes[${attribute.key}]`,
-                      value.value
-                    )}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        addParam(
-                          router,
-                          `attributes[${attribute.key}]`,
-                          value.value
-                        )
-                      } else {
-                        removeParam(
-                          router,
-                          `attributes[${attribute.key}]`,
-                          value.value
-                        )
-                      }
+          {attribute.values &&
+            attribute.values
+              .sort((a, b) => b.count - a.count)
+              .map((value) => (
+                <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+                  <Text
+                    style="body1"
+                    css={{
+                      color: '$gray11',
+                      flex: 1,
+                      whiteSpace: 'pre',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden',
                     }}
-                  />
+                  >
+                    {value.value}
+                  </Text>
+
+                  <Text style="body2" css={{ color: '$gray11' }}>
+                    {value.count}
+                  </Text>
+                  <Flex align="center">
+                    <Switch
+                      checked={hasParam(
+                        router,
+                        `attributes[${attribute.key}]`,
+                        value.value
+                      )}
+                      onCheckedChange={(checked) => {
+                        if (checked) {
+                          addParam(
+                            router,
+                            `attributes[${attribute.key}]`,
+                            value.value
+                          )
+                        } else {
+                          removeParam(
+                            router,
+                            `attributes[${attribute.key}]`,
+                            value.value
+                          )
+                        }
+                      }}
+                    />
+                  </Flex>
                 </Flex>
-              </Flex>
-            ))}
+              ))}
         </Box>
       )}
     </Box>

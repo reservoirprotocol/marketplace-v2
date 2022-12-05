@@ -33,9 +33,9 @@ export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
           }}
         >
           {attributes &&
-            attributes.map((attribute) => (
-              <AttributeSelector attribute={attribute} />
-            ))}
+            attributes
+              .filter((attribute) => attribute.kind != 'number')
+              .map((attribute) => <AttributeSelector attribute={attribute} />)}
         </Box>
       </CollapsibleContent>
     </Collapsible.Root>
