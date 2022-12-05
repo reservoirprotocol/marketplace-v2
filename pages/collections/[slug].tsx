@@ -25,12 +25,15 @@ import { Grid } from 'components/primitives/Grid'
 import { useIntersectionObserver } from 'usehooks-ts'
 import fetcher from 'utils/fetcher'
 import { useRouter } from 'next/router'
+import { SortTokens } from 'components/collections/SortTokens'
+import { useMediaQuery } from 'react-responsive'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
+  const isMobile = useMediaQuery({ maxWidth: 600 })
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -57,6 +60,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
   }
+
+  const sortDirection = router.query['sortDirection']?.toString()
+  const sortBy = router.query['sortBy']?.toString()
+
+  if (sortBy === 'tokenId' || sortBy === 'rarity') tokenQuery.sortBy = sortBy
+  if (sortDirection === 'desc') tokenQuery.sortDirection = 'desc'
 
   // Extract all queries of attribute type
   Object.keys({ ...router.query }).map((key) => {
@@ -145,13 +154,25 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
               }}
             >
               <Flex justify="between" css={{ marginBottom: '$4' }}>
-                {attributes && attributes.length > 0 && (
+                {attributes && attributes.length > 0 && !isMobile && (
                   <FilterButton
                     open={attributeFiltersOpen}
                     setOpen={setAttributeFiltersOpen}
                   />
                 )}
-                <CollectionOffer collection={collection} />
+                <Flex
+                  direction="column"
+                  css={{
+                    width: '100%',
+                    '@bp1': {
+                      flexDirection: 'row',
+                      width: 'max-content',
+                    },
+                  }}
+                >
+                  <SortTokens />
+                  <CollectionOffer collection={collection} />
+                </Flex>
               </Flex>
               <SelectedAttributes />
               <Grid

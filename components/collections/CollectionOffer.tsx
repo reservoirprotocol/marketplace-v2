@@ -60,7 +60,10 @@ export const CollectionOffer: FC<Props> = ({ collection }) => {
         <BidModal
           collectionId={collection?.id}
           trigger={
-            <Button disabled={isInTheWrongNetwork}>
+            <Button
+              css={{ justifyContent: 'center', '@bp1': { ml: '$4' } }}
+              disabled={isInTheWrongNetwork}
+            >
               {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
             </Button>
           }
