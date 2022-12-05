@@ -1,12 +1,13 @@
 import 'fonts/inter.css'
 import type { AppProps } from 'next/app'
-import { ThemeProvider } from 'next-themes'
+import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
 import {
   RainbowKitProvider,
   getDefaultWallets,
   darkTheme as rainbowDarkTheme,
+  lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
 import {
   WagmiConfig,
@@ -24,9 +25,11 @@ import { KeyShortcutProvider } from 'react-key-shortcuts'
 
 import {
   ReservoirKitProvider,
-  darkTheme as resKitTheme,
+  darkTheme as reservoirDarkTheme,
+  lightTheme as reservoirLightTheme,
+  ReservoirKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 const envChain = allChains.find(
   (chain) => chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || chainId.mainnet)
@@ -51,19 +54,59 @@ const wagmiClient = createClient({
   provider,
 })
 
-const theme = resKitTheme({
-  headlineFont: 'Figtree',
-  font: 'Figtree',
+const reservoirKitThemeOverrides = {
+  headlineFont: 'Inter',
+  font: 'Inter',
   primaryColor: '#6E56CB',
   primaryHoverColor: '#644fc1',
-})
+}
 
-const rainbowKitTheme = rainbowDarkTheme({
-  borderRadius: 'small',
-})
+function AppWrapper(props: AppProps & { baseUrl: string }) {
+  return (
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      value={{
+        dark: darkTheme.className,
+        light: 'light',
+      }}
+    >
+      <MyApp {...props} />
+    </ThemeProvider>
+  )
+}
 
 function MyApp({ Component, pageProps }: AppProps) {
   globalReset()
+
+  const { theme } = useTheme()
+
+  const [reservoirKitTheme, setReservoirKitTheme] = useState<
+    ReservoirKitTheme | undefined
+  >()
+  const [rainbowKitTheme, setRainbowKitTheme] = useState<
+    | ReturnType<typeof rainbowDarkTheme>
+    | ReturnType<typeof rainbowLightTheme>
+    | undefined
+  >()
+
+  useEffect(() => {
+    if (theme == 'dark') {
+      setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
+      setRainbowKitTheme(
+        rainbowDarkTheme({
+          borderRadius: 'small',
+        })
+      )
+    } else {
+      setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
+      setRainbowKitTheme(
+        rainbowLightTheme({
+          borderRadius: 'small',
+        })
+      )
+    }
+  }, [theme])
 
   const FunctionalComponent = Component as FC
 
@@ -88,7 +131,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
               source: 'reservoir.hub',
             }}
-            theme={theme}
+            theme={reservoirKitTheme}
           >
             <Tooltip.Provider>
               <RainbowKitProvider
@@ -106,4 +149,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   )
 }
 
-export default MyApp
+export default AppWrapper

@@ -7,22 +7,39 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
-import { Box, Flex } from 'components/primitives'
-import { FC } from 'react'
+import { Flex } from 'components/primitives'
+import { ComponentPropsWithoutRef, FC } from 'react'
 import { useEnvChain } from 'hooks'
 import { useTheme } from 'next-themes'
 import { Dropdown } from 'components/primitives/Dropdown'
+import { useMediaQuery } from 'react-responsive'
+import fetcher from 'utils/fetcher'
 
 type CollectionActionsProps = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
 }
 
-const CollectionAction = styled(Box, {
+const CollectionAction = styled(Flex, {
   px: '$4',
   py: '$3',
   color: '$gray12',
   background: '$gray3',
   cursor: 'pointer',
+  transition: 'background 0.25s ease-in',
+  height: 48,
+  alignItems: 'center',
+  '&:hover': {
+    background: '$gray4',
+  },
+})
+
+const CollectionActionDropdownItem = styled(Flex, {
+  gap: '$3',
+  cursor: 'pointer',
+  alignItems: 'center',
+  flexDirection: 'row',
+  px: '$4',
+  py: 20,
   transition: 'background 0.25s ease-in',
   '&:hover': {
     background: '$gray4',
@@ -30,16 +47,45 @@ const CollectionAction = styled(Box, {
 })
 
 const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
+  const isMobile = useMediaQuery({ maxWidth: 600 })
   const envChain = useEnvChain()
   const { theme } = useTheme()
-  const etherscanLogo =
-    theme === 'dark'
-      ? '/icons/etherscan-logo-light-circle.svg'
-      : '/icons/etherscan-logo-circle.svg'
+  const etherscanImage = (
+    <img
+      src={
+        theme === 'dark'
+          ? '/icons/etherscan-logo-light-circle.svg'
+          : '/icons/etherscan-logo-circle.svg'
+      }
+      alt="Etherscan Icon"
+      style={{
+        height: 16,
+        width: 16,
+      }}
+    />
+  )
 
   const blockExplorerUrl = `${
     envChain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/address/${collection?.id}`
+  const twitterLink = collection?.twitterUsername
+    ? `https://twitter.com/${collection?.twitterUsername}`
+    : null
+
+  const containerCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
+    borderRadius: 8,
+    overflow: 'hidden',
+    gap: 1,
+    flexShrink: 0,
+    mb: 'auto',
+  }
+
+  const dropdownContentProps: ComponentPropsWithoutRef<
+    typeof Dropdown
+  >['contentProps'] = {
+    sideOffset: 4,
+    style: { padding: 0, overflow: 'hidden' },
+  }
 
   const collectionActionOverflowTrigger = (
     <CollectionAction>
@@ -47,29 +93,101 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
     </CollectionAction>
   )
 
-  return (
-    <Flex
-      align="start"
-      css={{ borderRadius: 8, overflow: 'hidden', mb: 'auto', gap: 1 }}
+  const refreshMetadataItem = (
+    <CollectionActionDropdownItem
+      onClick={() => {
+        fetcher('collections/refresh/v1', undefined, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ collection: collection.id }),
+        })
+          .then(({ response }) => {
+            if (response.status === 200) {
+              //TODO show toast
+            }
+            throw 'Request Failed'
+          })
+          .catch((e) => {
+            //TODO show toast error
+            throw e
+          })
+      }}
     >
-      <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
-        <CollectionAction>
-          <img
-            src={etherscanLogo}
-            alt="Etherscan Icon"
-            style={{
-              height: 16,
-              width: 16,
-            }}
-          />
-        </CollectionAction>
-      </a>
-      {collection.twitterUsername && (
-        <a
-          href={`https://twitter.com/${collection?.twitterUsername}`}
-          target="_blank"
-          rel="noopener noreferrer"
+      <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+      Refresh Metadata
+    </CollectionActionDropdownItem>
+  )
+
+  if (isMobile) {
+    return (
+      <Flex css={containerCss}>
+        <Dropdown
+          trigger={collectionActionOverflowTrigger}
+          contentProps={dropdownContentProps}
         >
+          <Flex
+            css={{
+              flexDirection: 'column',
+            }}
+          >
+            <a
+              href={blockExplorerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <CollectionActionDropdownItem>
+                {etherscanImage}
+                Etherscan
+              </CollectionActionDropdownItem>
+            </a>
+            {collection?.externalUrl && (
+              <a
+                href={collection.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <CollectionActionDropdownItem>
+                  <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
+                  Website
+                </CollectionActionDropdownItem>
+              </a>
+            )}
+            {collection?.discordUrl && (
+              <a
+                href={collection.discordUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <CollectionActionDropdownItem>
+                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} />{' '}
+                  Discord
+                </CollectionActionDropdownItem>
+              </a>
+            )}
+            {twitterLink && (
+              <a href={twitterLink} target="_blank" rel="noopener noreferrer">
+                <CollectionActionDropdownItem>
+                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} />{' '}
+                  Twitter
+                </CollectionActionDropdownItem>
+              </a>
+            )}
+            {refreshMetadataItem}
+          </Flex>
+        </Dropdown>
+      </Flex>
+    )
+  }
+
+  return (
+    <Flex css={containerCss}>
+      <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
+        <CollectionAction>{etherscanImage}</CollectionAction>
+      </a>
+      {twitterLink && (
+        <a href={twitterLink} target="_blank" rel="noopener noreferrer">
           <CollectionAction>
             <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
           </CollectionAction>
@@ -99,18 +217,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       )}
       <Dropdown
         trigger={collectionActionOverflowTrigger}
-        contentProps={{ sideOffset: 4 }}
+        contentProps={dropdownContentProps}
       >
-        <Flex
-          css={{
-            p: '$2',
-          }}
-        >
-          <Flex align="center" css={{ gap: '$3', cursor: 'pointer' }}>
-            <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
-            Refresh Metadata
-          </Flex>
-        </Flex>
+        {refreshMetadataItem}
       </Dropdown>
     </Flex>
   )

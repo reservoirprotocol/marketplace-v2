@@ -78,7 +78,14 @@ const Layout: FC<Props> = ({
         <meta property="og:image:height" content="640" />
         <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
       </Head>
-      <Box css={{ background: '$slate1', height: '100%', pt: 80 }}>
+      <Box
+        css={{
+          background: '$gray1',
+          height: '100%',
+          minHeight: '100vh',
+          pt: 80,
+        }}
+      >
         <Navbar />
         <main>{children}</main>
       </Box>

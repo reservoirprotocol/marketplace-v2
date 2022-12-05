@@ -5,12 +5,7 @@ import Document, {
   NextScript,
   DocumentContext,
 } from 'next/document'
-import { styled, getCssText } from '../stitches.config'
-
-const Body = styled('body', {
-  backgroundColor: '$gray1',
-  color: '$gray11',
-})
+import { getCssText } from '../stitches.config'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -30,10 +25,10 @@ class MyDocument extends Document {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <Body>
+        <body>
           <Main />
           <NextScript />
-        </Body>
+        </body>
       </Html>
     )
   }

@@ -1,5 +1,11 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import { Flex, Text, Box, FormatCryptoCurrency } from 'components/primitives'
+import {
+  Flex,
+  Text,
+  Box,
+  FormatCryptoCurrency,
+  Grid,
+} from 'components/primitives'
 import { FC } from 'react'
 import { formatNumber } from 'utils/numbers'
 
@@ -8,9 +14,10 @@ const StatBox = ({ label, children }) => (
     css={{
       p: '$4',
       minWidth: 120,
+      background: '$gray4',
     }}
   >
-    <Text style="subtitle2" css={{ color: '$gray12', mb: '$1' }} as="p">
+    <Text style="subtitle2" css={{ color: '$gray12' }} as="p">
       {label}
     </Text>
     {children}
@@ -28,12 +35,15 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
     100
 
   return (
-    <Flex
+    <Grid
       css={{
-        background: '$gray4',
         borderRadius: 8,
-        '& > div': {
-          borderRight: '1px solid $gray1',
+        overflow: 'hidden',
+        gap: 1,
+        gridTemplateColumns: '1fr 1fr',
+        '@bp1': {
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+          marginRight: 'auto',
         },
       }}
     >
@@ -64,7 +74,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
       <StatBox label="Count">
         <Text style="h6">{formatNumber(collection?.tokenCount)}</Text>
       </StatBox>
-    </Flex>
+    </Grid>
   )
 }
 
