@@ -102,7 +102,10 @@ const HamburgerMenu = () => {
               borderBottom: '1px solid $gray4',
               pb: '$4',
             }}
-            onClick={() => (ensName ? copy(ensName) : copy(address))}
+            onClick={
+              //TODO: add toast
+              () => (ensName ? copy(ensName) : copy(address))
+            }
           >
             <Flex css={{ alignItems: 'center' }}>
               {ensAvatar ? (

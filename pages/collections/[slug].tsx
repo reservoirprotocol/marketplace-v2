@@ -16,6 +16,7 @@ import { Filters } from 'components/collections/filters/Filters'
 import { FilterButton } from 'components/collections/filters/FilterButton'
 import { useState } from 'react'
 import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
+import { CollectionOffer } from 'components/collections/CollectionOffer'
 
 const IndexPage: NextPage = () => {
   const [open, setOpen] = useState(false)
@@ -88,7 +89,10 @@ const IndexPage: NextPage = () => {
               }}
             >
               <Flex justify="between" css={{ marginBottom: '$4' }}>
-                <FilterButton open={open} setOpen={setOpen} />
+                {attributes && attributes.length > 0 && (
+                  <FilterButton open={open} setOpen={setOpen} />
+                )}
+                <CollectionOffer collection={collection} />
               </Flex>
               <SelectedAttributes />
               <Box

@@ -4,13 +4,7 @@ import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
-import {
-  addParam,
-  toggleOffAttribute,
-  toggleOffItem,
-  toggleOnAttribute,
-  toggleOnItem,
-} from 'utils/router'
+import { addParam, hasParam, removeParam } from 'utils/router'
 
 type Props = {
   attribute: NonNullable<
@@ -65,32 +59,24 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
                 </Text>
                 <Flex align="center">
                   <Switch
-                    defaultChecked={
-                      router.query[`attributes[${attribute.key}]`] ===
+                    checked={hasParam(
+                      router,
+                      `attributes[${attribute.key}]`,
                       value.value
-                    }
+                    )}
                     onCheckedChange={(checked) => {
-                      console.log('Query ', router.query)
-                      // console.log(
-                      //   router.query[`attributes[${attribute.key}]`] !=
-                      //     undefined
-                      // )
                       if (checked) {
-                        // if (
-                        //   router.query[`attributes[${attribute.key}]`] !=
-                        //   undefined
-                        // )
                         addParam(
                           router,
                           `attributes[${attribute.key}]`,
                           value.value
                         )
-                        // toggleOnAttribute(router, attribute.key, value.value)
-                        // else {
-                        //   toggleOnAttribute(router, attribute.key, value.value)
-                        // }
                       } else {
-                        toggleOffAttribute(router, attribute.key)
+                        removeParam(
+                          router,
+                          `attributes[${attribute.key}]`,
+                          value.value
+                        )
                       }
                     }}
                   />
