@@ -20,7 +20,7 @@ import TokenCard from 'components/collections/TokenCard'
 import { Filters } from 'components/collections/filters/Filters'
 import { FilterButton } from 'components/collections/filters/FilterButton'
 import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
-import { CollectionOffer } from 'components/collections/CollectionOffer'
+import { CollectionOffer } from 'components/buttons/CollectionOffer'
 import { Grid } from 'components/primitives/Grid'
 import { useIntersectionObserver } from 'usehooks-ts'
 import fetcher from 'utils/fetcher'
@@ -132,7 +132,9 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             </Box>
           </Flex>
 
-          <Flex css={{ gap: attributeFiltersOpen && '$5' }}>
+          <Flex
+            css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
+          >
             <Filters
               attributes={attributes}
               open={attributeFiltersOpen}
@@ -151,7 +153,9 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     setOpen={setAttributeFiltersOpen}
                   />
                 )}
-                <CollectionOffer collection={collection} />
+                <Flex css={{ ml: 'auto' }}>
+                  <CollectionOffer collection={collection} mutate={mutate} />
+                </Flex>
               </Flex>
               <SelectedAttributes />
               <Grid

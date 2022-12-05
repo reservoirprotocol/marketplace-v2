@@ -15,10 +15,16 @@ type Props = {
 
 export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
+    <Collapsible.Root
+      open={open}
+      onOpenChange={setOpen}
+      style={{
+        transition: 'width .5s',
+        width: open ? 320 : 0,
+      }}
+    >
       <CollapsibleContent
         css={{
-          width: 320,
           position: 'sticky',
           top: 16 + 80,
           height: 'calc(100vh - 81px - 32px)',
