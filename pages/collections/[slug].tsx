@@ -39,6 +39,13 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
     rootMargin: '0px 0px 300px 0px',
   })
 
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollToTop = () => {
+    let top = (scrollRef.current?.offsetTop || 0) - 97
+    window.scrollTo({ top: top })
+  }
+
   const { data: collections } = useCollections(
     {
       id,
@@ -134,11 +141,13 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
 
           <Flex
             css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
+            ref={scrollRef}
           >
             <Filters
               attributes={attributes}
               open={attributeFiltersOpen}
               setOpen={setAttributeFiltersOpen}
+              scrollToTop={scrollToTop}
             />
             <Box
               css={{

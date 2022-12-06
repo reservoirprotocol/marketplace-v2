@@ -10,9 +10,10 @@ type Props = {
   attribute: NonNullable<
     ReturnType<typeof useAttributes>['response']['attributes']['0']
   >
+  scrollToTop: () => void
 }
 
-export const AttributeSelector: FC<Props> = ({ attribute }) => {
+export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
@@ -79,6 +80,7 @@ export const AttributeSelector: FC<Props> = ({ attribute }) => {
                             value.value
                           )
                         }
+                        scrollToTop()
                       }}
                     />
                   </Flex>

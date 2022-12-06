@@ -11,9 +11,15 @@ type Props = {
   attributes: NonNullable<
     ReturnType<typeof useAttributes>['response']['attributes']
   >
+  scrollToTop: () => void
 }
 
-export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
+export const Filters: FC<Props> = ({
+  attributes,
+  open,
+  setOpen,
+  scrollToTop,
+}) => {
   return (
     <Collapsible.Root
       open={open}
@@ -41,7 +47,12 @@ export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
           {attributes &&
             attributes
               .filter((attribute) => attribute.kind != 'number')
-              .map((attribute) => <AttributeSelector attribute={attribute} />)}
+              .map((attribute) => (
+                <AttributeSelector
+                  attribute={attribute}
+                  scrollToTop={scrollToTop}
+                />
+              ))}
         </Box>
       </CollapsibleContent>
     </Collapsible.Root>
