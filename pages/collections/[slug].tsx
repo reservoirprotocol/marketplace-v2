@@ -9,6 +9,7 @@ import {
   useCollections,
   useTokens,
   useAttributes,
+  useCollectionActivity,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 import Layout from 'components/Layout'
@@ -27,6 +28,9 @@ import fetcher from 'utils/fetcher'
 import { useRouter } from 'next/router'
 import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
+import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
+import * as Tabs from '@radix-ui/react-tabs'
+import { ActivityTable } from 'components/ActivityTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -60,6 +64,15 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   )
 
   let collection = collections && collections[0]
+
+  const collectionActivityData = useCollectionActivity(
+    { collection: id, limit: 20 },
+    {
+      revalidateOnMount: true,
+      fallbackData: [],
+      revalidateFirstPage: true,
+    }
+  )
 
   let tokenQuery: Parameters<typeof useTokens>['0'] = {
     limit: 20,
@@ -131,100 +144,99 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             <CollectionActions collection={collection} />
           </Flex>
           <StatHeader collection={collection} />
-          <Flex
-            css={{
-              borderBottom: '1px solid $gray5',
-              mt: '$5',
-              mb: '$4',
-              gap: '$5',
-            }}
-          >
-            <Box css={{ pb: '$3', borderBottom: '1px solid $accent' }}>
-              <Text style="h6">Items</Text>
-            </Box>
+          <Tabs.Root defaultValue="items">
+            <TabsList>
+              <TabsTrigger value="items">Items</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
+            </TabsList>
 
-            <Box>
-              <Text style="h6">Activity</Text>
-            </Box>
-          </Flex>
-
-          <Flex
-            css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
-            ref={scrollRef}
-          >
-            <Filters
-              attributes={attributes}
-              open={attributeFiltersOpen}
-              setOpen={setAttributeFiltersOpen}
-              scrollToTop={scrollToTop}
-            />
-            <Box
-              css={{
-                flex: 1,
-                pb: '$5',
-              }}
-            >
-              <Flex justify="between" css={{ marginBottom: '$4' }}>
-                {attributes && attributes.length > 0 && !isMobile && (
-                  <FilterButton
-                    open={attributeFiltersOpen}
-                    setOpen={setAttributeFiltersOpen}
-                  />
-                )}
-                <Flex
-                  direction="column"
+            <TabsContent value="items">
+              <Flex
+                css={{
+                  gap: attributeFiltersOpen && '$5',
+                  position: 'relative',
+                }}
+                ref={scrollRef}
+              >
+                <Filters
+                  attributes={attributes}
+                  open={attributeFiltersOpen}
+                  setOpen={setAttributeFiltersOpen}
+                  scrollToTop={scrollToTop}
+                />
+                <Box
                   css={{
-                    ml: 'auto',
-                    width: '100%',
-                    '@bp1': {
-                      flexDirection: 'row',
-                      width: 'max-content',
-                    },
+                    flex: 1,
+                    pb: '$5',
                   }}
                 >
-                  <SortTokens />
-                  <CollectionOffer
-                    collection={collection}
-                    buttonCss={{
-                      justifyContent: 'center',
-                      '@bp1': { ml: '$4' },
+                  <Flex justify="between" css={{ marginBottom: '$4' }}>
+                    {attributes && attributes.length > 0 && !isMobile && (
+                      <FilterButton
+                        open={attributeFiltersOpen}
+                        setOpen={setAttributeFiltersOpen}
+                      />
+                    )}
+                    <Flex
+                      direction="column"
+                      css={{
+                        ml: 'auto',
+                        width: '100%',
+                        '@bp1': {
+                          flexDirection: 'row',
+                          width: 'max-content',
+                        },
+                      }}
+                    >
+                      <SortTokens />
+                      <CollectionOffer
+                        collection={collection}
+                        buttonCss={{
+                          justifyContent: 'center',
+                          '@bp1': { ml: '$4' },
+                        }}
+                      />
+                    </Flex>
+                  </Flex>
+                  <SelectedAttributes />
+                  <Grid
+                    css={{
+                      gridTemplateColumns:
+                        'repeat(auto-fit, minmax(300px, 1fr))',
+                      gap: '$4',
                     }}
-                  />
-                </Flex>
+                  >
+                    {tokens.map((token, i) => (
+                      <TokenCard
+                        key={i}
+                        token={token}
+                        mutate={mutate}
+                        rarityEnabled={rarityEnabledCollection}
+                        onMediaPlayed={(e) => {
+                          if (
+                            playingElement &&
+                            playingElement !== e.nativeEvent.target
+                          ) {
+                            playingElement.pause()
+                          }
+                          const element =
+                            (e.nativeEvent.target as HTMLAudioElement) ||
+                            (e.nativeEvent.target as HTMLVideoElement)
+                          if (element) {
+                            setPlayingElement(element)
+                          }
+                        }}
+                      />
+                    ))}
+                    <div ref={loadMoreRef}></div>
+                  </Grid>
+                </Box>
               </Flex>
-              <SelectedAttributes />
-              <Grid
-                css={{
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: '$4',
-                }}
-              >
-                {tokens.map((token, i) => (
-                  <TokenCard
-                    key={i}
-                    token={token}
-                    mutate={mutate}
-                    rarityEnabled={rarityEnabledCollection}
-                    onMediaPlayed={(e) => {
-                      if (
-                        playingElement &&
-                        playingElement !== e.nativeEvent.target
-                      ) {
-                        playingElement.pause()
-                      }
-                      const element =
-                        (e.nativeEvent.target as HTMLAudioElement) ||
-                        (e.nativeEvent.target as HTMLVideoElement)
-                      if (element) {
-                        setPlayingElement(element)
-                      }
-                    }}
-                  />
-                ))}
-                <div ref={loadMoreRef}></div>
-              </Grid>
-            </Box>
-          </Flex>
+            </TabsContent>
+            <TabsContent value="activity">
+              <ActivityTable data={collectionActivityData} />
+            </TabsContent>
+          </Tabs.Root>
         </Flex>
       ) : (
         <Box />
