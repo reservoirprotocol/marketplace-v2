@@ -4,6 +4,7 @@ import { FC } from 'react'
 import { AttributeSelector } from './AttributeSelector'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = {
   open: boolean
@@ -33,7 +34,8 @@ export const Filters: FC<Props> = ({
         css={{
           position: 'sticky',
           top: 16 + 80,
-          height: 'calc(100vh - 81px - 32px)',
+          height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
+          overflow: 'auto',
         }}
       >
         <Box
