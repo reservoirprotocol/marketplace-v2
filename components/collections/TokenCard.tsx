@@ -107,7 +107,9 @@ export default ({
                 {token?.token?.name || '#' + token?.token?.tokenId}{' '}
               </Text>
               {token?.token?.isFlagged && (
-                <Tooltip content={'Not tradeable on OpenSea'}>
+                <Tooltip
+                  content={<Text style="body2">Not tradeable on OpenSea</Text>}
+                >
                   <Text css={{ color: '$red10' }}>
                     <FontAwesomeIcon
                       icon={faCircleExclamation}
