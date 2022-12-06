@@ -50,7 +50,10 @@ export const ProfileDropdown: FC = () => {
   const children = (
     <>
       <DropdownMenuItem
-        onClick={() => (ensName ? copy(ensName) : copy(address))}
+        onClick={
+          //TODO: add toast
+          () => (ensName ? copy(ensName) : copy(address))
+        }
       >
         <Flex justify="between">
           <Text style="subtitle1" color="$gray11" css={{ color: '$gray11' }}>

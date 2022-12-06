@@ -15,6 +15,9 @@ import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
 import MobileSearch from './MobileSearch'
 
+export const NAVBAR_HEIGHT = 81
+export const NAVBAR_HEIGHT_MOBILE = 77
+
 const Navbar = () => {
   const { theme } = useTheme()
   const { isConnected } = useAccount()
@@ -37,7 +40,7 @@ const Navbar = () => {
   return isMobile ? (
     <Flex
       css={{
-        py: '$4',
+        height: NAVBAR_HEIGHT_MOBILE,
         px: '$4',
         width: '100%',
         borderBottom: '1px solid $gray4',
@@ -69,7 +72,7 @@ const Navbar = () => {
   ) : (
     <Flex
       css={{
-        py: '$4',
+        height: NAVBAR_HEIGHT,
         px: '$5',
         width: '100%',
         borderBottom: '1px solid $gray4',

@@ -17,62 +17,20 @@ import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
+import { Filters } from 'components/collections/filters/Filters'
+import { FilterButton } from 'components/collections/filters/FilterButton'
+import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
+import { CollectionOffer } from 'components/buttons/CollectionOffer'
 import { Grid } from 'components/primitives/Grid'
 import { useIntersectionObserver } from 'usehooks-ts'
 import fetcher from 'utils/fetcher'
-
-// const AttributeSelector = ({ attribute }) => {
-//   const [open, setOpen] = useState(false)
-
-//   return (
-//     <Box css={{ pt: '$2', borderBottom: '1px solid $gray7' }}>
-//       <Flex
-//         align="center"
-//         justify="between"
-//         css={{ mb: '$3', cursor: 'pointer' }}
-//         onClick={() => setOpen(!open)}
-//       >
-//         <Text as="h5" style="h6">
-//           {attribute.key}
-//         </Text>
-//         <FontAwesomeIcon icon={open ? faChevronUp : faChevronDown} />
-//       </Flex>
-//       {open && (
-//         <Box css={{ maxHeight: 300, overflow: 'auto', pb: '$2' }}>
-//           {attribute.values
-//             .sort((a, b) => b.count - a.count)
-//             .map((value) => (
-//               <Flex css={{ mb: '$3', gap: '$3' }} align="center">
-//                 <Flex align="center">
-//                   <Switch />
-//                 </Flex>
-//                 <Text
-//                   style="body1"
-//                   css={{
-//                     color: '$gray11',
-//                     flex: 1,
-//                     whiteSpace: 'pre',
-//                     textOverflow: 'ellipsis',
-//                     overflow: 'hidden',
-//                   }}
-//                 >
-//                   {value.value}
-//                 </Text>
-
-//                 <Text style="body2" css={{ color: '$gray11' }}>
-//                   {value.count}
-//                 </Text>
-//               </Flex>
-//             ))}
-//         </Box>
-//       )}
-//     </Box>
-//   )
-// }
+import { useRouter } from 'next/router'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+  const router = useRouter()
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -80,6 +38,13 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollToTop = () => {
+    let top = (scrollRef.current?.offsetTop || 0) - 97
+    window.scrollTo({ top: top })
+  }
 
   const { data: collections } = useCollections(
     {
@@ -92,20 +57,34 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   )
 
   let collection = collections && collections[0]
+
+  let tokenQuery: Parameters<typeof useTokens>['0'] = {
+    limit: 20,
+    collection: id,
+    sortBy: 'floorAskPrice',
+    sortDirection: 'asc',
+  }
+
+  // Extract all queries of attribute type
+  Object.keys({ ...router.query }).map((key) => {
+    if (
+      key.startsWith('attributes[') &&
+      key.endsWith(']') &&
+      router.query[key] !== ''
+    ) {
+      tokenQuery[key] = router.query[key]
+    }
+  })
+
   const {
     data: tokens,
     mutate,
     fetchNextPage,
-  } = useTokens(
-    {
-      collection: id,
-    },
-    {
-      fallback: ssr.tokens,
-    }
-  )
+  } = useTokens(tokenQuery, {
+    fallback: ssr.tokens,
+  })
 
-  let { data: attributes } = useAttributes()
+  let { data: attributes } = useAttributes(collection?.id)
 
   const rarityEnabledCollection =
     collection?.tokenCount &&
@@ -160,40 +139,34 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             </Box>
           </Flex>
 
-          <Flex css={{ gap: '$5' }}>
-            {/* <Box
-              css={{
-                width: 320,
-                background: '$gray3',
-                border: '1px solid $gray5',
-                position: 'sticky',
-                top: 16 + 80,
-                borderRadius: 8,
-                overflow: 'auto',
-                height: 'calc(100vh - 81px - 32px)',
-              }}
-            >
-              <Box
-                css={{
-                  p: '$4',
-                  '& > div:first-of-type': {
-                    pt: 0,
-                  },
-                }}
-              >
-                {attributes &&
-                  attributes.map((attribute) => (
-                    <AttributeSelector attribute={attribute} />
-                  ))}
-              </Box>
-            </Box> */}
-
+          <Flex
+            css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
+            ref={scrollRef}
+          >
+            <Filters
+              attributes={attributes}
+              open={attributeFiltersOpen}
+              setOpen={setAttributeFiltersOpen}
+              scrollToTop={scrollToTop}
+            />
             <Box
               css={{
                 flex: 1,
                 pb: '$5',
               }}
             >
+              <Flex justify="between" css={{ marginBottom: '$4' }}>
+                {attributes && attributes.length > 0 && (
+                  <FilterButton
+                    open={attributeFiltersOpen}
+                    setOpen={setAttributeFiltersOpen}
+                  />
+                )}
+                <Flex css={{ ml: 'auto' }}>
+                  <CollectionOffer collection={collection} mutate={mutate} />
+                </Flex>
+              </Flex>
+              <SelectedAttributes />
               <Grid
                 css={{
                   gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
