@@ -21,7 +21,20 @@ const AnimatedCollapsibleContent = forwardRef<
   ComponentPropsWithoutRef<typeof CollapsibleContent>
 >(({ children, ...props }, forwardedRef) => (
   <CollapsibleContent asChild forceMount {...props}>
-    <motion.div ref={forwardedRef}>{children}</motion.div>
+    <motion.div
+      ref={forwardedRef}
+      initial={{ width: 0 }}
+      animate={{
+        width: '100%',
+        transition: { mass: 1, duration: 0.15 },
+      }}
+      exit={{
+        width: 0,
+        transition: { duration: 0.3 },
+      }}
+    >
+      {children}
+    </motion.div>
   </CollapsibleContent>
 ))
 
@@ -52,4 +65,4 @@ const Collapsible = forwardRef<
   )
 })
 
-export { Collapsible, CollapsibleContent }
+export { Collapsible, CollapsibleContent, AnimatedCollapsibleContent }

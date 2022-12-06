@@ -4,6 +4,7 @@ import { FC } from 'react'
 import { AttributeSelector } from './AttributeSelector'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = {
   open: boolean
@@ -11,17 +12,30 @@ type Props = {
   attributes: NonNullable<
     ReturnType<typeof useAttributes>['response']['attributes']
   >
+  scrollToTop: () => void
 }
 
-export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
+export const Filters: FC<Props> = ({
+  attributes,
+  open,
+  setOpen,
+  scrollToTop,
+}) => {
   return (
-    <Collapsible.Root open={open} onOpenChange={setOpen}>
+    <Collapsible.Root
+      open={open}
+      onOpenChange={setOpen}
+      style={{
+        transition: 'width .5s',
+        width: open ? 320 : 0,
+      }}
+    >
       <CollapsibleContent
         css={{
-          width: 320,
           position: 'sticky',
           top: 16 + 80,
-          height: 'calc(100vh - 81px - 32px)',
+          height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
+          overflow: 'auto',
         }}
       >
         <Box
@@ -35,7 +49,12 @@ export const Filters: FC<Props> = ({ attributes, open, setOpen }) => {
           {attributes &&
             attributes
               .filter((attribute) => attribute.kind != 'number')
-              .map((attribute) => <AttributeSelector attribute={attribute} />)}
+              .map((attribute) => (
+                <AttributeSelector
+                  attribute={attribute}
+                  scrollToTop={scrollToTop}
+                />
+              ))}
         </Box>
       </CollapsibleContent>
     </Collapsible.Root>

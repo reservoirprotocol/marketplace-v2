@@ -1,9 +1,11 @@
 import { BidModal, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
-import { FC, useEffect, useState } from 'react'
+import { ComponentProps, FC, useEffect, useState } from 'react'
 import { useNetwork, useSigner } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { SWRResponse } from 'swr'
+import { CSS } from '@stitches/react'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
@@ -11,9 +13,17 @@ type ChainId = 1 | 3 | 4 | 5 | 10
 
 type Props = {
   collection: ReturnType<typeof useCollections>['data'][0]
+  mutate?: SWRResponse['mutate']
+  buttonCss?: CSS
+  buttonProps?: ComponentProps<typeof Button>
 }
 
-export const CollectionOffer: FC<Props> = ({ collection }) => {
+export const CollectionOffer: FC<Props> = ({
+  collection,
+  mutate,
+  buttonCss,
+  buttonProps = {},
+}) => {
   const router = useRouter()
   const [attribute, setAttribute] = useState<Trait>(undefined)
   const { data: signer } = useSigner()
@@ -61,17 +71,18 @@ export const CollectionOffer: FC<Props> = ({ collection }) => {
           collectionId={collection?.id}
           trigger={
             <Button
-              css={{ justifyContent: 'center', '@bp1': { ml: '$4' } }}
               disabled={isInTheWrongNetwork}
+              css={buttonCss}
+              {...buttonProps}
             >
               {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
             </Button>
           }
           attribute={attribute}
           onBidComplete={() => {
-            // Update when tokens grid is set up with swr
-            // stats.mutate()
-            // tokens.mutate()
+            if (mutate) {
+              mutate()
+            }
           }}
           onBidError={(error) => {
             if (error) {

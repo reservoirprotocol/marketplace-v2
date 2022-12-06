@@ -20,7 +20,7 @@ import TokenCard from 'components/collections/TokenCard'
 import { Filters } from 'components/collections/filters/Filters'
 import { FilterButton } from 'components/collections/filters/FilterButton'
 import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
-import { CollectionOffer } from 'components/collections/CollectionOffer'
+import { CollectionOffer } from 'components/buttons/CollectionOffer'
 import { Grid } from 'components/primitives/Grid'
 import { useIntersectionObserver } from 'usehooks-ts'
 import fetcher from 'utils/fetcher'
@@ -41,6 +41,13 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollToTop = () => {
+    let top = (scrollRef.current?.offsetTop || 0) - 97
+    window.scrollTo({ top: top })
+  }
 
   const { data: collections } = useCollections(
     {
@@ -141,11 +148,15 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             </Box>
           </Flex>
 
-          <Flex css={{ gap: attributeFiltersOpen && '$5' }}>
+          <Flex
+            css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
+            ref={scrollRef}
+          >
             <Filters
               attributes={attributes}
               open={attributeFiltersOpen}
               setOpen={setAttributeFiltersOpen}
+              scrollToTop={scrollToTop}
             />
             <Box
               css={{
@@ -163,6 +174,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                 <Flex
                   direction="column"
                   css={{
+                    ml: 'auto',
                     width: '100%',
                     '@bp1': {
                       flexDirection: 'row',
@@ -171,7 +183,13 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                   }}
                 >
                   <SortTokens />
-                  <CollectionOffer collection={collection} />
+                  <CollectionOffer
+                    collection={collection}
+                    buttonCss={{
+                      justifyContent: 'center',
+                      '@bp1': { ml: '$4' },
+                    }}
+                  />
                 </Flex>
               </Flex>
               <SelectedAttributes />
