@@ -34,7 +34,7 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
-import { formatDollar } from 'utils/numbers'
+import { optimizeImage } from 'utils/optimizeImage'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
@@ -76,7 +76,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
       {!data.isValidating && (!activities || activities.length === 0) ? (
         <Text>No results</Text> // TODO: Update empty state
       ) : (
-        <Table css={{ width: '100%', overflowX: 'scroll' }}>
+        <Table css={{ width: '100%' }}>
           <TableBody>
             {activities.map((activity, i) => {
               if (!activity) return null
@@ -107,7 +107,7 @@ type ActivityTableRowProps = {
 }
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
-  const isMobile = useMediaQuery({ maxWidth: 600 })
+  const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const { address } = useAccount()
   const [toShortAddress, setToShortAddress] = useState<string>(
     activity?.toAddress || ''
@@ -149,8 +149,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
   useEffect(() => {
     if (activity?.token?.tokenImage) {
-      setImageSrc(activity?.token?.tokenImage) // TODO: Optimize image
-    } else if (activity?.collection?.collectionImage) {
+      setImageSrc(optimizeImage(activity?.token?.tokenImage, 48))
+    } else if (optimizeImage(activity?.collection?.collectionImage, 48)) {
       setImageSrc(activity?.collection?.collectionImage)
     }
   }, [activity])
@@ -208,16 +208,12 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     }
   }
 
-  if (isMobile) {
+  if (isSmallDevice) {
     return (
       <TableRow key={activity.txHash}>
         <TableData css={{ pr: '0' }}>
           <Flex direction="column" css={{ gap: '$3' }}>
-            <Flex
-              css={{ mt: '$4', color: '$gray11' }}
-              align="center"
-              justify="between"
-            >
+            <Flex css={{ color: '$gray11' }} align="center" justify="between">
               <Flex align="center">
                 {/* @ts-ignore */}
                 {activity.type && logos[activity.type]}
@@ -287,15 +283,10 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <Flex direction="column" align="center">
                   <FormatCryptoCurrency
                     amount={activity.price}
-                    maximumFractionDigits={1}
                     logoHeight={16}
                     textStyle="subtitle1"
                     css={{ mr: '$2', fontSize: '14px' }}
                   />
-                  <FormatCurrency
-                    amount={activity.price}
-                    css={{ color: '$gray11' }}
-                  />{' '}
                   {/* TODO: convert to USD*/}
                 </Flex>
               ) : (
@@ -303,7 +294,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               )}
             </Flex>
 
-            <Flex align="center" css={{ gap: '$2' }}>
+            <Flex align="baseline" css={{ gap: '$2' }}>
+              <Text
+                style="subtitle2"
+                css={{ fontSize: '12px', color: '$gray11' }}
+              >
+                From
+              </Text>
               {activity.fromAddress &&
               activity.fromAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.fromAddress}`}>
@@ -384,16 +381,23 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <Flex align="center">
             <FormatCryptoCurrency
               amount={activity.price}
-              maximumFractionDigits={4}
               logoHeight={16}
               textStyle="subtitle1"
               css={{ mr: '$2', fontSize: '14px' }}
             />
-            {/* <FormatCurrency
-              amount={activity.price}
-              css={{ color: '$gray11' }}
-            />{' '} */}
             {/* TODO: convert to USD*/}
+          </Flex>
+        ) : (
+          <span>-</span>
+        )}
+      </TableData>
+      <TableData>
+        {activity.amount ? (
+          <Flex direction="column" align="start">
+            <Text style="subtitle2" css={{ color: '$gray11' }}>
+              Quantity
+            </Text>
+            <Text style="subtitle2">{activity.amount}</Text>
           </Flex>
         ) : (
           <span>-</span>
