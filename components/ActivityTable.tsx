@@ -5,7 +5,6 @@ import {
 import { FC, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
-  Box,
   Text,
   Table,
   TableBody,
@@ -13,9 +12,9 @@ import {
   TableRow,
   Flex,
   FormatCryptoCurrency,
-  FormatCurrency,
+  Anchor,
 } from './primitives'
-import { DateTime } from 'luxon'
+import dayjs from 'dayjs'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -34,7 +33,6 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
-import { optimizeImage } from 'utils/optimizeImage'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
@@ -141,16 +139,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     setToShortAddress(toShortAddress)
     setFromShortAddress(fromShortAddress)
     setTimeAgo(
-      activity?.timestamp
-        ? DateTime.fromSeconds(activity.timestamp).toRelative() || ''
-        : ''
+      activity?.timestamp ? dayjs.unix(activity?.timestamp).fromNow() || '' : ''
     )
   }, [activity, address])
 
   useEffect(() => {
     if (activity?.token?.tokenImage) {
-      setImageSrc(optimizeImage(activity?.token?.tokenImage, 48))
-    } else if (optimizeImage(activity?.collection?.collectionImage, 48)) {
+      setImageSrc(activity?.token?.tokenImage)
+    } else if (activity?.collection?.collectionImage) {
       setImageSrc(activity?.collection?.collectionImage)
     }
   }, [activity])
@@ -215,7 +211,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <Flex direction="column" css={{ gap: '$3' }}>
             <Flex css={{ color: '$gray11' }} align="center" justify="between">
               <Flex align="center">
-                {/* @ts-ignore */}
                 {activity.type && logos[activity.type]}
                 <Text
                   style="subtitle1"
@@ -229,8 +224,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   <img
                     width="20px"
                     height="20px"
-                    // @ts-ignore
-                    src={activity.order?.source?.icon || ''}
+                    src={(activity.order?.source?.icon as string) || ''}
                     alt={`${activity.order?.source?.name} Source`}
                   />
                 )}
@@ -243,15 +237,18 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
                 {activity.txHash && (
                   <Link href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}>
-                    <a target="_blank" rel="noopener noreferrer">
-                      <Box css={{ color: '$violet9' }}>
-                        <FontAwesomeIcon
-                          icon={faExternalLink}
-                          width={12}
-                          height={15}
-                        />
-                      </Box>
-                    </a>
+                    <Anchor
+                      href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
+                      color="primary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <FontAwesomeIcon
+                        icon={faExternalLink}
+                        width={12}
+                        height={15}
+                      />
+                    </Anchor>
                   </Link>
                 )}
               </Flex>
@@ -287,7 +284,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                     textStyle="subtitle1"
                     css={{ mr: '$2', fontSize: '14px' }}
                   />
-                  {/* TODO: convert to USD*/}
                 </Flex>
               ) : (
                 <span>-</span>
@@ -305,7 +301,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               activity.fromAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.fromAddress}`}>
                   <a>
-                    <Text style="subtitle2" css={{ color: '$violet11' }}>
+                    <Text style="subtitle2" css={{ color: '$primary11' }}>
                       {fromShortAddress}
                     </Text>
                   </a>
@@ -323,7 +319,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               activity.toAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.toAddress}`}>
                   <a>
-                    <Text style="subtitle2" css={{ color: '$violet11' }}>
+                    <Text style="subtitle2" css={{ color: '$primary11' }}>
                       {toShortAddress}
                     </Text>
                   </a>
@@ -342,7 +338,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     <TableRow key={activity.txHash} css={{ height: '40px' }}>
       <TableData css={{ color: '$gray11' }}>
         <Flex align="center">
-          {/* @ts-ignore */}
           {activity.type && logos[activity.type]}
           <Text
             style="subtitle1"
@@ -385,7 +380,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               textStyle="subtitle1"
               css={{ mr: '$2', fontSize: '14px' }}
             />
-            {/* TODO: convert to USD*/}
           </Flex>
         ) : (
           <span>-</span>
@@ -412,7 +406,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <Text style="subtitle2" css={{ color: '$gray11' }}>
                   From
                 </Text>
-                <Text style="subtitle2" css={{ color: '$violet11' }}>
+                <Text style="subtitle2" css={{ color: '$primary11' }}>
                   {fromShortAddress}
                 </Text>
               </Flex>
@@ -430,7 +424,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <Text style="subtitle2" css={{ color: '$gray11' }}>
                   To
                 </Text>
-                <Text style="subtitle2" css={{ color: '$violet11' }}>
+                <Text style="subtitle2" css={{ color: '$primary11' }}>
                   {toShortAddress}
                 </Text>
               </Flex>
@@ -446,8 +440,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <img
               width="20px"
               height="20px"
-              // @ts-ignore
-              src={activity.order?.source?.icon || ''}
+              src={(activity.order?.source?.icon as string) || ''}
               alt={`${activity.order?.source?.name} Source`}
             />
           )}
@@ -456,17 +449,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           </Text>
 
           {activity.txHash && (
-            <Link href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}>
-              <a target="_blank" rel="noopener noreferrer">
-                <Box css={{ color: '$violet9' }}>
-                  <FontAwesomeIcon
-                    icon={faExternalLink}
-                    width={12}
-                    height={15}
-                  />
-                </Box>
-              </a>
-            </Link>
+            <Anchor
+              href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
+              color="primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
+            </Anchor>
           )}
         </Flex>
       </TableData>

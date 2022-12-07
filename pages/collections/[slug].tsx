@@ -9,7 +9,6 @@ import {
   useCollections,
   useTokens,
   useAttributes,
-  useCollectionActivity,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 import Layout from 'components/Layout'
@@ -30,8 +29,8 @@ import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { ActivityTable } from 'components/ActivityTable'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -65,15 +64,6 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   )
 
   let collection = collections && collections[0]
-
-  const collectionActivityData = useCollectionActivity(
-    { collection: id, limit: 20 },
-    {
-      revalidateOnMount: true,
-      fallbackData: [],
-      revalidateFirstPage: true,
-    }
-  )
 
   let tokenQuery: Parameters<typeof useTokens>['0'] = {
     limit: 20,
@@ -245,7 +235,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
             </TabsContent>
             <TabsContent value="activity">
-              <ActivityTable data={collectionActivityData} />
+              <CollectionAcivityTable id={id} />
             </TabsContent>
           </Tabs.Root>
         </Flex>
