@@ -1,10 +1,4 @@
 import { FC, useEffect, useState } from 'react'
-import { Content } from 'components/primitives/Dialog'
-import {
-  Root as DialogRoot,
-  DialogTrigger,
-  DialogPortal,
-} from '@radix-ui/react-dialog'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { Box, Button, Flex, Text } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,6 +7,7 @@ import { useRouter } from 'next/router'
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { AttributeSelector } from './AttributeSelector'
 import { clearAllAttributes } from 'utils/router'
+import { MobileModal } from 'components/common/MobileModal'
 
 type Props = {
   attributes: ReturnType<typeof useAttributes>['data'] | undefined
@@ -50,6 +45,52 @@ export const MobileActivityFilters: FC<Props> = ({
   }, [router.query])
 
   let filtersEnabled = filtersLength > 0
+
+  const trigger = (
+    <Flex
+      justify="center"
+      css={{
+        position: 'fixed',
+        left: 0,
+        bottom: '70px',
+        width: '100vw',
+        zIndex: 99,
+      }}
+    >
+      <Button
+        css={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          justifyItems: 'center',
+          position: 'fixed',
+          px: '$6',
+          py: '$3',
+        }}
+        type="button"
+        size="small"
+        corners="pill"
+        color="gray3"
+      >
+        <Text style="h6">Filter</Text>
+        {filtersEnabled && (
+          <Flex
+            justify="center"
+            align="center"
+            css={{
+              height: '24px',
+              width: '24px',
+              backgroundColor: '$gray4',
+              borderRadius: '100%',
+              fontSize: 'medium',
+              fontWeight: '500',
+            }}
+          >
+            {filtersLength}
+          </Flex>
+        )}
+      </Button>
+    </Flex>
+  )
 
   const children = (
     <Flex
@@ -139,73 +180,5 @@ export const MobileActivityFilters: FC<Props> = ({
       </Flex>
     </Flex>
   )
-  return (
-    <DialogRoot modal={false}>
-      <Flex
-        justify="center"
-        css={{
-          position: 'fixed',
-          left: 0,
-          bottom: '70px',
-          width: '100vw',
-          zIndex: 99,
-        }}
-      >
-        <DialogTrigger asChild>
-          <Button
-            css={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              justifyItems: 'center',
-              position: 'fixed',
-              px: '$6',
-              py: '$3',
-            }}
-            type="button"
-            size="small"
-            corners="pill"
-            color="gray3"
-          >
-            <Text style="h6">Filter</Text>
-            {filtersEnabled && (
-              <Flex
-                justify="center"
-                align="center"
-                css={{
-                  height: '24px',
-                  width: '24px',
-                  backgroundColor: '$gray4',
-                  borderRadius: '100%',
-                  fontSize: 'medium',
-                  fontWeight: '500',
-                }}
-              >
-                {filtersLength}
-              </Flex>
-            )}
-          </Button>
-        </DialogTrigger>
-      </Flex>
-      <DialogPortal>
-        <Content
-          onInteractOutside={(e) => {
-            e.preventDefault()
-          }}
-          css={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '0px',
-            border: '0px',
-            minWidth: '100%',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
-            top: '0%',
-            zIndex: 9999,
-          }}
-        >
-          {children}
-        </Content>
-      </DialogPortal>
-    </DialogRoot>
-  )
+  return <MobileModal trigger={trigger}>{children}</MobileModal>
 }

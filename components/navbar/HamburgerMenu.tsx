@@ -5,13 +5,7 @@ import {
   FormatCryptoCurrency,
   Text,
 } from 'components/primitives'
-import { Content } from 'components/primitives/Dialog'
 import { Avatar } from 'components/primitives/Avatar'
-import {
-  Root as DialogRoot,
-  DialogTrigger,
-  DialogPortal,
-} from '@radix-ui/react-dialog'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import {
   faBars,
@@ -33,6 +27,7 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { useCopyToClipboard } from 'usehooks-ts'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { truncateAddress, truncateEns } from 'utils/truncate'
+import { MobileModal } from 'components/common/MobileModal'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -41,6 +36,17 @@ const HamburgerMenu = () => {
   const { data: ensAvatar } = useEnsAvatar({ addressOrName: address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
+
+  const trigger = (
+    <Button
+      css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+      type="button"
+      size="small"
+      color="gray3"
+    >
+      <FontAwesomeIcon icon={faBars} width={16} height={16} />
+    </Button>
+  )
 
   const children = (
     <Flex
@@ -248,40 +254,7 @@ const HamburgerMenu = () => {
       </Flex>
     </Flex>
   )
-  return (
-    <DialogRoot modal={false}>
-      <DialogTrigger asChild>
-        <Button
-          css={{ justifyContent: 'center', width: '44px', height: '44px' }}
-          type="button"
-          size="small"
-          color="gray3"
-        >
-          <FontAwesomeIcon icon={faBars} width={16} height={16} />
-        </Button>
-      </DialogTrigger>
-      <DialogPortal>
-        <Content
-          onInteractOutside={(e) => {
-            e.preventDefault()
-          }}
-          css={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '0px',
-            border: '0px',
-            minWidth: '100%',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
-            top: '0%',
-            zIndex: 9999,
-          }}
-        >
-          {children}
-        </Content>
-      </DialogPortal>
-    </DialogRoot>
-  )
+  return <MobileModal trigger={trigger}>{children}</MobileModal>
 }
 
 export default HamburgerMenu
