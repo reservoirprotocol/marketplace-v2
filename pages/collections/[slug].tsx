@@ -31,6 +31,7 @@ import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { ActivityTable } from 'components/ActivityTable'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -49,7 +50,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToTop = () => {
-    let top = (scrollRef.current?.offsetTop || 0) - 97
+    let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
     window.scrollTo({ top: top })
   }
 
@@ -123,7 +124,17 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   return (
     <Layout>
       {collection ? (
-        <Flex direction="column" css={{ p: '$5', pb: 0 }}>
+        <Flex
+          direction="column"
+          css={{
+            px: '$4',
+            pt: '$5',
+            pb: 0,
+            '@bp1': {
+              px: '$5',
+            },
+          }}
+        >
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">

@@ -34,6 +34,7 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
+import { formatDollar } from 'utils/numbers'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
@@ -56,8 +57,6 @@ type Props = {
 }
 
 export const ActivityTable: FC<Props> = ({ data }) => {
-  const isMobile = useMediaQuery({ maxWidth: 600 })
-
   const loadMoreRef = useRef<HTMLDivElement>()
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
@@ -77,7 +76,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
       {!data.isValidating && (!activities || activities.length === 0) ? (
         <Text>No results</Text> // TODO: Update empty state
       ) : (
-        <Table css={{ width: '100%' }}>
+        <Table css={{ width: '100%', overflowX: 'scroll' }}>
           <TableBody>
             {activities.map((activity, i) => {
               if (!activity) return null
@@ -211,98 +210,131 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
   if (isMobile) {
     return (
-      <TableRow
-        key={activity.txHash}
-        className="h-24 border-b border-gray-300 dark:border-[#525252]"
-        css={{ height: '60px', borderBottom: '1px solid $gray5' }}
-      >
-        <TableData className="flex flex-col gap-3">
-          <Flex css={{ mt: '$4' }} align="center">
-            {/* @ts-ignore */}
-            {activity.type && logos[activity.type]}
-            {!!activity.order?.source?.icon && (
-              <img
-                style={{ display: 'inline' }}
-                width="12px"
-                height="12px"
-                // @ts-ignore
-                src={activity.order?.source?.icon || ''}
-                alt={`${activity.order?.source?.name} Source`}
-              />
-            )}
-            <Text style="subtitle1">{activityDescription}</Text>
-          </Flex>
-          <Flex align="center" justify="center">
-            <Link href={href} passHref>
-              <a>
-                <Flex align="center" justify="center">
-                  <Image
-                    className="rounded object-cover"
-                    loader={({ src }) => src}
-                    src={imageSrc}
-                    alt={`${activity.token?.tokenName} Token Image`}
-                    width={48}
-                    height={48}
+      <TableRow key={activity.txHash}>
+        <TableData css={{ pr: '0' }}>
+          <Flex direction="column" css={{ gap: '$3' }}>
+            <Flex
+              css={{ mt: '$4', color: '$gray11' }}
+              align="center"
+              justify="between"
+            >
+              <Flex align="center">
+                {/* @ts-ignore */}
+                {activity.type && logos[activity.type]}
+                <Text
+                  style="subtitle1"
+                  css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+                >
+                  {activityDescription}
+                </Text>
+              </Flex>
+              <Flex align="center" justify="end" css={{ gap: '$3' }}>
+                {!!activity.order?.source?.icon && (
+                  <img
+                    width="20px"
+                    height="20px"
+                    // @ts-ignore
+                    src={activity.order?.source?.icon || ''}
+                    alt={`${activity.order?.source?.name} Source`}
                   />
-                  <div className="ml-2 grid truncate">
-                    <div className="reservoir-h6 dark:text-white">
+                )}
+                <Text
+                  style="subtitle2"
+                  css={{ fontSize: '12px', color: '$gray11' }}
+                >
+                  {timeAgo}
+                </Text>
+
+                {activity.txHash && (
+                  <Link href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}>
+                    <a target="_blank" rel="noopener noreferrer">
+                      <Box css={{ color: '$violet9' }}>
+                        <FontAwesomeIcon
+                          icon={faExternalLink}
+                          width={12}
+                          height={15}
+                        />
+                      </Box>
+                    </a>
+                  </Link>
+                )}
+              </Flex>
+            </Flex>
+            <Flex align="center" justify="between">
+              <Link href={href} passHref>
+                <a>
+                  <Flex align="center">
+                    <Image
+                      style={{ borderRadius: '4px', objectFit: 'cover' }}
+                      loader={({ src }) => src}
+                      src={imageSrc}
+                      alt={`${activity.token?.tokenName} Token Image`}
+                      width={48}
+                      height={48}
+                    />
+                    <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
                       {activity.token?.tokenName ||
                         activity.token?.tokenId ||
                         activity.collection?.collectionName}
-                    </div>
-                  </div>
+                    </Text>
+                  </Flex>
+                </a>
+              </Link>
+              {activity.price &&
+              activity.price !== 0 &&
+              activity.type &&
+              !['transfer', 'mint'].includes(activity.type) ? (
+                <Flex direction="column" align="center">
+                  <FormatCryptoCurrency
+                    amount={activity.price}
+                    maximumFractionDigits={1}
+                    logoHeight={16}
+                    textStyle="subtitle1"
+                    css={{ mr: '$2', fontSize: '14px' }}
+                  />
+                  <FormatCurrency
+                    amount={activity.price}
+                    css={{ color: '$gray11' }}
+                  />{' '}
+                  {/* TODO: convert to USD*/}
                 </Flex>
-              </a>
-            </Link>
-            {/* {activity.price &&
-            activity.price !== 0 &&
-            activity.type &&
-            !['transfer', 'mint'].includes(activity.type) ? (
-              <FormatNativeCrypto amount={activity.price} />
-            ) : null} */}
-          </Flex>
+              ) : (
+                <span>-</span>
+              )}
+            </Flex>
 
-          <Flex justify="between" align="center">
-            <Flex>
-              <Text style="body1">From</Text>
+            <Flex align="center" css={{ gap: '$2' }}>
               {activity.fromAddress &&
               activity.fromAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.fromAddress}`}>
-                  <a>{fromShortAddress}</a>
+                  <a>
+                    <Text style="subtitle2" css={{ color: '$violet11' }}>
+                      {fromShortAddress}
+                    </Text>
+                  </a>
                 </Link>
               ) : (
-                <span className="font-light">-</span>
+                <span>-</span>
               )}
-              <Text style="body1">To</Text>
+              <Text
+                style="subtitle2"
+                css={{ fontSize: '12px', color: '$gray11' }}
+              >
+                to
+              </Text>
               {activity.toAddress &&
               activity.toAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.toAddress}`}>
-                  <a>{toShortAddress}</a>
+                  <a>
+                    <Text style="subtitle2" css={{ color: '$violet11' }}>
+                      {toShortAddress}
+                    </Text>
+                  </a>
                 </Link>
               ) : (
-                <Text>-</Text>
+                <span>-</span>
               )}
-              <Flex
-                align="center"
-                justify="between"
-                css={{ mb: '$3', gap: '$2' }}
-              >
-                {timeAgo}
-              </Flex>
             </Flex>
-            {activity.txHash && (
-              <Link href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}>
-                <a target="_blank" rel="noopener noreferrer">
-                  <Box css={{ color: '$violet9' }}>
-                    <FontAwesomeIcon
-                      icon={faExternalLink}
-                      width={12}
-                      height={15}
-                    />
-                  </Box>
-                </a>
-              </Link>
-            )}
           </Flex>
         </TableData>
       </TableRow>
@@ -310,11 +342,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   }
 
   return (
-    <TableRow
-      key={activity.txHash}
-      css={{ height: '40px', borderBottom: '1px solid $gray3' }}
-    >
-      <TableData css={{ pr: '$5', py: '$4', color: '$gray11' }}>
+    <TableRow key={activity.txHash} css={{ height: '40px' }}>
+      <TableData css={{ color: '$gray11' }}>
         <Flex align="center">
           {/* @ts-ignore */}
           {activity.type && logos[activity.type]}
@@ -326,7 +355,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           </Text>
         </Flex>
       </TableData>
-      <TableData css={{ pr: '$5', py: '$4' }}>
+      <TableData>
         <Link href={href} passHref>
           <a>
             <Flex align="center">
@@ -347,7 +376,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           </a>
         </Link>
       </TableData>
-      <TableData css={{ pr: '$5', py: '$4' }}>
+      <TableData>
         {activity.price &&
         activity.price !== 0 &&
         activity.type &&
@@ -355,21 +384,22 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <Flex align="center">
             <FormatCryptoCurrency
               amount={activity.price}
+              maximumFractionDigits={4}
               logoHeight={16}
               textStyle="subtitle1"
               css={{ mr: '$2', fontSize: '14px' }}
             />
-            <FormatCurrency
+            {/* <FormatCurrency
               amount={activity.price}
               css={{ color: '$gray11' }}
-            />{' '}
+            />{' '} */}
             {/* TODO: convert to USD*/}
           </Flex>
         ) : (
           <span>-</span>
         )}
       </TableData>
-      <TableData css={{ pr: '$5', py: '$4' }}>
+      <TableData>
         {activity.fromAddress &&
         activity.fromAddress !== constants.AddressZero ? (
           <Link href={`/address/${activity.fromAddress}`}>
@@ -388,7 +418,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <span>-</span>
         )}
       </TableData>
-      <TableData css={{ pr: '$5', py: '$4' }}>
+      <TableData>
         {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
           <Link href={`/address/${activity.toAddress}`}>
             <a>
@@ -406,7 +436,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <span>-</span>
         )}
       </TableData>
-      <TableData css={{ pr: '$5', py: '$4' }}>
+      <TableData>
         <Flex align="center" justify="end" css={{ gap: '$3' }}>
           {!!activity.order?.source?.icon && (
             <img

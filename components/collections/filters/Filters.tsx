@@ -51,6 +51,7 @@ export const Filters: FC<Props> = ({
               .filter((attribute) => attribute.kind != 'number')
               .map((attribute) => (
                 <AttributeSelector
+                  key={attribute.key}
                   attribute={attribute}
                   scrollToTop={scrollToTop}
                 />
