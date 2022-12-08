@@ -12,7 +12,7 @@ const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 type ChainId = 1 | 3 | 4 | 5 | 10
 
 type Props = {
-  collection: ReturnType<typeof useCollections>['data'][0]
+  collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
   mutate?: SWRResponse['mutate']
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
@@ -55,6 +55,10 @@ export const CollectionOffer: FC<Props> = ({
       })
     }
   }, [router.query])
+
+  if (!CHAIN_ID) {
+    throw 'A Chain id is required'
+  }
 
   const env = {
     chainId: +CHAIN_ID as ChainId,

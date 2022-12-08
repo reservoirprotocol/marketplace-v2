@@ -5,7 +5,7 @@ import { FC } from 'react'
 
 type Props = {
   open: boolean
-  setOpen: (boolean) => void
+  setOpen: (open: boolean) => void
 }
 
 export const FilterButton: FC<Props> = ({ open, setOpen }) => {

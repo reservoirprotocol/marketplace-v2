@@ -36,7 +36,7 @@ const envChain = allChains.find(
 )
 
 const { chains, provider } = configureChains(
-  [envChain],
+  envChain ? [envChain] : [chain.mainnet],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
     publicProvider(),

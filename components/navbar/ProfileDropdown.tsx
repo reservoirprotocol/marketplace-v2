@@ -42,7 +42,7 @@ export const ProfileDropdown: FC = () => {
       {ensAvatar ? (
         <Avatar size="medium" src={ensAvatar} />
       ) : (
-        <Jazzicon diameter={44} seed={jsNumberForAddress(address)} />
+        <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
       )}
     </Button>
   )
@@ -52,12 +52,14 @@ export const ProfileDropdown: FC = () => {
       <DropdownMenuItem
         onClick={
           //TODO: add toast
-          () => (ensName ? copy(ensName) : copy(address))
+          () => (ensName ? copy(ensName) : copy(address as string))
         }
       >
         <Flex justify="between">
           <Text style="subtitle1" color="$gray11" css={{ color: '$gray11' }}>
-            {ensName ? truncateEns(ensName) : truncateAddress(address)}
+            {ensName
+              ? truncateEns(ensName)
+              : truncateAddress(address as string)}
           </Text>
           <Box css={{ color: '$gray10' }}>
             <FontAwesomeIcon icon={faCopy} width={16} height={16} />

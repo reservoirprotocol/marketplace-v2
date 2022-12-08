@@ -37,7 +37,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
-  const loadMoreRef = useRef<HTMLDivElement>()
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
@@ -81,6 +81,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
       key.endsWith(']') &&
       router.query[key] !== ''
     ) {
+      //@ts-ignore
       tokenQuery[key] = router.query[key]
     }
   })
@@ -98,6 +99,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const rarityEnabledCollection =
     collection?.tokenCount &&
     +collection.tokenCount >= 2 &&
+    attributes &&
     attributes?.length >= 2
 
   useEffect(() => {
@@ -123,7 +125,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     {collection.name}
                   </Text>
                   <Text style="body2" css={{ color: '$gray11' }} as="p">
-                    {truncateAddress(collection.id)}
+                    {truncateAddress(collection.id as string)}
                   </Text>
                 </Box>
               </Flex>
@@ -149,7 +151,10 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
           </Flex>
 
           <Flex
-            css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
+            css={{
+              gap: attributeFiltersOpen ? '$5' : '',
+              position: 'relative',
+            }}
             ref={scrollRef}
           >
             <Filters
@@ -204,7 +209,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     key={i}
                     token={token}
                     mutate={mutate}
-                    rarityEnabled={rarityEnabledCollection}
+                    rarityEnabled={rarityEnabledCollection as boolean}
                     onMediaPlayed={(e) => {
                       if (
                         playingElement &&

@@ -72,17 +72,17 @@ export default ({
               preview={showPreview}
               audioOptions={{
                 onPlay: (e) => {
-                  onMediaPlayed(e)
+                  onMediaPlayed?.(e)
                 },
               }}
               videoOptions={{
                 onPlay: (e) => {
-                  onMediaPlayed(e)
+                  onMediaPlayed?.(e)
                 },
               }}
               onRefreshToken={() => {
                 //TODO: add toast
-                mutate()
+                mutate?.()
               }}
             />
           </Box>
@@ -157,7 +157,7 @@ export default ({
                 height: 20,
                 borderRadius: '50%',
               }}
-              src={`${API_BASE}/redirect/sources/${token.market.floorAsk.source.name}/logo/v2`}
+              src={`${API_BASE}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
             />
           </Flex>
           {token?.token?.lastBuy?.value && (

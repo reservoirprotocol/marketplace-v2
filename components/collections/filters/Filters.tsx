@@ -8,10 +8,8 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = {
   open: boolean
-  setOpen: (boolean) => void
-  attributes: NonNullable<
-    ReturnType<typeof useAttributes>['response']['attributes']
-  >
+  setOpen: (open: boolean) => void
+  attributes: ReturnType<typeof useAttributes>['data'] | undefined
   scrollToTop: () => void
 }
 

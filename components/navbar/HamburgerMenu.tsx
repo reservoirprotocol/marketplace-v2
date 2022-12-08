@@ -104,21 +104,26 @@ const HamburgerMenu = () => {
             }}
             onClick={
               //TODO: add toast
-              () => (ensName ? copy(ensName) : copy(address))
+              () => (ensName ? copy(ensName) : copy(address as string))
             }
           >
             <Flex css={{ alignItems: 'center' }}>
               {ensAvatar ? (
                 <Avatar size="medium" src={ensAvatar} />
               ) : (
-                <Jazzicon diameter={36} seed={jsNumberForAddress(address)} />
+                <Jazzicon
+                  diameter={36}
+                  seed={jsNumberForAddress(address as string)}
+                />
               )}
               <Text
                 style="subtitle1"
                 color="$gray11"
                 css={{ ml: '$2', color: '$gray11' }}
               >
-                {ensName ? truncateEns(ensName) : truncateAddress(address)}
+                {ensName
+                  ? truncateEns(ensName)
+                  : truncateAddress(address as string)}
               </Text>
             </Flex>
             <Box css={{ color: '$gray10' }}>
