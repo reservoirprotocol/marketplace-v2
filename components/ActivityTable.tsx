@@ -14,12 +14,11 @@ import {
   FormatCryptoCurrency,
   Anchor,
 } from './primitives'
-import dayjs from 'dayjs'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAccount } from 'wagmi'
-import { useEnvChain } from 'hooks'
+import { useEnvChain, useTimeSince } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import { constants } from 'ethers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -117,7 +116,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     activity?.token?.tokenImage ||
       `${API_BASE}/redirect/collections/${activity?.collection?.collectionImage}/image/v1`
   )
-  const [timeAgo, setTimeAgo] = useState(activity?.timestamp || '')
   const envChain = useEnvChain()
   const blockExplorerBaseUrl =
     envChain?.blockExplorers?.default?.url || 'https://etherscan.io'
@@ -138,9 +136,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     }
     setToShortAddress(toShortAddress)
     setFromShortAddress(fromShortAddress)
-    setTimeAgo(
-      activity?.timestamp ? dayjs.unix(activity?.timestamp).fromNow() || '' : ''
-    )
   }, [activity, address])
 
   useEffect(() => {
@@ -232,13 +227,15 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   style="subtitle2"
                   css={{ fontSize: '12px', color: '$gray11' }}
                 >
-                  {timeAgo}
+                  {useTimeSince(activity?.timestamp)}
                 </Text>
 
                 {activity.txHash && (
-                  <Link href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}>
+                  <Link
+                    href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
+                    passHref
+                  >
                     <Anchor
-                      href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
                       color="primary"
                       target="_blank"
                       rel="noopener noreferrer"
@@ -300,11 +297,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               {activity.fromAddress &&
               activity.fromAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.fromAddress}`}>
-                  <a>
-                    <Text style="subtitle2" css={{ color: '$primary11' }}>
-                      {fromShortAddress}
-                    </Text>
-                  </a>
+                  <Anchor
+                    color="primary"
+                    weight="medium"
+                    css={{ fontSize: 12 }}
+                  >
+                    {fromShortAddress}
+                  </Anchor>
                 </Link>
               ) : (
                 <span>-</span>
@@ -318,11 +317,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               {activity.toAddress &&
               activity.toAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.toAddress}`}>
-                  <a>
-                    <Text style="subtitle2" css={{ color: '$primary11' }}>
-                      {toShortAddress}
-                    </Text>
-                  </a>
+                  <Anchor
+                    color="primary"
+                    weight="medium"
+                    css={{ fontSize: 12 }}
+                  >
+                    {toShortAddress}
+                  </Anchor>
                 </Link>
               ) : (
                 <span>-</span>
@@ -400,36 +401,32 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableData>
         {activity.fromAddress &&
         activity.fromAddress !== constants.AddressZero ? (
-          <Link href={`/address/${activity.fromAddress}`}>
-            <a>
-              <Flex direction="column" align="start">
-                <Text style="subtitle2" css={{ color: '$gray11' }}>
-                  From
-                </Text>
-                <Text style="subtitle2" css={{ color: '$primary11' }}>
-                  {fromShortAddress}
-                </Text>
-              </Flex>
-            </a>
-          </Link>
+          <Flex direction="column" align="start">
+            <Text style="subtitle2" css={{ color: '$gray11' }}>
+              From
+            </Text>
+            <Link href={`/address/${activity.fromAddress}`}>
+              <Anchor color="primary" weight="medium" css={{ fontSize: 12 }}>
+                {fromShortAddress}
+              </Anchor>
+            </Link>
+          </Flex>
         ) : (
           <span>-</span>
         )}
       </TableData>
       <TableData>
         {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
-          <Link href={`/address/${activity.toAddress}`}>
-            <a>
-              <Flex direction="column" align="start">
-                <Text style="subtitle2" css={{ color: '$gray11' }}>
-                  To
-                </Text>
-                <Text style="subtitle2" css={{ color: '$primary11' }}>
-                  {toShortAddress}
-                </Text>
-              </Flex>
-            </a>
-          </Link>
+          <Flex direction="column" align="start">
+            <Text style="subtitle2" css={{ color: '$gray11' }}>
+              To
+            </Text>
+            <Link href={`/address/${activity.fromAddress}`}>
+              <Anchor color="primary" weight="medium" css={{ fontSize: 12 }}>
+                {toShortAddress}
+              </Anchor>
+            </Link>
+          </Flex>
         ) : (
           <span>-</span>
         )}
@@ -445,7 +442,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             />
           )}
           <Text style="subtitle2" css={{ fontSize: '12px', color: '$gray11' }}>
-            {timeAgo}
+            {useTimeSince(activity?.timestamp)}
           </Text>
 
           {activity.txHash && (
