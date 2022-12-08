@@ -21,7 +21,6 @@ import {
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { KeyShortcutProvider } from 'react-key-shortcuts'
 
 import {
   ReservoirKitProvider,
@@ -30,6 +29,7 @@ import {
   ReservoirKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
+import { HotkeysProvider } from 'react-hotkeys-hook'
 
 const envChain = allChains.find(
   (chain) => chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || chainId.mainnet)
@@ -111,41 +111,35 @@ function MyApp({ Component, pageProps }: AppProps) {
   const FunctionalComponent = Component as FC
 
   return (
-    <KeyShortcutProvider
-      shortcuts={{
-        search: 'command+k',
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="dark"
+      value={{
+        dark: darkTheme.className,
+        light: 'light',
       }}
     >
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        value={{
-          dark: darkTheme.className,
-          light: 'light',
-        }}
-      >
-        <WagmiConfig client={wagmiClient}>
-          <ReservoirKitProvider
-            options={{
-              apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
-              apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
-              source: 'reservoir.hub',
-            }}
-            theme={reservoirKitTheme}
-          >
-            <Tooltip.Provider>
-              <RainbowKitProvider
-                chains={chains}
-                theme={rainbowKitTheme}
-                modalSize="compact"
-              >
-                <FunctionalComponent {...pageProps} />
-              </RainbowKitProvider>
-            </Tooltip.Provider>
-          </ReservoirKitProvider>
-        </WagmiConfig>
-      </ThemeProvider>
-    </KeyShortcutProvider>
+      <WagmiConfig client={wagmiClient}>
+        <ReservoirKitProvider
+          options={{
+            apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
+            apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
+            source: 'reservoir.hub',
+          }}
+          theme={reservoirKitTheme}
+        >
+          <Tooltip.Provider>
+            <RainbowKitProvider
+              chains={chains}
+              theme={rainbowKitTheme}
+              modalSize="compact"
+            >
+              <FunctionalComponent {...pageProps} />
+            </RainbowKitProvider>
+          </Tooltip.Provider>
+        </ReservoirKitProvider>
+      </WagmiConfig>
+    </ThemeProvider>
   )
 }
 
