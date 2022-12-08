@@ -10,7 +10,7 @@ type Props = {
   trigger: ReactNode
 }
 
-export const MobileModal: FC<Props> = ({ trigger, children }) => {
+export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
   return (
     <DialogRoot modal={false}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>

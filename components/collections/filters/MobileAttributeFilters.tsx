@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { AttributeSelector } from './AttributeSelector'
 import { clearAllAttributes } from 'utils/router'
-import { MobileModal } from 'components/common/MobileModal'
+import { FullscreenModal } from 'components/common/FullscreenModal'
 
 type Props = {
   attributes: ReturnType<typeof useAttributes>['data'] | undefined
@@ -32,7 +32,8 @@ export const MobileActivityFilters: FC<Props> = ({
         router.query[key] !== ''
       ) {
         if (Array.isArray(router.query[key])) {
-          ;(router.query[key] as string[]).map((value) => {
+          let values = router.query[key] as string[]
+          values.forEach((value) => {
             filters.push({ key: key.slice(11, -1), value: value })
           })
         } else {
@@ -92,93 +93,95 @@ export const MobileActivityFilters: FC<Props> = ({
     </Flex>
   )
 
-  const children = (
-    <Flex
-      css={{
-        flexDirection: 'column',
-        height: '100%',
-      }}
-    >
+  return (
+    <FullscreenModal trigger={trigger}>
+      {' '}
       <Flex
         css={{
-          py: '$4',
-          px: '$4',
-          width: '100%',
-          borderBottom: '1px solid $gray4',
+          flexDirection: 'column',
+          height: '100%',
         }}
-        align="center"
-        justify="between"
       >
-        <Flex align="center">
-          <Text style="h5" css={{ mr: '$3' }}>
-            Filter
-          </Text>
-          {filtersEnabled && (
+        <Flex
+          css={{
+            py: '$4',
+            px: '$4',
+            width: '100%',
+            borderBottom: '1px solid $gray4',
+          }}
+          align="center"
+          justify="between"
+        >
+          <Flex align="center">
+            <Text style="h5" css={{ mr: '$3' }}>
+              Filter
+            </Text>
+            {filtersEnabled && (
+              <Flex
+                justify="center"
+                css={{
+                  height: '24px',
+                  width: '24px',
+                  backgroundColor: '$gray3',
+                  borderRadius: '100%',
+                  mr: '$3',
+                }}
+              >
+                {filtersLength}
+              </Flex>
+            )}
+            {filtersEnabled && (
+              <Button
+                onClick={() => clearAllAttributes(router)}
+                color="ghost"
+                size="small"
+                css={{ color: '$primary11', fontWeight: 400 }}
+              >
+                Clear all
+              </Button>
+            )}
+          </Flex>
+          <RadixDialog.Close>
             <Flex
-              justify="center"
               css={{
-                height: '24px',
-                width: '24px',
+                justifyContent: 'center',
+                width: '44px',
+                height: '44px',
+                alignItems: 'center',
+                borderRadius: 8,
                 backgroundColor: '$gray3',
-                borderRadius: '100%',
-                mr: '$3',
+                color: '$gray12',
+                '&:hover': {
+                  backgroundColor: '$gray4',
+                },
               }}
             >
-              {filtersLength}
+              <FontAwesomeIcon icon={faXmark} width={16} height={16} />
             </Flex>
-          )}
-          {filtersEnabled && (
-            <Button
-              onClick={() => clearAllAttributes(router)}
-              color="ghost"
-              size="small"
-              css={{ color: '$primary11', fontWeight: 400 }}
-            >
-              Clear all
-            </Button>
-          )}
+          </RadixDialog.Close>
         </Flex>
-        <RadixDialog.Close>
-          <Flex
-            css={{
-              justifyContent: 'center',
-              width: '44px',
-              height: '44px',
-              alignItems: 'center',
-              borderRadius: 8,
-              backgroundColor: '$gray3',
-              color: '$gray12',
-              '&:hover': {
-                backgroundColor: '$gray4',
-              },
-            }}
-          >
-            <FontAwesomeIcon icon={faXmark} width={16} height={16} />
-          </Flex>
-        </RadixDialog.Close>
-      </Flex>
-      <Flex
-        css={{
-          width: '100%',
-        }}
-      >
-        <Box
+        <Flex
           css={{
             width: '100%',
           }}
         >
-          {attributes &&
-            attributes
-              .filter((attribute) => attribute.kind != 'number')
-              .map((attribute) => (
-                <AttributeSelector
-                  attribute={attribute}
-                  scrollToTop={scrollToTop}
-                />
-              ))}
-        </Box>
+          <Box
+            css={{
+              width: '100%',
+            }}
+          >
+            {attributes &&
+              attributes
+                .filter((attribute) => attribute.kind != 'number')
+                .map((attribute) => (
+                  <AttributeSelector
+                    attribute={attribute}
+                    scrollToTop={scrollToTop}
+                  />
+                ))}
+          </Box>
+        </Flex>
       </Flex>
-    </Flex>
+    </FullscreenModal>
   )
-  return <MobileModal trigger={trigger}>{children}</MobileModal>
 }
