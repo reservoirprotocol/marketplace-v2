@@ -5,10 +5,10 @@ const fetcher = async (
   params: Record<string, any> = {},
   data: RequestInit = {}
 ) => {
-  const headers: RequestInit['headers'] = data['headers'] || {}
+  const headers = new Headers()
 
   if (process.env.NEXT_PUBLIC_RESERVOIR_API_KEY) {
-    headers['x-api-key'] = process.env.NEXT_PUBLIC_RESERVOIR_API_KEY
+    headers.set('x-api-key', process.env.NEXT_PUBLIC_RESERVOIR_API_KEY)
   }
 
   const path = new URL(`${process.env.NEXT_PUBLIC_RESERVOIR_API_BASE}/${url}`)
