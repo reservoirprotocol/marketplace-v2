@@ -8,15 +8,15 @@ import {
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0] | null
   collection?: NonNullable<ReturnType<typeof useCollections>['data']>[0] | null
-  attributes?: ReturnType<typeof useAttributes>['data']
+  collectionAttributes?: ReturnType<typeof useAttributes>['data']
 }
 
-export default ({ token, collection, attributes }: Props) => {
+export default ({ token, collection, collectionAttributes }: Props) => {
   const rarityEnabledCollection =
     collection?.tokenCount &&
     +collection.tokenCount >= 2 &&
-    attributes &&
-    attributes?.length >= 2
+    collectionAttributes &&
+    collectionAttributes?.length >= 2
 
   if (
     token?.token?.rarityRank === undefined ||
