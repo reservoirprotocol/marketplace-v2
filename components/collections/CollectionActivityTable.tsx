@@ -3,7 +3,7 @@ import { ActivityTable } from 'components/ActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 
 type Props = {
-  id: string
+  id: string | undefined
 }
 
 export const CollectionAcivityTable: FC<Props> = ({ id }) => {

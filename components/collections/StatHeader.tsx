@@ -6,10 +6,15 @@ import {
   FormatCryptoCurrency,
   Grid,
 } from 'components/primitives'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { formatNumber } from 'utils/numbers'
 
-const StatBox = ({ label, children }) => (
+type Props = {
+  label: string
+  children: ReactNode
+}
+
+const StatBox: FC<Props> = ({ label, children }) => (
   <Box
     css={{
       p: '$4',
@@ -50,8 +55,8 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
       <StatBox label="Floor">
         <FormatCryptoCurrency
           amount={collection?.floorAsk?.price?.amount?.decimal}
-          address={collection?.floorAsk?.price?.currency.contract}
-          decimals={collection?.floorAsk?.price?.currency.decimals}
+          address={collection?.floorAsk?.price?.currency?.contract}
+          decimals={collection?.floorAsk?.price?.currency?.decimals}
           logoHeight={18}
           textStyle={'h6'}
         />
@@ -60,8 +65,8 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
       <StatBox label="Top Offer">
         <FormatCryptoCurrency
           amount={collection?.topBid?.price?.amount?.decimal}
-          address={collection?.topBid?.price?.currency.contract}
-          decimals={collection?.topBid?.price?.currency.decimals}
+          address={collection?.topBid?.price?.currency?.contract}
+          decimals={collection?.topBid?.price?.currency?.decimals}
           logoHeight={18}
           textStyle={'h6'}
         />

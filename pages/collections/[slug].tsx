@@ -42,7 +42,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
-  const loadMoreRef = useRef<HTMLDivElement>()
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
@@ -86,6 +86,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
       key.endsWith(']') &&
       router.query[key] !== ''
     ) {
+      //@ts-ignore
       tokenQuery[key] = router.query[key]
     }
   })
@@ -100,10 +101,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
 
   let { data: attributes } = useAttributes(collection?.id)
 
-  const rarityEnabledCollection =
+  const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
-    +collection.tokenCount >= 2 &&
-    attributes?.length >= 2
+      +collection.tokenCount >= 2 &&
+      attributes &&
+      attributes?.length >= 2
+  )
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -138,7 +141,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     {collection.name}
                   </Text>
                   <Text style="body2" css={{ color: '$gray11' }} as="p">
-                    {truncateAddress(collection.id)}
+                    {truncateAddress(collection.id as string)}
                   </Text>
                 </Box>
               </Flex>
@@ -155,7 +158,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             <TabsContent value="items">
               <Flex
                 css={{
-                  gap: attributeFiltersOpen && '$5',
+                  gap: attributeFiltersOpen ? '$5' : '',
                   position: 'relative',
                 }}
                 ref={scrollRef}
@@ -201,6 +204,8 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       <CollectionOffer
                         collection={collection}
                         buttonCss={{
+                          minWidth: 'max-content',
+                          height: 'min-content',
                           justifyContent: 'center',
                           '@bp1': { ml: '$4' },
                         }}

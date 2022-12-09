@@ -21,7 +21,6 @@ import {
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { KeyShortcutProvider } from 'react-key-shortcuts'
 
 import {
   ReservoirKitProvider,
@@ -30,13 +29,14 @@ import {
   ReservoirKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
+import { HotkeysProvider } from 'react-hotkeys-hook'
 
 const envChain = allChains.find(
   (chain) => chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || chainId.mainnet)
 )
 
 const { chains, provider } = configureChains(
-  [envChain],
+  envChain ? [envChain] : [chain.mainnet],
   [
     alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
     publicProvider(),
@@ -111,11 +111,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const FunctionalComponent = Component as FC
 
   return (
-    <KeyShortcutProvider
-      shortcuts={{
-        search: 'command+k',
-      }}
-    >
+    <HotkeysProvider>
       <ThemeProvider
         attribute="class"
         defaultTheme="dark"
@@ -145,7 +141,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </ReservoirKitProvider>
         </WagmiConfig>
       </ThemeProvider>
-    </KeyShortcutProvider>
+    </HotkeysProvider>
   )
 }
 

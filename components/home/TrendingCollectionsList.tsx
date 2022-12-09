@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 type CollectionRowProps = {
   rank: string | number
-  collection: ReturnType<typeof useCollections>['data'][0]
+  collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
 }
 
 const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
@@ -36,10 +36,10 @@ const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
 
         <Flex css={{ ml: '$4', mr: '$5' }} direction="column" align="end">
           <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
-            {formatNumber(collection?.volumeChange['7day'])}%
+            {formatNumber(collection?.volumeChange?.['7day'])}%
           </Text>
           <FormatCryptoCurrency
-            amount={collection.volume['7day']}
+            amount={collection?.volume?.['7day']}
             maximumFractionDigits={1}
           />
         </Flex>

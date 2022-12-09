@@ -13,6 +13,7 @@ import {
   forwardRef,
   ElementRef,
   ComponentPropsWithoutRef,
+  FC,
 } from 'react'
 import { formatNumber } from 'utils/numbers'
 
@@ -21,8 +22,15 @@ import { useMediaQuery } from 'react-responsive'
 
 import { useCopyToClipboard } from 'usehooks-ts'
 import Link from 'next/link'
+import { paths } from '@reservoir0x/reservoir-kit-client'
 
-const CollectionItem = ({ collection }) => {
+type Props = {
+  collection: NonNullable<
+    paths['/collections/v5']['get']['responses']['200']['schema']['collections']
+  >[0]
+}
+
+const CollectionItem: FC<Props> = ({ collection }) => {
   const [value, copy] = useCopyToClipboard()
   const [selected, setSelected] = useState(false)
 
@@ -77,7 +85,7 @@ const CollectionItem = ({ collection }) => {
           }}
           onClick={() => {
             flash()
-            copy(collection.id)
+            copy(collection?.id as string)
           }}
         >
           <FontAwesomeIcon icon={faCopy} />
@@ -87,22 +95,40 @@ const CollectionItem = ({ collection }) => {
   )
 }
 
-const WalletItem = ({ wallet }) => (
+type WalletItemProps = {
+  wallet: {
+    address: string | null
+    name: string | null
+    displayName: string
+    avatar: string | null
+    error?: string
+  }
+}
+
+const WalletItem: FC<WalletItemProps> = ({ wallet }) => (
   <Flex css={{ p: '$2', gap: '$4' }} align="center">
     <img
-      src={wallet.avatar}
+      src={wallet.avatar as string}
       style={{ width: 32, height: 32, borderRadius: 4 }}
     />
     <Text style="subtitle1">{wallet.displayName}</Text>
   </Flex>
 )
 
-const SearchResult = ({ result }) => {
+type SearchResultProps = {
+  result: {
+    type: 'collection' | 'wallet'
+    data: any
+  }
+}
+
+const SearchResult: FC<SearchResultProps> = ({ result }) => {
   console.log(result)
-  return {
-    collection: () => <CollectionItem collection={result.data} />,
-    wallet: () => <WalletItem wallet={result.data} />,
-  }[result.type]()
+  if (result.type == 'collection') {
+    return <CollectionItem collection={result.data} />
+  } else {
+    return <WalletItem wallet={result.data} />
+  }
 }
 
 const GlobalSearch = forwardRef<
@@ -111,7 +137,7 @@ const GlobalSearch = forwardRef<
 >(({ children, ...props }, forwardedRef) => {
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
-  const [results, setResults] = useState(null)
+  const [results, setResults] = useState([])
   const [showSearchBox, setShowSearchBox] = useState(false)
 
   const debouncedSearch = useDebounce(search, 500)
@@ -131,7 +157,7 @@ const GlobalSearch = forwardRef<
     if (debouncedSearch.length >= 3) {
       getSearchResults()
     } else {
-      setResults(null)
+      setResults([])
     }
   }, [debouncedSearch])
 
@@ -206,10 +232,10 @@ const GlobalSearch = forwardRef<
         onChange={(e) => setSearch(e.target.value)}
         css={{
           pl: isMobile ? 80 : 48,
-          backgroundColor: isMobile && 'transparent',
-          borderRadius: isMobile && '$0',
-          borderBottom: isMobile && '1px solid $gray4',
-          pb: isMobile && '24px',
+          backgroundColor: isMobile ? 'transparent' : '',
+          borderRadius: isMobile ? '$0' : '',
+          borderBottom: isMobile ? '1px solid $gray4' : '',
+          pb: isMobile ? '24px' : '',
           $$focusColor: isMobile && 'none',
         }}
         ref={forwardedRef}
