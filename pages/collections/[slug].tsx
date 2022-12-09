@@ -27,6 +27,10 @@ import fetcher from 'utils/fetcher'
 import { useRouter } from 'next/router'
 import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
+import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
+import * as Tabs from '@radix-ui/react-tabs'
+import { NAVBAR_HEIGHT } from 'components/navbar'
+import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
 import { MobileActivityFilters } from 'components/collections/filters/MobileAttributeFilters'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -46,7 +50,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToTop = () => {
-    let top = (scrollRef.current?.offsetTop || 0) - 97
+    let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
     window.scrollTo({ top: top })
   }
 
@@ -111,7 +115,17 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   return (
     <Layout>
       {collection ? (
-        <Flex direction="column" css={{ p: '$5', pb: 0 }}>
+        <Flex
+          direction="column"
+          css={{
+            px: '$4',
+            pt: '$5',
+            pb: 0,
+            '@bp1': {
+              px: '$5',
+            },
+          }}
+        >
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
@@ -132,107 +146,106 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             <CollectionActions collection={collection} />
           </Flex>
           <StatHeader collection={collection} />
-          <Flex
-            css={{
-              borderBottom: '1px solid $gray5',
-              mt: '$5',
-              mb: '$4',
-              gap: '$5',
-            }}
-          >
-            <Box css={{ pb: '$3', borderBottom: '1px solid $accent' }}>
-              <Text style="h6">Items</Text>
-            </Box>
+          <Tabs.Root defaultValue="items">
+            <TabsList>
+              <TabsTrigger value="items">Items</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
+            </TabsList>
 
-            <Box>
-              <Text style="h6">Activity</Text>
-            </Box>
-          </Flex>
-
-          <Flex
-            css={{ gap: attributeFiltersOpen && '$5', position: 'relative' }}
-            ref={scrollRef}
-          >
-            {isSmallDevice ? (
-              <MobileActivityFilters
-                attributes={attributes}
-                scrollToTop={scrollToTop}
-              />
-            ) : (
-              <Filters
-                attributes={attributes}
-                open={attributeFiltersOpen}
-                setOpen={setAttributeFiltersOpen}
-                scrollToTop={scrollToTop}
-              />
-            )}
-            <Box
-              css={{
-                flex: 1,
-                pb: '$5',
-              }}
-            >
-              <Flex justify="between" css={{ marginBottom: '$4' }}>
-                {attributes && attributes.length > 0 && !isSmallDevice && (
-                  <FilterButton
+            <TabsContent value="items">
+              <Flex
+                css={{
+                  gap: attributeFiltersOpen && '$5',
+                  position: 'relative',
+                }}
+                ref={scrollRef}
+              >
+                {isSmallDevice ? (
+                  <MobileActivityFilters
+                    attributes={attributes}
+                    scrollToTop={scrollToTop}
+                  />
+                ) : (
+                  <Filters
+                    attributes={attributes}
                     open={attributeFiltersOpen}
                     setOpen={setAttributeFiltersOpen}
+                    scrollToTop={scrollToTop}
                   />
                 )}
-                <Flex
-                  direction="column"
+                <Box
                   css={{
-                    ml: 'auto',
-                    width: '100%',
-                    '@bp2': {
-                      flexDirection: 'row',
-                      width: 'max-content',
-                    },
+                    flex: 1,
+                    pb: '$5',
                   }}
                 >
-                  <SortTokens />
-                  <CollectionOffer
-                    collection={collection}
-                    buttonCss={{
-                      justifyContent: 'center',
-                      '@bp2': { ml: '$4' },
+                  <Flex justify="between" css={{ marginBottom: '$4' }}>
+                    {attributes && attributes.length > 0 && !isSmallDevice && (
+                      <FilterButton
+                        open={attributeFiltersOpen}
+                        setOpen={setAttributeFiltersOpen}
+                      />
+                    )}
+                    <Flex
+                      direction="column"
+                      css={{
+                        ml: 'auto',
+                        width: '100%',
+                        '@bp1': {
+                          flexDirection: 'row',
+                          width: 'max-content',
+                        },
+                      }}
+                    >
+                      <SortTokens />
+                      <CollectionOffer
+                        collection={collection}
+                        buttonCss={{
+                          justifyContent: 'center',
+                          '@bp1': { ml: '$4' },
+                        }}
+                      />
+                    </Flex>
+                  </Flex>
+                  {!isSmallDevice && <SelectedAttributes />}
+                  <Grid
+                    css={{
+                      gridTemplateColumns:
+                        'repeat(auto-fit, minmax(300px, 1fr))',
+                      gap: '$4',
                     }}
-                  />
-                </Flex>
+                  >
+                    {tokens.map((token, i) => (
+                      <TokenCard
+                        key={i}
+                        token={token}
+                        mutate={mutate}
+                        rarityEnabled={rarityEnabledCollection}
+                        onMediaPlayed={(e) => {
+                          if (
+                            playingElement &&
+                            playingElement !== e.nativeEvent.target
+                          ) {
+                            playingElement.pause()
+                          }
+                          const element =
+                            (e.nativeEvent.target as HTMLAudioElement) ||
+                            (e.nativeEvent.target as HTMLVideoElement)
+                          if (element) {
+                            setPlayingElement(element)
+                          }
+                        }}
+                      />
+                    ))}
+                    <div ref={loadMoreRef}></div>
+                  </Grid>
+                </Box>
               </Flex>
-              {!isSmallDevice && <SelectedAttributes />}
-              <Grid
-                css={{
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: '$4',
-                }}
-              >
-                {tokens.map((token, i) => (
-                  <TokenCard
-                    key={i}
-                    token={token}
-                    mutate={mutate}
-                    rarityEnabled={rarityEnabledCollection}
-                    onMediaPlayed={(e) => {
-                      if (
-                        playingElement &&
-                        playingElement !== e.nativeEvent.target
-                      ) {
-                        playingElement.pause()
-                      }
-                      const element =
-                        (e.nativeEvent.target as HTMLAudioElement) ||
-                        (e.nativeEvent.target as HTMLVideoElement)
-                      if (element) {
-                        setPlayingElement(element)
-                      }
-                    }}
-                  />
-                ))}
-                <div ref={loadMoreRef}></div>
-              </Grid>
-            </Box>
-          </Flex>
+            </TabsContent>
+            <TabsContent value="activity">
+              <CollectionAcivityTable id={id} />
+            </TabsContent>
+          </Tabs.Root>
         </Flex>
       ) : (
         <Box />
