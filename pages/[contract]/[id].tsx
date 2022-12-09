@@ -6,6 +6,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 import {
+  TokenMedia,
   useCollections,
   useTokenOpenseaBanned,
   useTokens,
@@ -84,7 +85,18 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           gap: 80,
         }}
       >
-        <Flex css={{ maxWidth: 445, flex: 1 }}>Left Placeholder</Flex>
+        <Flex css={{ maxWidth: 445, flex: 1 }}>
+          <TokenMedia
+            token={token?.token}
+            style={{
+              width: '100%',
+              height: 'auto',
+              minHeight: 445,
+              borderRadius: 8,
+              overflow: 'hidden',
+            }}
+          />
+        </Flex>
         <Flex direction="column" css={{ flex: 1 }}>
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Link href={`/collections/${collectionId}`}>
