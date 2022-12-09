@@ -1,4 +1,4 @@
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
@@ -7,9 +7,7 @@ import { FC, useState } from 'react'
 import { addParam, hasParam, removeParam } from 'utils/router'
 
 type Props = {
-  attribute: NonNullable<
-    ReturnType<typeof useAttributes>['response']['attributes']['0']
-  >
+  attribute: NonNullable<ReturnType<typeof useAttributes>['data']>[0]
   scrollToTop: () => void
 }
 
@@ -19,7 +17,13 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
 
   return (
     <Box
-      css={{ pt: '$3', borderBottom: '1px solid $gray7', cursor: 'pointer' }}
+      css={{
+        pt: '$3',
+        px: '$4',
+        borderBottom: '1px solid $gray7',
+        cursor: 'pointer',
+        '@bp2': { px: '0' },
+      }}
     >
       <Flex
         align="center"
@@ -32,7 +36,7 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
         </Text>
         <FontAwesomeIcon
           icon={faChevronDown}
-          style={{ transform: open && 'rotate(180deg)', transition: '.3s' }}
+          style={{ transform: open ? 'rotate(180deg)' : '', transition: '.3s' }}
           width={16}
           height={16}
         />
@@ -42,12 +46,18 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
           transition: 'max-height .3s ease-in-out',
           maxHeight: open ? 300 : 0,
           overflow: 'auto',
-          pb: open && '$2',
+          pb: open ? '$2' : '',
         }}
       >
         {attribute.values &&
           attribute.values
-            .sort((a, b) => b.count - a.count)
+            .sort((a, b) => {
+              if (!a.count || !b.count) {
+                return 0
+              } else {
+                return b.count - a.count
+              }
+            })
             .map((value) => (
               <Flex css={{ mb: '$3', gap: '$3' }} align="center">
                 <Text

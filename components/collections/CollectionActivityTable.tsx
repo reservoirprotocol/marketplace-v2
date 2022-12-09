@@ -1,12 +1,12 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect } from 'react'
 import { ActivityTable } from 'components/ActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 
 type Props = {
-  id: string
+  id: string | undefined
   activityTypes: NonNullable<
-    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>['types']
-  >
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
 }
 
 export const CollectionAcivityTable: FC<Props> = ({ id, activityTypes }) => {

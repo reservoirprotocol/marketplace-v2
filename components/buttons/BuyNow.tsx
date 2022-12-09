@@ -23,7 +23,9 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: CHAIN_ID ? +CHAIN_ID : undefined,
   })
-  const isInTheWrongNetwork = signer && activeChain?.id !== +CHAIN_ID
+  const isInTheWrongNetwork = Boolean(
+    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
+  )
 
   if (
     token?.market?.floorAsk?.price?.amount === null ||
@@ -57,7 +59,7 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
         }
 
         if (!signer) {
-          openConnectModal()
+          openConnectModal?.()
         }
       }}
       {...buttonProps}
@@ -67,8 +69,8 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   ) : (
     <BuyModal
       trigger={trigger}
-      tokenId={token.token.tokenId}
-      collectionId={token.token.collection.id}
+      tokenId={token?.token?.tokenId}
+      collectionId={token?.token?.collection?.id}
       onClose={() => {
         if (mutate) {
           mutate()

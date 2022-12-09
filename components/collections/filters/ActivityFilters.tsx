@@ -14,20 +14,22 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 
 type ActivityTypes = NonNullable<
-  Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>['types']
+  NonNullable<
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
 >
 
 type Filters = {
-  type: ActivityTypes['0']
+  type: ActivityTypes[0]
   name: string
   icon: IconDefinition
 }[]
 
 type Props = {
   open: boolean
-  setOpen: (boolean) => void
-  activityTypes: ActivityTypes
-  setActivityTypes: (ActivityTypes) => void
+  setOpen: (open: boolean) => void
+  activityTypes: NonNullable<ActivityTypes>
+  setActivityTypes: (activityTypes: ActivityTypes) => void
 }
 
 export const ActivityFilters: FC<Props> = ({

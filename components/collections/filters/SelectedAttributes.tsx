@@ -14,7 +14,7 @@ const SelectedAttributes: FC = () => {
   const [filters, setFilters] = useState<Attribute>([])
 
   useEffect(() => {
-    let filters = []
+    let filters = [] as Attribute
 
     // Extract all queries of attribute type
     // and convert into token format
@@ -25,11 +25,15 @@ const SelectedAttributes: FC = () => {
         router.query[key] !== ''
       ) {
         if (Array.isArray(router.query[key])) {
-          ;(router.query[key] as string[]).map((value) => {
+          let values = router.query[key] as string[]
+          values.forEach((value) => {
             filters.push({ key: key.slice(11, -1), value: value })
           })
         } else {
-          filters.push({ key: key.slice(11, -1), value: router.query[key] })
+          filters.push({
+            key: key.slice(11, -1),
+            value: router.query[key] as string,
+          })
         }
       }
     })

@@ -7,7 +7,7 @@ import { NextRouter } from 'next/router'
    * @param name The name of the param.
    * @param value The value of the param.
    */
- const addParam = (router: NextRouter, name: string, value: string | boolean | number) => {
+ const addParam = (router: NextRouter, name: string, value: string ) => {
   const { [name]: param, ...rest } = router.query;
 
   let newQuery;

@@ -1,16 +1,19 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
+import { paths } from '@reservoir0x/reservoir-kit-client'
+
+type Collection = NonNullable<paths['/collections/v5']['get']['responses']['200']['schema']['collections']>[0]
 
 export const config = {
   runtime: 'experimental-edge',
 }
 
-export default async function handler(req) {
+export default async function handler(req: Request) {
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q')
   let searchResults = []
 
-  let isAddress = ethers.utils.isAddress(q)
+  let isAddress = ethers.utils.isAddress(q as string)
 
   if (isAddress) {
     let { data: collections } = await fetcher(`collections/v5?contract=${q}`)
@@ -38,7 +41,7 @@ export default async function handler(req) {
     }
   } else if (
     /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(
-      q
+      q as string
     )
   ) {
     let ensData = await fetch(`https://api.ensideas.com/ens/resolve/${q}`).then(
@@ -58,7 +61,7 @@ export default async function handler(req) {
   } else {
     let { data: collections } = await fetcher(`collections/v5?name=${q}`)
 
-    searchResults = collections.map((collection) => ({
+    searchResults = collections.map((collection: Collection) => ({
       type: 'collection',
       data: collection,
     }))

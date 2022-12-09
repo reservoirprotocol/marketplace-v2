@@ -33,9 +33,13 @@ import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/collections/filters/ActivityFilters'
+import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
+import { MobileActivityFilters } from 'components/collections/filters/MobileActivityFilters'
 
 type ActivityTypes = NonNullable<
-  Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  NonNullable<
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
 >
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -44,14 +48,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(false)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes['types']>([
-    'sale',
-  ])
-  const isMobile = useMediaQuery({ maxWidth: 600 })
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
-  const loadMoreRef = useRef<HTMLDivElement>()
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
@@ -95,6 +97,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
       key.endsWith(']') &&
       router.query[key] !== ''
     ) {
+      //@ts-ignore
       tokenQuery[key] = router.query[key]
     }
   })
@@ -109,10 +112,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
 
   let { data: attributes } = useAttributes(collection?.id)
 
-  const rarityEnabledCollection =
+  const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
-    +collection.tokenCount >= 2 &&
-    attributes?.length >= 2
+      +collection.tokenCount >= 2 &&
+      attributes &&
+      attributes?.length >= 2
+  )
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -147,7 +152,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     {collection.name}
                   </Text>
                   <Text style="body2" css={{ color: '$gray11' }} as="p">
-                    {truncateAddress(collection.id)}
+                    {truncateAddress(collection.id as string)}
                   </Text>
                 </Box>
               </Flex>
@@ -164,17 +169,24 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             <TabsContent value="items">
               <Flex
                 css={{
-                  gap: attributeFiltersOpen && '$5',
+                  gap: attributeFiltersOpen ? '$5' : '',
                   position: 'relative',
                 }}
                 ref={scrollRef}
               >
-                <AttributeFilters
-                  attributes={attributes}
-                  open={attributeFiltersOpen}
-                  setOpen={setAttributeFiltersOpen}
-                  scrollToTop={scrollToTop}
-                />
+                {isSmallDevice ? (
+                  <MobileAttributeFilters
+                    attributes={attributes}
+                    scrollToTop={scrollToTop}
+                  />
+                ) : (
+                  <AttributeFilters
+                    attributes={attributes}
+                    open={attributeFiltersOpen}
+                    setOpen={setAttributeFiltersOpen}
+                    scrollToTop={scrollToTop}
+                  />
+                )}
                 <Box
                   css={{
                     flex: 1,
@@ -182,7 +194,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                   }}
                 >
                   <Flex justify="between" css={{ marginBottom: '$4' }}>
-                    {attributes && attributes.length > 0 && !isMobile && (
+                    {attributes && attributes.length > 0 && !isSmallDevice && (
                       <FilterButton
                         open={attributeFiltersOpen}
                         setOpen={setAttributeFiltersOpen}
@@ -203,13 +215,15 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       <CollectionOffer
                         collection={collection}
                         buttonCss={{
+                          minWidth: 'max-content',
+                          height: 'min-content',
                           justifyContent: 'center',
                           '@bp1': { ml: '$4' },
                         }}
                       />
                     </Flex>
                   </Flex>
-                  <SelectedAttributes />
+                  {!isSmallDevice && <SelectedAttributes />}
                   <Grid
                     css={{
                       gridTemplateColumns:
@@ -247,7 +261,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             <TabsContent value="activity">
               <Flex
                 css={{
-                  gap: activityFiltersOpen && '$5',
+                  gap: activityFiltersOpen ? '$5' : '',
                   position: 'relative',
                 }}
               >
@@ -264,10 +278,14 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     pb: '$5',
                   }}
                 >
-                  <FilterButton
-                    open={activityFiltersOpen}
-                    setOpen={setActivityFiltersOpen}
-                  />
+                  {isSmallDevice ? (
+                    <MobileActivityFilters />
+                  ) : (
+                    <FilterButton
+                      open={activityFiltersOpen}
+                      setOpen={setActivityFiltersOpen}
+                    />
+                  )}
                   <CollectionAcivityTable
                     id={id}
                     activityTypes={activityTypes}

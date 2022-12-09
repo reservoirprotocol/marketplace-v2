@@ -1,8 +1,8 @@
-import { createRef } from 'react'
+import { useRef } from 'react'
 import { Box, Flex } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
-import { useShortcutCallback } from 'react-key-shortcuts'
+import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
@@ -24,10 +24,11 @@ const Navbar = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
 
-  let searchRef = createRef<HTMLInputElement>()
+  let searchRef = useRef<HTMLInputElement>(null)
 
   const router = useRouter()
-  useShortcutCallback('search', () => {
+  useHotkeys('meta+k', () => {
+    console.log(searchRef)
     if (searchRef?.current) {
       searchRef?.current?.focus()
     }
