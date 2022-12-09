@@ -15,7 +15,7 @@ type Props = {
   scrollToTop: () => void
 }
 
-export const Filters: FC<Props> = ({
+export const AttributeFilters: FC<Props> = ({
   attributes,
   open,
   setOpen,
