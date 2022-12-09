@@ -24,6 +24,24 @@ export const MobileAttributeFilters: FC<Props> = ({
   useEffect(() => {
     let filters = []
 
+    // Extract all queries of attribute type
+    Object.keys({ ...router.query }).map((key) => {
+      if (
+        key.startsWith('attributes[') &&
+        key.endsWith(']') &&
+        router.query[key] !== ''
+      ) {
+        if (Array.isArray(router.query[key])) {
+          let values = router.query[key] as string[]
+          values.forEach((value) => {
+            filters.push({ key: key.slice(11, -1), value: value })
+          })
+        } else {
+          filters.push({ key: key.slice(11, -1), value: router.query[key] })
+        }
+      }
+    })
+
     setFiltersLength(filters.length)
   }, [router.query])
 
