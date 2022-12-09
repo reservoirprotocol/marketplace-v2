@@ -1,27 +1,69 @@
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
-import { Box, Button, Flex, Text } from 'components/primitives'
+import { Box, Button, Flex, Switch, Text } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/router'
-import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
-import { AttributeSelector } from './AttributeSelector'
-import { clearAllAttributes } from 'utils/router'
+import {
+  faHand,
+  faRightLeft,
+  faSeedling,
+  faShoppingCart,
+  faTag,
+  faXmark,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons'
 import { FullscreenModal } from 'components/common/FullscreenModal'
+import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 
-type Props = {}
+type ActivityTypes = NonNullable<
+  NonNullable<
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
+>
 
-export const MobileActivityFilters: FC<Props> = ({}) => {
-  const router = useRouter()
-  const [filtersLength, setFiltersLength] = useState(0)
+type Filters = {
+  type: ActivityTypes[0]
+  name: string
+  icon: IconDefinition
+}[]
 
-  useEffect(() => {
-    let filters = []
+type Props = {
+  activityTypes: NonNullable<ActivityTypes>
+  setActivityTypes: (activityTypes: ActivityTypes) => void
+}
 
-    setFiltersLength(filters.length)
-  }, [router.query])
+export const MobileActivityFilters: FC<Props> = ({
+  activityTypes,
+  setActivityTypes,
+}) => {
+  const filters: Filters = [
+    {
+      type: 'sale',
+      name: 'Sales',
+      icon: faShoppingCart,
+    },
+    {
+      type: 'ask',
+      name: 'Listings',
+      icon: faTag,
+    },
+    {
+      type: 'bid',
+      name: 'Offers',
+      icon: faHand,
+    },
+    {
+      type: 'transfer',
+      name: 'Transfer',
+      icon: faRightLeft,
+    },
+    {
+      type: 'mint',
+      name: 'Mint',
+      icon: faSeedling,
+    },
+  ]
 
-  let filtersEnabled = filtersLength > 0
+  let filtersEnabled = activityTypes.length > 0
 
   const trigger = (
     <Flex
@@ -62,7 +104,7 @@ export const MobileActivityFilters: FC<Props> = ({}) => {
               fontWeight: '500',
             }}
           >
-            {filtersLength}
+            {activityTypes.length}
           </Flex>
         )}
       </Button>
@@ -103,12 +145,14 @@ export const MobileActivityFilters: FC<Props> = ({}) => {
                   mr: '$3',
                 }}
               >
-                {filtersLength}
+                {activityTypes.length}
               </Flex>
             )}
             {filtersEnabled && (
               <Button
-                onClick={() => clearAllAttributes(router)}
+                onClick={() => {
+                  setActivityTypes([])
+                }}
                 color="ghost"
                 size="small"
                 css={{ color: '$primary11', fontWeight: 400 }}
@@ -137,10 +181,49 @@ export const MobileActivityFilters: FC<Props> = ({}) => {
           </RadixDialog.Close>
         </Flex>
         <Flex
+          direction="column"
           css={{
-            width: '100%',
+            p: '$4',
+            '& > div:first-of-type': {
+              pt: 0,
+            },
           }}
-        ></Flex>
+        >
+          <Text style="subtitle1" css={{ mb: '$4' }}>
+            Event Type
+          </Text>
+          {filters.map((filter) => (
+            <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+              <Box css={{ color: '$gray11' }}>
+                <FontAwesomeIcon icon={filter.icon} width={16} height={16} />
+              </Box>
+              <Text
+                style="body1"
+                css={{
+                  flex: 1,
+                }}
+              >
+                {filter.name}
+              </Text>
+              <Flex align="center">
+                <Switch
+                  checked={activityTypes?.includes(filter.type)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setActivityTypes([...activityTypes, filter.type])
+                    } else {
+                      setActivityTypes(
+                        activityTypes.filter((item) => {
+                          return item != filter.type
+                        })
+                      )
+                    }
+                  }}
+                />
+              </Flex>
+            </Flex>
+          ))}
+        </Flex>
       </Flex>
     </FullscreenModal>
   )

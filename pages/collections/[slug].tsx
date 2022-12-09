@@ -279,7 +279,10 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                   }}
                 >
                   {isSmallDevice ? (
-                    <MobileActivityFilters />
+                    <MobileActivityFilters
+                      activityTypes={activityTypes}
+                      setActivityTypes={setActivityTypes}
+                    />
                   ) : (
                     <FilterButton
                       open={activityFiltersOpen}
