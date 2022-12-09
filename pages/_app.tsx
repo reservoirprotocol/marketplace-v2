@@ -111,35 +111,37 @@ function MyApp({ Component, pageProps }: AppProps) {
   const FunctionalComponent = Component as FC
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      value={{
-        dark: darkTheme.className,
-        light: 'light',
-      }}
-    >
-      <WagmiConfig client={wagmiClient}>
-        <ReservoirKitProvider
-          options={{
-            apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
-            apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
-            source: 'reservoir.hub',
-          }}
-          theme={reservoirKitTheme}
-        >
-          <Tooltip.Provider>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <FunctionalComponent {...pageProps} />
-            </RainbowKitProvider>
-          </Tooltip.Provider>
-        </ReservoirKitProvider>
-      </WagmiConfig>
-    </ThemeProvider>
+    <HotkeysProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        value={{
+          dark: darkTheme.className,
+          light: 'light',
+        }}
+      >
+        <WagmiConfig client={wagmiClient}>
+          <ReservoirKitProvider
+            options={{
+              apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
+              apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
+              source: 'reservoir.hub',
+            }}
+            theme={reservoirKitTheme}
+          >
+            <Tooltip.Provider>
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
+              >
+                <FunctionalComponent {...pageProps} />
+              </RainbowKitProvider>
+            </Tooltip.Provider>
+          </ReservoirKitProvider>
+        </WagmiConfig>
+      </ThemeProvider>
+    </HotkeysProvider>
   )
 }
 

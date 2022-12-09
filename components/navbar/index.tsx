@@ -1,4 +1,4 @@
-import { createRef, useRef } from 'react'
+import { useRef } from 'react'
 import { Box, Flex } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'

@@ -54,7 +54,7 @@ type Props = {
 }
 
 export const ActivityTable: FC<Props> = ({ data }) => {
-  const loadMoreRef = useRef<HTMLDivElement>()
+  const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
@@ -152,7 +152,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
   let activityDescription = ''
 
-  const logos = {
+  type Logos = {
+    [key: string]: JSX.Element
+  }
+
+  const logos: Logos = {
     transfer: <FontAwesomeIcon icon={faRightLeft} width={16} height={16} />,
     sale: <FontAwesomeIcon icon={faShoppingCart} width={16} height={16} />,
     mint: <FontAwesomeIcon icon={faSeedling} width={16} height={16} />,

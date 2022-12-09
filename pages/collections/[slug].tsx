@@ -101,11 +101,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
 
   let { data: attributes } = useAttributes(collection?.id)
 
-  const rarityEnabledCollection =
+  const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
-    +collection.tokenCount >= 2 &&
-    attributes &&
-    attributes?.length >= 2
+      +collection.tokenCount >= 2 &&
+      attributes &&
+      attributes?.length >= 2
+  )
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -157,7 +158,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             <TabsContent value="items">
               <Flex
                 css={{
-                  gap: attributeFiltersOpen && '$5',
+                  gap: attributeFiltersOpen ? '$5' : '',
                   position: 'relative',
                 }}
                 ref={scrollRef}
@@ -203,6 +204,8 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       <CollectionOffer
                         collection={collection}
                         buttonCss={{
+                          minWidth: 'max-content',
+                          height: 'min-content',
                           justifyContent: 'center',
                           '@bp1': { ml: '$4' },
                         }}
