@@ -31,13 +31,14 @@ import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
+import { MobileActivityFilters } from 'components/collections/filters/MobileAttributeFilters'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
-  const isMobile = useMediaQuery({ maxWidth: 600 })
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -159,12 +160,19 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                 }}
                 ref={scrollRef}
               >
-                <Filters
-                  attributes={attributes}
-                  open={attributeFiltersOpen}
-                  setOpen={setAttributeFiltersOpen}
-                  scrollToTop={scrollToTop}
-                />
+                {isSmallDevice ? (
+                  <MobileActivityFilters
+                    attributes={attributes}
+                    scrollToTop={scrollToTop}
+                  />
+                ) : (
+                  <Filters
+                    attributes={attributes}
+                    open={attributeFiltersOpen}
+                    setOpen={setAttributeFiltersOpen}
+                    scrollToTop={scrollToTop}
+                  />
+                )}
                 <Box
                   css={{
                     flex: 1,
@@ -172,7 +180,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                   }}
                 >
                   <Flex justify="between" css={{ marginBottom: '$4' }}>
-                    {attributes && attributes.length > 0 && !isMobile && (
+                    {attributes && attributes.length > 0 && !isSmallDevice && (
                       <FilterButton
                         open={attributeFiltersOpen}
                         setOpen={setAttributeFiltersOpen}
@@ -199,7 +207,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       />
                     </Flex>
                   </Flex>
-                  <SelectedAttributes />
+                  {!isSmallDevice && <SelectedAttributes />}
                   <Grid
                     css={{
                       gridTemplateColumns:
