@@ -1,4 +1,4 @@
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
@@ -19,7 +19,13 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
 
   return (
     <Box
-      css={{ pt: '$3', borderBottom: '1px solid $gray7', cursor: 'pointer' }}
+      css={{
+        pt: '$3',
+        px: '$4',
+        borderBottom: '1px solid $gray7',
+        cursor: 'pointer',
+        '@bp2': { px: '0' },
+      }}
     >
       <Flex
         align="center"

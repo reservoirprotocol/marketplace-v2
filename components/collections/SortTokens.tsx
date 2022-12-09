@@ -55,7 +55,7 @@ export const SortTokens: FC = () => {
             width: '100%',
             justifyContent: 'center',
             mb: '$3',
-            '@bp1': { width: '220px', minWidth: 'max-content', mb: '0' },
+            '@bp2': { width: '220px', minWidth: 'max-content', mb: '0' },
           }}
         >
           <span>{sortSelection}</span>
