@@ -9,6 +9,7 @@ import {
   useCollections,
   useTokens,
   useAttributes,
+  useCollectionActivity,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 import Layout from 'components/Layout'
@@ -17,7 +18,7 @@ import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
-import { Filters } from 'components/collections/filters/Filters'
+import { AttributeFilters } from 'components/collections/filters/AttributeFilters'
 import { FilterButton } from 'components/collections/filters/FilterButton'
 import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
 import { CollectionOffer } from 'components/buttons/CollectionOffer'
@@ -31,13 +32,23 @@ import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
-import { MobileActivityFilters } from 'components/collections/filters/MobileAttributeFilters'
+import { ActivityFilters } from 'components/collections/filters/ActivityFilters'
+import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
+import { MobileActivityFilters } from 'components/collections/filters/MobileActivityFilters'
+
+type ActivityTypes = NonNullable<
+  NonNullable<
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
+>
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(false)
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
@@ -164,12 +175,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                 ref={scrollRef}
               >
                 {isSmallDevice ? (
-                  <MobileActivityFilters
+                  <MobileAttributeFilters
                     attributes={attributes}
                     scrollToTop={scrollToTop}
                   />
                 ) : (
-                  <Filters
+                  <AttributeFilters
                     attributes={attributes}
                     open={attributeFiltersOpen}
                     setOpen={setAttributeFiltersOpen}
@@ -248,7 +259,42 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
             </TabsContent>
             <TabsContent value="activity">
-              <CollectionAcivityTable id={id} />
+              <Flex
+                css={{
+                  gap: activityFiltersOpen ? '$5' : '',
+                  position: 'relative',
+                }}
+              >
+                <ActivityFilters
+                  open={activityFiltersOpen}
+                  setOpen={setActivityFiltersOpen}
+                  activityTypes={activityTypes}
+                  setActivityTypes={setActivityTypes}
+                />
+                <Box
+                  css={{
+                    flex: 1,
+                    gap: '$4',
+                    pb: '$5',
+                  }}
+                >
+                  {isSmallDevice ? (
+                    <MobileActivityFilters
+                      activityTypes={activityTypes}
+                      setActivityTypes={setActivityTypes}
+                    />
+                  ) : (
+                    <FilterButton
+                      open={activityFiltersOpen}
+                      setOpen={setActivityFiltersOpen}
+                    />
+                  )}
+                  <CollectionAcivityTable
+                    id={id}
+                    activityTypes={activityTypes}
+                  />
+                </Box>
+              </Flex>
             </TabsContent>
           </Tabs.Root>
         </Flex>

@@ -1,51 +1,69 @@
-import { FC, useEffect, useState } from 'react'
+import { FC } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
-import { Box, Button, Flex, Text } from 'components/primitives'
+import { Box, Button, Flex, Switch, Text } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/router'
-import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
-import { AttributeSelector } from './AttributeSelector'
-import { clearAllAttributes } from 'utils/router'
+import {
+  faHand,
+  faRightLeft,
+  faSeedling,
+  faShoppingCart,
+  faTag,
+  faXmark,
+  IconDefinition,
+} from '@fortawesome/free-solid-svg-icons'
 import { FullscreenModal } from 'components/common/FullscreenModal'
+import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+
+type ActivityTypes = NonNullable<
+  NonNullable<
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
+>
+
+type Filters = {
+  type: ActivityTypes[0]
+  name: string
+  icon: IconDefinition
+}[]
 
 type Props = {
-  attributes: ReturnType<typeof useAttributes>['data'] | undefined
-  scrollToTop: () => void
+  activityTypes: NonNullable<ActivityTypes>
+  setActivityTypes: (activityTypes: ActivityTypes) => void
 }
 
-export const MobileAttributeFilters: FC<Props> = ({
-  attributes,
-  scrollToTop,
+export const MobileActivityFilters: FC<Props> = ({
+  activityTypes,
+  setActivityTypes,
 }) => {
-  const router = useRouter()
-  const [filtersLength, setFiltersLength] = useState(0)
+  const filters: Filters = [
+    {
+      type: 'sale',
+      name: 'Sales',
+      icon: faShoppingCart,
+    },
+    {
+      type: 'ask',
+      name: 'Listings',
+      icon: faTag,
+    },
+    {
+      type: 'bid',
+      name: 'Offers',
+      icon: faHand,
+    },
+    {
+      type: 'transfer',
+      name: 'Transfer',
+      icon: faRightLeft,
+    },
+    {
+      type: 'mint',
+      name: 'Mint',
+      icon: faSeedling,
+    },
+  ]
 
-  useEffect(() => {
-    let filters = []
-
-    // Extract all queries of attribute type
-    Object.keys({ ...router.query }).map((key) => {
-      if (
-        key.startsWith('attributes[') &&
-        key.endsWith(']') &&
-        router.query[key] !== ''
-      ) {
-        if (Array.isArray(router.query[key])) {
-          let values = router.query[key] as string[]
-          values.forEach((value) => {
-            filters.push({ key: key.slice(11, -1), value: value })
-          })
-        } else {
-          filters.push({ key: key.slice(11, -1), value: router.query[key] })
-        }
-      }
-    })
-
-    setFiltersLength(filters.length)
-  }, [router.query])
-
-  let filtersEnabled = filtersLength > 0
+  let filtersEnabled = activityTypes.length > 0
 
   const trigger = (
     <Flex
@@ -86,7 +104,7 @@ export const MobileAttributeFilters: FC<Props> = ({
               fontWeight: '500',
             }}
           >
-            {filtersLength}
+            {activityTypes.length}
           </Flex>
         )}
       </Button>
@@ -127,12 +145,14 @@ export const MobileAttributeFilters: FC<Props> = ({
                   mr: '$3',
                 }}
               >
-                {filtersLength}
+                {activityTypes.length}
               </Flex>
             )}
             {filtersEnabled && (
               <Button
-                onClick={() => clearAllAttributes(router)}
+                onClick={() => {
+                  setActivityTypes([])
+                }}
                 color="ghost"
                 size="small"
                 css={{ color: '$primary11', fontWeight: 400 }}
@@ -161,25 +181,48 @@ export const MobileAttributeFilters: FC<Props> = ({
           </RadixDialog.Close>
         </Flex>
         <Flex
+          direction="column"
           css={{
-            width: '100%',
+            p: '$4',
+            '& > div:first-of-type': {
+              pt: 0,
+            },
           }}
         >
-          <Box
-            css={{
-              width: '100%',
-            }}
-          >
-            {attributes &&
-              attributes
-                .filter((attribute) => attribute.kind != 'number')
-                .map((attribute) => (
-                  <AttributeSelector
-                    attribute={attribute}
-                    scrollToTop={scrollToTop}
-                  />
-                ))}
-          </Box>
+          <Text style="subtitle1" css={{ mb: '$4' }}>
+            Event Type
+          </Text>
+          {filters.map((filter) => (
+            <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+              <Box css={{ color: '$gray11' }}>
+                <FontAwesomeIcon icon={filter.icon} width={16} height={16} />
+              </Box>
+              <Text
+                style="body1"
+                css={{
+                  flex: 1,
+                }}
+              >
+                {filter.name}
+              </Text>
+              <Flex align="center">
+                <Switch
+                  checked={activityTypes?.includes(filter.type)}
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setActivityTypes([...activityTypes, filter.type])
+                    } else {
+                      setActivityTypes(
+                        activityTypes.filter((item) => {
+                          return item != filter.type
+                        })
+                      )
+                    }
+                  }}
+                />
+              </Flex>
+            </Flex>
+          ))}
         </Flex>
       </Flex>
     </FullscreenModal>
