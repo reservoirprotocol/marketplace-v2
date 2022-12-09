@@ -25,7 +25,8 @@ const SelectedAttributes: FC = () => {
         router.query[key] !== ''
       ) {
         if (Array.isArray(router.query[key])) {
-          ;(router.query[key] as string[]).map((value) => {
+          let values = router.query[key] as string[]
+          values.forEach((value) => {
             filters.push({ key: key.slice(11, -1), value: value })
           })
         } else {

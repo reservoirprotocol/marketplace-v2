@@ -16,6 +16,7 @@
     "@radix-ui/react-dialog": "^0.1.7",
     "@radix-ui/react-dropdown-menu": "^0.1.6",
     "@radix-ui/react-switch": "^0.1.5",
+    "@radix-ui/react-tabs": "^1.0.1",
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "^0.7.1",
     "@reservoir0x/reservoir-kit-ui": "0.6.2",
