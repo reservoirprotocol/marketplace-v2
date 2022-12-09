@@ -58,19 +58,19 @@ const TrendingCollectionsList = () => {
       css={{
         display: 'grid',
         gridTemplateRows: 'repeat(12, 1fr)',
-        '@bp1': {
+        '@sm': {
           gridTemplateRows: 'repeat(12, 1fr)',
         },
 
-        '@bp2': {
+        '@md': {
           gridTemplateRows: 'repeat(6, 1fr)',
         },
 
-        '@bp3': {
+        '@lg': {
           gridTemplateRows: '1fr 1fr 1fr 1fr',
         },
 
-        '@bp4': {
+        '@xl': {
           gridTemplateRows: '1fr 1fr 1fr 1fr',
         },
         gridAutoFlow: 'column',

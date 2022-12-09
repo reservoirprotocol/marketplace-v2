@@ -30,14 +30,14 @@ const Span = styled('span', {})
 
 export const DesktopOnlyTd = styled('td', {
   display: 'none',
-  '@bp3': {
+  '@lg': {
     display: 'table-cell',
   },
 })
 
 export const DesktopOnlyHr = styled('th', {
   display: 'none',
-  '@bp3': {
+  '@lg': {
     display: 'table-cell',
   },
 })
@@ -226,7 +226,7 @@ const TokenRow = ({ token, owner, topBid, isMe }: any) => {
 
       <DesktopOnlyTd
         css={{
-          '@bp3': {
+          '@lg': {
             display: 'table-cell',
           },
         }}

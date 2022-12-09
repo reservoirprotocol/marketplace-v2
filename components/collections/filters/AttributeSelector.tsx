@@ -22,7 +22,7 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
         px: '$4',
         borderBottom: '1px solid $gray7',
         cursor: 'pointer',
-        '@bp2': { px: '0' },
+        '@md': { px: '0' },
       }}
     >
       <Flex
