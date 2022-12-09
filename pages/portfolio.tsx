@@ -45,7 +45,7 @@ const IndexPage: NextPage = () => {
             padding: 16,
             paddingTop: 16,
 
-            '@bp3': {
+            '@lg': {
               padding: 24,
             },
           }}

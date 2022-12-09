@@ -46,7 +46,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         overflow: 'hidden',
         gap: 1,
         gridTemplateColumns: '1fr 1fr',
-        '@bp1': {
+        '@sm': {
           gridTemplateColumns: '1fr 1fr 1fr 1fr',
           marginRight: 'auto',
         },
