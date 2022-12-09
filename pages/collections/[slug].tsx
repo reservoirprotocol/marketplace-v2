@@ -135,7 +135,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
             px: '$4',
             pt: '$5',
             pb: 0,
-            '@bp1': {
+            '@sm': {
               px: '$5',
             },
           }}
@@ -205,7 +205,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       css={{
                         ml: 'auto',
                         width: '100%',
-                        '@bp1': {
+                        '@sm': {
                           flexDirection: 'row',
                           width: 'max-content',
                         },
@@ -218,7 +218,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                           minWidth: 'max-content',
                           height: 'min-content',
                           justifyContent: 'center',
-                          '@bp1': { ml: '$4' },
+                          '@sm': { ml: '$4' },
                         }}
                       />
                     </Flex>
