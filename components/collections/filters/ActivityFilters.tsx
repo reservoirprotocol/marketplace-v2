@@ -115,7 +115,7 @@ export const ActivityFilters: FC<Props> = ({
                     } else {
                       setActivityTypes(
                         activityTypes.filter((item) => {
-                          item != filter.type
+                          return item != filter.type
                         })
                       )
                     }
