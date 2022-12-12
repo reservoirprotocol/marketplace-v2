@@ -13,7 +13,15 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import Layout from 'components/Layout'
-import { Flex, Text, Button, Tooltip, Anchor } from 'components/primitives'
+import {
+  Flex,
+  Text,
+  Button,
+  Tooltip,
+  Anchor,
+  Grid,
+} from 'components/primitives'
+import AttributeCard from 'components/token/AttributeCard'
 import RarityRank from 'components/token/RarityRank'
 import {
   GetStaticProps,
@@ -45,6 +53,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const { data: tokens } = useTokens(
     {
       tokens: [`${collectionId}:${id}`],
+      includeAttributes: true,
+      includeTopBid: true,
     },
     {
       fallback: ssr.tokens,
@@ -85,7 +95,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           gap: 80,
         }}
       >
-        <Flex css={{ maxWidth: 445, flex: 1 }}>
+        <Flex direction="column" css={{ maxWidth: 445, flex: 1 }}>
           <TokenMedia
             token={token?.token}
             style={{
@@ -96,6 +106,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               overflow: 'hidden',
             }}
           />
+          {token?.token?.attributes && (
+            <Grid css={{ gridTemplateColumns: '1fr 1fr', gap: '$3', mt: 24 }}>
+              {token?.token?.attributes?.map((attribute) => (
+                <AttributeCard
+                  attribute={attribute}
+                  collectionTokenCount={collection?.tokenCount || 0}
+                  collectionId={collection?.id}
+                />
+              ))}
+            </Grid>
+          )}
         </Flex>
         <Flex direction="column" css={{ flex: 1 }}>
           <Flex justify="between" align="center" css={{ mb: 20 }}>
@@ -165,7 +186,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               </Link>
             </Flex>
           )}
-          {/* TODO: pass attributes */}
+          {/* TODO: pass collection attributes */}
           <RarityRank token={token} collection={collection} />
         </Flex>
       </Flex>
