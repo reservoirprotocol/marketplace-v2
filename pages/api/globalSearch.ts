@@ -2,7 +2,9 @@ import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-kit-client'
 
-type Collection = NonNullable<paths['/collections/v5']['get']['responses']['200']['schema']['collections']>[0]
+type Collection = NonNullable<
+  paths['/collections/v5']['get']['responses']['200']['schema']['collections']
+>[0]
 
 export const config = {
   runtime: 'experimental-edge',
@@ -16,13 +18,12 @@ export default async function handler(req: Request) {
   let isAddress = ethers.utils.isAddress(q as string)
 
   if (isAddress) {
-    let { data: collections } = await fetcher(`collections/v5?contract=${q}`)
-
-    if (collections.length) {
+    let { data } = await fetcher(`collections/v5?contract=${q}`)
+    if (data.collections.length) {
       searchResults = [
         {
           type: 'collection',
-          data: collections[0],
+          data: data.collections[0],
         },
       ]
     } else {
@@ -59,9 +60,8 @@ export default async function handler(req: Request) {
       ]
     }
   } else {
-    let { data: collections } = await fetcher(`collections/v5?name=${q}`)
-
-    searchResults = collections.map((collection: Collection) => ({
+    let { data } = await fetcher(`collections/v5?name=${q}`)
+    searchResults = data.collections.map((collection: Collection) => ({
       type: 'collection',
       data: collection,
     }))
@@ -75,6 +75,7 @@ export default async function handler(req: Request) {
       status: 200,
       headers: {
         'content-type': 'application/json',
+        'Cache-Control': 'maxage=0, s-maxage=3600 stale-while-revalidate',
       },
     }
   )
