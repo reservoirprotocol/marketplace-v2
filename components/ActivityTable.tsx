@@ -228,7 +228,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   />
                 )}
                 <Text
-                  style="subtitle2"
+                  style="subtitle3"
                   css={{ fontSize: '12px', color: '$gray11' }}
                 >
                   {useTimeSince(activity?.timestamp)}
@@ -293,7 +293,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
             <Flex align="baseline" css={{ gap: '$2' }}>
               <Text
-                style="subtitle2"
+                style="subtitle3"
                 css={{ fontSize: '12px', color: '$gray11' }}
               >
                 From
@@ -313,7 +313,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <span>-</span>
               )}
               <Text
-                style="subtitle2"
+                style="subtitle3"
                 css={{ fontSize: '12px', color: '$gray11' }}
               >
                 to
@@ -393,10 +393,10 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableData>
         {activity.amount ? (
           <Flex direction="column" align="start">
-            <Text style="subtitle2" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" css={{ color: '$gray11' }}>
               Quantity
             </Text>
-            <Text style="subtitle2">{activity.amount}</Text>
+            <Text style="subtitle3">{activity.amount}</Text>
           </Flex>
         ) : (
           <span>-</span>
@@ -406,7 +406,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         {activity.fromAddress &&
         activity.fromAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
-            <Text style="subtitle2" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" css={{ color: '$gray11' }}>
               From
             </Text>
             <Link href={`/address/${activity.fromAddress}`}>
@@ -422,7 +422,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableData>
         {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
-            <Text style="subtitle2" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" css={{ color: '$gray11' }}>
               To
             </Text>
             <Link href={`/address/${activity.fromAddress}`}>
@@ -445,7 +445,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               alt={`${activity.order?.source?.name} Source`}
             />
           )}
-          <Text style="subtitle2" css={{ fontSize: '12px', color: '$gray11' }}>
+          <Text style="subtitle3" css={{ color: '$gray11' }}>
             {useTimeSince(activity?.timestamp)}
           </Text>
 
