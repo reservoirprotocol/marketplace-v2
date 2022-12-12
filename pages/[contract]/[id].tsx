@@ -22,6 +22,7 @@ import {
   Grid,
 } from 'components/primitives'
 import AttributeCard from 'components/token/AttributeCard'
+import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
 import {
   GetStaticProps,
@@ -188,6 +189,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           )}
           {/* TODO: pass collection attributes */}
           <RarityRank token={token} collection={collection} />
+          <PriceData token={token} />
         </Flex>
       </Flex>
     </Layout>
