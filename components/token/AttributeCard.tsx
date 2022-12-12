@@ -36,15 +36,15 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
             width: '100%',
           }}
         >
-          <Text style="subtitle2" css={{ color: '$primary11' }}>
+          <Text style="subtitle3" css={{ color: '$primary11' }}>
             {attribute.key}
           </Text>
           <Flex justify="between">
-            <Text style="subtitle3">{attribute.value}</Text>
+            <Text style="subtitle2">{attribute.value}</Text>
             <FormatCryptoCurrency
               amount={attribute.floorAskPrice}
               logoHeight={16}
-              textStyle="subtitle3"
+              textStyle="subtitle2"
             />
           </Flex>
           <Flex justify="between">
