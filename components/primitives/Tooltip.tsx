@@ -2,6 +2,11 @@
 import React from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
 import Box from './Box'
+import { styled } from 'stitches.config'
+
+const Arrow = styled(TooltipPrimitive.Arrow, {
+  fill: '$gray5',
+})
 
 const Tooltip = ({
   children,
@@ -26,18 +31,19 @@ const Tooltip = ({
         style={{ zIndex: 100 }}
         {...props}
       >
+        <Arrow />
         <Box
           css={{
             zIndex: 9999,
-            boxShadow:
-              '0px 4px 12px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px $colors$primary4 ',
+            $$shadowColor: '$colors$gray12',
+            boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
             borderRadius: 8,
             overflow: 'hidden',
           }}
         >
           <Box
             css={{
-              background: '$gray1',
+              background: '$gray5',
               p: '$4',
             }}
           >
