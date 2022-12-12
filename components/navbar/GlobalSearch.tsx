@@ -154,7 +154,7 @@ const GlobalSearch = forwardRef<
       setResults(res.results)
       setSearching(false)
     }
-    if (debouncedSearch.length >= 3) {
+    if (debouncedSearch.length >= 2) {
       getSearchResults()
     } else {
       setResults([])
