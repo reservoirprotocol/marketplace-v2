@@ -10,7 +10,6 @@ type Props = {
 }
 
 export const PriceData: FC<Props> = ({ token }) => {
-  console.log(token)
   const listSourceName = token?.market?.floorAsk?.source?.name
   const listSourceDomain = token?.market?.floorAsk?.source?.domain
 
