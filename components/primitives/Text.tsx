@@ -35,6 +35,10 @@ export default styled('span', {
         fontWeight: 500,
         fontSize: 12,
       },
+      subtitle3: {
+        fontWeight: 500,
+        fontSize: 14,
+      },
       body1: {
         fontWeight: 400,
         fontSize: 16,

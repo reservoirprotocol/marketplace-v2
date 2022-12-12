@@ -34,6 +34,9 @@ export const StyledAnchor = styled('a', {
       medium: {
         fontWeight: 500,
       },
+      normal: {
+        fontWeight: 400,
+      },
     },
   },
   defaultVariants: {

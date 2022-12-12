@@ -313,7 +313,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<{
-  collectionId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
