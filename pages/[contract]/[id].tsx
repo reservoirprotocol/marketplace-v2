@@ -21,6 +21,8 @@ import {
   Anchor,
   Grid,
 } from 'components/primitives'
+import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
+import * as Tabs from '@radix-ui/react-tabs'
 import AttributeCard from 'components/token/AttributeCard'
 import RarityRank from 'components/token/RarityRank'
 import {
@@ -35,6 +37,7 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import fetcher from 'utils/fetcher'
 import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
+import { TokenInfo } from 'components/token/TokenInfo'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -188,6 +191,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           )}
           {/* TODO: pass collection attributes */}
           <RarityRank token={token} collection={collection} />
+          <Tabs.Root defaultValue="info">
+            <TabsList>
+              <TabsTrigger value="info">Info</TabsTrigger>
+            </TabsList>
+            <TabsContent value="info">
+              <TokenInfo />
+            </TabsContent>
+          </Tabs.Root>
         </Flex>
       </Flex>
     </Layout>
