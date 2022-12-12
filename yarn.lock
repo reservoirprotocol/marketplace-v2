@@ -1130,16 +1130,16 @@
     "@babel/runtime" "^7.13.10"
     "@radix-ui/react-primitive" "1.0.1"
 
-"@radix-ui/react-avatar@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@radix-ui/react-avatar/-/react-avatar-0.1.4.tgz#36210e629e0eecde44027195c82d2a4101cbd7e9"
-  integrity sha512-RTs3KQTToVKJHHsn/E+vC2MyP0LnA6uMdcD7thwaCJEbI6NAvf56Y+RNJPSsGXz1o2LkD7Iy5SogsrzBwXQk6A==
+"@radix-ui/react-avatar@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-avatar/-/react-avatar-1.0.1.tgz#d25ef10b56210039c152e45209dd41a1afdc192e"
+  integrity sha512-GfUgw4i/OWmb76bmM9qLnedYOsXhPvRXL6xaxyZzhiIVEwo2KbmxTaSQv5r1Oh8nNqBs1vfYPGuVmhEfpxpnvw==
   dependencies:
     "@babel/runtime" "^7.13.10"
-    "@radix-ui/react-context" "0.1.1"
-    "@radix-ui/react-primitive" "0.1.4"
-    "@radix-ui/react-use-callback-ref" "0.1.0"
-    "@radix-ui/react-use-layout-effect" "0.1.0"
+    "@radix-ui/react-context" "1.0.0"
+    "@radix-ui/react-primitive" "1.0.1"
+    "@radix-ui/react-use-callback-ref" "1.0.0"
+    "@radix-ui/react-use-layout-effect" "1.0.0"
 
 "@radix-ui/react-collapsible@^1.0.1":
   version "1.0.1"
@@ -1686,6 +1686,21 @@
     "@radix-ui/react-use-previous" "0.1.1"
     "@radix-ui/react-use-size" "0.1.1"
 
+"@radix-ui/react-tabs@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-tabs/-/react-tabs-1.0.1.tgz#8fcfd6f70fe3026ff8a839b120f4e87f8d985e05"
+  integrity sha512-mVNEwHwgjy2G9F7b39f9VY+jF0QUZykTm0Sdv+Uz6KC4KOEIa4HLDiHU8MeEZluRtZE3aqGYDhl93O7QbJDwhg==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.0"
+    "@radix-ui/react-context" "1.0.0"
+    "@radix-ui/react-direction" "1.0.0"
+    "@radix-ui/react-id" "1.0.0"
+    "@radix-ui/react-presence" "1.0.0"
+    "@radix-ui/react-primitive" "1.0.1"
+    "@radix-ui/react-roving-focus" "1.0.1"
+    "@radix-ui/react-use-controllable-state" "1.0.0"
+
 "@radix-ui/react-toggle-group@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-toggle-group/-/react-toggle-group-1.0.1.tgz#26ca9629b5b5e76680ddbd1d362d8bdf359fa14c"
@@ -1899,22 +1914,10 @@
     qrcode "1.5.0"
     react-remove-scroll "2.5.4"
 
-"@react-hookz/deep-equal@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@react-hookz/deep-equal/-/deep-equal-1.0.2.tgz#4e8bdeda027379dcf8b62a42e5f75f0351b11b35"
-  integrity sha512-cM5kPFb6EFH5q52WzRxfRX9+8g5kq78McWOYs6e1seo+nK6NpfLupT5uOCIJp37jU8ayd4Su8ni3HRFTN2C2kg==
-
 "@react-hookz/deep-equal@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@react-hookz/deep-equal/-/deep-equal-1.0.3.tgz#e044bca38c1612ea8c1596ef858ef7cfea49dd7a"
   integrity sha512-lGZR5l3YRjzeIOHtJhiq96vQKrsq+9lsCyv+0fROMQeSNWtLLzX3R+psHNi6nsoP3XEhspiZ92nsiPmdNo8ztQ==
-
-"@react-hookz/web@^14.2.2":
-  version "14.2.2"
-  resolved "https://registry.yarnpkg.com/@react-hookz/web/-/web-14.2.2.tgz#eee0085f954e5b62d0a6c5b20d8786c28abfb9ad"
-  integrity sha512-6FeZHKV3FFOYnbSJMkkqXDoMuIX0HEFJlDF4LpHR7RsA3zrH2xzhtF8nSYZ+pG6fDIqYKID9yQuILFmbAWaqCQ==
-  dependencies:
-    "@react-hookz/deep-equal" "^1.0.2"
 
 "@react-hookz/web@^19.2.0":
   version "19.2.0"
@@ -4085,6 +4088,11 @@ react-flatpickr@^3.10.13:
     flatpickr "^4.6.2"
     prop-types "^15.5.10"
 
+react-hotkeys-hook@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/react-hotkeys-hook/-/react-hotkeys-hook-4.0.4.tgz#41675ce5f82cf1a978e89e16461242f2cd132e81"
+  integrity sha512-3w8Sk3ElOOv8+e8YreXlF4fl57iHcJ7GacocSKvvVRhGZDBzTfOe+DKz31ogtYJx7n9PRW5wMlaw2GDKhvUJeA==
+
 react-infinite-scroll-hook@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/react-infinite-scroll-hook/-/react-infinite-scroll-hook-4.0.4.tgz#616e66ba1de6421f74cd37d652e5b8c26c886373"
@@ -4108,11 +4116,6 @@ react-jazzicon@^1.0.4:
   integrity sha512-/3kWv5vtAhI18GBFoqjpxRTtL+EImuB73PAC02r/zJQ6E+PAUmoBx8edYvTCIYHwS01uFf6N3elTDqSrVPwg4w==
   dependencies:
     mersenne-twister "^1.1.0"
-
-react-key-shortcuts@^0.5.14:
-  version "0.5.14"
-  resolved "https://registry.yarnpkg.com/react-key-shortcuts/-/react-key-shortcuts-0.5.14.tgz#6790f4dea6b29dd7da79efac97f6ee8fd0bec64d"
-  integrity sha512-fY8kfzwh5GPTQ29V6lPHnstV8Be5hMXK5by4UuZ9pjExNyfYEO8gEqZZvYn34xC5+WrLeKS7tX6aalgnfR96xA==
 
 react-native-url-polyfill@^1.3.0:
   version "1.3.0"

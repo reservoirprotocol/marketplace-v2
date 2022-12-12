@@ -12,6 +12,8 @@
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@radix-ui/colors": "^0.1.8",
+    "@radix-ui/react-avatar": "^1.0.1",
     "@radix-ui/react-collapsible": "^1.0.1",
     "@radix-ui/react-dialog": "^0.1.7",
     "@radix-ui/react-dropdown-menu": "^0.1.6",
@@ -42,12 +44,6 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.1.1",
-    "@fortawesome/free-solid-svg-icons": "^6.1.1",
-    "@fortawesome/react-fontawesome": "^0.1.18",
-    "@radix-ui/colors": "^0.1.8",
-    "@radix-ui/react-avatar": "^0.1.4",
-    "@react-hookz/web": "^14.2.2",
     "@stitches/react": "^1.2.8",
     "@types/node": "^12.12.21",
     "@types/react": "^17.0.2",
