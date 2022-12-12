@@ -112,6 +112,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 <AttributeCard
                   attribute={attribute}
                   collectionTokenCount={collection?.tokenCount || 0}
+                  collectionId={collection?.id}
                 />
               ))}
             </Grid>
