@@ -175,7 +175,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           </Flex>
           {token && (
             <Flex align="center" css={{ mt: '$2' }}>
-              <Text style="subtitle2" css={{ color: '$gray11', mr: '$2' }}>
+              <Text style="subtitle3" css={{ color: '$gray11', mr: '$2' }}>
                 Owner
               </Text>
               <Jazzicon diameter={16} seed={jsNumberForAddress(owner || '')} />

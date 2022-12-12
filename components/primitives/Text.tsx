@@ -29,11 +29,11 @@ export default styled('span', {
       },
       subtitle2: {
         fontWeight: 500,
-        fontSize: 12,
+        fontSize: 14,
       },
       subtitle3: {
         fontWeight: 500,
-        fontSize: 14,
+        fontSize: 12,
       },
       body1: {
         fontWeight: 400,

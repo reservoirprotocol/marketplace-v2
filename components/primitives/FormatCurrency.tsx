@@ -30,7 +30,7 @@ const FormatCurrency: FC<ComponentPropsWithoutRef<typeof Text> & Props> = ({
   return (
     <Text
       {...props}
-      style={props.style || 'subtitle2'}
+      style={props.style || 'subtitle3'}
       color={props.color || 'base'}
     >
       {formattedValue}

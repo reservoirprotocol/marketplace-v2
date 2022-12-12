@@ -136,7 +136,7 @@ export default ({
                       style={{ width: 13, height: 13 }}
                       src="/icons/rarity-icon.svg"
                     />
-                    <Text style="subtitle2" as="p">
+                    <Text style="subtitle3" as="p">
                       {token?.token?.rarityRank}
                     </Text>
                   </Flex>
@@ -164,13 +164,13 @@ export default ({
           </Flex>
           {token?.token?.lastBuy?.value && (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
-              <Text css={{ color: '$gray11' }} style="subtitle2">
+              <Text css={{ color: '$gray11' }} style="subtitle3">
                 Last Sale
               </Text>
               <FormatCryptoCurrency
                 logoHeight={12}
                 amount={token.token.lastBuy.value}
-                textStyle="subtitle2"
+                textStyle="subtitle3"
               />
             </Flex>
           )}
