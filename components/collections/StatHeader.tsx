@@ -22,7 +22,7 @@ const StatBox: FC<Props> = ({ label, children }) => (
       background: '$gray4',
     }}
   >
-    <Text style="subtitle2" css={{ color: '$gray12' }} as="p">
+    <Text style="subtitle3" css={{ color: '$gray12' }} as="p">
       {label}
     </Text>
     {children}

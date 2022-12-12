@@ -430,7 +430,7 @@ const CollectionBlock = ({ collection: data, onSelect, isSelected }: any) => {
 
           <Box>
             <Text
-              style="subtitle2"
+              style="subtitle3"
               as="p"
               css={{
                 ml: '$1',

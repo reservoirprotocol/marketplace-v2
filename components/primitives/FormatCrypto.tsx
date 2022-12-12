@@ -17,7 +17,7 @@ const FormatCrypto: FC<Props> = ({
   maximumFractionDigits = 4,
   decimals = 18,
   css,
-  textStyle = 'subtitle2',
+  textStyle = 'subtitle3',
   children,
 }) => {
   const value = formatBN(amount, maximumFractionDigits, decimals)
