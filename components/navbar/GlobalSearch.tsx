@@ -123,7 +123,6 @@ type SearchResultProps = {
 }
 
 const SearchResult: FC<SearchResultProps> = ({ result }) => {
-  console.log(result)
   if (result.type == 'collection') {
     return <CollectionItem collection={result.data} />
   } else {
