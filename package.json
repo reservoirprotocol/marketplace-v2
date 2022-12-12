@@ -43,7 +43,6 @@
     "singleQuote": true
   },
   "devDependencies": {
-    "@react-hookz/web": "^20.0.1",
     "@stitches/react": "^1.2.8",
     "@types/lodash": "^4.14.189",
     "@types/node": "^12.12.21",
