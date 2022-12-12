@@ -10,11 +10,19 @@ type Props = {
 }
 
 export const PriceData: FC<Props> = ({ token }) => {
-  const listSourceName = token?.market?.floorAsk?.source?.name
-  const listSourceDomain = token?.market?.floorAsk?.source?.domain
+  const listSourceName = token?.market?.floorAsk?.source?.name as
+    | string
+    | undefined
+  const listSourceDomain = token?.market?.floorAsk?.source?.domain as
+    | string
+    | undefined
 
-  const offerSourceName = token?.market?.topBid?.source?.name
-  const offerSourceDomain = token?.market?.topBid?.source?.domain
+  const offerSourceName = token?.market?.topBid?.source?.name as
+    | string
+    | undefined
+  const offerSourceDomain = token?.market?.topBid?.source?.domain as
+    | string
+    | undefined
 
   const listSourceLogo = `${API_BASE}/redirect/sources/${
     listSourceDomain || listSourceName
@@ -79,7 +87,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             logoHeight={20}
           />
           <Text style="body2" css={{ color: '$gray11' }}>
-            {formatDollar(token?.market?.topBid?.price?.amount?.usd as number)}
+            {formatDollar(token?.market?.topBid?.price?.amount?.usd)}
           </Text>
         </Flex>
         <a href={offerSourceRedirect} target="_blank" rel="noopener noreferrer">
