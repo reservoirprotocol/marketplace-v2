@@ -29,19 +29,17 @@ const Bid: FC<Props> = ({
     </Button>
   )
   return (
-    <>
-      <BidModal
-        tokenId={tokenId}
-        collectionId={collectionId}
-        trigger={trigger}
-        openState={openState}
-        onBidComplete={() => {
-          if (mutate) {
-            mutate()
-          }
-        }}
-      />
-    </>
+    <BidModal
+      tokenId={tokenId}
+      collectionId={collectionId}
+      trigger={trigger}
+      openState={openState}
+      onBidComplete={() => {
+        if (mutate) {
+          mutate()
+        }
+      }}
+    />
   )
 }
 

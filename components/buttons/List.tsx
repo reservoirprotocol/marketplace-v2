@@ -30,26 +30,24 @@ const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
   )
 
   return (
-    <>
-      <ListModal
-        trigger={trigger}
-        collectionId={contract}
-        tokenId={tokenId}
-        currencies={listingCurrencies}
-        onListingComplete={() => {
-          if (mutate) {
-            mutate()
-          }
-        }}
-        onListingError={(err: any) => {
-          if (err?.code === 4001) {
-            // TODO: add toast
-            return
-          }
+    <ListModal
+      trigger={trigger}
+      collectionId={contract}
+      tokenId={tokenId}
+      currencies={listingCurrencies}
+      onListingComplete={() => {
+        if (mutate) {
+          mutate()
+        }
+      }}
+      onListingError={(err: any) => {
+        if (err?.code === 4001) {
           // TODO: add toast
-        }}
-      />
-    </>
+          return
+        }
+        // TODO: add toast
+      }}
+    />
   )
 }
 
