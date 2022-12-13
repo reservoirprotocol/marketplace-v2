@@ -24,6 +24,7 @@ import {
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import AttributeCard from 'components/token/AttributeCard'
+import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
 import {
   GetStaticProps,
@@ -194,6 +195,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               </Flex>
               {/* TODO: pass collection attributes */}
               <RarityRank token={token} collection={collection} />
+              <PriceData token={token} />
               <Tabs.Root defaultValue="info">
                 <TabsList>
                   <TabsTrigger value="info">Info</TabsTrigger>
