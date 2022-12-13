@@ -46,8 +46,8 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
-  const [activityFiltersOpen, setActivityFiltersOpen] = useState(false)
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const [playingElement, setPlayingElement] = useState<

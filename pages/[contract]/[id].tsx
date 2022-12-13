@@ -21,6 +21,8 @@ import {
   Anchor,
   Grid,
 } from 'components/primitives'
+import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
+import * as Tabs from '@radix-ui/react-tabs'
 import AttributeCard from 'components/token/AttributeCard'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
@@ -37,6 +39,7 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import fetcher from 'utils/fetcher'
 import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
+import { TokenInfo } from 'components/token/TokenInfo'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -176,22 +179,37 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             )}
           </Flex>
           {token && (
-            <Flex align="center" css={{ mt: '$2' }}>
-              <Text style="subtitle3" css={{ color: '$gray11', mr: '$2' }}>
-                Owner
-              </Text>
-              <Jazzicon diameter={16} seed={jsNumberForAddress(owner || '')} />
-              <Link href={`/portfolio/${owner}`}>
-                <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                  {ownerFormatted}
-                </Anchor>
-              </Link>
-            </Flex>
+            <>
+              <Flex align="center" css={{ mt: '$2' }}>
+                <Text style="subtitle3" css={{ color: '$gray11', mr: '$2' }}>
+                  Owner
+                </Text>
+                <Jazzicon
+                  diameter={16}
+                  seed={jsNumberForAddress(owner || '')}
+                />
+                <Link href={`/portfolio/${owner}`}>
+                  <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
+                    {ownerFormatted}
+                  </Anchor>
+                </Link>
+              </Flex>
+              {/* TODO: pass collection attributes */}
+              <RarityRank token={token} collection={collection} />
+              <PriceData token={token} />
+              <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
+              <Tabs.Root defaultValue="info">
+                <TabsList>
+                  <TabsTrigger value="info">Info</TabsTrigger>
+                </TabsList>
+                <TabsContent value="info">
+                  {collection && (
+                    <TokenInfo token={token} collection={collection} />
+                  )}
+                </TabsContent>
+              </Tabs.Root>
+            </>
           )}
-          {/* TODO: pass collection attributes */}
-          <RarityRank token={token} collection={collection} />
-          <PriceData token={token} />
-          <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
         </Flex>
       </Flex>
     </Layout>
