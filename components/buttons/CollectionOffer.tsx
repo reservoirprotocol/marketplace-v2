@@ -18,7 +18,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
 }
 
-export const CollectionOffer: FC<Props> = ({
+const CollectionOffer: FC<Props> = ({
   collection,
   mutate,
   buttonCss,
@@ -105,3 +105,5 @@ export const CollectionOffer: FC<Props> = ({
     </>
   )
 }
+
+export default CollectionOffer
