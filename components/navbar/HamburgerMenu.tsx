@@ -31,9 +31,9 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
-  const { data: balance } = useBalance({ addressOrName: address })
-  const { data: ensName } = useEnsName({ address: address })
-  const { data: ensAvatar } = useEnsAvatar({ addressOrName: address })
+  const { data: balance } = useBalance({ address })
+  const { data: ensName } = useEnsName({ address })
+  const { data: ensAvatar } = useEnsAvatar({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
 

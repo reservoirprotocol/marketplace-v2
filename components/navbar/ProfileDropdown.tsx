@@ -24,9 +24,9 @@ import { useCopyToClipboard } from 'usehooks-ts'
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
-  const { data: balance } = useBalance({ addressOrName: address })
-  const { data: ensAvatar } = useEnsAvatar({ addressOrName: address })
-  const { data: ensName } = useEnsName({ address: address })
+  const { data: balance } = useBalance({ address })
+  const { data: ensAvatar } = useEnsAvatar({ address })
+  const { data: ensName } = useEnsName({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
 
