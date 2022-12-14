@@ -40,11 +40,13 @@ import fetcher from 'utils/fetcher'
 import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
+import { useMediaQuery } from 'react-responsive'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const account = useAccount()
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { data: collections } = useCollections(
     {
       id: collectionId,
@@ -94,13 +96,30 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         justify="center"
         css={{
           maxWidth: 1175,
-          marginTop: 48,
+          mt: 10,
+          pb: 100,
           marginLeft: 'auto',
           marginRight: 'auto',
-          gap: 80,
+          px: '$1',
+          gap: 20,
+          flexDirection: 'column',
+          alignItems: 'center',
+          '@md': {
+            mt: 48,
+            px: '$3',
+            flexDirection: 'row',
+            gap: 40,
+            alignItems: 'flex-start',
+          },
+          '@lg': {
+            gap: 80,
+          },
         }}
       >
-        <Flex direction="column" css={{ maxWidth: 445, flex: 1 }}>
+        <Flex
+          direction="column"
+          css={{ maxWidth: '100%', flex: 1, '@md': { maxWidth: 445 } }}
+        >
           <TokenMedia
             token={token?.token}
             style={{
@@ -111,8 +130,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               overflow: 'hidden',
             }}
           />
-          {token?.token?.attributes && (
-            <Grid css={{ gridTemplateColumns: '1fr 1fr', gap: '$3', mt: 24 }}>
+          {token?.token?.attributes && !isSmallDevice && (
+            <Grid
+              css={{
+                gridTemplateColumns: '1fr 1fr',
+                gap: '$3',
+                mt: 24,
+              }}
+            >
               {token?.token?.attributes?.map((attribute) => (
                 <AttributeCard
                   attribute={attribute}
@@ -123,7 +148,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Grid>
           )}
         </Flex>
-        <Flex direction="column" css={{ flex: 1 }}>
+        <Flex
+          direction="column"
+          css={{
+            flex: 1,
+            px: '$4',
+            width: '100%',
+            '@md': {
+              px: 0,
+            },
+          }}
+        >
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Link href={`/collections/${collectionId}`}>
               <Anchor
@@ -200,8 +235,30 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
               <Tabs.Root defaultValue="info">
                 <TabsList>
+                  {isSmallDevice && (
+                    <TabsTrigger value="properties">Properties</TabsTrigger>
+                  )}
                   <TabsTrigger value="info">Info</TabsTrigger>
                 </TabsList>
+                <TabsContent value="properties">
+                  {token?.token?.attributes && (
+                    <Grid
+                      css={{
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '$3',
+                        mt: 24,
+                      }}
+                    >
+                      {token?.token?.attributes?.map((attribute) => (
+                        <AttributeCard
+                          attribute={attribute}
+                          collectionTokenCount={collection?.tokenCount || 0}
+                          collectionId={collection?.id}
+                        />
+                      ))}
+                    </Grid>
+                  )}
+                </TabsContent>
                 <TabsContent value="info">
                   {collection && (
                     <TokenInfo token={token} collection={collection} />
