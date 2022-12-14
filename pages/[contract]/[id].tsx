@@ -20,6 +20,7 @@ import {
   Tooltip,
   Anchor,
   Grid,
+  Box,
 } from 'components/primitives'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -124,20 +125,40 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             flex: 1,
             '@md': { maxWidth: 445 },
             position: 'relative',
+            '@sm': {
+              '>button': {
+                display: 'none',
+              },
+            },
+            ':hover >button': {
+              display: 'flex',
+            },
           }}
         >
-          <TokenMedia
-            token={token?.token}
-            style={{
-              width: '100%',
-              height: 'auto',
-              minHeight: 445,
-              borderRadius: 8,
-              overflow: 'hidden',
+          <Box
+            css={{
+              '@sm': {
+                button: {
+                  display: 'none',
+                },
+              },
+              ':hover button': {
+                display: 'flex',
+              },
             }}
-          />
-
-          <FullscreenMedia token={token} />
+          >
+            <TokenMedia
+              token={token?.token}
+              style={{
+                width: '100%',
+                height: 'auto',
+                minHeight: isSmallDevice ? 300 : 445,
+                borderRadius: 8,
+                overflow: 'hidden',
+              }}
+            />
+            <FullscreenMedia token={token} />
+          </Box>
 
           {token?.token?.attributes && !isSmallDevice && (
             <Grid

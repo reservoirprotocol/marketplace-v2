@@ -2,93 +2,110 @@ import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Flex } from 'components/primitives'
 import { FC } from 'react'
-import { Content, AnimatedOverlay, Overlay } from 'components/primitives/Dialog'
+import { Content, Overlay } from 'components/primitives/Dialog'
 import {
   Root as DialogRoot,
-  DialogOverlay,
-  DialogContent,
   DialogTrigger,
   DialogPortal,
   DialogClose,
 } from '@radix-ui/react-dialog'
-
-import { TokenMedia, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { useMediaQuery } from 'react-responsive'
-import { filter } from 'lodash'
+import {
+  TokenMedia,
+  useTokens,
+  extractMediaType,
+} from '@reservoir0x/reservoir-kit-ui'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
 }
 
 const FullscreenMedia: FC<Props> = ({ token }) => {
-  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-
+  const mediaType = extractMediaType(token?.token)
+  console.log(mediaType)
   const trigger = (
     <Button
       color="gray3"
       corners="circle"
-      css={{ position: 'absolute', right: 12, top: 12 }}
+      css={{
+        position: 'absolute',
+        right: 12,
+        top: 12,
+      }}
     >
       <FontAwesomeIcon icon={faExpand} width={16} height={16} />
     </Button>
   )
-  return (
-    <DialogRoot modal={true}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogPortal>
-        <Overlay
-          style={{
-            position: 'fixed',
-            zIndex: 1000,
-            inset: 0,
-            width: '100vw',
-            height: '100vh',
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            backdropFilter: '20px',
-          }}
-        />
-        <Content css={{ zIndex: 1000 }}>
-          <Flex
-            align="center"
-            css={{
-              flexDirection: 'column',
-              height: '100%',
+  if (
+    mediaType === 'png' ||
+    mediaType === 'jpeg' ||
+    mediaType === 'jpg' ||
+    mediaType === 'gif' ||
+    mediaType === null ||
+    mediaType === undefined
+  )
+    return (
+      <DialogRoot modal={true}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogPortal>
+          <Overlay
+            style={{
+              position: 'fixed',
+              zIndex: 1000,
+              inset: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              backdropFilter: '20px',
             }}
           >
-            <Flex align="center" justify="end">
-              <DialogClose>
-                <Button
-                  color="gray3"
-                  corners="circle"
-                  css={{ position: 'absolute', right: 12, top: 12 }}
-                >
-                  <FontAwesomeIcon icon={faCompress} width={16} height={16} />
-                </Button>
-              </DialogClose>
-            </Flex>
+            <DialogClose>
+              <Button
+                color="gray3"
+                corners="circle"
+                css={{ position: 'absolute', right: 12, top: 12 }}
+              >
+                <FontAwesomeIcon icon={faCompress} width={16} height={16} />
+              </Button>
+            </DialogClose>
+          </Overlay>
+          <Content
+            css={{
+              zIndex: 2000,
+              top: '50%',
+              border: 'none',
+              borderRadius: 0,
+              background: 'none',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
             <Flex
-              justify="center"
               direction="column"
               align="center"
-              css={{ height: '100%' }}
+              justify="center"
+              css={{
+                flexDirection: 'column',
+                height: '100%',
+                width: '100%',
+                maxWidth: '100%',
+              }}
             >
               <TokenMedia
                 token={token?.token}
                 style={{
-                  maxHeight: '100%',
-                  maxWidth: '100%',
-                  minWidth: 'min-content',
-                  height: 'min-content',
-                  minHeight: 445,
                   borderRadius: 0,
+                  width: '100vw',
+                  height: 'auto',
+                  padding: '4px',
                 }}
               />
             </Flex>
-          </Flex>
-        </Content>
-      </DialogPortal>
-    </DialogRoot>
-  )
+          </Content>
+        </DialogPortal>
+      </DialogRoot>
+    )
+  else {
+    return null
+  }
 }
 
 export default FullscreenMedia
