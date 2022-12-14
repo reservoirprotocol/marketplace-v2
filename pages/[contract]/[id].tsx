@@ -41,6 +41,7 @@ import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
+import FullscreenMedia from 'components/token/FullscreenMedia'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -118,7 +119,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       >
         <Flex
           direction="column"
-          css={{ maxWidth: '100%', flex: 1, '@md': { maxWidth: 445 } }}
+          css={{
+            maxWidth: '100%',
+            flex: 1,
+            '@md': { maxWidth: 445 },
+            position: 'relative',
+          }}
         >
           <TokenMedia
             token={token?.token}
@@ -130,6 +136,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               overflow: 'hidden',
             }}
           />
+
+          <FullscreenMedia token={token} />
+
           {token?.token?.attributes && !isSmallDevice && (
             <Grid
               css={{
@@ -244,9 +253,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   {token?.token?.attributes && (
                     <Grid
                       css={{
-                        gridTemplateColumns: '1fr 1fr',
                         gap: '$3',
                         mt: 24,
+                        gridTemplateColumns: '1fr',
+                        '@sm': {
+                          gridTemplateColumns: '1fr 1fr',
+                        },
                       }}
                     >
                       {token?.token?.attributes?.map((attribute) => (
