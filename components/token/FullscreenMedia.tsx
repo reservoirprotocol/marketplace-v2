@@ -21,7 +21,7 @@ type Props = {
 
 const FullscreenMedia: FC<Props> = ({ token }) => {
   const mediaType = extractMediaType(token?.token)
-  console.log(mediaType)
+
   const trigger = (
     <Button
       color="gray3"
