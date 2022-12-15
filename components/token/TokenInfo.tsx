@@ -116,6 +116,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 fontWeight: 500,
                 height: 28,
                 minHeight: 28,
+                px: 0,
               }}
               onClick={() => {
                 setIsExpanded(!isExpanded)
