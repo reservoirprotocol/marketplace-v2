@@ -3,7 +3,6 @@ import Head from 'next/head'
 import { FC, ReactNode } from 'react'
 import Navbar from './navbar'
 import { Provider as ToastProvider } from '@radix-ui/react-toast'
-import { Toast } from './primitives'
 
 type Props = {
   title?: string
@@ -92,13 +91,7 @@ const Layout: FC<Props> = ({
           }}
         >
           <Navbar />
-          <main>
-            {children}
-            <Toast
-              title="Can’t purchase item"
-              description="Not enough balance."
-            />
-          </main>
+          <main>{children}</main>
         </Box>
       </ToastProvider>
     </>

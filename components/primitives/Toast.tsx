@@ -31,12 +31,14 @@ const ToastRoot = styled(ToastPrimitive.Root, {
   alignItems: 'center',
 })
 
+// Struggling to get framer motion to work here
 // const AnimatedToastRoot = forwardRef<
 //   ElementRef<typeof ToastPrimitive.Root>,
 //   ComponentPropsWithoutRef<typeof ToastPrimitive.Root>
-// >(({ ...props }, forwardedRef) => (
+// >(({ children, ...props }, forwardedRef) => (
 //   <ToastRoot {...props} forceMount asChild>
 //     <motion.div
+//       //@ts-ignore
 //       ref={forwardedRef}
 //       transition={{ duration: 0.5 }}
 //       initial={{
@@ -44,7 +46,9 @@ const ToastRoot = styled(ToastPrimitive.Root, {
 //       }}
 //       animate={{ opacity: 1 }}
 //       exit={{ opacity: 0 }}
-//     />
+//     >
+//       {children}
+//     </motion.div>
 //   </ToastRoot>
 // ))
 
