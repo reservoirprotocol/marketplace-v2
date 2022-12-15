@@ -2,7 +2,12 @@ import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Flex } from 'components/primitives'
 import { FC } from 'react'
-import { Content, Overlay } from 'components/primitives/Dialog'
+import {
+  AnimatedContent,
+  AnimatedOverlay,
+  Content,
+  Overlay,
+} from 'components/primitives/Dialog'
 import {
   Root as DialogRoot,
   DialogTrigger,
@@ -14,6 +19,7 @@ import {
   useTokens,
   extractMediaType,
 } from '@reservoir0x/reservoir-kit-ui'
+import { motion } from 'framer-motion'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -47,7 +53,7 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
       <DialogRoot modal={true}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         <DialogPortal>
-          <Overlay
+          <AnimatedOverlay
             style={{
               position: 'fixed',
               zIndex: 1000,
@@ -67,7 +73,7 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
                 <FontAwesomeIcon icon={faCompress} width={16} height={16} />
               </Button>
             </DialogClose>
-          </Overlay>
+          </AnimatedOverlay>
           <Content
             css={{
               zIndex: 2000,
@@ -78,27 +84,43 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
               transform: 'translate(-50%, -50%)',
             }}
           >
-            <Flex
-              direction="column"
-              align="center"
-              justify="center"
-              css={{
-                flexDirection: 'column',
-                height: '100%',
-                width: '100%',
-                maxWidth: '100%',
+            <motion.div
+              transition={{ type: 'spring', duration: 1 }}
+              initial={{
+                opacity: 0,
+                top: '0%',
+              }}
+              animate={{
+                opacity: 1,
+                top: '50%',
+              }}
+              exit={{
+                opacity: 0,
+                top: '0%',
               }}
             >
-              <TokenMedia
-                token={token?.token}
-                style={{
-                  borderRadius: 0,
-                  width: '100vw',
-                  height: 'auto',
-                  padding: '4px',
+              <Flex
+                direction="column"
+                align="center"
+                justify="center"
+                css={{
+                  flexDirection: 'column',
+                  height: '100%',
+                  width: '100%',
+                  maxWidth: '100%',
                 }}
-              />
-            </Flex>
+              >
+                <TokenMedia
+                  token={token?.token}
+                  style={{
+                    borderRadius: 0,
+                    width: '100vw',
+                    height: 'auto',
+                    padding: '4px',
+                  }}
+                />
+              </Flex>
+            </motion.div>
           </Content>
         </DialogPortal>
       </DialogRoot>

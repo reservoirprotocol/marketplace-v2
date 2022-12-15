@@ -127,11 +127,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             position: 'relative',
             '@sm': {
               '>button': {
-                display: 'none',
+                height: 0,
+                opacity: 0,
+                transition: 'opacity .3s',
               },
             },
             ':hover >button': {
-              display: 'flex',
+              opacity: 1,
+              transition: 'opacity .3s',
             },
           }}
         >
@@ -139,11 +142,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             css={{
               '@sm': {
                 button: {
-                  display: 'none',
+                  height: 0,
+                  opacity: 0,
+                  transition: 'opacity .3s',
                 },
               },
               ':hover button': {
-                display: 'flex',
+                opacity: 1,
+                transition: 'opacity .3s',
               },
             }}
           >
