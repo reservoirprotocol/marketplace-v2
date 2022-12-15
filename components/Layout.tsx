@@ -2,6 +2,8 @@ import { Box } from 'components/primitives'
 import Head from 'next/head'
 import { FC, ReactNode } from 'react'
 import Navbar from './navbar'
+import { Provider as ToastProvider } from '@radix-ui/react-toast'
+import { Toast } from './primitives'
 
 type Props = {
   title?: string
@@ -79,17 +81,26 @@ const Layout: FC<Props> = ({
         <meta property="og:image:height" content="640" />
         <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
       </Head>
-      <Box
-        css={{
-          background: '$gray1',
-          height: '100%',
-          minHeight: '100vh',
-          pt: 80,
-        }}
-      >
-        <Navbar />
-        <main>{children}</main>
-      </Box>
+
+      <ToastProvider duration={5000}>
+        <Box
+          css={{
+            background: '$gray1',
+            height: '100%',
+            minHeight: '100vh',
+            pt: 80,
+          }}
+        >
+          <Navbar />
+          <main>
+            {children}
+            <Toast
+              title="Can’t purchase item"
+              description="Not enough balance."
+            />
+          </main>
+        </Box>
+      </ToastProvider>
     </>
   )
 }

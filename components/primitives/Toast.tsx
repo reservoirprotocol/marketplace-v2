@@ -1,6 +1,13 @@
-import { FC, ReactNode, useState } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  ElementRef,
+  FC,
+  forwardRef,
+  ReactNode,
+} from 'react'
 import { styled } from '@stitches/react'
 import * as ToastPrimitive from '@radix-ui/react-toast'
+import { motion } from 'framer-motion'
 
 const ToastViewport = styled(ToastPrimitive.Viewport, {
   padding: '25px',
@@ -24,6 +31,23 @@ const ToastRoot = styled(ToastPrimitive.Root, {
   alignItems: 'center',
 })
 
+// const AnimatedToastRoot = forwardRef<
+//   ElementRef<typeof ToastPrimitive.Root>,
+//   ComponentPropsWithoutRef<typeof ToastPrimitive.Root>
+// >(({ ...props }, forwardedRef) => (
+//   <ToastRoot {...props} forceMount asChild>
+//     <motion.div
+//       ref={forwardedRef}
+//       transition={{ duration: 0.5 }}
+//       initial={{
+//         opacity: 0,
+//       }}
+//       animate={{ opacity: 1 }}
+//       exit={{ opacity: 0 }}
+//     />
+//   </ToastRoot>
+// ))
+
 const ToastTitle = styled(ToastPrimitive.Title, {
   gridArea: 'title',
   fontSize: '14px',
@@ -43,17 +67,15 @@ const ToastAction = styled(ToastPrimitive.Action, {
 })
 
 type Props = {
-  open: boolean
   title?: string
   description?: string
   action?: ReactNode
 }
 
-const Toast: FC<Props> = ({ open, title, description, action }) => {
-  // const [open, setOpen] = useState(false)
+const Toast: FC<Props> = ({ title, description, action }) => {
   return (
-    <ToastPrimitive.Provider swipeDirection="right">
-      <ToastRoot open={open}>
+    <>
+      <ToastRoot defaultOpen={true} duration={5000}>
         <ToastTitle>{title}</ToastTitle>
         <ToastDescription>{description}</ToastDescription>
         <ToastAction asChild altText="">
@@ -61,7 +83,7 @@ const Toast: FC<Props> = ({ open, title, description, action }) => {
         </ToastAction>
       </ToastRoot>
       <ToastViewport />
-    </ToastPrimitive.Provider>
+    </>
   )
 }
 

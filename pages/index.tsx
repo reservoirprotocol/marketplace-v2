@@ -59,12 +59,6 @@ const IndexPage: NextPage = () => {
           </Text>
           <TrendingCollectionsList />
         </Box>
-        {/* Remove */}
-        <Toast
-          open={true}
-          title="Can’t purchase item"
-          description="Not enough balance."
-        />
       </Box>
     </Layout>
   )
