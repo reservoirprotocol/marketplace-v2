@@ -54,39 +54,33 @@ export default ({
       <Link
         passHref
         href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+        onClick={(e) => {
+          if (!showPreview || (e.target as HTMLElement)?.tagName === 'BUTTON') {
+            e.preventDefault()
+          }
+        }}
       >
-        <a
-          onClick={(e) => {
-            if (
-              !showPreview ||
-              (e.target as HTMLElement)?.tagName === 'BUTTON'
-            ) {
-              e.preventDefault()
-            }
-          }}
-        >
-          <Box css={{ background: '$gray3' }}>
-            <TokenMedia
-              token={token?.token}
-              style={{ width: '100%', height: 300, borderRadius: 0 }}
-              preview={showPreview}
-              audioOptions={{
-                onPlay: (e) => {
-                  onMediaPlayed?.(e)
-                },
-              }}
-              videoOptions={{
-                onPlay: (e) => {
-                  onMediaPlayed?.(e)
-                },
-              }}
-              onRefreshToken={() => {
-                //TODO: add toast
-                mutate?.()
-              }}
-            />
-          </Box>
-        </a>
+        <Box css={{ background: '$gray3' }}>
+          <TokenMedia
+            token={token?.token}
+            style={{ width: '100%', height: 300, borderRadius: 0 }}
+            preview={showPreview}
+            audioOptions={{
+              onPlay: (e) => {
+                onMediaPlayed?.(e)
+              },
+            }}
+            videoOptions={{
+              onPlay: (e) => {
+                onMediaPlayed?.(e)
+              },
+            }}
+            onRefreshToken={() => {
+              //TODO: add toast
+              mutate?.()
+            }}
+          />
+        </Box>
       </Link>
       <Link href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}>
         <Flex

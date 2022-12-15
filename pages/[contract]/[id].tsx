@@ -111,6 +111,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Grid css={{ gridTemplateColumns: '1fr 1fr', gap: '$3', mt: 24 }}>
               {token?.token?.attributes?.map((attribute) => (
                 <AttributeCard
+                  key={attribute.key}
                   attribute={attribute}
                   collectionTokenCount={collection?.tokenCount || 0}
                   collectionId={collection?.id}
@@ -121,7 +122,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         </Flex>
         <Flex direction="column" css={{ flex: 1 }}>
           <Flex justify="between" align="center" css={{ mb: 20 }}>
-            <Link href={`/collections/${collectionId}`}>
+            <Link href={`/collections/${collectionId}`} legacyBehavior={true}>
               <Anchor
                 color="primary"
                 css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
@@ -180,7 +181,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 Owner
               </Text>
               <Jazzicon diameter={16} seed={jsNumberForAddress(owner || '')} />
-              <Link href={`/portfolio/${owner}`}>
+              <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
                 <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                   {ownerFormatted}
                 </Anchor>

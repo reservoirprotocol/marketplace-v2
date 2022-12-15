@@ -238,6 +238,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   <Link
                     href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
                     passHref
+                    legacyBehavior={true}
                   >
                     <Anchor
                       color="primary"
@@ -256,23 +257,21 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             </Flex>
             <Flex align="center" justify="between">
               <Link href={href} passHref>
-                <a>
-                  <Flex align="center">
-                    <Image
-                      style={{ borderRadius: '4px', objectFit: 'cover' }}
-                      loader={({ src }) => src}
-                      src={imageSrc}
-                      alt={`${activity.token?.tokenName} Token Image`}
-                      width={48}
-                      height={48}
-                    />
-                    <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
-                      {activity.token?.tokenName ||
-                        activity.token?.tokenId ||
-                        activity.collection?.collectionName}
-                    </Text>
-                  </Flex>
-                </a>
+                <Flex align="center">
+                  <Image
+                    style={{ borderRadius: '4px', objectFit: 'cover' }}
+                    loader={({ src }) => src}
+                    src={imageSrc}
+                    alt={`${activity.token?.tokenName} Token Image`}
+                    width={48}
+                    height={48}
+                  />
+                  <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
+                    {activity.token?.tokenName ||
+                      activity.token?.tokenId ||
+                      activity.collection?.collectionName}
+                  </Text>
+                </Flex>
               </Link>
               {activity.price &&
               activity.price !== 0 &&
@@ -354,23 +353,21 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       </TableData>
       <TableData>
         <Link href={href} passHref>
-          <a>
-            <Flex align="center">
-              <Image
-                style={{ borderRadius: '4px', objectFit: 'cover' }}
-                loader={({ src }) => src}
-                src={imageSrc}
-                alt={`${activity.token?.tokenName} Token Image`}
-                width={48}
-                height={48}
-              />
-              <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
-                {activity.token?.tokenName ||
-                  activity.token?.tokenId ||
-                  activity.collection?.collectionName}
-              </Text>
-            </Flex>
-          </a>
+          <Flex align="center">
+            <Image
+              style={{ borderRadius: '4px', objectFit: 'cover' }}
+              loader={({ src }) => src}
+              src={imageSrc}
+              alt={`${activity.token?.tokenName} Token Image`}
+              width={48}
+              height={48}
+            />
+            <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
+              {activity.token?.tokenName ||
+                activity.token?.tokenId ||
+                activity.collection?.collectionName}
+            </Text>
+          </Flex>
         </Link>
       </TableData>
       <TableData>
