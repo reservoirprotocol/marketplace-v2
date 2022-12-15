@@ -8,6 +8,7 @@ import Layout from 'components/Layout'
 import { useAccount } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { useMounted } from 'hooks'
+import Toast from 'components/primitives/Toast'
 
 const IndexPage: NextPage = () => {
   const { isConnected } = useAccount()
@@ -58,6 +59,12 @@ const IndexPage: NextPage = () => {
           </Text>
           <TrendingCollectionsList />
         </Box>
+        {/* Remove */}
+        <Toast
+          open={true}
+          title="Can’t purchase item"
+          description="Not enough balance."
+        />
       </Box>
     </Layout>
   )
