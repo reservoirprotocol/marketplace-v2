@@ -9,15 +9,8 @@ import {
   darkTheme as rainbowDarkTheme,
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
-import {
-  WagmiConfig,
-  createClient,
-  configureChains,
-  chain,
-  allChains,
-  chainId,
-} from 'wagmi'
-
+import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import * as allChains from 'wagmi/chains'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -31,14 +24,15 @@ import {
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 
-const envChain = allChains.find(
-  (chain) => chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || chainId.mainnet)
+const envChain = Object.values(allChains).find(
+  (chain) =>
+    chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || allChains.mainnet.id)
 )
 
 const { chains, provider } = configureChains(
-  envChain ? [envChain] : [chain.mainnet],
+  envChain ? [envChain] : [allChains.mainnet],
   [
-    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
     publicProvider(),
   ]
 )

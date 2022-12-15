@@ -1,5 +1,6 @@
 import { constants } from 'ethers'
-import { chainId, useNetwork } from 'wagmi'
+import { useNetwork } from 'wagmi'
+import { mainnet, goerli } from 'wagmi/chains'
 
 export default function () {
   const { chain: activeChain, chains } = useNetwork()
@@ -12,7 +13,7 @@ export default function () {
     chain = activeChain
   }
 
-  const ETHChains: number[] = [chainId.mainnet, chainId.goerli]
+  const ETHChains: number[] = [mainnet.id, goerli.id]
 
   if (!chain || !chain.nativeCurrency || ETHChains.includes(chain.id)) {
     return {
@@ -20,7 +21,7 @@ export default function () {
       symbol: 'ETH',
       decimals: 18,
       address: constants.AddressZero,
-      chainId: chain?.id || chainId.mainnet,
+      chainId: chain?.id || mainnet.id,
     }
   } else {
     return {
