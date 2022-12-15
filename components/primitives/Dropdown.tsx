@@ -62,7 +62,7 @@ const DropdownMenuItem = styled(DropdownMenuPrimitive.DropdownMenuItem, {
 
 type Props = {
   trigger: ReactNode
-  contentProps?: DropdownMenuPrimitive.DropdownMenuRootContentProps
+  contentProps?: DropdownMenuPrimitive.DropdownMenuContentProps
 }
 
 const Dropdown = forwardRef<

@@ -96,7 +96,11 @@ export const ActivityFilters: FC<Props> = ({
             Event Type
           </Text>
           {filters.map((filter) => (
-            <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+            <Flex
+              key={filter.type}
+              css={{ mb: '$3', gap: '$3' }}
+              align="center"
+            >
               <Box css={{ color: '$gray11' }}>
                 <FontAwesomeIcon icon={filter.icon} width={16} height={16} />
               </Box>

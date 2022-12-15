@@ -22,8 +22,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
   )
   const attributeHref = `/collections/${collectionId}?attributes[${attribute.key}]=${attribute.value}`
   return (
-    <Link href={attributeHref} passHref>
-      <a>
+    <Link href={attributeHref}>
         <Flex
           direction="column"
           css={{
@@ -57,7 +56,6 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
             </Text>
           </Flex>
         </Flex>
-      </a>
     </Link>
   )
 }
