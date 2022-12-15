@@ -138,7 +138,7 @@ const HamburgerMenu = () => {
                 <FontAwesomeIcon icon={faCopy} width={16} height={16} />
               </Box>
             </Flex>
-            <Link href="/profile">
+            <Link href="/profile" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -151,7 +151,7 @@ const HamburgerMenu = () => {
                 Profile
               </Text>
             </Link>
-            <Link href="/portfolio">
+            <Link href="/portfolio" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
