@@ -3,6 +3,8 @@ import { Button } from 'components/primitives'
 import { ComponentProps, ComponentPropsWithoutRef, FC } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
+import { useAccount } from 'wagmi'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -16,6 +18,9 @@ type Props = {
 }
 
 const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
+  const { isDisconnected } = useAccount()
+  const { openConnectModal } = useConnectModal()
+
   let listingCurrencies: ListingCurrencies = undefined
 
   const tokenId = token?.token?.tokenId
@@ -28,27 +33,42 @@ const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
         : 'List for Sale'}
     </Button>
   )
-
-  return (
-    <ListModal
-      trigger={trigger}
-      collectionId={contract}
-      tokenId={tokenId}
-      currencies={listingCurrencies}
-      onListingComplete={() => {
-        if (mutate) {
-          mutate()
-        }
-      }}
-      onListingError={(err: any) => {
-        if (err?.code === 4001) {
+  if (isDisconnected) {
+    return (
+      <Button
+        css={buttonCss}
+        onClick={() => {
+          openConnectModal?.()
+        }}
+        color="primary"
+        {...buttonProps}
+      >
+        {token?.market?.floorAsk?.price?.amount?.decimal
+          ? 'Create New Listing'
+          : 'List for Sale'}
+      </Button>
+    )
+  } else
+    return (
+      <ListModal
+        trigger={trigger}
+        collectionId={contract}
+        tokenId={tokenId}
+        currencies={listingCurrencies}
+        onListingComplete={() => {
+          if (mutate) {
+            mutate()
+          }
+        }}
+        onListingError={(err: any) => {
+          if (err?.code === 4001) {
+            // TODO: add toast
+            return
+          }
           // TODO: add toast
-          return
-        }
-        // TODO: add toast
-      }}
-    />
-  )
+        }}
+      />
+    )
 }
 
 export default List

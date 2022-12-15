@@ -1,11 +1,10 @@
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
-import { Flex, Box, Button } from 'components/primitives'
+import { Flex, Button } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
-import { useAccount, useNetwork, useSigner } from 'wagmi'
-import { ConnectWalletButton } from '../ConnectWalletButton'
+import { useNetwork, useSigner } from 'wagmi'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
@@ -16,7 +15,6 @@ type Props = {
 }
 
 export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
-  const { isDisconnected } = useAccount()
   const router = useRouter()
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
@@ -32,7 +30,8 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
   const showAcceptOffer =
     token?.market?.topBid?.id !== null &&
     token?.market?.topBid?.id !== undefined &&
-    isOwner
+    isOwner &&
+    token?.token?.owner
       ? true
       : false
 
@@ -55,50 +54,42 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
         '@sm': { flexDirection: 'row' },
       }}
     >
-      {isDisconnected ? (
-        <Box css={{ maxWidth: 200 }}>
-          <ConnectWalletButton />
-        </Box>
+      {isOwner ? (
+        <List token={token} mutate={mutate} buttonCss={buttonCss} />
       ) : (
-        <>
-          {isOwner ? (
-            <List token={token} mutate={mutate} buttonCss={buttonCss} />
-          ) : (
-            <BuyNow token={token} mutate={mutate} buttonCss={buttonCss} />
-          )}
-          {showAcceptOffer && (
-            <AcceptBid
-              token={token}
-              bidId={queryBidId}
-              collectionId={token?.token?.contract}
-              disabled={isInTheWrongNetwork}
-              openState={
-                isOwner && (queryBidId || deeplinkToAcceptBid)
-                  ? bidOpenState
-                  : undefined
-              }
-              mutate={mutate}
-              buttonCss={buttonCss}
-            />
-          )}
-
-          {!isOwner && (
-            <Bid
-              tokenId={token?.token?.tokenId}
-              collectionId={token?.token?.contract}
-              disabled={isInTheWrongNetwork}
-              mutate={mutate}
-              buttonCss={buttonCss}
-            />
-          )}
-
-          {/* TODO: Add CancelOffer RK modal*/}
-
-          {/* TODO: Add CancelListing RK modal */}
-
-          {/* TODO: Add to Cart */}
-        </>
+        <BuyNow token={token} mutate={mutate} buttonCss={buttonCss} />
       )}
+      {showAcceptOffer && (
+        <AcceptBid
+          token={token}
+          bidId={queryBidId}
+          collectionId={token?.token?.contract}
+          disabled={isInTheWrongNetwork}
+          openState={
+            isOwner && (queryBidId || deeplinkToAcceptBid)
+              ? bidOpenState
+              : undefined
+          }
+          mutate={mutate}
+          buttonCss={buttonCss}
+        />
+      )}
+
+      {!isOwner && (
+        <Bid
+          tokenId={token?.token?.tokenId}
+          collectionId={token?.token?.contract}
+          disabled={isInTheWrongNetwork}
+          mutate={mutate}
+          buttonCss={buttonCss}
+        />
+      )}
+
+      {/* TODO: Add CancelOffer RK modal*/}
+
+      {/* TODO: Add CancelListing RK modal */}
+
+      {/* TODO: Add to Cart */}
     </Flex>
   )
 }
