@@ -1,6 +1,6 @@
 import { Box } from 'components/primitives'
 import Head from 'next/head'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import Navbar from './navbar'
 
 type Props = {
@@ -20,6 +20,7 @@ type Props = {
   ogUrl?: string
   ogImage?: string
   ogImageAlt?: string
+  children: ReactNode
 }
 
 const Layout: FC<Props> = ({

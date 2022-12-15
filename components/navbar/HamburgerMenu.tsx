@@ -31,9 +31,9 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
-  const { data: balance } = useBalance({ addressOrName: address })
-  const { data: ensName } = useEnsName({ address: address })
-  const { data: ensAvatar } = useEnsAvatar({ addressOrName: address })
+  const { data: balance } = useBalance({ address })
+  const { data: ensName } = useEnsName({ address })
+  const { data: ensAvatar } = useEnsAvatar({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
 
@@ -138,7 +138,7 @@ const HamburgerMenu = () => {
                 <FontAwesomeIcon icon={faCopy} width={16} height={16} />
               </Box>
             </Flex>
-            <Link href="/profile">
+            <Link href="/profile" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -151,7 +151,7 @@ const HamburgerMenu = () => {
                 Profile
               </Text>
             </Link>
-            <Link href="/portfolio">
+            <Link href="/portfolio" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{

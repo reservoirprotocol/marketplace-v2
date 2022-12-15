@@ -8,6 +8,7 @@ import {
 
 type Props = {
   trigger: ReactNode
+  children: ReactNode
 }
 
 export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
