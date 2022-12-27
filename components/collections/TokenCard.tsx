@@ -63,7 +63,12 @@ export default ({
         <Box css={{ background: '$gray3' }}>
           <TokenMedia
             token={token?.token}
-            style={{ width: '100%', height: 300, borderRadius: 0 }}
+            style={{
+              width: '100%',
+              maxHeight: 720,
+              height: '100%',
+              borderRadius: 0,
+            }}
             preview={showPreview}
             audioOptions={{
               onPlay: (e) => {
