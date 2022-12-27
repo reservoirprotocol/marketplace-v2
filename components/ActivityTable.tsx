@@ -61,6 +61,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
   })
 
   const activities = data.data
+  console.log(data)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -71,7 +72,10 @@ export const ActivityTable: FC<Props> = ({ data }) => {
 
   return (
     <>
-      {!data.isValidating && (!activities || activities.length === 0) ? (
+      {!data.isValidating &&
+      !data.isFetchingPage &&
+      activities &&
+      activities.length === 0 ? (
         <Box css={{ width: '100%' }}>
           <Text>No results</Text>
         </Box>
