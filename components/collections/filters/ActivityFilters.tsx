@@ -69,10 +69,11 @@ export const ActivityFilters: FC<Props> = ({
   return (
     <Collapsible.Root
       open={open}
+      key="hi"
       onOpenChange={setOpen}
       style={{
-        transition: 'width .5s',
-        width: open ? 320 : 0,
+        transition: 'min-width .5s',
+        minWidth: open ? 320 : 0,
       }}
     >
       <CollapsibleContent

@@ -12,6 +12,7 @@ import {
   TableRow,
   Flex,
   FormatCryptoCurrency,
+  Box,
   Anchor,
 } from './primitives'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -60,6 +61,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
   })
 
   const activities = data.data
+  console.log(data)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -70,8 +72,13 @@ export const ActivityTable: FC<Props> = ({ data }) => {
 
   return (
     <>
-      {!data.isValidating && (!activities || activities.length === 0) ? (
-        <Text>No results</Text> // TODO: Update empty state
+      {!data.isValidating &&
+      !data.isFetchingPage &&
+      activities &&
+      activities.length === 0 ? (
+        <Box css={{ width: '100%' }}>
+          <Text>No results</Text>
+        </Box>
       ) : (
         <Table css={{ width: '100%' }}>
           <TableBody>
@@ -103,19 +110,52 @@ type ActivityTableRowProps = {
   activity: Activity
 }
 
+type Logos = {
+  [key: string]: JSX.Element
+}
+
+const logos: Logos = {
+  transfer: <FontAwesomeIcon icon={faRightLeft} width={16} height={16} />,
+  sale: <FontAwesomeIcon icon={faShoppingCart} width={16} height={16} />,
+  mint: <FontAwesomeIcon icon={faSeedling} width={16} height={16} />,
+  burned: <FontAwesomeIcon icon={faTrash} width={16} height={16} />,
+  listing_canceled: <FontAwesomeIcon icon={faXmark} width={16} height={16} />,
+  ask_cancel: <FontAwesomeIcon icon={faXmark} width={16} height={16} />,
+  offer_canceled: <FontAwesomeIcon icon={faXmark} width={16} height={16} />,
+  ask: <FontAwesomeIcon icon={faTag} width={16} height={16} />,
+  bid: <FontAwesomeIcon icon={faHand} width={16} height={16} />,
+}
+
+type ActivityDescription = {
+  [key: string]: string
+}
+
+const activityTypeToDesciptionMap: ActivityDescription = {
+  ask_cancel: 'Listing Canceled',
+  bid_cancel: 'Offer Canceled',
+  mint: 'Mint',
+  ask: 'List',
+  bid: 'Offer',
+  transfer: 'Transfer',
+  sale: 'Sale',
+}
+
+const activityTypeToDesciption = (activityType: string) => {
+  return activityTypeToDesciptionMap[activityType] || activityType
+}
+
+const formatAddress = (contract: string, userAddress: string) => {
+  if (contract.toLowerCase() === userAddress.toLowerCase()) {
+    return 'You'
+  }
+
+  return truncateAddress(contract)
+}
+
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const { address } = useAccount()
-  const [toShortAddress, setToShortAddress] = useState<string>(
-    activity?.toAddress || ''
-  )
-  const [fromShortAddress, setFromShortAddress] = useState<string>(
-    activity?.fromAddress || ''
-  )
-  const [imageSrc, setImageSrc] = useState(
-    activity?.token?.tokenImage ||
-      `${API_BASE}/redirect/collections/${activity?.collection?.collectionImage}/image/v1`
-  )
+
   const envChain = useEnvChain()
   const blockExplorerBaseUrl =
     envChain?.blockExplorers?.default?.url || 'https://etherscan.io'
@@ -123,85 +163,23 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     ? `/${activity?.collection?.collectionId}/${activity?.token?.tokenId}`
     : `/collections/${activity?.collection?.collectionId}`
 
-  useEffect(() => {
-    let toShortAddress = truncateAddress(activity?.toAddress || '')
-    let fromShortAddress = truncateAddress(activity?.fromAddress || '')
-    if (!!address) {
-      if (address?.toLowerCase() === activity?.toAddress?.toLowerCase()) {
-        toShortAddress = 'You'
-      }
-      if (address?.toLowerCase() === activity?.fromAddress?.toLowerCase()) {
-        fromShortAddress = 'You'
-      }
-    }
-    setToShortAddress(toShortAddress)
-    setFromShortAddress(fromShortAddress)
-  }, [activity, address])
-
-  useEffect(() => {
-    if (activity?.token?.tokenImage) {
-      setImageSrc(activity?.token?.tokenImage)
-    } else if (activity?.collection?.collectionImage) {
-      setImageSrc(activity?.collection?.collectionImage)
-    }
-  }, [activity])
-
   if (!activity) {
     return null
   }
 
-  let activityDescription = ''
+  let imageSrc: string = (
+    activity?.token?.tokenId
+      ? activity?.token?.tokenImage || activity?.collection?.collectionImage
+      : activity?.collection?.collectionImage
+  ) as string
 
-  type Logos = {
-    [key: string]: JSX.Element
-  }
+  let activityDescription = activityTypeToDesciption(activity?.type || '')
 
-  const logos: Logos = {
-    transfer: <FontAwesomeIcon icon={faRightLeft} width={16} height={16} />,
-    sale: <FontAwesomeIcon icon={faShoppingCart} width={16} height={16} />,
-    mint: <FontAwesomeIcon icon={faSeedling} width={16} height={16} />,
-    burned: <FontAwesomeIcon icon={faTrash} width={16} height={16} />,
-    listing_canceled: <FontAwesomeIcon icon={faXmark} width={16} height={16} />,
-    ask_cancel: <FontAwesomeIcon icon={faXmark} width={16} height={16} />,
-    offer_canceled: <FontAwesomeIcon icon={faXmark} width={16} height={16} />,
-    ask: <FontAwesomeIcon icon={faTag} width={16} height={16} />,
-    bid: <FontAwesomeIcon icon={faHand} width={16} height={16} />,
-  }
-
-  switch (activity?.type) {
-    case 'ask_cancel': {
-      activityDescription = 'Listing Canceled'
-      break
-    }
-    case 'bid_cancel': {
-      activityDescription = 'Offer Canceled'
-      break
-    }
-    case 'mint': {
-      activityDescription = 'Mint'
-      break
-    }
-    case 'ask': {
-      activityDescription = 'List'
-      break
-    }
-    case 'bid': {
-      activityDescription = 'Offer'
-      break
-    }
-    case 'transfer': {
-      activityDescription = 'Transfer'
-      break
-    }
-    case 'sale': {
-      activityDescription = 'Sale'
-      break
-    }
-    default: {
-      if (activity.type) activityDescription = activity.type
-      break
-    }
-  }
+  let toShortAddress = formatAddress(activity?.toAddress || '', address || '')
+  let fromShortAddress = formatAddress(
+    activity?.fromAddress || '',
+    address || ''
+  )
 
   if (isSmallDevice) {
     return (
@@ -345,30 +323,29 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           {activity.type && logos[activity.type]}
           <Text
             style="subtitle1"
-            css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+            css={{ ml: '$2', color: '$gray11', fontSize: '14px', width: 80 }}
           >
             {activityDescription}
           </Text>
+
+          <Link href={href} passHref>
+            <Flex align="center" css={{ ml: '$5' }}>
+              <Image
+                style={{ borderRadius: '4px', objectFit: 'cover' }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${activity.token?.tokenName} Token Image`}
+                width={48}
+                height={48}
+              />
+              <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
+                {activity.token?.tokenName ||
+                  activity.token?.tokenId ||
+                  activity.collection?.collectionName}
+              </Text>
+            </Flex>
+          </Link>
         </Flex>
-      </TableData>
-      <TableData>
-        <Link href={href} passHref>
-          <Flex align="center">
-            <Image
-              style={{ borderRadius: '4px', objectFit: 'cover' }}
-              loader={({ src }) => src}
-              src={imageSrc}
-              alt={`${activity.token?.tokenName} Token Image`}
-              width={48}
-              height={48}
-            />
-            <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
-              {activity.token?.tokenName ||
-                activity.token?.tokenId ||
-                activity.collection?.collectionName}
-            </Text>
-          </Flex>
-        </Link>
       </TableData>
       <TableData>
         {activity.price &&
