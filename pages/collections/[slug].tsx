@@ -190,7 +190,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                 <Box
                   css={{
                     flex: 1,
-                    pb: '$5',
+                    //pb: '$5',
                   }}
                 >
                   <Flex justify="between" css={{ marginBottom: '$4' }}>
