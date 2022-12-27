@@ -20,6 +20,7 @@ import {
   Tooltip,
   Anchor,
   Grid,
+  Box,
 } from 'components/primitives'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -40,11 +41,14 @@ import fetcher from 'utils/fetcher'
 import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
+import { useMediaQuery } from 'react-responsive'
+import FullscreenMedia from 'components/token/FullscreenMedia'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const account = useAccount()
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { data: collections } = useCollections(
     {
       id: collectionId,
@@ -94,25 +98,82 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         justify="center"
         css={{
           maxWidth: 1175,
-          marginTop: 48,
+          mt: 10,
+          pb: 100,
           marginLeft: 'auto',
           marginRight: 'auto',
-          gap: 80,
+          px: '$1',
+          gap: 20,
+          flexDirection: 'column',
+          alignItems: 'center',
+          '@md': {
+            mt: 48,
+            px: '$3',
+            flexDirection: 'row',
+            gap: 40,
+            alignItems: 'flex-start',
+          },
+          '@lg': {
+            gap: 80,
+          },
         }}
       >
-        <Flex direction="column" css={{ maxWidth: 445, flex: 1 }}>
-          <TokenMedia
-            token={token?.token}
-            style={{
-              width: '100%',
-              height: 'auto',
-              minHeight: 445,
-              borderRadius: 8,
-              overflow: 'hidden',
+        <Flex
+          direction="column"
+          css={{
+            maxWidth: '100%',
+            flex: 1,
+            '@md': { maxWidth: 445 },
+            position: 'relative',
+            '@sm': {
+              '>button': {
+                height: 0,
+                opacity: 0,
+                transition: 'opacity .3s',
+              },
+            },
+            ':hover >button': {
+              opacity: 1,
+              transition: 'opacity .3s',
+            },
+          }}
+        >
+          <Box
+            css={{
+              '@sm': {
+                button: {
+                  height: 0,
+                  opacity: 0,
+                  transition: 'opacity .3s',
+                },
+              },
+              ':hover button': {
+                opacity: 1,
+                transition: 'opacity .3s',
+              },
             }}
-          />
-          {token?.token?.attributes && (
-            <Grid css={{ gridTemplateColumns: '1fr 1fr', gap: '$3', mt: 24 }}>
+          >
+            <TokenMedia
+              token={token?.token}
+              style={{
+                width: '100%',
+                height: 'auto',
+                minHeight: isSmallDevice ? 300 : 445,
+                borderRadius: 8,
+                overflow: 'hidden',
+              }}
+            />
+            <FullscreenMedia token={token} />
+          </Box>
+
+          {token?.token?.attributes && !isSmallDevice && (
+            <Grid
+              css={{
+                gridTemplateColumns: '1fr 1fr',
+                gap: '$3',
+                mt: 24,
+              }}
+            >
               {token?.token?.attributes?.map((attribute) => (
                 <AttributeCard
                   key={attribute.key}
@@ -124,7 +185,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Grid>
           )}
         </Flex>
-        <Flex direction="column" css={{ flex: 1 }}>
+        <Flex
+          direction="column"
+          css={{
+            flex: 1,
+            px: '$4',
+            width: '100%',
+            '@md': {
+              px: 0,
+            },
+          }}
+        >
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Link href={`/collections/${collectionId}`} legacyBehavior={true}>
               <Anchor
@@ -201,8 +272,33 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
               <Tabs.Root defaultValue="info">
                 <TabsList>
+                  {isSmallDevice && (
+                    <TabsTrigger value="properties">Properties</TabsTrigger>
+                  )}
                   <TabsTrigger value="info">Info</TabsTrigger>
                 </TabsList>
+                <TabsContent value="properties">
+                  {token?.token?.attributes && (
+                    <Grid
+                      css={{
+                        gap: '$3',
+                        mt: 24,
+                        gridTemplateColumns: '1fr',
+                        '@sm': {
+                          gridTemplateColumns: '1fr 1fr',
+                        },
+                      }}
+                    >
+                      {token?.token?.attributes?.map((attribute) => (
+                        <AttributeCard
+                          attribute={attribute}
+                          collectionTokenCount={collection?.tokenCount || 0}
+                          collectionId={collection?.id}
+                        />
+                      ))}
+                    </Grid>
+                  )}
+                </TabsContent>
                 <TabsContent value="info">
                   {collection && (
                     <TokenInfo token={token} collection={collection} />
