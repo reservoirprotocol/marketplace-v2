@@ -167,9 +167,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     return null
   }
 
-  let imageSrc: string =
-    activity?.token?.tokenImage ||
-    `${API_BASE}/redirect/collections/${activity?.collection?.collectionImage}/image/v1`
+  let imageSrc: string = (
+    activity?.token?.tokenId
+      ? activity?.token?.tokenImage || activity?.collection?.collectionImage
+      : activity?.collection?.collectionImage
+  ) as string
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')
 
