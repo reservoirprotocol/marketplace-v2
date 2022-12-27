@@ -2,10 +2,11 @@ import { BidModal, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentProps, FC, useEffect, useState } from 'react'
-import { useNetwork, useSigner } from 'wagmi'
+import { useAccount, useNetwork, useSigner } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
@@ -18,7 +19,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
 }
 
-export const CollectionOffer: FC<Props> = ({
+const CollectionOffer: FC<Props> = ({
   collection,
   mutate,
   buttonCss,
@@ -28,6 +29,8 @@ export const CollectionOffer: FC<Props> = ({
   const [attribute, setAttribute] = useState<Trait>(undefined)
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
+  const { isDisconnected } = useAccount()
+  const { openConnectModal } = useConnectModal()
 
   useEffect(() => {
     const keys = Object.keys(router.query)
@@ -68,40 +71,55 @@ export const CollectionOffer: FC<Props> = ({
   const isInTheWrongNetwork = Boolean(signer && activeChain?.id !== env.chainId)
   const isAttributeModal = !!attribute
 
-  return (
-    <>
-      {isSupported && (
-        <BidModal
-          collectionId={collection?.id}
-          trigger={
-            <Button
-              disabled={isInTheWrongNetwork}
-              css={buttonCss}
-              {...buttonProps}
-            >
-              {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
-            </Button>
-          }
-          attribute={attribute}
-          onBidComplete={() => {
-            if (mutate) {
-              mutate()
+  if (isDisconnected) {
+    return (
+      <Button
+        css={buttonCss}
+        onClick={() => {
+          openConnectModal?.()
+        }}
+        {...buttonProps}
+      >
+        {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
+      </Button>
+    )
+  } else
+    return (
+      <>
+        {isSupported && (
+          <BidModal
+            collectionId={collection?.id}
+            trigger={
+              <Button
+                disabled={isInTheWrongNetwork}
+                css={buttonCss}
+                {...buttonProps}
+              >
+                {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
+              </Button>
             }
-          }}
-          onBidError={(error) => {
-            if (error) {
-              if (
-                (error as any).cause.code &&
-                (error as any).cause.code === 4001
-              ) {
-                //TODO: add toast
-                return
+            attribute={attribute}
+            onBidComplete={() => {
+              if (mutate) {
+                mutate()
               }
-            }
-            //TODO: add toast
-          }}
-        />
-      )}
-    </>
-  )
+            }}
+            onBidError={(error) => {
+              if (error) {
+                if (
+                  (error as any).cause.code &&
+                  (error as any).cause.code === 4001
+                ) {
+                  //TODO: add toast
+                  return
+                }
+              }
+              //TODO: add toast
+            }}
+          />
+        )}
+      </>
+    )
 }
+
+export default CollectionOffer

@@ -26,6 +26,7 @@ import * as Tabs from '@radix-ui/react-tabs'
 import AttributeCard from 'components/token/AttributeCard'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
+import { TokenActions } from 'components/token/TokenActions'
 import {
   GetStaticProps,
   GetStaticPaths,
@@ -54,7 +55,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const collection = collections && collections[0] ? collections[0] : null
 
-  const { data: tokens } = useTokens(
+  const { data: tokens, mutate } = useTokens(
     {
       tokens: [`${collectionId}:${id}`],
       includeAttributes: true,
@@ -65,7 +66,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
-  const token = tokens && tokens[0] ? tokens[0] : null
+  const token = tokens && tokens[0] ? tokens[0] : undefined
   const checkUserOwnership = token?.token?.kind === 'erc1155'
 
   const { data: userTokens } = useUserTokens(
@@ -197,6 +198,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               {/* TODO: pass collection attributes */}
               <RarityRank token={token} collection={collection} />
               <PriceData token={token} />
+              <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
               <Tabs.Root defaultValue="info">
                 <TabsList>
                   <TabsTrigger value="info">Info</TabsTrigger>
