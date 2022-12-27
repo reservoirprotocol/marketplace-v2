@@ -15,9 +15,10 @@ const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
         <Box css={{ width: 32, mr: '$4' }}>
           <Text style="h5">{rank}</Text>
         </Box>
-        <Box css={{ width: 60, height: 60 }}>
-          <img src={collection?.image} style={{ borderRadius: 8 }} />
-        </Box>
+        <img
+          src={collection?.image}
+          style={{ borderRadius: 8, width: 60, height: 60, objectFit: 'cover' }}
+        />
         <Box css={{ ml: '$4', flex: 1 }}>
           <Text css={{ mb: 4 }} style="subtitle1" as="p">
             {collection?.name}

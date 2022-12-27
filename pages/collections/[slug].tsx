@@ -145,7 +145,12 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
                 <img
                   src={collection.image}
-                  style={{ width: 64, height: 64, borderRadius: 8 }}
+                  style={{
+                    width: 64,
+                    height: 64,
+                    borderRadius: 8,
+                    objectFit: 'cover',
+                  }}
                 />
                 <Box css={{ minWidth: 0 }}>
                   <Text style="h5" as="h6" ellipsify>
