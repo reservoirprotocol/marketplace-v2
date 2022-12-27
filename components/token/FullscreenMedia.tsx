@@ -2,12 +2,7 @@ import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Flex } from 'components/primitives'
 import { FC } from 'react'
-import {
-  AnimatedContent,
-  AnimatedOverlay,
-  Content,
-  Overlay,
-} from 'components/primitives/Dialog'
+import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
 import {
   Root as DialogRoot,
   DialogTrigger,
