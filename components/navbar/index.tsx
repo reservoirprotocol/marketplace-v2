@@ -28,7 +28,6 @@ const Navbar = () => {
 
   const router = useRouter()
   useHotkeys('meta+k', () => {
-    console.log(searchRef)
     if (searchRef?.current) {
       searchRef?.current?.focus()
     }
@@ -101,7 +100,7 @@ const Navbar = () => {
               )}
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: '420px' }}>
+          <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
               placeholder="Search collections"

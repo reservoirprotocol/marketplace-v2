@@ -34,6 +34,7 @@ export const AttributeFilters: FC<Props> = ({
           top: 16 + 80,
           height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
           overflow: 'auto',
+          marginBottom: 16,
         }}
       >
         <Box
