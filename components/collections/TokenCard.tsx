@@ -41,11 +41,16 @@ export default ({
   return (
     <Box
       css={{
-        border: '1px solid $gray7',
         borderRadius: 8,
         overflow: 'hidden',
-        background: '$gray4',
+        background: '$neutralBgSubtle',
+
+        $$shadowColor: '$colors$panelShadow',
+        boxShadow: '0 8px 12px 0px $$shadowColor',
         position: 'relative',
+        '&:hover > a > div > img': {
+          transform: 'scale(1.1)',
+        },
         '&:hover button[aria-haspopup="dialog"]': {
           bottom: 0,
         },
@@ -60,11 +65,12 @@ export default ({
           }
         }}
       >
-        <Box css={{ background: '$gray3' }}>
+        <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
             token={token?.token}
             style={{
               width: '100%',
+              transition: 'transform .3s ease-in-out',
               maxHeight: 720,
               height: '100%',
               borderRadius: 0,

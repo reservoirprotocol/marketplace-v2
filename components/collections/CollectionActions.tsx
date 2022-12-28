@@ -23,7 +23,7 @@ const CollectionAction = styled(Flex, {
   px: '$4',
   py: '$3',
   color: '$gray12',
-  background: '$gray3',
+  background: '$panelBg',
   cursor: 'pointer',
   transition: 'background 0.25s ease-in',
   height: 48,
