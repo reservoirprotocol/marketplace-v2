@@ -1,10 +1,11 @@
 import { BidModal } from '@reservoir0x/reservoir-kit-ui'
-import { Button } from 'components/primitives'
-import { ComponentProps, FC } from 'react'
+import { Button, Toast } from 'components/primitives'
+import { ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { ToastContext } from 'context/ToastContextProvider'
 
 type Props = {
   tokenId?: string | undefined
@@ -27,6 +28,7 @@ const Bid: FC<Props> = ({
 }) => {
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
+  const { addToast } = useContext(ToastContext)
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
@@ -65,11 +67,21 @@ const Bid: FC<Props> = ({
               (error as any).cause.code &&
               (error as any).cause.code === 4001
             ) {
-              //  TODO: Add toast
+              addToast?.(
+                <Toast
+                  title="User canceled transaction"
+                  description="You have canceled the transaction."
+                />
+              )
               return
             }
           }
-          // TODO: Add oast
+          addToast?.(
+            <Toast
+              title="Could not place bid"
+              description="The transaction was not completed."
+            />
+          )
         }}
       />
     )

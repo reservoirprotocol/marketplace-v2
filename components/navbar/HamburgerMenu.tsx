@@ -4,6 +4,7 @@ import {
   Flex,
   FormatCryptoCurrency,
   Text,
+  Toast,
 } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
 import * as RadixDialog from '@radix-ui/react-dialog'
@@ -28,6 +29,8 @@ import { useCopyToClipboard } from 'usehooks-ts'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { truncateAddress, truncateEns } from 'utils/truncate'
 import { FullscreenModal } from 'components/common/FullscreenModal'
+import { useContext } from 'react'
+import { ToastContext } from 'context/ToastContextProvider'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -36,6 +39,7 @@ const HamburgerMenu = () => {
   const { data: ensAvatar } = useEnsAvatar({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
+  const { addToast, toasts } = useContext(ToastContext)
 
   const trigger = (
     <Button
@@ -110,10 +114,10 @@ const HamburgerMenu = () => {
                 borderBottom: '1px solid $gray4',
                 pb: '$4',
               }}
-              onClick={
-                //TODO: add toast
-                () => (ensName ? copy(ensName) : copy(address as string))
-              }
+              onClick={() => {
+                ensName ? copy(ensName) : copy(address as string)
+                addToast?.(<Toast title="Copied" />)
+              }}
             >
               <Flex css={{ alignItems: 'center' }}>
                 {ensAvatar ? (

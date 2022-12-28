@@ -5,6 +5,7 @@ import {
   Dispatch,
   FC,
   ReactNode,
+  useEffect,
 } from 'react'
 import { Provider as ToastProvider } from '@radix-ui/react-toast'
 
@@ -24,6 +25,10 @@ const ToastContextProvider: FC<any> = ({ children }) => {
   const addToast = (toast: ReactNode) => {
     setToasts([...toasts, toast])
   }
+
+  useEffect(() => {
+    toasts.map((toast) => toast)
+  }, [toasts])
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, setToasts }}>

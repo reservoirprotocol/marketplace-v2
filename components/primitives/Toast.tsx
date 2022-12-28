@@ -14,6 +14,7 @@ const ToastViewport = styled(ToastPrimitive.Viewport, {
   gap: '10px',
   width: '327px',
   maxWidth: '100vw',
+  zIndex: 9999999999,
 })
 
 const hide = keyframes({
@@ -44,7 +45,7 @@ const ToastRoot = styled(ToastPrimitive.Root, {
   '&[data-state="open"]:last-child': {
     animation: `${slideIn} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
   },
-  '&[data-state="closed"]': {
+  '&[data-state="closed"]:first-child': {
     animation: `${hide} 100ms ease-in`,
   },
   '&[data-swipe="move"]': {

@@ -1,10 +1,11 @@
 import { AcceptBidModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { ComponentProps, FC } from 'react'
+import { ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { Button } from 'components/primitives'
+import { Button, Toast } from 'components/primitives'
 import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { ToastContext } from '../../context/ToastContextProvider'
 
 type Props = {
   token?: ReturnType<typeof useTokens>['data'][0]
@@ -29,6 +30,7 @@ const AcceptBid: FC<Props> = ({
 }) => {
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
+  const { addToast } = useContext(ToastContext)
 
   const trigger = (
     <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
@@ -64,15 +66,30 @@ const AcceptBid: FC<Props> = ({
         }}
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {
-            // TODO: add toast
+            addToast?.(
+              <Toast
+                title="Could not accept offer"
+                description="Offer was lower than expected."
+              />
+            )
             return
           }
           // Handle user rejection
           if (error?.code === 4001) {
-            // TODO: add toast
+            addToast?.(
+              <Toast
+                title="User canceled transaction"
+                description="You have canceled the transaction."
+              />
+            )
             return
           }
-          // TODO: add toast
+          addToast?.(
+            <Toast
+              title="Could not accept offer"
+              description="The transaction was not completed."
+            />
+          )
         }}
       />
     )

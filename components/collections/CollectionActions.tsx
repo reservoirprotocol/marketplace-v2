@@ -7,13 +7,14 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
-import { Flex } from 'components/primitives'
-import { ComponentPropsWithoutRef, FC } from 'react'
+import { Flex, Toast } from 'components/primitives'
+import { ComponentPropsWithoutRef, FC, useContext } from 'react'
 import { useEnvChain } from 'hooks'
 import { useTheme } from 'next-themes'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
+import { ToastContext } from 'context/ToastContextProvider'
 
 type CollectionActionsProps = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
@@ -47,6 +48,7 @@ const CollectionActionDropdownItem = styled(Flex, {
 })
 
 const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
+  const { addToast } = useContext(ToastContext)
   const isMobile = useMediaQuery({ maxWidth: 600 })
   const envChain = useEnvChain()
   const { theme } = useTheme()
@@ -105,12 +107,22 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
         })
           .then(({ response }) => {
             if (response.status === 200) {
-              //TODO show toast
+              addToast?.(
+                <Toast
+                  title="Refresh collection"
+                  description="Request to refresh collection was accepted.."
+                />
+              )
             }
             throw 'Request Failed'
           })
           .catch((e) => {
-            //TODO show toast error
+            addToast?.(
+              <Toast
+                title="Refresh collection failed"
+                description="Request to refresh collection was rejected."
+              />
+            )
             throw e
           })
       }}

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
@@ -15,12 +15,14 @@ import {
   Flex,
   FormatCryptoCurrency,
   Text,
+  Toast,
 } from 'components/primitives'
 import Link from 'next/link'
 import { truncateAddress, truncateEns } from 'utils/truncate'
 import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCopyToClipboard } from 'usehooks-ts'
+import { ToastContext } from 'context/ToastContextProvider'
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
@@ -29,6 +31,7 @@ export const ProfileDropdown: FC = () => {
   const { data: ensName } = useEnsName({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
+  const { addToast } = useContext(ToastContext)
 
   const trigger = (
     <Button
@@ -50,10 +53,10 @@ export const ProfileDropdown: FC = () => {
   const children = (
     <>
       <DropdownMenuItem
-        onClick={
-          //TODO: add toast
-          () => (ensName ? copy(ensName) : copy(address as string))
-        }
+        onClick={() => {
+          ensName ? copy(ensName) : copy(address as string)
+          addToast?.(<Toast title="Copied" />)
+        }}
       >
         <Flex justify="between">
           <Text style="subtitle1" color="$gray11" css={{ color: '$gray11' }}>
