@@ -26,10 +26,6 @@ const ToastContextProvider: FC<any> = ({ children }) => {
     setToasts([...toasts, toast])
   }
 
-  useEffect(() => {
-    toasts.map((toast) => toast)
-  }, [toasts])
-
   return (
     <ToastContext.Provider value={{ toasts, addToast, setToasts }}>
       <ToastProvider duration={5000}>{children}</ToastProvider>
