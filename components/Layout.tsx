@@ -1,8 +1,8 @@
 import { Box } from 'components/primitives'
 import Head from 'next/head'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useContext } from 'react'
 import Navbar from './navbar'
-import { Provider as ToastProvider } from '@radix-ui/react-toast'
+import { ToastContext } from '../context/ToastContextProvider'
 
 type Props = {
   title?: string
@@ -43,6 +43,8 @@ const Layout: FC<Props> = ({
   ogImageAlt = 'Reservoir',
   children,
 }) => {
+  const { toasts } = useContext(ToastContext)
+
   return (
     <>
       <Head>
@@ -81,19 +83,21 @@ const Layout: FC<Props> = ({
         <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
       </Head>
 
-      <ToastProvider duration={5000}>
-        <Box
-          css={{
-            background: '$gray1',
-            height: '100%',
-            minHeight: '100vh',
-            pt: 80,
-          }}
-        >
-          <Navbar />
-          <main>{children}</main>
-        </Box>
-      </ToastProvider>
+      <Box
+        css={{
+          background: '$gray1',
+          height: '100%',
+          minHeight: '100vh',
+          pt: 80,
+        }}
+      >
+        <Navbar />
+
+        <main>{children}</main>
+        {toasts.map((toast, idx) => {
+          return <div key={idx}>{toast}</div>
+        })}
+      </Box>
     </>
   )
 }

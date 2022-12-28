@@ -1,16 +1,11 @@
-import {
-  ComponentPropsWithoutRef,
-  ElementRef,
-  FC,
-  forwardRef,
-  ReactNode,
-} from 'react'
-import { styled } from '@stitches/react'
+import { FC, ReactNode } from 'react'
+import { keyframes, styled } from '@stitches/react'
 import * as ToastPrimitive from '@radix-ui/react-toast'
-import { motion } from 'framer-motion'
+
+const VIEWPORT_PADDING = 25
 
 const ToastViewport = styled(ToastPrimitive.Viewport, {
-  padding: '25px',
+  padding: VIEWPORT_PADDING,
   position: 'fixed',
   bottom: 0,
   right: 0,
@@ -21,36 +16,48 @@ const ToastViewport = styled(ToastPrimitive.Viewport, {
   maxWidth: '100vw',
 })
 
+const hide = keyframes({
+  '0%': { opacity: 1 },
+  '100%': { opacity: 0 },
+})
+
+const slideIn = keyframes({
+  from: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
+  to: { transform: 'translateX(0)' },
+})
+
+const swipeOut = keyframes({
+  from: { transform: 'translateX(var(--radix-toast-swipe-end-x))' },
+  to: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
+})
+
 const ToastRoot = styled(ToastPrimitive.Root, {
   backgroundColor: '$gray3',
   borderRadius: 6,
   padding: 12,
   display: 'grid',
-  gridTemplateAreas: `'title action' 'description action'`,
+  gridTemplateAreas: "'title action' 'description action'",
+  gridTemplateColumns: 'auto max-content',
   columnGap: '15px',
   alignItems: 'center',
-})
 
-// Struggling to get framer motion to work here
-// const AnimatedToastRoot = forwardRef<
-//   ElementRef<typeof ToastPrimitive.Root>,
-//   ComponentPropsWithoutRef<typeof ToastPrimitive.Root>
-// >(({ children, ...props }, forwardedRef) => (
-//   <ToastRoot {...props} forceMount asChild>
-//     <motion.div
-//       //@ts-ignore
-//       ref={forwardedRef}
-//       transition={{ duration: 0.5 }}
-//       initial={{
-//         opacity: 0,
-//       }}
-//       animate={{ opacity: 1 }}
-//       exit={{ opacity: 0 }}
-//     >
-//       {children}
-//     </motion.div>
-//   </ToastRoot>
-// ))
+  '&[data-state="open"]:last-child': {
+    animation: `${slideIn} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
+  },
+  '&[data-state="closed"]': {
+    animation: `${hide} 100ms ease-in`,
+  },
+  '&[data-swipe="move"]': {
+    transform: 'translateX(var(--radix-toast-swipe-move-x))',
+  },
+  '&[data-swipe="cancel"]': {
+    transform: 'translateX(0)',
+    transition: 'transform 200ms ease-out',
+  },
+  '&[data-swipe="end"]': {
+    animation: `${swipeOut} 100ms ease-out`,
+  },
+})
 
 const ToastTitle = styled(ToastPrimitive.Title, {
   gridArea: 'title',
@@ -79,10 +86,10 @@ type Props = {
 const Toast: FC<Props> = ({ title, description, action }) => {
   return (
     <>
-      <ToastRoot defaultOpen={true} duration={5000}>
+      <ToastRoot duration={5000}>
         <ToastTitle>{title}</ToastTitle>
         <ToastDescription>{description}</ToastDescription>
-        <ToastAction asChild altText="">
+        <ToastAction asChild altText="Toast action">
           {action}
         </ToastAction>
       </ToastRoot>
