@@ -4,7 +4,6 @@ import {
   Flex,
   FormatCryptoCurrency,
   Text,
-  Toast,
 } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
 import * as RadixDialog from '@radix-ui/react-dialog'
@@ -39,7 +38,7 @@ const HamburgerMenu = () => {
   const { data: ensAvatar } = useEnsAvatar({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
-  const { addToast, toasts } = useContext(ToastContext)
+  const { addToast } = useContext(ToastContext)
 
   const trigger = (
     <Button
@@ -116,7 +115,7 @@ const HamburgerMenu = () => {
               }}
               onClick={() => {
                 ensName ? copy(ensName) : copy(address as string)
-                addToast?.(<Toast title="Copied" />)
+                addToast?.({ title: 'Copied' })
               }}
             >
               <Flex css={{ alignItems: 'center' }}>

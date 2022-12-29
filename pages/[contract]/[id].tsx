@@ -21,7 +21,6 @@ import {
   Anchor,
   Grid,
   Box,
-  Toast,
 } from 'components/primitives'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -223,22 +222,20 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 })
                   .then(({ response }) => {
                     if (response.status === 200) {
-                      addToast?.(
-                        <Toast
-                          title="Refresh collection"
-                          description="Request to refresh collection was accepted."
-                        />
-                      )
+                      addToast?.({
+                        title: 'Refresh collection',
+                        description:
+                          'Request to refresh collection was accepted.',
+                      })
                     }
                     throw 'Request Failed'
                   })
                   .catch((e) => {
-                    addToast?.(
-                      <Toast
-                        title="Refresh collection failed"
-                        description="Request to refresh collection was rejected."
-                      />
-                    )
+                    addToast?.({
+                      title: 'Refresh collection failed',
+                      description:
+                        'Request to refresh collection was rejected.',
+                    })
                     throw e
                   })
               }}

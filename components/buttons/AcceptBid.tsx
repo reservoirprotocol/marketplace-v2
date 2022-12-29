@@ -2,7 +2,7 @@ import { AcceptBidModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { Button, Toast } from 'components/primitives'
+import { Button } from 'components/primitives'
 import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
@@ -66,30 +66,24 @@ const AcceptBid: FC<Props> = ({
         }}
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {
-            addToast?.(
-              <Toast
-                title="Could not accept offer"
-                description="Offer was lower than expected."
-              />
-            )
+            addToast?.({
+              title: 'Could not accept offer',
+              description: 'Offer was lower than expected.',
+            })
             return
           }
           // Handle user rejection
           if (error?.code === 4001) {
-            addToast?.(
-              <Toast
-                title="User canceled transaction"
-                description="You have canceled the transaction."
-              />
-            )
+            addToast?.({
+              title: 'User canceled transaction',
+              description: 'You have canceled the transaction.',
+            })
             return
           }
-          addToast?.(
-            <Toast
-              title="Could not accept offer"
-              description="The transaction was not completed."
-            />
-          )
+          addToast?.({
+            title: 'Could not accept offer',
+            description: 'The transaction was not completed.',
+          })
         }}
       />
     )

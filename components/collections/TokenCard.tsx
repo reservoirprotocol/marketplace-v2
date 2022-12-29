@@ -11,7 +11,6 @@ import {
   Flex,
   FormatCryptoCurrency,
   Text,
-  Toast,
   Tooltip,
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
@@ -85,12 +84,10 @@ export default ({
             }}
             onRefreshToken={() => {
               mutate?.()
-              addToast?.(
-                <Toast
-                  title="Refresh token"
-                  description="Request to refresh this token was accepted."
-                />
-              )
+              addToast?.({
+                title: 'Refresh token',
+                description: 'Request to refresh this token was accepted.',
+              })
             }}
           />
         </Box>

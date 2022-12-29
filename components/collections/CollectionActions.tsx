@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
-import { Flex, Toast } from 'components/primitives'
+import { Flex } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useContext } from 'react'
 import { useEnvChain } from 'hooks'
 import { useTheme } from 'next-themes'
@@ -107,22 +107,18 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
         })
           .then(({ response }) => {
             if (response.status === 200) {
-              addToast?.(
-                <Toast
-                  title="Refresh collection"
-                  description="Request to refresh collection was accepted.."
-                />
-              )
+              addToast?.({
+                title: 'Refresh collection',
+                description: 'Request to refresh collection was accepted..',
+              })
             }
             throw 'Request Failed'
           })
           .catch((e) => {
-            addToast?.(
-              <Toast
-                title="Refresh collection failed"
-                description="Request to refresh collection was rejected."
-              />
-            )
+            addToast?.({
+              title: 'Refresh collection failed',
+              description: 'Request to refresh collection was rejected.',
+            })
             throw e
           })
       }}

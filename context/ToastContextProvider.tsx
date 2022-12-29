@@ -5,14 +5,19 @@ import {
   Dispatch,
   FC,
   ReactNode,
-  useEffect,
 } from 'react'
 import { Provider as ToastProvider } from '@radix-ui/react-toast'
 
+type ToastType = {
+  title?: string
+  description?: string
+  action?: ReactNode
+}
+
 export const ToastContext = createContext<{
-  toasts: Array<ReactNode>
-  setToasts: Dispatch<SetStateAction<Array<ReactNode>>> | null
-  addToast: ((toast: ReactNode) => void) | null
+  toasts: Array<ToastType>
+  setToasts: Dispatch<SetStateAction<Array<ToastType>>> | null
+  addToast: ((toast: ToastType) => void) | null
 }>({
   toasts: [],
   setToasts: null,
@@ -20,9 +25,9 @@ export const ToastContext = createContext<{
 })
 
 const ToastContextProvider: FC<any> = ({ children }) => {
-  const [toasts, setToasts] = useState<Array<ReactNode>>([])
+  const [toasts, setToasts] = useState<Array<ToastType>>([])
 
-  const addToast = (toast: ReactNode) => {
+  const addToast = (toast: ToastType) => {
     setToasts([...toasts, toast])
   }
 

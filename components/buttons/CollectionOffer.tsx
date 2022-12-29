@@ -1,5 +1,5 @@
 import { BidModal, Trait } from '@reservoir0x/reservoir-kit-ui'
-import { Button, Toast } from 'components/primitives'
+import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
@@ -112,21 +112,17 @@ const CollectionOffer: FC<Props> = ({
                   (error as any).cause.code &&
                   (error as any).cause.code === 4001
                 ) {
-                  addToast?.(
-                    <Toast
-                      title="User canceled transaction"
-                      description="You have canceled the transaction."
-                    />
-                  )
+                  addToast?.({
+                    title: 'User canceled transaction',
+                    description: 'You have canceled the transaction.',
+                  })
                   return
                 }
               }
-              addToast?.(
-                <Toast
-                  title="Could not place bid"
-                  description="The transaction was not completed."
-                />
-              )
+              addToast?.({
+                title: 'Could not place bid',
+                description: 'The transaction was not completed.',
+              })
             }}
           />
         )}

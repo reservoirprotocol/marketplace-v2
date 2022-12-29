@@ -1,5 +1,5 @@
 import { BidModal } from '@reservoir0x/reservoir-kit-ui'
-import { Button, Toast } from 'components/primitives'
+import { Button } from 'components/primitives'
 import { ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -67,21 +67,17 @@ const Bid: FC<Props> = ({
               (error as any).cause.code &&
               (error as any).cause.code === 4001
             ) {
-              addToast?.(
-                <Toast
-                  title="User canceled transaction"
-                  description="You have canceled the transaction."
-                />
-              )
+              addToast?.({
+                title: 'User canceled transaction',
+                description: 'You have canceled the transaction.',
+              })
               return
             }
           }
-          addToast?.(
-            <Toast
-              title="Could not place bid"
-              description="The transaction was not completed."
-            />
-          )
+          addToast?.({
+            title: 'Could not place bid',
+            description: 'The transaction was not completed.',
+          })
         }}
       />
     )

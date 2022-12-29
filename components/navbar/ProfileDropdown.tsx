@@ -15,7 +15,6 @@ import {
   Flex,
   FormatCryptoCurrency,
   Text,
-  Toast,
 } from 'components/primitives'
 import Link from 'next/link'
 import { truncateAddress, truncateEns } from 'utils/truncate'
@@ -55,7 +54,7 @@ export const ProfileDropdown: FC = () => {
       <DropdownMenuItem
         onClick={() => {
           ensName ? copy(ensName) : copy(address as string)
-          addToast?.(<Toast title="Copied" />)
+          addToast?.({ title: 'Copied' })
         }}
       >
         <Flex justify="between">

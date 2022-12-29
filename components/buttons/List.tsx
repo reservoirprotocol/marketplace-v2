@@ -1,5 +1,5 @@
 import { ListModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { Button, Toast } from 'components/primitives'
+import { Button } from 'components/primitives'
 import { ComponentProps, ComponentPropsWithoutRef, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -64,20 +64,16 @@ const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
         }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {
-            addToast?.(
-              <Toast
-                title="User canceled transaction"
-                description="You have canceled the transaction."
-              />
-            )
+            addToast?.({
+              title: 'User canceled transaction',
+              description: 'You have canceled the transaction.',
+            })
             return
           }
-          addToast?.(
-            <Toast
-              title="Could not list token"
-              description="The transaction was not completed."
-            />
-          )
+          addToast?.({
+            title: 'Could not list token',
+            description: 'The transaction was not completed.',
+          })
         }}
       />
     )

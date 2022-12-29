@@ -1,6 +1,7 @@
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useContext } from 'react'
 import { keyframes, styled } from '@stitches/react'
 import * as ToastPrimitive from '@radix-ui/react-toast'
+import { ToastContext } from 'context/ToastContextProvider'
 
 const VIEWPORT_PADDING = 25
 
@@ -85,9 +86,23 @@ type Props = {
 }
 
 const Toast: FC<Props> = ({ title, description, action }) => {
+  const { toasts, setToasts } = useContext(ToastContext)
   return (
     <>
-      <ToastRoot duration={5000}>
+      <ToastRoot
+        duration={5000}
+        onOpenChange={(open) => {
+          if (!open) {
+            setTimeout(
+              () =>
+                setToasts?.(
+                  [...toasts].filter((toast) => toast.title != title)
+                ),
+              100
+            )
+          }
+        }}
+      >
         <ToastTitle>{title}</ToastTitle>
         <ToastDescription>{description}</ToastDescription>
         <ToastAction asChild altText="Toast action">

@@ -1,4 +1,4 @@
-import { Box } from 'components/primitives'
+import { Box, Toast } from 'components/primitives'
 import Head from 'next/head'
 import { FC, ReactNode, useContext } from 'react'
 import Navbar from './navbar'
@@ -95,7 +95,14 @@ const Layout: FC<Props> = ({
 
         <main>{children}</main>
         {toasts.map((toast, idx) => {
-          return <div key={idx}>{toast}</div>
+          return (
+            <Toast
+              key={idx}
+              title={toast.title}
+              description={toast.description}
+              action={toast.action}
+            />
+          )
         })}
       </Box>
     </>
