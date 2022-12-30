@@ -94,10 +94,7 @@ const Toast: FC<Props> = ({ title, description, action }) => {
         onOpenChange={(open) => {
           if (!open) {
             setTimeout(
-              () =>
-                setToasts?.(
-                  [...toasts].filter((toast) => toast.title != title)
-                ),
+              () => setToasts?.(toasts.filter((toast) => toast.title != title)),
               100
             )
           }
