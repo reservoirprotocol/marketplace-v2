@@ -2,6 +2,8 @@ import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
 import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
+import { useContext } from 'react'
+import { ToastContext } from '../../context/ToastContextProvider'
 
 type CollectionRowProps = {
   rank: string | number

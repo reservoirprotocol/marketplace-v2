@@ -23,6 +23,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
+import ToastContextProvider from 'context/ToastContextProvider'
 
 const envChain = Object.values(allChains).find(
   (chain) =>
@@ -129,7 +130,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 theme={rainbowKitTheme}
                 modalSize="compact"
               >
-                <FunctionalComponent {...pageProps} />
+                <ToastContextProvider>
+                  <FunctionalComponent {...pageProps} />
+                </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>
           </ReservoirKitProvider>

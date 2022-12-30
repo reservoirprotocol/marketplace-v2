@@ -2,7 +2,7 @@ import {
   useCollectionActivity,
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,

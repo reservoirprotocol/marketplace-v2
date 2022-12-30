@@ -1,7 +1,8 @@
-import { Box } from 'components/primitives'
+import { Box, Toast } from 'components/primitives'
 import Head from 'next/head'
-import { FC, ReactNode } from 'react'
+import { FC, ReactNode, useContext } from 'react'
 import Navbar from './navbar'
+import { ToastContext } from '../context/ToastContextProvider'
 
 type Props = {
   title?: string
@@ -42,6 +43,8 @@ const Layout: FC<Props> = ({
   ogImageAlt = 'Reservoir',
   children,
 }) => {
+  const { toasts } = useContext(ToastContext)
+
   return (
     <>
       <Head>
@@ -79,6 +82,7 @@ const Layout: FC<Props> = ({
         <meta property="og:image:height" content="640" />
         <meta property="og:image:alt" content={`${ogImageAlt} banner`} />
       </Head>
+
       <Box
         css={{
           background: '$gray1',
@@ -88,7 +92,18 @@ const Layout: FC<Props> = ({
         }}
       >
         <Navbar />
+
         <main>{children}</main>
+        {toasts.map((toast, idx) => {
+          return (
+            <Toast
+              key={idx}
+              title={toast.title}
+              description={toast.description}
+              action={toast.action}
+            />
+          )
+        })}
       </Box>
     </>
   )

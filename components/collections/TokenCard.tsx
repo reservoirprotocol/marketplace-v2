@@ -13,8 +13,9 @@ import {
   Text,
   Tooltip,
 } from 'components/primitives'
+import { ToastContext } from 'context/ToastContextProvider'
 import Link from 'next/link'
-import { SyntheticEvent } from 'react'
+import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
@@ -34,6 +35,7 @@ export default ({
   mutate,
   onMediaPlayed,
 }: TokenCardProps) => {
+  const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
@@ -81,8 +83,11 @@ export default ({
               },
             }}
             onRefreshToken={() => {
-              //TODO: add toast
               mutate?.()
+              addToast?.({
+                title: 'Refresh token',
+                description: 'Request to refresh this token was accepted.',
+              })
             }}
           />
         </Box>

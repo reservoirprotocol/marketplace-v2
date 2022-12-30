@@ -1,10 +1,11 @@
 import { ListModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { ComponentProps, ComponentPropsWithoutRef, FC } from 'react'
+import { ComponentProps, ComponentPropsWithoutRef, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { useAccount } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { ToastContext } from 'context/ToastContextProvider'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -20,6 +21,7 @@ type Props = {
 const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
+  const { addToast } = useContext(ToastContext)
 
   let listingCurrencies: ListingCurrencies = undefined
 
@@ -62,10 +64,16 @@ const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
         }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {
-            // TODO: add toast
+            addToast?.({
+              title: 'User canceled transaction',
+              description: 'You have canceled the transaction.',
+            })
             return
           }
-          // TODO: add toast
+          addToast?.({
+            title: 'Could not list token',
+            description: 'The transaction was not completed.',
+          })
         }}
       />
     )

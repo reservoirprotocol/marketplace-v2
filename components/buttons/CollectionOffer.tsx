@@ -1,12 +1,13 @@
 import { BidModal, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
-import { ComponentProps, FC, useEffect, useState } from 'react'
+import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { ToastContext } from 'context/ToastContextProvider'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
@@ -31,6 +32,7 @@ const CollectionOffer: FC<Props> = ({
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
+  const { addToast } = useContext(ToastContext)
 
   useEffect(() => {
     const keys = Object.keys(router.query)
@@ -110,11 +112,17 @@ const CollectionOffer: FC<Props> = ({
                   (error as any).cause.code &&
                   (error as any).cause.code === 4001
                 ) {
-                  //TODO: add toast
+                  addToast?.({
+                    title: 'User canceled transaction',
+                    description: 'You have canceled the transaction.',
+                  })
                   return
                 }
               }
-              //TODO: add toast
+              addToast?.({
+                title: 'Could not place bid',
+                description: 'The transaction was not completed.',
+              })
             }}
           />
         )}

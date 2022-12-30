@@ -43,10 +43,13 @@ import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
+import { useContext } from 'react'
+import { ToastContext } from 'context/ToastContextProvider'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+  const { addToast } = useContext(ToastContext)
   const account = useAccount()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { data: collections } = useCollections(
@@ -219,12 +222,20 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 })
                   .then(({ response }) => {
                     if (response.status === 200) {
-                      //TODO show toast
+                      addToast?.({
+                        title: 'Refresh collection',
+                        description:
+                          'Request to refresh collection was accepted.',
+                      })
                     }
                     throw 'Request Failed'
                   })
                   .catch((e) => {
-                    //TODO show toast error
+                    addToast?.({
+                      title: 'Refresh collection failed',
+                      description:
+                        'Request to refresh collection was rejected.',
+                    })
                     throw e
                   })
               }}
