@@ -77,7 +77,7 @@ const Navbar = () => {
         width: '100%',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
-        background: '$slate1',
+        background: '$neutralBg',
         position: 'fixed',
         top: 0,
         left: 0,

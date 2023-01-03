@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 const CollapsibleContent = styled(CollapsiblePrimitive.CollapsibleContent, {
   pa: '$4',
-  background: '$gray3',
+  background: '$panelBg',
   border: '1px solid $gray5',
   borderRadius: 8,
 })

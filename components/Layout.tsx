@@ -85,7 +85,7 @@ const Layout: FC<Props> = ({
 
       <Box
         css={{
-          background: '$gray1',
+          background: '$neutralBg',
           height: '100%',
           minHeight: '100vh',
           pt: 80,
