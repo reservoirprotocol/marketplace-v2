@@ -88,6 +88,12 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         red10: '$crimson10',
         red11: '$crimson11',
         red12: '$crimson12',
+
+        neutralBg: 'white',
+        neutralBgSubtle: 'white',
+        panelShadow: 'rgba(0,0,0,0.1)',
+        panelBg: '$gray2',
+        panelBorder: 'transparent',
       },
       space: {
         1: '4px',
@@ -110,8 +116,8 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       shadows: {},
       transitions: {},
       breakpoints: {
-        sm: 100
-      }
+        sm: 100,
+      },
     },
     utils: {
       // MARGIN
@@ -268,5 +274,12 @@ export const darkTheme = createTheme({
     gray12: '$slate12',
 
     accent: '#7000FF',
+
+    neutralBgSubtle: '$gray3',
+    neutralBg: '$gray1',
+
+    panelBg: '$gray3',
+    panelBorder: '$slate7',
+    panelShadow: 'transparent',
   },
 })

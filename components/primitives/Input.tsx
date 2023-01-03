@@ -17,7 +17,7 @@ const StyledInput = styled('input', {
   fontFamily: '$body',
   fontSize: 16,
   color: '$gray12',
-  backgroundColor: '$gray7',
+  backgroundColor: '$gray3',
   $$focusColor: '$colors$primary8',
   '&::placeholder': { color: '$gray10' },
   '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },

@@ -50,7 +50,7 @@ export const SortTokens: FC = () => {
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <Button
-          color="gray4"
+          color="gray3"
           css={{
             width: '100%',
             justifyContent: 'center',
