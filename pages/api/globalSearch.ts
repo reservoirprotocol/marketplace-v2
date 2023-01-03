@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']

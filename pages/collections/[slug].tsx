@@ -11,7 +11,7 @@ import {
   useAttributes,
   useCollectionActivity,
 } from '@reservoir0x/reservoir-kit-ui'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
@@ -36,10 +36,13 @@ import { ActivityFilters } from 'components/collections/filters/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/collections/filters/MobileActivityFilters'
 
-type ActivityTypes = NonNullable<
+type ActivityTypes = Exclude<
   NonNullable<
-    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-  >['types']
+    NonNullable<
+      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+    >['types']
+  >,
+  string
 >
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
