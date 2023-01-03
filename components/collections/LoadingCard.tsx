@@ -1,13 +1,13 @@
 import { keyframes } from '@stitches/react'
 import { Box, Flex } from 'components/primitives'
 
-const LoadingCard = () => {
-  const pulse = keyframes({
-    '0%': { backgroundColor: '$gray6' },
-    '50%': { backgroundColor: '$gray8' },
-    '100%': { backgroundColor: '$gray6' },
-  })
+const pulse = keyframes({
+  '0%': { backgroundColor: '$gray6' },
+  '50%': { backgroundColor: '$gray8' },
+  '100%': { backgroundColor: '$gray6' },
+})
 
+const LoadingCard = () => {
   return (
     <Flex
       direction="column"
