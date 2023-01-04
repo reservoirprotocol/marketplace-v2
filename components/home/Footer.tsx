@@ -30,37 +30,37 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
   </Anchor>
 )
 
+const developerSectionLinks = [
+  {
+    name: 'Docs',
+    href: 'https://docs.reservoir.tools/docs',
+  },
+  {
+    name: 'API Reference',
+    href: 'https://docs.reservoir.tools/reference/overview',
+  },
+  {
+    name: 'Github',
+    href: 'https://github.com/reservoirprotocol',
+  },
+]
+
+const companySectionLinks = [
+  {
+    name: 'Jobs',
+    href: 'https://jobs.ashbyhq.com/reservoir',
+  },
+  {
+    name: 'Terms of Use',
+    href: 'https://reservoir.tools/terms',
+  },
+  {
+    name: 'Privacy Policy',
+    href: 'https://reservoir.tools/privacy',
+  },
+]
+
 export const Footer = () => {
-  const developerSectionLinks = [
-    {
-      name: 'Docs',
-      href: 'https://docs.reservoir.tools/docs',
-    },
-    {
-      name: 'API Reference',
-      href: 'https://docs.reservoir.tools/reference/overview',
-    },
-    {
-      name: 'Github',
-      href: 'https://github.com/reservoirprotocol',
-    },
-  ]
-
-  const companySectionLinks = [
-    {
-      name: 'Jobs',
-      href: 'https://jobs.ashbyhq.com/reservoir',
-    },
-    {
-      name: 'Terms of Use',
-      href: 'https://reservoir.tools/terms',
-    },
-    {
-      name: 'Privacy Policy',
-      href: 'https://reservoir.tools/privacy',
-    },
-  ]
-
   return (
     <Flex
       justify="between"
