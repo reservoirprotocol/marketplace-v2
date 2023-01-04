@@ -21,6 +21,7 @@
     "@radix-ui/react-switch": "^1.0.1",
     "@radix-ui/react-tabs": "^1.0.1",
     "@radix-ui/react-toast": "^1.1.2",
+    "@radix-ui/react-toggle-group": "^1.0.1",
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@reservoir0x/reservoir-kit-ui": "0.7.1",
