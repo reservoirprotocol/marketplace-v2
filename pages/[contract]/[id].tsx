@@ -57,7 +57,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       id: collectionId,
     },
     {
-      fallback: ssr.collection,
+      fallbackData: ssr.collection,
     }
   )
   const collection = collections && collections[0] ? collections[0] : null
@@ -69,7 +69,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       includeTopBid: true,
     },
     {
-      fallback: ssr.tokens,
+      fallbackData: [ssr.tokens],
     }
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
@@ -348,17 +348,16 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('/collectins/v5', collectionQuery)
+  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${collectionId}:${id}`],
-    sortBy: 'floorAskPrice',
-    includeTopBid: false,
-    limit: 20,
+    includeAttributes: true,
+    includeTopBid: true,
   }
 
-  const tokensResponse = await fetcher('/tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 

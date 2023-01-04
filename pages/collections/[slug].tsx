@@ -74,7 +74,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
       includeTopBid: true,
     },
     {
-      fallback: ssr.collection,
+      fallbackData: ssr.collection,
     }
   )
 
@@ -112,7 +112,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
     isFetchingInitialData,
     hasNextPage,
   } = useTokens(tokenQuery, {
-    fallback: ssr.tokens,
+    fallbackData: [ssr.tokens],
   })
 
   const attributes = ssr?.attributes.attributes
@@ -367,17 +367,17 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('/collections/v5', collectionQuery)
+  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     collection: id,
     sortBy: 'floorAskPrice',
-    includeTopBid: false,
+    sortDirection: 'asc',
     limit: 20,
   }
 
-  const tokensResponse = await fetcher('/tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
