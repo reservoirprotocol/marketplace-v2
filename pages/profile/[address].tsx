@@ -78,18 +78,17 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
 
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
-    normalizeRoyalties: true,
     collection: filterCollection,
   }
-
   const {
     data: tokens,
     mutate,
     fetchNextPage,
     isFetchingInitialData,
     hasNextPage,
+    isFetchingPage,
   } = useUserTokens(address || '', tokenQuery, {
-    fallback: ssr.tokens,
+    fallbackData: filterCollection ? undefined : [ssr.tokens],
   })
 
   useEffect(() => {
@@ -211,30 +210,33 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                         .map((_, index) => (
                           <LoadingCard key={`loading-card-${index}`} />
                         ))
-                    : tokens.map((token, i) => (
-                        <TokenCard
-                          key={i}
-                          token={
-                            token as ReturnType<typeof useTokens>['data'][0]
-                          }
-                          mutate={mutate}
-                          rarityEnabled={false}
-                          onMediaPlayed={(e) => {
-                            if (
-                              playingElement &&
-                              playingElement !== e.nativeEvent.target
-                            ) {
-                              playingElement.pause()
-                            }
-                            const element =
-                              (e.nativeEvent.target as HTMLAudioElement) ||
-                              (e.nativeEvent.target as HTMLVideoElement)
-                            if (element) {
-                              setPlayingElement(element)
-                            }
-                          }}
-                        />
-                      ))}
+                    : tokens.map((token, i) => {
+                        if (token)
+                          return (
+                            <TokenCard
+                              key={i}
+                              token={
+                                token as ReturnType<typeof useTokens>['data'][0]
+                              }
+                              mutate={mutate}
+                              rarityEnabled={false}
+                              onMediaPlayed={(e) => {
+                                if (
+                                  playingElement &&
+                                  playingElement !== e.nativeEvent.target
+                                ) {
+                                  playingElement.pause()
+                                }
+                                const element =
+                                  (e.nativeEvent.target as HTMLAudioElement) ||
+                                  (e.nativeEvent.target as HTMLVideoElement)
+                                if (element) {
+                                  setPlayingElement(element)
+                                }
+                              }}
+                            />
+                          )
+                      })}
                   <Box ref={loadMoreRef}>
                     {hasNextPage && !isFetchingInitialData && <LoadingCard />}
                   </Box>
@@ -248,6 +250,16 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                     </>
                   )}
                 </Grid>
+                {tokens.length === 0 && !isFetchingPage && (
+                  <Flex
+                    direction="column"
+                    align="center"
+                    css={{ py: '$6', gap: '$4', width: '100%' }}
+                  >
+                    <img src="/magnifying-glass.svg" width={40} height={40} />
+                    <Text>No items found</Text>
+                  </Flex>
+                )}
               </Box>
             </Flex>
           </TabsContent>
@@ -316,11 +328,10 @@ export const getStaticProps: GetStaticProps<{
   let tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
-      normalizeRoyalties: true,
     }
 
   const tokensResponse = await fetcher(
-    `/users/${address}/tokens/v6`,
+    `users/${address}/tokens/v6`,
     tokensQuery
   )
 
