@@ -22,7 +22,7 @@ import { useMediaQuery } from 'react-responsive'
 
 import { useCopyToClipboard } from 'usehooks-ts'
 import Link from 'next/link'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 
 type Props = {
   collection: NonNullable<
