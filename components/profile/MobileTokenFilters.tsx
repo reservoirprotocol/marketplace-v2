@@ -1,54 +1,103 @@
-import { Flex, Text } from 'components/primitives'
 import { Dispatch, FC, SetStateAction } from 'react'
-import * as Collapsible from '@radix-ui/react-collapsible'
-import { CollapsibleContent } from 'components/primitives/Collapsible'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import * as RadixDialog from '@radix-ui/react-dialog'
+import { Button, Flex, Text } from 'components/primitives'
 import Image from 'next/image'
-import { NAVBAR_HEIGHT } from 'components/navbar'
-import { useRouter } from 'next/router'
+import { FullscreenModal } from 'components/common/FullscreenModal'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
+import { paths } from '@reservoir0x/reservoir-kit-client'
 
 type Props = {
-  open: boolean
-  setOpen: (open: boolean) => void
   collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
 }
 
-export const TokenFilters: FC<Props> = ({
-  open,
-  setOpen,
+export const MobileTokenFilters: FC<Props> = ({
   collections,
   filterCollection,
   setFilterCollection,
 }) => {
-  return (
-    <Collapsible.Root
-      open={open}
-      key="Token Filter"
-      onOpenChange={setOpen}
-      style={{
-        transition: 'width .5s',
-        width: open ? 350 : 0,
+  const trigger = (
+    <Flex
+      justify="center"
+      css={{
+        position: 'fixed',
+        left: 0,
+        bottom: '70px',
+        width: '100vw',
+        zIndex: 99,
       }}
     >
-      <CollapsibleContent
+      <Button
         css={{
-          position: 'sticky',
-          top: 16 + 80,
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
-          overflow: 'auto',
+          justifyContent: 'center',
+          alignItems: 'center',
+          justifyItems: 'center',
+          position: 'fixed',
+          px: '$6',
+          py: '$3',
+        }}
+        type="button"
+        size="small"
+        corners="pill"
+        color="gray3"
+      >
+        <Text style="h6">Filter</Text>
+      </Button>
+    </Flex>
+  )
+
+  return (
+    <FullscreenModal trigger={trigger}>
+      {' '}
+      <Flex
+        css={{
+          flexDirection: 'column',
+          height: '100%',
         }}
       >
         <Flex
+          css={{
+            py: '$4',
+            px: '$4',
+            width: '100%',
+            borderBottom: '1px solid $gray4',
+          }}
+          align="center"
+          justify="between"
+        >
+          <Flex align="center">
+            <Text style="h5" css={{ mr: '$3' }}>
+              Filter
+            </Text>
+          </Flex>
+          <RadixDialog.Close>
+            <Flex
+              css={{
+                justifyContent: 'center',
+                width: '44px',
+                height: '44px',
+                alignItems: 'center',
+                borderRadius: 8,
+                backgroundColor: '$gray3',
+                color: '$gray12',
+                '&:hover': {
+                  backgroundColor: '$gray4',
+                },
+              }}
+            >
+              <FontAwesomeIcon icon={faXmark} width={16} height={16} />
+            </Flex>
+          </RadixDialog.Close>
+        </Flex>
+        <Flex
           direction="column"
           css={{
-            p: '$2',
             pt: '$4',
-            overflowY: 'scroll',
           }}
         >
-          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
+          <Text style="subtitle1" css={{ mb: '$2', pl: '$4' }}>
             Collections
           </Text>
           {collections?.map((collection) => {
@@ -58,9 +107,8 @@ export const TokenFilters: FC<Props> = ({
                 key={collection?.collection?.id}
                 css={{
                   py: '$2',
-                  px: '$3',
+                  px: '$4',
                   gap: '$3',
-                  borderRadius: '4px',
                   cursor: 'pointer',
                   '&:hover': {
                     backgroundColor: selected ? '$gray5' : '$gray4',
@@ -100,7 +148,7 @@ export const TokenFilters: FC<Props> = ({
             )
           })}
         </Flex>
-      </CollapsibleContent>
-    </Collapsible.Root>
+      </Flex>
+    </FullscreenModal>
   )
 }

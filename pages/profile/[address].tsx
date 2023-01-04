@@ -32,6 +32,7 @@ import { FilterButton } from 'components/common/FilterButton'
 import { UserAcivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { ActivityFilters } from 'components/common/ActivityFilters'
+import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -155,13 +156,21 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
               }}
               ref={scrollRef}
             >
-              <TokenFilters
-                open={tokenFiltersOpen}
-                setOpen={setTokenFiltersOpen}
-                collections={collections}
-                filterCollection={filterCollection}
-                setFilterCollection={setFilterCollection}
-              />
+              {isSmallDevice ? (
+                <MobileTokenFilters
+                  collections={collections}
+                  filterCollection={filterCollection}
+                  setFilterCollection={setFilterCollection}
+                />
+              ) : (
+                <TokenFilters
+                  open={tokenFiltersOpen}
+                  setOpen={setTokenFiltersOpen}
+                  collections={collections}
+                  filterCollection={filterCollection}
+                  setFilterCollection={setFilterCollection}
+                />
+              )}
               <Box
                 css={{
                   flex: 1,
