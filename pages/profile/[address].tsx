@@ -5,7 +5,7 @@ import {
   NextPage,
 } from 'next'
 import { Text, Flex, Box, Grid } from '../../components/primitives'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import fetcher from 'utils/fetcher'
 import { useEnsAvatar, useEnsName, Address } from 'wagmi'
@@ -36,10 +36,13 @@ import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-type ActivityTypes = NonNullable<
+type ActivityTypes = Exclude<
   NonNullable<
-    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-  >['types']
+    NonNullable<
+      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+    >['types']
+  >,
+  string
 >
 
 const IndexPage: NextPage<Props> = ({ address, ssr }) => {

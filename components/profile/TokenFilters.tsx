@@ -2,10 +2,9 @@ import { Flex, Text } from 'components/primitives'
 import { Dispatch, FC, SetStateAction } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { useRouter } from 'next/router'
 
 type Props = {
   open: boolean

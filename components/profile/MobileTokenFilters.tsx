@@ -5,7 +5,7 @@ import Image from 'next/image'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 
 type Props = {
   collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
