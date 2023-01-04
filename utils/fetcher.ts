@@ -1,4 +1,4 @@
-import { setParams } from '@reservoir0x/reservoir-kit-client'
+import { setParams } from '@reservoir0x/reservoir-sdk'
 
 const fetcher = async (
   url: string,

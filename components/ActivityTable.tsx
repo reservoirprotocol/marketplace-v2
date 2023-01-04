@@ -33,6 +33,7 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
+import LoadingSpinner from './common/LoadingSpinner'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
@@ -61,7 +62,6 @@ export const ActivityTable: FC<Props> = ({ data }) => {
   })
 
   const activities = data.data
-  console.log(data)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -76,9 +76,10 @@ export const ActivityTable: FC<Props> = ({ data }) => {
       !data.isFetchingPage &&
       activities &&
       activities.length === 0 ? (
-        <Box css={{ width: '100%' }}>
-          <Text>No results</Text>
-        </Box>
+        <Flex direction="column" align="center" css={{ py: '$6', gap: '$4' }}>
+          <img src="/activity-icon.svg" width={40} height={40} />
+          <Text>No activity yet</Text>
+        </Flex>
       ) : (
         <Table css={{ width: '100%' }}>
           <TableBody>
@@ -96,10 +97,9 @@ export const ActivityTable: FC<Props> = ({ data }) => {
           </TableBody>
         </Table>
       )}
-      {/* TODO: Update loading state */}
       {data.isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$3' }}>
-          Loading...
+        <Flex align="center" justify="center" css={{ py: '$6' }}>
+          <LoadingSpinner />
         </Flex>
       )}
     </>

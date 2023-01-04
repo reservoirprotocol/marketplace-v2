@@ -8,10 +8,9 @@ import { Text, Flex, Box } from '../../components/primitives'
 import {
   useCollections,
   useTokens,
-  useAttributes,
   useCollectionActivity,
 } from '@reservoir0x/reservoir-kit-ui'
-import { paths } from '@reservoir0x/reservoir-kit-client'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
@@ -35,11 +34,15 @@ import { CollectionAcivityTable } from 'components/collections/CollectionActivit
 import { ActivityFilters } from 'components/collections/filters/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/collections/filters/MobileActivityFilters'
+import LoadingCard from 'components/collections/LoadingCard'
 
-type ActivityTypes = NonNullable<
+type ActivityTypes = Exclude<
   NonNullable<
-    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-  >['types']
+    NonNullable<
+      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+    >['types']
+  >,
+  string
 >
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -106,11 +109,13 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
     data: tokens,
     mutate,
     fetchNextPage,
+    isFetchingInitialData,
+    hasNextPage,
   } = useTokens(tokenQuery, {
     fallback: ssr.tokens,
   })
 
-  let { data: attributes } = useAttributes(collection?.id)
+  const attributes = ssr?.attributes.attributes
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
@@ -195,7 +200,6 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                 <Box
                   css={{
                     flex: 1,
-                    //pb: '$5',
                   }}
                 >
                   <Flex justify="between" css={{ marginBottom: '$4' }}>
@@ -234,32 +238,60 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       gridTemplateColumns:
                         'repeat(auto-fit, minmax(300px, 1fr))',
                       gap: '$4',
+                      pb: '$6',
                     }}
                   >
-                    {tokens.map((token, i) => (
-                      <TokenCard
-                        key={i}
-                        token={token}
-                        mutate={mutate}
-                        rarityEnabled={rarityEnabledCollection}
-                        onMediaPlayed={(e) => {
-                          if (
-                            playingElement &&
-                            playingElement !== e.nativeEvent.target
-                          ) {
-                            playingElement.pause()
-                          }
-                          const element =
-                            (e.nativeEvent.target as HTMLAudioElement) ||
-                            (e.nativeEvent.target as HTMLVideoElement)
-                          if (element) {
-                            setPlayingElement(element)
-                          }
-                        }}
-                      />
-                    ))}
-                    <div ref={loadMoreRef}></div>
+                    {isFetchingInitialData
+                      ? Array(10)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))
+                      : tokens.map((token, i) => (
+                          <TokenCard
+                            key={i}
+                            token={token}
+                            mutate={mutate}
+                            rarityEnabled={rarityEnabledCollection}
+                            onMediaPlayed={(e) => {
+                              if (
+                                playingElement &&
+                                playingElement !== e.nativeEvent.target
+                              ) {
+                                playingElement.pause()
+                              }
+                              const element =
+                                (e.nativeEvent.target as HTMLAudioElement) ||
+                                (e.nativeEvent.target as HTMLVideoElement)
+                              if (element) {
+                                setPlayingElement(element)
+                              }
+                            }}
+                          />
+                        ))}
+                    <Box ref={loadMoreRef}>
+                      {hasNextPage && !isFetchingInitialData && <LoadingCard />}
+                    </Box>
+                    {hasNextPage && (
+                      <>
+                        {Array(10)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))}
+                      </>
+                    )}
                   </Grid>
+                  {tokens.length == 0 && (
+                    <Flex
+                      direction="column"
+                      align="center"
+                      css={{ py: '$6', gap: '$4' }}
+                    >
+                      <img src="/magnifying-glass.svg" width={40} height={40} />
+                      <Text>No items found</Text>
+                    </Flex>
+                  )}
                 </Box>
               </Flex>
             </TabsContent>
@@ -270,12 +302,19 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                   position: 'relative',
                 }}
               >
-                <ActivityFilters
-                  open={activityFiltersOpen}
-                  setOpen={setActivityFiltersOpen}
-                  activityTypes={activityTypes}
-                  setActivityTypes={setActivityTypes}
-                />
+                {isSmallDevice ? (
+                  <MobileActivityFilters
+                    activityTypes={activityTypes}
+                    setActivityTypes={setActivityTypes}
+                  />
+                ) : (
+                  <ActivityFilters
+                    open={activityFiltersOpen}
+                    setOpen={setActivityFiltersOpen}
+                    activityTypes={activityTypes}
+                    setActivityTypes={setActivityTypes}
+                  />
+                )}
                 <Box
                   css={{
                     flex: 1,
@@ -283,12 +322,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                     pb: '$5',
                   }}
                 >
-                  {isSmallDevice ? (
-                    <MobileActivityFilters
-                      activityTypes={activityTypes}
-                      setActivityTypes={setActivityTypes}
-                    />
-                  ) : (
+                  {!isSmallDevice && (
                     <FilterButton
                       open={activityFiltersOpen}
                       setOpen={setActivityFiltersOpen}
@@ -321,6 +355,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+    attributes: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
   id: string | undefined
 }> = async ({ params }) => {
@@ -346,8 +381,15 @@ export const getStaticProps: GetStaticProps<{
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
+  const attributesResponse = await fetcher(
+    `collections/${id}/attributes/all/v2`,
+    {}
+  )
+
+  const attributes: Props['ssr']['attributes'] = attributesResponse['data']
+
   return {
-    props: { ssr: { collection, tokens }, id },
+    props: { ssr: { collection, tokens, attributes }, id },
     revalidate: 20,
   }
 }

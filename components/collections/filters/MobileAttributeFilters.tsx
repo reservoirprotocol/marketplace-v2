@@ -93,6 +93,10 @@ export const MobileAttributeFilters: FC<Props> = ({
     </Flex>
   )
 
+  if ((attributes && attributes?.length === 0) || attributes === null) {
+    return null
+  }
+
   return (
     <FullscreenModal trigger={trigger}>
       {' '}

@@ -13,14 +13,17 @@ import {
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons'
 
-type ActivityTypes = NonNullable<
+type ActivityTypes = Exclude<
   NonNullable<
-    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-  >['types']
+    NonNullable<
+      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+    >['types']
+  >,
+  string
 >
 
 type Filters = {
-  type: ActivityTypes[0]
+  type: ArrayItemTypes<ActivityTypes>
   name: string
   icon: IconDefinition
 }[]
