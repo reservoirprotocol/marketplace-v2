@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
@@ -12,17 +12,26 @@ import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import fetcher from 'utils/fetcher'
 
-const IndexPage: NextPage = () => {
+type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('allTimeVolume')
   const { data, hasNextPage, fetchNextPage, isFetchingPage } =
-    usePaginatedCollections({
-      limit: 20,
-      sortBy: sortByTime,
-    })
+    usePaginatedCollections(
+      {
+        limit: 20,
+        sortBy: sortByTime,
+      },
+      {
+        fallbackData: [ssr.collections],
+      }
+    )
 
   let collections = data || []
   const showViewAllButton = collections.length <= 20 && hasNextPage
@@ -101,6 +110,24 @@ const IndexPage: NextPage = () => {
       </Box>
     </Layout>
   )
+}
+
+export const getStaticProps: GetStaticProps<{
+  ssr: {
+    collections: paths['/collections/v5']['get']['responses']['200']['schema']
+  }
+}> = async () => {
+  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+    {
+      sortBy: 'allTimeVolume',
+    }
+
+  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+
+  return {
+    props: { ssr: { collections: collectionsResponse.data } },
+    revalidate: 5,
+  }
 }
 
 export default IndexPage

@@ -367,7 +367,7 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('/collectins/v5', collectionQuery)
+  const collectionsResponse = await fetcher('/collections/v5', collectionQuery)
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
