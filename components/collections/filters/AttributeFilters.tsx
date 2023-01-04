@@ -19,6 +19,9 @@ export const AttributeFilters: FC<Props> = ({
   setOpen,
   scrollToTop,
 }) => {
+  if ((attributes && attributes?.length === 0) || attributes === null) {
+    return null
+  }
   return (
     <Collapsible.Root
       open={open}
