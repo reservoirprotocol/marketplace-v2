@@ -11,6 +11,7 @@ import TrendingCollectionsTimeToggle, {
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 
 const IndexPage: NextPage = () => {
   const isMounted = useMounted()
@@ -74,6 +75,11 @@ const IndexPage: NextPage = () => {
             />
           </Flex>
           <TrendingCollectionsList collections={collections} />
+          {isFetchingPage && (
+            <Flex align="center" justify="center" css={{ py: '$4' }}>
+              <LoadingSpinner />
+            </Flex>
+          )}
           {showViewAllButton && (
             <Button
               onClick={() => {

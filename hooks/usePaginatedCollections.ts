@@ -1,5 +1,5 @@
 import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
-import { paths, setParams } from '@reservoir0x/reservoir-kit-client'
+import { paths, setParams } from '@reservoir0x/reservoir-sdk'
 import useSWRInfinite, { SWRInfiniteConfiguration } from 'swr/infinite'
 
 type CollectionResponse =
