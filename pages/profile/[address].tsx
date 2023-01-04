@@ -34,6 +34,7 @@ import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -64,6 +65,11 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  const scrollToTop = () => {
+    let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
+    window.scrollTo({ top: top })
+  }
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
@@ -175,6 +181,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                   collections={collections}
                   filterCollection={filterCollection}
                   setFilterCollection={setFilterCollection}
+                  scrollToTop={scrollToTop}
                 />
               )}
               <Box
