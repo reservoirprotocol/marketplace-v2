@@ -10,6 +10,7 @@ import Layout from 'components/Layout'
 import fetcher from 'utils/fetcher'
 import { useEnsAvatar, useEnsName, Address } from 'wagmi'
 import { useCopyToClipboard, useIntersectionObserver } from 'usehooks-ts'
+import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
@@ -19,13 +20,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useCollectionActivity,
+  useTokens,
+  useUserTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
 import { useMounted } from '../../hooks'
+import { TokenFilters } from 'components/profile/TokenFilters'
+import { FilterButton } from 'components/common/FilterButton'
+import { UserAcivityTable } from 'components/profile/UserActivityTable'
+import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
+import { ActivityFilters } from 'components/common/ActivityFilters'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
+type ActivityTypes = NonNullable<
+  NonNullable<
+    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+  >['types']
+>
+
 const IndexPage: NextPage<Props> = ({ address, ssr }) => {
+  const [filterCollection, setFilterCollection] = useState<string | undefined>(
+    undefined
+  )
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const { data: ensAvatar } = useEnsAvatar(address as Address)
   const { data: ensName } = useEnsName(address as Address)
   const [value, copy] = useCopyToClipboard()
@@ -34,6 +56,9 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
     HTMLAudioElement | HTMLVideoElement | null
   >()
   const isMounted = useMounted()
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
@@ -43,6 +68,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
     normalizeRoyalties: true,
+    collection: filterCollection,
   }
 
   const {
@@ -59,6 +85,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
       fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
+
+  const collections = ssr.collections.collections
 
   if (!isMounted) {
     return null
@@ -122,50 +150,104 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
           <TabsContent value="items">
             <Flex
               css={{
+                gap: tokenFiltersOpen ? '$5' : '',
                 position: 'relative',
-                width: '100%',
               }}
+              ref={scrollRef}
             >
-              <Grid
+              <TokenFilters
+                open={tokenFiltersOpen}
+                setOpen={setTokenFiltersOpen}
+                collections={collections}
+                filterCollection={filterCollection}
+                setFilterCollection={setFilterCollection}
+              />
+              <Box
                 css={{
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: '$4',
-                  width: '100%',
+                  flex: 1,
                 }}
               >
-                {tokens.map((token, i) => (
-                  <TokenCard
-                    key={i}
-                    token={token as ReturnType<typeof useTokens>['data'][0]}
-                    mutate={mutate}
-                    rarityEnabled={false}
-                    onMediaPlayed={(e) => {
-                      if (
-                        playingElement &&
-                        playingElement !== e.nativeEvent.target
-                      ) {
-                        playingElement.pause()
-                      }
-                      const element =
-                        (e.nativeEvent.target as HTMLAudioElement) ||
-                        (e.nativeEvent.target as HTMLVideoElement)
-                      if (element) {
-                        setPlayingElement(element)
-                      }
-                    }}
-                  />
-                ))}
-                <div ref={loadMoreRef}></div>
-              </Grid>
+                <Flex justify="between" css={{ marginBottom: '$4' }}>
+                  {collections && collections.length > 0 && !isSmallDevice && (
+                    <FilterButton
+                      open={tokenFiltersOpen}
+                      setOpen={setTokenFiltersOpen}
+                    />
+                  )}
+                </Flex>
+                <Grid
+                  css={{
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '$4',
+                    width: '100%',
+                    pb: '$4',
+                  }}
+                >
+                  {tokens.map((token, i) => (
+                    <TokenCard
+                      key={i}
+                      token={token as ReturnType<typeof useTokens>['data'][0]}
+                      mutate={mutate}
+                      rarityEnabled={false}
+                      onMediaPlayed={(e) => {
+                        if (
+                          playingElement &&
+                          playingElement !== e.nativeEvent.target
+                        ) {
+                          playingElement.pause()
+                        }
+                        const element =
+                          (e.nativeEvent.target as HTMLAudioElement) ||
+                          (e.nativeEvent.target as HTMLVideoElement)
+                        if (element) {
+                          setPlayingElement(element)
+                        }
+                      }}
+                    />
+                  ))}
+                  <div ref={loadMoreRef}></div>
+                </Grid>
+              </Box>
             </Flex>
           </TabsContent>
           <TabsContent value="activity">
             <Flex
               css={{
+                gap: activityFiltersOpen ? '$5' : '',
                 position: 'relative',
               }}
             >
-              Activity
+              {!isSmallDevice && (
+                <ActivityFilters
+                  open={activityFiltersOpen}
+                  setOpen={setActivityFiltersOpen}
+                  activityTypes={activityTypes}
+                  setActivityTypes={setActivityTypes}
+                />
+              )}
+              <Box
+                css={{
+                  flex: 1,
+                  gap: '$4',
+                  pb: '$5',
+                }}
+              >
+                {isSmallDevice ? (
+                  <MobileActivityFilters
+                    activityTypes={activityTypes}
+                    setActivityTypes={setActivityTypes}
+                  />
+                ) : (
+                  <FilterButton
+                    open={activityFiltersOpen}
+                    setOpen={setActivityFiltersOpen}
+                  />
+                )}
+                <UserAcivityTable
+                  user={address}
+                  activityTypes={activityTypes}
+                />
+              </Box>
             </Flex>
           </TabsContent>
         </Tabs.Root>
@@ -184,6 +266,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<{
   ssr: {
     tokens: paths['/users/{user}/tokens/v6']['get']['responses']['200']['schema']
+    collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
   }
   address: string | undefined
 }> = async ({ params }) => {
@@ -202,8 +285,20 @@ export const getStaticProps: GetStaticProps<{
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
+  let collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
+    {
+      limit: 100,
+    }
+
+  const collectionsResponse = await fetcher(
+    `users/${address}/collections/v2`,
+    collectionsQuery
+  )
+
+  const collections: Props['ssr']['collections'] = collectionsResponse['data']
+
   return {
-    props: { ssr: { tokens }, address },
+    props: { ssr: { tokens, collections }, address },
     revalidate: 20,
   }
 }

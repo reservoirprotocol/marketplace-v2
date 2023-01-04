@@ -72,8 +72,8 @@ export const ActivityFilters: FC<Props> = ({
       key="hi"
       onOpenChange={setOpen}
       style={{
-        transition: 'min-width .5s',
-        minWidth: open ? 320 : 0,
+        transition: 'width .5s',
+        width: open ? 320 : 0,
       }}
     >
       <CollapsibleContent
@@ -93,7 +93,7 @@ export const ActivityFilters: FC<Props> = ({
             },
           }}
         >
-          <Text style="subtitle1" css={{ mb: '$4' }}>
+          <Text style="subtitle1" css={{ mb: '$4', whiteSpace: 'nowrap' }}>
             Event Type
           </Text>
           {filters.map((filter) => (
