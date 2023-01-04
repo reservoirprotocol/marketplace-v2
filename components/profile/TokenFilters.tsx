@@ -21,85 +21,88 @@ export const TokenFilters: FC<Props> = ({
   filterCollection,
   setFilterCollection,
 }) => {
-  return (
-    <Collapsible.Root
-      open={open}
-      key="Token Filter"
-      onOpenChange={setOpen}
-      style={{
-        transition: 'width .5s',
-        width: open ? 350 : 0,
-      }}
-    >
-      <CollapsibleContent
-        css={{
-          position: 'sticky',
-          top: 16 + 80,
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
-          overflow: 'auto',
+  if (collections?.length === 0 || collections == null) {
+    return null
+  } else
+    return (
+      <Collapsible.Root
+        open={open}
+        key="Token Filter"
+        onOpenChange={setOpen}
+        style={{
+          transition: 'width .5s',
+          width: open ? 350 : 0,
         }}
       >
-        <Flex
-          direction="column"
+        <CollapsibleContent
           css={{
-            p: '$2',
-            pt: '$4',
-            overflowY: 'scroll',
+            position: 'sticky',
+            top: 16 + 80,
+            height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
+            overflow: 'auto',
           }}
         >
-          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
-            Collections
-          </Text>
-          {collections?.map((collection) => {
-            let selected = collection?.collection?.id == filterCollection
-            return (
-              <Flex
-                key={collection?.collection?.id}
-                css={{
-                  py: '$2',
-                  px: '$3',
-                  gap: '$3',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: selected ? '$gray5' : '$gray4',
-                  },
-                  backgroundColor: selected ? '$gray5' : '',
-                }}
-                align="center"
-                onClick={() => {
-                  if (selected) {
-                    setFilterCollection(undefined)
-                  } else {
-                    setFilterCollection(collection?.collection?.id)
-                  }
-                }}
-              >
-                <Image
-                  style={{ borderRadius: '4px', objectFit: 'cover' }}
-                  loader={({ src }) => src}
-                  src={collection?.collection?.image as string}
-                  alt={collection?.collection?.name as string}
-                  width={24}
-                  height={24}
-                />
-                <Text
-                  style="body1"
+          <Flex
+            direction="column"
+            css={{
+              p: '$2',
+              pt: '$4',
+              overflowY: 'scroll',
+            }}
+          >
+            <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
+              Collections
+            </Text>
+            {collections?.map((collection) => {
+              let selected = collection?.collection?.id == filterCollection
+              return (
+                <Flex
+                  key={collection?.collection?.id}
                   css={{
-                    flex: 1,
+                    py: '$2',
+                    px: '$3',
+                    gap: '$3',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: selected ? '$gray5' : '$gray4',
+                    },
+                    backgroundColor: selected ? '$gray5' : '',
                   }}
-                  ellipsify
+                  align="center"
+                  onClick={() => {
+                    if (selected) {
+                      setFilterCollection(undefined)
+                    } else {
+                      setFilterCollection(collection?.collection?.id)
+                    }
+                  }}
                 >
-                  {collection?.collection?.name}
-                </Text>
-                <Text style="subtitle2" css={{ color: '$gray10' }}>
-                  {collection?.ownership?.tokenCount}
-                </Text>
-              </Flex>
-            )
-          })}
-        </Flex>
-      </CollapsibleContent>
-    </Collapsible.Root>
-  )
+                  <Image
+                    style={{ borderRadius: '4px', objectFit: 'cover' }}
+                    loader={({ src }) => src}
+                    src={collection?.collection?.image as string}
+                    alt={collection?.collection?.name as string}
+                    width={24}
+                    height={24}
+                  />
+                  <Text
+                    style="body1"
+                    css={{
+                      flex: 1,
+                    }}
+                    ellipsify
+                  >
+                    {collection?.collection?.name}
+                  </Text>
+                  <Text style="subtitle2" css={{ color: '$gray10' }}>
+                    {collection?.ownership?.tokenCount}
+                  </Text>
+                </Flex>
+              )
+            })}
+          </Flex>
+        </CollapsibleContent>
+      </Collapsible.Root>
+    )
 }

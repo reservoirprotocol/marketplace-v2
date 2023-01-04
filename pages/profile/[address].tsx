@@ -33,6 +33,7 @@ import { UserAcivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
+import LoadingCard from 'components/common/LoadingCard'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -79,6 +80,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
     data: tokens,
     mutate,
     fetchNextPage,
+    isFetchingInitialData,
+    hasNextPage,
   } = useUserTokens(address || '', tokenQuery, {
     fallback: ssr.tokens,
   })
@@ -192,32 +195,51 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                     gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
                     gap: '$4',
                     width: '100%',
-                    pb: '$4',
+                    pb: '$6',
                   }}
                 >
-                  {tokens.map((token, i) => (
-                    <TokenCard
-                      key={i}
-                      token={token as ReturnType<typeof useTokens>['data'][0]}
-                      mutate={mutate}
-                      rarityEnabled={false}
-                      onMediaPlayed={(e) => {
-                        if (
-                          playingElement &&
-                          playingElement !== e.nativeEvent.target
-                        ) {
-                          playingElement.pause()
-                        }
-                        const element =
-                          (e.nativeEvent.target as HTMLAudioElement) ||
-                          (e.nativeEvent.target as HTMLVideoElement)
-                        if (element) {
-                          setPlayingElement(element)
-                        }
-                      }}
-                    />
-                  ))}
-                  <div ref={loadMoreRef}></div>
+                  {isFetchingInitialData
+                    ? Array(10)
+                        .fill(null)
+                        .map((_, index) => (
+                          <LoadingCard key={`loading-card-${index}`} />
+                        ))
+                    : tokens.map((token, i) => (
+                        <TokenCard
+                          key={i}
+                          token={
+                            token as ReturnType<typeof useTokens>['data'][0]
+                          }
+                          mutate={mutate}
+                          rarityEnabled={false}
+                          onMediaPlayed={(e) => {
+                            if (
+                              playingElement &&
+                              playingElement !== e.nativeEvent.target
+                            ) {
+                              playingElement.pause()
+                            }
+                            const element =
+                              (e.nativeEvent.target as HTMLAudioElement) ||
+                              (e.nativeEvent.target as HTMLVideoElement)
+                            if (element) {
+                              setPlayingElement(element)
+                            }
+                          }}
+                        />
+                      ))}
+                  <Box ref={loadMoreRef}>
+                    {hasNextPage && !isFetchingInitialData && <LoadingCard />}
+                  </Box>
+                  {hasNextPage && (
+                    <>
+                      {Array(10)
+                        .fill(null)
+                        .map((_, index) => (
+                          <LoadingCard key={`loading-card-${index}`} />
+                        ))}
+                    </>
+                  )}
                 </Grid>
               </Box>
             </Flex>

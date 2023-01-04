@@ -34,7 +34,7 @@ import { CollectionAcivityTable } from 'components/collections/CollectionActivit
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import LoadingCard from 'components/collections/LoadingCard'
+import LoadingCard from 'components/common/LoadingCard'
 
 type ActivityTypes = Exclude<
   NonNullable<
