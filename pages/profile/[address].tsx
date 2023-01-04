@@ -48,11 +48,11 @@ type ActivityTypes = Exclude<
 >
 
 const IndexPage: NextPage<Props> = ({ address, ssr }) => {
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
-  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
-  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const { data: ensAvatar } = useEnsAvatar(address as Address)
   const { data: ensName } = useEnsName(address as Address)
