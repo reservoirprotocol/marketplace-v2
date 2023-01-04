@@ -35,6 +35,7 @@ import { ActivityFilters } from 'components/collections/filters/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/collections/filters/MobileActivityFilters'
 import LoadingCard from 'components/collections/LoadingCard'
+import { useMounted } from 'hooks'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -52,7 +53,8 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
-  const isSmallDevice = useMediaQuery({ maxWidth: 905 })
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
