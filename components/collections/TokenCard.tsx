@@ -76,6 +76,7 @@ export default ({
               maxHeight: 720,
               height: '100%',
               borderRadius: 0,
+              aspectRatio: '1/1',
             }}
             preview={showPreview}
             audioOptions={{
