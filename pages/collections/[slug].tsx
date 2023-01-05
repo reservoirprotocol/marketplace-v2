@@ -18,7 +18,7 @@ import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { AttributeFilters } from 'components/collections/filters/AttributeFilters'
-import { FilterButton } from 'components/collections/filters/FilterButton'
+import { FilterButton } from 'components/common/FilterButton'
 import SelectedAttributes from 'components/collections/filters/SelectedAttributes'
 import { CollectionOffer } from 'components/buttons'
 import { Grid } from 'components/primitives/Grid'
@@ -31,10 +31,11 @@ import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
-import { ActivityFilters } from 'components/collections/filters/ActivityFilters'
+import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
-import { MobileActivityFilters } from 'components/collections/filters/MobileActivityFilters'
-import LoadingCard from 'components/collections/LoadingCard'
+import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
+import LoadingCard from 'components/common/LoadingCard'
+import { useMounted } from 'hooks'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -52,7 +53,8 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
-  const isSmallDevice = useMediaQuery({ maxWidth: 905 })
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -74,7 +76,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
       includeTopBid: true,
     },
     {
-      fallback: ssr.collection,
+      fallbackData: ssr.collection,
     }
   )
 
@@ -112,7 +114,7 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
     isFetchingInitialData,
     hasNextPage,
   } = useTokens(tokenQuery, {
-    fallback: ssr.tokens,
+    fallbackData: [ssr.tokens],
   })
 
   const attributes = ssr?.attributes.attributes
@@ -367,17 +369,17 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('/collectins/v5', collectionQuery)
+  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     collection: id,
     sortBy: 'floorAskPrice',
-    includeTopBid: false,
+    sortDirection: 'asc',
     limit: 20,
   }
 
-  const tokensResponse = await fetcher('/tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 

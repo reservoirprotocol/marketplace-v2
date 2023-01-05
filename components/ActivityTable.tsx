@@ -202,23 +202,18 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 </Text>
 
                 {activity.txHash && (
-                  <Link
+                  <Anchor
+                    color="primary"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
-                    passHref
-                    legacyBehavior={true}
                   >
-                    <Anchor
-                      color="primary"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <FontAwesomeIcon
-                        icon={faExternalLink}
-                        width={12}
-                        height={15}
-                      />
-                    </Anchor>
-                  </Link>
+                    <FontAwesomeIcon
+                      icon={faExternalLink}
+                      width={12}
+                      height={15}
+                    />
+                  </Anchor>
                 )}
               </Flex>
             </Flex>
@@ -267,13 +262,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               {activity.fromAddress &&
               activity.fromAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.fromAddress}`}>
-                  <Anchor
-                    color="primary"
-                    weight="medium"
-                    css={{ fontSize: 12 }}
+                  <Text
+                    style="subtitle3"
+                    css={{
+                      color: '$primary11',
+                      '&:hover': {
+                        color: '$primary10',
+                      },
+                    }}
                   >
                     {fromShortAddress}
-                  </Anchor>
+                  </Text>
                 </Link>
               ) : (
                 <span>-</span>
@@ -287,13 +286,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               {activity.toAddress &&
               activity.toAddress !== constants.AddressZero ? (
                 <Link href={`/address/${activity.toAddress}`}>
-                  <Anchor
-                    color="primary"
-                    weight="medium"
-                    css={{ fontSize: 12 }}
+                  <Text
+                    style="subtitle3"
+                    css={{
+                      color: '$primary11',
+                      '&:hover': {
+                        color: '$primary10',
+                      },
+                    }}
                   >
                     {toShortAddress}
-                  </Anchor>
+                  </Text>
                 </Link>
               ) : (
                 <span>-</span>
@@ -375,9 +378,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               From
             </Text>
             <Link href={`/address/${activity.fromAddress}`}>
-              <Anchor color="primary" weight="medium" css={{ fontSize: 12 }}>
+              <Text
+                style="subtitle3"
+                css={{
+                  color: '$primary11',
+                  '&:hover': {
+                    color: '$primary10',
+                  },
+                }}
+              >
                 {fromShortAddress}
-              </Anchor>
+              </Text>
             </Link>
           </Flex>
         ) : (
@@ -391,9 +402,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               To
             </Text>
             <Link href={`/address/${activity.fromAddress}`}>
-              <Anchor color="primary" weight="medium" css={{ fontSize: 12 }}>
+              <Text
+                style="subtitle3"
+                css={{
+                  color: '$primary11',
+                  '&:hover': {
+                    color: '$primary10',
+                  },
+                }}
+              >
                 {toShortAddress}
-              </Anchor>
+              </Text>
             </Link>
           </Flex>
         ) : (
