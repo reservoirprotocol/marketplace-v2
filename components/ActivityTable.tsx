@@ -4,7 +4,14 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { Text, Flex, FormatCryptoCurrency, Box, Anchor } from './primitives'
+import {
+  Text,
+  Flex,
+  FormatCryptoCurrency,
+  Anchor,
+  TableCell,
+  TableRow,
+} from './primitives'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -24,7 +31,6 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './common/LoadingSpinner'
-import { TableCell, TableRow } from './primitives/Table'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
