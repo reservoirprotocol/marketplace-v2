@@ -7,7 +7,7 @@ import {
 import { Text, Flex, Box, Grid } from '../../components/primitives'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
-import fetcher from 'utils/fetcher'
+import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useCopyToClipboard, useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useRef, useState } from 'react'
@@ -321,31 +321,50 @@ export const getStaticProps: GetStaticProps<{
   }
   address: string | undefined
 }> = async ({ params }) => {
-  const address = params?.address?.toString()
+  const promises: ReturnType<typeof fetcher>[] = []
+  let address = params?.address?.toString() || ''
+  const isEnsName = address.includes('.')
+
+  if (isEnsName) {
+    const ensResponse = await basicFetcher(
+      `https://api.ensideas.com/ens/resolve/${address}`
+    )
+    const ensAddress = ensResponse?.data?.address
+    if (ensAddress) {
+      address = ensAddress
+    } else {
+      return {
+        notFound: true,
+      }
+    }
+  }
 
   let tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
     }
 
-  const tokensResponse = await fetcher(
-    `users/${address}/tokens/v6`,
-    tokensQuery
-  )
+  const tokensPromise = fetcher(`users/${address}/tokens/v6`, tokensQuery)
 
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
+  promises.push(tokensPromise)
 
   let collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
     {
       limit: 100,
     }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `users/${address}/collections/v2`,
     collectionsQuery
   )
+  promises.push(collectionsPromise)
 
-  const collections: Props['ssr']['collections'] = collectionsResponse['data']
+  const responses = await Promise.allSettled(promises)
+
+  const tokens: Props['ssr']['tokens'] =
+    responses[0]?.status === 'fulfilled' ? responses[0].value.data : undefined
+  const collections: Props['ssr']['collections'] =
+    responses[1]?.status === 'fulfilled' ? responses[1].value.data : undefined
 
   return {
     props: { ssr: { tokens, collections }, address },
