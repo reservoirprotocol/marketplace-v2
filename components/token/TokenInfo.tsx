@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '../../stitches.config'
 import { useTheme } from 'next-themes'
-import { useEnvChain } from 'hooks'
+import { useEnvChain, useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'
 
@@ -24,6 +24,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
   const descriptionRef = useRef<HTMLParagraphElement | null>(null)
+  const isMounted = useMounted()
 
   const CollectionAction = styled(Flex, {
     px: '$4',
@@ -42,7 +43,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const etherscanImage = (
     <img
       src={
-        theme === 'dark'
+        isMounted && theme === 'dark'
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }

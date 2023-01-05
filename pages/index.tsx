@@ -1,66 +1,133 @@
-import { NextPage } from 'next'
-import Box from '../components/primitives/Box'
-import Flex from '../components/primitives/Flex'
-import Text from '../components/primitives/Text'
-import Button from 'components/primitives/Button'
+import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { useAccount } from 'wagmi'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { useState } from 'react'
+import usePaginatedCollections from 'hooks/usePaginatedCollections'
+import useInfiniteScroll from 'react-infinite-scroll-hook'
+import TrendingCollectionsTimeToggle, {
+  CollectionsSortingOption,
+} from 'components/home/TrendingCollectionsTimeToggle'
+import { Footer } from 'components/home/Footer'
+import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
+import LoadingSpinner from 'components/common/LoadingSpinner'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import fetcher from 'utils/fetcher'
 
-const IndexPage: NextPage = () => {
-  const { isConnected } = useAccount()
-  const mounted = useMounted()
+type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+const IndexPage: NextPage<Props> = ({ ssr }) => {
+  const isMounted = useMounted()
+  const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
+  const [sortByTime, setSortByTime] =
+    useState<CollectionsSortingOption>('allTimeVolume')
+  const { data, hasNextPage, fetchNextPage, isFetchingPage } =
+    usePaginatedCollections(
+      {
+        limit: 20,
+        sortBy: sortByTime,
+      },
+      {
+        fallbackData: [ssr.collections],
+      }
+    )
+
+  let collections = data || []
+  const showViewAllButton = collections.length <= 20 && hasNextPage
+  if (showViewAllButton) {
+    collections = collections?.slice(0, 12)
+  }
+
+  const [sentryRef] = useInfiniteScroll({
+    rootMargin: '0px 0px 100px 0px',
+    loading: isFetchingPage,
+    hasNextPage: hasNextPage && !showViewAllButton,
+    onLoadMore: () => {
+      fetchNextPage()
+    },
+  } as any)
 
   return (
     <Layout>
-      <Box css={{ padding: '$6', height: '100%' }}>
-        {mounted && isConnected && (
-          <Flex css={{ textAlign: 'center' }} align="center" direction="column">
-            <Text style="h2" css={{ mb: '$4', mt: '$4', fontSize: 42 }} as="h2">
-              Discover, Buy, and Sell NFTs
+      <Box
+        css={{
+          p: 24,
+          height: '100%',
+          '@bp800': {
+            p: '$6',
+          },
+        }}
+      >
+        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+          <Flex
+            justify="between"
+            align="start"
+            css={{
+              flexDirection: 'column',
+              gap: 24,
+              '@bp800': {
+                alignItems: 'center',
+                flexDirection: 'row',
+              },
+            }}
+          >
+            <Text style="h4" as="h4">
+              Popular Collections
             </Text>
+            <TrendingCollectionsTimeToggle
+              compact={compactToggleNames && isMounted}
+              option={sortByTime}
+              onOptionSelected={(option) => {
+                setSortByTime(option)
+              }}
+            />
           </Flex>
-        )}
-        {mounted && !isConnected && (
-          <Flex css={{ textAlign: 'center' }} align="center" direction="column">
-            <Text style="h2" css={{ mb: '$4', mt: '$6', fontSize: 58 }} as="h2">
-              Discover, Buy, and Sell NFTs
-            </Text>
-
-            <Text
-              style="body1"
-              css={{ mb: '$5', color: '$gray11', fontSize: 22, maxWidth: 520 }}
-              as="h2"
-            >
-              The first royalty compliant aggregator supporting the new nft
-              ecosystem
-            </Text>
-            <Flex css={{ gap: '$4', pt: '$4', pb: '$5' }} justify="center">
-              <ConnectWalletButton />
-              <a href="https://docs.reservoir.tools/docs" target="_blank">
-                <Button
-                  css={{ background: '$gray4' }}
-                  corners="pill"
-                  color="secondary"
-                  size="large"
-                >
-                  Open API Docs
-                </Button>
-              </a>
+          <TrendingCollectionsList collections={collections} />
+          {isFetchingPage && (
+            <Flex align="center" justify="center" css={{ py: '$4' }}>
+              <LoadingSpinner />
             </Flex>
-          </Flex>
-        )}
-        <Box css={{ my: '$6' }}>
-          <Text style="h4" as="h4" css={{ mb: '$5' }}>
-            Trending Collections
-          </Text>
-          <TrendingCollectionsList />
-        </Box>
+          )}
+          {showViewAllButton && (
+            <Button
+              onClick={() => {
+                fetchNextPage()
+              }}
+              css={{
+                minWidth: 224,
+                justifyContent: 'center',
+                alignSelf: 'center',
+              }}
+              size="large"
+            >
+              View All
+            </Button>
+          )}
+          {!showViewAllButton && <div ref={sentryRef}></div>}
+        </Flex>
+        <Footer />
       </Box>
     </Layout>
   )
+}
+
+export const getStaticProps: GetStaticProps<{
+  ssr: {
+    collections: paths['/collections/v5']['get']['responses']['200']['schema']
+  }
+}> = async () => {
+  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+    {
+      sortBy: 'allTimeVolume',
+    }
+
+  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+
+  return {
+    props: { ssr: { collections: collectionsResponse.data } },
+    revalidate: 5,
+  }
 }
 
 export default IndexPage
