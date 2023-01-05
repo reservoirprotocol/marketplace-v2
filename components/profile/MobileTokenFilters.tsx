@@ -55,6 +55,8 @@ export const MobileTokenFilters: FC<Props> = ({
         css={{
           flexDirection: 'column',
           height: '100%',
+          pb: '$5',
+          overflow: 'scroll',
         }}
       >
         <Flex

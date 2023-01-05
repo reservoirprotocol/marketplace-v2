@@ -1,10 +1,15 @@
-// your-tooltip.jsx
-import React from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import * as Popover from '@radix-ui/react-popover'
 import Box from './Box'
 import { styled } from 'stitches.config'
+import { useMediaQuery } from 'react-responsive'
+import { useMounted } from 'hooks'
 
-const Arrow = styled(TooltipPrimitive.Arrow, {
+const TooltipArrow = styled(TooltipPrimitive.Arrow, {
+  fill: '$gray5',
+})
+
+const PopoverArrow = styled(Popover.Arrow, {
   fill: '$gray5',
 })
 
@@ -16,6 +21,47 @@ const Tooltip = ({
   onOpenChange,
   ...props
 }: any) => {
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
+
+  if (isSmallDevice) {
+    return (
+      <Popover.Root
+        open={open}
+        defaultOpen={defaultOpen}
+        onOpenChange={onOpenChange}
+      >
+        <Popover.Trigger asChild>{children}</Popover.Trigger>
+        <Popover.Content
+          sideOffset={12}
+          side="bottom"
+          align="center"
+          style={{ zIndex: 100, outline: 'none' }}
+          {...props}
+        >
+          <PopoverArrow />
+          <Box
+            css={{
+              zIndex: 9999,
+              $$shadowColor: '$colors$gray12',
+              boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
+              borderRadius: 8,
+              overflow: 'hidden',
+            }}
+          >
+            <Box
+              css={{
+                background: '$gray5',
+                p: '$4',
+              }}
+            >
+              {content}
+            </Box>
+          </Box>
+        </Popover.Content>
+      </Popover.Root>
+    )
+  }
   return (
     <TooltipPrimitive.Root
       open={open}
@@ -31,7 +77,7 @@ const Tooltip = ({
         style={{ zIndex: 100 }}
         {...props}
       >
-        <Arrow />
+        <TooltipArrow />
         <Box
           css={{
             zIndex: 9999,
