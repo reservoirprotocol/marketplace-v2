@@ -270,7 +270,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   diameter={16}
                   seed={jsNumberForAddress(owner || '')}
                 />
-                <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
+                <Link href={`/profile/${owner}`} legacyBehavior={true}>
                   <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                     {ownerFormatted}
                   </Anchor>
