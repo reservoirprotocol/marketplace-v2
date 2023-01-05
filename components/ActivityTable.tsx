@@ -4,17 +4,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import {
-  Text,
-  Table,
-  TableBody,
-  TableData,
-  TableRow,
-  Flex,
-  FormatCryptoCurrency,
-  Box,
-  Anchor,
-} from './primitives'
+import { Text, Flex, FormatCryptoCurrency, Box, Anchor } from './primitives'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -34,6 +24,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './common/LoadingSpinner'
+import { TableCell, TableRow } from './primitives/Table'
 
 const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
@@ -81,21 +72,19 @@ export const ActivityTable: FC<Props> = ({ data }) => {
           <Text>No activity yet</Text>
         </Flex>
       ) : (
-        <Table css={{ width: '100%' }}>
-          <TableBody>
-            {activities.map((activity, i) => {
-              if (!activity) return null
+        <Flex direction="column" css={{ width: '100%' }}>
+          {activities.map((activity, i) => {
+            if (!activity) return null
 
-              return (
-                <ActivityTableRow
-                  key={`${activity?.txHash}-${i}`}
-                  activity={activity}
-                />
-              )
-            })}
-            <div ref={loadMoreRef}></div>
-          </TableBody>
-        </Table>
+            return (
+              <ActivityTableRow
+                key={`${activity?.txHash}-${i}`}
+                activity={activity}
+              />
+            )
+          })}
+          <div ref={loadMoreRef}></div>
+        </Flex>
       )}
       {data.isValidating && (
         <Flex align="center" justify="center" css={{ py: '$6' }}>
@@ -183,8 +172,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
   if (isSmallDevice) {
     return (
-      <TableRow key={activity.txHash}>
-        <TableData css={{ pr: '0' }}>
+      <TableRow key={activity.txHash} css={{ gridTemplateColumns: '1fr' }}>
+        <TableCell css={{ pr: '0' }}>
           <Flex direction="column" css={{ gap: '$3' }}>
             <Flex css={{ color: '$gray11' }} align="center" justify="between">
               <Flex align="center">
@@ -311,43 +300,45 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               )}
             </Flex>
           </Flex>
-        </TableData>
+        </TableCell>
       </TableRow>
     )
   }
 
   return (
-    <TableRow key={activity.txHash} css={{ height: '40px' }}>
-      <TableData css={{ color: '$gray11' }}>
+    <TableRow key={activity.txHash} css={{}}>
+      <TableCell css={{ color: '$gray11' }}>
         <Flex align="center">
           {activity.type && logos[activity.type]}
           <Text
             style="subtitle1"
-            css={{ ml: '$2', color: '$gray11', fontSize: '14px', width: 80 }}
+            css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
           >
             {activityDescription}
           </Text>
-
-          <Link href={href} passHref>
-            <Flex align="center" css={{ ml: '$5' }}>
-              <Image
-                style={{ borderRadius: '4px', objectFit: 'cover' }}
-                loader={({ src }) => src}
-                src={imageSrc}
-                alt={`${activity.token?.tokenName} Token Image`}
-                width={48}
-                height={48}
-              />
-              <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
-                {activity.token?.tokenName ||
-                  activity.token?.tokenId ||
-                  activity.collection?.collectionName}
-              </Text>
-            </Flex>
-          </Link>
         </Flex>
-      </TableData>
-      <TableData>
+      </TableCell>
+
+      <TableCell>
+        <Link href={href} passHref>
+          <Flex align="center">
+            <Image
+              style={{ borderRadius: '4px', objectFit: 'cover' }}
+              loader={({ src }) => src}
+              src={imageSrc}
+              alt={`${activity.token?.tokenName} Token Image`}
+              width={48}
+              height={48}
+            />
+            <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
+              {activity.token?.tokenName ||
+                activity.token?.tokenId ||
+                activity.collection?.collectionName}
+            </Text>
+          </Flex>
+        </Link>
+      </TableCell>
+      <TableCell>
         {activity.price &&
         activity.price !== 0 &&
         activity.type &&
@@ -363,8 +354,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         ) : (
           <span>-</span>
         )}
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         {activity.amount ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" css={{ color: '$gray11' }}>
@@ -375,8 +366,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         ) : (
           <span>-</span>
         )}
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         {activity.fromAddress &&
         activity.fromAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
@@ -392,8 +383,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         ) : (
           <span>-</span>
         )}
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" css={{ color: '$gray11' }}>
@@ -408,8 +399,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         ) : (
           <span>-</span>
         )}
-      </TableData>
-      <TableData>
+      </TableCell>
+      <TableCell>
         <Flex align="center" justify="end" css={{ gap: '$3' }}>
           {!!activity.order?.source?.icon && (
             <img
@@ -434,7 +425,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             </Anchor>
           )}
         </Flex>
-      </TableData>
+      </TableCell>
     </TableRow>
   )
 }
