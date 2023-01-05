@@ -11,7 +11,10 @@ type Props = {
 
 export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
   return (
-    <Link href={`/collections/${collection.id}`}>
+    <Link
+      href={`/collections/${collection.id}`}
+      style={{ display: 'inline-block' }}
+    >
       <Flex align="center" css={{ cursor: 'pointer' }}>
         <Text css={{ mr: '$4' }} style="subtitle3">
           {rank}
@@ -20,12 +23,20 @@ export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
           src={collection?.image}
           style={{ borderRadius: 8, width: 56, height: 56, objectFit: 'cover' }}
         />
-        <Box css={{ ml: '$4', flex: 1, minWidth: 0 }}>
-          <Text css={{ mb: 4, maxWidth: '80%' }} style="h6" as="p" ellipsify>
+        <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
+          <Text
+            css={{
+              mb: 4,
+              maxWidth: '80%',
+              display: 'inline-block',
+            }}
+            style="h6"
+            ellipsify
+          >
             {collection?.name}
           </Text>
           <Flex>
-            <Text css={{ mr: '$1', color: '$gray11' }} as="p" style="body2">
+            <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
               Floor
             </Text>
             <FormatCryptoCurrency
@@ -36,7 +47,7 @@ export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
           </Flex>
         </Box>
 
-        <Flex css={{ ml: '$4' }} direction="column" align="end">
+        <Flex direction="column" align="end">
           <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
             {formatNumber(collection?.volumeChange?.['7day'])}%
           </Text>
