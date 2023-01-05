@@ -68,7 +68,7 @@ export const ProfileDropdown: FC = () => {
           </Box>
         </Flex>
       </DropdownMenuItem>
-      <Link href="/profile">
+      <Link href={`/profile/${address}`}>
         <DropdownMenuItem>Profile</DropdownMenuItem>
       </Link>
       <DropdownMenuItem css={{ cursor: 'text' }}>
