@@ -59,7 +59,11 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
               }
             })
             .map((value) => (
-              <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+              <Flex
+                key={value.value}
+                css={{ mb: '$3', gap: '$3' }}
+                align="center"
+              >
                 <Text
                   style="body1"
                   css={{
