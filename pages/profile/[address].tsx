@@ -8,14 +8,12 @@ import { Text, Flex, Box, Grid } from '../../components/primitives'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import fetcher from 'utils/fetcher'
-import { useEnsAvatar, useEnsName, Address } from 'wagmi'
 import { useCopyToClipboard, useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { truncateAddress, truncateEns } from 'utils/truncate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
@@ -35,6 +33,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { useENSResolver } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -48,14 +47,17 @@ type ActivityTypes = Exclude<
 >
 
 const IndexPage: NextPage<Props> = ({ address, ssr }) => {
+  const {
+    avatar: ensAvatar,
+    name: ensName,
+    shortAddress,
+  } = useENSResolver(address)
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
-  const { data: ensAvatar } = useEnsAvatar(address as Address)
-  const { data: ensName } = useEnsName(address as Address)
   const [value, copy] = useCopyToClipboard()
   const { addToast } = useContext(ToastContext)
   const [playingElement, setPlayingElement] = useState<
@@ -127,11 +129,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
             />
           )}
           <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h4">
-              {ensName
-                ? truncateEns(ensName)
-                : truncateAddress(address as string)}
-            </Text>
+            <Text style="h4">{ensName ? ensName : shortAddress}</Text>
             <Flex
               align="center"
               css={{ cursor: 'pointer' }}
@@ -145,7 +143,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                 color="$gray11"
                 css={{ color: '$gray11', mr: '$3' }}
               >
-                {truncateAddress(address as string)}
+                {shortAddress}
               </Text>
               <Box css={{ color: '$gray10' }}>
                 <FontAwesomeIcon icon={faCopy} width={16} height={16} />

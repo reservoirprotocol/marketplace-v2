@@ -2,13 +2,7 @@ import { FC, useContext } from 'react'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
-import {
-  useAccount,
-  useBalance,
-  useDisconnect,
-  useEnsAvatar,
-  useEnsName,
-} from 'wagmi'
+import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import {
   Box,
   Button,
@@ -17,20 +11,24 @@ import {
   Text,
 } from 'components/primitives'
 import Link from 'next/link'
-import { truncateAddress, truncateEns } from 'utils/truncate'
 import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCopyToClipboard } from 'usehooks-ts'
 import { ToastContext } from 'context/ToastContextProvider'
+import { useENSResolver } from 'hooks'
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
   const { data: balance } = useBalance({ address })
-  const { data: ensAvatar } = useEnsAvatar({ address })
-  const { data: ensName } = useEnsName({ address })
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
   const { addToast } = useContext(ToastContext)
+  const {
+    name: ensName,
+    avatar: ensAvatar,
+    shortAddress,
+    shortName: shortEnsName,
+  } = useENSResolver(address)
 
   const trigger = (
     <Button
@@ -59,9 +57,7 @@ export const ProfileDropdown: FC = () => {
       >
         <Flex justify="between">
           <Text style="subtitle1" color="$gray11" css={{ color: '$gray11' }}>
-            {ensName
-              ? truncateEns(ensName)
-              : truncateAddress(address as string)}
+            {shortEnsName ? shortEnsName : shortAddress}
           </Text>
           <Box css={{ color: '$gray10' }}>
             <FontAwesomeIcon icon={faCopy} width={16} height={16} />
