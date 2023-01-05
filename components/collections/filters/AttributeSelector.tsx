@@ -36,7 +36,10 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
         </Text>
         <FontAwesomeIcon
           icon={faChevronDown}
-          style={{ transform: open ? 'rotate(180deg)' : '', transition: '.3s' }}
+          style={{
+            transform: open ? 'rotate(180deg)' : 'rotate(0)',
+            transition: '.3s',
+          }}
           width={16}
           height={16}
         />
@@ -59,7 +62,11 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
               }
             })
             .map((value) => (
-              <Flex css={{ mb: '$3', gap: '$3' }} align="center">
+              <Flex
+                key={value.value}
+                css={{ mb: '$3', gap: '$3' }}
+                align="center"
+              >
                 <Text
                   style="body1"
                   css={{

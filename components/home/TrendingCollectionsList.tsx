@@ -1,91 +1,31 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
-import { formatNumber } from '../../utils/numbers'
-import Link from 'next/link'
-import { useContext } from 'react'
-import { ToastContext } from '../../context/ToastContextProvider'
+import { Box } from '../primitives'
+import { FC } from 'react'
+import { TrendingCollectionItem } from './TrendingCollectionItem'
 
-type CollectionRowProps = {
-  rank: string | number
-  collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
+type Props = {
+  collections: ReturnType<typeof useCollections>['data']
 }
 
-const CollectionRow = ({ rank, collection }: CollectionRowProps) => {
-  return (
-    <Link href={`/collections/${collection.id}`}>
-      <Flex align="center" css={{ cursor: 'pointer' }}>
-        <Box css={{ width: 32, mr: '$4' }}>
-          <Text style="h5">{rank}</Text>
-        </Box>
-        <img
-          src={collection?.image}
-          style={{ borderRadius: 8, width: 60, height: 60, objectFit: 'cover' }}
-        />
-        <Box css={{ ml: '$4', flex: 1 }}>
-          <Text css={{ mb: 4 }} style="subtitle1" as="p">
-            {collection?.name}
-          </Text>
-          <Flex>
-            <Text css={{ mr: '$1', color: '$gray11' }} as="p" style="body2">
-              Floor
-            </Text>
-            <FormatCryptoCurrency
-              amount={collection?.floorAsk?.price?.amount?.decimal}
-              address={collection?.floorAsk?.price?.currency?.contract}
-              decimals={collection?.floorAsk?.price?.currency?.decimals}
-            />
-          </Flex>
-        </Box>
-
-        <Flex css={{ ml: '$4', mr: '$5' }} direction="column" align="end">
-          <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
-            {formatNumber(collection?.volumeChange?.['7day'])}%
-          </Text>
-          <FormatCryptoCurrency
-            amount={collection?.volume?.['7day']}
-            maximumFractionDigits={1}
-          />
-        </Flex>
-      </Flex>
-    </Link>
-  )
-}
-
-const TrendingCollectionsList = () => {
-  const { data: collections } = useCollections({
-    limit: 20,
-  })
-
+const TrendingCollectionsList: FC<Props> = ({ collections }) => {
   return (
     <Box
       css={{
         display: 'grid',
-        gridTemplateRows: 'repeat(12, 1fr)',
-        '@sm': {
-          gridTemplateRows: 'repeat(12, 1fr)',
+        gridTemplateColumns: '1fr',
+        columnGap: 48,
+        rowGap: '$5',
+        '@bp900': {
+          gridTemplateColumns: '1fr 1fr',
         },
-
-        '@md': {
-          gridTemplateRows: 'repeat(6, 1fr)',
+        '@bp1100': {
+          gridTemplateColumns: '1fr 1fr 1fr',
         },
-
-        '@lg': {
-          gridTemplateRows: '1fr 1fr 1fr 1fr',
-        },
-
-        '@xl': {
-          gridTemplateRows: '1fr 1fr 1fr 1fr',
-        },
-        gridAutoFlow: 'column',
-        gap: '$5',
       }}
     >
-      {collections &&
-        collections
-          .slice(0, 12)
-          .map((collection, i) => (
-            <CollectionRow collection={collection} rank={i + 1} />
-          ))}
+      {collections?.map((collection, i) => (
+        <TrendingCollectionItem key={i} collection={collection} rank={i + 1} />
+      ))}
     </Box>
   )
 }

@@ -45,19 +45,21 @@ import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
+import { useMounted } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
-  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const { data: collections } = useCollections(
     {
       id: collectionId,
     },
     {
-      fallback: ssr.collection,
+      fallbackData: ssr.collection,
     }
   )
   const collection = collections && collections[0] ? collections[0] : null
@@ -69,7 +71,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       includeTopBid: true,
     },
     {
-      fallback: ssr.tokens,
+      fallbackData: [ssr.tokens],
     }
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
@@ -161,7 +163,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               style={{
                 width: '100%',
                 height: 'auto',
-                minHeight: isSmallDevice ? 300 : 445,
+                minHeight: isMounted && isSmallDevice ? 300 : 445,
                 borderRadius: 8,
                 overflow: 'hidden',
               }}
@@ -179,7 +181,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             >
               {token?.token?.attributes?.map((attribute) => (
                 <AttributeCard
-                  key={attribute.key}
+                  key={`${attribute.key}-${attribute.value}`}
                   attribute={attribute}
                   collectionTokenCount={collection?.tokenCount || 0}
                   collectionId={collection?.id}
@@ -302,6 +304,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     >
                       {token?.token?.attributes?.map((attribute) => (
                         <AttributeCard
+                          key={`${attribute.key}-${attribute.value}`}
                           attribute={attribute}
                           collectionTokenCount={collection?.tokenCount || 0}
                           collectionId={collection?.id}
@@ -348,17 +351,16 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('/collectins/v5', collectionQuery)
+  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${collectionId}:${id}`],
-    sortBy: 'floorAskPrice',
-    includeTopBid: false,
-    limit: 20,
+    includeAttributes: true,
+    includeTopBid: true,
   }
 
-  const tokensResponse = await fetcher('/tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 

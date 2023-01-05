@@ -9,7 +9,7 @@ import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
 import { Flex } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useContext } from 'react'
-import { useEnvChain } from 'hooks'
+import { useEnvChain, useMounted } from 'hooks'
 import { useTheme } from 'next-themes'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { useMediaQuery } from 'react-responsive'
@@ -52,10 +52,11 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const isMobile = useMediaQuery({ maxWidth: 600 })
   const envChain = useEnvChain()
   const { theme } = useTheme()
+  const isMounted = useMounted()
   const etherscanImage = (
     <img
       src={
-        theme === 'dark'
+        isMounted && theme === 'dark'
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }
