@@ -2,7 +2,6 @@ import { styled } from 'stitches.config'
 
 export const HeaderRow = styled('div', {
   display: 'grid',
-  borderBottom: '1px solid $gray3',
   gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
   ':first-child': {
     paddingLeft: '0',
