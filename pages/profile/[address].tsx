@@ -46,12 +46,13 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ address, ssr }) => {
+const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   const {
     avatar: ensAvatar,
-    name: ensName,
+    name: resolvedEnsName,
     shortAddress,
   } = useENSResolver(address)
+  ensName = resolvedEnsName ? resolvedEnsName : ensName
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
@@ -320,12 +321,15 @@ export const getStaticProps: GetStaticProps<{
     collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
   }
   address: string | undefined
+  ensName: string | null
 }> = async ({ params }) => {
   const promises: ReturnType<typeof fetcher>[] = []
   let address = params?.address?.toString() || ''
   const isEnsName = address.includes('.')
+  let ensName: null | string = null
 
   if (isEnsName) {
+    ensName = address
     const ensResponse = await basicFetcher(
       `https://api.ensideas.com/ens/resolve/${address}`
     )
@@ -367,7 +371,7 @@ export const getStaticProps: GetStaticProps<{
     responses[1]?.status === 'fulfilled' ? responses[1].value.data : undefined
 
   return {
-    props: { ssr: { tokens, collections }, address },
+    props: { ssr: { tokens, collections }, address, ensName },
     revalidate: 20,
   }
 }
