@@ -1,7 +1,8 @@
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import CancelBid from 'components/buttons/CancelBid'
-import { Flex, Button } from 'components/primitives'
+import CancelListing from 'components/buttons/CancelListing'
+import { Flex, Button, Grid } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -47,6 +48,11 @@ export const TokenActions: FC<Props> = ({
     token?.market?.topBid?.maker?.toLowerCase() ===
       account?.address?.toLowerCase()
 
+  const isListed = token
+    ? token?.market?.floorAsk?.price?.amount?.native !== null &&
+      token?.token?.kind !== 'erc1155'
+    : false
+
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
     justifyContent: 'center',
@@ -57,13 +63,16 @@ export const TokenActions: FC<Props> = ({
   }
 
   return (
-    <Flex
+    <Grid
       align="center"
       css={{
         gap: '$3',
-        flexDirection: 'column',
+        gridTemplateColumns: 'repeat(1,minmax(0,1fr))',
         width: '100%',
-        '@sm': { flexDirection: 'row' },
+        '@sm': {
+          gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
+          width: 'max-content',
+        },
       }}
     >
       {isOwner ? (
@@ -107,17 +116,25 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
-      {/* TODO: Add CancelOffer RK modal*/}
-      {/* {isTopBidder && (
+      {isTopBidder && (
         <CancelBid
           bidId={token?.market?.topBid?.id as string}
           buttonChildren="Cancel Offer"
+          buttonCss={{ color: '$red11', justifyContent: 'center' }}
+          mutate={mutate}
         />
-      )} */}
+      )}
 
-      {/* TODO: Add CancelListing RK modal */}
+      {isOwner && isListed && (
+        <CancelListing
+          listingId={token?.market?.floorAsk?.id as string}
+          buttonChildren="Cancel Listing"
+          buttonCss={{ color: '$red11', justifyContent: 'center' }}
+          mutate={mutate}
+        />
+      )}
 
       {/* TODO: Add to Cart */}
-    </Flex>
+    </Grid>
   )
 }
