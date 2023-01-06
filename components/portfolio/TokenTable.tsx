@@ -18,6 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 import { useNetwork, useSigner } from 'wagmi'
 import Link from 'next/link'
+import { MutatorCallback } from 'swr'
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
@@ -70,6 +71,7 @@ export const TokenTable: FC<Props> = ({ data }) => {
               <TokenTableRow
                 key={`${token.token?.tokenId}-${i}`}
                 token={token}
+                mutate={data?.mutate}
               />
             )
           })}
@@ -87,9 +89,10 @@ export const TokenTable: FC<Props> = ({ data }) => {
 
 type TokenTableRowProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
+  mutate?: MutatorCallback
 }
 
-const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
+const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   if (isSmallDevice) {
@@ -155,6 +158,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
             />
             <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
+              mutate={mutate}
               buttonCss={{
                 width: '100%',
                 maxWidth: '300px',
@@ -183,6 +187,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
               <AcceptBid
                 token={token as ReturnType<typeof useTokens>['data'][0]}
                 collectionId={token?.token?.contract}
+                mutate={mutate}
                 buttonCss={{
                   width: '100%',
                   maxWidth: '300px',
@@ -290,6 +295,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                   Sell
                 </Flex>
               }
+              mutate={mutate}
             />
           )}
 
@@ -304,6 +310,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
               },
             }}
             buttonChildren="List"
+            mutate={mutate}
           />
         </Flex>
       </TableCell>

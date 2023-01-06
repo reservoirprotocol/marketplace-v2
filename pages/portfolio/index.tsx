@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useUserTokens, useUserTopBids } from '@reservoir0x/reservoir-kit-ui'
+import { useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useMounted, useUserCollections } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
@@ -107,6 +107,7 @@ const IndexPage: NextPage = () => {
                   <Box
                     css={{
                       flex: 1,
+                      maxWidth: '100%',
                     }}
                   >
                     <Flex justify="between" css={{ marginBottom: '$4' }}>
