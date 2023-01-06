@@ -7,15 +7,13 @@ import {
 import { Text, Flex, Box, Grid } from '../../components/primitives'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
-import fetcher from 'utils/fetcher'
-import { useEnsAvatar, useEnsName, Address } from 'wagmi'
+import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useCopyToClipboard, useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { truncateAddress, truncateEns } from 'utils/truncate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
@@ -35,6 +33,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { useENSResolver } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -47,15 +46,19 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ address, ssr }) => {
+const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
+  const {
+    avatar: ensAvatar,
+    name: resolvedEnsName,
+    shortAddress,
+  } = useENSResolver(address)
+  ensName = resolvedEnsName ? resolvedEnsName : ensName
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
-  const { data: ensAvatar } = useEnsAvatar(address as Address)
-  const { data: ensName } = useEnsName(address as Address)
   const [value, copy] = useCopyToClipboard()
   const { addToast } = useContext(ToastContext)
   const [playingElement, setPlayingElement] = useState<
@@ -127,11 +130,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
             />
           )}
           <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h4">
-              {ensName
-                ? truncateEns(ensName)
-                : truncateAddress(address as string)}
-            </Text>
+            <Text style="h4">{ensName ? ensName : shortAddress}</Text>
             <Flex
               align="center"
               css={{ cursor: 'pointer' }}
@@ -145,7 +144,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                 color="$gray11"
                 css={{ color: '$gray11', mr: '$3' }}
               >
-                {truncateAddress(address as string)}
+                {shortAddress}
               </Text>
               <Box css={{ color: '$gray10' }}>
                 <FontAwesomeIcon icon={faCopy} width={16} height={16} />
@@ -322,35 +321,57 @@ export const getStaticProps: GetStaticProps<{
     collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
   }
   address: string | undefined
+  ensName: string | null
 }> = async ({ params }) => {
-  const address = params?.address?.toString()
+  const promises: ReturnType<typeof fetcher>[] = []
+  let address = params?.address?.toString() || ''
+  const isEnsName = address.includes('.')
+  let ensName: null | string = null
+
+  if (isEnsName) {
+    ensName = address
+    const ensResponse = await basicFetcher(
+      `https://api.ensideas.com/ens/resolve/${address}`
+    )
+    const ensAddress = ensResponse?.data?.address
+    if (ensAddress) {
+      address = ensAddress
+    } else {
+      return {
+        notFound: true,
+      }
+    }
+  }
 
   let tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
     }
 
-  const tokensResponse = await fetcher(
-    `users/${address}/tokens/v6`,
-    tokensQuery
-  )
+  const tokensPromise = fetcher(`users/${address}/tokens/v6`, tokensQuery)
 
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
+  promises.push(tokensPromise)
 
   let collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
     {
       limit: 100,
     }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `users/${address}/collections/v2`,
     collectionsQuery
   )
+  promises.push(collectionsPromise)
 
-  const collections: Props['ssr']['collections'] = collectionsResponse['data']
+  const responses = await Promise.allSettled(promises)
+
+  const tokens: Props['ssr']['tokens'] =
+    responses[0]?.status === 'fulfilled' ? responses[0].value.data : undefined
+  const collections: Props['ssr']['collections'] =
+    responses[1]?.status === 'fulfilled' ? responses[1].value.data : undefined
 
   return {
-    props: { ssr: { tokens, collections }, address },
+    props: { ssr: { tokens, collections }, address, ensName },
     revalidate: 20,
   }
 }

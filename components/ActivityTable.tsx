@@ -15,9 +15,7 @@ import {
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAccount } from 'wagmi'
-import { useEnvChain, useTimeSince } from 'hooks'
-import { truncateAddress } from 'utils/truncate'
+import { useENSResolver, useEnvChain, useTimeSince } from 'hooks'
 import { constants } from 'ethers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -31,8 +29,6 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './common/LoadingSpinner'
-
-const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -139,18 +135,8 @@ const activityTypeToDesciption = (activityType: string) => {
   return activityTypeToDesciptionMap[activityType] || activityType
 }
 
-const formatAddress = (contract: string, userAddress: string) => {
-  if (contract.toLowerCase() === userAddress.toLowerCase()) {
-    return 'You'
-  }
-
-  return truncateAddress(contract)
-}
-
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
-  const { address } = useAccount()
-
   const envChain = useEnvChain()
   const blockExplorerBaseUrl =
     envChain?.blockExplorers?.default?.url || 'https://etherscan.io'
@@ -170,11 +156,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')
 
-  let toShortAddress = formatAddress(activity?.toAddress || '', address || '')
-  let fromShortAddress = formatAddress(
-    activity?.fromAddress || '',
-    address || ''
-  )
+  const { displayName: toDisplayName } = useENSResolver(activity?.toAddress)
+  const { displayName: fromDisplayName } = useENSResolver(activity?.fromAddress)
 
   if (isSmallDevice) {
     return (
@@ -267,7 +250,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               </Text>
               {activity.fromAddress &&
               activity.fromAddress !== constants.AddressZero ? (
-                <Link href={`/address/${activity.fromAddress}`}>
+                <Link href={`/profile/${activity.fromAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -277,7 +260,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                       },
                     }}
                   >
-                    {fromShortAddress}
+                    {fromDisplayName}
                   </Text>
                 </Link>
               ) : (
@@ -291,7 +274,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               </Text>
               {activity.toAddress &&
               activity.toAddress !== constants.AddressZero ? (
-                <Link href={`/address/${activity.toAddress}`}>
+                <Link href={`/profile/${activity.toAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -301,7 +284,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                       },
                     }}
                   >
-                    {toShortAddress}
+                    {toDisplayName}
                   </Text>
                 </Link>
               ) : (
@@ -386,7 +369,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="subtitle3" css={{ color: '$gray11' }}>
               From
             </Text>
-            <Link href={`/address/${activity.fromAddress}`}>
+            <Link href={`/profile/${activity.fromAddress}`}>
               <Text
                 style="subtitle3"
                 css={{
@@ -396,7 +379,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   },
                 }}
               >
-                {fromShortAddress}
+                {fromDisplayName}
               </Text>
             </Link>
           </Flex>
@@ -410,7 +393,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="subtitle3" css={{ color: '$gray11' }}>
               To
             </Text>
-            <Link href={`/address/${activity.fromAddress}`}>
+            <Link href={`/profile/${activity.fromAddress}`}>
               <Text
                 style="subtitle3"
                 css={{
@@ -420,7 +403,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   },
                 }}
               >
-                {toShortAddress}
+                {toDisplayName}
               </Text>
             </Link>
           </Flex>

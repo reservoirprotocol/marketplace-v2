@@ -16,26 +16,24 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
-import {
-  useAccount,
-  useBalance,
-  useDisconnect,
-  useEnsAvatar,
-  useEnsName,
-} from 'wagmi'
+import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { useCopyToClipboard } from 'usehooks-ts'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { truncateAddress, truncateEns } from 'utils/truncate'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
+import { useENSResolver } from 'hooks'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
   const { data: balance } = useBalance({ address })
-  const { data: ensName } = useEnsName({ address })
-  const { data: ensAvatar } = useEnsAvatar({ address })
+  const {
+    name: ensName,
+    avatar: ensAvatar,
+    shortAddress,
+    shortName: shortEnsName,
+  } = useENSResolver(address)
   const { disconnect } = useDisconnect()
   const [value, copy] = useCopyToClipboard()
   const { addToast } = useContext(ToastContext)
@@ -132,9 +130,7 @@ const HamburgerMenu = () => {
                   color="$gray11"
                   css={{ ml: '$2', color: '$gray11' }}
                 >
-                  {ensName
-                    ? truncateEns(ensName)
-                    : truncateAddress(address as string)}
+                  {shortEnsName ? shortEnsName : shortAddress}
                 </Text>
               </Flex>
               <Box css={{ color: '$gray10' }}>
