@@ -81,14 +81,16 @@ export const TokenFilters: FC<Props> = ({
                   scrollToTop?.()
                 }}
               >
-                <Image
-                  style={{ borderRadius: '4px', objectFit: 'cover' }}
-                  loader={({ src }) => src}
-                  src={collection?.collection?.image as string}
-                  alt={collection?.collection?.name as string}
-                  width={24}
-                  height={24}
-                />
+                {collection?.collection?.image && (
+                  <Image
+                    style={{ borderRadius: '4px', objectFit: 'cover' }}
+                    loader={({ src }) => src}
+                    src={collection?.collection?.image as string}
+                    alt={collection?.collection?.name as string}
+                    width={24}
+                    height={24}
+                  />
+                )}
                 <Text
                   style="body1"
                   css={{

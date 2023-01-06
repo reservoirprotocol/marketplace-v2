@@ -38,14 +38,13 @@ import Link from 'next/link'
 import { jsNumberForAddress } from 'react-jazzicon'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import fetcher from 'utils/fetcher'
-import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useMounted } from 'hooks'
+import { useENSResolver, useMounted } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -93,9 +92,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       ? true
       : token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
   const owner = isOwner ? account?.address : token?.token?.owner
-  const ownerFormatted = isOwner
-    ? 'You'
-    : truncateAddress(token?.token?.owner || '')
+  const { displayName: ownerFormatted } = useENSResolver(token?.token?.owner)
 
   return (
     <Layout>
@@ -273,7 +270,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   diameter={16}
                   seed={jsNumberForAddress(owner || '')}
                 />
-                <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
+                <Link href={`/profile/${owner}`} legacyBehavior={true}>
                   <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                     {ownerFormatted}
                   </Anchor>
