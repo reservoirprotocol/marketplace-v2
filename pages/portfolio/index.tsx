@@ -8,13 +8,14 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useUserTokens } from '@reservoir0x/reservoir-kit-ui'
+import { useListings, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useMounted, useUserCollections } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import { TokenFilters } from 'components/profile/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
+import { ListingsTable } from 'components/portfolio/ListingsTable'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -38,6 +39,11 @@ const IndexPage: NextPage = () => {
   const data = useUserTokens(address, tokenQuery, {})
 
   const { data: collections } = useUserCollections(address as string)
+
+  const listingsData = useListings({
+    maker: address,
+    includeCriteriaMetadata: true,
+  })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -125,7 +131,9 @@ const IndexPage: NextPage = () => {
                 </Flex>
               </TabsContent>
               <TabsContent value="collections">Collections</TabsContent>
-              <TabsContent value="listings">Listings</TabsContent>
+              <TabsContent value="listings">
+                <ListingsTable data={listingsData} />
+              </TabsContent>
               <TabsContent value="offers">Offers Made</TabsContent>
             </Tabs.Root>
           </>

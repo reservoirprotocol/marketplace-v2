@@ -282,7 +282,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               {/* TODO: pass collection attributes */}
               <RarityRank token={token} collection={collection} />
               <PriceData token={token} />
-              <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
+              <TokenActions
+                token={token}
+                isOwner={isOwner}
+                mutate={mutate}
+                account={account}
+              />
               <Tabs.Root defaultValue="info">
                 <TabsList>
                   {isSmallDevice && (
