@@ -55,7 +55,16 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
       }}
     >
       {isOwner ? (
-        <List token={token} mutate={mutate} buttonCss={buttonCss} />
+        <List
+          token={token}
+          mutate={mutate}
+          buttonCss={buttonCss}
+          buttonChildren={
+            token?.market?.floorAsk?.price?.amount?.decimal
+              ? 'Create New Listing'
+              : 'List for Sale'
+          }
+        />
       ) : (
         <BuyNow token={token} mutate={mutate} buttonCss={buttonCss} />
       )}
@@ -72,6 +81,7 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
           }
           mutate={mutate}
           buttonCss={buttonCss}
+          buttonChildren="Accept Offer"
         />
       )}
 

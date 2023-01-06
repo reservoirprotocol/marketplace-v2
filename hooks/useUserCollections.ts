@@ -2,7 +2,7 @@ import { omitBy, isNil } from 'lodash'
 import api from '../utils/api'
 
 import useSWRInfinite from 'swr/infinite'
-const PAGE_SIZE = 20
+const PAGE_SIZE = 100
 
 export default function useUserCollections(address: string) {
   const getKey = (

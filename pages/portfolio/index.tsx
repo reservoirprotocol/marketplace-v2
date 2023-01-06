@@ -1,28 +1,24 @@
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next'
-import { Text, Flex, Box, Grid } from '../../components/primitives'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { NextPage } from 'next'
+import { Text, Flex, Box } from '../../components/primitives'
+import Image from 'next/image'
 import Layout from 'components/Layout'
-import fetcher from 'utils/fetcher'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import {
-  useCollectionActivity,
-  useTokens,
-  useUserTokens,
-} from '@reservoir0x/reservoir-kit-ui'
-import { useMounted } from '../../hooks'
+import { useUserTokens, useUserTopBids } from '@reservoir0x/reservoir-kit-ui'
+import { useMounted, useUserCollections } from '../../hooks'
+import { TokenTable } from 'components/portfolio/TokenTable'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
+import { TokenFilters } from 'components/profile/TokenFilters'
+import { FilterButton } from 'components/common/FilterButton'
 
 const IndexPage: NextPage = () => {
-  const { address } = useAccount()
+  const { address, isConnected } = useAccount()
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
@@ -37,20 +33,16 @@ const IndexPage: NextPage = () => {
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
     collection: filterCollection,
+    includeTopBid: true,
   }
-  const {
-    data: tokens,
-    mutate,
-    fetchNextPage,
-    isFetchingInitialData,
-    hasNextPage,
-    isFetchingPage,
-  } = useUserTokens(address || '', tokenQuery, {})
+  const data = useUserTokens(address, tokenQuery, {})
+
+  const { data: collections } = useUserCollections(address as string)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      data.fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -64,29 +56,103 @@ const IndexPage: NextPage = () => {
         direction="column"
         css={{
           px: '$4',
-          pt: '$5',
-          pb: 0,
+          py: '$5',
           '@sm': {
             px: '$5',
           },
         }}
       >
-        <Text style="h4" css={{ mb: '$5' }}>
-          Portfolio
-        </Text>
-        <Tabs.Root defaultValue="items">
-          <TabsList style={{ overflow: 'scroll', whiteSpace: 'nowrap' }}>
-            <TabsTrigger value="items">Items</TabsTrigger>
-            <TabsTrigger value="collections">Collections</TabsTrigger>
-            <TabsTrigger value="listings">Listings</TabsTrigger>
-            <TabsTrigger value="offers">Offers Made</TabsTrigger>
-          </TabsList>
+        {isConnected ? (
+          <>
+            <Text style="h4" css={{}}>
+              Portfolio
+            </Text>
+            <Tabs.Root defaultValue="items">
+              <Flex css={{ overflowX: 'scroll' }}>
+                <TabsList
+                  style={{
+                    whiteSpace: 'nowrap',
+                    width: '100%',
+                  }}
+                >
+                  <TabsTrigger value="items">Items</TabsTrigger>
+                  <TabsTrigger value="collections">Collections</TabsTrigger>
+                  <TabsTrigger value="listings">Listings</TabsTrigger>
+                  <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                </TabsList>
+              </Flex>
 
-          <TabsContent value="items">Items</TabsContent>
-          <TabsContent value="collections">Collections</TabsContent>
-          <TabsContent value="listings">Listings</TabsContent>
-          <TabsContent value="offers">Offers Made</TabsContent>
-        </Tabs.Root>
+              <TabsContent value="items">
+                <Flex
+                  css={{
+                    gap: tokenFiltersOpen ? '$5' : '',
+                    position: 'relative',
+                  }}
+                >
+                  {isSmallDevice ? (
+                    <MobileTokenFilters
+                      collections={collections}
+                      filterCollection={filterCollection}
+                      setFilterCollection={setFilterCollection}
+                    />
+                  ) : (
+                    <TokenFilters
+                      open={tokenFiltersOpen}
+                      setOpen={setTokenFiltersOpen}
+                      collections={collections}
+                      filterCollection={filterCollection}
+                      setFilterCollection={setFilterCollection}
+                    />
+                  )}
+                  <Box
+                    css={{
+                      flex: 1,
+                    }}
+                  >
+                    <Flex justify="between" css={{ marginBottom: '$4' }}>
+                      {collections &&
+                        collections.length > 0 &&
+                        !isSmallDevice && (
+                          <FilterButton
+                            open={tokenFiltersOpen}
+                            setOpen={setTokenFiltersOpen}
+                          />
+                        )}
+                    </Flex>
+                    <TokenTable data={data} />
+                  </Box>
+                </Flex>
+              </TabsContent>
+              <TabsContent value="collections">Collections</TabsContent>
+              <TabsContent value="listings">Listings</TabsContent>
+              <TabsContent value="offers">Offers Made</TabsContent>
+            </Tabs.Root>
+          </>
+        ) : (
+          <Flex
+            direction="column"
+            align="center"
+            css={{ mx: 'auto', py: '120px', maxWidth: '350px', gap: '$4' }}
+          >
+            <Text style="h4" css={{ mb: '$3' }}>
+              Sell your NFT instantly
+            </Text>
+            <Image
+              src="/wallet-icon.svg"
+              width={32}
+              height={32}
+              alt="Wallet Icon"
+            />
+            <Text
+              style="body1"
+              css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
+            >
+              Connect wallet to instant sell your token across all major
+              marketplaces.
+            </Text>
+            <ConnectWalletButton />
+          </Flex>
+        )}
       </Flex>
     </Layout>
   )

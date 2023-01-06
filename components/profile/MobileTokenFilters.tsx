@@ -48,6 +48,10 @@ export const MobileTokenFilters: FC<Props> = ({
     </Flex>
   )
 
+  if (collections?.length === 0 || collections == null) {
+    return null
+  }
+
   return (
     <FullscreenModal trigger={trigger}>
       {' '}

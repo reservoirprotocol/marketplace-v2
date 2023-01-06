@@ -5,7 +5,7 @@ import round from '../../utils/round'
 import useUserCollections from '../../hooks/useUserCollections'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import { useMediaQuery } from 'react-responsive'
-import { DesktopOnlyHr, DesktopOnlyTd } from './TokenTable'
+import { DesktopOnlyHr, DesktopOnlyTd } from './OldTokenTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons'
 

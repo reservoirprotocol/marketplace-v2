@@ -12,7 +12,7 @@ type Props = {
   collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
-  scrollToTop: () => void
+  scrollToTop?: () => void
 }
 
 export const TokenFilters: FC<Props> = ({
@@ -78,7 +78,7 @@ export const TokenFilters: FC<Props> = ({
                   } else {
                     setFilterCollection(collection?.collection?.id)
                   }
-                  scrollToTop()
+                  scrollToTop?.()
                 }}
               >
                 <Image
