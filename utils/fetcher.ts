@@ -13,7 +13,7 @@ const fetcher = async (
 
   const path = new URL(`${process.env.NEXT_PUBLIC_RESERVOIR_API_BASE}/${url}`)
   setParams(path, params)
-
+//todo: refactor for multichain
   const response = await fetch(path.href, {
     headers,
     ...data,

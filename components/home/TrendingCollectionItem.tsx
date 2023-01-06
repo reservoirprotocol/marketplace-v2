@@ -3,6 +3,7 @@ import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
 import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
 import { FC } from 'react'
+import { useMarketplaceChain } from '../../hooks'
 
 type Props = {
   rank: string | number
@@ -10,9 +11,11 @@ type Props = {
 }
 
 export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
+  const { routePrefix } = useMarketplaceChain()
+
   return (
     <Link
-      href={`/collections/${collection.id}`}
+      href={`/collection/${routePrefix}/${collection.id}`}
       style={{ display: 'inline-block' }}
     >
       <Flex align="center" css={{ cursor: 'pointer' }}>

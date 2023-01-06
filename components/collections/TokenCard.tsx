@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
@@ -39,6 +40,7 @@ export default ({
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
+  const { routePrefix } = useMarketplaceChain()
 
   return (
     <Box
@@ -60,7 +62,7 @@ export default ({
     >
       <Link
         passHref
-        href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+        href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
         onClick={(e) => {
           if (!showPreview || (e.target as HTMLElement)?.tagName === 'BUTTON') {
             e.preventDefault()
@@ -99,7 +101,9 @@ export default ({
           />
         </Box>
       </Link>
-      <Link href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}>
+      <Link
+        href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+      >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
           direction="column"

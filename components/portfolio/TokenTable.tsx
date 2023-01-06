@@ -26,6 +26,7 @@ import {
 import Link from 'next/link'
 
 import { useAccount } from 'wagmi'
+import { useMarketplaceChain } from 'hooks'
 const Span = styled('span', {})
 
 export const DesktopOnlyTd = styled('td', {
@@ -159,6 +160,7 @@ const TokenRow = ({ token, owner, topBid, isMe }: any) => {
     id: token.token.contract,
     limit: 1,
   })
+  const { routePrefix } = useMarketplaceChain()
 
   const collection = collections && collections[0] && collections[0]
 
@@ -182,7 +184,9 @@ const TokenRow = ({ token, owner, topBid, isMe }: any) => {
       }}
     >
       <td>
-        <Link href={`/${token.token.contract}/${token.token.tokenId}`}>
+        <Link
+          href={`/collection/${routePrefix}/${token.token.contract}/${token.token.tokenId}`}
+        >
           <Flex
             css={{
               paddingTop: '$2',

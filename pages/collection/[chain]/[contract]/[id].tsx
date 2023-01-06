@@ -46,10 +46,12 @@ import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMounted } from 'hooks'
+import { useRouter } from 'next/router'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+  const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
   const isMounted = useMounted()
@@ -202,7 +204,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           }}
         >
           <Flex justify="between" align="center" css={{ mb: 20 }}>
-            <Link href={`/collections/${collectionId}`} legacyBehavior={true}>
+            <Link
+              href={`/collection/${router.query.chain}/${collectionId}`}
+              legacyBehavior={true}
+            >
               <Anchor
                 color="primary"
                 css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
@@ -273,16 +278,18 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   diameter={16}
                   seed={jsNumberForAddress(owner || '')}
                 />
-                <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
+                <Link href={`/profile/${owner}`} legacyBehavior={true}>
                   <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                    {ownerFormatted}
+                    {isMounted ? ownerFormatted : ''}
                   </Anchor>
                 </Link>
               </Flex>
               {/* TODO: pass collection attributes */}
               <RarityRank token={token} collection={collection} />
               <PriceData token={token} />
-              <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
+              {isMounted && (
+                <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
+              )}
               <Tabs.Root defaultValue="info">
                 <TabsList>
                   {isSmallDevice && (

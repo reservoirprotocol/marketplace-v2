@@ -23,6 +23,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useCopyToClipboard } from 'usehooks-ts'
 import Link from 'next/link'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   collection: NonNullable<
@@ -33,6 +34,7 @@ type Props = {
 const CollectionItem: FC<Props> = ({ collection }) => {
   const [value, copy] = useCopyToClipboard()
   const [selected, setSelected] = useState(false)
+  const { routePrefix } = useMarketplaceChain()
 
   let flashing = useRef(null as any)
 
@@ -46,7 +48,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
   }
 
   return (
-    <Link href={`/collections/${collection.id}`}>
+    <Link href={`/collection/${routePrefix}/${collection.id}`}>
       <Flex
         css={{
           p: '$2',

@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from '../../components/primitives'
+import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useTokens,
@@ -48,7 +48,7 @@ type ActivityTypes = Exclude<
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -361,7 +361,7 @@ export const getStaticProps: GetStaticProps<{
   }
   id: string | undefined
 }> = async ({ params }) => {
-  const id = params?.slug?.toString()
+  const id = params?.contract?.toString()
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -396,4 +396,4 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-export default IndexPage
+export default CollectionPage

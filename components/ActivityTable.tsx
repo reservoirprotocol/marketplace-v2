@@ -16,7 +16,7 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAccount } from 'wagmi'
-import { useEnvChain, useTimeSince } from 'hooks'
+import { useMarketplaceChain, useTimeSince } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import { constants } from 'ethers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -31,8 +31,6 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './common/LoadingSpinner'
-
-const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -151,12 +149,12 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const { address } = useAccount()
 
-  const envChain = useEnvChain()
+  const marketplaceChain = useMarketplaceChain()
   const blockExplorerBaseUrl =
-    envChain?.blockExplorers?.default?.url || 'https://etherscan.io'
+    marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const href = activity?.token?.tokenId
-    ? `/${activity?.collection?.collectionId}/${activity?.token?.tokenId}`
-    : `/collections/${activity?.collection?.collectionId}`
+    ? `/collection/${marketplaceChain.routePrefix}/${activity?.collection?.collectionId}/${activity?.token?.tokenId}`
+    : `/collection/${marketplaceChain.routePrefix}/${activity?.collection?.collectionId}`
 
   if (!activity) {
     return null
