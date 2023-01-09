@@ -17,7 +17,6 @@ import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
-import CollectionTable from 'components/portfolio/CollectionTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 
 const IndexPage: NextPage = () => {
