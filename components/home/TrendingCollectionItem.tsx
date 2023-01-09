@@ -16,7 +16,7 @@ export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
   return (
     <Link
       href={`/collection/${routePrefix}/${collection.id}`}
-      style={{ display: 'inline-block' }}
+      style={{ display: 'inline-block', minWidth: 0 }}
     >
       <Flex align="center" css={{ cursor: 'pointer' }}>
         <Text css={{ mr: '$4' }} style="subtitle3">

@@ -3,7 +3,6 @@ import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
 import { useState } from 'react'
-import usePaginatedCollections from 'hooks/usePaginatedCollections'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
@@ -13,12 +12,14 @@ import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import supportedChains from 'utils/chains'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
+  const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
@@ -31,18 +32,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     isFetchingPage,
     isValidating,
     isFetchingInitialData,
-  } = usePaginatedCollections(
+  } = useCollections(
     {
-      limit: 20,
+      limit: 12,
       sortBy: sortByTime,
     },
     {
       fallbackData: [ssr.collections[marketplaceChain.id]],
     }
   )
-
   let collections = data || []
-  const showViewAllButton = collections.length <= 20 && hasNextPage
+  const showViewAllButton = collections.length <= 12 && hasNextPage
   if (showViewAllButton) {
     collections = collections?.slice(0, 12)
   }
@@ -91,7 +91,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               }}
             />
           </Flex>
-          {isValidating || isFetchingInitialData ? null : (
+          {isSSR || !isMounted || isFetchingInitialData ? null : (
             <TrendingCollectionsList collections={collections} />
           )}
           {!isFetchingInitialData && (isFetchingPage || isValidating) && (
@@ -134,7 +134,7 @@ export const getStaticProps: GetStaticProps<{
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: 'allTimeVolume',
-      limit: 20,
+      limit: 12,
     }
 
   const promises: ReturnType<typeof fetcher>[] = []
@@ -150,8 +150,6 @@ export const getStaticProps: GetStaticProps<{
       collections[supportedChains[i].id] = response.value.data
     }
   })
-
-  console.log(collections)
 
   return {
     props: { ssr: { collections } },

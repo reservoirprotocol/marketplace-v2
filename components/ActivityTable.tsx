@@ -224,14 +224,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Flex align="center" justify="between">
               <Link href={href} passHref>
                 <Flex align="center">
-                  <Image
+                  {imageSrc && <Image
                     style={{ borderRadius: '4px', objectFit: 'cover' }}
                     loader={({ src }) => src}
                     src={imageSrc}
                     alt={`${activity.token?.tokenName} Token Image`}
                     width={48}
                     height={48}
-                  />
+                  />}
                   <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
                     {activity.token?.tokenName ||
                       activity.token?.tokenId ||
@@ -332,14 +332,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell>
         <Link href={href} passHref>
           <Flex align="center">
-            <Image
+            {imageSrc && <Image
               style={{ borderRadius: '4px', objectFit: 'cover' }}
               loader={({ src }) => src}
               src={imageSrc}
               alt={`${activity.token?.tokenName} Token Image`}
               width={48}
               height={48}
-            />
+            />}
             <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
               {activity.token?.tokenName ||
                 activity.token?.tokenId ||
