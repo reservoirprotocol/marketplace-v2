@@ -131,7 +131,11 @@ export const MobileTokenFilters: FC<Props> = ({
                 }}
               >
                 <Image
-                  style={{ borderRadius: '4px', objectFit: 'cover' }}
+                  style={{
+                    borderRadius: '4px',
+                    objectFit: 'cover',
+                    aspectRatio: '1/1',
+                  }}
                   loader={({ src }) => src}
                   src={collection?.collection?.image as string}
                   alt={collection?.collection?.name as string}

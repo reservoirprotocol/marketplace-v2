@@ -91,6 +91,13 @@ type OfferTableRowProps = {
 const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
+  let imageSrc: string = (
+    offer?.criteria?.data?.token?.tokenId
+      ? offer?.criteria?.data?.token?.image ||
+        offer?.criteria?.data?.collection?.image
+      : offer?.criteria?.data?.collection?.image
+  ) as string
+
   if (isSmallDevice) {
     return (
       <Flex
@@ -109,7 +116,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
         <Flex justify="between" css={{ width: '100%' }}>
           <Link href={`/${offer?.contract}/${offer?.id}`}>
             <Flex align="center">
-              {offer?.criteria?.data?.token?.image && (
+              {imageSrc && (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -117,7 +124,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={offer?.criteria?.data?.token?.image as string}
+                  src={imageSrc}
                   alt={`${offer?.id}`}
                   width={36}
                   height={36}
@@ -178,7 +185,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       <TableCell css={{ minWidth: 0 }}>
         <Link href={`/${offer?.contract}/${offer?.id}`}>
           <Flex align="center">
-            {offer?.criteria?.data?.token?.image && (
+            {imageSrc && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -186,7 +193,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                   aspectRatio: '1/1',
                 }}
                 loader={({ src }) => src}
-                src={offer?.criteria?.data?.token?.image as string}
+                src={imageSrc}
                 alt={`${offer?.criteria?.data?.token?.name}`}
                 width={48}
                 height={48}

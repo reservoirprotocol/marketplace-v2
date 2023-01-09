@@ -95,6 +95,12 @@ type TokenTableRowProps = {
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
+  let imageSrc: string = (
+    token?.token?.tokenId
+      ? token?.token?.image || token?.token?.collection?.imageUrl
+      : token?.token?.collection?.imageUrl
+  ) as string
+
   if (isSmallDevice) {
     return (
       <Flex
@@ -114,7 +120,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
           href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
         >
           <Flex align="center">
-            {token?.token?.image && (
+            {imageSrc && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -122,7 +128,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   aspectRatio: '1/1',
                 }}
                 loader={({ src }) => src}
-                src={token?.token?.image as string}
+                src={imageSrc}
                 alt={`${token?.token?.name}`}
                 width={36}
                 height={36}
@@ -223,7 +229,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
           href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
         >
           <Flex align="center">
-            {token?.token?.image && (
+            {imageSrc && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -231,7 +237,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   aspectRatio: '1/1',
                 }}
                 loader={({ src }) => src}
-                src={token?.token?.image as string}
+                src={imageSrc}
                 alt={`${token?.token?.name}`}
                 width={48}
                 height={48}

@@ -11,7 +11,7 @@ import {
   Anchor,
   TableCell,
   TableRow,
-} from './primitives'
+} from '../primitives'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -28,7 +28,7 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
-import LoadingSpinner from './common/LoadingSpinner'
+import LoadingSpinner from './LoadingSpinner'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]

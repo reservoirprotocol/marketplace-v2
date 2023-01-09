@@ -91,6 +91,13 @@ type ListingTableRowProps = {
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
+  let imageSrc: string = (
+    listing?.criteria?.data?.token?.tokenId
+      ? listing?.criteria?.data?.token?.image ||
+        listing?.criteria?.data?.collection?.image
+      : listing?.criteria?.data?.collection?.image
+  ) as string
+
   if (isSmallDevice) {
     return (
       <Flex
@@ -107,9 +114,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         }}
       >
         <Flex justify="between" css={{ width: '100%' }}>
-          <Link href={`/${listing?.contract}/${listing?.id}`}>
+          <Link
+            href={`/${listing?.contract}/${listing?.criteria?.data?.token?.tokenId}`}
+          >
             <Flex align="center">
-              {listing?.criteria?.data?.token?.image && (
+              {imageSrc && (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -117,7 +126,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={listing?.criteria?.data?.token?.image as string}
+                  src={imageSrc}
                   alt={`${listing?.id}`}
                   width={36}
                   height={36}
@@ -176,9 +185,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       css={{ gridTemplateColumns: '1.25fr .75fr 1fr 1fr 1fr' }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/${listing?.contract}/${listing?.id}`}>
+        <Link
+          href={`/${listing?.contract}/${listing?.criteria?.data?.token?.tokenId}`}
+        >
           <Flex align="center">
-            {listing?.criteria?.data?.token?.image && (
+            {imageSrc && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -186,7 +197,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                   aspectRatio: '1/1',
                 }}
                 loader={({ src }) => src}
-                src={listing?.criteria?.data?.token?.image as string}
+                src={imageSrc as string}
                 alt={`${listing?.criteria?.data?.token?.name}`}
                 width={48}
                 height={48}
