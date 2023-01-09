@@ -17,6 +17,9 @@ export default async function handler(req: Request) {
 
   let isAddress = ethers.utils.isAddress(q as string)
 
+  //todo pass in marketplace chain
+  //todo handle search by ens and route to ens profile
+
   // start fetching search preemptively
   let collectionQuery = fetcher(`collections/v5?name=${q}`)
 

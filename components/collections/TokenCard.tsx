@@ -19,8 +19,6 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 
-const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
-
 type TokenCardProps = {
   token: ReturnType<typeof useTokens>['data'][0]
   rarityEnabled: boolean
@@ -40,7 +38,7 @@ export default ({
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
-  const { routePrefix } = useMarketplaceChain()
+  const { routePrefix, reservoirBaseUrl } = useMarketplaceChain()
 
   return (
     <Box
@@ -174,7 +172,7 @@ export default ({
                 height: 20,
                 borderRadius: '50%',
               }}
-              src={`${API_BASE}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
+              src={`${reservoirBaseUrl}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
             />
           </Flex>
           {token?.token?.lastBuy?.value && (

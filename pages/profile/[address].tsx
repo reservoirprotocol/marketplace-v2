@@ -329,7 +329,7 @@ export const getStaticProps: GetStaticProps<{
     {
       limit: 20,
     }
-
+  //todo fetch all chains and return as options
   const tokensResponse = await fetcher(
     `users/${address}/tokens/v6`,
     tokensQuery
@@ -351,7 +351,7 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: { ssr: { tokens, collections }, address },
-    revalidate: 20,
+    revalidate: 5,
   }
 }
 

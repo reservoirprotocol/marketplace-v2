@@ -10,10 +10,11 @@ import TrendingCollectionsTimeToggle, {
 } from 'components/home/TrendingCollectionsTimeToggle'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
-import { useMounted } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import fetcher from 'utils/fetcher'
+import supportedChains from 'utils/chains'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -22,16 +23,23 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('allTimeVolume')
-  const { data, hasNextPage, fetchNextPage, isFetchingPage } =
-    usePaginatedCollections(
-      {
-        limit: 20,
-        sortBy: sortByTime,
-      },
-      {
-        fallbackData: [ssr.collections],
-      }
-    )
+  const marketplaceChain = useMarketplaceChain()
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingPage,
+    isValidating,
+    isFetchingInitialData,
+  } = usePaginatedCollections(
+    {
+      limit: 20,
+      sortBy: sortByTime,
+    },
+    {
+      fallbackData: [ssr.collections[marketplaceChain.id]],
+    }
+  )
 
   let collections = data || []
   const showViewAllButton = collections.length <= 20 && hasNextPage
@@ -83,8 +91,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               }}
             />
           </Flex>
-          <TrendingCollectionsList collections={collections} />
-          {isFetchingPage && (
+          {isValidating || isFetchingInitialData ? null : (
+            <TrendingCollectionsList collections={collections} />
+          )}
+          {!isFetchingInitialData && (isFetchingPage || isValidating) && (
             <Flex align="center" justify="center" css={{ py: '$4' }}>
               <LoadingSpinner />
             </Flex>
@@ -112,20 +122,39 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
+type CollectionSchema =
+  paths['/collections/v5']['get']['responses']['200']['schema']
+type ChainCollections = Record<string, CollectionSchema>
+
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collections: paths['/collections/v5']['get']['responses']['200']['schema']
+    collections: ChainCollections
   }
 }> = async () => {
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: 'allTimeVolume',
+      limit: 20,
     }
 
-  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+  const promises: ReturnType<typeof fetcher>[] = []
+  supportedChains.forEach((chain) => {
+    promises.push(
+      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery)
+    )
+  })
+  const responses = await Promise.allSettled(promises)
+  const collections: ChainCollections = {}
+  responses.forEach((response, i) => {
+    if (response.status === 'fulfilled') {
+      collections[supportedChains[i].id] = response.value.data
+    }
+  })
+
+  console.log(collections)
 
   return {
-    props: { ssr: { collections: collectionsResponse.data } },
+    props: { ssr: { collections } },
     revalidate: 5,
   }
 }

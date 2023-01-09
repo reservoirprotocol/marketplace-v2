@@ -45,8 +45,9 @@ import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useMounted } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import { useRouter } from 'next/router'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -56,6 +57,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const account = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
+  const { reservoirBaseUrl } = useMarketplaceChain()
   const { data: collections } = useCollections(
     {
       id: collectionId,
@@ -220,7 +222,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Link>
             <Button
               onClick={() => {
-                fetcher('tokens/refresh/v1', undefined, {
+                fetcher(`${reservoirBaseUrl}/tokens/refresh/v1`, undefined, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -351,6 +353,9 @@ export const getStaticProps: GetStaticProps<{
 }> = async ({ params }) => {
   const collectionId = params?.contract?.toString()
   const id = params?.id?.toString()
+  const reservoirBaseUrl =
+    supportedChains.find((chain) => params?.chain === chain.routePrefix)
+      ?.reservoirBaseUrl || DefaultChain.reservoirBaseUrl
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -358,7 +363,10 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+  const collectionsResponse = await fetcher(
+    `${reservoirBaseUrl}/collections/v5`,
+    collectionQuery
+  )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
@@ -367,7 +375,10 @@ export const getStaticProps: GetStaticProps<{
     includeTopBid: true,
   }
 
-  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher(
+    `${reservoirBaseUrl}/tokens/v5`,
+    tokensQuery
+  )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 

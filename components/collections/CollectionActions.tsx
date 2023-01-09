@@ -99,13 +99,17 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const refreshMetadataItem = (
     <CollectionActionDropdownItem
       onClick={() => {
-        fetcher('collections/refresh/v1', undefined, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ collection: collection.id }),
-        })
+        fetcher(
+          `${marketplaceChain.reservoirBaseUrl}/collections/refresh/v1`,
+          undefined,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ collection: collection.id }),
+          }
+        )
           .then(({ response }) => {
             if (response.status === 200) {
               addToast?.({
