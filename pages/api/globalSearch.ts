@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import supportedChains from 'utils/chains'
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -13,18 +14,22 @@ export const config = {
 export default async function handler(req: Request) {
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q')
+  const chainId = Number(searchParams.get('chainId') || 1)
   let searchResults = []
 
   let isAddress = ethers.utils.isAddress(q as string)
 
-  //todo pass in marketplace chain
-  //todo handle search by ens and route to ens profile
+  const chain = supportedChains.find((chain) => chain.id == chainId)
 
   // start fetching search preemptively
-  let collectionQuery = fetcher(`collections/v5?name=${q}`)
+  let collectionQuery = fetcher(
+    `${chain?.reservoirBaseUrl}/collections/v5?name=${q}&limit=6`
+  )
 
   if (isAddress) {
-    let { data } = await fetcher(`collections/v5?contract=${q}`)
+    let { data } = await fetcher(
+      `${chain?.reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`
+    )
     if (data.collections.length) {
       searchResults = [
         {
@@ -36,7 +41,7 @@ export default async function handler(req: Request) {
       let ensData = await fetch(
         `https://api.ensideas.com/ens/resolve/${q}`
       ).then((res) => res.json())
-      https: searchResults = [
+      searchResults = [
         {
           type: 'wallet',
           data: {
