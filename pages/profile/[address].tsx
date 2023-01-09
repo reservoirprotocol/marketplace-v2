@@ -25,12 +25,12 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
 import { useMounted } from '../../hooks'
-import { TokenFilters } from 'components/profile/TokenFilters'
+import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
-import { UserAcivityTable } from 'components/profile/UserActivityTable'
+import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { ActivityFilters } from 'components/common/ActivityFilters'
-import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
+import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useENSResolver } from 'hooks'
@@ -295,7 +295,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     setOpen={setActivityFiltersOpen}
                   />
                 )}
-                <UserAcivityTable
+                <UserActivityTable
                   user={address}
                   activityTypes={activityTypes}
                 />

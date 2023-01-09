@@ -12,61 +12,60 @@ import {
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useListings } from '@reservoir0x/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-import { useTimeSince } from 'hooks'
-import CancelListing from 'components/buttons/CancelListing'
+import { useTimeSince, useUserCollections } from 'hooks'
+import CancelBid from 'components/buttons/CancelBid'
 import { Address } from 'wagmi'
+import { size } from 'lodash'
 
 type Props = {
   address: Address | undefined
 }
 
-export const ListingsTable: FC<Props> = ({ address }) => {
+export const CollectionsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
 
-  const data = useListings({
-    maker: address,
-    includeCriteriaMetadata: true,
-  })
+  const data = useUserCollections(address as string)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      data.fetchNextPage()
+      data.setSize(data.size + 1)
     }
   }, [loadMoreObserver?.isIntersecting])
 
-  const listings = data.data
+  const collections = data.data
+
+  console.log(collections)
 
   return (
     <>
-      {!data.isValidating &&
-      !data.isFetchingPage &&
-      listings &&
-      listings.length === 0 ? (
+      {/* {!data.isValidating &&
+      !data.isLoading &&
+      offers &&
+      offers.length === 0 ? (
         <Flex
           direction="column"
           align="center"
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
-          <img src="/tag-icon.svg" width={40} height={40} />
-          <Text css={{ color: '$gray11' }}>No listings yet</Text>
+          <img src="/hand-icon.svg" width={40} height={40} />
+          <Text css={{ color: '$gray11' }}>No offers made yet</Text>
         </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
           <TableHeading />
-          {listings.map((listing, i) => {
-            if (!listing) return null
+          {offers.map((offer, i) => {
+            if (!offer) return null
 
             return (
-              <ListingTableRow
-                key={`${listing?.id}-${i}`}
-                listing={listing}
+              <OfferTableRow
+                key={`${offer?.id}-${i}`}
+                offer={offer}
                 mutate={data?.mutate}
               />
             )
@@ -78,23 +77,23 @@ export const ListingsTable: FC<Props> = ({ address }) => {
         <Flex align="center" justify="center" css={{ py: '$6' }}>
           <LoadingSpinner />
         </Flex>
-      )}
+      )} */}
     </>
   )
 }
 
-type ListingTableRowProps = {
-  listing: ReturnType<typeof useListings>['data'][0]
+type OfferTableRowProps = {
+  offer: ReturnType<typeof useUserCollections>['data'][0]
   mutate?: MutatorCallback
 }
 
-const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
+const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   if (isSmallDevice) {
     return (
       <Flex
-        key={listing?.id}
+        key={offer?.id}
         direction="column"
         align="start"
         css={{
@@ -107,9 +106,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         }}
       >
         <Flex justify="between" css={{ width: '100%' }}>
-          <Link href={`/${listing?.contract}/${listing?.id}`}>
+          <Link href={`/${offer?.contract}/${offer?.id}`}>
             <Flex align="center">
-              {listing?.criteria?.data?.token?.image && (
+              {offer?.criteria?.data?.token?.image && (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -117,8 +116,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={listing?.criteria?.data?.token?.image as string}
-                  alt={`${listing?.id}`}
+                  src={offer?.criteria?.data?.token?.image as string}
+                  alt={`${offer?.id}`}
                   width={36}
                   height={36}
                 />
@@ -132,35 +131,35 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {listing?.criteria?.data?.collection?.name}
+                  {offer?.criteria?.data?.collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{listing?.criteria?.data?.token?.tokenId}
+                  #{offer?.criteria?.data?.token?.tokenId}
                 </Text>
               </Flex>
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={listing?.price?.amount?.native}
-            address={listing?.price?.currency?.contract}
+            amount={offer?.price?.amount?.native}
+            address={offer?.price?.currency?.contract}
             textStyle="subtitle2"
             logoHeight={14}
           />
         </Flex>
         <Flex justify="between" align="center" css={{ width: '100%' }}>
-          <a href={`https://${listing?.source?.domain}`} target="_blank">
+          <a href={`https://${offer?.source?.domain}`} target="_blank">
             <Flex align="center" css={{ gap: '$2' }}>
               <img
                 width="20px"
                 height="20px"
-                src={(listing?.source?.icon as string) || ''}
-                alt={`${listing?.source?.name}`}
+                src={(offer?.source?.icon as string) || ''}
+                alt={`${offer?.source?.name}`}
               />
-              <Text style="subtitle2">{useTimeSince(listing?.expiration)}</Text>
+              <Text style="subtitle2">{useTimeSince(offer?.expiration)}</Text>
             </Flex>
           </a>
-          <CancelListing
-            listingId={listing?.id as string}
+          <CancelBid
+            bidId={offer?.id as string}
             buttonChildren="Cancel"
             buttonCss={{ color: '$red11' }}
             mutate={mutate}
@@ -172,13 +171,13 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
 
   return (
     <TableRow
-      key={listing?.id}
+      key={offer?.id}
       css={{ gridTemplateColumns: '1.25fr .75fr 1fr 1fr 1fr' }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/${listing?.contract}/${listing?.id}`}>
+        <Link href={`/${offer?.contract}/${offer?.id}`}>
           <Flex align="center">
-            {listing?.criteria?.data?.token?.image && (
+            {offer?.criteria?.data?.token?.image && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -186,8 +185,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                   aspectRatio: '1/1',
                 }}
                 loader={({ src }) => src}
-                src={listing?.criteria?.data?.token?.image as string}
-                alt={`${listing?.criteria?.data?.token?.name}`}
+                src={offer?.criteria?.data?.token?.image as string}
+                alt={`${offer?.criteria?.data?.token?.name}`}
                 width={48}
                 height={48}
               />
@@ -200,10 +199,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {listing?.criteria?.data?.collection?.name}
+                {offer?.criteria?.data?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{listing?.criteria?.data?.collection?.id}
+                #{offer?.criteria?.data?.collection?.id}
               </Text>
             </Flex>
           </Flex>
@@ -211,37 +210,37 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={listing?.price?.amount?.native}
-          address={listing?.price?.currency?.contract}
+          amount={offer?.price?.amount?.native}
+          address={offer?.price?.currency?.contract}
           textStyle="subtitle2"
           logoHeight={14}
         />
       </TableCell>
       <TableCell>
-        <Text style="subtitle2">{useTimeSince(listing?.expiration)}</Text>
+        <Text style="subtitle2">{useTimeSince(offer?.expiration)}</Text>
       </TableCell>
       <TableCell>
         <Flex align="center" css={{ gap: '$2' }}>
           <img
             width="20px"
             height="20px"
-            src={(listing?.source?.icon as string) || ''}
-            alt={`${listing?.source?.name}`}
+            src={(offer?.source?.icon as string) || ''}
+            alt={`${offer?.source?.name}`}
           />
           <Anchor
-            href={`https://${listing?.source?.domain as string}`}
+            href={`https://${offer?.source?.domain as string}`}
             target="_blank"
             color="primary"
             weight="normal"
           >
-            {listing?.source?.name as string}
+            {offer?.source?.name as string}
           </Anchor>
         </Flex>
       </TableCell>
       <TableCell>
         <Flex justify="end">
-          <CancelListing
-            listingId={listing?.id as string}
+          <CancelBid
+            bidId={offer?.id as string}
             buttonChildren="Cancel"
             buttonCss={{ color: '$red11' }}
             mutate={mutate}
@@ -262,30 +261,28 @@ const TableHeading = () => (
   >
     <TableCell>
       <Text style="subtitle3" css={{ color: '$gray11' }}>
-        Items
+        Collection
       </Text>
     </TableCell>
     <TableCell>
       <Text style="subtitle3" css={{ color: '$gray11' }}>
-        Listed Price
+        Volume
       </Text>
     </TableCell>
     <TableCell>
       <Text style="subtitle3" css={{ color: '$gray11' }}>
-        Expiration
+        Top Offer
       </Text>
     </TableCell>
-
-    {/* <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
-        Quantity
-      </Text>
-    </TableCell> */}
     <TableCell>
       <Text style="subtitle3" css={{ color: '$gray11' }}>
-        Marketplace
+        Floor Price
       </Text>
     </TableCell>
-    <TableCell></TableCell>
+    <TableCell>
+      <Text style="subtitle3" css={{ color: '$gray11' }}>
+        Owned
+      </Text>
+    </TableCell>
   </HeaderRow>
 )

@@ -8,14 +8,17 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useListings, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
+import { useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useMounted, useUserCollections } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
-import { TokenFilters } from 'components/profile/TokenFilters'
+import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
+import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
+import { OffersTable } from 'components/portfolio/OffersTable'
+import CollectionTable from 'components/portfolio/CollectionTable'
+import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -36,19 +39,14 @@ const IndexPage: NextPage = () => {
     collection: filterCollection,
     includeTopBid: true,
   }
-  const data = useUserTokens(address, tokenQuery, {})
+  const tokensData = useUserTokens(address, tokenQuery, {})
 
   const { data: collections } = useUserCollections(address as string)
-
-  const listingsData = useListings({
-    maker: address,
-    includeCriteriaMetadata: true,
-  })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      data.fetchNextPage()
+      tokensData.fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -126,15 +124,19 @@ const IndexPage: NextPage = () => {
                           />
                         )}
                     </Flex>
-                    <TokenTable data={data} />
+                    <TokenTable data={tokensData} />
                   </Box>
                 </Flex>
               </TabsContent>
-              <TabsContent value="collections">Collections</TabsContent>
-              <TabsContent value="listings">
-                <ListingsTable data={listingsData} />
+              <TabsContent value="collections">
+                <CollectionsTable address={address} />
               </TabsContent>
-              <TabsContent value="offers">Offers Made</TabsContent>
+              <TabsContent value="listings">
+                <ListingsTable address={address} />
+              </TabsContent>
+              <TabsContent value="offers">
+                <OffersTable address={address} />
+              </TabsContent>
             </Tabs.Root>
           </>
         ) : (

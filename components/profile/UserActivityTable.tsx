@@ -12,7 +12,7 @@ type Props = {
   activityTypes: ActivityTypes
 }
 
-export const UserAcivityTable: FC<Props> = ({ user, activityTypes }) => {
+export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
   const data = useUsersActivity(
     user ? [user] : undefined,
     { types: activityTypes, limit: 20 },
