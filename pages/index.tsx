@@ -25,22 +25,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('allTimeVolume')
   const marketplaceChain = useMarketplaceChain()
-  const {
-    data,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingPage,
-    isValidating,
-    isFetchingInitialData,
-  } = useCollections(
-    {
-      limit: 12,
-      sortBy: sortByTime,
-    },
-    {
-      fallbackData: [ssr.collections[marketplaceChain.id]],
-    }
-  )
+  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
+    useCollections(
+      {
+        limit: 12,
+        sortBy: sortByTime,
+      },
+      {
+        fallbackData: [ssr.collections[marketplaceChain.id]],
+      }
+    )
   let collections = data || []
   const showViewAllButton = collections.length <= 12 && hasNextPage
   if (showViewAllButton) {
@@ -91,10 +85,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               }}
             />
           </Flex>
-          {isSSR || !isMounted || isFetchingInitialData ? null : (
-            <TrendingCollectionsList collections={collections} />
+          {isSSR || !isMounted ? null : (
+            <TrendingCollectionsList
+              collections={collections}
+              loading={isValidating}
+            />
           )}
-          {!isFetchingInitialData && (isFetchingPage || isValidating) && (
+          {(isFetchingPage || isValidating) && !showViewAllButton && (
             <Flex align="center" justify="center" css={{ py: '$4' }}>
               <LoadingSpinner />
             </Flex>
