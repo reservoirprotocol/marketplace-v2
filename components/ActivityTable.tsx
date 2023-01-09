@@ -162,14 +162,20 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   if (isSmallDevice) {
     return (
       <TableRow key={activity.txHash} css={{ gridTemplateColumns: '1fr' }}>
-        <TableCell css={{ pr: '0' }}>
+        <TableCell css={{ pr: '0', width: '100%', minWidth: 0 }}>
           <Flex direction="column" css={{ gap: '$3' }}>
             <Flex css={{ color: '$gray11' }} align="center" justify="between">
               <Flex align="center">
                 {activity.type && logos[activity.type]}
                 <Text
                   style="subtitle1"
-                  css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+                  ellipsify
+                  css={{
+                    ml: '$2',
+                    color: '$gray11',
+                    fontSize: '14px',
+                    minWidth: 0,
+                  }}
                 >
                   {activityDescription}
                 </Text>
@@ -207,7 +213,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               </Flex>
             </Flex>
             <Flex align="center" justify="between">
-              <Link href={href} passHref>
+              <Link
+                href={href}
+                passHref
+                style={{ maxWidth: '100%', minWidth: 0 }}
+              >
                 <Flex align="center">
                   {imageSrc && (
                     <Image
@@ -230,7 +240,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               activity.price !== 0 &&
               activity.type &&
               !['transfer', 'mint'].includes(activity.type) ? (
-                <Flex direction="column" align="center">
+                <Flex
+                  direction="column"
+                  align="center"
+                  css={{ minWidth: 'max-content', pl: '$2' }}
+                >
                   <FormatCryptoCurrency
                     amount={activity.price}
                     logoHeight={16}
@@ -316,7 +330,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         </Flex>
       </TableCell>
 
-      <TableCell>
+      <TableCell css={{ minWidth: 0 }}>
         <Link href={href} passHref>
           <Flex align="center">
             {imageSrc && (
