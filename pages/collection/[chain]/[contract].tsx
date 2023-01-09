@@ -77,7 +77,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       includeTopBid: true,
     },
     {
-      fallbackData: ssr.collection,
+      fallbackData: [ssr.collection],
     }
   )
 
