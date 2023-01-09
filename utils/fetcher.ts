@@ -23,4 +23,11 @@ const fetcher = async (
   return { data: json, response }
 }
 
+export const basicFetcher = async (href: string, options?: RequestInit) => {
+  const response = await fetch(href, options)
+  const json = await response.json()
+
+  return { data: json, response }
+}
+
 export default fetcher

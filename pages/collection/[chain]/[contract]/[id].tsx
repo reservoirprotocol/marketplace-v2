@@ -38,14 +38,13 @@ import Link from 'next/link'
 import { jsNumberForAddress } from 'react-jazzicon'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import fetcher from 'utils/fetcher'
-import { truncateAddress } from 'utils/truncate'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
 import { useRouter } from 'next/router'
 import supportedChains, { DefaultChain } from 'utils/chains'
 
@@ -97,9 +96,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       ? true
       : token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
   const owner = isOwner ? account?.address : token?.token?.owner
-  const ownerFormatted = isOwner
-    ? 'You'
-    : truncateAddress(token?.token?.owner || '')
+  const { displayName: ownerFormatted } = useENSResolver(token?.token?.owner)
 
   return (
     <Layout>

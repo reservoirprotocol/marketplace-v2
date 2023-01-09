@@ -7,15 +7,13 @@ import {
 import { Text, Flex, Box, Grid } from '../../components/primitives'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
-import fetcher from 'utils/fetcher'
-import { useEnsAvatar, useEnsName, Address } from 'wagmi'
+import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useCopyToClipboard, useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { truncateAddress, truncateEns } from 'utils/truncate'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
@@ -36,6 +34,7 @@ import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import supportedChains, { DefaultChain } from 'utils/chains'
+import { useENSResolver } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -48,15 +47,19 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ address, ssr }) => {
+const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
+  const {
+    avatar: ensAvatar,
+    name: resolvedEnsName,
+    shortAddress,
+  } = useENSResolver(address)
+  ensName = resolvedEnsName ? resolvedEnsName : ensName
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
-  const { data: ensAvatar } = useEnsAvatar(address as Address)
-  const { data: ensName } = useEnsName(address as Address)
   const [value, copy] = useCopyToClipboard()
   const { addToast } = useContext(ToastContext)
   const [playingElement, setPlayingElement] = useState<
@@ -131,11 +134,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
             />
           )}
           <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h4">
-              {ensName
-                ? truncateEns(ensName)
-                : truncateAddress(address as string)}
-            </Text>
+            <Text style="h4">{ensName ? ensName : shortAddress}</Text>
             <Flex
               align="center"
               css={{ cursor: 'pointer' }}
@@ -149,7 +148,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr }) => {
                 color="$gray11"
                 css={{ color: '$gray11', mr: '$3' }}
               >
-                {truncateAddress(address as string)}
+                {shortAddress}
               </Text>
               <Box css={{ color: '$gray10' }}>
                 <FontAwesomeIcon icon={faCopy} width={16} height={16} />
@@ -331,8 +330,26 @@ export const getStaticProps: GetStaticProps<{
     collections: Record<number, UserCollectionsSchema>
   }
   address: string | undefined
+  ensName: string | null
 }> = async ({ params }) => {
-  const address = params?.address?.toString()
+  let address = params?.address?.toString() || ''
+  const isEnsName = address.includes('.')
+  let ensName: null | string = null
+
+  if (isEnsName) {
+    ensName = address
+    const ensResponse = await basicFetcher(
+      `https://api.ensideas.com/ens/resolve/${address}`
+    )
+    const ensAddress = ensResponse?.data?.address
+    if (ensAddress) {
+      address = ensAddress
+    } else {
+      return {
+        notFound: true,
+      }
+    }
+  }
 
   const tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
@@ -378,7 +395,7 @@ export const getStaticProps: GetStaticProps<{
   })
 
   return {
-    props: { ssr: { tokens, collections }, address },
+    props: { ssr: { tokens, collections }, address, ensName },
     revalidate: 5,
   }
 }
