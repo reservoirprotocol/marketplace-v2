@@ -58,7 +58,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       id: collectionId,
     },
     {
-      fallbackData: ssr.collection,
+      fallbackData: [ssr.collection],
     }
   )
   const collection = collections && collections[0] ? collections[0] : null
