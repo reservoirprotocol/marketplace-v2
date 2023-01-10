@@ -48,9 +48,15 @@ const TrendingCollectionsTimeToggle: FC<Props> = ({
         onOptionSelected(value as CollectionsSortingOption)
       }}
     >
-      {sortingOptions.map((option) => (
-        <ToggleGroupItem key={option} value={option}>
-          <Text style="subtitle1">{nameForSortingOption(option, compact)}</Text>
+      {sortingOptions.map((optionItem) => (
+        <ToggleGroupItem
+          key={optionItem}
+          value={optionItem}
+          disabled={optionItem === option}
+        >
+          <Text style="subtitle1">
+            {nameForSortingOption(optionItem, compact)}
+          </Text>
         </ToggleGroupItem>
       ))}
     </ToggleGroup>

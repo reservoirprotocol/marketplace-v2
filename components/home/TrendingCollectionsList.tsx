@@ -1,13 +1,18 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Box } from '../primitives'
-import { FC } from 'react'
+import { ComponentPropsWithoutRef, FC } from 'react'
 import { TrendingCollectionItem } from './TrendingCollectionItem'
 
+export type TrendingCollections = ReturnType<typeof useCollections>['data']
+
 type Props = {
-  collections: ReturnType<typeof useCollections>['data']
+  collections: TrendingCollections
+  volumeKey: ComponentPropsWithoutRef<
+    typeof TrendingCollectionItem
+  >['volumeKey']
 }
 
-const TrendingCollectionsList: FC<Props> = ({ collections }) => {
+const TrendingCollectionsList: FC<Props> = ({ collections, volumeKey }) => {
   return (
     <Box
       css={{
@@ -24,7 +29,12 @@ const TrendingCollectionsList: FC<Props> = ({ collections }) => {
       }}
     >
       {collections?.map((collection, i) => (
-        <TrendingCollectionItem key={i} collection={collection} rank={i + 1} />
+        <TrendingCollectionItem
+          key={i}
+          collection={collection}
+          rank={i + 1}
+          volumeKey={volumeKey}
+        />
       ))}
     </Box>
   )
