@@ -20,7 +20,7 @@ const ChainSwitcher = () => {
   const chainIcon = supportedChain ? supportedChain.iconUrl : mainnet?.iconUrl
 
   const trigger = (
-    <Button color="gray3" size="small">
+    <Button color="gray3" size="small" css={{ py: '$3' }}>
       <img style={{ height: 17 }} src={chainIcon} />
       {isSmallDevice ? null : <Text style="body1">{chainName}</Text>}
       <Text css={{ color: '$slate10' }}>
