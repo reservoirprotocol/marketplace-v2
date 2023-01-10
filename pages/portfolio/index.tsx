@@ -93,7 +93,7 @@ const IndexPage: NextPage = () => {
               <TabsContent value="items">
                 <Flex
                   css={{
-                    gap: tokenFiltersOpen ? '$5' : '',
+                    gap: tokenFiltersOpen ? '$5' : '0',
                     position: 'relative',
                   }}
                 >

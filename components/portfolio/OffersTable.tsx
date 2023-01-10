@@ -8,6 +8,7 @@ import {
   HeaderRow,
   FormatCryptoCurrency,
   Anchor,
+  Button,
 } from '../primitives'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -22,6 +23,8 @@ import { Address } from 'wagmi'
 type Props = {
   address: Address | undefined
 }
+
+const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
 export const OffersTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -62,8 +65,6 @@ export const OffersTable: FC<Props> = ({ address }) => {
         <Flex direction="column" css={{ width: '100%' }}>
           <TableHeading />
           {offers.map((offer, i) => {
-            if (!offer) return null
-
             return (
               <OfferTableRow
                 key={`${offer?.id}-${i}`}
@@ -91,12 +92,14 @@ type OfferTableRowProps = {
 
 const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const expiration = useTimeSince(offer?.expiration)
+
+  let criteriaData = offer?.criteria?.data
 
   let imageSrc: string = (
-    offer?.criteria?.data?.token?.tokenId
-      ? offer?.criteria?.data?.token?.image ||
-        offer?.criteria?.data?.collection?.image
-      : offer?.criteria?.data?.collection?.image
+    criteriaData?.token?.tokenId
+      ? criteriaData?.token?.image || criteriaData?.collection?.image
+      : criteriaData?.collection?.image
   ) as string
 
   if (isSmallDevice) {
@@ -115,7 +118,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
         }}
       >
         <Flex justify="between" css={{ width: '100%' }}>
-          <Link href={`/${offer?.contract}/${offer?.id}`}>
+          <Link href={`/${offer?.contract}/${criteriaData?.token?.tokenId}`}>
             <Flex align="center">
               {imageSrc && (
                 <Image
@@ -140,10 +143,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {offer?.criteria?.data?.collection?.name}
+                  {criteriaData?.collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{offer?.criteria?.data?.token?.tokenId}
+                  #{criteriaData?.token?.tokenId}
                 </Text>
               </Flex>
             </Flex>
@@ -164,14 +167,17 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 src={(offer?.source?.icon as string) || ''}
                 alt={`${offer?.source?.name}`}
               />
-              <Text style="subtitle2">{useTimeSince(offer?.expiration)}</Text>
+              <Text style="subtitle2">{expiration}</Text>
             </Flex>
           </a>
           <CancelBid
             bidId={offer?.id as string}
-            buttonChildren="Cancel"
-            buttonCss={{ color: '$red11' }}
             mutate={mutate}
+            trigger={
+              <Button css={{ color: '$red11' }} color="gray3">
+                Cancel
+              </Button>
+            }
           />
         </Flex>
       </Flex>
@@ -181,10 +187,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   return (
     <TableRow
       key={offer?.id}
-      css={{ gridTemplateColumns: '1.25fr .75fr 1fr 1fr 1fr' }}
+      css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/${offer?.contract}/${offer?.id}`}>
+        <Link href={`/${offer?.contract}/${criteriaData?.token?.tokenId}`}>
           <Flex align="center">
             {imageSrc && (
               <Image
@@ -195,7 +201,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${offer?.criteria?.data?.token?.name}`}
+                alt={`${criteriaData?.token?.name}`}
                 width={48}
                 height={48}
               />
@@ -208,10 +214,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {offer?.criteria?.data?.collection?.name}
+                {criteriaData?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{offer?.criteria?.data?.collection?.id}
+                #{criteriaData?.collection?.id}
               </Text>
             </Flex>
           </Flex>
@@ -226,7 +232,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
         />
       </TableCell>
       <TableCell>
-        <Text style="subtitle2">{useTimeSince(offer?.expiration)}</Text>
+        <Text style="subtitle2">{expiration}</Text>
       </TableCell>
       <TableCell>
         <Flex align="center" css={{ gap: '$2' }}>
@@ -250,9 +256,12 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
         <Flex justify="end">
           <CancelBid
             bidId={offer?.id as string}
-            buttonChildren="Cancel"
-            buttonCss={{ color: '$red11' }}
             mutate={mutate}
+            trigger={
+              <Button css={{ color: '$red11' }} color="gray3">
+                Cancel
+              </Button>
+            }
           />
         </Flex>
       </TableCell>
@@ -265,26 +274,26 @@ const TableHeading = () => (
     css={{
       display: 'none',
       '@md': { display: 'grid' },
-      gridTemplateColumns: '1.25fr .75fr 1fr 1fr 1fr',
+      gridTemplateColumns: desktopTemplateColumns,
     }}
   >
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Items
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Offer Amount
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Expiration
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Marketplace
       </Text>
     </TableCell>

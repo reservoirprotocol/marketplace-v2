@@ -371,7 +371,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell>
         {activity.amount ? (
           <Flex direction="column" align="start">
-            <Text style="subtitle3" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" subtleColor>
               Quantity
             </Text>
             <Text style="subtitle3">{activity.amount}</Text>
@@ -384,7 +384,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         {activity.fromAddress &&
         activity.fromAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
-            <Text style="subtitle3" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" subtleColor>
               From
             </Text>
             <Link href={`/profile/${activity.fromAddress}`}>
@@ -408,7 +408,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell>
         {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
-            <Text style="subtitle3" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" subtleColor>
               To
             </Text>
             <Link href={`/profile/${activity.fromAddress}`}>
@@ -439,7 +439,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               alt={`${activity.order?.source?.name} Source`}
             />
           )}
-          <Text style="subtitle3" css={{ color: '$gray11' }}>
+          <Text style="subtitle3" subtleColor>
             {useTimeSince(activity?.timestamp)}
           </Text>
 

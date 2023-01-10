@@ -23,6 +23,8 @@ type Props = {
   data: ReturnType<typeof useUserTokens>
 }
 
+const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
+
 export const TokenTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
@@ -133,7 +135,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 minWidth: 0,
               }}
             >
-              <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
+              <Text style="subtitle3" ellipsify subtleColor>
                 {token?.token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
@@ -144,7 +146,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         </Link>
         <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
-            <Text style="subtitle3" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" subtleColor>
               Net Floor
             </Text>
             <FormatCryptoCurrency
@@ -171,7 +173,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             />
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
-            <Text style="subtitle3" css={{ color: '$gray11' }}>
+            <Text style="subtitle3" subtleColor>
               You Get
             </Text>
             <FormatCryptoCurrency
@@ -213,7 +215,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   return (
     <TableRow
       key={token?.token?.tokenId}
-      css={{ gridTemplateColumns: '1.25fr .75fr .75fr .75fr 1.5fr' }}
+      css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
@@ -320,22 +322,22 @@ const TableHeading = () => (
     css={{
       display: 'none',
       '@md': { display: 'grid' },
-      gridTemplateColumns: '1.25fr .75fr .75fr .75fr 1.5fr',
+      gridTemplateColumns: desktopTemplateColumns,
     }}
   >
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Items
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Listed Price
       </Text>
     </TableCell>
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
-        <Text style="subtitle3" css={{ color: '$gray11' }}>
+        <Text style="subtitle3" subtleColor>
           Net Floor
         </Text>
         <Tooltip
@@ -356,7 +358,7 @@ const TableHeading = () => (
     </TableCell>
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
-        <Text style="subtitle3" css={{ color: '$gray11' }}>
+        <Text style="subtitle3" subtleColor>
           You Get
         </Text>
         <Tooltip

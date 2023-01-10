@@ -119,18 +119,30 @@ export const TokenActions: FC<Props> = ({
       {isTopBidder && (
         <CancelBid
           bidId={token?.market?.topBid?.id as string}
-          buttonChildren="Cancel Offer"
-          buttonCss={{ color: '$red11', justifyContent: 'center' }}
           mutate={mutate}
+          trigger={
+            <Button
+              css={{ color: '$red11', justifyContent: 'center' }}
+              color="gray3"
+            >
+              Cancel Offer
+            </Button>
+          }
         />
       )}
 
       {isOwner && isListed && (
         <CancelListing
           listingId={token?.market?.floorAsk?.id as string}
-          buttonChildren="Cancel Listing"
-          buttonCss={{ color: '$red11', justifyContent: 'center' }}
           mutate={mutate}
+          trigger={
+            <Button
+              css={{ color: '$red11', justifyContent: 'center' }}
+              color="gray3"
+            >
+              Cancel Listing
+            </Button>
+          }
         />
       )}
 

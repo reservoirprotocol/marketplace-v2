@@ -8,6 +8,7 @@ import {
   HeaderRow,
   FormatCryptoCurrency,
   Anchor,
+  Button,
 } from '../primitives'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -22,6 +23,8 @@ import { Address } from 'wagmi'
 type Props = {
   address: Address | undefined
 }
+
+const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
 export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -62,8 +65,6 @@ export const ListingsTable: FC<Props> = ({ address }) => {
         <Flex direction="column" css={{ width: '100%' }}>
           <TableHeading />
           {listings.map((listing, i) => {
-            if (!listing) return null
-
             return (
               <ListingTableRow
                 key={`${listing?.id}-${i}`}
@@ -91,12 +92,14 @@ type ListingTableRowProps = {
 
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const expiration = useTimeSince(listing?.expiration)
+
+  let criteriaData = listing?.criteria?.data
 
   let imageSrc: string = (
-    listing?.criteria?.data?.token?.tokenId
-      ? listing?.criteria?.data?.token?.image ||
-        listing?.criteria?.data?.collection?.image
-      : listing?.criteria?.data?.collection?.image
+    criteriaData?.token?.tokenId
+      ? criteriaData?.token?.image || criteriaData?.collection?.image
+      : criteriaData?.collection?.image
   ) as string
 
   if (isSmallDevice) {
@@ -115,9 +118,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         }}
       >
         <Flex justify="between" css={{ width: '100%' }}>
-          <Link
-            href={`/${listing?.contract}/${listing?.criteria?.data?.token?.tokenId}`}
-          >
+          <Link href={`/${listing?.contract}/${criteriaData?.token?.tokenId}`}>
             <Flex align="center">
               {imageSrc && (
                 <Image
@@ -142,10 +143,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {listing?.criteria?.data?.collection?.name}
+                  {criteriaData?.collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{listing?.criteria?.data?.token?.tokenId}
+                  #{criteriaData?.token?.tokenId}
                 </Text>
               </Flex>
             </Flex>
@@ -166,14 +167,17 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 src={(listing?.source?.icon as string) || ''}
                 alt={`${listing?.source?.name}`}
               />
-              <Text style="subtitle2">{useTimeSince(listing?.expiration)}</Text>
+              <Text style="subtitle2">{expiration}</Text>
             </Flex>
           </a>
           <CancelListing
             listingId={listing?.id as string}
-            buttonChildren="Cancel"
-            buttonCss={{ color: '$red11' }}
             mutate={mutate}
+            trigger={
+              <Button css={{ color: '$red11' }} color="gray3">
+                Cancel
+              </Button>
+            }
           />
         </Flex>
       </Flex>
@@ -183,12 +187,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   return (
     <TableRow
       key={listing?.id}
-      css={{ gridTemplateColumns: '1.25fr .75fr 1fr 1fr 1fr' }}
+      css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link
-          href={`/${listing?.contract}/${listing?.criteria?.data?.token?.tokenId}`}
-        >
+        <Link href={`/${listing?.contract}/${criteriaData?.token?.tokenId}`}>
           <Flex align="center">
             {imageSrc && (
               <Image
@@ -199,7 +201,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc as string}
-                alt={`${listing?.criteria?.data?.token?.name}`}
+                alt={`${criteriaData?.token?.name}`}
                 width={48}
                 height={48}
               />
@@ -212,10 +214,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {listing?.criteria?.data?.collection?.name}
+                {criteriaData?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{listing?.criteria?.data?.collection?.id}
+                #{criteriaData?.collection?.id}
               </Text>
             </Flex>
           </Flex>
@@ -230,7 +232,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         />
       </TableCell>
       <TableCell>
-        <Text style="subtitle2">{useTimeSince(listing?.expiration)}</Text>
+        <Text style="subtitle2">{expiration}</Text>
       </TableCell>
       <TableCell>
         <Flex align="center" css={{ gap: '$2' }}>
@@ -254,9 +256,12 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         <Flex justify="end">
           <CancelListing
             listingId={listing?.id as string}
-            buttonChildren="Cancel"
-            buttonCss={{ color: '$red11' }}
             mutate={mutate}
+            trigger={
+              <Button css={{ color: '$red11' }} color="gray3">
+                Cancel
+              </Button>
+            }
           />
         </Flex>
       </TableCell>
@@ -269,32 +274,26 @@ const TableHeading = () => (
     css={{
       display: 'none',
       '@md': { display: 'grid' },
-      gridTemplateColumns: '1.25fr .75fr 1fr 1fr 1fr',
+      gridTemplateColumns: desktopTemplateColumns,
     }}
   >
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Items
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Listed Price
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Expiration
       </Text>
     </TableCell>
-
-    {/* <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
-        Quantity
-      </Text>
-    </TableCell> */}
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Marketplace
       </Text>
     </TableCell>

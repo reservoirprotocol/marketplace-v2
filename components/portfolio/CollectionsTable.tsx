@@ -23,6 +23,8 @@ import round from 'utils/round'
 type Props = {
   address: Address | undefined
 }
+const mobileTemplateColumns = '1.4fr repeat(2, 1fr)'
+const desktopTemplateColumns = '1.26fr repeat(4, 1fr)'
 
 export const CollectionsTable: FC<Props> = ({ address }) => {
   const isMounted = useMounted()
@@ -74,8 +76,6 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
           />
           <TableHeading />
           {collections.map((collection, i) => {
-            if (!collection) return null
-
             return (
               <CollectionTableRow
                 key={`${collection?.collection?.id}-${i}`}
@@ -111,7 +111,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
     return (
       <TableRow
         key={collection?.collection?.id}
-        css={{ gridTemplateColumns: '1.2fr .9fr .9fr' }}
+        css={{ gridTemplateColumns: mobileTemplateColumns }}
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link href={`/collections/${collection?.collection?.id}`}>
@@ -187,7 +187,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
   return (
     <TableRow
       key={collection?.collection?.id}
-      css={{ gridTemplateColumns: '1.2fr .95fr .95fr .95fr .95fr' }}
+      css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link href={`/collections/${collection?.collection?.id}`}>
@@ -263,38 +263,39 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
 const TableHeading = () => (
   <HeaderRow
     css={{
-      gridTemplateColumns: '1.2fr .9fr .9fr',
+      gridTemplateColumns: mobileTemplateColumns,
       '@md': {
         display: 'grid',
-        gridTemplateColumns: '1.2fr .95fr .95fr .95fr .95fr',
+        gridTemplateColumns: desktopTemplateColumns,
       },
     }}
   >
     <TableCell>
       <Text
         style="subtitle3"
-        css={{ color: '$gray11', display: 'none', '@md': { display: 'block' } }}
+        css={{ display: 'none', '@md': { display: 'block' } }}
+        subtleColor
       >
         Collection
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Volume
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Top Offer
       </Text>
     </TableCell>
     <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Floor Price
       </Text>
     </TableCell>
     <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text style="subtitle3" subtleColor>
         Owned
       </Text>
     </TableCell>
