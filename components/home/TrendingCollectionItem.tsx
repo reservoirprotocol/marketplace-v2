@@ -7,7 +7,7 @@ import { TrendingCollections } from 'components/home/TrendingCollectionsList'
 
 type Props = {
   rank: string | number
-  collection: TrendingCollections[0]
+  collection: NonNullable<TrendingCollections>[0]
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
