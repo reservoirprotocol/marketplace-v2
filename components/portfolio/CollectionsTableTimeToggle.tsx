@@ -41,9 +41,16 @@ const CollectionsTableTimeToggle: FC<Props> = ({
       }}
       css={{ maxWidth: 'max-content' }}
     >
-      {sortingOptions.map((option) => (
-        <ToggleGroupItem key={option} value={option} css={{ py: '$3' }}>
-          <Text style="subtitle1">{nameForSortingOption(option, compact)}</Text>
+      {sortingOptions.map((optionItem) => (
+        <ToggleGroupItem
+          key={optionItem}
+          value={optionItem}
+          disabled={optionItem === option}
+          css={{ py: '$3' }}
+        >
+          <Text style="subtitle1">
+            {nameForSortingOption(optionItem, compact)}
+          </Text>
         </ToggleGroupItem>
       ))}
     </ToggleGroup>

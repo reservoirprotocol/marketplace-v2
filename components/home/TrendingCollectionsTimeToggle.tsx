@@ -47,7 +47,6 @@ const TrendingCollectionsTimeToggle: FC<Props> = ({
       onValueChange={(value) => {
         onOptionSelected(value as CollectionsSortingOption)
       }}
-      css={{ maxWidth: 'max-content' }}
     >
       {sortingOptions.map((optionItem) => (
         <ToggleGroupItem

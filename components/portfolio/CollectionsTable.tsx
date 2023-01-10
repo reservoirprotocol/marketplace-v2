@@ -12,7 +12,6 @@ import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import Link from 'next/link'
-import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { useMounted } from 'hooks'
@@ -38,7 +37,6 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   const {
     data: collections,
     fetchNextPage,
-    mutate,
     isFetchingPage,
     isValidating,
   } = useUserCollections(address as string, { includeTopBid: true })
@@ -81,7 +79,6 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
               <CollectionTableRow
                 key={`${collection?.collection?.id}-${i}`}
                 collection={collection}
-                mutate={mutate}
                 sortByTime={sortByTime}
               />
             )
@@ -100,95 +97,73 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
 
 type OfferTableRowProps = {
   collection: ReturnType<typeof useUserCollections>['data'][0]
-  mutate?: MutatorCallback
   sortByTime: CollectionsTableSortingOption
 }
 
 const CollectionTableRow: FC<OfferTableRowProps> = ({
   collection,
-  mutate,
   sortByTime,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  // if (isSmallDevice) {
-  //   return (
-  //     <Flex
-  //       key={collection?.collection?.id}
-  //       direction="column"
-  //       align="start"
-  //       css={{
-  //         gap: '$3',
-  //         borderBottom: '1px solid $gray3',
-  //         py: '$3',
-  //         width: '100%',
-  //         overflow: 'hidden',
-  //         flex: 1,
-  //       }}
-  //     >
-  //       <Flex justify="between" css={{ width: '100%' }}>
-  //         <Link href={`/${offer?.contract}/${offer?.id}`}>
-  //           <Flex align="center">
-  //             {imageSrc && (
-  //               <Image
-  //                 style={{
-  //                   borderRadius: '4px',
-  //                   objectFit: 'cover',
-  //                   aspectRatio: '1/1',
-  //                 }}
-  //                 loader={({ src }) => src}
-  //                 src={imageSrc}
-  //                 alt={`${offer?.id}`}
-  //                 width={36}
-  //                 height={36}
-  //               />
-  //             )}
-  //             <Flex
-  //               direction="column"
-  //               css={{
-  //                 ml: '$2',
-  //                 overflow: 'hidden',
-  //                 minWidth: 0,
-  //               }}
-  //             >
-  //               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-  //                 {offer?.criteria?.data?.collection?.name}
-  //               </Text>
-  //               <Text style="subtitle2" ellipsify>
-  //                 #{offer?.criteria?.data?.token?.tokenId}
-  //               </Text>
-  //             </Flex>
-  //           </Flex>
-  //         </Link>
-  //         <FormatCryptoCurrency
-  //           amount={offer?.price?.amount?.native}
-  //           address={offer?.price?.currency?.contract}
-  //           textStyle="subtitle2"
-  //           logoHeight={14}
-  //         />
-  //       </Flex>
-  //       <Flex justify="between" align="center" css={{ width: '100%' }}>
-  //         <a href={`https://${offer?.source?.domain}`} target="_blank">
-  //           <Flex align="center" css={{ gap: '$2' }}>
-  //             <img
-  //               width="20px"
-  //               height="20px"
-  //               src={(offer?.source?.icon as string) || ''}
-  //               alt={`${offer?.source?.name}`}
-  //             />
-  //             <Text style="subtitle2">{useTimeSince(offer?.expiration)}</Text>
-  //           </Flex>
-  //         </a>
-  //         <CancelBid
-  //           bidId={offer?.id as string}
-  //           buttonChildren="Cancel"
-  //           buttonCss={{ color: '$red11' }}
-  //           mutate={mutate}
-  //         />
-  //       </Flex>
-  //     </Flex>
-  //   )
-  // }
+  if (isSmallDevice) {
+    return (
+      <TableRow
+        key={collection?.collection?.id}
+        css={{ gridTemplateColumns: '1.4fr .8fr .8fr' }}
+      >
+        <TableCell css={{ minWidth: 0 }}>
+          <Link href={`/collections/${collection?.collection?.id}`}>
+            <Flex align="center">
+              {collection?.collection?.image && (
+                <Image
+                  style={{
+                    borderRadius: '4px',
+                    objectFit: 'cover',
+                    aspectRatio: '1/1',
+                  }}
+                  loader={({ src }) => src}
+                  src={collection?.collection?.image}
+                  alt={`${collection?.collection?.name}`}
+                  width={48}
+                  height={48}
+                />
+              )}
+              <Text
+                style="subtitle3"
+                ellipsify
+                css={{ color: '$gray11', ml: '$2' }}
+              >
+                {collection?.collection?.name}
+              </Text>
+            </Flex>
+          </Link>
+        </TableCell>
+        <TableCell>
+          <Flex
+            direction="column"
+            align="start"
+            css={{ minWidth: 'max-content' }}
+          >
+            <FormatCryptoCurrency
+              amount={collection?.collection?.volume?.[sortByTime]}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Flex>
+        </TableCell>
+        <TableCell css={{ minWidth: 'max-content' }}>
+          <Text style="subtitle2" css={{ minWidth: 'max-content' }}>
+            <FormatCryptoCurrency
+              amount={collection?.collection?.topBidValue}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
+      </TableRow>
+    )
+  }
 
   return (
     <TableRow
@@ -223,11 +198,14 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
         </Link>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={collection?.collection?.volume?.[sortByTime]}
-          textStyle="subtitle2"
-          logoHeight={14}
-        />
+        <Flex direction="column" align="start">
+          <FormatCryptoCurrency
+            amount={collection?.collection?.volume?.[sortByTime]}
+            textStyle="subtitle2"
+            logoHeight={14}
+          />
+          {/* {collection?.collection?.volumeChange[sortByTime]} */}
+        </Flex>
       </TableCell>
       <TableCell>
         <Text style="subtitle2">
@@ -255,13 +233,18 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
 const TableHeading = () => (
   <HeaderRow
     css={{
-      display: 'none',
-      '@md': { display: 'grid' },
-      gridTemplateColumns: '1.2fr .95fr .95fr .95fr .95fr',
+      gridTemplateColumns: '1.4fr .8fr .8fr',
+      '@md': {
+        display: 'grid',
+        gridTemplateColumns: '1.2fr .95fr .95fr .95fr .95fr',
+      },
     }}
   >
     <TableCell>
-      <Text style="subtitle3" css={{ color: '$gray11' }}>
+      <Text
+        style="subtitle3"
+        css={{ color: '$gray11', display: 'none', '@md': { display: 'block' } }}
+      >
         Collection
       </Text>
     </TableCell>
@@ -275,12 +258,12 @@ const TableHeading = () => (
         Top Offer
       </Text>
     </TableCell>
-    <TableCell>
+    <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
       <Text style="subtitle3" css={{ color: '$gray11' }}>
         Floor Price
       </Text>
     </TableCell>
-    <TableCell>
+    <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
       <Text style="subtitle3" css={{ color: '$gray11' }}>
         Owned
       </Text>
