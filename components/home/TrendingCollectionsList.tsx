@@ -1,15 +1,24 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex } from '../primitives'
-import { FC } from 'react'
+import { ComponentPropsWithoutRef, FC } from 'react'
 import { TrendingCollectionItem } from './TrendingCollectionItem'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 
+export type TrendingCollections = ReturnType<typeof useCollections>['data']
+
 type Props = {
-  collections: ReturnType<typeof useCollections>['data']
+  collections: TrendingCollections
   loading?: boolean
+  volumeKey: ComponentPropsWithoutRef<
+    typeof TrendingCollectionItem
+  >['volumeKey']
 }
 
-const TrendingCollectionsList: FC<Props> = ({ collections, loading }) => {
+const TrendingCollectionsList: FC<Props> = ({
+  collections,
+  volumeKey,
+  loading,
+}) => {
   return (
     <Box
       css={{
@@ -27,7 +36,12 @@ const TrendingCollectionsList: FC<Props> = ({ collections, loading }) => {
       }}
     >
       {collections?.map((collection, i) => (
-        <TrendingCollectionItem key={i} collection={collection} rank={i + 1} />
+        <TrendingCollectionItem
+          key={i}
+          collection={collection}
+          rank={i + 1}
+          volumeKey={volumeKey}
+        />
       ))}
       {loading && (
         <Flex

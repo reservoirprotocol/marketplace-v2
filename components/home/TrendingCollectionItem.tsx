@@ -1,18 +1,22 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
 import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
 import { FC } from 'react'
 import { useMarketplaceChain } from '../../hooks'
+import { TrendingCollections } from 'components/home/TrendingCollectionsList'
 
 type Props = {
   rank: string | number
-  collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
+  collection: NonNullable<TrendingCollections>[0]
+  volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
-export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
+export const TrendingCollectionItem: FC<Props> = ({
+  rank,
+  collection,
+  volumeKey,
+}) => {
   const { routePrefix } = useMarketplaceChain()
-
   return (
     <Link
       href={`/collection/${routePrefix}/${collection.id}`}
@@ -51,11 +55,13 @@ export const TrendingCollectionItem: FC<Props> = ({ rank, collection }) => {
         </Box>
 
         <Flex direction="column" align="end">
-          <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
-            {formatNumber(collection?.volumeChange?.['7day'])}%
-          </Text>
+          {volumeKey !== 'allTime' && (
+            <Text css={{ mb: 4, color: '$green10' }} style="body2" as="p">
+              {formatNumber(collection?.volumeChange?.[volumeKey])}%
+            </Text>
+          )}
           <FormatCryptoCurrency
-            amount={collection?.volume?.['7day']}
+            amount={collection?.volume?.[volumeKey]}
             maximumFractionDigits={1}
           />
         </Flex>

@@ -2,7 +2,7 @@ import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { useState } from 'react'
+import { ComponentPropsWithoutRef, useState } from 'react'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
@@ -50,6 +50,22 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     },
   } as any)
 
+  let volumeKey: ComponentPropsWithoutRef<
+    typeof TrendingCollectionsList
+  >['volumeKey'] = 'allTime'
+
+  switch (sortByTime) {
+    case '1DayVolume':
+      volumeKey = '1day'
+      break
+    case '7DayVolume':
+      volumeKey = '7day'
+      break
+    case '30DayVolume':
+      volumeKey = '30day'
+      break
+  }
+
   return (
     <Layout>
       <Box
@@ -89,6 +105,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <TrendingCollectionsList
               collections={collections}
               loading={isValidating}
+              volumeKey={volumeKey}
             />
           )}
           {(isFetchingPage || isValidating) && !showViewAllButton && (
