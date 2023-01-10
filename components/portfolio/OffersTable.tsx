@@ -18,15 +18,13 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
-import { Address, useNetwork, useSigner } from 'wagmi'
+import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHand } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
   address: Address | undefined
 }
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
@@ -99,13 +97,6 @@ type OfferTableRowProps = {
 const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const expiration = useTimeSince(offer?.expiration)
-
-  const { data: signer } = useSigner()
-  const { chain: activeChain } = useNetwork()
-
-  const isInTheWrongNetwork = Boolean(
-    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
-  )
 
   let criteriaData = offer?.criteria?.data
 
@@ -187,11 +178,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
             bidId={offer?.id as string}
             mutate={mutate}
             trigger={
-              <Button
-                disabled={isInTheWrongNetwork}
-                css={{ color: '$red11' }}
-                color="gray3"
-              >
+              <Button css={{ color: '$red11' }} color="gray3">
                 Cancel
               </Button>
             }
@@ -275,11 +262,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
             bidId={offer?.id as string}
             mutate={mutate}
             trigger={
-              <Button
-                disabled={isInTheWrongNetwork}
-                css={{ color: '$red11' }}
-                color="gray3"
-              >
+              <Button css={{ color: '$red11' }} color="gray3">
                 Cancel
               </Button>
             }
@@ -301,7 +284,7 @@ const TableHeading = () => (
     }}
   >
     {headings.map((heading) => (
-      <TableCell>
+      <TableCell key={heading}>
         <Text style="subtitle3" subtleColor>
           {heading}
         </Text>

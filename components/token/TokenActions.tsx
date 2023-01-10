@@ -2,7 +2,7 @@ import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
-import { Flex, Button, Grid } from 'components/primitives'
+import { Button, Grid } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -122,7 +122,6 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           trigger={
             <Button
-              disabled={isInTheWrongNetwork}
               css={{ color: '$red11', justifyContent: 'center' }}
               color="gray3"
             >
@@ -138,7 +137,6 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           trigger={
             <Button
-              disabled={isInTheWrongNetwork}
               css={{ color: '$red11', justifyContent: 'center' }}
               color="gray3"
             >
