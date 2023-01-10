@@ -25,6 +25,7 @@ import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
+import ChainContextProvider from 'context/ChainContextProvider'
 
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
@@ -60,7 +61,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
       }}
     >
       <WagmiConfig client={wagmiClient}>
-        <MyApp {...props} />
+        <ChainContextProvider>
+          <MyApp {...props} />
+        </ChainContextProvider>
       </WagmiConfig>
     </ThemeProvider>
   )

@@ -1,9 +1,10 @@
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { useRouter } from 'next/router'
-import useCurrentChain from 'hooks/useCurrentChain'
+import { useContext } from 'react'
+import { ChainContext } from 'context/ChainContextProvider'
 
 export default () => {
-  const [chain] = useCurrentChain()
+  const { chain } = useContext(ChainContext)
   const router = useRouter()
 
   //Detect route chain first

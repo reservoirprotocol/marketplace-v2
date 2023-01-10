@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState, createContext, FC, useEffect, useCallback } from 'react'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { useNetwork, useSwitchNetwork } from 'wagmi'
 
@@ -7,18 +7,15 @@ const supportedChainsMap = supportedChains.reduce((map, chain) => {
   return map
 }, {} as Record<string, typeof supportedChains[0]>)
 
-const setLocalStorageChain = (chainId: string | number) => {
-  if (typeof window === 'undefined') {
-    return
-  }
+export const ChainContext = createContext<{
+  chain: typeof DefaultChain
+  switchCurrentChain: (chainId: string | number) => void
+}>({
+  chain: DefaultChain,
+  switchCurrentChain: () => {},
+})
 
-  localStorage.setItem('reservoir.lastChainId', `${chainId}`)
-}
-
-export default (): [
-  typeof DefaultChain,
-  (chainId: string | number) => void
-] => {
+const ChainContextProvider: FC<any> = ({ children }) => {
   const { switchNetwork } = useSwitchNetwork()
   const { chain } = useNetwork()
   const [lastSelectedChain, setLastSelectedChain] = useState(DefaultChain.id)
@@ -47,20 +44,27 @@ export default (): [
       if (chain && switchNetwork) {
         switchNetwork(+chainId)
       } else {
-        setLocalStorageChain(chainId)
         setLastSelectedChain(+chainId)
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('reservoir.lastChainId', `${chainId}`)
+        }
       }
     },
-    [chain, switchNetwork]
+    [chain, switchNetwork, setLastSelectedChain]
   )
 
   let currentChain = DefaultChain
-
   if (chain && supportedChainsMap[chain.id]) {
     currentChain = supportedChainsMap[chain.id]
   } else if (lastSelectedChain && supportedChainsMap[lastSelectedChain]) {
     currentChain = supportedChainsMap[lastSelectedChain]
   }
 
-  return [currentChain, switchCurrentChain]
+  return (
+    <ChainContext.Provider value={{ chain: currentChain, switchCurrentChain }}>
+      {children}
+    </ChainContext.Provider>
+  )
 }
+
+export default ChainContextProvider

@@ -5,12 +5,13 @@ import supportedChains from 'utils/chains'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import useCurrentChain from 'hooks/useCurrentChain'
+import { useContext } from 'react'
+import { ChainContext } from 'context/ChainContextProvider'
 
 const ChainSwitcher = () => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
-  const [chain, setCurrentChain] = useCurrentChain()
+  const { chain, switchCurrentChain } = useContext(ChainContext)
   const supportedChain = supportedChains.find(
     (supportedChain) => supportedChain.id === chain?.id
   )
@@ -35,7 +36,7 @@ const ChainSwitcher = () => {
           <DropdownMenuItem
             key={chainOption.id}
             onClick={() => {
-              setCurrentChain(chainOption.id)
+              switchCurrentChain(chainOption.id)
             }}
           >
             <Flex align="center" css={{ cursor: 'pointer' }}>
