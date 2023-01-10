@@ -8,8 +8,11 @@ import { useEffect, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useUserTokens } from '@reservoir0x/reservoir-kit-ui'
-import { useMounted, useUserCollections } from '../../hooks'
+import {
+  useUserTokens,
+  useUserCollections,
+} from '@reservoir0x/reservoir-kit-ui'
+import { useMounted } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
@@ -40,7 +43,9 @@ const IndexPage: NextPage = () => {
   }
   const tokensData = useUserTokens(address, tokenQuery, {})
 
-  const { data: collections } = useUserCollections(address as string)
+  const { data: collections } = useUserCollections(address as string, {
+    limit: 100,
+  })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting

@@ -1,41 +1,33 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { ToggleGroup, ToggleGroupItem, Text } from '../primitives'
 import { FC } from 'react'
 
-export type CollectionsSortingOption = NonNullable<
-  Exclude<Parameters<typeof useCollections>[0], false | undefined>['sortBy']
->
+export type CollectionsTableSortingOption = typeof sortingOptions[number]
 
-const sortingOptions: CollectionsSortingOption[] = [
-  'allTimeVolume',
-  '1DayVolume',
-  '7DayVolume',
-  '30DayVolume',
-]
+const sortingOptions = ['allTime', '1day', '7day', '30day'] as const
 
 const nameForSortingOption = (
-  option: CollectionsSortingOption,
+  option: CollectionsTableSortingOption,
   compact: boolean
 ) => {
   switch (option) {
-    case 'allTimeVolume':
+    case 'allTime':
       return compact ? 'All' : 'All Time'
-    case '1DayVolume':
+    case '1day':
       return compact ? '24h' : '24 hours'
-    case '7DayVolume':
+    case '7day':
       return compact ? '7d' : '7 days'
-    case '30DayVolume':
+    case '30day':
       return compact ? '30d' : '30 days'
   }
 }
 
 type Props = {
   compact?: boolean
-  option: CollectionsSortingOption
-  onOptionSelected: (option: CollectionsSortingOption) => void
+  option: CollectionsTableSortingOption
+  onOptionSelected: (option: CollectionsTableSortingOption) => void
 }
 
-const TrendingCollectionsTimeToggle: FC<Props> = ({
+const CollectionsTableTimeToggle: FC<Props> = ({
   compact = false,
   option,
   onOptionSelected,
@@ -45,12 +37,12 @@ const TrendingCollectionsTimeToggle: FC<Props> = ({
       type="single"
       value={option}
       onValueChange={(value) => {
-        onOptionSelected(value as CollectionsSortingOption)
+        onOptionSelected(value as CollectionsTableSortingOption)
       }}
       css={{ maxWidth: 'max-content' }}
     >
       {sortingOptions.map((option) => (
-        <ToggleGroupItem key={option} value={option}>
+        <ToggleGroupItem key={option} value={option} css={{ py: '$3' }}>
           <Text style="subtitle1">{nameForSortingOption(option, compact)}</Text>
         </ToggleGroupItem>
       ))}
@@ -58,4 +50,4 @@ const TrendingCollectionsTimeToggle: FC<Props> = ({
   )
 }
 
-export default TrendingCollectionsTimeToggle
+export default CollectionsTableTimeToggle

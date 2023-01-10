@@ -6,9 +6,14 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+
+type Collections =
+  | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
+  | ReturnType<typeof useUserCollections>['data']
 
 type Props = {
-  collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
+  collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
 }

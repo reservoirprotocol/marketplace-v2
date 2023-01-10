@@ -59,7 +59,7 @@ export const TokenTable: FC<Props> = ({ data }) => {
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
           <img src="/magnifying-glass.svg" width={40} height={40} />
-          <Text>No items found</Text>
+          <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
