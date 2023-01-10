@@ -122,6 +122,7 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           trigger={
             <Button
+              disabled={isInTheWrongNetwork}
               css={{ color: '$red11', justifyContent: 'center' }}
               color="gray3"
             >
@@ -137,6 +138,7 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           trigger={
             <Button
+              disabled={isInTheWrongNetwork}
               css={{ color: '$red11', justifyContent: 'center' }}
               color="gray3"
             >

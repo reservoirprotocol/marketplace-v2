@@ -15,7 +15,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
@@ -255,8 +255,10 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     align="center"
                     css={{ py: '$6', gap: '$4', width: '100%' }}
                   >
-                    <img src="/magnifying-glass.svg" width={40} height={40} />
-                    <Text>No items found</Text>
+                    <Text css={{ color: '$gray11' }}>
+                      <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+                    </Text>
+                    <Text css={{ color: '$gray11' }}>No items found</Text>
                   </Flex>
                 )}
               </Box>

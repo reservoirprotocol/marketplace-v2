@@ -15,43 +15,66 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import { useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBolt, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBolt,
+  faCircleInfo,
+  faMagnifyingGlass,
+} from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
+import { Address } from 'wagmi'
 
 type Props = {
-  data: ReturnType<typeof useUserTokens>
+  address: Address | undefined
+  filterCollection: string | undefined
 }
 
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 
-export const TokenTable: FC<Props> = ({ data }) => {
+export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
 
+  let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
+    limit: 20,
+    collection: filterCollection,
+    includeTopBid: true,
+  }
+  const {
+    data: tokens,
+    fetchNextPage,
+    mutate,
+    isFetchingPage,
+    isValidating,
+  } = useUserTokens(address, tokenQuery, {})
+
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      data.fetchNextPage()
+      fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
-  const tokens = data.data
+  useEffect(() => {
+    const isVisible = !!loadMoreObserver?.isIntersecting
+    if (isVisible) {
+      fetchNextPage()
+    }
+  }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
-      {!data.isValidating &&
-      !data.isFetchingPage &&
-      tokens &&
-      tokens.length === 0 ? (
+      {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
         <Flex
           direction="column"
           align="center"
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
-          <img src="/magnifying-glass.svg" width={40} height={40} />
+          <Text css={{ color: '$gray11' }}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+          </Text>
           <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
       ) : (
@@ -64,14 +87,14 @@ export const TokenTable: FC<Props> = ({ data }) => {
               <TokenTableRow
                 key={`${token.token?.tokenId}-${i}`}
                 token={token}
-                mutate={data?.mutate}
+                mutate={mutate}
               />
             )
           })}
           <div ref={loadMoreRef}></div>
         </Flex>
       )}
-      {data.isValidating && (
+      {isValidating && (
         <Flex align="center" justify="center" css={{ py: '$6' }}>
           <LoadingSpinner />
         </Flex>

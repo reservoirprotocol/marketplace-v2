@@ -7,6 +7,7 @@ import {
   TableRow,
   HeaderRow,
   FormatCryptoCurrency,
+  Box,
 } from '../primitives'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -19,6 +20,8 @@ import CollectionsTableTimeToggle, {
   CollectionsTableSortingOption,
 } from './CollectionsTableTimeToggle'
 import round from 'utils/round'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
   address: Address | undefined
@@ -62,7 +65,9 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
           align="center"
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
-          <img src="/magnifying-glass.svg" width={40} height={40} />
+          <Text css={{ color: '$gray11' }}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+          </Text>
           <Text css={{ color: '$gray11' }}>No collections found</Text>
         </Flex>
       ) : (

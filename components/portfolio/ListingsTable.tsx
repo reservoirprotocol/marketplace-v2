@@ -18,11 +18,15 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
-import { Address } from 'wagmi'
+import { Address, useNetwork, useSigner } from 'wagmi'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTag } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
   address: Address | undefined
 }
+
+const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
@@ -58,7 +62,9 @@ export const ListingsTable: FC<Props> = ({ address }) => {
           align="center"
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
-          <img src="/tag-icon.svg" width={40} height={40} />
+          <Text css={{ color: '$gray11' }}>
+            <FontAwesomeIcon icon={faTag} size="2xl" />
+          </Text>
           <Text css={{ color: '$gray11' }}>No listings yet</Text>
         </Flex>
       ) : (
@@ -93,6 +99,13 @@ type ListingTableRowProps = {
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const expiration = useTimeSince(listing?.expiration)
+
+  const { data: signer } = useSigner()
+  const { chain: activeChain } = useNetwork()
+
+  const isInTheWrongNetwork = Boolean(
+    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
+  )
 
   let criteriaData = listing?.criteria?.data
 
@@ -174,7 +187,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             listingId={listing?.id as string}
             mutate={mutate}
             trigger={
-              <Button css={{ color: '$red11' }} color="gray3">
+              <Button
+                disabled={isInTheWrongNetwork}
+                css={{ color: '$red11' }}
+                color="gray3"
+              >
                 Cancel
               </Button>
             }
@@ -258,7 +275,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             listingId={listing?.id as string}
             mutate={mutate}
             trigger={
-              <Button css={{ color: '$red11' }} color="gray3">
+              <Button
+                disabled={isInTheWrongNetwork}
+                css={{ color: '$red11' }}
+                color="gray3"
+              >
                 Cancel
               </Button>
             }
@@ -269,6 +290,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   )
 }
 
+const headings = ['Items', 'Listed Price', 'Expiration', 'Marketplace', '']
+
 const TableHeading = () => (
   <HeaderRow
     css={{
@@ -277,26 +300,12 @@ const TableHeading = () => (
       gridTemplateColumns: desktopTemplateColumns,
     }}
   >
-    <TableCell>
-      <Text style="subtitle3" subtleColor>
-        Items
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" subtleColor>
-        Listed Price
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" subtleColor>
-        Expiration
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" subtleColor>
-        Marketplace
-      </Text>
-    </TableCell>
-    <TableCell></TableCell>
+    {headings.map((heading) => (
+      <TableCell>
+        <Text style="subtitle3" subtleColor>
+          {heading}
+        </Text>
+      </TableCell>
+    ))}
   </HeaderRow>
 )

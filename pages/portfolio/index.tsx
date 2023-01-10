@@ -1,17 +1,12 @@
 import { NextPage } from 'next'
 import { Text, Flex, Box } from '../../components/primitives'
-import Image from 'next/image'
 import Layout from 'components/Layout'
-import { useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import {
-  useUserTokens,
-  useUserCollections,
-} from '@reservoir0x/reservoir-kit-ui'
+import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { useMounted } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
@@ -21,6 +16,8 @@ import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
+import { faWallet } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -31,28 +28,9 @@ const IndexPage: NextPage = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
 
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
-
-  let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
-    limit: 20,
-    collection: filterCollection,
-    includeTopBid: true,
-  }
-  const tokensData = useUserTokens(address, tokenQuery, {})
-
   const { data: collections } = useUserCollections(address as string, {
     limit: 100,
   })
-
-  useEffect(() => {
-    const isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      tokensData.fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting])
 
   if (!isMounted) {
     return null
@@ -128,7 +106,10 @@ const IndexPage: NextPage = () => {
                           />
                         )}
                     </Flex>
-                    <TokenTable data={tokensData} />
+                    <TokenTable
+                      address={address}
+                      filterCollection={filterCollection}
+                    />
                   </Box>
                 </Flex>
               </TabsContent>
@@ -152,12 +133,9 @@ const IndexPage: NextPage = () => {
             <Text style="h4" css={{ mb: '$3' }}>
               Sell your NFT instantly
             </Text>
-            <Image
-              src="/wallet-icon.svg"
-              width={32}
-              height={32}
-              alt="Wallet Icon"
-            />
+            <Text css={{ color: '$gray11' }}>
+              <FontAwesomeIcon icon={faWallet} size="2xl" />
+            </Text>
             <Text
               style="body1"
               css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
