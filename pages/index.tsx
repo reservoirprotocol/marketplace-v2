@@ -35,6 +35,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
         fallbackData: [ssr.collections[marketplaceChain.id]],
       }
     )
+
   let collections = data || []
   const showViewAllButton = collections.length <= 12 && hasNextPage
   if (showViewAllButton) {

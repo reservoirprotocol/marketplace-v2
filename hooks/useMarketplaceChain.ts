@@ -1,9 +1,9 @@
-import { useNetwork } from 'wagmi'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { useRouter } from 'next/router'
+import useCurrentChain from 'hooks/useCurrentChain'
 
 export default () => {
-  const { chain } = useNetwork()
+  const [chain] = useCurrentChain()
   const router = useRouter()
 
   //Detect route chain first

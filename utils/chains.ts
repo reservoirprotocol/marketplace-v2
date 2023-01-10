@@ -4,7 +4,6 @@ import { goerli, mainnet, polygon } from 'wagmi/chains'
 export const DefaultChain = {
   ...mainnet,
   iconUrl: `https://api.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
-  iconBackground: '#fff',
   reservoirBaseUrl: 'https://api.reservoir.tools',
   routePrefix: 'ethereum',
 }
@@ -20,7 +19,6 @@ export default [
   {
     ...goerli,
     iconUrl: `https://api-goerli.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
-    iconBackground: '#fff',
     reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
     routePrefix: 'goerli',
   },
