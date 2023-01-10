@@ -16,27 +16,18 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import { useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt, faCircleInfo } from '@fortawesome/free-solid-svg-icons'
-import { useNetwork, useSigner } from 'wagmi'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
 type Props = {
   data: ReturnType<typeof useUserTokens>
 }
 
 export const TokenTable: FC<Props> = ({ data }) => {
-  const { data: signer } = useSigner()
-  const { chain: activeChain } = useNetwork()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
     rootMargin: '0px 0px 300px 0px',
   })
-
-  const isInTheWrongNetwork = Boolean(
-    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
-  )
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting

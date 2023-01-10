@@ -18,6 +18,7 @@ import { useMounted } from 'hooks'
 import CollectionsTableTimeToggle, {
   CollectionsTableSortingOption,
 } from './CollectionsTableTimeToggle'
+import round from 'utils/round'
 
 type Props = {
   address: Address | undefined
@@ -110,7 +111,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
     return (
       <TableRow
         key={collection?.collection?.id}
-        css={{ gridTemplateColumns: '1.4fr .8fr .8fr' }}
+        css={{ gridTemplateColumns: '1.2fr .9fr .9fr' }}
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link href={`/collections/${collection?.collection?.id}`}>
@@ -125,8 +126,8 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
                   loader={({ src }) => src}
                   src={collection?.collection?.image}
                   alt={`${collection?.collection?.name}`}
-                  width={48}
-                  height={48}
+                  width={36}
+                  height={36}
                 />
               )}
               <Text
@@ -139,23 +140,41 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
             </Flex>
           </Link>
         </TableCell>
-        <TableCell>
+        <TableCell css={{ minWidth: 0 }}>
           <Flex
             direction="column"
             align="start"
-            css={{ minWidth: 'max-content' }}
+            css={{
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
           >
             <FormatCryptoCurrency
               amount={collection?.collection?.volume?.[sortByTime]}
+              maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
+              css={{
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+              }}
             />
+            {sortByTime != 'allTime' &&
+              collection?.collection?.volumeChange && (
+                <PercentChange
+                  percent={
+                    collection?.collection?.volumeChange[sortByTime] as number
+                  }
+                />
+              )}
           </Flex>
         </TableCell>
         <TableCell css={{ minWidth: 'max-content' }}>
           <Text style="subtitle2" css={{ minWidth: 'max-content' }}>
             <FormatCryptoCurrency
               amount={collection?.collection?.topBidValue}
+              maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -198,13 +217,24 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
         </Link>
       </TableCell>
       <TableCell>
-        <Flex direction="column" align="start">
+        <Flex
+          direction="column"
+          align="start"
+          justify="start"
+          css={{ height: '100%' }}
+        >
           <FormatCryptoCurrency
             amount={collection?.collection?.volume?.[sortByTime]}
             textStyle="subtitle2"
             logoHeight={14}
           />
-          {/* {collection?.collection?.volumeChange[sortByTime]} */}
+          {sortByTime != 'allTime' && collection?.collection?.volumeChange && (
+            <PercentChange
+              percent={
+                collection?.collection?.volumeChange[sortByTime] as number
+              }
+            />
+          )}
         </Flex>
       </TableCell>
       <TableCell>
@@ -233,7 +263,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
 const TableHeading = () => (
   <HeaderRow
     css={{
-      gridTemplateColumns: '1.4fr .8fr .8fr',
+      gridTemplateColumns: '1.2fr .9fr .9fr',
       '@md': {
         display: 'grid',
         gridTemplateColumns: '1.2fr .95fr .95fr .95fr .95fr',
@@ -270,3 +300,25 @@ const TableHeading = () => (
     </TableCell>
   </HeaderRow>
 )
+
+type PercentChangeProps = {
+  percent: number
+}
+
+const PercentChange = ({ percent }: PercentChangeProps) => {
+  const isPositive = round(percent, 2) >= 0
+
+  return (
+    <Flex css={{ color: isPositive ? '$green9' : '$red9' }} align="center">
+      <Text
+        style="subtitle3"
+        css={{
+          color: isPositive ? '$green11' : '$red11',
+          ml: '$1',
+        }}
+      >
+        {isPositive ? '' : '- '} {round(percent, 2)}%
+      </Text>
+    </Flex>
+  )
+}

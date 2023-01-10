@@ -29,7 +29,13 @@ export const OffersTable: FC<Props> = ({ address }) => {
     rootMargin: '0px 0px 300px 0px',
   })
 
-  const data = useBids({
+  const {
+    data: offers,
+    fetchNextPage,
+    mutate,
+    isValidating,
+    isFetchingPage,
+  } = useBids({
     maker: address,
     includeCriteriaMetadata: true,
   })
@@ -37,18 +43,13 @@ export const OffersTable: FC<Props> = ({ address }) => {
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      data.fetchNextPage()
+      fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
-  const offers = data.data
-
   return (
     <>
-      {!data.isValidating &&
-      !data.isFetchingPage &&
-      offers &&
-      offers.length === 0 ? (
+      {!isValidating && !isFetchingPage && offers && offers.length === 0 ? (
         <Flex
           direction="column"
           align="center"
@@ -67,14 +68,14 @@ export const OffersTable: FC<Props> = ({ address }) => {
               <OfferTableRow
                 key={`${offer?.id}-${i}`}
                 offer={offer}
-                mutate={data?.mutate}
+                mutate={mutate}
               />
             )
           })}
           <div ref={loadMoreRef}></div>
         </Flex>
       )}
-      {data.isValidating && (
+      {isValidating && (
         <Flex align="center" justify="center" css={{ py: '$6' }}>
           <LoadingSpinner />
         </Flex>
