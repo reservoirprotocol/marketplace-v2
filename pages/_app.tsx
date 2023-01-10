@@ -25,6 +25,10 @@ import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 
+const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
+  ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
+  : false
+
 const envChain = Object.values(allChains).find(
   (chain) =>
     chain.id === +(process.env.NEXT_PUBLIC_CHAIN_ID || allChains.mainnet.id)
@@ -121,6 +125,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               apiBase: process.env.NEXT_PUBLIC_RESERVOIR_API_BASE as string,
               apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
               source: 'reservoir.hub',
+              normalizeRoyalties: NORMALIZE_ROYALTIES,
             }}
             theme={reservoirKitTheme}
           >
