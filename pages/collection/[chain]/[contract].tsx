@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from '../../components/primitives'
+import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useTokens,
@@ -36,6 +36,7 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -48,7 +49,7 @@ type ActivityTypes = Exclude<
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -361,7 +362,10 @@ export const getStaticProps: GetStaticProps<{
   }
   id: string | undefined
 }> = async ({ params }) => {
-  const id = params?.slug?.toString()
+  const id = params?.contract?.toString()
+  const reservoirBaseUrl =
+    supportedChains.find((chain) => params?.chain === chain.routePrefix)
+      ?.reservoirBaseUrl || DefaultChain.reservoirBaseUrl
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -369,7 +373,10 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+  const collectionsResponse = await fetcher(
+    `${reservoirBaseUrl}/collections/v5`,
+    collectionQuery
+  )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
@@ -379,12 +386,15 @@ export const getStaticProps: GetStaticProps<{
     limit: 20,
   }
 
-  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher(
+    `${reservoirBaseUrl}/tokens/v5`,
+    tokensQuery
+  )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
   const attributesResponse = await fetcher(
-    `collections/${id}/attributes/all/v2`,
+    `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
     {}
   )
 
@@ -396,4 +406,4 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-export default IndexPage
+export default CollectionPage

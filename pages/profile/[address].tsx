@@ -24,7 +24,7 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
-import { useMounted } from '../../hooks'
+import { useMounted, useMarketplaceChain } from '../../hooks'
 import { TokenFilters } from 'components/profile/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { UserAcivityTable } from 'components/profile/UserActivityTable'
@@ -33,6 +33,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import supportedChains, { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -66,6 +67,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   >()
   const isMounted = useMounted()
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const marketplaceChain = useMarketplaceChain()
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
@@ -83,6 +85,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     limit: 20,
     collection: filterCollection,
   }
+  const ssrTokens = ssr.tokens[marketplaceChain.id]
   const {
     data: tokens,
     mutate,
@@ -91,7 +94,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     hasNextPage,
     isFetchingPage,
   } = useUserTokens(address || '', tokenQuery, {
-    fallbackData: filterCollection ? undefined : [ssr.tokens],
+    fallbackData: filterCollection ? undefined : [ssrTokens],
   })
 
   useEffect(() => {
@@ -101,7 +104,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     }
   }, [loadMoreObserver?.isIntersecting])
 
-  const collections = ssr.collections.collections
+  const ssrCollections = ssr.collections[marketplaceChain.id]
+  const collections = ssrCollections?.collections || []
 
   if (!isMounted) {
     return null
@@ -315,15 +319,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
+type UserTokensSchema =
+  paths['/users/{user}/tokens/v6']['get']['responses']['200']['schema']
+type UserCollectionsSchema =
+  paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
+
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    tokens: paths['/users/{user}/tokens/v6']['get']['responses']['200']['schema']
-    collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
+    tokens: Record<number, UserTokensSchema>
+    collections: Record<number, UserCollectionsSchema>
   }
   address: string | undefined
   ensName: string | null
 }> = async ({ params }) => {
-  const promises: ReturnType<typeof fetcher>[] = []
   let address = params?.address?.toString() || ''
   const isEnsName = address.includes('.')
   let ensName: null | string = null
@@ -343,36 +351,52 @@ export const getStaticProps: GetStaticProps<{
     }
   }
 
-  let tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
+  const tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
     }
 
-  const tokensPromise = fetcher(`users/${address}/tokens/v6`, tokensQuery)
-
-  promises.push(tokensPromise)
-
-  let collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
+  const collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
     {
       limit: 100,
     }
 
-  const collectionsPromise = fetcher(
-    `users/${address}/collections/v2`,
-    collectionsQuery
-  )
-  promises.push(collectionsPromise)
+  const chainMap: Record<string, typeof supportedChains[0]> = {}
+  const promises: ReturnType<typeof fetcher>[] = []
+  supportedChains.forEach((chain) => {
+    chainMap[chain.reservoirBaseUrl] = chain
+    const tokensPromise = fetcher(
+      `${chain.reservoirBaseUrl}/users/${address}/tokens/v6`,
+      tokensQuery
+    )
+    const collectionsPromise = fetcher(
+      `${chain.reservoirBaseUrl}/users/${address}/collections/v2`,
+      collectionsQuery
+    )
+    promises.push(tokensPromise)
+    promises.push(collectionsPromise)
+  })
 
   const responses = await Promise.allSettled(promises)
-
-  const tokens: Props['ssr']['tokens'] =
-    responses[0]?.status === 'fulfilled' ? responses[0].value.data : undefined
-  const collections: Props['ssr']['collections'] =
-    responses[1]?.status === 'fulfilled' ? responses[1].value.data : undefined
+  const collections: Record<number, any> = {}
+  const tokens: Record<number, any> = {}
+  responses.forEach((response) => {
+    if (response.status === 'fulfilled') {
+      const url = new URL(response.value.response.url)
+      const chain = chainMap[url.origin]
+      if (chain) {
+        if (url.pathname.includes('collections')) {
+          collections[chain.id] = response.value.data
+        } else if (url.pathname.includes('tokens')) {
+          tokens[chain.id] = response.value.data
+        }
+      }
+    }
+  })
 
   return {
     props: { ssr: { tokens, collections }, address, ensName },
-    revalidate: 20,
+    revalidate: 5,
   }
 }
 

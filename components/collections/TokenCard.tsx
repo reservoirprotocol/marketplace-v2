@@ -14,11 +14,10 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
-
-const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
 type TokenCardProps = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -39,6 +38,7 @@ export default ({
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
+  const { routePrefix, reservoirBaseUrl } = useMarketplaceChain()
 
   return (
     <Box
@@ -60,7 +60,7 @@ export default ({
     >
       <Link
         passHref
-        href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+        href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
         onClick={(e) => {
           if (!showPreview || (e.target as HTMLElement)?.tagName === 'BUTTON') {
             e.preventDefault()
@@ -99,7 +99,9 @@ export default ({
           />
         </Box>
       </Link>
-      <Link href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}>
+      <Link
+        href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+      >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
           direction="column"
@@ -170,7 +172,7 @@ export default ({
                 height: 20,
                 borderRadius: '50%',
               }}
-              src={`${API_BASE}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
+              src={`${reservoirBaseUrl}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
             />
           </Flex>
           {token?.token?.lastBuy?.value && (

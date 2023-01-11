@@ -15,7 +15,8 @@ import {
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useENSResolver, useEnvChain, useTimeSince } from 'hooks'
+import { useAccount } from 'wagmi'
+import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import { constants } from 'ethers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -137,12 +138,12 @@ const activityTypeToDesciption = (activityType: string) => {
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
-  const envChain = useEnvChain()
+  const marketplaceChain = useMarketplaceChain()
   const blockExplorerBaseUrl =
-    envChain?.blockExplorers?.default?.url || 'https://etherscan.io'
+    marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const href = activity?.token?.tokenId
-    ? `/${activity?.collection?.collectionId}/${activity?.token?.tokenId}`
-    : `/collections/${activity?.collection?.collectionId}`
+    ? `/collection/${marketplaceChain.routePrefix}/${activity?.collection?.collectionId}/${activity?.token?.tokenId}`
+    : `/collection/${marketplaceChain.routePrefix}/${activity?.collection?.collectionId}`
 
   if (!activity) {
     return null
@@ -209,14 +210,16 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Flex align="center" justify="between">
               <Link href={href} passHref>
                 <Flex align="center">
-                  <Image
-                    style={{ borderRadius: '4px', objectFit: 'cover' }}
-                    loader={({ src }) => src}
-                    src={imageSrc}
-                    alt={`${activity.token?.tokenName} Token Image`}
-                    width={48}
-                    height={48}
-                  />
+                  {imageSrc && (
+                    <Image
+                      style={{ borderRadius: '4px', objectFit: 'cover' }}
+                      loader={({ src }) => src}
+                      src={imageSrc}
+                      alt={`${activity.token?.tokenName} Token Image`}
+                      width={48}
+                      height={48}
+                    />
+                  )}
                   <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
                     {activity.token?.tokenName ||
                       activity.token?.tokenId ||
@@ -317,14 +320,16 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell>
         <Link href={href} passHref>
           <Flex align="center">
-            <Image
-              style={{ borderRadius: '4px', objectFit: 'cover' }}
-              loader={({ src }) => src}
-              src={imageSrc}
-              alt={`${activity.token?.tokenName} Token Image`}
-              width={48}
-              height={48}
-            />
+            {imageSrc && (
+              <Image
+                style={{ borderRadius: '4px', objectFit: 'cover' }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${activity.token?.tokenName} Token Image`}
+                width={48}
+                height={48}
+              />
+            )}
             <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
               {activity.token?.tokenName ||
                 activity.token?.tokenId ||
