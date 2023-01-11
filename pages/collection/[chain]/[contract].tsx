@@ -36,13 +36,10 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
-<<<<<<< HEAD:pages/collections/[slug].tsx
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
-=======
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
->>>>>>> 4a81d7a60f19b81c1b0c0680c51e592766343023:pages/collection/[chain]/[contract].tsx
 
 type ActivityTypes = Exclude<
   NonNullable<
