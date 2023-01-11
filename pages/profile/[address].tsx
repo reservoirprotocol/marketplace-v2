@@ -35,6 +35,7 @@ import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import supportedChains from 'utils/chains'
 import { useENSResolver } from 'hooks'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -352,6 +353,7 @@ export const getStaticProps: GetStaticProps<{
   const tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =

@@ -36,6 +36,7 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
@@ -375,6 +376,7 @@ export const getStaticProps: GetStaticProps<{
     {
       id,
       includeTopBid: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsResponse = await fetcher(
@@ -388,6 +390,7 @@ export const getStaticProps: GetStaticProps<{
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
     limit: 20,
+    normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
   const tokensResponse = await fetcher(

@@ -27,6 +27,10 @@ import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 
+export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
+  ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
+  : false
+
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
@@ -118,6 +122,7 @@ function MyApp({ Component, pageProps }: AppProps) {
             apiBase: marketplaceChain.reservoirBaseUrl,
             apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
             source: 'reservoir.hub',
+            normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
           theme={reservoirKitTheme}
         >

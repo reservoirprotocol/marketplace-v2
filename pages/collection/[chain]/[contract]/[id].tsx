@@ -44,6 +44,7 @@ import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
 import { useRouter } from 'next/router'
 import supportedChains, { DefaultChain } from 'utils/chains'
@@ -363,6 +364,7 @@ export const getStaticProps: GetStaticProps<{
     {
       id: collectionId,
       includeTopBid: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsResponse = await fetcher(
@@ -375,6 +377,7 @@ export const getStaticProps: GetStaticProps<{
     tokens: [`${collectionId}:${id}`],
     includeAttributes: true,
     includeTopBid: true,
+    normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
   const tokensResponse = await fetcher(
