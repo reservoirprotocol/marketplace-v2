@@ -37,10 +37,10 @@ export default async function handler(req: Request) {
  if (COMMUNITY){
    queryParams.community = COMMUNITY
  }
- 
+
   // start fetching search preemptively
   let collectionQuery = fetcher(
-    `${reservoirBaseUrl}/collections/v5?name=${q}&limit=6`,
+    `${reservoirBaseUrl}/search/collections/v1?name=${q}&limit=6`,
     queryParams,
     headers
   )
