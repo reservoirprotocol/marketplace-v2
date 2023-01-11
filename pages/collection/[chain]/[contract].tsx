@@ -138,7 +138,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   return (
     <Layout>
-      <Text></Text>
       {collection ? (
         <Flex
           direction="column"
@@ -414,7 +413,7 @@ export const getStaticProps: GetStaticProps<{
   )
 
   const attributes: Props['ssr']['attributes'] = attributesResponse['data']
-  
+
   return {
     props: { ssr: { collection, tokens, attributes }, id },
     revalidate: 20,

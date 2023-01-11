@@ -14,26 +14,22 @@ type Props = {
 }
 
 export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
-  let useUsersActivityParams: Parameters<typeof useUsersActivity>['1'] = {
+  let activityQuery: Parameters<typeof useUsersActivity>['1'] = {
     limit: 20,
     types: activityTypes,
   }
 
   if (COLLECTION_SET_ID) {
-    useUsersActivityParams.collectionsSetId = COLLECTION_SET_ID
+    activityQuery.collectionsSetId = COLLECTION_SET_ID
   } else {
-    if (COMMUNITY) useUsersActivityParams.community = COMMUNITY
+    if (COMMUNITY) activityQuery.community = COMMUNITY
   }
 
-  const data = useUsersActivity(
-    user ? [user] : undefined,
-    useUsersActivityParams,
-    {
-      revalidateOnMount: true,
-      fallbackData: [],
-      revalidateFirstPage: true,
-    }
-  )
+  const data = useUsersActivity(user ? [user] : undefined, activityQuery, {
+    revalidateOnMount: true,
+    fallbackData: [],
+    revalidateFirstPage: true,
+  })
 
   useEffect(() => {
     data.mutate()
