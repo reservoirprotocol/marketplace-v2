@@ -57,7 +57,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const account = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
-  const { reservoirBaseUrl } = useMarketplaceChain()
+  const { proxyApi } = useMarketplaceChain()
   const { data: collections } = useCollections(
     {
       id: collectionId,
@@ -220,13 +220,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Link>
             <Button
               onClick={() => {
-                fetcher(`${reservoirBaseUrl}/tokens/refresh/v1`, undefined, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ token: `${collectionId}:${id}` }),
-                })
+                fetcher(
+                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  undefined,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: `${collectionId}:${id}` }),
+                  }
+                )
                   .then(({ response }) => {
                     if (response.status === 200) {
                       addToast?.({
@@ -234,8 +238,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                         description:
                           'Request to refresh collection was accepted.',
                       })
+                    } else {
+                      throw 'Request Failed'
                     }
-                    throw 'Request Failed'
                   })
                   .catch((e) => {
                     addToast?.({
@@ -356,9 +361,9 @@ export const getStaticProps: GetStaticProps<{
 }> = async ({ params }) => {
   const collectionId = params?.contract?.toString()
   const id = params?.id?.toString()
-  const reservoirBaseUrl =
-    supportedChains.find((chain) => params?.chain === chain.routePrefix)
-      ?.reservoirBaseUrl || DefaultChain.reservoirBaseUrl
+  const { reservoirBaseUrl, apiKey } =
+    supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
+    DefaultChain
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -367,9 +372,16 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
+  const headers = {
+    headers: {
+      'x-api-key': apiKey || '',
+    },
+  }
+
   const collectionsResponse = await fetcher(
     `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery
+    collectionQuery,
+    headers
   )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
@@ -382,7 +394,8 @@ export const getStaticProps: GetStaticProps<{
 
   const tokensResponse = await fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
-    tokensQuery
+    tokensQuery,
+    headers
   )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']

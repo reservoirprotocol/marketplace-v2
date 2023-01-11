@@ -6,7 +6,7 @@ import fetcher from 'utils/fetcher'
 const PAGE_SIZE = 20
 
 export default function useUserCollections(address: string) {
-  const { reservoirBaseUrl } = useMarketplaceChain()
+  const { proxyApi } = useMarketplaceChain()
   const getKey = (
     pageIndex: number,
     previousPageData: any,
@@ -33,7 +33,7 @@ export default function useUserCollections(address: string) {
   }
 
   const { data, error, isValidating, size, setSize } = useSWRInfinite(
-    (...args) => getKey(...args, address, PAGE_SIZE, reservoirBaseUrl),
+    (...args) => getKey(...args, address, PAGE_SIZE, proxyApi),
     fetcher
   )
 
