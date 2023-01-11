@@ -156,8 +156,10 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   if (appContext.ctx.req?.headers.host) {
     baseUrl = `http://${appContext.ctx.req?.headers.host}`
   } else if (process.env.VERCEL_URL) {
-    baseUrl = process.env.VERCEL_URL
+    baseUrl = `${process.env.VERCEL_URL}`
   }
+
+  baseUrl = baseUrl.replace(/\/$/, '')
 
   return { ...appProps, baseUrl }
 }
