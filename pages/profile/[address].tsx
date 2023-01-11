@@ -15,7 +15,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
@@ -24,16 +24,16 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
+import { TokenFilters } from 'components/common/TokenFilters'
 import { useMounted, useMarketplaceChain } from '../../hooks'
-import { TokenFilters } from 'components/profile/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
-import { UserAcivityTable } from 'components/profile/UserActivityTable'
+import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { ActivityFilters } from 'components/common/ActivityFilters'
-import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
+import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import supportedChains, { DefaultChain } from 'utils/chains'
+import supportedChains from 'utils/chains'
 import { useENSResolver } from 'hooks'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -143,11 +143,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 addToast?.({ title: 'Copied' })
               }}
             >
-              <Text
-                style="subtitle1"
-                color="$gray11"
-                css={{ color: '$gray11', mr: '$3' }}
-              >
+              <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
                 {shortAddress}
               </Text>
               <Box css={{ color: '$gray10' }}>
@@ -259,8 +255,10 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     align="center"
                     css={{ py: '$6', gap: '$4', width: '100%' }}
                   >
-                    <img src="/magnifying-glass.svg" width={40} height={40} />
-                    <Text>No items found</Text>
+                    <Text css={{ color: '$gray11' }}>
+                      <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+                    </Text>
+                    <Text css={{ color: '$gray11' }}>No items found</Text>
                   </Flex>
                 )}
               </Box>
@@ -299,7 +297,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     setOpen={setActivityFiltersOpen}
                   />
                 )}
-                <UserAcivityTable
+                <UserActivityTable
                   user={address}
                   activityTypes={activityTypes}
                 />

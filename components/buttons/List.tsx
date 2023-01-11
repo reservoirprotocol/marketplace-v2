@@ -1,6 +1,12 @@
 import { ListModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { ComponentProps, ComponentPropsWithoutRef, FC, useContext } from 'react'
+import {
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  ReactNode,
+  useContext,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { useAccount } from 'wagmi'
@@ -14,11 +20,18 @@ type ListingCurrencies = ComponentPropsWithoutRef<
 type Props = {
   token?: ReturnType<typeof useTokens>['data'][0]
   buttonCss?: CSS
+  buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
   mutate?: SWRResponse['mutate']
 }
 
-const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
+const List: FC<Props> = ({
+  token,
+  buttonCss,
+  buttonChildren,
+  buttonProps,
+  mutate,
+}) => {
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
@@ -30,9 +43,7 @@ const List: FC<Props> = ({ token, buttonCss, buttonProps, mutate }) => {
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
-      {token?.market?.floorAsk?.price?.amount?.decimal
-        ? 'Create New Listing'
-        : 'List for Sale'}
+      {buttonChildren}
     </Button>
   )
   if (isDisconnected) {

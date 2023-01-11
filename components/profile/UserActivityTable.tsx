@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react'
-import { ActivityTable } from 'components/ActivityTable'
+import { ActivityTable } from 'components/common/ActivityTable'
 import { useUsersActivity } from '@reservoir0x/reservoir-kit-ui'
 
 type ActivityQuery = NonNullable<
@@ -12,7 +12,7 @@ type Props = {
   activityTypes: ActivityTypes
 }
 
-export const UserAcivityTable: FC<Props> = ({ user, activityTypes }) => {
+export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
   const data = useUsersActivity(
     user ? [user] : undefined,
     { types: activityTypes, limit: 20 },

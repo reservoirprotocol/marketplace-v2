@@ -44,6 +44,11 @@ export default styled('span', {
         fontSize: 12,
       },
     },
+    color: {
+      subtle: {
+        color: '$gray11',
+      },
+    },
     italic: {
       true: {
         fontStyle: 'italic',

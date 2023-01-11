@@ -32,7 +32,7 @@ export const ConnectWalletButton: FC<Props> = () => {
                 return (
                   <Button
                     css={{ flex: 1, justifyContent: 'center' }}
-                    corners="pill"
+                    corners="rounded"
                     onClick={openConnectModal}
                     type="button"
                   >

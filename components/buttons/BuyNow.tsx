@@ -49,7 +49,6 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     <Button
       css={buttonCss}
       color="primary"
-      disabled={isInTheWrongNetwork && !switchNetworkAsync}
       onClick={async () => {
         if (isInTheWrongNetwork && switchNetworkAsync) {
           const chain = await switchNetworkAsync(marketplaceChain.id)

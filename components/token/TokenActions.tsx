@@ -1,19 +1,27 @@
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
-import { Flex, Button } from 'components/primitives'
+import CancelBid from 'components/buttons/CancelBid'
+import CancelListing from 'components/buttons/CancelListing'
+import { Button, Grid } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
-import { useNetwork, useSigner } from 'wagmi'
+import { useAccount, useNetwork, useSigner } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
+  account: ReturnType<typeof useAccount>
 }
 
-export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
+export const TokenActions: FC<Props> = ({
+  token,
+  isOwner,
+  mutate,
+  account,
+}) => {
   const router = useRouter()
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
@@ -35,6 +43,16 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
       ? true
       : false
 
+  const isTopBidder =
+    account.isConnected &&
+    token?.market?.topBid?.maker?.toLowerCase() ===
+      account?.address?.toLowerCase()
+
+  const isListed = token
+    ? token?.market?.floorAsk?.price?.amount?.native !== null &&
+      token?.token?.kind !== 'erc1155'
+    : false
+
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
     justifyContent: 'center',
@@ -45,17 +63,29 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
   }
 
   return (
-    <Flex
+    <Grid
       align="center"
       css={{
         gap: '$3',
-        flexDirection: 'column',
+        gridTemplateColumns: 'repeat(1,minmax(0,1fr))',
         width: '100%',
-        '@sm': { flexDirection: 'row' },
+        '@sm': {
+          gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
+          width: 'max-content',
+        },
       }}
     >
       {isOwner ? (
-        <List token={token} mutate={mutate} buttonCss={buttonCss} />
+        <List
+          token={token}
+          mutate={mutate}
+          buttonCss={buttonCss}
+          buttonChildren={
+            token?.market?.floorAsk?.price?.amount?.decimal
+              ? 'Create New Listing'
+              : 'List for Sale'
+          }
+        />
       ) : (
         <BuyNow token={token} mutate={mutate} buttonCss={buttonCss} />
       )}
@@ -72,6 +102,7 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
           }
           mutate={mutate}
           buttonCss={buttonCss}
+          buttonChildren="Accept Offer"
         />
       )}
 
@@ -85,11 +116,37 @@ export const TokenActions: FC<Props> = ({ token, isOwner, mutate }) => {
         />
       )}
 
-      {/* TODO: Add CancelOffer RK modal*/}
+      {isTopBidder && (
+        <CancelBid
+          bidId={token?.market?.topBid?.id as string}
+          mutate={mutate}
+          trigger={
+            <Button
+              css={{ color: '$red11', justifyContent: 'center' }}
+              color="gray3"
+            >
+              Cancel Offer
+            </Button>
+          }
+        />
+      )}
 
-      {/* TODO: Add CancelListing RK modal */}
+      {isOwner && isListed && (
+        <CancelListing
+          listingId={token?.market?.floorAsk?.id as string}
+          mutate={mutate}
+          trigger={
+            <Button
+              css={{ color: '$red11', justifyContent: 'center' }}
+              color="gray3"
+            >
+              Cancel Listing
+            </Button>
+          }
+        />
+      )}
 
       {/* TODO: Add to Cart */}
-    </Flex>
+    </Grid>
   )
 }
