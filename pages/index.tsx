@@ -14,6 +14,7 @@ import { useMounted } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import fetcher from 'utils/fetcher'
+import { NORMALIZE_ROYALTIES } from './_app'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -139,6 +140,7 @@ export const getStaticProps: GetStaticProps<{
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: 'allTimeVolume',
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsResponse = await fetcher('collections/v5', collectionQuery)

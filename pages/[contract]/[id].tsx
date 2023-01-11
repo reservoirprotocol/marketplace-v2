@@ -45,6 +45,7 @@ import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver, useMounted } from 'hooks'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -346,6 +347,7 @@ export const getStaticProps: GetStaticProps<{
     {
       id: collectionId,
       includeTopBid: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsResponse = await fetcher('collections/v5', collectionQuery)
@@ -355,6 +357,7 @@ export const getStaticProps: GetStaticProps<{
     tokens: [`${collectionId}:${id}`],
     includeAttributes: true,
     includeTopBid: true,
+    normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
   const tokensResponse = await fetcher('tokens/v5', tokensQuery)

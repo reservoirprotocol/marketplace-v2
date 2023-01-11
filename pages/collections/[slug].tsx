@@ -36,6 +36,7 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -367,6 +368,7 @@ export const getStaticProps: GetStaticProps<{
     {
       id,
       includeTopBid: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsResponse = await fetcher('collections/v5', collectionQuery)
@@ -377,6 +379,7 @@ export const getStaticProps: GetStaticProps<{
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
     limit: 20,
+    normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
   const tokensResponse = await fetcher('tokens/v5', tokensQuery)

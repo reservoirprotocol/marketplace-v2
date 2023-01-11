@@ -34,6 +34,7 @@ import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useENSResolver } from 'hooks'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -346,6 +347,7 @@ export const getStaticProps: GetStaticProps<{
   let tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const tokensPromise = fetcher(`users/${address}/tokens/v6`, tokensQuery)
