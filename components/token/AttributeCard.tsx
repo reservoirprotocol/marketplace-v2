@@ -37,7 +37,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           width: '100%',
         }}
       >
-        <Text style="subtitle3" css={{ color: '$primary11' }}>
+        <Text style="subtitle3" color="subtle">
           {attribute.key}
         </Text>
         <Flex justify="between">

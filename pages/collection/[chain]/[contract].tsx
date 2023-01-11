@@ -36,6 +36,8 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 
 type ActivityTypes = Exclude<
@@ -291,8 +293,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       align="center"
                       css={{ py: '$6', gap: '$4' }}
                     >
-                      <img src="/magnifying-glass.svg" width={40} height={40} />
-                      <Text>No items found</Text>
+                      <Text css={{ color: '$gray11' }}>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+                      </Text>
+                      <Text css={{ color: '$gray11' }}>No items found</Text>
                     </Flex>
                   )}
                 </Box>

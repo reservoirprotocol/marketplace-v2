@@ -1,5 +1,5 @@
 import { AcceptBidModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { ComponentProps, FC, useContext } from 'react'
+import { ComponentProps, FC, ReactNode, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
@@ -14,6 +14,7 @@ type Props = {
   disabled?: boolean
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   buttonCss?: CSS
+  buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
   mutate?: SWRResponse['mutate']
 }
@@ -25,6 +26,7 @@ const AcceptBid: FC<Props> = ({
   disabled,
   openState,
   buttonCss,
+  buttonChildren,
   buttonProps,
   mutate,
 }) => {
@@ -34,7 +36,7 @@ const AcceptBid: FC<Props> = ({
 
   const trigger = (
     <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
-      Accept Offer
+      {buttonChildren}
     </Button>
   )
 

@@ -5,14 +5,19 @@ import { CollapsibleContent } from 'components/primitives/Collapsible'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+
+type Collections =
+  | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
+  | ReturnType<typeof useUserCollections>['data']
 
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
-  collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
+  collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
-  scrollToTop: () => void
+  scrollToTop?: () => void
 }
 
 export const TokenFilters: FC<Props> = ({
@@ -78,12 +83,16 @@ export const TokenFilters: FC<Props> = ({
                   } else {
                     setFilterCollection(collection?.collection?.id)
                   }
-                  scrollToTop()
+                  scrollToTop?.()
                 }}
               >
                 {collection?.collection?.image && (
                   <Image
-                    style={{ borderRadius: '4px', objectFit: 'cover' }}
+                    style={{
+                      borderRadius: '4px',
+                      objectFit: 'cover',
+                      aspectRatio: '1/1',
+                    }}
                     loader={({ src }) => src}
                     src={collection?.collection?.image as string}
                     alt={collection?.collection?.name as string}

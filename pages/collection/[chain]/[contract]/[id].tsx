@@ -270,7 +270,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           {token && (
             <>
               <Flex align="center" css={{ mt: '$2' }}>
-                <Text style="subtitle3" css={{ color: '$gray11', mr: '$2' }}>
+                <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
                   Owner
                 </Text>
                 <Jazzicon
@@ -287,7 +287,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <RarityRank token={token} collection={collection} />
               <PriceData token={token} />
               {isMounted && (
-                <TokenActions token={token} isOwner={isOwner} mutate={mutate} />
+                <TokenActions
+                  token={token}
+                  isOwner={isOwner}
+                  mutate={mutate}
+                  account={account}
+                />
               )}
               <Tabs.Root defaultValue="info">
                 <TabsList>
