@@ -154,7 +154,8 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   let baseUrl = ''
 
   if (appContext.ctx.req?.headers.host) {
-    baseUrl = `https://${appContext.ctx.req?.headers.host}`
+    const host = appContext.ctx.req?.headers.host
+    baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
   } else if (process.env.VERCEL_URL) {
     baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }
