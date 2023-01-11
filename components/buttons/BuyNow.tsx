@@ -6,8 +6,7 @@ import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   token?: ReturnType<typeof useTokens>['data'][0]
@@ -20,11 +19,12 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   const { data: signer } = useSigner()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
+  const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: CHAIN_ID ? +CHAIN_ID : undefined,
+    chainId: marketplaceChain.id,
   })
   const isInTheWrongNetwork = Boolean(
-    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
+    signer && activeChain?.id !== marketplaceChain.id
   )
 
   if (
@@ -49,11 +49,10 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     <Button
       css={buttonCss}
       color="primary"
-      disabled={isInTheWrongNetwork && !switchNetworkAsync}
       onClick={async () => {
-        if (isInTheWrongNetwork && switchNetworkAsync && CHAIN_ID) {
-          const chain = await switchNetworkAsync(+CHAIN_ID)
-          if (chain.id !== +CHAIN_ID) {
+        if (isInTheWrongNetwork && switchNetworkAsync) {
+          const chain = await switchNetworkAsync(marketplaceChain.id)
+          if (chain.id !== marketplaceChain.id) {
             return false
           }
         }

@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from '../../components/primitives'
+import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useTokens,
@@ -36,7 +36,13 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
+<<<<<<< HEAD:pages/collections/[slug].tsx
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
+=======
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import supportedChains, { DefaultChain } from 'utils/chains'
+>>>>>>> 4a81d7a60f19b81c1b0c0680c51e592766343023:pages/collection/[chain]/[contract].tsx
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -49,7 +55,7 @@ type ActivityTypes = Exclude<
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const IndexPage: NextPage<Props> = ({ id, ssr }) => {
+const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -291,8 +297,10 @@ const IndexPage: NextPage<Props> = ({ id, ssr }) => {
                       align="center"
                       css={{ py: '$6', gap: '$4' }}
                     >
-                      <img src="/magnifying-glass.svg" width={40} height={40} />
-                      <Text>No items found</Text>
+                      <Text css={{ color: '$gray11' }}>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+                      </Text>
+                      <Text css={{ color: '$gray11' }}>No items found</Text>
                     </Flex>
                   )}
                 </Box>
@@ -362,7 +370,10 @@ export const getStaticProps: GetStaticProps<{
   }
   id: string | undefined
 }> = async ({ params }) => {
-  const id = params?.slug?.toString()
+  const id = params?.contract?.toString()
+  const reservoirBaseUrl =
+    supportedChains.find((chain) => params?.chain === chain.routePrefix)
+      ?.reservoirBaseUrl || DefaultChain.reservoirBaseUrl
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -371,7 +382,10 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
-  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+  const collectionsResponse = await fetcher(
+    `${reservoirBaseUrl}/collections/v5`,
+    collectionQuery
+  )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
@@ -382,12 +396,15 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
-  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher(
+    `${reservoirBaseUrl}/tokens/v5`,
+    tokensQuery
+  )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
   const attributesResponse = await fetcher(
-    `collections/${id}/attributes/all/v2`,
+    `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
     {}
   )
 
@@ -399,4 +416,4 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-export default IndexPage
+export default CollectionPage

@@ -28,11 +28,7 @@ const FormatCurrency: FC<ComponentPropsWithoutRef<typeof Text> & Props> = ({
   }, [amount, maximumFractionDigits])
 
   return (
-    <Text
-      {...props}
-      style={props.style || 'subtitle3'}
-      color={props.color || 'base'}
-    >
+    <Text {...props} style={props.style || 'subtitle3'}>
       {formattedValue}
     </Text>
   )

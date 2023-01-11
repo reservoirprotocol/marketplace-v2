@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react'
-import { ActivityTable } from 'components/ActivityTable'
+import { ActivityTable } from 'components/common/ActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 
 type Props = {

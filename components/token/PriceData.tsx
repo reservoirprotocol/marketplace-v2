@@ -1,15 +1,15 @@
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
+import { useMarketplaceChain } from 'hooks'
 import { FC } from 'react'
 import { formatDollar } from 'utils/numbers'
-
-const API_BASE = process.env.NEXT_PUBLIC_RESERVOIR_API_BASE
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0] | null
 }
 
 export const PriceData: FC<Props> = ({ token }) => {
+  const { reservoirBaseUrl } = useMarketplaceChain()
   const listSourceName = token?.market?.floorAsk?.source?.name as
     | string
     | undefined
@@ -24,19 +24,19 @@ export const PriceData: FC<Props> = ({ token }) => {
     | string
     | undefined
 
-  const listSourceLogo = `${API_BASE}/redirect/sources/${
+  const listSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
     listSourceDomain || listSourceName
   }/logo/v2`
 
-  const offerSourceLogo = `${API_BASE}/redirect/sources/${
+  const offerSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
     offerSourceDomain || offerSourceName
   }/logo/v2`
 
-  const listSourceRedirect = `${API_BASE}/redirect/sources/${
+  const listSourceRedirect = `${reservoirBaseUrl}/redirect/sources/${
     listSourceDomain || listSourceName
   }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
 
-  const offerSourceRedirect = `${API_BASE}/redirect/sources/${
+  const offerSourceRedirect = `${reservoirBaseUrl}/redirect/sources/${
     offerSourceDomain || offerSourceName
   }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
 

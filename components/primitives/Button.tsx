@@ -38,9 +38,6 @@ const Button = styled('button', {
           backgroundColor: '$secondary5',
         },
       },
-      gradient: {
-        background: 'linear-gradient(270deg, #BD00FF 0%, #0091FF 109.23%)',
-      },
       gray3: {
         backgroundColor: '$gray3',
         color: '$gray12',

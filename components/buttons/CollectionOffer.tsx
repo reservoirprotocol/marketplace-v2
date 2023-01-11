@@ -2,16 +2,13 @@ import { BidModal, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
-import { useAccount, useNetwork, useSigner } from 'wagmi'
+import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
-
-type ChainId = 1 | 3 | 4 | 5 | 10
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
@@ -27,12 +24,16 @@ const CollectionOffer: FC<Props> = ({
   buttonProps = {},
 }) => {
   const router = useRouter()
+  const marketplaceChain = useMarketplaceChain()
   const [attribute, setAttribute] = useState<Trait>(undefined)
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
 
   useEffect(() => {
     const keys = Object.keys(router.query)
@@ -61,24 +62,28 @@ const CollectionOffer: FC<Props> = ({
     }
   }, [router.query])
 
-  if (!CHAIN_ID) {
-    throw 'A Chain id is required'
-  }
-
-  const env = {
-    chainId: +CHAIN_ID as ChainId,
-  }
-
   const isSupported = !!collection?.collectionBidSupported
-  const isInTheWrongNetwork = Boolean(signer && activeChain?.id !== env.chainId)
+  const isInTheWrongNetwork = Boolean(
+    signer && activeChain?.id !== marketplaceChain.id
+  )
   const isAttributeModal = !!attribute
 
-  if (isDisconnected) {
+  if (isDisconnected || isInTheWrongNetwork) {
     return (
       <Button
         css={buttonCss}
-        onClick={() => {
-          openConnectModal?.()
+        disabled={isInTheWrongNetwork && !switchNetworkAsync}
+        onClick={async () => {
+          if (isInTheWrongNetwork && switchNetworkAsync) {
+            const chain = await switchNetworkAsync(marketplaceChain.id)
+            if (chain.id !== marketplaceChain.id) {
+              return false
+            }
+          }
+
+          if (!signer) {
+            openConnectModal?.()
+          }
         }}
         {...buttonProps}
       >
@@ -92,11 +97,7 @@ const CollectionOffer: FC<Props> = ({
           <BidModal
             collectionId={collection?.id}
             trigger={
-              <Button
-                disabled={isInTheWrongNetwork}
-                css={buttonCss}
-                {...buttonProps}
-              >
+              <Button css={buttonCss} {...buttonProps}>
                 {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
               </Button>
             }

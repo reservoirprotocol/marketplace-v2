@@ -15,7 +15,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCopy } from '@fortawesome/free-solid-svg-icons'
+import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
@@ -24,15 +24,16 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
-import { useMounted } from '../../hooks'
-import { TokenFilters } from 'components/profile/TokenFilters'
+import { TokenFilters } from 'components/common/TokenFilters'
+import { useMounted, useMarketplaceChain } from '../../hooks'
 import { FilterButton } from 'components/common/FilterButton'
-import { UserAcivityTable } from 'components/profile/UserActivityTable'
+import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { ActivityFilters } from 'components/common/ActivityFilters'
-import { MobileTokenFilters } from 'components/profile/MobileTokenFilters'
+import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import supportedChains from 'utils/chains'
 import { useENSResolver } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 
@@ -67,6 +68,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   >()
   const isMounted = useMounted()
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const marketplaceChain = useMarketplaceChain()
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
@@ -84,6 +86,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     limit: 20,
     collection: filterCollection,
   }
+  const ssrTokens = ssr.tokens[marketplaceChain.id]
   const {
     data: tokens,
     mutate,
@@ -92,7 +95,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     hasNextPage,
     isFetchingPage,
   } = useUserTokens(address || '', tokenQuery, {
-    fallbackData: filterCollection ? undefined : [ssr.tokens],
+    fallbackData: filterCollection ? undefined : [ssrTokens],
   })
 
   useEffect(() => {
@@ -102,7 +105,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     }
   }, [loadMoreObserver?.isIntersecting])
 
-  const collections = ssr.collections.collections
+  const ssrCollections = ssr.collections[marketplaceChain.id]
+  const collections = ssrCollections?.collections || []
 
   if (!isMounted) {
     return null
@@ -140,11 +144,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 addToast?.({ title: 'Copied' })
               }}
             >
-              <Text
-                style="subtitle1"
-                color="$gray11"
-                css={{ color: '$gray11', mr: '$3' }}
-              >
+              <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
                 {shortAddress}
               </Text>
               <Box css={{ color: '$gray10' }}>
@@ -256,8 +256,10 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     align="center"
                     css={{ py: '$6', gap: '$4', width: '100%' }}
                   >
-                    <img src="/magnifying-glass.svg" width={40} height={40} />
-                    <Text>No items found</Text>
+                    <Text css={{ color: '$gray11' }}>
+                      <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+                    </Text>
+                    <Text css={{ color: '$gray11' }}>No items found</Text>
                   </Flex>
                 )}
               </Box>
@@ -296,7 +298,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     setOpen={setActivityFiltersOpen}
                   />
                 )}
-                <UserAcivityTable
+                <UserActivityTable
                   user={address}
                   activityTypes={activityTypes}
                 />
@@ -316,15 +318,19 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
+type UserTokensSchema =
+  paths['/users/{user}/tokens/v6']['get']['responses']['200']['schema']
+type UserCollectionsSchema =
+  paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
+
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    tokens: paths['/users/{user}/tokens/v6']['get']['responses']['200']['schema']
-    collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
+    tokens: Record<number, UserTokensSchema>
+    collections: Record<number, UserCollectionsSchema>
   }
   address: string | undefined
   ensName: string | null
 }> = async ({ params }) => {
-  const promises: ReturnType<typeof fetcher>[] = []
   let address = params?.address?.toString() || ''
   const isEnsName = address.includes('.')
   let ensName: null | string = null
@@ -344,37 +350,53 @@ export const getStaticProps: GetStaticProps<{
     }
   }
 
-  let tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
+  const tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
     {
       limit: 20,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
-  const tokensPromise = fetcher(`users/${address}/tokens/v6`, tokensQuery)
-
-  promises.push(tokensPromise)
-
-  let collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
+  const collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
     {
       limit: 100,
     }
 
-  const collectionsPromise = fetcher(
-    `users/${address}/collections/v2`,
-    collectionsQuery
-  )
-  promises.push(collectionsPromise)
+  const chainMap: Record<string, typeof supportedChains[0]> = {}
+  const promises: ReturnType<typeof fetcher>[] = []
+  supportedChains.forEach((chain) => {
+    chainMap[chain.reservoirBaseUrl] = chain
+    const tokensPromise = fetcher(
+      `${chain.reservoirBaseUrl}/users/${address}/tokens/v6`,
+      tokensQuery
+    )
+    const collectionsPromise = fetcher(
+      `${chain.reservoirBaseUrl}/users/${address}/collections/v2`,
+      collectionsQuery
+    )
+    promises.push(tokensPromise)
+    promises.push(collectionsPromise)
+  })
 
   const responses = await Promise.allSettled(promises)
-
-  const tokens: Props['ssr']['tokens'] =
-    responses[0]?.status === 'fulfilled' ? responses[0].value.data : undefined
-  const collections: Props['ssr']['collections'] =
-    responses[1]?.status === 'fulfilled' ? responses[1].value.data : undefined
+  const collections: Record<number, any> = {}
+  const tokens: Record<number, any> = {}
+  responses.forEach((response) => {
+    if (response.status === 'fulfilled') {
+      const url = new URL(response.value.response.url)
+      const chain = chainMap[url.origin]
+      if (chain) {
+        if (url.pathname.includes('collections')) {
+          collections[chain.id] = response.value.data
+        } else if (url.pathname.includes('tokens')) {
+          tokens[chain.id] = response.value.data
+        }
+      }
+    }
+  })
 
   return {
     props: { ssr: { tokens, collections }, address, ensName },
-    revalidate: 20,
+    revalidate: 5,
   }
 }
 

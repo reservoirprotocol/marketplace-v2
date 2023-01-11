@@ -9,7 +9,7 @@ import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
 import { Flex } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useContext } from 'react'
-import { useEnvChain, useMounted } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import { useTheme } from 'next-themes'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { useMediaQuery } from 'react-responsive'
@@ -50,7 +50,7 @@ const CollectionActionDropdownItem = styled(Flex, {
 const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const { addToast } = useContext(ToastContext)
   const isMobile = useMediaQuery({ maxWidth: 600 })
-  const envChain = useEnvChain()
+  const marketplaceChain = useMarketplaceChain()
   const { theme } = useTheme()
   const isMounted = useMounted()
   const etherscanImage = (
@@ -60,7 +60,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }
-      alt="Etherscan Icon"
+      alt={marketplaceChain.blockExplorers?.default.name || 'Etherscan'}
       style={{
         height: 16,
         width: 16,
@@ -69,7 +69,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   )
 
   const blockExplorerUrl = `${
-    envChain?.blockExplorers?.default.url || 'https://etherscan.io'
+    marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/address/${collection?.id}`
   const twitterLink = collection?.twitterUsername
     ? `https://twitter.com/${collection?.twitterUsername}`
@@ -99,13 +99,17 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const refreshMetadataItem = (
     <CollectionActionDropdownItem
       onClick={() => {
-        fetcher('collections/refresh/v1', undefined, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ collection: collection.id }),
-        })
+        fetcher(
+          `${marketplaceChain.reservoirBaseUrl}/collections/refresh/v1`,
+          undefined,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ collection: collection.id }),
+          }
+        )
           .then(({ response }) => {
             if (response.status === 200) {
               addToast?.({
@@ -136,11 +140,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
           trigger={collectionActionOverflowTrigger}
           contentProps={dropdownContentProps}
         >
-          <Flex
-            css={{
-              flexDirection: 'column',
-            }}
-          >
+          <Flex direction="column">
             <a
               href={blockExplorerUrl}
               target="_blank"

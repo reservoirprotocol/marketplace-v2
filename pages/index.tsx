@@ -3,39 +3,42 @@ import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useState } from 'react'
-import usePaginatedCollections from 'hooks/usePaginatedCollections'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
 } from 'components/home/TrendingCollectionsTimeToggle'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
-import { useMounted } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
+import supportedChains from 'utils/chains'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
+  const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('allTimeVolume')
-  const { data, hasNextPage, fetchNextPage, isFetchingPage } =
-    usePaginatedCollections(
+  const marketplaceChain = useMarketplaceChain()
+  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
+    useCollections(
       {
-        limit: 20,
+        limit: 12,
         sortBy: sortByTime,
       },
       {
-        fallbackData: [ssr.collections],
+        fallbackData: [ssr.collections[marketplaceChain.id]],
       }
     )
 
   let collections = data || []
-  const showViewAllButton = collections.length <= 20 && hasNextPage
+  const showViewAllButton = collections.length <= 12 && hasNextPage
   if (showViewAllButton) {
     collections = collections?.slice(0, 12)
   }
@@ -100,11 +103,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               }}
             />
           </Flex>
-          <TrendingCollectionsList
-            collections={collections}
-            volumeKey={volumeKey}
-          />
-          {isFetchingPage && (
+          {isSSR || !isMounted ? null : (
+            <TrendingCollectionsList
+              collections={collections}
+              loading={isValidating}
+              volumeKey={volumeKey}
+            />
+          )}
+          {(isFetchingPage || isValidating) && !showViewAllButton && (
             <Flex align="center" justify="center" css={{ py: '$4' }}>
               <LoadingSpinner />
             </Flex>
@@ -132,21 +138,38 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
+type CollectionSchema =
+  paths['/collections/v5']['get']['responses']['200']['schema']
+type ChainCollections = Record<string, CollectionSchema>
+
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collections: paths['/collections/v5']['get']['responses']['200']['schema']
+    collections: ChainCollections
   }
 }> = async () => {
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: 'allTimeVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
+      limit: 12,
     }
 
-  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+  const promises: ReturnType<typeof fetcher>[] = []
+  supportedChains.forEach((chain) => {
+    promises.push(
+      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery)
+    )
+  })
+  const responses = await Promise.allSettled(promises)
+  const collections: ChainCollections = {}
+  responses.forEach((response, i) => {
+    if (response.status === 'fulfilled') {
+      collections[supportedChains[i].id] = response.value.data
+    }
+  })
 
   return {
-    props: { ssr: { collections: collectionsResponse.data } },
+    props: { ssr: { collections } },
     revalidate: 5,
   }
 }

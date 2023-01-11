@@ -7,13 +7,14 @@ import Link from 'next/link'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
-import { useTheme } from 'next-themes'
+import ChainSwitcher from './ChainSwitcher'
 import HamburgerMenu from './HamburgerMenu'
+import MobileSearch from './MobileSearch'
+import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
-import MobileSearch from './MobileSearch'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -65,6 +66,7 @@ const Navbar = () => {
       </Box>
       <Flex align="center" css={{ gap: '$4' }}>
         <MobileSearch />
+        <ChainSwitcher />
         <ThemeSwitcher />
         <HamburgerMenu />
       </Flex>
@@ -123,6 +125,7 @@ const Navbar = () => {
 
       <Flex css={{ gap: '$5' }} justify="end" align="center">
         <ThemeSwitcher />
+        <ChainSwitcher />
         {isConnected ? (
           <ProfileDropdown />
         ) : (

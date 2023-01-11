@@ -6,9 +6,14 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+
+type Collections =
+  | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
+  | ReturnType<typeof useUserCollections>['data']
 
 type Props = {
-  collections: paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
+  collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
 }
@@ -47,6 +52,10 @@ export const MobileTokenFilters: FC<Props> = ({
       </Button>
     </Flex>
   )
+
+  if (collections?.length === 0 || collections == null) {
+    return null
+  }
 
   return (
     <FullscreenModal trigger={trigger}>
@@ -126,14 +135,20 @@ export const MobileTokenFilters: FC<Props> = ({
                   }
                 }}
               >
-                <Image
-                  style={{ borderRadius: '4px', objectFit: 'cover' }}
-                  loader={({ src }) => src}
-                  src={collection?.collection?.image as string}
-                  alt={collection?.collection?.name as string}
-                  width={24}
-                  height={24}
-                />
+                {collection?.collection?.image && (
+                  <Image
+                    style={{
+                      borderRadius: '4px',
+                      objectFit: 'cover',
+                      aspectRatio: '1/1',
+                    }}
+                    loader={({ src }) => src}
+                    src={collection?.collection?.image as string}
+                    alt={collection?.collection?.name as string}
+                    width={24}
+                    height={24}
+                  />
+                )}
                 <Text
                   style="body1"
                   css={{

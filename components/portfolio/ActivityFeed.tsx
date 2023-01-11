@@ -7,9 +7,9 @@ import {
   faTag,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import useUserActivity from '../../hooks/useUserActivity'
 import useInfiniteScroll from 'react-infinite-scroll-hook'
 import useTimeSince from 'hooks/useTimeSince'
+import { useUsersActivity } from '@reservoir0x/reservoir-kit-ui'
 
 const shortenAddress = (address: string) => {
   return address.slice(0, 4) + '...' + address.slice(-4 - 1)
@@ -176,15 +176,15 @@ const Activity = ({ activity, address }: any) => {
   )
 }
 const ActivityFeed = ({ address }: any) => {
-  const { data, setSize, size, isFinished, isLoading } =
-    useUserActivity(address)
+  const { data, hasNextPage, isValidating, fetchNextPage } =
+    useUsersActivity(address)
 
   const [sentryRef] = useInfiniteScroll({
     rootMargin: '0px 0px 800px 0px',
-    loading: isLoading,
-    hasNextPage: !isFinished,
+    loading: isValidating,
+    hasNextPage,
     onLoadMore: () => {
-      setSize(size + 1)
+      fetchNextPage()
     },
   } as any)
   return (
@@ -201,7 +201,7 @@ const ActivityFeed = ({ address }: any) => {
           />
         ))}
 
-      {!isLoading && !isFinished && (
+      {!isValidating && hasNextPage && (
         <div ref={sentryRef}>
           <div className="flex justify-center">loading</div>
         </div>
