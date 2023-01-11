@@ -124,7 +124,7 @@ function MyApp({
       >
         <ReservoirKitProvider
           options={{
-            apiBase: `${baseUrl}/${marketplaceChain.proxyApi}`,
+            apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
             apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
             source: 'reservoir.hub',
             normalizeRoyalties: NORMALIZE_ROYALTIES,
@@ -158,7 +158,6 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   } else if (process.env.VERCEL_URL) {
     baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }
-
   baseUrl = baseUrl.replace(/\/$/, '')
 
   return { ...appProps, baseUrl }
