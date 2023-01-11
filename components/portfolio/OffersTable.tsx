@@ -285,7 +285,7 @@ const TableHeading = () => (
   >
     {headings.map((heading) => (
       <TableCell key={heading}>
-        <Text style="subtitle3" subtleColor>
+        <Text style="subtitle3" color="subtle">
           {heading}
         </Text>
       </TableCell>

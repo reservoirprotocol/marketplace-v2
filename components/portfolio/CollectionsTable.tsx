@@ -279,28 +279,28 @@ const TableHeading = () => (
       <Text
         style="subtitle3"
         css={{ display: 'none', '@md': { display: 'block' } }}
-        subtleColor
+        color="subtle"
       >
         Collection
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" subtleColor>
+      <Text style="subtitle3" color="subtle">
         Volume
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" subtleColor>
+      <Text style="subtitle3" color="subtle">
         Top Offer
       </Text>
     </TableCell>
     <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
-      <Text style="subtitle3" subtleColor>
+      <Text style="subtitle3" color="subtle">
         Floor Price
       </Text>
     </TableCell>
     <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
-      <Text style="subtitle3" subtleColor>
+      <Text style="subtitle3" color="subtle">
         Owned
       </Text>
     </TableCell>

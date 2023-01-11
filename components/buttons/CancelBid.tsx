@@ -1,41 +1,46 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CancelBidModal } from '@reservoir0x/reservoir-kit-ui'
-import { Box } from 'components/primitives'
-import { FC, ReactNode, useContext } from 'react'
+import {
+  FC,
+  ReactElement,
+  ReactEventHandler,
+  cloneElement,
+  useContext,
+} from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   bidId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  trigger: ReactNode
+  trigger: ReactElement & { onClick: ReactEventHandler }
   mutate?: SWRResponse['mutate']
 }
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
 const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
   const { addToast } = useContext(ToastContext)
   const { openConnectModal } = useConnectModal()
+  const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: CHAIN_ID ? +CHAIN_ID : undefined,
+    chainId: marketplaceChain.id,
   })
 
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
-    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
+    signer && marketplaceChain.id !== activeChain?.id
   )
 
   if (isInTheWrongNetwork) {
-    return (
-      <Box
-        onClick={async () => {
-          if (switchNetworkAsync && CHAIN_ID) {
-            const chain = await switchNetworkAsync(+CHAIN_ID)
-            if (chain.id !== +CHAIN_ID) {
+    return cloneElement(trigger, {
+      onClick: async () => {
+        try {
+          if (switchNetworkAsync && activeChain) {
+            const chain = await switchNetworkAsync(marketplaceChain.id)
+            if (chain.id !== marketplaceChain.id) {
               return false
             }
           }
@@ -43,11 +48,11 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
           if (!signer) {
             openConnectModal?.()
           }
-        }}
-      >
-        {trigger}
-      </Box>
-    )
+        } catch (e) {
+          //todo add a toast
+        }
+      },
+    })
   }
 
   return (

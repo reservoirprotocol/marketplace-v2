@@ -44,8 +44,8 @@ export default styled('span', {
         fontSize: 12,
       },
     },
-    subtleColor: {
-      true: {
+    color: {
+      subtle: {
         color: '$gray11',
       },
     },

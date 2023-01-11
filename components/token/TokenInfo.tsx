@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '../../stitches.config'
 import { useTheme } from 'next-themes'
-import { useEnvChain, useMounted } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'
 
@@ -20,7 +20,7 @@ type Props = {
 }
 
 export const TokenInfo: FC<Props> = ({ token, collection }) => {
-  const envChain = useEnvChain()
+  const marketplaceChain = useMarketplaceChain()
   const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
   const descriptionRef = useRef<HTMLParagraphElement | null>(null)
@@ -47,15 +47,17 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }
-      alt="Etherscan Icon"
+      alt={`${
+        marketplaceChain.blockExplorers?.default.name || 'Ethereum'
+      } Icon`}
       height={16}
       width={16}
     />
   )
 
   const blockExplorerUrl = `${
-    envChain?.blockExplorers?.default.url || 'https://etherscan.io'
-  }/address/${collection?.id}`
+    marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
+  }/token/${token?.token?.contract}?a=${token?.token?.tokenId}`
   const twitterLink = collection?.twitterUsername
     ? `https://twitter.com/${collection?.twitterUsername}`
     : null

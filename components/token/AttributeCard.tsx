@@ -2,6 +2,7 @@ import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { formatNumber } from 'utils/numbers'
 import Link from 'next/link'
+import { useMarketplaceChain } from '../../hooks'
 
 type Token = NonNullable<
   NonNullable<ReturnType<typeof useTokens>['data']>[0]
@@ -14,13 +15,14 @@ type Props = {
 }
 
 export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
+  const { routePrefix } = useMarketplaceChain()
   const attributeTokenCount = attribute?.tokenCount || 0
   const totalTokens = collectionTokenCount ? Number(collectionTokenCount) : 0
   const attributeRarity = formatNumber(
     (attributeTokenCount / totalTokens) * 100,
     1
   )
-  const attributeHref = `/collections/${collectionId}?attributes[${attribute.key}]=${attribute.value}`
+  const attributeHref = `/collection/${routePrefix}/${collectionId}?attributes[${attribute.key}]=${attribute.value}`
   return (
     <Link href={attributeHref}>
       <Flex
@@ -35,7 +37,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           width: '100%',
         }}
       >
-        <Text style="subtitle3" subtleColor>
+        <Text style="subtitle3" color="subtle">
           {attribute.key}
         </Text>
         <Flex justify="between">

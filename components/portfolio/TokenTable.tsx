@@ -23,6 +23,7 @@ import {
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   address: Address | undefined
@@ -109,6 +110,7 @@ type TokenTableRowProps = {
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
+  const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   let imageSrc: string = (
@@ -133,7 +135,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         }}
       >
         <Link
-          href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+          href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -158,7 +160,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 minWidth: 0,
               }}
             >
-              <Text style="subtitle3" ellipsify subtleColor>
+              <Text style="subtitle3" ellipsify color="subtle">
                 {token?.token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
@@ -169,7 +171,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         </Link>
         <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
-            <Text style="subtitle3" subtleColor>
+            <Text style="subtitle3" color="subtle">
               Net Floor
             </Text>
             <FormatCryptoCurrency
@@ -196,7 +198,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             />
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
-            <Text style="subtitle3" subtleColor>
+            <Text style="subtitle3" color="subtle">
               You Get
             </Text>
             <FormatCryptoCurrency
@@ -242,7 +244,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+          href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -349,18 +351,18 @@ const TableHeading = () => (
     }}
   >
     <TableCell>
-      <Text style="subtitle3" subtleColor>
+      <Text style="subtitle3" color="subtle">
         Items
       </Text>
     </TableCell>
     <TableCell>
-      <Text style="subtitle3" subtleColor>
+      <Text style="subtitle3" color="subtle">
         Listed Price
       </Text>
     </TableCell>
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
-        <Text style="subtitle3" subtleColor>
+        <Text style="subtitle3" color="subtle">
           Net Floor
         </Text>
         <Tooltip
@@ -381,7 +383,7 @@ const TableHeading = () => (
     </TableCell>
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
-        <Text style="subtitle3" subtleColor>
+        <Text style="subtitle3" color="subtle">
           You Get
         </Text>
         <Tooltip

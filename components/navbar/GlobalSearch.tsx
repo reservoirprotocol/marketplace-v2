@@ -23,6 +23,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useCopyToClipboard } from 'usehooks-ts'
 import Link from 'next/link'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   collection: NonNullable<
@@ -33,6 +34,7 @@ type Props = {
 const CollectionItem: FC<Props> = ({ collection }) => {
   const [value, copy] = useCopyToClipboard()
   const [selected, setSelected] = useState(false)
+  const { routePrefix } = useMarketplaceChain()
 
   let flashing = useRef(null as any)
 
@@ -46,7 +48,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
   }
 
   return (
-    <Link href={`/collections/${collection.id}`}>
+    <Link href={`/collection/${routePrefix}/${collection.id}`}>
       <Flex
         css={{
           p: '$2',
@@ -83,12 +85,13 @@ const CollectionItem: FC<Props> = ({ collection }) => {
             },
             transition: 'color 100ms ease-out',
           }}
-          onClick={() => {
+          onClick={(e) => {
             flash()
             copy(collection?.id as string)
+            e.preventDefault()
           }}
         >
-          <FontAwesomeIcon icon={faCopy} />
+          <FontAwesomeIcon icon={faCopy} height={14} />
         </Box>
       </Flex>
     </Link>
@@ -105,15 +108,19 @@ type WalletItemProps = {
   }
 }
 
-const WalletItem: FC<WalletItemProps> = ({ wallet }) => (
-  <Flex css={{ p: '$2', gap: '$4' }} align="center">
-    <img
-      src={wallet.avatar as string}
-      style={{ width: 32, height: 32, borderRadius: 4 }}
-    />
-    <Text style="subtitle1">{wallet.displayName}</Text>
-  </Flex>
-)
+const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
+  return (
+    <Link href={`/profile/${wallet.name}`}>
+      <Flex css={{ p: '$2', gap: '$4' }} align="center">
+        <img
+          src={wallet.avatar as string}
+          style={{ width: 32, height: 32, borderRadius: 4 }}
+        />
+        <Text style="subtitle1">{wallet.displayName}</Text>
+      </Flex>
+    </Link>
+  )
+}
 
 type SearchResultProps = {
   result: {
@@ -140,15 +147,16 @@ const GlobalSearch = forwardRef<
   const [showSearchBox, setShowSearchBox] = useState(false)
 
   const debouncedSearch = useDebounce(search, 500)
+  const marketplaceChain = useMarketplaceChain()
 
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
-      let res = await fetch(`/api/globalSearch?q=${debouncedSearch}`).then(
-        (res) => res.json()
-      )
+      let res = await fetch(
+        `/api/globalSearch?q=${debouncedSearch}&chainId=${marketplaceChain.id}`
+      ).then((res) => res.json())
 
       setResults(res.results)
       setSearching(false)

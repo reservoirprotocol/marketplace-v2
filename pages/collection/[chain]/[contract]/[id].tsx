@@ -44,15 +44,19 @@ import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useENSResolver, useMounted } from 'hooks'
+import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
+import { useRouter } from 'next/router'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+  const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
+  const { reservoirBaseUrl } = useMarketplaceChain()
   const { data: collections } = useCollections(
     {
       id: collectionId,
@@ -199,7 +203,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           }}
         >
           <Flex justify="between" align="center" css={{ mb: 20 }}>
-            <Link href={`/collections/${collectionId}`} legacyBehavior={true}>
+            <Link
+              href={`/collection/${router.query.chain}/${collectionId}`}
+              legacyBehavior={true}
+            >
               <Anchor
                 color="primary"
                 css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
@@ -212,7 +219,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Link>
             <Button
               onClick={() => {
-                fetcher('tokens/refresh/v1', undefined, {
+                fetcher(`${reservoirBaseUrl}/tokens/refresh/v1`, undefined, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/json',
@@ -263,7 +270,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           {token && (
             <>
               <Flex align="center" css={{ mt: '$2' }}>
-                <Text style="subtitle3" subtleColor css={{ mr: '$2' }}>
+                <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
                   Owner
                 </Text>
                 <Jazzicon
@@ -272,19 +279,21 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
                 <Link href={`/profile/${owner}`} legacyBehavior={true}>
                   <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                    {ownerFormatted}
+                    {isMounted ? ownerFormatted : ''}
                   </Anchor>
                 </Link>
               </Flex>
               {/* TODO: pass collection attributes */}
               <RarityRank token={token} collection={collection} />
               <PriceData token={token} />
-              <TokenActions
-                token={token}
-                isOwner={isOwner}
-                mutate={mutate}
-                account={account}
-              />
+              {isMounted && (
+                <TokenActions
+                  token={token}
+                  isOwner={isOwner}
+                  mutate={mutate}
+                  account={account}
+                />
+              )}
               <Tabs.Root defaultValue="info">
                 <TabsList>
                   {isSmallDevice && (
@@ -346,6 +355,9 @@ export const getStaticProps: GetStaticProps<{
 }> = async ({ params }) => {
   const collectionId = params?.contract?.toString()
   const id = params?.id?.toString()
+  const reservoirBaseUrl =
+    supportedChains.find((chain) => params?.chain === chain.routePrefix)
+      ?.reservoirBaseUrl || DefaultChain.reservoirBaseUrl
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -353,7 +365,10 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  const collectionsResponse = await fetcher('collections/v5', collectionQuery)
+  const collectionsResponse = await fetcher(
+    `${reservoirBaseUrl}/collections/v5`,
+    collectionQuery
+  )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
@@ -362,7 +377,10 @@ export const getStaticProps: GetStaticProps<{
     includeTopBid: true,
   }
 
-  const tokensResponse = await fetcher('tokens/v5', tokensQuery)
+  const tokensResponse = await fetcher(
+    `${reservoirBaseUrl}/tokens/v5`,
+    tokensQuery
+  )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 

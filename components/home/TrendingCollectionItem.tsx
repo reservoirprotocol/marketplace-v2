@@ -1,8 +1,8 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
 import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
 import { FC } from 'react'
+import { useMarketplaceChain } from '../../hooks'
 import { TrendingCollections } from 'components/home/TrendingCollectionsList'
 
 type Props = {
@@ -16,10 +16,11 @@ export const TrendingCollectionItem: FC<Props> = ({
   collection,
   volumeKey,
 }) => {
+  const { routePrefix } = useMarketplaceChain()
   return (
     <Link
-      href={`/collections/${collection.id}`}
-      style={{ display: 'inline-block' }}
+      href={`/collection/${routePrefix}/${collection.id}`}
+      style={{ display: 'inline-block', minWidth: 0 }}
     >
       <Flex align="center" css={{ cursor: 'pointer' }}>
         <Text css={{ mr: '$4' }} style="subtitle3">

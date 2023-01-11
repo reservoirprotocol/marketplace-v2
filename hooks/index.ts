@@ -1,6 +1,5 @@
 export { default as useMounted } from './useMounted'
 export { default as useTimeSince } from './useTimeSince'
-export { default as useUserActivity } from './useUserActivity'
 export { default as useChainCurrency } from './useChainCurrency'
-export { default as useEnvChain } from './useEnvChain'
+export { default as useMarketplaceChain } from './useMarketplaceChain'
 export { default as useENSResolver } from './useENSResolver'

@@ -1,19 +1,23 @@
-import { useChainModal, useConnectModal } from '@rainbow-me/rainbowkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CancelListingModal } from '@reservoir0x/reservoir-kit-ui'
-import { Box } from 'components/primitives'
-import { FC, ReactNode, useContext } from 'react'
+import {
+  FC,
+  ReactElement,
+  useContext,
+  ReactEventHandler,
+  cloneElement,
+} from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   listingId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  trigger: ReactNode
+  trigger: ReactElement<any> & { onClick: ReactEventHandler }
   mutate?: SWRResponse['mutate']
 }
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
 
 const CancelListing: FC<Props> = ({
   listingId,
@@ -23,24 +27,25 @@ const CancelListing: FC<Props> = ({
 }) => {
   const { addToast } = useContext(ToastContext)
   const { openConnectModal } = useConnectModal()
+  const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: CHAIN_ID ? +CHAIN_ID : undefined,
+    chainId: marketplaceChain.id,
   })
 
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
-    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
+    signer && activeChain && activeChain.id !== marketplaceChain.id
   )
 
   if (isInTheWrongNetwork) {
-    return (
-      <Box
-        onClick={async () => {
-          if (switchNetworkAsync && CHAIN_ID) {
-            const chain = await switchNetworkAsync(+CHAIN_ID)
-            if (chain.id !== +CHAIN_ID) {
+    return cloneElement(trigger, {
+      onClick: async () => {
+        try {
+          if (switchNetworkAsync && activeChain) {
+            const chain = await switchNetworkAsync(marketplaceChain.id)
+            if (chain.id !== marketplaceChain.id) {
               return false
             }
           }
@@ -48,11 +53,11 @@ const CancelListing: FC<Props> = ({
           if (!signer) {
             openConnectModal?.()
           }
-        }}
-      >
-        {trigger}
-      </Box>
-    )
+        } catch (e) {
+          //todo add a toast
+        }
+      },
+    })
   }
 
   return (

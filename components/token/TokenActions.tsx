@@ -7,8 +7,7 @@ import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useAccount, useNetwork, useSigner } from 'wagmi'
-
-const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -26,13 +25,14 @@ export const TokenActions: FC<Props> = ({
   const router = useRouter()
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
+  const marketplaceChain = useMarketplaceChain()
   const bidOpenState = useState(true)
 
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
 
   const isInTheWrongNetwork = Boolean(
-    signer && CHAIN_ID && activeChain?.id !== +CHAIN_ID
+    signer && activeChain?.id !== marketplaceChain.id
   )
 
   const showAcceptOffer =
