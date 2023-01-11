@@ -1,9 +1,9 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
-import { paths} from '@reservoir0x/reservoir-sdk'
-import supportedChains from 'utils/chains'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -21,25 +21,35 @@ export default async function handler(req: Request) {
 
   let isAddress = ethers.utils.isAddress(q as string)
 
-  const chain = supportedChains.find((chain) => chain.id == chainId)
+  const { reservoirBaseUrl, apiKey } =
+    supportedChains.find((chain) => chain.id == chainId) || DefaultChain
+  const headers = {
+    headers: {
+      'x-api-key': apiKey || '',
+    },
+  }
 
   let queryParams: Parameters<typeof useCollections>['0'] = {}
 
-   if (COLLECTION_SET_ID) {
-    queryParams.collectionsSetId = COLLECTION_SET_ID
-  } else 
-  if (COMMUNITY){
-    queryParams.community = COMMUNITY
-  }
-
+  if (COLLECTION_SET_ID) {
+   queryParams.collectionsSetId = COLLECTION_SET_ID
+ } else 
+ if (COMMUNITY){
+   queryParams.community = COMMUNITY
+ }
+ 
   // start fetching search preemptively
   let collectionQuery = fetcher(
-    `${chain?.reservoirBaseUrl}/search/collections/v1?name=${q}&limit=6`, queryParams
+    `${reservoirBaseUrl}/collections/v5?name=${q}&limit=6`,
+    queryParams,
+    headers
   )
 
   if (isAddress) {
     let { data } = await fetcher(
-      `${chain?.reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`
+      `${reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`,
+      {},
+      headers
     )
     if (data.collections.length) {
       searchResults = [

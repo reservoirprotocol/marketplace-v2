@@ -1,5 +1,6 @@
 import 'fonts/inter.css'
-import type { AppProps } from 'next/app'
+import type { AppContext, AppProps } from 'next/app'
+import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
@@ -81,7 +82,11 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   )
 }
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({
+  Component,
+  pageProps,
+  baseUrl,
+}: AppProps & { baseUrl: string }) {
   globalReset()
 
   const { theme } = useTheme()
@@ -127,7 +132,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <ReservoirKitProvider
           options={{
-            apiBase: marketplaceChain.reservoirBaseUrl,
+            apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
             apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
             source: 'reservoir.hub',
             normalizeRoyalties: NORMALIZE_ROYALTIES,
@@ -149,6 +154,22 @@ function MyApp({ Component, pageProps }: AppProps) {
       </ThemeProvider>
     </HotkeysProvider>
   )
+}
+
+AppWrapper.getInitialProps = async (appContext: AppContext) => {
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await NextApp.getInitialProps(appContext)
+  let baseUrl = ''
+
+  if (appContext.ctx.req?.headers.host) {
+    const host = appContext.ctx.req?.headers.host
+    baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
+  } else if (process.env.VERCEL_URL) {
+    baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
+  }
+  baseUrl = baseUrl.replace(/\/$/, '')
+
+  return { ...appProps, baseUrl }
 }
 
 export default AppWrapper
