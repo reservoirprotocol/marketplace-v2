@@ -38,7 +38,7 @@ export default ({
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
-  const { routePrefix, reservoirBaseUrl } = useMarketplaceChain()
+  const { routePrefix, proxyApi } = useMarketplaceChain()
 
   return (
     <Box
@@ -172,7 +172,7 @@ export default ({
                 height: 20,
                 borderRadius: '50%',
               }}
-              src={`${reservoirBaseUrl}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
+              src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
             />
           </Flex>
           {token?.token?.lastBuy?.value && (

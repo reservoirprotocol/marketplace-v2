@@ -1,7 +1,7 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import supportedChains from 'utils/chains'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -19,16 +19,25 @@ export default async function handler(req: Request) {
 
   let isAddress = ethers.utils.isAddress(q as string)
 
-  const chain = supportedChains.find((chain) => chain.id == chainId)
-
+  const { reservoirBaseUrl, apiKey } =
+    supportedChains.find((chain) => chain.id == chainId) || DefaultChain
+  const headers = {
+    headers: {
+      'x-api-key': apiKey || '',
+    },
+  }
   // start fetching search preemptively
   let collectionQuery = fetcher(
-    `${chain?.reservoirBaseUrl}/collections/v5?name=${q}&limit=6`
+    `${reservoirBaseUrl}/collections/v5?name=${q}&limit=6`,
+    {},
+    headers
   )
 
   if (isAddress) {
     let { data } = await fetcher(
-      `${chain?.reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`
+      `${reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`,
+      {},
+      headers
     )
     if (data.collections.length) {
       searchResults = [

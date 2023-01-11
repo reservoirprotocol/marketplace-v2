@@ -100,7 +100,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
     <CollectionActionDropdownItem
       onClick={() => {
         fetcher(
-          `${marketplaceChain.reservoirBaseUrl}/collections/refresh/v1`,
+          `${marketplaceChain.proxyApi}/collections/refresh/v1`,
           undefined,
           {
             method: 'POST',

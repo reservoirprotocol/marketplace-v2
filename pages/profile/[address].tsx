@@ -364,13 +364,13 @@ export const getStaticProps: GetStaticProps<{
   const chainMap: Record<string, typeof supportedChains[0]> = {}
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
-    chainMap[chain.reservoirBaseUrl] = chain
+    chainMap[chain.proxyApi] = chain
     const tokensPromise = fetcher(
-      `${chain.reservoirBaseUrl}/users/${address}/tokens/v6`,
+      `${chain.proxyApi}/users/${address}/tokens/v6`,
       tokensQuery
     )
     const collectionsPromise = fetcher(
-      `${chain.reservoirBaseUrl}/users/${address}/collections/v2`,
+      `${chain.proxyApi}/users/${address}/collections/v2`,
       collectionsQuery
     )
     promises.push(tokensPromise)
@@ -383,6 +383,7 @@ export const getStaticProps: GetStaticProps<{
   responses.forEach((response) => {
     if (response.status === 'fulfilled') {
       const url = new URL(response.value.response.url)
+      //todo debug
       const chain = chainMap[url.origin]
       if (chain) {
         if (url.pathname.includes('collections')) {

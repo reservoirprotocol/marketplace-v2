@@ -25,6 +25,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('allTimeVolume')
   const marketplaceChain = useMarketplaceChain()
+
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(
       {
@@ -155,7 +156,11 @@ export const getStaticProps: GetStaticProps<{
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
     promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery)
+      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
+        headers: {
+          'x-api-key': chain.apiKey || '',
+        },
+      })
     )
   })
   const responses = await Promise.allSettled(promises)

@@ -363,9 +363,14 @@ export const getStaticProps: GetStaticProps<{
   id: string | undefined
 }> = async ({ params }) => {
   const id = params?.contract?.toString()
-  const reservoirBaseUrl =
-    supportedChains.find((chain) => params?.chain === chain.routePrefix)
-      ?.reservoirBaseUrl || DefaultChain.reservoirBaseUrl
+  const { reservoirBaseUrl, apiKey } =
+    supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
+    DefaultChain
+  const headers = {
+    headers: {
+      'x-api-key': apiKey || '',
+    },
+  }
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
@@ -375,7 +380,8 @@ export const getStaticProps: GetStaticProps<{
 
   const collectionsResponse = await fetcher(
     `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery
+    collectionQuery,
+    headers
   )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
@@ -388,18 +394,20 @@ export const getStaticProps: GetStaticProps<{
 
   const tokensResponse = await fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
-    tokensQuery
+    tokensQuery,
+    headers
   )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
   const attributesResponse = await fetcher(
     `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
-    {}
+    {},
+    headers
   )
 
   const attributes: Props['ssr']['attributes'] = attributesResponse['data']
-
+  
   return {
     props: { ssr: { collection, tokens, attributes }, id },
     revalidate: 20,
