@@ -56,7 +56,7 @@ export const ProfileDropdown: FC = () => {
         }}
       >
         <Flex justify="between">
-          <Text style="subtitle1" color="$gray11" css={{ color: '$gray11' }}>
+          <Text style="subtitle1" color="subtle">
             {shortEnsName ? shortEnsName : shortAddress}
           </Text>
           <Box css={{ color: '$gray10' }}>

@@ -15,7 +15,7 @@ import { useMarketplaceChain } from 'hooks'
 type Props = {
   listingId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  trigger: ReactElement<any> & { onClick: ReactEventHandler }
+  trigger: ReactElement<any, string> & { onClick: ReactEventHandler }
   mutate?: SWRResponse['mutate']
 }
 
