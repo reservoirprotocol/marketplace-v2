@@ -1,9 +1,17 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import supportedChains, { DefaultChain } from 'utils/chains'
+
+const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
+  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
+  : undefined
+
+const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
+  ? process.env.NEXT_PUBLIC_COMMUNITY
+  : undefined
+
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
