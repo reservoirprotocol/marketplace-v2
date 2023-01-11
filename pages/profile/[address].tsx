@@ -86,7 +86,6 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     collection: filterCollection,
   }
   const ssrTokens = ssr.tokens[marketplaceChain.id]
-  console.log(ssrTokens)
   const {
     data: tokens,
     mutate,
@@ -363,14 +362,21 @@ export const getStaticProps: GetStaticProps<{
   const chainMap: Record<string, typeof supportedChains[0]> = {}
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
+    const headers = {
+      headers: {
+        'x-api-key': chain.apiKey || '',
+      },
+    }
     chainMap[chain.reservoirBaseUrl] = chain
     const tokensPromise = fetcher(
       `${chain.reservoirBaseUrl}/users/${address}/tokens/v6`,
-      tokensQuery
+      tokensQuery,
+      headers
     )
     const collectionsPromise = fetcher(
       `${chain.reservoirBaseUrl}/users/${address}/collections/v2`,
-      collectionsQuery
+      collectionsQuery,
+      headers
     )
     promises.push(tokensPromise)
     promises.push(collectionsPromise)
