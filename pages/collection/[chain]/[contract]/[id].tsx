@@ -219,13 +219,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Link>
             <Button
               onClick={() => {
-                fetcher(`${proxyApi}/tokens/refresh/v1`, undefined, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ token: `${collectionId}:${id}` }),
-                })
+                fetcher(
+                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  undefined,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: `${collectionId}:${id}` }),
+                  }
+                )
                   .then(({ response }) => {
                     if (response.status === 200) {
                       addToast?.({
@@ -233,8 +237,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                         description:
                           'Request to refresh collection was accepted.',
                       })
+                    } else {
+                      throw 'Request Failed'
                     }
-                    throw 'Request Failed'
                   })
                   .catch((e) => {
                     addToast?.({

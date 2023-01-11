@@ -100,7 +100,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
     <CollectionActionDropdownItem
       onClick={() => {
         fetcher(
-          `${marketplaceChain.proxyApi}/collections/refresh/v1`,
+          `${window.location.origin}/${marketplaceChain.proxyApi}/collections/refresh/v1`,
           undefined,
           {
             method: 'POST',
@@ -116,8 +116,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
                 title: 'Refresh collection',
                 description: 'Request to refresh collection was accepted..',
               })
+            } else {
+              throw 'Request Failed'
             }
-            throw 'Request Failed'
           })
           .catch((e) => {
             addToast?.({
