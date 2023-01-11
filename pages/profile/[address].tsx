@@ -143,11 +143,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 addToast?.({ title: 'Copied' })
               }}
             >
-              <Text
-                style="subtitle1"
-                color="$gray11"
-                css={{ color: '$gray11', mr: '$3' }}
-              >
+              <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
                 {shortAddress}
               </Text>
               <Box css={{ color: '$gray10' }}>

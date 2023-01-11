@@ -125,11 +125,7 @@ const HamburgerMenu = () => {
                     seed={jsNumberForAddress(address as string)}
                   />
                 )}
-                <Text
-                  style="subtitle1"
-                  color="$gray11"
-                  css={{ ml: '$2', color: '$gray11' }}
-                >
+                <Text style="subtitle1" color="subtle" css={{ ml: '$2' }}>
                   {shortEnsName ? shortEnsName : shortAddress}
                 </Text>
               </Flex>

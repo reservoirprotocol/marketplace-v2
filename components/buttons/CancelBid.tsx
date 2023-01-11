@@ -1,12 +1,6 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CancelBidModal } from '@reservoir0x/reservoir-kit-ui'
-import {
-  FC,
-  ReactElement,
-  ReactEventHandler,
-  cloneElement,
-  useContext,
-} from 'react'
+import { FC, ReactElement, cloneElement, useContext } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
@@ -15,7 +9,7 @@ import { useMarketplaceChain } from 'hooks'
 type Props = {
   bidId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  trigger: ReactElement & { onClick: ReactEventHandler }
+  trigger: ReactElement
   mutate?: SWRResponse['mutate']
 }
 

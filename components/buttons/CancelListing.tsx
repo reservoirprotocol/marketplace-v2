@@ -1,12 +1,6 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CancelListingModal } from '@reservoir0x/reservoir-kit-ui'
-import {
-  FC,
-  ReactElement,
-  useContext,
-  ReactEventHandler,
-  cloneElement,
-} from 'react'
+import { FC, ReactElement, useContext, cloneElement } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
@@ -15,7 +9,7 @@ import { useMarketplaceChain } from 'hooks'
 type Props = {
   listingId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
-  trigger: ReactElement<any> & { onClick: ReactEventHandler }
+  trigger: ReactElement<any>
   mutate?: SWRResponse['mutate']
 }
 
