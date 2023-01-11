@@ -22,6 +22,7 @@ import CollectionsTableTimeToggle, {
 import round from 'utils/round'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
 type Props = {
   address: Address | undefined
@@ -40,12 +41,22 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     rootMargin: '0px 0px 300px 0px',
   })
 
+  const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
+    includeTopBid: true,
+  }
+
+  if (COLLECTION_SET_ID) {
+    collectionQuery.collectionsSetId = COLLECTION_SET_ID
+  } else {
+    if (COMMUNITY) collectionQuery.community = COMMUNITY
+  }
+
   const {
     data: collections,
     fetchNextPage,
     isFetchingPage,
     isValidating,
-  } = useUserCollections(address as string, { includeTopBid: true })
+  } = useUserCollections(address as string, collectionQuery)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting

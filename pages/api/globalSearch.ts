@@ -1,7 +1,9 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { paths} from '@reservoir0x/reservoir-sdk'
 import supportedChains from 'utils/chains'
+import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -21,9 +23,18 @@ export default async function handler(req: Request) {
 
   const chain = supportedChains.find((chain) => chain.id == chainId)
 
+  let queryParams: Parameters<typeof useCollections>['0'] = {}
+
+   if (COLLECTION_SET_ID) {
+    queryParams.collectionsSetId = COLLECTION_SET_ID
+  } else 
+  if (COMMUNITY){
+    queryParams.community = COMMUNITY
+  }
+
   // start fetching search preemptively
   let collectionQuery = fetcher(
-    `${chain?.reservoirBaseUrl}/collections/v5?name=${q}&limit=6`
+    `${chain?.reservoirBaseUrl}/search/collections/v1?name=${q}&limit=6`, queryParams
   )
 
   if (isAddress) {

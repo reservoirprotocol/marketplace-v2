@@ -18,6 +18,7 @@ import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -28,9 +29,21 @@ const IndexPage: NextPage = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
 
-  const { data: collections } = useUserCollections(address as string, {
-    limit: 100,
-  })
+  let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
+    limit: 20,
+    collection: filterCollection,
+  }
+
+  if (COLLECTION_SET_ID) {
+    collectionQuery.collectionsSetId = COLLECTION_SET_ID
+  } else {
+    if (COMMUNITY) collectionQuery.community = COMMUNITY
+  }
+
+  const { data: collections } = useUserCollections(
+    address as string,
+    collectionQuery
+  )
 
   if (!isMounted) {
     return null

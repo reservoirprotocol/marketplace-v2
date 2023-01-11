@@ -35,7 +35,7 @@ import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import supportedChains from 'utils/chains'
 import { useENSResolver } from 'hooks'
-import { NORMALIZE_ROYALTIES } from 'pages/_app'
+import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -86,6 +86,13 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     limit: 20,
     collection: filterCollection,
   }
+
+  if (COLLECTION_SET_ID) {
+    tokenQuery.collectionsSetId = COLLECTION_SET_ID
+  } else {
+    if (COMMUNITY) tokenQuery.community = COMMUNITY
+  }
+
   const ssrTokens = ssr.tokens[marketplaceChain.id]
   const {
     data: tokens,
@@ -360,6 +367,16 @@ export const getStaticProps: GetStaticProps<{
     {
       limit: 100,
     }
+
+  if (COLLECTION_SET_ID) {
+    tokensQuery.collectionsSetId = COLLECTION_SET_ID
+    collectionsQuery.collectionsSetId = COLLECTION_SET_ID
+  } else {
+    if (COMMUNITY) {
+      tokensQuery.community = COMMUNITY
+      collectionsQuery.community = COMMUNITY
+    }
+  }
 
   const chainMap: Record<string, typeof supportedChains[0]> = {}
   const promises: ReturnType<typeof fetcher>[] = []

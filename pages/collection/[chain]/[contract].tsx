@@ -36,7 +36,7 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
-import { NORMALIZE_ROYALTIES } from 'pages/_app'
+import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
@@ -74,15 +74,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  const { data: collections } = useCollections(
-    {
-      id,
-      includeTopBid: true,
-    },
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
+  let collectionQuery: Parameters<typeof useCollections>['0'] = {
+    id,
+    includeTopBid: true,
+  }
+
+  const { data: collections } = useCollections(collectionQuery, {
+    fallbackData: [ssr.collection],
+  })
 
   let collection = collections && collections[0]
 
@@ -139,6 +138,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   return (
     <Layout>
+      <Text></Text>
       {collection ? (
         <Flex
           direction="column"

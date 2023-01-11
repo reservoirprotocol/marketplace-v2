@@ -24,6 +24,7 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
+import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
 type Props = {
   address: Address | undefined
@@ -43,6 +44,13 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
     collection: filterCollection,
     includeTopBid: true,
   }
+
+  if (COLLECTION_SET_ID) {
+    tokenQuery.collectionsSetId = COLLECTION_SET_ID
+  } else {
+    if (COMMUNITY) tokenQuery.community = COMMUNITY
+  }
+
   const {
     data: tokens,
     fetchNextPage,
@@ -50,13 +58,6 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
     isFetchingPage,
     isValidating,
   } = useUserTokens(address, tokenQuery, {})
-
-  useEffect(() => {
-    const isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
