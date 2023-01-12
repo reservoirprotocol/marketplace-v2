@@ -67,7 +67,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
         <Text style="subtitle1" css={{ flex: 1 }}>
           {collection.name}
         </Text>
-        <Text
+        {/* <Text
           style="subtitle1"
           css={{
             color: selected ? '$primary9' : '$gray9',
@@ -75,7 +75,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
           }}
         >
           {selected ? 'Copied Address' : formatNumber(collection.tokenCount)}
-        </Text>
+        </Text> */}
         <Box
           css={{
             cursor: 'pointer',
