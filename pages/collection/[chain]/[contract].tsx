@@ -242,7 +242,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   <Grid
                     css={{
                       gridTemplateColumns:
-                        'repeat(auto-fit, minmax(300px, 1fr))',
+                        'repeat(auto-fill, minmax(300px, 1fr))',
                       gap: '$4',
                       pb: '$6',
                     }}
@@ -414,7 +414,7 @@ export const getStaticProps: GetStaticProps<{
   )
 
   const attributes: Props['ssr']['attributes'] = attributesResponse['data']
-  
+
   return {
     props: { ssr: { collection, tokens, attributes }, id },
     revalidate: 20,

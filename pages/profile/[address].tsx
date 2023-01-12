@@ -198,7 +198,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 </Flex>
                 <Grid
                   css={{
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gridTemplateColumns:
+                      'repeat(auto-fill, minmax(300px, 1fr))',
                     gap: '$4',
                     width: '100%',
                     pb: '$6',
