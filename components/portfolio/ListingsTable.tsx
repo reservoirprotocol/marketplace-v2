@@ -82,7 +82,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
         </Flex>
       )}
       {isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
+        <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
       )}
