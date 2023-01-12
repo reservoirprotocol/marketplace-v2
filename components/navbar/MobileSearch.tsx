@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from 'components/primitives'
+import { Button, Flex } from 'components/primitives'
 import { Content } from 'components/primitives/Dialog'
 import {
   Root as DialogRoot,

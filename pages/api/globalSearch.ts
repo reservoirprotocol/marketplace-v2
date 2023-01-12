@@ -1,6 +1,5 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import supportedChains, { DefaultChain } from 'utils/chains'
 
