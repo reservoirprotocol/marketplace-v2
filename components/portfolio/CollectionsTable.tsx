@@ -47,8 +47,8 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
 
   if (COLLECTION_SET_ID) {
     collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) collectionQuery.community = COMMUNITY
+  } else if (COMMUNITY) {
+    collectionQuery.community = COMMUNITY
   }
 
   const {

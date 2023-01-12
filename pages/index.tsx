@@ -34,8 +34,8 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   if (COLLECTION_SET_ID) {
     collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) collectionQuery.community = COMMUNITY
+  } else if (COMMUNITY) {
+    collectionQuery.community = COMMUNITY
   }
 
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
@@ -162,8 +162,8 @@ export const getStaticProps: GetStaticProps<{
 
   if (COLLECTION_SET_ID) {
     collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) collectionQuery.community = COMMUNITY
+  } else if (COMMUNITY) {
+    collectionQuery.community = COMMUNITY
   }
 
   const promises: ReturnType<typeof fetcher>[] = []

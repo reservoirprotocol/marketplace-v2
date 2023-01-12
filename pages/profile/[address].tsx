@@ -89,8 +89,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
 
   if (COLLECTION_SET_ID) {
     tokenQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) tokenQuery.community = COMMUNITY
+  } else if (COMMUNITY) {
+    tokenQuery.community = COMMUNITY
   }
 
   const ssrTokens = ssr.tokens[marketplaceChain.id]
@@ -371,11 +371,9 @@ export const getStaticProps: GetStaticProps<{
   if (COLLECTION_SET_ID) {
     tokensQuery.collectionsSetId = COLLECTION_SET_ID
     collectionsQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) {
-      tokensQuery.community = COMMUNITY
-      collectionsQuery.community = COMMUNITY
-    }
+  } else if (COMMUNITY) {
+    tokensQuery.community = COMMUNITY
+    collectionsQuery.community = COMMUNITY
   }
 
   const chainMap: Record<string, typeof supportedChains[0]> = {}

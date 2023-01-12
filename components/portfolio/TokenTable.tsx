@@ -47,8 +47,8 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
 
   if (COLLECTION_SET_ID) {
     tokenQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) tokenQuery.community = COMMUNITY
+  } else if (COMMUNITY) {
+    tokenQuery.community = COMMUNITY
   }
 
   const {

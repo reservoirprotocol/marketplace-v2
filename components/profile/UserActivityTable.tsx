@@ -21,8 +21,8 @@ export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
 
   if (COLLECTION_SET_ID) {
     activityQuery.collectionsSetId = COLLECTION_SET_ID
-  } else {
-    if (COMMUNITY) activityQuery.community = COMMUNITY
+  } else if (COMMUNITY) {
+    activityQuery.community = COMMUNITY
   }
 
   const data = useUsersActivity(user ? [user] : undefined, activityQuery, {

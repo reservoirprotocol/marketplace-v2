@@ -21,7 +21,7 @@ import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTag } from '@fortawesome/free-solid-svg-icons'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import { COMMUNITY } from 'pages/_app'
 
 type Props = {
   address: Address | undefined

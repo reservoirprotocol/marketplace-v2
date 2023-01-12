@@ -12,8 +12,12 @@ const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
   : undefined
 
 
-type Collection = NonNullable<
+type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
+>[0]
+
+type Collection = NonNullable<
+  paths['/collections/v5']['get']['responses']['200']['schema']['collections']
 >[0]
 
 export const config = {
@@ -43,8 +47,7 @@ export default async function handler(req: Request) {
 
   if (COLLECTION_SET_ID) {
    queryParams.collectionsSetId = COLLECTION_SET_ID
- } else 
- if (COMMUNITY){
+ } else if (COMMUNITY){
    queryParams.community = COMMUNITY
  }
 
@@ -62,12 +65,13 @@ export default async function handler(req: Request) {
       headers
     )
     if (data.collections.length) {
-      searchResults = [
-        {
-          type: 'collection',
-          data: data.collections[0],
-        },
-      ]
+      searchResults = data.collections.map((collection: Collection) => {
+        let processedCollection = collection as SearchCollection
+        processedCollection['collectionId'] = collection.id
+        return {
+        type: 'collection',
+        data: processedCollection,
+      }})
     } else {
       let ensData = await fetch(
         `https://api.ensideas.com/ens/resolve/${q}`
@@ -104,7 +108,7 @@ export default async function handler(req: Request) {
   } else {
     let { data } = await collectionQuery
 
-    searchResults = data.collections.map((collection: Collection) => ({
+    searchResults = data.collections.map((collection: SearchCollection) => ({
       type: 'collection',
       data: collection,
     }))
