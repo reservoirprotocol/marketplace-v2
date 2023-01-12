@@ -16,7 +16,7 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import { useBids } from '@reservoir0x/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-import { useTimeSince } from 'hooks'
+import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -96,6 +96,7 @@ type OfferTableRowProps = {
 
 const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(offer?.expiration)
 
   let criteriaData = offer?.criteria?.data
@@ -122,7 +123,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
         }}
       >
         <Flex justify="between" css={{ width: '100%' }}>
-          <Link href={`/${offer?.contract}/${criteriaData?.token?.tokenId}`}>
+          <Link
+            href={`/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+          >
             <Flex align="center">
               {imageSrc && (
                 <Image
@@ -194,7 +197,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/${offer?.contract}/${criteriaData?.token?.tokenId}`}>
+        <Link
+          href={`/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+        >
           <Flex align="center">
             {imageSrc && (
               <Image
