@@ -50,6 +50,7 @@ export const TrendingCollectionItem: FC<Props> = ({
               amount={collection?.floorAsk?.price?.amount?.decimal}
               address={collection?.floorAsk?.price?.currency?.contract}
               decimals={collection?.floorAsk?.price?.currency?.decimals}
+              logoHeight={12}
             />
           </Flex>
         </Box>
@@ -63,6 +64,7 @@ export const TrendingCollectionItem: FC<Props> = ({
           <FormatCryptoCurrency
             amount={collection?.volume?.[volumeKey]}
             maximumFractionDigits={1}
+            logoHeight={12}
           />
         </Flex>
       </Flex>
