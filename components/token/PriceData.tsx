@@ -64,23 +64,29 @@ export const PriceData: FC<Props> = ({ token }) => {
             )}
           </Text>
         </Flex>
-        <a href={listSourceRedirect} target="_blank" rel="noopener noreferrer">
-          <Flex
-            align="center"
-            css={{
-              background: '$gray2',
-              p: '$1',
-              borderRadius: 4,
-              gap: '$1',
-              width: 'max-content',
-            }}
+        {listSourceName && (
+          <a
+            href={listSourceRedirect}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <img width="20px" height="20px" src={listSourceLogo} />
-            <Text style="body2" css={{ color: '$gray11' }}>
-              {listSourceName}
-            </Text>
-          </Flex>
-        </a>
+            <Flex
+              align="center"
+              css={{
+                background: '$gray2',
+                p: '$1',
+                borderRadius: 4,
+                gap: '$1',
+                width: 'max-content',
+              }}
+            >
+              <img width="20px" height="20px" src={listSourceLogo} />
+              <Text style="body2" css={{ color: '$gray11' }}>
+                {listSourceName}
+              </Text>
+            </Flex>
+          </a>
+        )}
       </Flex>
       <Flex direction="column" css={{ gap: '$1' }}>
         <Text style="subtitle2">Top Offer</Text>
@@ -102,23 +108,29 @@ export const PriceData: FC<Props> = ({ token }) => {
             {formatDollar(token?.market?.topBid?.price?.amount?.usd)}
           </Text>
         </Flex>
-        <a href={offerSourceRedirect} target="_blank" rel="noopener noreferrer">
-          <Flex
-            align="center"
-            css={{
-              background: '$gray2',
-              p: '$1',
-              borderRadius: 4,
-              gap: '$1',
-              width: 'max-content',
-            }}
+        {offerSourceName && (
+          <a
+            href={offerSourceRedirect}
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            <img width="20px" height="20px" src={offerSourceLogo} />
-            <Text style="body2" css={{ color: '$gray11' }}>
-              {offerSourceName}
-            </Text>
-          </Flex>
-        </a>
+            <Flex
+              align="center"
+              css={{
+                background: '$gray2',
+                p: '$1',
+                borderRadius: 4,
+                gap: '$1',
+                width: 'max-content',
+              }}
+            >
+              <img width="20px" height="20px" src={offerSourceLogo} />
+              <Text style="body2" css={{ color: '$gray11' }}>
+                {offerSourceName}
+              </Text>
+            </Flex>
+          </a>
+        )}
       </Flex>
     </Flex>
   )
