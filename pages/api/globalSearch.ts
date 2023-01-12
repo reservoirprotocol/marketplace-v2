@@ -36,7 +36,10 @@ export default async function handler(req: Request) {
     },
   }
 
-  let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] = {}
+  let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] = {
+    name: q as string,
+    limit: 6
+  }
 
   if (COLLECTION_SET_ID) {
    queryParams.collectionsSetId = COLLECTION_SET_ID
@@ -47,7 +50,7 @@ export default async function handler(req: Request) {
 
   // start fetching search preemptively
   let collectionQuery = fetcher(
-    `${reservoirBaseUrl}/search/collections/v1?name=${q}&limit=6`,
+    `${reservoirBaseUrl}/search/collections/v1`,
     queryParams,
     headers
   )
