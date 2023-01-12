@@ -18,7 +18,6 @@ import Link from 'next/link'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useMarketplaceChain } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
-import { useRouter } from 'next/router'
 
 type Props = {
   collection: NonNullable<
