@@ -1,54 +1,36 @@
 import { Box, Text, Flex, Input, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faMagnifyingGlass,
-  faCopy,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 import {
   useEffect,
   useState,
-  useRef,
   forwardRef,
   ElementRef,
   ComponentPropsWithoutRef,
   FC,
 } from 'react'
-import { formatNumber } from 'utils/numbers'
 
 import { useDebounce } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 
-import { useCopyToClipboard } from 'usehooks-ts'
 import Link from 'next/link'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useMarketplaceChain } from 'hooks'
+import LoadingSpinner from 'components/common/LoadingSpinner'
+import { useRouter } from 'next/router'
 
 type Props = {
   collection: NonNullable<
-    paths['/collections/v5']['get']['responses']['200']['schema']['collections']
+    paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
   >[0]
 }
 
 const CollectionItem: FC<Props> = ({ collection }) => {
-  const [value, copy] = useCopyToClipboard()
-  const [selected, setSelected] = useState(false)
   const { routePrefix } = useMarketplaceChain()
 
-  let flashing = useRef(null as any)
-
-  const flash = () => {
-    clearTimeout(flashing.current)
-    setSelected(true)
-
-    flashing.current = setTimeout(() => {
-      setSelected(false)
-    }, 1000)
-  }
-
   return (
-    <Link href={`/collection/${routePrefix}/${collection.id}`}>
+    <Link href={`/collection/${routePrefix}/${collection.collectionId}`}>
       <Flex
         css={{
           p: '$2',
@@ -67,32 +49,6 @@ const CollectionItem: FC<Props> = ({ collection }) => {
         <Text style="subtitle1" css={{ flex: 1 }}>
           {collection.name}
         </Text>
-        {/* <Text
-          style="subtitle1"
-          css={{
-            color: selected ? '$primary9' : '$gray9',
-            transition: 'color 100ms ease-out',
-          }}
-        >
-          {selected ? 'Copied Address' : formatNumber(collection.tokenCount)}
-        </Text> */}
-        <Box
-          css={{
-            cursor: 'pointer',
-            color: selected ? '$primary9' : '$gray10',
-            '&:hover': {
-              color: '$gray11',
-            },
-            transition: 'color 100ms ease-out',
-          }}
-          onClick={(e) => {
-            flash()
-            copy(collection?.id as string)
-            e.preventDefault()
-          }}
-        >
-          <FontAwesomeIcon icon={faCopy} height={14} />
-        </Box>
       </Flex>
     </Link>
   )
@@ -230,7 +186,15 @@ const GlobalSearch = forwardRef<
             transform: 'translate(0, -50%)',
           }}
         >
-          <Text css={{ color: '$gray9' }}>⌘K</Text>
+          <Text
+            css={{
+              color: '$gray9',
+              display: 'none',
+              '@bp1100': { display: 'block' },
+            }}
+          >
+            ⌘K
+          </Text>
         </Box>
       )}
       <Input
@@ -244,11 +208,14 @@ const GlobalSearch = forwardRef<
           borderBottom: isMobile ? '1px solid $gray4' : '',
           pb: isMobile ? '24px' : '',
           $$focusColor: isMobile && 'none',
+          '&[placeholder]': {
+            textOverflow: 'ellipsis',
+          },
         }}
         ref={forwardedRef}
       />
 
-      {(showSearchBox || (isMobile && !searching)) &&
+      {(showSearchBox || isMobile) &&
         search.length > 3 &&
         (results || searching) && (
           <Box
@@ -273,7 +240,16 @@ const GlobalSearch = forwardRef<
                 .slice(0, 8)
                 .map((result) => <SearchResult result={result} />)}
 
-            {searching && <Box css={{ p: '$4' }}>loading</Box>}
+            {searching && (
+              <Flex align="center" justify="center" css={{ py: '$4' }}>
+                <LoadingSpinner
+                  css={{ width: 24, height: 24, borderWidth: '3px' }}
+                />
+              </Flex>
+            )}
+            {!searching && results.length === 0 && (
+              <Box css={{ p: '$4' }}>No Results</Box>
+            )}
           </Box>
         )}
     </Box>

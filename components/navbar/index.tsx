@@ -105,8 +105,9 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections"
+              placeholder="Search collections and addresses"
               containerCss={{ width: '100%' }}
+              key={router.asPath}
             />
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>

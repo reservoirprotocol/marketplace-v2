@@ -14,7 +14,7 @@ const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
 
 
 type Collection = NonNullable<
-  paths['/collections/v5']['get']['responses']['200']['schema']['collections']
+  paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
 >[0]
 
 export const config = {
@@ -37,7 +37,7 @@ export default async function handler(req: Request) {
     },
   }
 
-  let queryParams: Parameters<typeof useCollections>['0'] = {}
+  let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] = {}
 
   if (COLLECTION_SET_ID) {
    queryParams.collectionsSetId = COLLECTION_SET_ID
