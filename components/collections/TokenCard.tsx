@@ -53,8 +53,10 @@ export default ({
         '&:hover > a > div > img': {
           transform: 'scale(1.1)',
         },
-        '&:hover button[aria-haspopup="dialog"]': {
-          bottom: 0,
+        '@sm': {
+          '&:hover button[aria-haspopup="dialog"]': {
+            bottom: 0,
+          },
         },
       }}
     >
