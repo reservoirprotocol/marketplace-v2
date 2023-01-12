@@ -42,7 +42,7 @@ import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
 import FullscreenMedia from 'components/token/FullscreenMedia'
-import { useContext } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
@@ -57,6 +57,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const account = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
+  const [tabValue, setTabValue] = useState('info')
   const { proxyApi } = useMarketplaceChain()
   const { data: collections } = useCollections(
     {
@@ -98,6 +99,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       : token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
   const owner = isOwner ? account?.address : token?.token?.owner
   const { displayName: ownerFormatted } = useENSResolver(token?.token?.owner)
+
+  useEffect(() => {
+    isMounted && isSmallDevice ? setTabValue('attributes') : setTabValue('info')
+  }, [isSmallDevice])
 
   return (
     <Layout>
@@ -300,14 +305,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   account={account}
                 />
               )}
-              <Tabs.Root defaultValue="info">
+              <Tabs.Root
+                value={tabValue}
+                onValueChange={(value) => setTabValue(value)}
+              >
                 <TabsList>
-                  {isSmallDevice && (
-                    <TabsTrigger value="properties">Properties</TabsTrigger>
+                  {isMounted && isSmallDevice && (
+                    <TabsTrigger value="attributes">Attributes</TabsTrigger>
                   )}
                   <TabsTrigger value="info">Info</TabsTrigger>
                 </TabsList>
-                <TabsContent value="properties">
+                <TabsContent value="attributes">
                   {token?.token?.attributes && (
                     <Grid
                       css={{
