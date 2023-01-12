@@ -16,7 +16,7 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import { useListings } from '@reservoir0x/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-import { useTimeSince } from 'hooks'
+import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -96,6 +96,7 @@ type ListingTableRowProps = {
 
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
 
   let criteriaData = listing?.criteria?.data
@@ -122,7 +123,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         }}
       >
         <Flex justify="between" css={{ width: '100%' }}>
-          <Link href={`/${listing?.contract}/${criteriaData?.token?.tokenId}`}>
+          <Link
+            href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+          >
             <Flex align="center">
               {imageSrc && (
                 <Image
@@ -194,7 +197,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/${listing?.contract}/${criteriaData?.token?.tokenId}`}>
+        <Link
+          href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+        >
           <Flex align="center">
             {imageSrc && (
               <Image

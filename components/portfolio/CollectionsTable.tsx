@@ -15,7 +15,7 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import Link from 'next/link'
 import { Address } from 'wagmi'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
-import { useMounted } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import CollectionsTableTimeToggle, {
   CollectionsTableSortingOption,
 } from './CollectionsTableTimeToggle'
@@ -111,6 +111,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
   sortByTime,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const { routePrefix } = useMarketplaceChain()
 
   if (isSmallDevice) {
     return (
@@ -119,7 +120,9 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
         css={{ gridTemplateColumns: mobileTemplateColumns }}
       >
         <TableCell css={{ minWidth: 0 }}>
-          <Link href={`/collections/${collection?.collection?.id}`}>
+          <Link
+            href={`/collection/${routePrefix}/${collection?.collection?.id}`}
+          >
             <Flex align="center">
               {collection?.collection?.image && (
                 <Image
@@ -195,7 +198,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/collections/${collection?.collection?.id}`}>
+        <Link href={`/collection/${routePrefix}/${collection?.collection?.id}`}>
           <Flex align="center">
             {collection?.collection?.image && (
               <Image
