@@ -44,7 +44,13 @@ export const PriceData: FC<Props> = ({ token }) => {
     <Flex css={{ gap: '$6', py: '$4' }}>
       <Flex direction="column" css={{ gap: '$1' }}>
         <Text style="subtitle2">Price</Text>
-        <Flex align="center" css={{ gap: '$2' }}>
+        <Flex
+          align="center"
+          css={{
+            flexDirection: 'column',
+            '@bp400': { flexDirection: 'row', gap: '$2' },
+          }}
+        >
           <FormatCryptoCurrency
             amount={token?.market?.floorAsk?.price?.amount?.decimal}
             address={token?.market?.floorAsk?.price?.currency?.contract}
@@ -52,7 +58,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             textStyle="h4"
             logoHeight={20}
           />
-          <Text style="body2" css={{ color: '$gray11' }}>
+          <Text style="body2" css={{ color: '$gray11' }} ellipsify>
             {formatDollar(
               token?.market?.floorAsk?.price?.amount?.usd as number
             )}
@@ -78,7 +84,13 @@ export const PriceData: FC<Props> = ({ token }) => {
       </Flex>
       <Flex direction="column" css={{ gap: '$1' }}>
         <Text style="subtitle2">Top Offer</Text>
-        <Flex align="center" css={{ gap: '$2' }}>
+        <Flex
+          align="center"
+          css={{
+            flexDirection: 'column',
+            '@bp400': { flexDirection: 'row', gap: '$2' },
+          }}
+        >
           <FormatCryptoCurrency
             amount={token?.market?.topBid?.price?.amount?.decimal}
             address={token?.market?.topBid?.price?.currency?.contract}
@@ -86,7 +98,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             textStyle="h4"
             logoHeight={20}
           />
-          <Text style="body2" css={{ color: '$gray11' }}>
+          <Text style="body2" css={{ color: '$gray11' }} ellipsify>
             {formatDollar(token?.market?.topBid?.price?.amount?.usd)}
           </Text>
         </Flex>

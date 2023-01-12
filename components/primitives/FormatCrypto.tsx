@@ -22,7 +22,7 @@ const FormatCrypto: FC<Props> = ({
 }) => {
   const value = formatBN(amount, maximumFractionDigits, decimals)
   return (
-    <Flex align="center" css={{ gap: '$1' }}>
+    <Flex align="center" css={{ gap: '$1', minWidth: 'max-content' }}>
       {value !== '-' ? children : null}
       <Text style={textStyle} css={css} as="p">
         {value}
