@@ -9,6 +9,7 @@ import {
   FormatCryptoCurrency,
   Anchor,
   Button,
+  Box,
 } from '../primitives'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -66,7 +67,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
           <Text css={{ color: '$gray11' }}>No offers made yet</Text>
         </Flex>
       ) : (
-        <Flex direction="column" css={{ width: '100%' }}>
+        <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
           <TableHeading />
           {offers.map((offer, i) => {
             return (
@@ -77,7 +78,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
               />
             )
           })}
-          <div ref={loadMoreRef}></div>
+          <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
       {isValidating && (

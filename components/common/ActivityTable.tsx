@@ -11,6 +11,7 @@ import {
   Anchor,
   TableCell,
   TableRow,
+  Box,
 } from '../primitives'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
@@ -75,7 +76,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
           <Text>No activity yet</Text>
         </Flex>
       ) : (
-        <Flex direction="column" css={{ width: '100%' }}>
+        <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
           {activities.map((activity, i) => {
             if (!activity) return null
 
@@ -86,11 +87,11 @@ export const ActivityTable: FC<Props> = ({ data }) => {
               />
             )
           })}
-          <div ref={loadMoreRef}></div>
+          <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
       {data.isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
+        <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
       )}
