@@ -18,6 +18,7 @@ import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
+import { formatNumber } from 'utils/numbers'
 
 type TokenCardProps = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -152,7 +153,7 @@ export default ({
                       src="/icons/rarity-icon.svg"
                     />
                     <Text style="subtitle3" as="p">
-                      {token?.token?.rarityRank}
+                      {formatNumber(token?.token?.rarityRank)}
                     </Text>
                   </Flex>
                 )}
@@ -160,22 +161,41 @@ export default ({
           </Flex>
 
           <Flex align="center" css={{ gap: '$2' }}>
-            <Box css={{ flex: 1 }}>
+            <Box
+              css={{
+                flex: 1,
+                minWidth: 0,
+                width: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+              }}
+            >
               <FormatCryptoCurrency
                 logoHeight={18}
                 amount={token?.market?.floorAsk?.price?.amount?.decimal}
                 address={token?.market?.floorAsk?.price?.currency?.contract}
                 textStyle="h6"
+                css={{
+                  textOverflow: 'ellipsis',
+                  minWidth: 0,
+                  with: '100%',
+                  overflow: 'hidden',
+                }}
               />
             </Box>
-            <img
-              style={{
-                width: 20,
-                height: 20,
-                borderRadius: '50%',
-              }}
-              src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
-            />
+
+            <>
+              {token?.market?.floorAsk?.source?.name && (
+                <img
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: '50%',
+                  }}
+                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
+                />
+              )}
+            </>
           </Flex>
           {token?.token?.lastBuy?.value && (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
