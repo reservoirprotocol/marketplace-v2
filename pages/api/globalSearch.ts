@@ -72,7 +72,7 @@ export default async function handler(req: Request) {
           image: collection.image,
           name: collection.name,
           allTimeVolume: collection.volume?.allTime,
-          floorAskPrice: collection.floorAsk?.price?.netAmount?.native,
+          floorAskPrice: collection.floorAsk?.price?.amount?.decimal,
           openseaVerificationStatus: collection.openseaVerificationStatus
         }
         return {
