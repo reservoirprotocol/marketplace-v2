@@ -22,6 +22,7 @@ import CancelBid from 'components/buttons/CancelBid'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHand } from '@fortawesome/free-solid-svg-icons'
+import { COMMUNITY } from 'pages/_app'
 
 type Props = {
   address: Address | undefined
@@ -35,16 +36,20 @@ export const OffersTable: FC<Props> = ({ address }) => {
     rootMargin: '0px 0px 300px 0px',
   })
 
+  let bidsQuery: Parameters<typeof useBids>['0'] = {
+    maker: address,
+    includeCriteriaMetadata: true,
+  }
+
+  if (COMMUNITY) bidsQuery.community = COMMUNITY
+
   const {
     data: offers,
     fetchNextPage,
     mutate,
     isValidating,
     isFetchingPage,
-  } = useBids({
-    maker: address,
-    includeCriteriaMetadata: true,
-  })
+  } = useBids(bidsQuery)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting

@@ -74,15 +74,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  const { data: collections } = useCollections(
-    {
-      id,
-      includeTopBid: true,
-    },
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
+  let collectionQuery: Parameters<typeof useCollections>['0'] = {
+    id,
+    includeTopBid: true,
+  }
+
+  const { data: collections } = useCollections(collectionQuery, {
+    fallbackData: [ssr.collection],
+  })
 
   let collection = collections && collections[0]
 
