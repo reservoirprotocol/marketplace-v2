@@ -51,6 +51,7 @@ export const TrendingCollectionItem: FC<Props> = ({
               address={collection?.floorAsk?.price?.currency?.contract}
               decimals={collection?.floorAsk?.price?.currency?.decimals}
               logoHeight={12}
+              maximumFractionDigits={2}
             />
           </Flex>
         </Box>

@@ -181,6 +181,7 @@ export default ({
                   with: '100%',
                   overflow: 'hidden',
                 }}
+                maximumFractionDigits={4}
               />
             </Box>
 
@@ -206,6 +207,7 @@ export default ({
                 logoHeight={12}
                 amount={token.token.lastBuy.value}
                 textStyle="subtitle3"
+                maximumFractionDigits={4}
               />
             </Flex>
           )}
