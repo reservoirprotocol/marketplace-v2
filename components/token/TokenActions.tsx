@@ -49,8 +49,7 @@ export const TokenActions: FC<Props> = ({
       account?.address?.toLowerCase()
 
   const isListed = token
-    ? token?.market?.floorAsk?.price?.amount?.native !== null &&
-      token?.token?.kind !== 'erc1155'
+    ? token?.market?.floorAsk?.id !== null && token?.token?.kind !== 'erc1155'
     : false
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
