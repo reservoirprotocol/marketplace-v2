@@ -107,7 +107,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           {isSSR || !isMounted ? null : (
             <TrendingCollectionsList
               collections={collections}
-              loading={isValidating}
+              loading={isValidating && showViewAllButton}
               volumeKey={volumeKey}
             />
           )}
@@ -118,6 +118,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           )}
           {showViewAllButton && (
             <Button
+              disabled={isValidating}
               onClick={() => {
                 fetchNextPage()
               }}
