@@ -57,6 +57,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             decimals={token?.market?.floorAsk?.price?.currency?.decimals}
             textStyle="h4"
             logoHeight={20}
+            maximumFractionDigits={4}
           />
           <Text style="body2" css={{ color: '$gray11' }} ellipsify>
             {formatDollar(
@@ -103,6 +104,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             decimals={token?.market?.topBid?.price?.currency?.decimals}
             textStyle="h4"
             logoHeight={20}
+            maximumFractionDigits={4}
           />
           <Text style="body2" css={{ color: '$gray11' }} ellipsify>
             {formatDollar(token?.market?.topBid?.price?.amount?.usd)}

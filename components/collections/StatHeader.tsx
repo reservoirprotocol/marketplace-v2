@@ -59,6 +59,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
           decimals={collection?.floorAsk?.price?.currency?.decimals}
           logoHeight={18}
           textStyle={'h6'}
+          maximumFractionDigits={4}
         />
       </StatBox>
 
@@ -69,6 +70,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
           decimals={collection?.topBid?.price?.currency?.decimals}
           logoHeight={18}
           textStyle={'h6'}
+          maximumFractionDigits={4}
         />
       </StatBox>
 

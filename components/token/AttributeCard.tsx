@@ -35,6 +35,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           borderRadius: 8,
           gap: '$1',
           width: '100%',
+          height: '100%',
         }}
       >
         <Text style="subtitle3" color="subtle">
@@ -46,6 +47,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
             amount={attribute.floorAskPrice}
             logoHeight={16}
             textStyle="subtitle2"
+            maximumFractionDigits={2}
           />
         </Flex>
         <Flex justify="between">
