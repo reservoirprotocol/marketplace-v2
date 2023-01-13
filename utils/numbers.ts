@@ -28,10 +28,8 @@ const truncateFractionAndFormat = (
   parts: Intl.NumberFormatPart[],
   digits: number
 ) => {
-  console.log("Truncate: ", digits)
   return parts
     .map(({ type, value }) => {
-      console.log(type, value)
       if (type !== 'fraction' || !value || value.length < digits) {
         return value
       }
