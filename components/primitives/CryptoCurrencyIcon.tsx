@@ -24,7 +24,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
     if (constants.AddressZero === address) {
       return (
         <Box css={{ display: 'flex', ...css }}>
-          <img src="/eth.svg" alt="ETH Logo" />
+          <img src="/eth.svg" alt="ETH Logo" style={{ height: '100%' }} />
         </Box>
       )
     }
@@ -36,7 +36,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
     ) {
       return (
         <Box css={{ display: 'flex', ...css }}>
-          <img src="/weth.svg" alt="WETH Logo" />
+          <img src="/weth.svg" alt="WETH Logo" style={{ height: '100%' }} />
         </Box>
       )
     }
