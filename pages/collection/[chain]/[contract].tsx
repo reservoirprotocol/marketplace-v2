@@ -116,6 +116,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     mutate,
     fetchNextPage,
     isFetchingInitialData,
+    isValidating,
     hasNextPage,
   } = useTokens(tokenQuery, {
     fallbackData: [ssr.tokens],
@@ -247,7 +248,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       pb: '$6',
                     }}
                   >
-                    {isFetchingInitialData
+                    {isFetchingInitialData || isValidating
                       ? Array(10)
                           .fill(null)
                           .map((_, index) => (
