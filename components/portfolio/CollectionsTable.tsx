@@ -71,7 +71,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
           <Text css={{ color: '$gray11' }}>No collections found</Text>
         </Flex>
       ) : (
-        <Flex direction="column" css={{ width: '100%' }}>
+        <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
           <CollectionsTableTimeToggle
             compact={compactToggleNames && isMounted}
             option={sortByTime}
@@ -89,11 +89,11 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
               />
             )
           })}
-          <div ref={loadMoreRef}></div>
+          <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
       {isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
+        <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
       )}
