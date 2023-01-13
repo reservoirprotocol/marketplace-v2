@@ -53,14 +53,14 @@ const truncateFractionAndFormat = (
 function formatBN(
   amount: BigNumberish | null | undefined,
   maximumFractionDigits: number,
-  decimals?: number
+  decimals: number = 18
 ) {
   if (typeof amount === 'undefined' || amount === null) return '-'
 
   const amountToFormat =
     typeof amount === 'number'
       ? amount
-      : +utils.formatUnits(amount, decimals || 18)
+      : +utils.formatUnits(amount, decimals)
 
   if (amountToFormat === 0) {
     return amountToFormat
@@ -148,7 +148,9 @@ function formatBN(
       return truncateFractionAndFormat(parts, maximumFractionDigits)
     }
   } else {
-    return amount
+    return typeof amount === 'string' || typeof amount === 'number'
+    ? `${amount}`
+    : ''
   }
 }
 
