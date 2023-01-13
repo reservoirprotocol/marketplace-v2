@@ -72,20 +72,20 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         />
       </StatBox>
 
-      <StatBox label="Listed">
-        <Text style="h6">{formatNumber(listedPercentage)}%</Text>
-      </StatBox>
-
       {!isSmallDevice && (
-        <StatBox label="Total Volume">
-          <FormatCryptoCurrency
-            amount={collection.volume?.allTime}
-            logoHeight={18}
-            textStyle={'h6'}
-            maximumFractionDigits={4}
-          />
+        <StatBox label="Listed">
+          <Text style="h6">{formatNumber(listedPercentage)}%</Text>
         </StatBox>
       )}
+
+      <StatBox label="Total Volume">
+        <FormatCryptoCurrency
+          amount={collection.volume?.allTime}
+          logoHeight={18}
+          textStyle={'h6'}
+          maximumFractionDigits={4}
+        />
+      </StatBox>
 
       <StatBox label="Count">
         <Text style="h6">{formatNumber(collection?.tokenCount)}</Text>
