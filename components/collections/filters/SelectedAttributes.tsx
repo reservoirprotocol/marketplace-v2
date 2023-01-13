@@ -2,6 +2,8 @@ import { clearAllAttributes, removeParam } from 'utils/router'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useState } from 'react'
 import { Button, Flex, Text } from 'components/primitives'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faClose } from '@fortawesome/free-solid-svg-icons'
 
 type Attribute = {
   key: string
@@ -51,9 +53,13 @@ const SelectedAttributes: FC = () => {
           onClick={() => removeParam(router, `attributes[${key}]`, value)}
           color="gray4"
           css={{ mr: '$4', mb: '24px' }}
+          size="small"
         >
           <Text css={{ color: '$primary11' }}>{key}:</Text>
           <Text style="subtitle1">{value}</Text>
+          <Text css={{ color: '$gray9' }}>
+            <FontAwesomeIcon icon={faClose} width="16" height="16" />
+          </Text>
         </Button>
       ))}
 
