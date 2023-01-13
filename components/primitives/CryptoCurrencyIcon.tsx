@@ -18,29 +18,6 @@ const CryptoCurrencyIcon: FC<Props> = ({
   css,
 }) => {
   const client = useReservoirClient()
-  const chainCurrency = useChainCurrency()
-
-  if (chainCurrency.symbol === 'ETH') {
-    if (constants.AddressZero === address) {
-      return (
-        <Box css={{ display: 'flex', ...css }}>
-          <img src="/eth.svg" alt="ETH Logo" style={{ height: '100%' }} />
-        </Box>
-      )
-    }
-
-    const wrappedContractAddress = wrappedContracts[chainCurrency.chainId]
-    if (
-      wrappedContractAddress &&
-      wrappedContractAddress.toLowerCase() == address.toLowerCase()
-    ) {
-      return (
-        <Box css={{ display: 'flex', ...css }}>
-          <img src="/weth.svg" alt="WETH Logo" style={{ height: '100%' }} />
-        </Box>
-      )
-    }
-  }
 
   return (
     <StyledImg
