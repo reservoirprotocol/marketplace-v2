@@ -66,8 +66,15 @@ export default async function handler(req: Request) {
     )
     if (data.collections.length) {
       searchResults = data.collections.map((collection: Collection) => {
-        let processedCollection = collection as SearchCollection
-        processedCollection['collectionId'] = collection.id
+        let processedCollection: SearchCollection = {
+          collectionId: collection.id,
+          contract: collection.primaryContract,
+          image: collection.image,
+          name: collection.name,
+          allTimeVolume: collection.volume?.allTime,
+          floorAskPrice: collection.floorAsk?.price?.netAmount?.native,
+          openseaVerificationStatus: collection.openseaVerificationStatus
+        }
         return {
         type: 'collection',
         data: processedCollection,
