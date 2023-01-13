@@ -32,7 +32,7 @@ export default ({ token, collection, collectionAttributes }: Props) => {
     <Tooltip
       content={
         <Flex direction="column" align="start">
-          <Text ellipsify>
+          <Text style="body2" ellipsify>
             {`${formatNumber(token?.token?.rarityRank)}/
             ${formatNumber(collection.tokenCount)}`}
           </Text>
