@@ -48,6 +48,7 @@ const truncateFractionAndFormat = (
  *  Convert ETH values to human readable formats
  * @param amount An ETH amount
  * @param maximumFractionDigits Number of decimal digits
+ * @param decimals Number of decimal digits for the atomic unit
  * @returns returns the ETH value as a `string` or `-` if the amount is `null` or `undefined`
  */
 function formatBN(
@@ -149,8 +150,8 @@ function formatBN(
     }
   } else {
     return typeof amount === 'string' || typeof amount === 'number'
-    ? `${amount}`
-    : ''
+      ? `${amount}`
+      : ''
   }
 }
 
