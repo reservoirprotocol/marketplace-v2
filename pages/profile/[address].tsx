@@ -21,6 +21,7 @@ import * as Tabs from '@radix-ui/react-tabs'
 import {
   useCollectionActivity,
   useTokens,
+  useUserCollections,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
@@ -33,7 +34,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import supportedChains from 'utils/chains'
+import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
 
@@ -82,18 +83,26 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     rootMargin: '0px 0px 300px 0px',
   })
 
-  let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
+  const tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
     collection: filterCollection,
   }
 
+  const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
+    limit: 100,
+  }
+
   if (COLLECTION_SET_ID) {
+    collectionQuery.collectionsSetId = COLLECTION_SET_ID
     tokenQuery.collectionsSetId = COLLECTION_SET_ID
   } else if (COMMUNITY) {
+    collectionQuery.community = COMMUNITY
     tokenQuery.community = COMMUNITY
   }
 
   const ssrTokens = ssr.tokens[marketplaceChain.id]
+    ? [ssr.tokens[marketplaceChain.id]]
+    : undefined
   const {
     data: tokens,
     mutate,
@@ -102,7 +111,15 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     hasNextPage,
     isFetchingPage,
   } = useUserTokens(address || '', tokenQuery, {
-    fallbackData: filterCollection ? undefined : [ssrTokens],
+    fallbackData: filterCollection ? undefined : ssrTokens,
+  })
+
+  const ssrCollections = ssr.collections[marketplaceChain.id]
+    ? [ssr.collections[marketplaceChain.id]]
+    : undefined
+
+  const { data: collections } = useUserCollections(address, collectionQuery, {
+    fallbackData: filterCollection ? undefined : ssrCollections,
   })
 
   useEffect(() => {
@@ -111,9 +128,6 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
       fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
-
-  const ssrCollections = ssr.collections[marketplaceChain.id]
-  const collections = ssrCollections?.collections || []
 
   if (!isMounted) {
     return null
@@ -377,28 +391,25 @@ export const getStaticProps: GetStaticProps<{
     collectionsQuery.community = COMMUNITY
   }
 
-  const chainMap: Record<string, typeof supportedChains[0]> = {}
   const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    const headers = {
-      headers: {
-        'x-api-key': chain.apiKey || '',
-      },
-    }
-    chainMap[chain.reservoirBaseUrl] = chain
-    const tokensPromise = fetcher(
-      `${chain.reservoirBaseUrl}/users/${address}/tokens/v6`,
-      tokensQuery,
-      headers
-    )
-    const collectionsPromise = fetcher(
-      `${chain.reservoirBaseUrl}/users/${address}/collections/v2`,
-      collectionsQuery,
-      headers
-    )
-    promises.push(tokensPromise)
-    promises.push(collectionsPromise)
-  })
+
+  const headers = {
+    headers: {
+      'x-api-key': DefaultChain.apiKey || '',
+    },
+  }
+  const tokensPromise = fetcher(
+    `${DefaultChain.reservoirBaseUrl}/users/${address}/tokens/v6`,
+    tokensQuery,
+    headers
+  )
+  const collectionsPromise = fetcher(
+    `${DefaultChain.reservoirBaseUrl}/users/${address}/collections/v2`,
+    collectionsQuery,
+    headers
+  )
+  promises.push(tokensPromise)
+  promises.push(collectionsPromise)
 
   const responses = await Promise.allSettled(promises)
   const collections: Record<number, any> = {}
@@ -406,13 +417,10 @@ export const getStaticProps: GetStaticProps<{
   responses.forEach((response) => {
     if (response.status === 'fulfilled') {
       const url = new URL(response.value.response.url)
-      const chain = chainMap[url.origin]
-      if (chain) {
-        if (url.pathname.includes('collections')) {
-          collections[chain.id] = response.value.data
-        } else if (url.pathname.includes('tokens')) {
-          tokens[chain.id] = response.value.data
-        }
+      if (url.pathname.includes('collections')) {
+        collections[DefaultChain.id] = response.value.data
+      } else if (url.pathname.includes('tokens')) {
+        tokens[DefaultChain.id] = response.value.data
       }
     }
   })
