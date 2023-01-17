@@ -37,9 +37,10 @@ import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
+import CopyText from 'components/common/CopyText'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -166,9 +167,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   <Text style="h5" as="h6" ellipsify>
                     {collection.name}
                   </Text>
-                  <Text style="body2" css={{ color: '$gray11' }} as="p">
-                    {truncateAddress(collection.id as string)}
-                  </Text>
+                  <CopyText
+                    text={collection.id as string}
+                    css={{ width: 'max-content' }}
+                  >
+                    <Flex css={{ gap: '$2', mt: '$2', width: 'max-content' }}>
+                      <Text style="body1" css={{ color: '$gray11' }} as="p">
+                        {truncateAddress(collection.id as string)}
+                      </Text>
+                      <Box css={{ color: '$gray10' }}>
+                        <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                      </Box>
+                    </Flex>
+                  </CopyText>
                 </Box>
               </Flex>
             </Flex>
