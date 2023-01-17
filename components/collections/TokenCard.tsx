@@ -142,6 +142,7 @@ export default ({
                 py: 2,
                 background: '$gray5',
                 borderRadius: 8,
+                minWidth: 'max-content',
               }}
             >
               {rarityEnabled &&

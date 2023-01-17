@@ -314,8 +314,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   </Anchor>
                 </Link>
               </Flex>
-              {/* TODO: pass collection attributes */}
-              <RarityRank token={token} collection={collection} />
+              <RarityRank
+                token={token}
+                collection={collection}
+                collectionAttributes={ssr.attributes.attributes}
+              />
               <PriceData token={token} />
               {isMounted && (
                 <TokenActions
@@ -385,6 +388,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+    attributes: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
   const collectionId = params?.contract?.toString()
@@ -428,8 +432,16 @@ export const getStaticProps: GetStaticProps<{
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
+  const attributesResponse = await fetcher(
+    `${reservoirBaseUrl}/collections/${collectionId}/attributes/all/v2`,
+    {},
+    headers
+  )
+
+  const attributes: Props['ssr']['attributes'] = attributesResponse['data']
+
   return {
-    props: { collectionId, id, ssr: { collection, tokens } },
+    props: { collectionId, id, ssr: { collection, tokens, attributes } },
     revalidate: 20,
   }
 }
