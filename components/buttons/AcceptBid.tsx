@@ -1,11 +1,12 @@
 import { AcceptBidModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { ComponentProps, FC, ReactNode, useContext } from 'react'
+import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   token?: ReturnType<typeof useTokens>['data'][0]
@@ -34,25 +35,39 @@ const AcceptBid: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
 
+  const marketplaceChain = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
+
+  const { data: signer } = useSigner()
+  const { chain: activeChain } = useNetwork()
+
+  const isInTheWrongNetwork = Boolean(
+    signer && marketplaceChain.id !== activeChain?.id
+  )
+
   const trigger = (
     <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
       {buttonChildren}
     </Button>
   )
 
-  if (isDisconnected) {
-    return (
-      <Button
-        css={buttonCss}
-        onClick={() => {
+  if (isDisconnected || isInTheWrongNetwork) {
+    return cloneElement(trigger, {
+      onClick: async () => {
+        if (switchNetworkAsync && activeChain) {
+          const chain = await switchNetworkAsync(marketplaceChain.id)
+          if (chain.id !== marketplaceChain.id) {
+            return false
+          }
+        }
+
+        if (!signer) {
           openConnectModal?.()
-        }}
-        color="gray3"
-        {...buttonProps}
-      >
-        Accept Offer
-      </Button>
-    )
+        }
+      },
+    })
   } else
     return (
       <AcceptBidModal

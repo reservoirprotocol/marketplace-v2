@@ -1,6 +1,7 @@
 import { ListModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import {
+  cloneElement,
   ComponentProps,
   ComponentPropsWithoutRef,
   FC,
@@ -9,9 +10,10 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount } from 'wagmi'
+import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -36,6 +38,18 @@ const List: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
 
+  const marketplaceChain = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
+
+  const { data: signer } = useSigner()
+  const { chain: activeChain } = useNetwork()
+
+  const isInTheWrongNetwork = Boolean(
+    signer && marketplaceChain.id !== activeChain?.id
+  )
+
   let listingCurrencies: ListingCurrencies = undefined
 
   const tokenId = token?.token?.tokenId
@@ -46,21 +60,22 @@ const List: FC<Props> = ({
       {buttonChildren}
     </Button>
   )
-  if (isDisconnected) {
-    return (
-      <Button
-        css={buttonCss}
-        onClick={() => {
+
+  if (isDisconnected || isInTheWrongNetwork) {
+    return cloneElement(trigger, {
+      onClick: async () => {
+        if (switchNetworkAsync && activeChain) {
+          const chain = await switchNetworkAsync(marketplaceChain.id)
+          if (chain.id !== marketplaceChain.id) {
+            return false
+          }
+        }
+
+        if (!signer) {
           openConnectModal?.()
-        }}
-        color="primary"
-        {...buttonProps}
-      >
-        {token?.market?.floorAsk?.price?.amount?.decimal
-          ? 'Create New Listing'
-          : 'List for Sale'}
-      </Button>
-    )
+        }
+      },
+    })
   } else
     return (
       <ListModal
