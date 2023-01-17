@@ -6,8 +6,7 @@ import { Button, Grid } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
-import { useAccount, useNetwork, useSigner } from 'wagmi'
-import { useMarketplaceChain } from 'hooks'
+import { useAccount } from 'wagmi'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -23,17 +22,10 @@ export const TokenActions: FC<Props> = ({
   account,
 }) => {
   const router = useRouter()
-  const { data: signer } = useSigner()
-  const { chain: activeChain } = useNetwork()
-  const marketplaceChain = useMarketplaceChain()
   const bidOpenState = useState(true)
 
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
-
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
-  )
 
   const showAcceptOffer =
     token?.market?.topBid?.id !== null &&
@@ -93,7 +85,6 @@ export const TokenActions: FC<Props> = ({
           token={token}
           bidId={queryBidId}
           collectionId={token?.token?.contract}
-          disabled={isInTheWrongNetwork}
           openState={
             isOwner && (queryBidId || deeplinkToAcceptBid)
               ? bidOpenState
@@ -109,7 +100,6 @@ export const TokenActions: FC<Props> = ({
         <Bid
           tokenId={token?.token?.tokenId}
           collectionId={token?.token?.contract}
-          disabled={isInTheWrongNetwork}
           mutate={mutate}
           buttonCss={buttonCss}
         />
