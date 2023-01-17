@@ -54,37 +54,34 @@ export const SortTokens: FC = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        {isSmallDevice ? (
-          <Button
-            color="gray3"
-            css={{
-              justifyContent: 'center',
-              px: '$3',
-            }}
-          >
+        <Button
+          color="gray3"
+          css={{
+            px: '14px',
+            justifyContent: 'center',
+            '@md': {
+              width: '220px',
+              minWidth: 'max-content',
+              px: '$5',
+            },
+          }}
+        >
+          {isSmallDevice ? (
             <FontAwesomeIcon icon={faSort} width={16} height={16} />
-          </Button>
-        ) : (
-          <Button
-            color="gray3"
-            css={{
-              width: '100%',
-              justifyContent: 'center',
-              mb: '$3',
-              '@md': { width: '220px', minWidth: 'max-content', mb: '0' },
-            }}
-          >
-            <span>{sortSelection}</span>
-            <Box
-              css={{
-                transition: 'transform',
-                '[data-state=open] &': { transform: 'rotate(180deg)' },
-              }}
-            >
-              <FontAwesomeIcon icon={faChevronDown} width={16} />
-            </Box>
-          </Button>
-        )}
+          ) : (
+            <>
+              <span>{sortSelection}</span>
+              <Box
+                css={{
+                  transition: 'transform',
+                  '[data-state=open] &': { transform: 'rotate(180deg)' },
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronDown} width={16} />
+              </Box>
+            </>
+          )}
+        </Button>
       </DropdownMenu.Trigger>
       <DropdownMenuContent css={{ width: '220px', mt: '$2' }}>
         {Object.keys(options).map((key) => (
