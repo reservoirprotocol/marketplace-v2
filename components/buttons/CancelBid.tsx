@@ -31,19 +31,15 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
   if (isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
-        try {
-          if (switchNetworkAsync && activeChain) {
-            const chain = await switchNetworkAsync(marketplaceChain.id)
-            if (chain.id !== marketplaceChain.id) {
-              return false
-            }
+        if (switchNetworkAsync && activeChain) {
+          const chain = await switchNetworkAsync(marketplaceChain.id)
+          if (chain.id !== marketplaceChain.id) {
+            return false
           }
+        }
 
-          if (!signer) {
-            openConnectModal?.()
-          }
-        } catch (e) {
-          //todo add a toast
+        if (!signer) {
+          openConnectModal?.()
         }
       },
     })

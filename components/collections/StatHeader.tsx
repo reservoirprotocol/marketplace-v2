@@ -1,12 +1,8 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import {
-  Flex,
-  Text,
-  Box,
-  FormatCryptoCurrency,
-  Grid,
-} from 'components/primitives'
+import { Text, Box, FormatCryptoCurrency, Grid } from 'components/primitives'
+import { useMounted } from 'hooks'
 import { FC, ReactNode } from 'react'
+import { useMediaQuery } from 'react-responsive'
 import { formatNumber } from 'utils/numbers'
 
 type Props = {
@@ -34,6 +30,8 @@ type StatHeaderProps = {
 }
 
 const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
   const listedPercentage =
     ((collection?.onSaleCount ? +collection.onSaleCount : 0) /
       (collection?.tokenCount ? +collection.tokenCount : 0)) *
@@ -47,7 +45,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         gap: 1,
         gridTemplateColumns: '1fr 1fr',
         '@sm': {
-          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+          gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
           marginRight: 'auto',
         },
       }}
@@ -74,8 +72,19 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         />
       </StatBox>
 
-      <StatBox label="Listed">
-        <Text style="h6">{formatNumber(listedPercentage)}%</Text>
+      {!isSmallDevice && (
+        <StatBox label="Listed">
+          <Text style="h6">{formatNumber(listedPercentage)}%</Text>
+        </StatBox>
+      )}
+
+      <StatBox label="Total Volume">
+        <FormatCryptoCurrency
+          amount={collection.volume?.allTime}
+          logoHeight={18}
+          textStyle={'h6'}
+          maximumFractionDigits={4}
+        />
       </StatBox>
 
       <StatBox label="Count">

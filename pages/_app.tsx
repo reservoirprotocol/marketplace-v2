@@ -32,6 +32,14 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
+export const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
+  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
+  : undefined
+
+export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
+  ? process.env.NEXT_PUBLIC_COMMUNITY
+  : undefined
+
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
@@ -156,7 +164,7 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   if (appContext.ctx.req?.headers.host) {
     const host = appContext.ctx.req?.headers.host
     baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
-  } else if (process.env.VERCEL_URL) {
+  } else if (process.env.NEXT_PUBLIC_HOST_URL) {
     baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }
   baseUrl = baseUrl.replace(/\/$/, '')

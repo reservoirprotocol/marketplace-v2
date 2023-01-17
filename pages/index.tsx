@@ -14,7 +14,7 @@ import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from './_app'
+import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -27,16 +27,21 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     useState<CollectionsSortingOption>('allTimeVolume')
   const marketplaceChain = useMarketplaceChain()
 
+  let collectionQuery: Parameters<typeof useCollections>['0'] = {
+    limit: 12,
+    sortBy: sortByTime,
+  }
+
+  if (COLLECTION_SET_ID) {
+    collectionQuery.collectionsSetId = COLLECTION_SET_ID
+  } else if (COMMUNITY) {
+    collectionQuery.community = COMMUNITY
+  }
+
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(
-      {
-        limit: 12,
-        sortBy: sortByTime,
-      },
-      {
-        fallbackData: [ssr.collections[marketplaceChain.id]],
-      }
-    )
+    useCollections(collectionQuery, {
+      fallbackData: [ssr.collections[marketplaceChain.id]],
+    })
 
   let collections = data || []
   const showViewAllButton = collections.length <= 12 && hasNextPage
@@ -107,7 +112,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           {isSSR || !isMounted ? null : (
             <TrendingCollectionsList
               collections={collections}
-              loading={isValidating}
+              loading={isValidating && showViewAllButton}
               volumeKey={volumeKey}
             />
           )}
@@ -118,6 +123,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           )}
           {showViewAllButton && (
             <Button
+              disabled={isValidating}
               onClick={() => {
                 fetchNextPage()
               }}
@@ -154,6 +160,12 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 12,
     }
+
+  if (COLLECTION_SET_ID) {
+    collectionQuery.collectionsSetId = COLLECTION_SET_ID
+  } else if (COMMUNITY) {
+    collectionQuery.community = COMMUNITY
+  }
 
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {

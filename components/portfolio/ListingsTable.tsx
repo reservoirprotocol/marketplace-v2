@@ -22,6 +22,7 @@ import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTag } from '@fortawesome/free-solid-svg-icons'
+import { COMMUNITY } from 'pages/_app'
 
 type Props = {
   address: Address | undefined
@@ -35,16 +36,20 @@ export const ListingsTable: FC<Props> = ({ address }) => {
     rootMargin: '0px 0px 300px 0px',
   })
 
+  let listingsQuery: Parameters<typeof useListings>['0'] = {
+    maker: address,
+    includeCriteriaMetadata: true,
+  }
+
+  if (COMMUNITY) listingsQuery.community = COMMUNITY
+
   const {
     data: listings,
     mutate,
     fetchNextPage,
     isFetchingPage,
     isValidating,
-  } = useListings({
-    maker: address,
-    includeCriteriaMetadata: true,
-  })
+  } = useListings(listingsQuery)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
