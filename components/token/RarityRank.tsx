@@ -13,11 +13,9 @@ type Props = {
 }
 
 export default ({ token, collection, collectionAttributes }: Props) => {
-  const rarityRank = token?.token?.rarityRank
-  const tokenCount = collection?.tokenCount
-  const rankPercentile = Math.floor(
-    ((rarityRank as number) / parseInt(tokenCount as string)) * 100
-  )
+  const rarityRank = token?.token?.rarityRank as number
+  const tokenCount = collection?.tokenCount as string
+  const rankPercentile = Math.floor((rarityRank / parseInt(tokenCount)) * 100)
 
   const topPercentile = (percentile: number) => {
     if (percentile <= 1) {
