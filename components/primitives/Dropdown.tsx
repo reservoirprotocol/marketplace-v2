@@ -10,6 +10,7 @@ import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { AnimatePresence, motion } from 'framer-motion'
 
 const DropdownMenuContent = styled(DropdownMenuPrimitive.DropdownMenuContent, {
+  mx: '$4',
   p: '$2',
   borderRadius: 8,
   zIndex: 5,
