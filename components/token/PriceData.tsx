@@ -41,7 +41,7 @@ export const PriceData: FC<Props> = ({ token }) => {
   }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
 
   return (
-    <Flex css={{ gap: '$6', py: '$4' }}>
+    <Flex css={{ gap: '$6', pt: '$4', pb: '$5' }}>
       <Flex direction="column" css={{ gap: '$1' }}>
         <Text style="subtitle2">Price</Text>
         <Flex
