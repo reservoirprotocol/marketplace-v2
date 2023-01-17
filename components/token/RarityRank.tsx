@@ -19,25 +19,30 @@ export default ({ token, collection, collectionAttributes }: Props) => {
     ((rarityRank as number) / parseInt(tokenCount as string)) * 100
   )
 
-  let displayPercentile = rankPercentile
-
-  if (displayPercentile <= 1) {
-    displayPercentile = 1
-  } else if (displayPercentile <= 5) {
-    displayPercentile = 5
-  } else if (displayPercentile <= 10) {
-    displayPercentile = 10
-  } else if (displayPercentile <= 15) {
-    displayPercentile = 15
-  } else if (displayPercentile <= 20) {
-    displayPercentile = 20
-  } else if (displayPercentile <= 30) {
-    displayPercentile = 30
-  } else if (displayPercentile <= 40) {
-    displayPercentile = 40
-  } else if (displayPercentile <= 50) {
-    displayPercentile = 50
+  const topPercentile = (percentile: number) => {
+    if (percentile <= 1) {
+      return 1
+    } else if (percentile <= 5) {
+      return 5
+    } else if (percentile <= 10) {
+      return 10
+    } else if (percentile <= 15) {
+      return 15
+    } else if (percentile <= 20) {
+      return 20
+    } else if (percentile <= 25) {
+      return 25
+    } else if (percentile <= 30) {
+      return 30
+    } else if (percentile <= 40) {
+      return 40
+    } else if (percentile <= 50) {
+      return 50
+    } else return
   }
+
+  let topPercentileText =
+    rankPercentile <= 50 && `Top ${topPercentile(rankPercentile)}%`
 
   const rarityEnabledCollection =
     tokenCount &&
@@ -58,9 +63,7 @@ export default ({ token, collection, collectionAttributes }: Props) => {
     <Tooltip
       content={
         <Flex direction="column" align="start">
-          {displayPercentile <= 50 && (
-            <Text style="body2">Top {displayPercentile}%</Text>
-          )}
+          <Text style="body2">{topPercentileText}</Text>
           <Text style="body2" ellipsify>
             Rarity rank:{' '}
             {`${formatNumber(rarityRank)}/
