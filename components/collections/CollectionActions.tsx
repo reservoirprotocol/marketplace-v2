@@ -49,10 +49,10 @@ const CollectionActionDropdownItem = styled(Flex, {
 
 const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const { addToast } = useContext(ToastContext)
-  const isMobile = useMediaQuery({ maxWidth: 600 })
+  const isMounted = useMounted()
+  const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
   const { theme } = useTheme()
-  const isMounted = useMounted()
   const etherscanImage = (
     <img
       src={

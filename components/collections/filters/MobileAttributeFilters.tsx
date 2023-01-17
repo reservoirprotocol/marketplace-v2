@@ -66,6 +66,7 @@ export const MobileAttributeFilters: FC<Props> = ({
           position: 'fixed',
           px: '$6',
           py: '$3',
+          boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
         }}
         type="button"
         size="small"
