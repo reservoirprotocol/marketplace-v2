@@ -71,9 +71,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const collection = collections && collections[0] ? collections[0] : null
 
+  const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: tokens, mutate } = useTokens(
     {
-      tokens: [`${collectionId}:${id}`],
+      tokens: [`${contract}:${id}`],
       includeAttributes: true,
       includeTopBid: true,
     },
@@ -88,7 +89,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const { data: userTokens } = useUserTokens(
     checkUserOwnership ? account.address : undefined,
     {
-      tokens: [`${collectionId}:${id}`],
+      tokens: [`${contract}:${id}`],
     }
   )
 
@@ -241,7 +242,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ token: `${collectionId}:${id}` }),
+                    body: JSON.stringify({ token: `${contract}:${id}` }),
                   }
                 )
                   .then(({ response }) => {
@@ -391,7 +392,7 @@ export const getStaticProps: GetStaticProps<{
     attributes: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
-  const collectionId = params?.contract?.toString()
+  let collectionId = params?.contract?.toString()
   const id = params?.id?.toString()
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
@@ -416,9 +417,10 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
+  const contract = collectionId ? collectionId?.split(':')[0] : undefined
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
-    tokens: [`${collectionId}:${id}`],
+    tokens: [`${contract}:${id}`],
     includeAttributes: true,
     includeTopBid: true,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
