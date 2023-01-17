@@ -42,7 +42,7 @@ export const PriceData: FC<Props> = ({ token }) => {
 
   return (
     <Flex css={{ gap: '$6', py: '$4' }}>
-      <Flex direction="column" css={{ gap: '$1' }}>
+      <Flex direction="column" align="start" css={{ gap: '$1' }}>
         <Text style="subtitle2">Price</Text>
         <Flex
           align="center"
@@ -74,8 +74,6 @@ export const PriceData: FC<Props> = ({ token }) => {
             <Flex
               align="center"
               css={{
-                background: '$gray2',
-                p: '$1',
                 borderRadius: 4,
                 gap: '$1',
                 width: 'max-content',
@@ -89,7 +87,7 @@ export const PriceData: FC<Props> = ({ token }) => {
           </a>
         )}
       </Flex>
-      <Flex direction="column" css={{ gap: '$1' }}>
+      <Flex direction="column" align="start" css={{ gap: '$1' }}>
         <Text style="subtitle2">Top Offer</Text>
         <Flex
           align="center"
@@ -119,8 +117,6 @@ export const PriceData: FC<Props> = ({ token }) => {
             <Flex
               align="center"
               css={{
-                background: '$gray2',
-                p: '$1',
                 borderRadius: 4,
                 gap: '$1',
                 width: 'max-content',
