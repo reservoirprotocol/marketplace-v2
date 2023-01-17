@@ -205,6 +205,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 <Box
                   css={{
                     flex: 1,
+                    width: '100%',
                   }}
                 >
                   <Flex justify="between" css={{ marginBottom: '$4' }}>
@@ -215,13 +216,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       />
                     )}
                     <Flex
-                      direction="column"
                       css={{
                         ml: 'auto',
                         width: '100%',
-                        '@sm': {
+                        flexDirection: 'row-reverse',
+                        gap: '$3',
+                        '@md': {
                           flexDirection: 'row',
                           width: 'max-content',
+                          gap: '$4',
                         },
                       }}
                     >
@@ -229,10 +232,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       <CollectionOffer
                         collection={collection}
                         buttonCss={{
-                          minWidth: 'max-content',
-                          height: 'min-content',
+                          width: '100%',
                           justifyContent: 'center',
-                          '@sm': { ml: '$4' },
+                          '@sm': {
+                            maxWidth: '220px',
+                          },
                         }}
                       />
                     </Flex>
@@ -240,10 +244,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   {!isSmallDevice && <SelectedAttributes />}
                   <Grid
                     css={{
-                      gridTemplateColumns:
-                        'repeat(auto-fill, minmax(300px, 1fr))',
                       gap: '$4',
                       pb: '$6',
+                      gridTemplateColumns:
+                        'repeat(auto-fill, minmax(200px, 1fr))',
+                      '@md': {
+                        gridTemplateColumns:
+                          'repeat(auto-fill, minmax(300px, 1fr))',
+                      },
                     }}
                   >
                     {isFetchingInitialData

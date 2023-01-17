@@ -6,8 +6,10 @@ import {
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useRouter } from 'next/router'
 import { FC, useEffect, useState } from 'react'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faSort } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useMounted } from 'hooks'
+import { useMediaQuery } from 'react-responsive'
 
 type Options =
   | 'Price low to high'
@@ -26,6 +28,9 @@ export const SortTokens: FC = () => {
   const router = useRouter()
   const [sortSelection, setSortSelection] =
     useState<Options>('Price low to high')
+
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
 
   useEffect(() => {
     const sortBy = router?.query['sortBy']?.toString()
@@ -49,25 +54,37 @@ export const SortTokens: FC = () => {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <Button
-          color="gray3"
-          css={{
-            width: '100%',
-            justifyContent: 'center',
-            mb: '$3',
-            '@md': { width: '220px', minWidth: 'max-content', mb: '0' },
-          }}
-        >
-          <span>{sortSelection}</span>
-          <Box
+        {isSmallDevice ? (
+          <Button
+            color="gray3"
             css={{
-              transition: 'transform',
-              '[data-state=open] &': { transform: 'rotate(180deg)' },
+              justifyContent: 'center',
+              px: '$3',
             }}
           >
-            <FontAwesomeIcon icon={faChevronDown} width={16} />
-          </Box>
-        </Button>
+            <FontAwesomeIcon icon={faSort} width={16} height={16} />
+          </Button>
+        ) : (
+          <Button
+            color="gray3"
+            css={{
+              width: '100%',
+              justifyContent: 'center',
+              mb: '$3',
+              '@md': { width: '220px', minWidth: 'max-content', mb: '0' },
+            }}
+          >
+            <span>{sortSelection}</span>
+            <Box
+              css={{
+                transition: 'transform',
+                '[data-state=open] &': { transform: 'rotate(180deg)' },
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronDown} width={16} />
+            </Box>
+          </Button>
+        )}
       </DropdownMenu.Trigger>
       <DropdownMenuContent css={{ width: '220px', mt: '$2' }}>
         {Object.keys(options).map((key) => (
