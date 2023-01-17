@@ -12,14 +12,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 type Options =
   | 'Price low to high'
   | 'Price high to low'
-  | 'Rare to Common'
-  | 'Common to Rare'
+  | 'Rare to common'
+  | 'Common to rare'
 
 const options: { [x: string]: { sortBy: string; sortDirection: string } } = {
   'Price low to high': { sortBy: 'floorAskPrice', sortDirection: 'asc' },
   'Price high to low': { sortBy: 'floorAskPrice', sortDirection: 'desc' },
-  'Rare to Common': { sortBy: 'rarity', sortDirection: 'asc' },
-  'Common to Rare': { sortBy: 'rarity', sortDirection: 'desc' },
+  'Rare to common': { sortBy: 'rarity', sortDirection: 'asc' },
+  'Common to rare': { sortBy: 'rarity', sortDirection: 'desc' },
 }
 
 export const SortTokens: FC = () => {
@@ -32,11 +32,11 @@ export const SortTokens: FC = () => {
     const sortDirection = router?.query['sortDirection']?.toString()
 
     if (sortBy === 'rarity' && sortDirection === 'desc') {
-      setSortSelection('Common to Rare')
+      setSortSelection('Common to rare')
       return
     }
     if (sortBy === 'rarity' && sortDirection === 'asc') {
-      setSortSelection('Rare to Common')
+      setSortSelection('Rare to common')
       return
     }
     if (sortBy === 'floorAskPrice' && sortDirection === 'desc') {
