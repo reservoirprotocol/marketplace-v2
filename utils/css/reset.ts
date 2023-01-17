@@ -36,6 +36,7 @@ export const reset = {
     lineHeight: 'inherit' /* 2 */,
     height: '100%',
     width: '100%',
+    '-webkit-font-smoothing': 'antialiased',
   },
 
   /*
