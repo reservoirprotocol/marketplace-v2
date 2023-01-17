@@ -260,7 +260,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     addToast?.({
                       title: 'Refresh collection failed',
                       description:
-                        'Request to refresh collection was rejected.',
+                        'We have queued this item for an update, check back in a few.',
                     })
                     setIsRefreshing(false)
                     throw e
