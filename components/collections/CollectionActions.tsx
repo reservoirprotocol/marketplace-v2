@@ -7,14 +7,15 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
-import { Flex } from 'components/primitives'
-import { ComponentPropsWithoutRef, FC, useContext } from 'react'
+import { Box, Flex } from 'components/primitives'
+import { ComponentPropsWithoutRef, FC, useContext, useState } from 'react'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { useTheme } from 'next-themes'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
 import { ToastContext } from 'context/ToastContextProvider'
+import { spin } from 'components/common/LoadingSpinner'
 
 type CollectionActionsProps = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
@@ -51,6 +52,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const { addToast } = useContext(ToastContext)
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const { theme } = useTheme()
   const etherscanImage = (
@@ -98,7 +100,15 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
 
   const refreshMetadataItem = (
     <CollectionActionDropdownItem
-      onClick={() => {
+      css={{
+        cursor: isRefreshing ? 'not-allowed' : 'pointer',
+      }}
+      onClick={(e) => {
+        if (isRefreshing) {
+          e.preventDefault()
+          return
+        }
+        setIsRefreshing(true)
         fetcher(
           `${window.location.origin}/${marketplaceChain.proxyApi}/collections/refresh/v1`,
           undefined,
@@ -119,17 +129,27 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
             } else {
               throw 'Request Failed'
             }
+            setIsRefreshing(false)
           })
           .catch((e) => {
             addToast?.({
               title: 'Refresh collection failed',
               description: 'Request to refresh collection was rejected.',
             })
+            setIsRefreshing(false)
             throw e
           })
       }}
     >
-      <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+      <Box
+        css={{
+          animation: isRefreshing
+            ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+            : 'none',
+        }}
+      >
+        <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+      </Box>
       Refresh Metadata
     </CollectionActionDropdownItem>
   )

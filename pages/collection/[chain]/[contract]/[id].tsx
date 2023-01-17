@@ -48,6 +48,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
 import { useRouter } from 'next/router'
 import supportedChains, { DefaultChain } from 'utils/chains'
+import { spin } from 'components/common/LoadingSpinner'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -58,6 +59,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const [tabValue, setTabValue] = useState('info')
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const { proxyApi } = useMarketplaceChain()
   const { data: collections } = useCollections(
     {
@@ -225,7 +227,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               </Anchor>
             </Link>
             <Button
-              onClick={() => {
+              onClick={(e) => {
+                if (isRefreshing) {
+                  e.preventDefault()
+                  return
+                }
+                setIsRefreshing(true)
                 fetcher(
                   `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
                   undefined,
@@ -247,6 +254,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     } else {
                       throw 'Request Failed'
                     }
+                    setIsRefreshing(false)
                   })
                   .catch((e) => {
                     addToast?.({
@@ -254,13 +262,24 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       description:
                         'Request to refresh collection was rejected.',
                     })
+                    setIsRefreshing(false)
                     throw e
                   })
               }}
+              disabled={isRefreshing}
               color="gray3"
               size="xs"
+              css={{ cursor: isRefreshing ? 'not-allowed' : 'pointer' }}
             >
-              <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+              <Box
+                css={{
+                  animation: isRefreshing
+                    ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+                    : 'none',
+                }}
+              >
+                <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+              </Box>
             </Button>
           </Flex>
           <Flex align="center" css={{ gap: '$2' }}>
