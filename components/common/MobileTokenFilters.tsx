@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 
 type Collections =
   | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
@@ -64,7 +65,6 @@ export const MobileTokenFilters: FC<Props> = ({
         css={{
           flexDirection: 'column',
           height: '100%',
-          pb: '$5',
           overflow: 'scroll',
         }}
       >
@@ -74,6 +74,7 @@ export const MobileTokenFilters: FC<Props> = ({
             px: '$4',
             width: '100%',
             borderBottom: '1px solid $gray4',
+            height: NAVBAR_HEIGHT_MOBILE,
           }}
           align="center"
           justify="between"
@@ -106,6 +107,9 @@ export const MobileTokenFilters: FC<Props> = ({
           direction="column"
           css={{
             pt: '$4',
+            maxHeight: `calc(100vh - ${NAVBAR_HEIGHT_MOBILE}px)`,
+            overflowY: 'auto',
+            pb: '$5',
           }}
         >
           <Text style="subtitle1" css={{ mb: '$2', pl: '$4' }}>

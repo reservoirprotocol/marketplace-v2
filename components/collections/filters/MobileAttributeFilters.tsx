@@ -8,6 +8,7 @@ import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { AttributeSelector } from './AttributeSelector'
 import { clearAllAttributes } from 'utils/router'
 import { FullscreenModal } from 'components/common/FullscreenModal'
+import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 
 type Props = {
   attributes: ReturnType<typeof useAttributes>['data'] | undefined
@@ -105,10 +106,12 @@ export const MobileAttributeFilters: FC<Props> = ({
         css={{
           flexDirection: 'column',
           height: '100%',
+          width: '100%',
         }}
       >
         <Flex
           css={{
+            height: NAVBAR_HEIGHT_MOBILE,
             py: '$4',
             px: '$4',
             width: '100%',
@@ -168,6 +171,8 @@ export const MobileAttributeFilters: FC<Props> = ({
         <Flex
           css={{
             width: '100%',
+            maxHeight: `calc(100vh - ${NAVBAR_HEIGHT_MOBILE}px)`,
+            overflowY: 'auto',
           }}
         >
           <Box
