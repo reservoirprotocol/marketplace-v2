@@ -57,7 +57,7 @@ export const TokenActions: FC<Props> = ({
     <Grid
       align="center"
       css={{
-        gap: '$3',
+        gap: '$4',
         gridTemplateColumns: 'repeat(1,minmax(0,1fr))',
         width: '100%',
         '@sm': {
