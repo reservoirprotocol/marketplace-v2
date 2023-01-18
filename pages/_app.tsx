@@ -134,7 +134,8 @@ function MyApp({
           options={{
             apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
             apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
-            source: 'reservoir.hub',
+            // Replace source with your domain
+            // source: 'YOUR_DOMAIN',
             normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
           theme={reservoirKitTheme}
