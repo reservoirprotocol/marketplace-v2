@@ -52,8 +52,6 @@ export const TokenFilters: FC<Props> = ({
         <Flex
           direction="column"
           css={{
-            p: '$2',
-            pt: '$4',
             overflowY: 'scroll',
           }}
         >
