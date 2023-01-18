@@ -91,19 +91,21 @@ const Layout: FC<Props> = ({
           pt: 80,
         }}
       >
-        <Navbar />
+        <Box css={{ maxWidth: 1920, mx: 'auto' }}>
+          <Navbar />
 
-        <main>{children}</main>
-        {toasts.map((toast, idx) => {
-          return (
-            <Toast
-              key={idx}
-              title={toast.title}
-              description={toast.description}
-              action={toast.action}
-            />
-          )
-        })}
+          <main>{children}</main>
+          {toasts.map((toast, idx) => {
+            return (
+              <Toast
+                key={idx}
+                title={toast.title}
+                description={toast.description}
+                action={toast.action}
+              />
+            )
+          })}
+        </Box>
       </Box>
     </>
   )
