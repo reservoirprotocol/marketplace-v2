@@ -25,6 +25,7 @@ import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import wrappedContracts from 'utils/wrappedContracts'
 
 type Props = {
   address: Address | undefined
@@ -113,6 +114,7 @@ type TokenTableRowProps = {
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const marketplaceChain = useMarketplaceChain()
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -298,6 +300,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
           amount={token?.token?.topBid?.price?.netAmount?.native}
           textStyle="subtitle1"
           logoHeight={14}
+          address={wrappedContracts[marketplaceChain.id]}
         />
       </TableCell>
       <TableCell>
