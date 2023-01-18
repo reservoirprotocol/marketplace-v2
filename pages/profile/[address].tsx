@@ -36,7 +36,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
-import { Head } from 'next/document'
+import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -134,9 +134,9 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
 
   return (
     <Layout>
-      {/* <Head>
-        <title>{`${address} Profile`}</title>
-      </Head> */}
+      <Head>
+        <title>{`Profile - ${address}`}</title>
+      </Head>
       <Flex
         direction="column"
         css={{
