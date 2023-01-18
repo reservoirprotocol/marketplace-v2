@@ -51,22 +51,24 @@ export const ProfileDropdown: FC = () => {
           e.preventDefault()
         }}
       >
-        <CopyText
-          text={shortEnsName ? shortEnsName : shortAddress}
-          css={{ width: '100%' }}
-        >
-          <Flex justify="between" css={{ width: '100%' }}>
+        <Link href={`/profile/${address}`} style={{ flex: 1 }}>
+          <Flex justify="between" align="center" css={{ width: '100%' }}>
             <Text style="subtitle1" color="subtle">
               {shortEnsName ? shortEnsName : shortAddress}
             </Text>
-            <Box css={{ color: '$gray10' }}>
-              <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-            </Box>
+            <CopyText
+              text={shortEnsName ? shortEnsName : shortAddress}
+              css={{ width: 'auto' }}
+            >
+              <Box css={{ color: '$gray10' }}>
+                <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+              </Box>
+            </CopyText>
           </Flex>
-        </CopyText>
+        </Link>
       </DropdownMenuItem>
-      <Link href={`/profile/${address}`}>
-        <DropdownMenuItem>Profile</DropdownMenuItem>
+      <Link href={`/portfolio`}>
+        <DropdownMenuItem>Portfolio</DropdownMenuItem>
       </Link>
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
