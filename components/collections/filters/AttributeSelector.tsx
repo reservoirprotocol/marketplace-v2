@@ -31,7 +31,7 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
         css={{ mb: '$3', cursor: 'pointer' }}
         onClick={() => setOpen(!open)}
       >
-        <Text as="h5" style="subtitle1">
+        <Text as="h5" style="subtitle1" ellipsify>
           {attribute.key}
         </Text>
         <FontAwesomeIcon
