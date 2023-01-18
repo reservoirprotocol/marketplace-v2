@@ -61,8 +61,6 @@ Reservoir Market v2 is lightly configurable with the configurations below. You c
 | NEXT_PUBLIC_COLLECTION_SET_ID | `false` | Use this to configure a community marketplace. Generate your collection set ID [here](https://docs.reservoir.tools/reference/postcollectionssetsv1). | f566ba09c14f56aedeed3f77e3ae7f5ff28b9177714d3827a87b7a182f8f90ff |
 | NEXT_PUBLIC_COMMUNITY | `false` | Use this to configure a community marketplace. Note: Community IDs are only available for certain communities. | artblocks |
 
-Please visit [our docs](https://docs.reservoir.tools/docs/marketplace-getting-started#configuration) to view all supported environment variables.
-
 ### Run the App
 
 Once you have your setup ready, run:
