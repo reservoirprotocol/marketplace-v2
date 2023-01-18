@@ -103,6 +103,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const owner = isOwner ? account?.address : token?.token?.owner
   const { displayName: ownerFormatted } = useENSResolver(token?.token?.owner)
 
+  const tokenName = `${token?.token?.name || `#${token?.token?.tokenId}`}`
+
   useEffect(() => {
     isMounted && isSmallDevice ? setTabValue('attributes') : setTabValue('info')
   }, [isSmallDevice])
@@ -284,7 +286,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Button>
           </Flex>
           <Flex align="center" css={{ gap: '$2' }}>
-            <Text style="h4">{token?.token?.name}</Text>
+            <Text style="h4">{tokenName}</Text>
             {flagged && (
               <Tooltip
                 content={<Text style="body2">Not tradeable on OpenSea</Text>}
