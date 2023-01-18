@@ -49,6 +49,7 @@ import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
 import { useRouter } from 'next/router'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
+import Head from 'next/head'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -109,6 +110,22 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   return (
     <Layout>
+      <Head>
+        <title>
+          {token?.token?.name
+            ? token.token.name
+            : `${token?.token?.tokenId} - ${token?.token?.collection}`}
+        </title>
+        <meta name="description" content={collection?.description as string} />
+        <meta
+          name="twitter:image"
+          content={token?.token?.image || collection?.banner}
+        />
+        <meta
+          property="og:image"
+          content={token?.token?.image || collection?.banner}
+        />
+      </Head>
       <Flex
         justify="center"
         css={{
