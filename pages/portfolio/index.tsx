@@ -67,7 +67,7 @@ const IndexPage: NextPage = () => {
               Portfolio
             </Text>
             <Tabs.Root defaultValue="items">
-              <Flex css={{ overflowX: 'scroll' }}>
+              <Flex css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}>
                 <TabsList
                   style={{
                     whiteSpace: 'nowrap',
