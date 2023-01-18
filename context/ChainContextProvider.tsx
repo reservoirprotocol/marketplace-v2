@@ -1,3 +1,4 @@
+import Router, { useRouter } from 'next/router'
 import { useState, createContext, FC, useEffect, useCallback } from 'react'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { useNetwork, useSwitchNetwork } from 'wagmi'
@@ -16,10 +17,10 @@ export const ChainContext = createContext<{
 })
 
 const ChainContextProvider: FC<any> = ({ children }) => {
-  const { switchNetwork } = useSwitchNetwork()
+  const { switchNetworkAsync } = useSwitchNetwork()
   const { chain } = useNetwork()
   const [lastSelectedChain, setLastSelectedChain] = useState(DefaultChain.id)
-
+  const router = useRouter()
   useEffect(() => {
     if (typeof window === 'undefined') {
       return
@@ -41,16 +42,26 @@ const ChainContextProvider: FC<any> = ({ children }) => {
 
   const switchCurrentChain = useCallback(
     (chainId: string | number) => {
-      if (chain && switchNetwork) {
-        switchNetwork(+chainId)
+      if (chainId === chain?.id) {
+        return
+      }
+      if (chain && switchNetworkAsync) {
+        switchNetworkAsync(+chainId)
+          .then(({ id: newChainId }) => {
+            if (newChainId === +chainId) {
+              router.push('/')
+            }
+          })
+          .catch(() => {})
       } else {
         setLastSelectedChain(+chainId)
+        router.push('/')
         if (typeof window !== 'undefined') {
           localStorage.setItem('reservoir.lastChainId', `${chainId}`)
         }
       }
     },
-    [chain, switchNetwork, setLastSelectedChain]
+    [chain, switchNetworkAsync, setLastSelectedChain, router]
   )
 
   let currentChain = DefaultChain
