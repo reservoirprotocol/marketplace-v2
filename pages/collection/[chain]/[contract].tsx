@@ -40,6 +40,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
+import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
 
 type ActivityTypes = Exclude<
@@ -139,6 +140,29 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   return (
     <Layout>
+      <Head>
+        <title>{ssr?.collection?.collections?.[0]?.name}</title>
+        <meta
+          name="description"
+          content={ssr?.collection?.collections?.[0]?.description as string}
+        />
+        <meta
+          property="twitter:title"
+          content={ssr?.collection?.collections?.[0]?.name}
+        />
+        <meta
+          name="twitter:image"
+          content={ssr?.collection?.collections?.[0]?.banner}
+        />
+        <meta
+          property="og:title"
+          content={ssr?.collection?.collections?.[0]?.name}
+        />
+        <meta
+          property="og:image"
+          content={ssr?.collection?.collections?.[0]?.banner}
+        />
+      </Head>
       {collection ? (
         <Flex
           direction="column"

@@ -49,6 +49,7 @@ import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
 import { useRouter } from 'next/router'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
+import Head from 'next/head'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -109,8 +110,26 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     isMounted && isSmallDevice ? setTabValue('attributes') : setTabValue('info')
   }, [isSmallDevice])
 
+  const pageTitle = token?.token?.name
+    ? token.token.name
+    : `${token?.token?.tokenId} - ${token?.token?.collection}`
+
   return (
     <Layout>
+      <Head>
+        <title>{pageTitle}</title>
+        <meta name="description" content={collection?.description as string} />
+        <meta name="twitter:title" content={pageTitle} />
+        <meta
+          name="twitter:image"
+          content={token?.token?.image || collection?.banner}
+        />
+        <meta name="og:title" content={pageTitle} />
+        <meta
+          property="og:image"
+          content={token?.token?.image || collection?.banner}
+        />
+      </Head>
       <Flex
         justify="center"
         css={{
