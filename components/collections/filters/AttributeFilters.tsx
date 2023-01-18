@@ -38,11 +38,13 @@ export const AttributeFilters: FC<Props> = ({
           height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
           overflow: 'auto',
           marginBottom: 16,
+          background: 'transparent',
+          border: 'none',
+          borderRadius: 0,
         }}
       >
         <Box
           css={{
-            p: '$4',
             '& > div:first-of-type': {
               pt: 0,
             },

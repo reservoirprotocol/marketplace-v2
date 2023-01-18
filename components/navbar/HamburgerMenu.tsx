@@ -18,12 +18,10 @@ import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import { useCopyToClipboard } from 'usehooks-ts'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useContext } from 'react'
-import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver } from 'hooks'
+import CopyText from 'components/common/CopyText'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -35,8 +33,6 @@ const HamburgerMenu = () => {
     shortName: shortEnsName,
   } = useENSResolver(address)
   const { disconnect } = useDisconnect()
-  const [value, copy] = useCopyToClipboard()
-  const { addToast } = useContext(ToastContext)
 
   const trigger = (
     <Button
@@ -103,36 +99,34 @@ const HamburgerMenu = () => {
               px: '$4',
             }}
           >
-            <Flex
-              css={{
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                cursor: 'pointer',
-                borderBottom: '1px solid $gray4',
-                pb: '$4',
-              }}
-              onClick={() => {
-                ensName ? copy(ensName) : copy(address as string)
-                addToast?.({ title: 'Copied' })
-              }}
-            >
-              <Flex css={{ alignItems: 'center' }}>
-                {ensAvatar ? (
-                  <Avatar size="medium" src={ensAvatar} />
-                ) : (
-                  <Jazzicon
-                    diameter={36}
-                    seed={jsNumberForAddress(address as string)}
-                  />
-                )}
-                <Text style="subtitle1" color="subtle" css={{ ml: '$2' }}>
-                  {shortEnsName ? shortEnsName : shortAddress}
-                </Text>
+            <CopyText text={ensName ? ensName : (address as string)}>
+              <Flex
+                css={{
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  borderBottom: '1px solid $gray4',
+                  pb: '$4',
+                }}
+              >
+                <Flex css={{ alignItems: 'center' }}>
+                  {ensAvatar ? (
+                    <Avatar size="medium" src={ensAvatar} />
+                  ) : (
+                    <Jazzicon
+                      diameter={36}
+                      seed={jsNumberForAddress(address as string)}
+                    />
+                  )}
+                  <Text style="subtitle1" color="subtle" css={{ ml: '$2' }}>
+                    {shortEnsName ? shortEnsName : shortAddress}
+                  </Text>
+                </Flex>
+                <Box css={{ color: '$gray10' }}>
+                  <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                </Box>
               </Flex>
-              <Box css={{ color: '$gray10' }}>
-                <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-              </Box>
-            </Flex>
+            </CopyText>
             <Link href={`/profile/${address}`} legacyBehavior>
               <Text
                 style="subtitle1"

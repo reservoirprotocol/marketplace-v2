@@ -8,10 +8,9 @@ import { Text, Flex, Box, Grid } from '../../components/primitives'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import fetcher, { basicFetcher } from 'utils/fetcher'
-import { useCopyToClipboard, useIntersectionObserver } from 'usehooks-ts'
+import { useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { ToastContext } from 'context/ToastContextProvider'
+import { useEffect, useRef, useState } from 'react'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -38,6 +37,7 @@ import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
 import { Head } from 'next/document'
+import CopyText from 'components/common/CopyText'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -63,8 +63,6 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     undefined
   )
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
-  const [value, copy] = useCopyToClipboard()
-  const { addToast } = useContext(ToastContext)
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -161,21 +159,16 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
           )}
           <Flex direction="column" css={{ ml: '$4' }}>
             <Text style="h4">{ensName ? ensName : shortAddress}</Text>
-            <Flex
-              align="center"
-              css={{ cursor: 'pointer' }}
-              onClick={() => {
-                copy(address as string)
-                addToast?.({ title: 'Copied' })
-              }}
-            >
-              <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
-                {shortAddress}
-              </Text>
-              <Box css={{ color: '$gray10' }}>
-                <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-              </Box>
-            </Flex>
+            <CopyText text={ensName ? ensName : (address as string)}>
+              <Flex align="center" css={{ cursor: 'pointer' }}>
+                <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
+                  {shortAddress}
+                </Text>
+                <Box css={{ color: '$gray10' }}>
+                  <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                </Box>
+              </Flex>
+            </CopyText>
           </Flex>
         </Flex>
         <Tabs.Root defaultValue="items">

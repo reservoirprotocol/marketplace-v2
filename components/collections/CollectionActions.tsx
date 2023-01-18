@@ -124,7 +124,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
             if (response.status === 200) {
               addToast?.({
                 title: 'Refresh collection',
-                description: 'Request to refresh collection was accepted..',
+                description: 'Request to refresh collection was accepted.',
               })
             } else {
               throw 'Request Failed'

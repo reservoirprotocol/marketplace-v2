@@ -52,7 +52,7 @@ const Tooltip = ({
             <Box
               css={{
                 background: '$gray5',
-                p: '$4',
+                p: '$2',
               }}
             >
               {content}
@@ -90,7 +90,7 @@ const Tooltip = ({
           <Box
             css={{
               background: '$gray5',
-              p: '$4',
+              p: '$2',
             }}
           >
             {content}
