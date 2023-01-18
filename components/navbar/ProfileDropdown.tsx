@@ -1,4 +1,4 @@
-import { FC, useContext } from 'react'
+import { FC } from 'react'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
@@ -13,16 +13,13 @@ import {
 import Link from 'next/link'
 import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useCopyToClipboard } from 'usehooks-ts'
-import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver } from 'hooks'
+import CopyText from 'components/common/CopyText'
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
   const { data: balance } = useBalance({ address })
   const { disconnect } = useDisconnect()
-  const [value, copy] = useCopyToClipboard()
-  const { addToast } = useContext(ToastContext)
   const {
     name: ensName,
     avatar: ensAvatar,
@@ -50,19 +47,23 @@ export const ProfileDropdown: FC = () => {
   const children = (
     <>
       <DropdownMenuItem
-        onClick={() => {
-          ensName ? copy(ensName) : copy(address as string)
-          addToast?.({ title: 'Copied' })
+        onClick={(e) => {
+          e.preventDefault()
         }}
       >
-        <Flex justify="between">
-          <Text style="subtitle1" color="subtle">
-            {shortEnsName ? shortEnsName : shortAddress}
-          </Text>
-          <Box css={{ color: '$gray10' }}>
-            <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-          </Box>
-        </Flex>
+        <CopyText
+          text={shortEnsName ? shortEnsName : shortAddress}
+          css={{ width: '100%' }}
+        >
+          <Flex justify="between" css={{ width: '100%' }}>
+            <Text style="subtitle1" color="subtle">
+              {shortEnsName ? shortEnsName : shortAddress}
+            </Text>
+            <Box css={{ color: '$gray10' }}>
+              <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+            </Box>
+          </Flex>
+        </CopyText>
       </DropdownMenuItem>
       <Link href={`/profile/${address}`}>
         <DropdownMenuItem>Profile</DropdownMenuItem>
