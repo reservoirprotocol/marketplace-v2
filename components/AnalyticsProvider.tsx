@@ -1,4 +1,3 @@
-// import useDataDog from 'hooks/useAnalytics'
 import { FC, ReactElement, useEffect } from 'react'
 import { useAccount } from 'wagmi'
 import { datadogRum } from '@datadog/browser-rum'
