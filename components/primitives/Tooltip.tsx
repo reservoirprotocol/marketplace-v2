@@ -6,11 +6,11 @@ import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
 
 const TooltipArrow = styled(TooltipPrimitive.Arrow, {
-  fill: '$gray5',
+  fill: '$neutralBgSubtle',
 })
 
 const PopoverArrow = styled(Popover.Arrow, {
-  fill: '$gray5',
+  fill: '$neutralBgSubtle',
 })
 
 const Tooltip = ({
@@ -43,7 +43,7 @@ const Tooltip = ({
           <Box
             css={{
               zIndex: 9999,
-              $$shadowColor: '$colors$gray12',
+              $$shadowColor: '$colors$panelShadow',
               boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
               borderRadius: 8,
               overflow: 'hidden',
@@ -51,7 +51,7 @@ const Tooltip = ({
           >
             <Box
               css={{
-                background: '$gray5',
+                background: '$neutralBgSubtle',
                 p: '$2',
               }}
             >
@@ -81,7 +81,7 @@ const Tooltip = ({
         <Box
           css={{
             zIndex: 9999,
-            $$shadowColor: '$colors$gray12',
+            $$shadowColor: '$colors$panelShadow',
             boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
             borderRadius: 8,
             overflow: 'hidden',
@@ -89,7 +89,7 @@ const Tooltip = ({
         >
           <Box
             css={{
-              background: '$gray5',
+              background: '$neutralBgSubtle',
               p: '$2',
             }}
           >
