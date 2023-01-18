@@ -72,7 +72,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
       activities &&
       activities.length === 0 ? (
         <Flex direction="column" align="center" css={{ py: '$6', gap: '$4' }}>
-          <img src="/activity-icon.svg" width={40} height={40} />
+          <img src="/icons/activity-icon.svg" width={40} height={40} />
           <Text>No activity yet</Text>
         </Flex>
       ) : (
