@@ -12,6 +12,11 @@ const ChainSwitcher = () => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
   const { chain, switchCurrentChain } = useContext(ChainContext)
+
+  if (supportedChains.length === 1) {
+    return null
+  }
+
   const supportedChain = supportedChains.find(
     (supportedChain) => supportedChain.id === chain?.id
   )
