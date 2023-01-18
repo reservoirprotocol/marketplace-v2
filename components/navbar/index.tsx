@@ -77,6 +77,8 @@ const Navbar = () => {
         height: NAVBAR_HEIGHT,
         px: '$5',
         width: '100%',
+        maxWidth: 1920,
+        mx: 'auto',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
         background: '$neutralBg',
