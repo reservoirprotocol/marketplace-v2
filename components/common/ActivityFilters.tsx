@@ -90,7 +90,6 @@ export const ActivityFilters: FC<Props> = ({
         <Flex
           direction="column"
           css={{
-            p: '$4',
             '& > div:first-of-type': {
               pt: 0,
             },
