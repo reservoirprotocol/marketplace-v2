@@ -27,6 +27,7 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import AnalyticsProvider from 'components/AnalyticsProvider'
 
 export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
@@ -75,7 +76,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
     >
       <WagmiConfig client={wagmiClient}>
         <ChainContextProvider>
-          <MyApp {...props} />
+          <AnalyticsProvider>
+            <MyApp {...props} />
+          </AnalyticsProvider>
         </ChainContextProvider>
       </WagmiConfig>
     </ThemeProvider>

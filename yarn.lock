@@ -192,6 +192,26 @@
     stream-browserify "^3.0.0"
     util "^0.12.4"
 
+"@datadog/browser-core@4.30.1":
+  version "4.30.1"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-core/-/browser-core-4.30.1.tgz#ee03c9fd83dde67ef21cb6db3f48c879ef721af0"
+  integrity sha512-f2ETFJgZTHH3gzAKNEy8wI22Ae9jFtMk6t7s1QIyHwdFsftC0E0GKuCdMv2maeKMm/z8UYvP27vvGgXjbW1twg==
+
+"@datadog/browser-rum-core@4.30.1":
+  version "4.30.1"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum-core/-/browser-rum-core-4.30.1.tgz#da88d95af2c8c7811fe05da62ef036dd19fbe55e"
+  integrity sha512-scWb9zAJfIEQexabQxdm98wxy9CJzhqvsDX/5/DUyv1lQDAsjaP6IHWAMTkikHeHift67/E9j5FVTrUMaanydQ==
+  dependencies:
+    "@datadog/browser-core" "4.30.1"
+
+"@datadog/browser-rum@^4.30.1":
+  version "4.30.1"
+  resolved "https://registry.yarnpkg.com/@datadog/browser-rum/-/browser-rum-4.30.1.tgz#4497824fc166bef2dff6736dac42c627ea703e8e"
+  integrity sha512-iOJJYjyS9j1EsD93RIwabqCPRpfDd7FrltbgVVll+4oJ+eE2lfO/wPWbLuV1Kr4jZ39tGSzef7GC/Q/dcNLYzQ==
+  dependencies:
+    "@datadog/browser-core" "4.30.1"
+    "@datadog/browser-rum-core" "4.30.1"
+
 "@davatar/react@^1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@davatar/react/-/react-1.11.1.tgz#4d260ee3ec178da78002ce070422bcafe7c92288"
