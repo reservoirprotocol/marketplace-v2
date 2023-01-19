@@ -230,6 +230,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             width: '100%',
             '@md': {
               px: 0,
+              maxWidth: '60%',
             },
           }}
         >

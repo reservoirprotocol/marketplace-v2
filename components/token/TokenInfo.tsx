@@ -83,7 +83,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
 
   return (
     <>
-      <Flex direction="column" css={{ gap: '$3' }}>
+      <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
             src={collection?.image}
@@ -196,11 +196,18 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           <Flex justify="between" css={{ width: '100%' }}>
             <Text
               style="subtitle1"
-              css={{ color: '$gray11', fontWeight: 'normal' }}
+              css={{
+                color: '$gray11',
+                fontWeight: 'normal',
+                whiteSpace: 'nowrap',
+                mr: '$2',
+              }}
             >
               Token ID
             </Text>
-            <Text style="subtitle1">{token?.token?.tokenId}</Text>
+            <Text style="subtitle1" ellipsify>
+              {token?.token?.tokenId}
+            </Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
             <Text
