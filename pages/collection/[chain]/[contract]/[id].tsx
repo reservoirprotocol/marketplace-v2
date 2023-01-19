@@ -200,6 +200,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 borderRadius: 8,
                 overflow: 'hidden',
               }}
+              onRefreshToken={() => {
+                mutate?.()
+                addToast?.({
+                  title: 'Refresh token',
+                  description: 'Request to refresh this token was accepted.',
+                })
+              }}
             />
             <FullscreenMedia token={token} />
           </Box>
@@ -281,9 +288,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   .then(({ response }) => {
                     if (response.status === 200) {
                       addToast?.({
-                        title: 'Refresh collection',
+                        title: 'Refresh token',
                         description:
-                          'Request to refresh collection was accepted.',
+                          'Request to refresh this token was accepted.',
                       })
                     } else {
                       throw 'Request Failed'
@@ -292,7 +299,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   })
                   .catch((e) => {
                     addToast?.({
-                      title: 'Refresh collection failed',
+                      title: 'Refresh token failed',
                       description:
                         'We have queued this item for an update, check back in a few.',
                     })
