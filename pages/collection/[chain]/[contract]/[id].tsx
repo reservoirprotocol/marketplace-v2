@@ -159,7 +159,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           css={{
             maxWidth: '100%',
             flex: 1,
-            '@md': { maxWidth: 445 },
+            '@md': { maxWidth: 445, width: '100%' },
             position: 'relative',
             '@sm': {
               '>button': {
@@ -206,6 +206,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           {token?.token?.attributes && !isSmallDevice && (
             <Grid
               css={{
+                maxWidth: '100%',
+                width: '100%',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '$3',
                 mt: 24,
