@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useMarketplaceChain } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
   collection: NonNullable<
@@ -33,7 +34,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
       <Flex
         css={{
           p: '$2',
-          gap: '$4',
+          gap: '$2',
           cursor: 'pointer',
           '&:hover': {
             background: '$gray4',
@@ -45,9 +46,12 @@ const CollectionItem: FC<Props> = ({ collection }) => {
           src={collection.image}
           style={{ width: 32, height: 32, borderRadius: 4 }}
         />
-        <Text style="subtitle1" css={{ flex: 1 }}>
+        <Text style="subtitle1" ellipsify>
           {collection.name}
         </Text>
+        <OpenSeaVerified
+          openseaVerificationStatus={collection?.openseaVerificationStatus}
+        />
       </Flex>
     </Link>
   )
@@ -143,8 +147,6 @@ const GlobalSearch = forwardRef<
             position: 'absolute',
             top: '50%',
             left: '$4',
-            width: '16px',
-            height: '16px',
             zIndex: 2,
             transform: 'translate(0, -50%)',
             color: '$gray11',

@@ -4,6 +4,7 @@ import { FC } from 'react'
 import { useMarketplaceChain } from '../../hooks'
 import { TrendingCollections } from 'components/home/TrendingCollectionsList'
 import { PercentChange } from 'components/primitives/PercentChange'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
   rank: string | number
@@ -31,18 +32,21 @@ export const TrendingCollectionItem: FC<Props> = ({
           style={{ borderRadius: 8, width: 56, height: 56, objectFit: 'cover' }}
         />
         <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
-          <Text
-            css={{
-              mb: 4,
-              maxWidth: '80%',
-              display: 'inline-block',
-            }}
-            style="subtitle1"
-            ellipsify
-          >
-            {collection?.name}
-          </Text>
-          <Flex align="center">
+          <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
+            <Text
+              css={{
+                display: 'inline-block',
+              }}
+              style="subtitle1"
+              ellipsify
+            >
+              {collection?.name}
+            </Text>
+            <OpenSeaVerified
+              openseaVerificationStatus={collection?.openseaVerificationStatus}
+            />
+          </Flex>
+          <Flex>
             <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
               Floor
             </Text>

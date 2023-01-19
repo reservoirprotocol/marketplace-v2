@@ -50,6 +50,7 @@ import { useRouter } from 'next/router'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
 import Head from 'next/head'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -199,6 +200,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 borderRadius: 8,
                 overflow: 'hidden',
               }}
+              onRefreshToken={() => {
+                mutate?.()
+                addToast?.({
+                  title: 'Refresh token',
+                  description: 'Request to refresh this token was accepted.',
+                })
+              }}
             />
             <FullscreenMedia token={token} />
           </Box>
@@ -237,20 +245,31 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           }}
         >
           <Flex justify="between" align="center" css={{ mb: 20 }}>
-            <Link
-              href={`/collection/${router.query.chain}/${collectionId}`}
-              legacyBehavior={true}
-            >
-              <Anchor
-                color="primary"
-                css={{ display: 'flex', alignItems: 'center', gap: '$2' }}
+            <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
+              <Link
+                href={`/collection/${router.query.chain}/${collectionId}`}
+                legacyBehavior={true}
               >
-                <FontAwesomeIcon icon={faArrowLeft} height={16} />
-                <Text css={{ color: 'inherit' }} style="subtitle1">
-                  {collection?.name}
-                </Text>
-              </Anchor>
-            </Link>
+                <Anchor
+                  color="primary"
+                  css={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '$2',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} height={16} />
+                  <Text css={{ color: 'inherit' }} style="subtitle1" ellipsify>
+                    {collection?.name}
+                  </Text>
+                </Anchor>
+              </Link>
+              <OpenSeaVerified
+                openseaVerificationStatus={
+                  collection?.openseaVerificationStatus
+                }
+              />
+            </Flex>
             <Button
               onClick={(e) => {
                 if (isRefreshing) {
@@ -272,9 +291,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   .then(({ response }) => {
                     if (response.status === 200) {
                       addToast?.({
-                        title: 'Refresh collection',
+                        title: 'Refresh token',
                         description:
-                          'Request to refresh collection was accepted.',
+                          'Request to refresh this token was accepted.',
                       })
                     } else {
                       throw 'Request Failed'
@@ -283,7 +302,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   })
                   .catch((e) => {
                     addToast?.({
-                      title: 'Refresh collection failed',
+                      title: 'Refresh token failed',
                       description:
                         'We have queued this item for an update, check back in a few.',
                     })
