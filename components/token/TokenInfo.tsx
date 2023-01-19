@@ -13,6 +13,7 @@ import { useTheme } from 'next-themes'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0] | null
@@ -92,6 +93,9 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           <Text style="h6" ellipsify>
             {collection?.name}
           </Text>
+          <OpenSeaVerified
+            openseaVerificationStatus={collection?.openseaVerificationStatus}
+          />
         </Flex>
         <Flex
           direction="column"

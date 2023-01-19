@@ -271,7 +271,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 overflow: 'hidden',
               }}
             >
-              <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
+              <Text style="subtitle3" ellipsify color="subtle">
                 {token?.token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
