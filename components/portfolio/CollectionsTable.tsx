@@ -225,11 +225,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
                 height={48}
               />
             )}
-            <Text
-              style="subtitle3"
-              ellipsify
-              css={{ color: '$gray11', ml: '$2' }}
-            >
+            <Text style="subtitle2" ellipsify css={{ ml: '$2' }}>
               {collection?.collection?.name}
             </Text>
           </Flex>

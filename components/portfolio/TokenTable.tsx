@@ -271,9 +271,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 overflow: 'hidden',
               }}
             >
-              <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {token?.token?.collection?.name}
-              </Text>
+              <Flex>
+                <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
+                  {token?.token?.collection?.name}
+                </Text>
+              </Flex>
               <Text style="subtitle2" ellipsify>
                 #{token?.token?.tokenId}
               </Text>

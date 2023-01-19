@@ -42,6 +42,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -188,9 +189,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   }}
                 />
                 <Box css={{ minWidth: 0 }}>
-                  <Text style="h5" as="h6" ellipsify>
-                    {collection.name}
-                  </Text>
+                  <Flex align="center" css={{ gap: '$2' }}>
+                    <Text style="h5" as="h6" ellipsify>
+                      {collection.name}
+                    </Text>
+                    <OpenSeaVerified
+                      openseaVerificationStatus={
+                        collection?.openseaVerificationStatus
+                      }
+                    />
+                  </Flex>
+
                   <CopyText
                     text={collection.id as string}
                     css={{ width: 'max-content' }}
