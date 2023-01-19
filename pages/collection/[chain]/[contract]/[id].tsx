@@ -308,7 +308,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Text style="h4">{tokenName}</Text>
             {flagged && (
               <Tooltip
-                content={<Text style="body2">Not tradeable on OpenSea</Text>}
+                content={
+                  <Text style="body2" as="p">
+                    Not tradeable on OpenSea
+                  </Text>
+                }
               >
                 <Text css={{ color: '$red10' }}>
                   <FontAwesomeIcon

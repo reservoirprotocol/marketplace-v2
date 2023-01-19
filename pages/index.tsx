@@ -24,7 +24,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('allTimeVolume')
+    useState<CollectionsSortingOption>('1DayVolume')
   const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
@@ -156,7 +156,7 @@ export const getStaticProps: GetStaticProps<{
 }> = async () => {
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
-      sortBy: 'allTimeVolume',
+      sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 12,
     }
