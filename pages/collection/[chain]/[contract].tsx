@@ -294,7 +294,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         'repeat(auto-fill, minmax(200px, 1fr))',
                       '@md': {
                         gridTemplateColumns:
-                          'repeat(auto-fill, minmax(300px, 1fr))',
+                          'repeat(auto-fill, minmax(240px, 1fr))',
                       },
                     }}
                   >
