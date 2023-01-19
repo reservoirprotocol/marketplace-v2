@@ -1,5 +1,5 @@
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import { Box, Flex, Text } from '../primitives'
+import { Box, Flex } from '../primitives'
 import { ComponentPropsWithoutRef, FC } from 'react'
 import { TrendingCollectionItem } from './TrendingCollectionItem'
 import LoadingSpinner from 'components/common/LoadingSpinner'

@@ -1,10 +1,8 @@
 import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
-import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
 import { FC } from 'react'
 import { useMarketplaceChain } from '../../hooks'
 import { TrendingCollections } from 'components/home/TrendingCollectionsList'
-import round from 'utils/round'
 import { PercentChange } from 'components/primitives/PercentChange'
 
 type Props = {
