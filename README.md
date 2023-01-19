@@ -60,6 +60,9 @@ Reservoir Market v2 is lightly configurable with the configurations below. You c
 | NEXT_PUBLIC_ALCHEMY_ID | `true` | Alchemy API key required for removing rate limiting restrictions. [Get your own API key here](https://docs.alchemy.com/alchemy/introduction/getting-started#1.create-an-alchemy-key). | 123e4567-e89b-12d3-a456-426614174000 |
 | NEXT_PUBLIC_COLLECTION_SET_ID | `false` | Use this to configure a community marketplace. Generate your collection set ID [here](https://docs.reservoir.tools/reference/postcollectionssetsv1). | f566ba09c14f56aedeed3f77e3ae7f5ff28b9177714d3827a87b7a182f8f90ff |
 | NEXT_PUBLIC_COMMUNITY | `false` | Use this to configure a community marketplace. Note: Community IDs are only available for certain communities. | artblocks |
+| NEXT_PUBLIC_NORMALIZE_ROYALTIES | `false` | Enables royalty normalization. Refer to [docs](https://docs.reservoir.tools/docs/normalized-royalties) for more info. | true/false |
+| NEXT_PUBLIC_DATADOG_CLIENT_TOKEN | `false` | Datadog client token for configuring analytics. | pubdaddswww4dad449dadas12ada123bae |
+| NEXT_PUBLIC_DATADOG_APPLICATION_ID | `false` | Datadog application id for configuring analytics. | 123cccbb-1234-1111-4411-abc12345612afgds |
 
 ### Run the App
 
