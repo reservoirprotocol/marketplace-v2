@@ -59,11 +59,13 @@ export const PriceData: FC<Props> = ({ token }) => {
             logoHeight={20}
             maximumFractionDigits={4}
           />
-          <Text style="body2" css={{ color: '$gray11' }} ellipsify>
-            {formatDollar(
-              token?.market?.floorAsk?.price?.amount?.usd as number
-            )}
-          </Text>
+          {token?.market?.floorAsk?.price?.amount?.usd && (
+            <Text style="body2" css={{ color: '$gray11' }} ellipsify>
+              {formatDollar(
+                token?.market?.floorAsk?.price?.amount?.usd as number
+              )}
+            </Text>
+          )}
         </Flex>
         {listSourceName && (
           <a
@@ -104,9 +106,11 @@ export const PriceData: FC<Props> = ({ token }) => {
             logoHeight={20}
             maximumFractionDigits={4}
           />
-          <Text style="body2" css={{ color: '$gray11' }} ellipsify>
-            {formatDollar(token?.market?.topBid?.price?.amount?.usd)}
-          </Text>
+          {token?.market?.topBid?.price?.amount?.usd && (
+            <Text style="body2" css={{ color: '$gray11' }} ellipsify>
+              {formatDollar(token?.market?.topBid?.price?.amount?.usd)}
+            </Text>
+          )}
         </Flex>
         {offerSourceName && (
           <a
