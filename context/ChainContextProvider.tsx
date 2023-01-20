@@ -45,17 +45,27 @@ const ChainContextProvider: FC<any> = ({ children }) => {
       if (chainId === chain?.id) {
         return
       }
+      const routePrefix = router.query.chain
+      const routeChain = supportedChains.find(
+        (chain) => chain.routePrefix === routePrefix
+      )
       if (chain && switchNetworkAsync) {
         switchNetworkAsync(+chainId)
           .then(({ id: newChainId }) => {
-            if (newChainId === +chainId) {
+            if (
+              routePrefix &&
+              newChainId === +chainId &&
+              routeChain?.id !== +chainId
+            ) {
               router.push('/')
             }
           })
           .catch(() => {})
       } else {
         setLastSelectedChain(+chainId)
-        router.push('/')
+        if (routePrefix && routeChain?.id !== +chainId) {
+          router.push('/')
+        }
         if (typeof window !== 'undefined') {
           localStorage.setItem('reservoir.lastChainId', `${chainId}`)
         }
