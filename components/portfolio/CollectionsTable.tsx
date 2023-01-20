@@ -19,10 +19,10 @@ import { useMarketplaceChain, useMounted } from 'hooks'
 import CollectionsTableTimeToggle, {
   CollectionsTableSortingOption,
 } from './CollectionsTableTimeToggle'
-import round from 'utils/round'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import { PercentChange } from 'components/primitives/PercentChange'
 
 type Props = {
   address: Address | undefined
@@ -34,7 +34,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
-    useState<CollectionsTableSortingOption>('allTime')
+    useState<CollectionsTableSortingOption>('1day')
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
@@ -182,9 +182,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
             {sortByTime != 'allTime' &&
               collection?.collection?.volumeChange && (
                 <PercentChange
-                  percent={
-                    collection?.collection?.volumeChange[sortByTime] as number
-                  }
+                  value={collection?.collection?.volumeChange[sortByTime]}
                 />
               )}
           </Flex>
@@ -245,9 +243,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
           />
           {sortByTime != 'allTime' && collection?.collection?.volumeChange && (
             <PercentChange
-              percent={
-                collection?.collection?.volumeChange[sortByTime] as number
-              }
+              value={collection?.collection?.volumeChange[sortByTime]}
             />
           )}
         </Flex>
@@ -316,25 +312,3 @@ const TableHeading = () => (
     </TableCell>
   </HeaderRow>
 )
-
-type PercentChangeProps = {
-  percent: number
-}
-
-const PercentChange = ({ percent }: PercentChangeProps) => {
-  const isPositive = round(percent, 2) >= 0
-
-  return (
-    <Flex css={{ color: isPositive ? '$green9' : '$red9' }} align="center">
-      <Text
-        style="subtitle3"
-        css={{
-          color: isPositive ? '$green11' : '$red11',
-          ml: '$1',
-        }}
-      >
-        {isPositive ? '' : '- '} {round(percent, 2)}%
-      </Text>
-    </Flex>
-  )
-}

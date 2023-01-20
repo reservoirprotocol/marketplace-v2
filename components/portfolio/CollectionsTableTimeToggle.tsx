@@ -3,21 +3,21 @@ import { FC } from 'react'
 
 export type CollectionsTableSortingOption = typeof sortingOptions[number]
 
-const sortingOptions = ['allTime', '1day', '7day', '30day'] as const
+const sortingOptions = ['1day', '7day', '30day', 'allTime'] as const
 
 const nameForSortingOption = (
   option: CollectionsTableSortingOption,
   compact: boolean
 ) => {
   switch (option) {
-    case 'allTime':
-      return compact ? 'All' : 'All Time'
     case '1day':
       return compact ? '24h' : '24 hours'
     case '7day':
       return compact ? '7d' : '7 days'
     case '30day':
       return compact ? '30d' : '30 days'
+    case 'allTime':
+      return compact ? 'All' : 'All Time'
   }
 }
 

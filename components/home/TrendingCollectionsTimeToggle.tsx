@@ -7,10 +7,10 @@ export type CollectionsSortingOption = NonNullable<
 >
 
 const sortingOptions: CollectionsSortingOption[] = [
-  'allTimeVolume',
   '1DayVolume',
   '7DayVolume',
   '30DayVolume',
+  'allTimeVolume',
 ]
 
 const nameForSortingOption = (
@@ -18,14 +18,14 @@ const nameForSortingOption = (
   compact: boolean
 ) => {
   switch (option) {
-    case 'allTimeVolume':
-      return compact ? 'All' : 'All Time'
     case '1DayVolume':
       return compact ? '24h' : '24 hours'
     case '7DayVolume':
       return compact ? '7d' : '7 days'
     case '30DayVolume':
       return compact ? '30d' : '30 days'
+    case 'allTimeVolume':
+      return compact ? 'All' : 'All Time'
   }
 }
 

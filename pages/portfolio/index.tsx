@@ -30,7 +30,7 @@ const IndexPage: NextPage = () => {
   const isMounted = useMounted()
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
-    limit: 20,
+    limit: 100,
     collection: filterCollection,
   }
 

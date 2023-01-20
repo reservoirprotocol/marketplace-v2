@@ -24,7 +24,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
   )
   const attributeHref = `/collection/${routePrefix}/${collectionId}?attributes[${attribute.key}]=${attribute.value}`
   return (
-    <Link href={attributeHref}>
+    <Link href={attributeHref} style={{ minWidth: 0 }}>
       <Flex
         direction="column"
         css={{
@@ -38,11 +38,13 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           height: '100%',
         }}
       >
-        <Text style="subtitle3" color="subtle">
+        <Text style="subtitle3" color="subtle" ellipsify>
           {attribute.key}
         </Text>
-        <Flex justify="between">
-          <Text style="subtitle2">{attribute.value}</Text>
+        <Flex justify="between" css={{ gap: '$2' }}>
+          <Text style="subtitle2" ellipsify>
+            {attribute.value}
+          </Text>
           <FormatCryptoCurrency
             amount={attribute.floorAskPrice}
             logoHeight={16}

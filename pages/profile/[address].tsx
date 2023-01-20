@@ -216,11 +216,15 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 </Flex>
                 <Grid
                   css={{
-                    gridTemplateColumns:
-                      'repeat(auto-fill, minmax(300px, 1fr))',
                     gap: '$4',
                     width: '100%',
                     pb: '$6',
+                    gridTemplateColumns:
+                      'repeat(auto-fill, minmax(200px, 1fr))',
+                    '@md': {
+                      gridTemplateColumns:
+                        'repeat(auto-fill, minmax(240px, 1fr))',
+                    },
                   }}
                 >
                   {isFetchingInitialData

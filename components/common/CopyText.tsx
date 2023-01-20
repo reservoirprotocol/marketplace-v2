@@ -25,7 +25,11 @@ const CopyText: FC<Props> = ({ children, text, css }) => {
       open={open}
       align="center"
       side="top"
-      content={<Text style="body2">{isCopied ? 'Copied!' : 'Copy'}</Text>}
+      content={
+        <Text style="body2" as="p">
+          {isCopied ? 'Copied!' : 'Copy'}
+        </Text>
+      }
     >
       <Box
         onClick={(e) => {
