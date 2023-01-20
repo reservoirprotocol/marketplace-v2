@@ -61,9 +61,6 @@ export const TrendingCollectionItem: FC<Props> = ({
         </Box>
 
         <Flex direction="column" align="end" css={{ gap: '$1' }}>
-          <Text style="subtitle3" color="subtle">
-            Volume
-          </Text>
           {volumeKey !== 'allTime' && (
             <Text css={{ color: '$green10' }} style="body2" as="p">
               {formatNumber(collection?.volumeChange?.[volumeKey])}%

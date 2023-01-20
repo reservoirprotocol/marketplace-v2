@@ -158,8 +158,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
             />
           )}
           <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h4">{ensName ? ensName : shortAddress}</Text>
-            <CopyText text={ensName ? ensName : (address as string)}>
+            <Text style="h5">{ensName ? ensName : shortAddress}</Text>
+            <CopyText text={address as string}>
               <Flex align="center" css={{ cursor: 'pointer' }}>
                 <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
                   {shortAddress}

@@ -123,7 +123,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: [ssr.tokens],
   })
 
-  const attributes = ssr?.attributes.attributes
+  const attributes = ssr?.attributes.attributes?.filter(
+    (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+  )
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&

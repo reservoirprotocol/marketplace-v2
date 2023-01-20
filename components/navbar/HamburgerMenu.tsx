@@ -99,7 +99,7 @@ const HamburgerMenu = () => {
               px: '$4',
             }}
           >
-            <CopyText text={ensName ? ensName : (address as string)}>
+            <CopyText text={address as string}>
               <Flex
                 css={{
                   justifyContent: 'space-between',
