@@ -53,7 +53,7 @@ const TrendingCollectionsList: FC<Props> = ({
             css={{
               inset: 0,
               position: 'absolute',
-              background: '$slate1',
+              background: '$neutralBg',
               opacity: 0.9,
             }}
           ></Box>
