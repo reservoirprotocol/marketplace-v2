@@ -33,7 +33,7 @@ const Tooltip = ({
       >
         <Popover.Trigger asChild>{children}</Popover.Trigger>
         <Popover.Content
-          sideOffset={12}
+          sideOffset={2}
           side="bottom"
           align="center"
           style={{ zIndex: 100, outline: 'none' }}
@@ -71,7 +71,7 @@ const Tooltip = ({
     >
       <TooltipPrimitive.Trigger asChild>{children}</TooltipPrimitive.Trigger>
       <TooltipPrimitive.Content
-        sideOffset={12}
+        sideOffset={2}
         side="bottom"
         align="center"
         style={{ zIndex: 100 }}

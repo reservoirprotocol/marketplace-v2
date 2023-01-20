@@ -160,7 +160,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           css={{
             maxWidth: '100%',
             flex: 1,
-            '@md': { maxWidth: 445 },
+            '@md': { maxWidth: 445, width: '100%' },
             position: 'relative',
             '@sm': {
               '>button': {
@@ -177,6 +177,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         >
           <Box
             css={{
+              backgroundColor: '$gray3',
+              borderRadius: 8,
               '@sm': {
                 button: {
                   height: 0,
@@ -214,6 +216,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           {token?.token?.attributes && !isSmallDevice && (
             <Grid
               css={{
+                maxWidth: '100%',
+                width: '100%',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '$3',
                 mt: 24,
@@ -238,6 +242,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             width: '100%',
             '@md': {
               px: 0,
+              maxWidth: '60%',
             },
           }}
         >
@@ -327,7 +332,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Text style="h4">{tokenName}</Text>
             {flagged && (
               <Tooltip
-                content={<Text style="body2">Not tradeable on OpenSea</Text>}
+                content={
+                  <Text style="body2" as="p">
+                    Not tradeable on OpenSea
+                  </Text>
+                }
               >
                 <Text css={{ color: '$red10' }}>
                   <FontAwesomeIcon

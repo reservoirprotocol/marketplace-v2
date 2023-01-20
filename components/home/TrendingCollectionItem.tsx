@@ -1,9 +1,9 @@
 import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
-import { formatNumber } from '../../utils/numbers'
 import Link from 'next/link'
 import { FC } from 'react'
 import { useMarketplaceChain } from '../../hooks'
 import { TrendingCollections } from 'components/home/TrendingCollectionsList'
+import { PercentChange } from 'components/primitives/PercentChange'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
@@ -37,7 +37,7 @@ export const TrendingCollectionItem: FC<Props> = ({
               css={{
                 display: 'inline-block',
               }}
-              style="h6"
+              style="subtitle1"
               ellipsify
             >
               {collection?.name}
@@ -56,6 +56,7 @@ export const TrendingCollectionItem: FC<Props> = ({
               decimals={collection?.floorAsk?.price?.currency?.decimals}
               logoHeight={12}
               maximumFractionDigits={2}
+              textStyle="subtitle2"
             />
           </Flex>
         </Box>
@@ -64,16 +65,18 @@ export const TrendingCollectionItem: FC<Props> = ({
           <Text style="subtitle3" color="subtle">
             Volume
           </Text>
-          {volumeKey !== 'allTime' && (
-            <Text css={{ color: '$green10' }} style="body2" as="p">
-              {formatNumber(collection?.volumeChange?.[volumeKey])}%
-            </Text>
-          )}
           <FormatCryptoCurrency
             amount={collection?.volume?.[volumeKey]}
             maximumFractionDigits={1}
             logoHeight={12}
+            textStyle="subtitle1"
           />
+          {volumeKey !== 'allTime' && (
+            <PercentChange
+              value={collection?.volumeChange?.[volumeKey]}
+              decimals={1}
+            />
+          )}
         </Flex>
       </Flex>
     </Link>
