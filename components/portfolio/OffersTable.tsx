@@ -232,7 +232,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 {criteriaData?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{criteriaData?.collection?.id}
+                #{criteriaData?.token?.tokenId}
               </Text>
             </Flex>
           </Flex>
