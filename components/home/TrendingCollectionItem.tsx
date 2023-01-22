@@ -62,9 +62,6 @@ export const TrendingCollectionItem: FC<Props> = ({
         </Box>
 
         <Flex direction="column" align="end" css={{ gap: '$1' }}>
-          <Text style="subtitle3" color="subtle">
-            Volume
-          </Text>
           <FormatCryptoCurrency
             amount={collection?.volume?.[volumeKey]}
             maximumFractionDigits={1}
