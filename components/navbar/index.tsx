@@ -98,7 +98,7 @@ const Navbar = () => {
                 <img src="/logo.svg" style={{ width: '100%' }} />
               ) : (
                 <img
-                  src="/reservoirMarketLogoLight.svg"
+                  src="/logo-black.svg"
                   style={{ width: '100%' }}
                 />
               )}
