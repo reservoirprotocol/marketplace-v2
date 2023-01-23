@@ -95,7 +95,7 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
-                <img src="/logo.svg" style={{ width: '100%' }} />
+                <img src="/logo-white.svg" style={{ width: '100%' }} />
               ) : (
                 <img
                   src="/logo-black.svg"
