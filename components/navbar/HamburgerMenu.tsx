@@ -1,4 +1,5 @@
 import {
+  Anchor,
   Box,
   Button,
   Flex,
@@ -11,7 +12,6 @@ import {
   faBars,
   faXmark,
   faRightFromBracket,
-  faCopy,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -21,13 +21,11 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
-import CopyText from 'components/common/CopyText'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
   const { data: balance } = useBalance({ address })
   const {
-    name: ensName,
     avatar: ensAvatar,
     shortAddress,
     shortName: shortEnsName,
@@ -99,13 +97,12 @@ const HamburgerMenu = () => {
               px: '$4',
             }}
           >
-            <CopyText text={ensName ? ensName : (address as string)}>
+            <Link href={`/profile/${address}`} legacyBehavior>
               <Flex
                 css={{
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   cursor: 'pointer',
-                  borderBottom: '1px solid $gray4',
                   pb: '$4',
                 }}
               >
@@ -118,16 +115,13 @@ const HamburgerMenu = () => {
                       seed={jsNumberForAddress(address as string)}
                     />
                   )}
-                  <Text style="subtitle1" color="subtle" css={{ ml: '$2' }}>
+                  <Text style="subtitle1" css={{ ml: '$2' }}>
                     {shortEnsName ? shortEnsName : shortAddress}
                   </Text>
                 </Flex>
-                <Box css={{ color: '$gray10' }}>
-                  <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                </Box>
               </Flex>
-            </CopyText>
-            <Link href={`/profile/${address}`} legacyBehavior>
+            </Link>
+            <Link href="/" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -137,7 +131,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Profile
+                Explore
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
@@ -150,7 +144,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Sell
+                Portfolio
               </Text>
             </Link>
             <Flex
@@ -204,14 +198,57 @@ const HamburgerMenu = () => {
           </Flex>
         ) : (
           <Flex
+            direction="column"
+            justify="between"
             css={{
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
               height: '100%',
-              py: '$5',
+              pb: '$5',
               px: '$4',
             }}
           >
+            <Flex direction="column">
+              <Link href="/" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                    width: '100%',
+                  }}
+                >
+                  Explore
+                </Text>
+              </Link>
+              <Link href="/portfolio" legacyBehavior>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    borderBottom: '1px solid $gray4',
+                    cursor: 'pointer',
+                    pb: '$4',
+                    pt: '24px',
+                    width: '100%',
+                  }}
+                >
+                  Portfolio
+                </Text>
+              </Link>
+              <Anchor
+                href="https://docs.reservoir.tools/docs"
+                target="_blank"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                <Text style="subtitle1">Docs</Text>
+              </Anchor>
+            </Flex>
             <Box>
               <ConnectWalletButton />
             </Box>

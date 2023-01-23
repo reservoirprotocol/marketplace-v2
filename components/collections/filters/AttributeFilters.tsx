@@ -19,7 +19,11 @@ export const AttributeFilters: FC<Props> = ({
   setOpen,
   scrollToTop,
 }) => {
-  if ((attributes && attributes?.length === 0) || attributes === null) {
+  if (
+    (attributes && attributes?.length === 0) ||
+    attributes === null ||
+    attributes === undefined
+  ) {
     return null
   }
   return (

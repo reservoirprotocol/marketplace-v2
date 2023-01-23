@@ -95,7 +95,11 @@ export const MobileAttributeFilters: FC<Props> = ({
     </Flex>
   )
 
-  if ((attributes && attributes?.length === 0) || attributes === null) {
+  if (
+    (attributes && attributes?.length === 0) ||
+    attributes === null ||
+    attributes === undefined
+  ) {
     return null
   }
 
