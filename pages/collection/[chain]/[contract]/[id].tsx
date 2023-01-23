@@ -113,7 +113,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const pageTitle = token?.token?.name
     ? token.token.name
-    : `${token?.token?.tokenId} - ${token?.token?.collection}`
+    : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
 
   return (
     <Layout>
