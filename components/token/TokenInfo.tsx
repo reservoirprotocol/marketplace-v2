@@ -209,7 +209,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
             >
               Token ID
             </Text>
-            <Text style="subtitle1" ellipsify>
+            <Text style="subtitle1" ellipsify css={{ maxWidth: '100%' }}>
               {token?.token?.tokenId}
             </Text>
           </Flex>
