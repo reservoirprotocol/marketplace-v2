@@ -107,8 +107,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const tokenName = `${token?.token?.name || `#${token?.token?.tokenId}`}`
 
+  const hasAttributes =
+    token?.token?.attributes && token?.token?.attributes.length > 0
+
   useEffect(() => {
-    isMounted && isSmallDevice ? setTabValue('attributes') : setTabValue('info')
+    isMounted && isSmallDevice && hasAttributes
+      ? setTabValue('attributes')
+      : setTabValue('info')
   }, [isSmallDevice])
 
   const pageTitle = token?.token?.name
@@ -243,6 +248,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             '@md': {
               px: 0,
               maxWidth: '60%',
+              overflow: 'hidden',
             },
           }}
         >
@@ -329,7 +335,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             </Button>
           </Flex>
           <Flex align="center" css={{ gap: '$2' }}>
-            <Text style="h4">{tokenName}</Text>
+            <Text style="h4" css={{ wordBreak: 'break-all' }}>
+              {tokenName}
+            </Text>
             {flagged && (
               <Tooltip
                 content={
@@ -383,7 +391,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 onValueChange={(value) => setTabValue(value)}
               >
                 <TabsList>
-                  {isMounted && isSmallDevice && (
+                  {isMounted && isSmallDevice && hasAttributes && (
                     <TabsTrigger value="attributes">Attributes</TabsTrigger>
                   )}
                   <TabsTrigger value="info">Info</TabsTrigger>
