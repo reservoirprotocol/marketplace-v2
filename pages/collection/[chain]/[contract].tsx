@@ -60,6 +60,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const [playingElement, setPlayingElement] = useState<
@@ -116,11 +117,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const {
     data: tokens,
     mutate,
+    resetCache,
     fetchNextPage,
     isFetchingInitialData,
     hasNextPage,
   } = useTokens(tokenQuery, {
-    fallbackData: [ssr.tokens],
+    fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
   const attributes = ssr?.attributes.attributes?.filter(
@@ -140,6 +142,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
+
+  useEffect(() => {
+    if (isMounted && initialTokenFallbackData) {
+      setInitialTokenFallbackData(false)
+    }
+    resetCache()
+  }, [router.query])
 
   return (
     <Layout>
