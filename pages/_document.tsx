@@ -29,7 +29,7 @@ class MyDocument extends Document {
         <link
           rel="shortcut icon"
           type="image/svg"
-          href="https://market.reservoir.tools/reservoir.svg"
+          href="https://marketplace.reservoir.tools/reservoir.svg"
         />
         <title>Reservoir Market | Open Source NFT Marketplace</title>
         <meta
