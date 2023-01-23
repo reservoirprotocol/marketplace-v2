@@ -95,7 +95,7 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
-                <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
+                <img src="/logo.svg" style={{ width: '100%' }} />
               ) : (
                 <img
                   src="/reservoirMarketLogoLight.svg"
@@ -118,9 +118,6 @@ const Navbar = () => {
             </Link>
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
-            </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
             </Link>
           </Flex>
         </Flex>
