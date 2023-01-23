@@ -120,6 +120,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     resetCache,
     fetchNextPage,
     isFetchingInitialData,
+    isFetchingPage,
     hasNextPage,
   } = useTokens(tokenQuery, {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
@@ -144,10 +145,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
+    resetCache()
     if (isMounted && initialTokenFallbackData) {
       setInitialTokenFallbackData(false)
     }
-    resetCache()
   }, [router.query])
 
   return (
@@ -338,9 +339,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           />
                         ))}
                     <Box ref={loadMoreRef}>
-                      {hasNextPage && !isFetchingInitialData && <LoadingCard />}
+                      {(hasNextPage || isFetchingPage) &&
+                        !isFetchingInitialData && <LoadingCard />}
                     </Box>
-                    {hasNextPage && (
+                    {(hasNextPage || isFetchingPage) && (
                       <>
                         {Array(10)
                           .fill(null)
