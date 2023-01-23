@@ -64,6 +64,8 @@ Reservoir Market v2 is lightly configurable with the configurations below. You c
 | NEXT_PUBLIC_DATADOG_CLIENT_TOKEN | `false` | Datadog client token for configuring analytics. | pubdaddswww4dad449dadas12ada123bae |
 | NEXT_PUBLIC_DATADOG_APPLICATION_ID | `false` | Datadog application id for configuring analytics. | 123cccbb-1234-1111-4411-abc12345612afgds |
 
+In addition to the configuration above we've also added comments prefixed with `CONFIGURABLE` throughout the app pointing out some pieces of code where you could customize functionality. After cloning the app make sure to search the repo for the aforementioned prefix.
+
 ### Run the App
 
 Once you have your setup ready, run:
