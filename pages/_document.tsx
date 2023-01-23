@@ -55,7 +55,7 @@ class MyDocument extends Document {
         {/* https://www.opengraph.xyz/ */}
         <meta
           name="og:title"
-          content="Fellowship | Marketplace""
+          content="Fellowship | Marketplace"
         />
         <meta property="og:type" content="website" />
         <meta property="og:determiner" content="the" />
