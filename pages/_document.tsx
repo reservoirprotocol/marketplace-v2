@@ -14,6 +14,9 @@ class MyDocument extends Document {
   }
 
   render() {
+    const description =
+      'Reservoir Market is an open source NFT marketplace built with Reservoir.'
+    const ogImage = 'https://marketplace.reservoir.tools/og-image.png'
     return (
       <Html>
         <Head>
@@ -32,23 +35,17 @@ class MyDocument extends Document {
           href="https://marketplace.reservoir.tools/reservoir.svg"
         />
         <title>Reservoir Market | Open Source NFT Marketplace</title>
-        <meta
-          name="description"
-          content="Reservoir Market is an open source NFT marketplace built with Reservoir."
-        />
+        <meta name="description" content={description} />
         <meta name="keywords" content="NFT, API, Protocol" />
         {/* Twitter */}
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
-        {/* <meta name="twitter:image" content="Reservoir Market | Open Source NFT Marketplace" /> */}
+        <meta name="twitter:image" content={ogImage} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
           content="Reservoir Market | Open Source NFT Marketplace"
         />
-        <meta
-          name="twitter:description"
-          content="Reservoir Market is an open source NFT marketplace built with Reservoir."
-        />
+        <meta name="twitter:description" content={description} />
         <meta name="twitter:site" content="@reservoir0x" />
 
         {/* OG - https://ogp.me/ */}
@@ -60,15 +57,12 @@ class MyDocument extends Document {
         <meta property="og:type" content="website" />
         <meta property="og:determiner" content="the" />
         <meta property="og:locale" content="en" />
-        <meta
-          property="og:description"
-          content="Reservoir Market is an open source NFT marketplace built with Reservoir."
-        />
+        <meta property="og:description" content={description} />
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
-        {/* <meta property="og:image" content={OG_IMAGE} /> */}
+        <meta property="og:image" content={ogImage} />
         <meta property="og:image:type" content="image/png" />
-        <meta property="og:image:width" content="1280" />
-        <meta property="og:image:height" content="640" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Reservoir Market Banner" />
 
         {/* Reservoir Meta Tags: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
