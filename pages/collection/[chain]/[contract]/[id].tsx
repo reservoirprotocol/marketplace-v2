@@ -375,7 +375,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <RarityRank
                 token={token}
                 collection={collection}
-                collectionAttributes={ssr.attributes.attributes}
+                collectionAttributes={ssr.attributes?.attributes}
               />
               <PriceData token={token} />
               {isMounted && (
@@ -446,7 +446,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
+    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
@@ -491,13 +491,17 @@ export const getStaticProps: GetStaticProps<{
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
-  const attributesResponse = await fetcher(
-    `${reservoirBaseUrl}/collections/${collectionId}/attributes/all/v2`,
-    {},
-    headers
-  )
-
-  const attributes: Props['ssr']['attributes'] = attributesResponse['data']
+  let attributes: Props['ssr']['attributes'] | undefined
+  try {
+    const attributesResponse = await fetcher(
+      `${reservoirBaseUrl}/collections/${collectionId}/attributes/all/v2`,
+      {},
+      headers
+    )
+    attributes = attributesResponse['data']
+  } catch (e) {
+    console.log('Failed to load attributes')
+  }
 
   return {
     props: { collectionId, id, ssr: { collection, tokens, attributes } },

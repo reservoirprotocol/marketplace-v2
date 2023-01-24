@@ -123,7 +123,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: [ssr.tokens],
   })
 
-  const attributes = ssr?.attributes.attributes?.filter(
+  const attributes = ssr?.attributes?.attributes?.filter(
     (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
   )
 
@@ -416,7 +416,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
+    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
   id: string | undefined
 }> = async ({ params }) => {
@@ -459,14 +459,17 @@ export const getStaticProps: GetStaticProps<{
   )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
-
-  const attributesResponse = await fetcher(
-    `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
-    {},
-    headers
-  )
-
-  const attributes: Props['ssr']['attributes'] = attributesResponse['data']
+  let attributes: Props['ssr']['attributes'] | undefined
+  try {
+    const attributesResponse = await fetcher(
+      `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
+      {},
+      headers
+    )
+    attributes = attributesResponse['data']
+  } catch (e) {
+    console.log('Failed to load attributes')
+  }
 
   return {
     props: { ssr: { collection, tokens, attributes }, id },
