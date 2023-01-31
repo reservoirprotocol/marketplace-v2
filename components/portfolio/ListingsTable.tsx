@@ -23,6 +23,7 @@ import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTag } from '@fortawesome/free-solid-svg-icons'
 import { COMMUNITY } from 'pages/_app'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = {
   address: Address | undefined
@@ -292,6 +293,9 @@ const TableHeading = () => (
       display: 'none',
       '@md': { display: 'grid' },
       gridTemplateColumns: desktopTemplateColumns,
+      position: 'sticky',
+      top: NAVBAR_HEIGHT,
+      backgroundColor: '$neutralBg',
     }}
   >
     {headings.map((heading) => (

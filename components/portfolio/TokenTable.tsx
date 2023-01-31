@@ -26,6 +26,7 @@ import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type Props = {
   address: Address | undefined
@@ -352,6 +353,9 @@ const TableHeading = () => (
       display: 'none',
       '@md': { display: 'grid' },
       gridTemplateColumns: desktopTemplateColumns,
+      position: 'sticky',
+      top: NAVBAR_HEIGHT,
+      backgroundColor: '$neutralBg',
     }}
   >
     <TableCell>
