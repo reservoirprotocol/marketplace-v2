@@ -11,6 +11,7 @@ type Props = {
   setOpen: (open: boolean) => void
   attributes: ReturnType<typeof useAttributes>['data'] | undefined
   scrollToTop: () => void
+  resetCache: () => Promise<void>
 }
 
 export const AttributeFilters: FC<Props> = ({
@@ -18,6 +19,7 @@ export const AttributeFilters: FC<Props> = ({
   open,
   setOpen,
   scrollToTop,
+  resetCache,
 }) => {
   if (
     (attributes && attributes?.length === 0) ||
@@ -62,6 +64,7 @@ export const AttributeFilters: FC<Props> = ({
                   key={attribute.key}
                   attribute={attribute}
                   scrollToTop={scrollToTop}
+                  resetCache={resetCache}
                 />
               ))}
         </Box>

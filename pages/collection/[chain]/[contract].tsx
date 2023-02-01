@@ -140,12 +140,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      // fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
-    resetCache()
+    // resetCache()
     if (isMounted && initialTokenFallbackData) {
       setInitialTokenFallbackData(false)
     }
@@ -256,6 +256,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     open={attributeFiltersOpen}
                     setOpen={setAttributeFiltersOpen}
                     scrollToTop={scrollToTop}
+                    resetCache={resetCache}
                   />
                 )}
                 <Box
@@ -352,7 +353,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       </>
                     )}
                   </Grid>
-                  {tokens.length == 0 && (
+                  {tokens.length == 0 && !isFetchingPage && (
                     <Flex
                       direction="column"
                       align="center"

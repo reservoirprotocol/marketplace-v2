@@ -9,9 +9,14 @@ import { addParam, hasParam, removeParam } from 'utils/router'
 type Props = {
   attribute: NonNullable<ReturnType<typeof useAttributes>['data']>[0]
   scrollToTop: () => void
+  resetCache: () => Promise<void>
 }
 
-export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
+export const AttributeSelector: FC<Props> = ({
+  attribute,
+  scrollToTop,
+  resetCache,
+}) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
@@ -90,7 +95,9 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
                       `attributes[${attribute.key}]`,
                       value.value
                     )}
-                    onCheckedChange={(checked) => {
+                    onCheckedChange={async (checked) => {
+                      await resetCache()
+                      console.log('reset cache')
                       if (checked) {
                         addParam(
                           router,
