@@ -17,7 +17,10 @@ const LoadingCard = () => {
         overflow: 'hidden',
         background: '$gray6',
         height: '100%',
-        minHeight: 400,
+        minHeight: 332,
+        '@md': {
+          minHeight: 372,
+        },
       }}
     >
       <Flex

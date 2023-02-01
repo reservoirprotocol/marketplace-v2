@@ -231,9 +231,6 @@ export default ({
         }}
         buttonProps={{
           corners: 'square',
-          onClick: (e) => {
-            // e.stopPropagation()
-          },
         }}
       />
     </Box>
