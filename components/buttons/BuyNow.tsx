@@ -48,6 +48,7 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   return !canBuy ? (
     <Button
       css={buttonCss}
+      aria-haspopup="dialog"
       color="primary"
       onClick={async () => {
         if (isInTheWrongNetwork && switchNetworkAsync) {
