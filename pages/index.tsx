@@ -2,8 +2,7 @@ import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useState } from 'react'
-import useInfiniteScroll from 'react-infinite-scroll-hook'
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
 } from 'components/home/TrendingCollectionsTimeToggle'
@@ -16,6 +15,7 @@ import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
+import { useIntersectionObserver } from 'usehooks-ts'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -49,14 +49,15 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collections = collections?.slice(0, 12)
   }
 
-  const [sentryRef] = useInfiniteScroll({
-    rootMargin: '0px 0px 100px 0px',
-    loading: isFetchingPage,
-    hasNextPage: hasNextPage && !showViewAllButton,
-    onLoadMore: () => {
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+
+  useEffect(() => {
+    let isVisible = !!loadMoreObserver?.isIntersecting
+    if (isVisible) {
       fetchNextPage()
-    },
-  } as any)
+    }
+  }, [loadMoreObserver?.isIntersecting])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList
@@ -137,7 +138,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               View All
             </Button>
           )}
-          {!showViewAllButton && <div ref={sentryRef}></div>}
+          {!showViewAllButton && <Box ref={loadMoreRef}></Box>}
         </Flex>
         <Footer />
       </Box>
