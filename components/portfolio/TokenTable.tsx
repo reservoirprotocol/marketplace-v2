@@ -139,7 +139,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         }}
       >
         <Link
-          href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+          href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -248,7 +248,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+          href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
