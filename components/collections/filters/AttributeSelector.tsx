@@ -1,6 +1,6 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
+import { useAttributes, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
@@ -9,14 +9,9 @@ import { addParam, hasParam, removeParam } from 'utils/router'
 type Props = {
   attribute: NonNullable<ReturnType<typeof useAttributes>['data']>[0]
   scrollToTop: () => void
-  resetCache: () => Promise<void>
 }
 
-export const AttributeSelector: FC<Props> = ({
-  attribute,
-  scrollToTop,
-  resetCache,
-}) => {
+export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
@@ -95,9 +90,7 @@ export const AttributeSelector: FC<Props> = ({
                       `attributes[${attribute.key}]`,
                       value.value
                     )}
-                    onCheckedChange={async (checked) => {
-                      await resetCache()
-                      console.log('reset cache')
+                    onCheckedChange={(checked) => {
                       if (checked) {
                         addParam(
                           router,

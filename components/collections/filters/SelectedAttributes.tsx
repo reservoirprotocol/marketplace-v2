@@ -4,6 +4,7 @@ import { FC, useEffect, useState } from 'react'
 import { Button, Flex, Text } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 
 type Attribute = {
   key: string
@@ -50,7 +51,9 @@ const SelectedAttributes: FC = () => {
       {filters.map(({ key, value }) => (
         <Button
           key={key + value}
-          onClick={() => removeParam(router, `attributes[${key}]`, value)}
+          onClick={() => {
+            removeParam(router, `attributes[${key}]`, value)
+          }}
           color="gray4"
           css={{ mr: '$4', mb: '24px' }}
           size="small"
@@ -65,7 +68,9 @@ const SelectedAttributes: FC = () => {
 
       {filters.length > 1 && (
         <Button
-          onClick={() => clearAllAttributes(router)}
+          onClick={() => {
+            clearAllAttributes(router)
+          }}
           color="ghost"
           css={{ color: '$primary11', fontWeight: 500, mb: '24px' }}
         >

@@ -117,7 +117,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const {
     data: tokens,
     mutate,
-    resetCache,
     fetchNextPage,
     isFetchingInitialData,
     isFetchingPage,
@@ -140,12 +139,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      // fetchNextPage()
+      fetchNextPage()
     }
   }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
-    // resetCache()
     if (isMounted && initialTokenFallbackData) {
       setInitialTokenFallbackData(false)
     }
@@ -256,7 +254,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     open={attributeFiltersOpen}
                     setOpen={setAttributeFiltersOpen}
                     scrollToTop={scrollToTop}
-                    resetCache={resetCache}
                   />
                 )}
                 <Box
@@ -343,15 +340,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       {(hasNextPage || isFetchingPage) &&
                         !isFetchingInitialData && <LoadingCard />}
                     </Box>
-                    {(hasNextPage || isFetchingPage) && (
-                      <>
-                        {Array(10)
-                          .fill(null)
-                          .map((_, index) => (
-                            <LoadingCard key={`loading-card-${index}`} />
-                          ))}
-                      </>
-                    )}
+                    {(hasNextPage || isFetchingPage) &&
+                      !isFetchingInitialData && (
+                        <>
+                          {Array(10)
+                            .fill(null)
+                            .map((_, index) => (
+                              <LoadingCard key={`loading-card-${index}`} />
+                            ))}
+                        </>
+                      )}
                   </Grid>
                   {tokens.length == 0 && !isFetchingPage && (
                     <Flex
@@ -485,7 +483,7 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: { ssr: { collection, tokens, attributes }, id },
-    revalidate: 20,
+    revalidate: 60,
   }
 }
 
