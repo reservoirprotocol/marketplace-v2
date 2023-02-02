@@ -459,7 +459,6 @@ export const getStaticProps: GetStaticProps<{
 
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
-      // id: collectionId,
       contract: contract,
       includeTopBid: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
