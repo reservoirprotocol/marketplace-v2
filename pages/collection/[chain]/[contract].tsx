@@ -481,7 +481,7 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: { ssr: { collection, tokens, attributes }, id },
-    revalidate: 60,
+    revalidate: 30,
   }
 }
 
