@@ -63,9 +63,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const [tabValue, setTabValue] = useState('info')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { proxyApi } = useMarketplaceChain()
+  const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: collections } = useCollections(
     {
-      id: collectionId,
+      contract: contract,
     },
     {
       fallbackData: [ssr.collection],
@@ -73,7 +74,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const collection = collections && collections[0] ? collections[0] : null
 
-  const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: tokens, mutate } = useTokens(
     {
       tokens: [`${contract}:${id}`],
