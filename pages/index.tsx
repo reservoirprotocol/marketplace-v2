@@ -57,7 +57,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList

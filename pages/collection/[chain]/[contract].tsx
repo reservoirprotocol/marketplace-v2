@@ -139,7 +139,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   useEffect(() => {
     if (isMounted && initialTokenFallbackData) {

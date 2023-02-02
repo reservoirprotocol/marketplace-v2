@@ -124,7 +124,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   if (!isMounted) {
     return null
