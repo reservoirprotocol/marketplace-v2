@@ -67,9 +67,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     HTMLAudioElement | HTMLVideoElement | null
   >()
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
@@ -117,7 +115,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const {
     data: tokens,
     mutate,
-    resetCache,
     fetchNextPage,
     isFetchingInitialData,
     isFetchingPage,
@@ -142,10 +139,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   useEffect(() => {
-    resetCache()
     if (isMounted && initialTokenFallbackData) {
       setInitialTokenFallbackData(false)
     }
@@ -342,17 +338,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       {(hasNextPage || isFetchingPage) &&
                         !isFetchingInitialData && <LoadingCard />}
                     </Box>
-                    {(hasNextPage || isFetchingPage) && (
-                      <>
-                        {Array(10)
-                          .fill(null)
-                          .map((_, index) => (
-                            <LoadingCard key={`loading-card-${index}`} />
-                          ))}
-                      </>
-                    )}
+                    {(hasNextPage || isFetchingPage) &&
+                      !isFetchingInitialData && (
+                        <>
+                          {Array(10)
+                            .fill(null)
+                            .map((_, index) => (
+                              <LoadingCard key={`loading-card-${index}`} />
+                            ))}
+                        </>
+                      )}
                   </Grid>
-                  {tokens.length == 0 && (
+                  {tokens.length == 0 && !isFetchingPage && (
                     <Flex
                       direction="column"
                       align="center"
@@ -484,7 +481,7 @@ export const getStaticProps: GetStaticProps<{
 
   return {
     props: { ssr: { collection, tokens, attributes }, id },
-    revalidate: 20,
+    revalidate: 30,
   }
 }
 

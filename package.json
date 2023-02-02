@@ -36,7 +36,6 @@
     "react": "^18.0",
     "react-dom": "^18.0",
     "react-hotkeys-hook": "^4.0.4",
-    "react-infinite-scroll-hook": "^4.0.4",
     "react-jazzicon": "^1.0.4",
     "react-markdown": "^8.0.4",
     "react-responsive": "^9.0.0",

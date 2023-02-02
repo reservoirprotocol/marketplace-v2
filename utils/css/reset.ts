@@ -24,7 +24,6 @@ export const reset = {
     '-moz-tab-size': 4 /* 3 */,
     tabSize: 4 /* 3 */,
     fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"` /* 4 */,
-    overflowY: 'scroll'
   },
 
   /*
@@ -38,6 +37,7 @@ export const reset = {
     height: '100%',
     width: '100%',
     '-webkit-font-smoothing': 'antialiased',
+    overflowY: 'overlay',
   },
 
   /*

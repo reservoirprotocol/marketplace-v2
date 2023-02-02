@@ -16,7 +16,6 @@ import {
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAccount } from 'wagmi'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import { constants } from 'ethers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -52,9 +51,7 @@ type Props = {
 
 export const ActivityTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const activities = data.data
 
@@ -63,7 +60,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
     if (isVisible) {
       data.fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [loadMoreObserver?.isIntersecting, data.isFetchingPage])
 
   return (
     <>
