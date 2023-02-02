@@ -63,9 +63,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const [tabValue, setTabValue] = useState('info')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { proxyApi } = useMarketplaceChain()
+  const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: collections } = useCollections(
     {
-      id: collectionId,
+      contract: contract,
     },
     {
       fallbackData: [ssr.collection],
@@ -73,7 +74,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const collection = collections && collections[0] ? collections[0] : null
 
-  const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: tokens, mutate } = useTokens(
     {
       tokens: [`${contract}:${id}`],
@@ -255,7 +255,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${router.query.chain}/${collectionId}`}
+                href={`/collection/${router.query.chain}/${collection?.id}`}
                 legacyBehavior={true}
               >
                 <Anchor
@@ -455,9 +455,11 @@ export const getStaticProps: GetStaticProps<{
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
 
+  const contract = collectionId ? collectionId?.split(':')[0] : undefined
+
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
-      id: collectionId,
+      contract: contract,
       includeTopBid: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
@@ -474,7 +476,6 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
   const collection: Props['ssr']['collection'] = collectionsResponse['data']
-  const contract = collectionId ? collectionId?.split(':')[0] : undefined
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],

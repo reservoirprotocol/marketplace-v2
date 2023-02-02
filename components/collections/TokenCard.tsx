@@ -63,7 +63,7 @@ export default ({
     >
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
         onClick={(e) => {
           if (!showPreview || (e.target as HTMLElement)?.tagName === 'BUTTON') {
             e.preventDefault()
@@ -103,7 +103,7 @@ export default ({
         </Box>
       </Link>
       <Link
-        href={`/collection/${routePrefix}/${token?.token?.collection?.id}/${token?.token?.tokenId}`}
+        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
