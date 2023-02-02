@@ -78,9 +78,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   }
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,

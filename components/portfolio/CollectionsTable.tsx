@@ -37,9 +37,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     useState<CollectionsTableSortingOption>('1day')
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     includeTopBid: true,

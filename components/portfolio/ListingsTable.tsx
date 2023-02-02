@@ -32,9 +32,7 @@ const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
 export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   let listingsQuery: Parameters<typeof useListings>['0'] = {
     maker: address,

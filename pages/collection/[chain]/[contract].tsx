@@ -67,9 +67,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     HTMLAudioElement | HTMLVideoElement | null
   >()
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 

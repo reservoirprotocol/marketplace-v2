@@ -36,9 +36,7 @@ const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 
 export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {
-    rootMargin: '0px 0px 300px 0px',
-  })
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
