@@ -33,6 +33,14 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
+export const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
+  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
+  : undefined
+
+export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
+  ? process.env.NEXT_PUBLIC_COMMUNITY
+  : undefined
+
 const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 
