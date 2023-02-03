@@ -33,13 +33,8 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-export const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  : undefined
-
-export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
-  ? process.env.NEXT_PUBLIC_COMMUNITY
-  : undefined
+const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
+const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
@@ -141,6 +136,8 @@ function MyApp({
             apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
             disablePoweredByReservoir: true,
             apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
+            marketplaceFee: +`${FEE_BPS || 0}`,
+            marketplaceFeeRecipient: FEE_RECIPIENT,
             // Replace source with your domain
             source: 'nftearth.exchange',
             normalizeRoyalties: true,
