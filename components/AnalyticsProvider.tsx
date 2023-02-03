@@ -29,7 +29,7 @@ const AnalyticsProvider: FC<Props> = ({ children }) => {
         applicationId: ddApplicationId,
         clientToken: ddClientToken,
         site: 'datadoghq.com',
-        service: 'reservoir-marketplace',
+        service: 'nfteart-marketplace',
         env,
         sampleRate: 100,
         replaySampleRate: 100,

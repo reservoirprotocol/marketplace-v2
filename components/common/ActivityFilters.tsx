@@ -1,4 +1,4 @@
-import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { useCollectionActivity } from '@nftearth/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { FC } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'

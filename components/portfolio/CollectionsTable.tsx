@@ -14,14 +14,13 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import Link from 'next/link'
 import { Address } from 'wagmi'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useUserCollections } from '@nftearth/reservoir-kit-ui'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import CollectionsTableTimeToggle, {
   CollectionsTableSortingOption,
 } from './CollectionsTableTimeToggle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 
@@ -44,18 +43,16 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     includeTopBid: true,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
-  }
-
   const {
     data: collections,
     fetchNextPage,
     isFetchingPage,
     isValidating,
-  } = useUserCollections(address as string, collectionQuery)
+  } = useUserCollections(address as string, collectionQuery, {
+    revalidateOnMount: true,
+    revalidateOnFocus: true,
+    revalidateAll: true
+  })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -99,7 +96,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
               />
             )
           })}
-          <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
+          <Box ref={loadMoreRef} css={{ height: 20 }}/>
         </Flex>
       )}
       {isValidating && (

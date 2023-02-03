@@ -1,7 +1,7 @@
 import React, { ComponentProps, FC } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner } from 'wagmi'
-import { BuyModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { BuyModal, useTokens } from '@nftearth/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'

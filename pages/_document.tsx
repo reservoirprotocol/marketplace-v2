@@ -15,8 +15,8 @@ class MyDocument extends Document {
 
   render() {
     const description =
-      'Reservoir Market is an open source NFT marketplace built with Reservoir.'
-    const ogImage = 'https://marketplace.reservoir.tools/og-image.png'
+      'NFTEarth Exchange is Marketplace, built for layer2 community.'
+    const ogImage = 'https://nftearth.exchange/og-image.png'
     return (
       <Html>
         <Head>
@@ -31,19 +31,19 @@ class MyDocument extends Document {
         <meta name="keywords" content="nft, ethereum, protocol" />
         <link
           rel="shortcut icon"
-          type="image/svg"
-          href="https://marketplace.reservoir.tools/reservoir.svg"
+          type="image/png"
+          href="https://nftearth.exchange/nftearth-icon.png"
         />
-        <title>Reservoir Market | Open Source NFT Marketplace</title>
+        <title>Layer 2 NFT Marketplace</title>
         <meta name="description" content={description} />
-        <meta name="keywords" content="NFT, API, Protocol" />
+        <meta name="keywords" content="NFT, Marketplace, Optimism" />
         {/* Twitter */}
         {/* The optimal size is 1200 x 630 (1.91:1 ratio). */}
         <meta name="twitter:image" content={ogImage} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta
           name="twitter:title"
-          content="Reservoir Market | Open Source NFT Marketplace"
+          content="NFTEarth Exchange | Layer 2 NFT Marketplace"
         />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:site" content="@reservoir0x" />
@@ -52,7 +52,7 @@ class MyDocument extends Document {
         {/* https://www.opengraph.xyz/ */}
         <meta
           name="og:title"
-          content="Reservoir Market | Open Source NFT Marketplace"
+          content="NFTEarth Exchange | Layer 2 NFT Marketplace"
         />
         <meta property="og:type" content="website" />
         <meta property="og:determiner" content="the" />
@@ -63,22 +63,13 @@ class MyDocument extends Document {
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:image:alt" content="Reservoir Market Banner" />
+        <meta property="og:image:alt" content="NFTEarth Exchange Banner" />
 
-        {/* Reservoir Meta Tags: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
-        <meta property="reservoir:title" content="Reservoir Market" />
-        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+        <meta property="reservoir:title" content="NFTEarth Exchange" />
+        <meta property="reservoir:icon" content="/nftearth-icon.png" />
         <meta
-          property="reservoir:token-url-mainnet"
-          content="/collection/ethereum/${contract}/${tokenId}"
-        />
-        <meta
-          property="reservoir:token-url-goerli"
-          content="/collection/goerli/${contract}/${tokenId}"
-        />
-        <meta
-          property="reservoir:token-url-polygon"
-          content="/collection/polygon/${contract}/${tokenId}"
+          property="reservoir:token-url-optimism"
+          content="/collection/optimism/${contract}/${tokenId}"
         />
         <body>
           <Main />

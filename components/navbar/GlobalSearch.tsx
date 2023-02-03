@@ -15,7 +15,7 @@ import { useDebounce } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 
 import Link from 'next/link'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { paths } from '@nftearth/reservoir-sdk'
 import { useMarketplaceChain } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
@@ -43,7 +43,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
         align="center"
       >
         <img
-          src={collection.image}
+          src={collection.image || 'https://via.placeholder.com/32'}
           style={{ width: 32, height: 32, borderRadius: 4 }}
         />
         <Text style="subtitle1" ellipsify>
@@ -72,7 +72,7 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
     <Link href={`/profile/${wallet.name}`}>
       <Flex css={{ p: '$2', gap: '$4' }} align="center">
         <img
-          src={wallet.avatar as string}
+          src={wallet.avatar as string || 'https://via.placeholder.com/32' }
           style={{ width: 32, height: 32, borderRadius: 4 }}
         />
         <Text style="subtitle1">{wallet.displayName}</Text>

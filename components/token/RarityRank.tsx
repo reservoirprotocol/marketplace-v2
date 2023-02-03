@@ -3,7 +3,7 @@ import {
   useAttributes,
   useCollections,
   useTokens,
-} from '@reservoir0x/reservoir-kit-ui'
+} from '@nftearth/reservoir-kit-ui'
 import { formatNumber } from 'utils/numbers'
 
 type Props = {

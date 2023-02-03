@@ -1,21 +1,24 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useCollections } from '@nftearth/reservoir-kit-ui'
 import { Box, Flex, Text } from '../primitives'
 import { ComponentPropsWithoutRef, FC } from 'react'
 import { TrendingCollectionItem } from './TrendingCollectionItem'
 import LoadingSpinner from 'components/common/LoadingSpinner'
-import { display } from '@datadog/browser-core'
 
 export type TrendingCollections = ReturnType<typeof useCollections>['data']
 
 type Props = {
+  chain: any,
+  uniqueKey: string,
   collections: TrendingCollections
   loading?: boolean
-  volumeKey: ComponentPropsWithoutRef<
+  volumeKey?: ComponentPropsWithoutRef<
     typeof TrendingCollectionItem
   >['volumeKey']
 }
 
 const TrendingCollectionsList: FC<Props> = ({
+  chain,
+  uniqueKey,
   collections,
   volumeKey,
   loading,
@@ -48,8 +51,8 @@ const TrendingCollectionsList: FC<Props> = ({
       >
         {Array(3)
           .fill(null)
-          .map(() => (
-            <Flex justify="between">
+          .map((a, i) => (
+            <Flex justify="between" key={`label-${i}`}>
               <Text style="subtitle3" color="subtle">
                 Collection
               </Text>
@@ -75,13 +78,13 @@ const TrendingCollectionsList: FC<Props> = ({
         }}
       >
         {collections?.map((collection, i) => (
-          <TrendingCollectionItem
-            key={i}
-            collection={collection}
-            rank={i + 1}
-            volumeKey={volumeKey}
-          />
-        ))}
+            <TrendingCollectionItem
+              key={`${uniqueKey}${chain.id}${collection.id}`}
+              collection={collection}
+              rank={i + 1}
+              volumeKey={volumeKey}
+            />
+          ))}
         {loading && (
           <Flex
             css={{ width: '100%', height: '100%', position: 'absolute' }}
@@ -95,7 +98,7 @@ const TrendingCollectionsList: FC<Props> = ({
                 background: '$neutralBg',
                 opacity: 0.9,
               }}
-            ></Box>
+            />
             <LoadingSpinner />
           </Flex>
         )}

@@ -1,5 +1,5 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { CancelListingModal } from '@reservoir0x/reservoir-kit-ui'
+import { CancelListingModal } from '@nftearth/reservoir-kit-ui'
 import { FC, ReactElement, useContext, cloneElement } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'

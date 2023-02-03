@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useUserCollections } from '@nftearth/reservoir-kit-ui'
 import { useMounted } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
@@ -18,9 +18,8 @@ import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
-const IndexPage: NextPage = () => {
+const PortfolioPage: NextPage = () => {
   const { address, isConnected } = useAccount()
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
@@ -32,12 +31,6 @@ const IndexPage: NextPage = () => {
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
     collection: filterCollection,
-  }
-
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
   }
 
   const { data: collections } = useUserCollections(
@@ -164,4 +157,4 @@ const IndexPage: NextPage = () => {
   )
 }
 
-export default IndexPage
+export default PortfolioPage

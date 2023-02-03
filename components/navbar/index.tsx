@@ -59,7 +59,7 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/reservoirLogo.svg" style={{ width: '100%' }} />
+              <img src="/nftearth-icon.png" style={{ width: '100%' }} />
             </Box>
           </Link>
         </Flex>
@@ -93,18 +93,18 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 112, cursor: 'pointer' }}>
+            <Box css={{ width: 132, cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               {theme == 'dark' ? (
-                <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
+                <img src="/nftearth-icon.png" style={{ width: 40 }} />
               ) : (
                 <img
-                  src="/reservoirMarketLogoLight.svg"
-                  style={{ width: '100%' }}
+                  src="/nftearth-icon.png"
+                  style={{ width: 40 }}
                 />
-              )}
+              )}<span style={{ marginLeft: 10, fontWeight: 'bold' }}>NFTEarth</span>
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
+          <Box css={{ flex: 1, ml: '$5', px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
               placeholder="Search collections and addresses"
@@ -113,15 +113,12 @@ const Navbar = () => {
             />
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            <Link href="/">
-              <NavItem active={router.pathname == '/'}>Explore</NavItem>
+            <Link href="/explore" legacyBehavior>
+              <NavItem active={router.pathname == '/explore'}>Explore</NavItem>
             </Link>
-            <Link href="/portfolio">
+            <a href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
-            </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
-            </Link>
+            </a>
           </Flex>
         </Flex>
       </Box>

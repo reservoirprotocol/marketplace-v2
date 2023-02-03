@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { paths } from '@nftearth/reservoir-sdk'
 import { Tooltip, Text } from 'components/primitives'
 
 type Props = {

@@ -1,4 +1,4 @@
-import { BidModal } from '@reservoir0x/reservoir-kit-ui'
+import { BidModal } from '@nftearth/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { cloneElement, ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'

@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react'
 import { ActivityTable } from 'components/common/ActivityTable'
-import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { useCollectionActivity } from '@nftearth/reservoir-kit-ui'
 
 type Props = {
   id: string | undefined

@@ -1,4 +1,4 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useCollections } from '@nftearth/reservoir-kit-ui'
 import { ToggleGroup, ToggleGroupItem, Text } from '../primitives'
 import { FC } from 'react'
 

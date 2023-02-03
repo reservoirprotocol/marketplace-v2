@@ -9,8 +9,8 @@ import {
   useCollections,
   useTokens,
   useCollectionActivity,
-} from '@reservoir0x/reservoir-kit-ui'
-import { paths } from '@reservoir0x/reservoir-sdk'
+} from '@nftearth/reservoir-kit-ui'
+import { paths } from '@nftearth/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'

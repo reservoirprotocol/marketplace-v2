@@ -1,4 +1,4 @@
-import { setParams } from '@reservoir0x/reservoir-sdk'
+import { setParams } from '@nftearth/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import supportedChains, { DefaultChain } from 'utils/chains'
 
@@ -33,6 +33,13 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   setParams(url, query)
 
   if (endpoint.includes('redirect/')) {
+    if (endpoint.includes('/currency')) {
+      const paths = url.href.split('/');
+      res.redirect(`/icons/currency/${paths[paths.length -3]}.png`);
+      return;
+    }
+
+
     res.redirect(url.href)
     return
   }

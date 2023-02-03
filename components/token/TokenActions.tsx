@@ -1,4 +1,4 @@
-import { useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { useTokens } from '@nftearth/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'

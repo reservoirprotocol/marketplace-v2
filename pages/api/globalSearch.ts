@@ -1,6 +1,6 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { paths } from '@nftearth/reservoir-sdk'
 import supportedChains, { DefaultChain } from 'utils/chains'
 
 const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID

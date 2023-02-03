@@ -5,7 +5,7 @@ import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
 import Box from './Box'
 import wrappedContracts from '../../utils/wrappedContracts'
-import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
+import { useReservoirClient } from '@nftearth/reservoir-kit-ui'
 
 type Props = {
   address: string

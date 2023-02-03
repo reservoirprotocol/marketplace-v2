@@ -1,4 +1,4 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useCollections } from '@nftearth/reservoir-kit-ui'
 import { Text, Box, FormatCryptoCurrency, Grid } from 'components/primitives'
 import { useMounted } from 'hooks'
 import { FC, ReactNode } from 'react'

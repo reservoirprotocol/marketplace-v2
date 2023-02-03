@@ -5,8 +5,8 @@ import Image from 'next/image'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@nftearth/reservoir-sdk'
+import { useUserCollections } from '@nftearth/reservoir-kit-ui'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 
 type Collections =

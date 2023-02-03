@@ -9,13 +9,13 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 type Props = {
   rank: string | number
   collection: NonNullable<TrendingCollections>[0]
-  volumeKey: '1day' | '7day' | '30day' | 'allTime'
+  volumeKey?: '1day' | '7day' | '30day' | 'allTime'
 }
 
 export const TrendingCollectionItem: FC<Props> = ({
   rank,
   collection,
-  volumeKey,
+  volumeKey = '1day',
 }) => {
   const { routePrefix } = useMarketplaceChain()
   return (
@@ -28,7 +28,7 @@ export const TrendingCollectionItem: FC<Props> = ({
           {rank}
         </Text>
         <img
-          src={collection?.image}
+          src={collection?.image || 'https://via.placeholder.com/56'}
           style={{ borderRadius: 8, width: 56, height: 56, objectFit: 'cover' }}
         />
         <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>

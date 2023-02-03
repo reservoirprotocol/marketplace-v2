@@ -65,7 +65,7 @@ const HamburgerMenu = () => {
         >
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/reservoirLogo.svg" style={{ width: '100%' }} />
+              <img src="/nftearth-icon.png" style={{ width: '100%' }} />
             </Box>
           </Link>
           <RadixDialog.Close>
@@ -121,7 +121,7 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href="/" legacyBehavior>
+            <Link href="/explore" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -134,19 +134,19 @@ const HamburgerMenu = () => {
                 Explore
               </Text>
             </Link>
-            <Link href="/portfolio" legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Portfolio
-              </Text>
-            </Link>
+            <Text
+              as="a"
+              href="/portfolio"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+              }}
+            >
+              Portfolio
+            </Text>
             <Flex
               css={{
                 justifyContent: 'space-between',
@@ -207,7 +207,7 @@ const HamburgerMenu = () => {
             }}
           >
             <Flex direction="column">
-              <Link href="/" legacyBehavior>
+              <Link href="/explore" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -221,23 +221,10 @@ const HamburgerMenu = () => {
                   Explore
                 </Text>
               </Link>
-              <Link href="/portfolio" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    width: '100%',
-                  }}
-                >
-                  Portfolio
-                </Text>
-              </Link>
-              <Anchor
-                href="https://docs.reservoir.tools/docs"
-                target="_blank"
+              <Text
+                as="a"
+                href="/portfolio"
+                style="subtitle1"
                 css={{
                   borderBottom: '1px solid $gray4',
                   cursor: 'pointer',
@@ -246,8 +233,8 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                <Text style="subtitle1">Docs</Text>
-              </Anchor>
+                Portfolio
+              </Text>
             </Flex>
             <Box>
               <ConnectWalletButton />

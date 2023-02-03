@@ -320,4 +320,15 @@ Ensure the default browser behavior of the `hidden` attribute.
   '[hidden]': {
     display: 'none',
   },
+
+  '.masonry-grid': {
+    display: 'flex',
+    marginLeft: '-30px', /* gutter size offset */
+    width: 'auto',
+  },
+
+  '.masonry-grid_column': {
+    paddingLeft: 30, /* gutter size */
+    backgroundClip: 'padding-box'
+  }
 }

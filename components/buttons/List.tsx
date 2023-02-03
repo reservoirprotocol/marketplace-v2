@@ -1,4 +1,4 @@
-import { ListModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { ListModal, useTokens } from '@nftearth/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import {
   cloneElement,
@@ -27,6 +27,8 @@ type Props = {
   mutate?: SWRResponse['mutate']
 }
 
+const CURRENCIES = process.env.NEXT_PUBLIC_LISTING_CURRENCIES
+
 const List: FC<Props> = ({
   token,
   buttonCss,
@@ -51,6 +53,10 @@ const List: FC<Props> = ({
   )
 
   let listingCurrencies: ListingCurrencies = undefined
+
+  if (CURRENCIES) {
+    listingCurrencies = JSON.parse(CURRENCIES)
+  }
 
   const tokenId = token?.token?.tokenId
   const contract = token?.token?.contract

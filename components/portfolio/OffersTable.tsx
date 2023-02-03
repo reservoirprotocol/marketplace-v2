@@ -14,7 +14,7 @@ import {
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useBids } from '@reservoir0x/reservoir-kit-ui'
+import { useBids } from '@nftearth/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useMarketplaceChain, useTimeSince } from 'hooks'

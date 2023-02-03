@@ -1,4 +1,4 @@
-import { AcceptBidModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { AcceptBidModal, useTokens } from '@nftearth/reservoir-kit-ui'
 import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'

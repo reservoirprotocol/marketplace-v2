@@ -20,7 +20,7 @@ import {
   darkTheme as reservoirDarkTheme,
   lightTheme as reservoirLightTheme,
   ReservoirKitTheme,
-} from '@reservoir0x/reservoir-kit-ui'
+} from '@nftearth/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
@@ -139,9 +139,11 @@ function MyApp({
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
             apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
+            disablePoweredByReservoir: true,
             apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
-            // source: 'YOUR_DOMAIN',
-            normalizeRoyalties: NORMALIZE_ROYALTIES,
+            // Replace source with your domain
+            source: 'nftearth.exchange',
+            normalizeRoyalties: true,
           }}
           theme={reservoirKitTheme}
         >

@@ -4,14 +4,14 @@ import {
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { paths } from '@nftearth/reservoir-sdk'
 import {
   TokenMedia,
   useCollections,
   useTokenOpenseaBanned,
   useTokens,
   useUserTokens,
-} from '@reservoir0x/reservoir-kit-ui'
+} from '@nftearth/reservoir-kit-ui'
 import Layout from 'components/Layout'
 import {
   Flex,
@@ -54,7 +54,7 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -510,4 +510,4 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-export default IndexPage
+export default TokenPage

@@ -5,7 +5,7 @@ import {
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useCollections } from '@nftearth/reservoir-kit-ui'
 import { styled } from '../../stitches.config'
 import { Box, Flex } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useContext, useState } from 'react'

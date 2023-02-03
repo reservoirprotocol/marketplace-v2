@@ -1,5 +1,5 @@
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
-import { useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { useTokens } from '@nftearth/reservoir-kit-ui'
 import { formatNumber } from 'utils/numbers'
 import Link from 'next/link'
 import { useMarketplaceChain } from '../../hooks'

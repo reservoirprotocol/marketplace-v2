@@ -4,7 +4,7 @@ import {
   extractMediaType,
   TokenMedia,
   useTokens,
-} from '@reservoir0x/reservoir-kit-ui'
+} from '@nftearth/reservoir-kit-ui'
 import BuyNow from 'components/buttons/BuyNow'
 import {
   Box,

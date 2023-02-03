@@ -5,7 +5,7 @@ import {
   NextPage,
 } from 'next'
 import { Text, Flex, Box, Grid } from '../../components/primitives'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import { paths } from '@nftearth/reservoir-sdk'
 import Layout from 'components/Layout'
 import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -22,7 +22,7 @@ import {
   useTokens,
   useUserCollections,
   useUserTokens,
-} from '@reservoir0x/reservoir-kit-ui'
+} from '@nftearth/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
 import { TokenFilters } from 'components/common/TokenFilters'
 import { useMounted, useMarketplaceChain } from '../../hooks'
@@ -35,7 +35,7 @@ import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
-import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
 
@@ -50,7 +50,7 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
+const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
   const {
     avatar: ensAvatar,
     name: resolvedEnsName,
@@ -87,14 +87,6 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
 
   const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
-  }
-
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-    tokenQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
-    tokenQuery.community = COMMUNITY
   }
 
   const ssrTokens = ssr.tokens[marketplaceChain.id]
@@ -382,14 +374,6 @@ export const getStaticProps: GetStaticProps<{
       limit: 100,
     }
 
-  if (COLLECTION_SET_ID) {
-    tokensQuery.collectionsSetId = COLLECTION_SET_ID
-    collectionsQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    tokensQuery.community = COMMUNITY
-    collectionsQuery.community = COMMUNITY
-  }
-
   const promises: ReturnType<typeof fetcher>[] = []
 
   const headers = {
@@ -430,4 +414,4 @@ export const getStaticProps: GetStaticProps<{
   }
 }
 
-export default IndexPage
+export default ProfilePage
