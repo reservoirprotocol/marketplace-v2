@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useCollectionActivity } from '@nftearth/reservoir-kit-ui'
+import {ArrayItemTypes} from "../../types/reservoir";
 
 type ActivityTypes = Exclude<
   NonNullable<
