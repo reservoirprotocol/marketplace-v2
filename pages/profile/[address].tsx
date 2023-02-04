@@ -38,17 +38,9 @@ import { useENSResolver } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
+import {ActivityTypes} from "../../types/reservoir";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
-
-type ActivityTypes = Exclude<
-  NonNullable<
-    NonNullable<
-      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-    >['types']
-  >,
-  string
->
 
 const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
   const {

@@ -27,7 +27,7 @@ export const DefaultChain = {
 }
 
 export default [
-  DefaultChain,
+  DefaultChain
   // {
   //   ...arbitrum,
   //   iconUrl: `/icons/currency/0x6c0c4816098e13cacfc7ed68da3e89d0066e8893.png`,

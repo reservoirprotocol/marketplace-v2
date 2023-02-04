@@ -18,10 +18,16 @@ import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {ActivityFilters} from "../../components/common/ActivityFilters";
+import {MobileActivityFilters} from "../../components/common/MobileActivityFilters";
+import {UserActivityTable} from "../../components/profile/UserActivityTable";
+import {ActivityTypes} from "../../types/reservoir";
 
 const PortfolioPage: NextPage = () => {
   const { address, isConnected } = useAccount()
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
@@ -71,6 +77,7 @@ const PortfolioPage: NextPage = () => {
                   <TabsTrigger value="collections">Collections</TabsTrigger>
                   <TabsTrigger value="listings">Listings</TabsTrigger>
                   <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                  <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
               </Flex>
 
@@ -127,6 +134,46 @@ const PortfolioPage: NextPage = () => {
               </TabsContent>
               <TabsContent value="offers">
                 <OffersTable address={address} />
+              </TabsContent>
+              <TabsContent value="activity">
+                <Flex
+                  css={{
+                    gap: activityFiltersOpen ? '$5' : '',
+                    position: 'relative',
+                  }}
+                >
+                  {!isSmallDevice && (
+                    <ActivityFilters
+                      open={activityFiltersOpen}
+                      setOpen={setActivityFiltersOpen}
+                      activityTypes={activityTypes}
+                      setActivityTypes={setActivityTypes}
+                    />
+                  )}
+                  <Box
+                    css={{
+                      flex: 1,
+                      gap: '$4',
+                      pb: '$5',
+                    }}
+                  >
+                    {isSmallDevice ? (
+                      <MobileActivityFilters
+                        activityTypes={activityTypes}
+                        setActivityTypes={setActivityTypes}
+                      />
+                    ) : (
+                      <FilterButton
+                        open={activityFiltersOpen}
+                        setOpen={setActivityFiltersOpen}
+                      />
+                    )}
+                    <UserActivityTable
+                      user={address}
+                      activityTypes={activityTypes}
+                    />
+                  </Box>
+                </Flex>
               </TabsContent>
             </Tabs.Root>
           </>
