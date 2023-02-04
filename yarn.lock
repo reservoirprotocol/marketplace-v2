@@ -714,10 +714,10 @@
   resolved "https://registry.yarnpkg.com/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-13.0.7.tgz#7aaa6cee723cde844e891e895e5561a60d9fa7f3"
   integrity sha512-kvdnlLcrnEq72ZP0lqe2Z5NqvB9N5uSCvtXJ0PhKvNncWWd0fEG9Ec9erXgwCmVlM2ytw41k9/uuQ+SVw4Pihw==
 
-"@nftearth/reservoir-kit-ui@^0.8.28":
-  version "0.8.28"
-  resolved "https://registry.yarnpkg.com/@nftearth/reservoir-kit-ui/-/reservoir-kit-ui-0.8.28.tgz#c3422f2b3f29a05726dc77a92439cd30d5e398cf"
-  integrity sha512-HGGeU+YooQ0K8aA7ouQBJdHv17wMX2CZ3BdoQNh04AXBgZw18rBLCcku9lroT1XM6Zl+grIpx5pTm+eJb5jwng==
+"@nftearth/reservoir-kit-ui@^0.8.29":
+  version "0.8.29"
+  resolved "https://registry.yarnpkg.com/@nftearth/reservoir-kit-ui/-/reservoir-kit-ui-0.8.29.tgz#6ef1f73130fff9d7eb0718341530645f95e436a7"
+  integrity sha512-9oH8dGZc47QxV3Y9DHTOqu3pCRnEKWLQvG2q+Q/GR3UbM9MhPMajlKpVM6Ssc/+LrJ6FZ6SsxJfCNRJAx3U0Gw==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
