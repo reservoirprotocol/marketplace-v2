@@ -12,6 +12,7 @@ import {
   faTag,
   IconDefinition,
 } from '@fortawesome/free-solid-svg-icons'
+import {ArrayItemTypes} from "../../types/reservoir";
 
 type ActivityTypes = Exclude<
   NonNullable<
