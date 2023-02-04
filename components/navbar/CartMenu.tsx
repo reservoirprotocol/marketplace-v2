@@ -1,12 +1,12 @@
-import { styled, keyframes } from '@stitches/react'
+import {styled, keyframes} from '@stitches/react'
 import * as Popover from '@radix-ui/react-popover'
 import {FC, useContext, useState} from 'react'
-import { faShoppingCart, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { Execute } from '@nftearth/reservoir-sdk'
-import { Signer } from 'ethers'
-import { useAccount, useBalance, useSigner } from 'wagmi'
-import { useReservoirClient } from '@nftearth/reservoir-kit-ui'
+import {faShoppingCart, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
+import {useRecoilState, useRecoilValue} from 'recoil'
+import {Execute} from '@nftearth/reservoir-sdk'
+import {Signer} from 'ethers'
+import {useAccount, useBalance, useSigner} from 'wagmi'
+import {useReservoirClient} from '@nftearth/reservoir-kit-ui'
 import cartTokensAtom, {
   getCartCount,
   getCartCurrency,
@@ -14,35 +14,36 @@ import cartTokensAtom, {
   getPricingPools,
 } from 'recoil/cart'
 import FormatCrypto from 'components/primitives/FormatCryptoCurrency'
-import { getPricing } from 'utils/tokenPricing'
-import { formatEther } from 'ethers/lib/utils'
+import {getPricing} from 'utils/tokenPricing'
+import {formatEther} from 'ethers/lib/utils'
 import {ToastContext} from "../../context/ToastContextProvider";
-import {Box, FormatCryptoCurrency} from "../primitives";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {Box, Button, Flex, FormatCryptoCurrency} from "../primitives";
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+
 type UseBalanceToken = NonNullable<Parameters<typeof useBalance>['0']>['token']
 
 const slideDown = keyframes({
-  '0%': { opacity: 0, transform: 'translateY(-10px)' },
-  '100%': { opacity: 1, transform: 'translateY(0)' },
+  '0%': {opacity: 0, transform: 'translateY(-10px)'},
+  '100%': {opacity: 1, transform: 'translateY(0)'},
 })
 
 const slideUp = keyframes({
-  '0%': { opacity: 0, transform: 'translateY(10px)' },
-  '100%': { opacity: 1, transform: 'translateY(0)' },
+  '0%': {opacity: 0, transform: 'translateY(10px)'},
+  '100%': {opacity: 1, transform: 'translateY(0)'},
 })
 
 const StyledContent = styled(Popover.Content, {
   animationDuration: '0.6s',
   animationTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
   animationFillMode: 'forwards',
-  '&[data-side="top"]': { animationName: slideUp },
-  '&[data-side="bottom"]': { animationName: slideDown },
+  '&[data-side="top"]': {animationName: slideUp},
+  '&[data-side="bottom"]': {animationName: slideDown},
 })
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID || 1;
 
 const CartMenu: FC = () => {
-  const { addToast } = useContext(ToastContext);
+  const {addToast} = useContext(ToastContext);
   const cartCount = useRecoilValue(getCartCount)
   const cartTotal = useRecoilValue(getCartTotalPrice)
   const cartCurrency = useRecoilValue(getCartCurrency)
@@ -51,10 +52,10 @@ const CartMenu: FC = () => {
   const [_open, setOpen] = useState(false)
   const [_steps, setSteps] = useState<Execute['steps']>()
   const [waitingTx, setWaitingTx] = useState<boolean>(false)
-  const { data: signer } = useSigner()
-  const { address } = useAccount()
+  const {data: signer} = useSigner()
+  const {address} = useAccount()
   const reservoirClient = useReservoirClient()
-  const { data: balance } = useBalance({
+  const {data: balance} = useBalance({
     chainId: +CHAIN_ID,
     address: address,
     token:
@@ -124,51 +125,89 @@ const CartMenu: FC = () => {
 
   return (
     <Popover.Root>
-      <Popover.Trigger>
-        <Box className="relative c" css={{ justifyContent: 'center' }}>
+      <Popover.Trigger >
+        <Flex
+          align="center"
+          justify="center"
+          css={{
+            background: '$gray3',
+            width: '44px',
+            height: '44px',
+            borderRadius: 8,
+            position: 'relative'
+          }}>
           {cartCount > 0 && (
-            <div className="reservoir-subtitle absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary-700">
+            <Flex
+              className="reservoir-subtitle"
+              align="center"
+              justify="center"
+              css={{
+                position: 'absolute',
+                top: -3,
+                right: -3,
+                background: '$primary7',
+                fontSize: 12,
+                padding: '2px 7px',
+                borderRadius: '50%'
+              }}>
               {cartCount}
-            </div>
+            </Flex>
           )}
-          <FontAwesomeIcon icon={faShoppingCart} className="h-[18px] w-[18px]" />
-        </Box>
+          <FontAwesomeIcon icon={faShoppingCart} className="h-[18px] w-[18px]"/>
+        </Flex>
       </Popover.Trigger>
       <StyledContent
-        sideOffset={22}
-        className="z-[10000000] w-[367px] rounded-2xl bg-white p-6 shadow-lg dark:border dark:border-neutral-700 dark:bg-neutral-900"
+        sideOffset={30}
+        style={{
+          zIndex: 10000000,
+          width: 367,
+          background: 'hsla(85,100%,22%,0.9)',
+          boxShadow: '2px 2px 3px rgba(0, 0, 0, 0.5)',
+          borderRadius: 8,
+          padding: 20,
+          marginRight: 10
+        }}
       >
-        <div className="mb-4 flex justify-between">
-          <div className="flex items-center">
-            <div className="reservoir-h6 mr-3">My Cart</div>
-            <div className="reservoir-subtitle flex h-5 w-5 items-center justify-center rounded-full bg-primary-700">
+        <Flex justify="between" css={{mb: '$2'}}>
+          <Flex align="center">
+            <div className="reservoir-h6" style={{ marginRight: '3rem', fontWeight: 'bold' }}>My Cart</div>
+            <Flex className="reservoir-subtitle"
+                  align="center"
+                  justify="center"
+                  css={{
+                    height: '$5',
+                    width: '$5',
+                    borderRadius: 8,
+                    background: '$primary7',
+                    padding: 5,
+                    fontWeight: 'bold'
+                  }}>
               {cartCount}
-            </div>
-          </div>
+            </Flex>
+          </Flex>
           {cartCount > 0 && (
-            <button
+            <Button
               onClick={() => setCartTokens([])}
-              className="text-primary-700 dark:text-white"
             >
               Clear
-            </button>
+            </Button>
           )}
-        </div>
-        <div className="mb-6 grid max-h-[300px] gap-2 overflow-auto">
+        </Flex>
+        <Box css={{ gap: '$2', overflow: 'auto', maxHeight: 300, display: 'grid', mb: '$6' }}>
           {cartTokens.map((tokenData, index) => {
-            const { token } = tokenData
-            const { collection, contract, name, image, tokenId } = token
+            const {token} = tokenData
+            const {collection, contract, name, image, tokenId} = token
             const price = getPricing(pricingPools, tokenData)
 
             return (
-              <div
+              <Flex
                 key={`${contract}:${tokenId}`}
-                className="flex justify-between"
+                justify="between"
               >
-                <div className="flex items-center gap-2">
-                  <div className="h-14 w-14 overflow-hidden rounded-[4px]">
-                    <img src={image || collection?.image} alt="" />
-                  </div>
+                <Flex align="center" css={{ gap: '$2' }}>
+                  <Box css={{ height: 60, width: 60, overflow: 'hidden', borderRadius: 8 }}>
+                    <img src={image || collection?.image} alt=""/>
+                  </Box>
                   <div>
                     <div>
                       {name || `#${tokenId}`}
@@ -179,57 +218,72 @@ const CartMenu: FC = () => {
                         amount={price?.amount?.decimal}
                         address={price?.currency?.contract}
                         decimals={price?.currency?.decimals}
+                        logoHeight={18}
+                        textStyle={'h6'}
+                        maximumFractionDigits={4}
                       />
                     </div>
                   </div>
-                </div>
-                <button
+                </Flex>
+                <Button
                   onClick={() => {
                     const newCartTokens = [...cartTokens]
                     newCartTokens.splice(index, 1)
                     setCartTokens(newCartTokens)
                   }}
+                  size="xs"
+                  corners="circle"
+
                 >
                   <FontAwesomeIcon icon={faTrashAlt}/>
-                </button>
-              </div>
+                </Button>
+              </Flex>
             )
           })}
-        </div>
+        </Box>
 
-        <div className="mb-4 flex justify-between">
-          <div className="reservoir-h6">You Pay</div>
+        <Flex justify="between" css={{ mb: '$4' }}>
+          <div className="reservoir-h6" style={{ fontWeight: 'bold' }}>You Pay</div>
           <div className="reservoir-h6">
             <FormatCryptoCurrency
               amount={cartTotal}
               address={cartCurrency?.contract}
               decimals={cartCurrency?.decimals}
+              logoHeight={18}
+              textStyle={'h6'}
+              maximumFractionDigits={4}
             />
           </div>
-        </div>
+        </Flex>
         {balance?.formatted && +balance.formatted < cartTotal && (
-          <div className="mb-2 text-center ">
-            <span className="reservoir-headings text-[#FF6369]">
+          <Box css={{ textAlign: 'center', mb: '$2' }}>
+            <span className="reservoir-headings" style={{ color: '#FF6369' }}>
               Insufficient balance{' '}
             </span>
             <FormatCryptoCurrency
               amount={+balance.formatted}
               address={cartCurrency?.contract}
               decimals={cartCurrency?.decimals}
+              logoHeight={18}
+              textStyle={'h6'}
+              maximumFractionDigits={4}
             />
-          </div>
+          </Box>
         )}
-        <button
+        <Button
           onClick={() => signer && execute(signer)}
           disabled={
             cartCount === 0 ||
             waitingTx ||
             Boolean(balance?.formatted && +balance.formatted < cartTotal)
           }
-          className="btn-primary-fill text-black w-full"
+          css={{
+            width: '100%',
+            textAlign: 'center'
+          }}
         >
           {waitingTx ? 'Waiting' : 'Purchase'}
-        </button>
+        </Button>
       </StyledContent>
     </Popover.Root>
   )
