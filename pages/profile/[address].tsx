@@ -18,7 +18,6 @@ import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
-  useCollectionActivity,
   useTokens,
   useUserCollections,
   useUserTokens,

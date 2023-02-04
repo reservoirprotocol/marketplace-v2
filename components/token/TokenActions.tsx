@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useAccount } from 'wagmi'
-import AddToCart from "../buttons/AddToCart";
+// import AddToCart from "../buttons/AddToCart";
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]

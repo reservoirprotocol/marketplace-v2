@@ -5,12 +5,11 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import recoilCartTokens, {getTokensMap, getPricingPools, getCartCurrency} from 'recoil/cart'
 import {Dispatch, FC, SetStateAction} from "react";
 import {useTokens} from "@nftearth/reservoir-kit-ui";
-import {MutatorCallback} from "swr";
 import {getPricing} from "../../utils/tokenPricing";
 import {Button} from "../primitives";
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['tokens']['data'][0]
+  token?: ReturnType<typeof useTokens>['data'][0]
   setClearCartOpen?: Dispatch<SetStateAction<boolean>>
   setCartToSwap?: Dispatch<SetStateAction<any | undefined>>
 }
