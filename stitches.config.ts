@@ -41,10 +41,10 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary6: '$lime6',
         primary7: '$lime7',
         primary8: '$lime8',
-        primary9: '$lime9',
-        primary10: '$lime10',
-        primary11: '$lime11',
-        primary12: '$lime12',
+        primary9: 'hsl(141,100%,64%)',
+        primary10: 'hsl(141, 100%, 52%)',
+        primary11: 'hsl(141,100%,74%)',
+        primary12: 'hsl(141,100%,88%)',
 
         //Secondary
         secondary1: '$limeA1',

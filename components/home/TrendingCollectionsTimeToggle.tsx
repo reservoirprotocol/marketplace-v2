@@ -68,7 +68,7 @@ const TrendingCollectionsTimeToggle: FC<Props> = ({
           value={optionItem}
           disabled={optionItem === option}
         >
-          <Text style="subtitle2">
+          <Text style="subtitle2" css={{ color: '#000' }}>
             {nameForSortingOption(optionItem, compact)}
           </Text>
         </ToggleGroupItem>
