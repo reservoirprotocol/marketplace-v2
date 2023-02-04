@@ -28,12 +28,10 @@ export const TokenActions: FC<Props> = ({
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
 
   const showAcceptOffer =
-    token?.market?.topBid?.id !== null &&
-    token?.market?.topBid?.id !== undefined &&
-    isOwner &&
-    token?.token?.owner
-      ? true
-      : false
+    !!(token?.market?.topBid?.id !== null &&
+      token?.market?.topBid?.id !== undefined &&
+      isOwner &&
+      token?.token?.owner)
 
   const isTopBidder =
     account.isConnected &&

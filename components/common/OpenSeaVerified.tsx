@@ -15,7 +15,7 @@ export const OpenSeaVerified: FC<Props> = ({ openseaVerificationStatus }) => {
         sideOffset={4}
         content={
           <Text style="body2" css={{ display: 'block' }}>
-            Verified by OpenSea
+            Verified by NFTEarth
           </Text>
         }
       >

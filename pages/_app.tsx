@@ -14,6 +14,7 @@ import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { RecoilRoot } from 'recoil'
 
 import {
   ReservoirKitProvider,
@@ -152,17 +153,19 @@ function MyApp({
           }}
           theme={reservoirKitTheme}
         >
-          <Tooltip.Provider>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <ToastContextProvider>
-                <FunctionalComponent {...pageProps} />
-              </ToastContextProvider>
-            </RainbowKitProvider>
-          </Tooltip.Provider>
+          <RecoilRoot>
+            <Tooltip.Provider>
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
+              >
+                <ToastContextProvider>
+                  <FunctionalComponent {...pageProps} />
+                </ToastContextProvider>
+              </RainbowKitProvider>
+            </Tooltip.Provider>
+          </RecoilRoot>
         </ReservoirKitProvider>
       </ThemeProvider>
     </HotkeysProvider>
