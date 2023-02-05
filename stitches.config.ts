@@ -33,14 +33,14 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         //Aliases
 
         //Primary
-        primary1: '$lime1',
-        primary2: '$lime2',
-        primary3: '$lime3',
-        primary4: '$lime4',
-        primary5: '$lime5',
-        primary6: '$lime6',
-        primary7: '$lime7',
-        primary8: '$lime8',
+        primary1: 'hsl(141,100%,74%)',
+        primary2: 'hsl(141,100%,74%)',
+        primary3: 'hsl(141,100%,74%)',
+        primary4: 'hsl(141,100%,74%),
+        primary5: 'hsl(141,100%,74%),
+        primary6: 'hsl(141,100%,74%),
+        primary7: 'hsl(141,100%,74%),
+        primary8: 'hsl(141,100%,74%),
         primary9: 'hsl(141,100%,64%)',
         primary10: 'hsl(141, 100%, 52%)',
         primary11: 'hsl(141,100%,74%)',
@@ -272,7 +272,7 @@ export const darkTheme = createTheme({
     gray11: '$slate11',
     gray12: '$slate12',
 
-    accent: '#7000FF',
+    accent: '#79ffa8',
 
     neutralBgSubtle: '$gray3',
     neutralBg: '$gray1',
