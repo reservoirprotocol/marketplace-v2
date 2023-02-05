@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {ChangeEvent, useContext, useState} from "react";
 import {
   Root as DialogRoot,
   DialogTrigger,
@@ -90,6 +90,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
   const { addToast } = useContext(ToastContext)
   const { address } = useAccount()
   const [transferAddress, setTransferAddress] = useState('');
+  const [quantity, setQuantity] = useState(1);
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
@@ -97,14 +98,18 @@ const Transfer = ({ token, mutate } : TransferProps) => {
     address: token?.token?.contract,
     abi: token?.token?.kind === 'erc721' ? ERC721NFTAbi : ERC1155NFTAbi,
     functionName: 'safeTransferFrom',
-    args: token?.token?.kind === 'erc721' ? [address, transferAddress, token?.token?.tokenId] : [address, transferAddress, token?.token?.tokenId, 1, ''],
+    args: token?.token?.kind === 'erc721' ? [address, transferAddress, token?.token?.tokenId] : [address, transferAddress, token?.token?.tokenId, quantity, ''],
   })
-  console.log(token?.token?.kind);
   const { data, sendTransaction, isLoading, error } = useSendTransaction(config)
-
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
     hash: data?.hash,
   })
+
+  const handleSetQuantity = (e: ChangeEvent<HTMLInputElement>) => {
+    let qty = parseInt(e.target.value, 10);
+
+    setQuantity(qty < 1 ? 1 : qty);
+  }
 
   return (
     <DialogRoot modal={false}>
@@ -202,7 +207,10 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                 />
                 <Box css={{ mb: 20 }}>
                   <Box css={{ textAlign: 'center' }}>
-                    {`"${token?.token?.name ? token.token.name : `${token?.token?.collection?.name} #${token?.token?.tokenId}`}" will be transferred to ${transferAddress == '' ? '...' : transferAddress}`}
+                    <strong>{token?.token?.kind === 'erc1155' ? `${quantity}x ` : ''}</strong>
+                    <strong>{`"${token?.token?.name ? token.token.name : `${token?.token?.collection?.name} #${token?.token?.tokenId}`}"`}</strong>
+                    {` will be transferred to `}
+                    <strong>{`${transferAddress == '' ? '...' : transferAddress}`}</strong>
                   </Box>
                   {transferAddress !== '' && (
                     <Box css={{ color: 'orange', mt: '$4', textAlign: 'center' }}>
@@ -217,17 +225,34 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                     </Box>
                   )}
                 </Box>
-                <Input
-                  disabled={isLoading || isLoadingTransaction}
-                  value={transferAddress}
-                  onChange={(e) => setTransferAddress(e.target.value)}
-                  placeholder={"e.g. 0x21ab235523cdd..."}
-                  containerCss={{
-                    width: '100%',
-                    mb: 20,
-                    px: 10
-                  }}
-                />
+                <Flex justify="between" css={{
+                  mb: 20,
+                  px: 10,
+                  width: '100%',
+                }}>
+                  <Input
+                    disabled={isLoading || isLoadingTransaction}
+                    value={transferAddress}
+                    onChange={(e) => setTransferAddress(e.target.value)}
+                    placeholder={"e.g. 0x21ab235523cdd..."}
+                    containerCss={{
+                      width: '100%',
+                    }}
+                  />
+                  {token?.token?.kind === 'erc1155' && (
+                    <Input
+                      disabled={isLoading || isLoadingTransaction}
+                      value={quantity}
+                      onChange={handleSetQuantity}
+                      placeholder={"Qty"}
+                      type="number"
+                      containerCss={{
+                        width: 100,
+                        ml: '$2'
+                      }}
+                    />
+                  )}
+                </Flex>
                 {isLoadingTransaction ? (
                   <Text as="h4">Transferring...</Text>
                 ) : (
