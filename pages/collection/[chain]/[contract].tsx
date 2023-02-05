@@ -9,6 +9,7 @@ import {
   useCollections,
   useTokens,
   useCollectionActivity,
+  useAttributes
 } from '@nftearth/reservoir-kit-ui'
 import { paths } from '@nftearth/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -123,7 +124,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
-  const attributes = ssr?.attributes?.attributes?.filter(
+  const { data: attributesData }  = useAttributes(collection.id);
+
+  const attributes = attributesData?.filter(
     (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
   )
 
@@ -424,7 +427,6 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
   id: string | undefined
 }> = async ({ params }) => {
@@ -467,20 +469,9 @@ export const getStaticProps: GetStaticProps<{
   )
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
-  let attributes: Props['ssr']['attributes'] | undefined
-  try {
-    const attributesResponse = await fetcher(
-      `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
-      {},
-      headers
-    )
-    attributes = attributesResponse['data']
-  } catch (e) {
-    console.log('Failed to load attributes')
-  }
 
   return {
-    props: { ssr: { collection, tokens, attributes }, id },
+    props: { ssr: { collection, tokens }, id },
     revalidate: 30,
   }
 }
