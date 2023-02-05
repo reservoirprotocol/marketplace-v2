@@ -100,7 +100,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
     functionName: 'safeTransferFrom',
     args: token?.token?.kind === 'erc721' ? [address, transferAddress, token?.token?.tokenId] : [address, transferAddress, token?.token?.tokenId, quantity, ''],
   })
-  const { data, sendTransaction, isLoading, error } = useSendTransaction(config)
+  const { data, sendTransactionAsync, isLoading, error } = useSendTransaction(config)
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
     hash: data?.hash,
   })
@@ -109,6 +109,14 @@ const Transfer = ({ token, mutate } : TransferProps) => {
     let qty = parseInt(e.target.value, 10);
 
     setQuantity(qty < 1 ? 1 : qty);
+  }
+
+  const handleTransfer = async () => {
+    sendTransactionAsync?.().then(() => {
+      mutate?.();
+    }).catch(() => {
+      // Empty
+    });
   }
 
   return (
@@ -256,7 +264,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                 {isLoadingTransaction ? (
                   <Text as="h4">Transferring...</Text>
                 ) : (
-                  <Button disabled={isLoading || isLoadingTransaction || !!preparedError} onClick={() => sendTransaction?.()}>
+                  <Button disabled={isLoading || isLoadingTransaction || !!preparedError} onClick={handleTransfer}>
                     {isLoading ? `Confirm` : 'Transfer'}
                   </Button>
                 )}
