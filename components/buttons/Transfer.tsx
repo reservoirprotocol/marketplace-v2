@@ -12,7 +12,7 @@ import {
   useAccount
 } from 'wagmi'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPaperPlane, faXmark, faWarning, faClose} from "@fortawesome/free-solid-svg-icons";
+import {faPaperPlane, faXmark, faWarning, faClose, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
 import {extractMediaType, TokenMedia, useTokens} from "@nftearth/reservoir-kit-ui";
 import {MutatorCallback} from "swr";
 
@@ -132,10 +132,18 @@ const Transfer = ({ token, mutate } : TransferProps) => {
           }}
         >
           {isSuccess ? (
-            <Flex align="center" justify="center">
-              <Text style="h4">
-                {`Your NFT has successfully transferred to ${transferAddress}`}
-              </Text>
+            <Flex align="center" justify="center" direction="column" css={{ textAlign: 'center' }}>
+              <FontAwesomeIcon icon={faCheckCircle} size="2xl" style={{ marginBottom: 20 }}/>
+              <Box css={{ wordBreak: 'break-word', mb: '$5' }}>
+                <Text style="h6">
+                  {`Your NFT has successfully transferred to ${transferAddress}`}
+                </Text>
+              </Box>
+              <Close>
+                <Button color="secondary">
+                  OK
+                </Button>
+              </Close>
             </Flex>
           ) : (
             <>
