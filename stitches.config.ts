@@ -33,7 +33,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         //Aliases
 
         //Primary
-        primary1: 'hsl(141,100%,74%)',
+        primary1: '$lime1',
         primary2: 'hsl(141,100%,74%)',
         primary3: 'hsl(141,100%,74%)',
         primary4: 'hsl(141,100%,74%),
