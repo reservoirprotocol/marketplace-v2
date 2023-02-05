@@ -272,7 +272,7 @@ export const darkTheme = createTheme({
     gray11: '$slate11',
     gray12: '$slate12',
 
-    accent: '#7000FF',
+    accent: '#79ffa8',
 
     neutralBgSubtle: '$gray3',
     neutralBg: '$gray1',

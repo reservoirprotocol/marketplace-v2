@@ -32,18 +32,18 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
 
 const developerSectionLinks = [
   {
-    name: 'Github',
+    name: 'GitHub',
     href: 'https://github.com/NFTEarth',
   },
 ]
 
 const companySectionLinks = [
   {
-    name: 'Terms of Use',
+    name: 'Terms',
     href: '/terms',
   },
   {
-    name: 'Privacy Policy',
+    name: 'Privacy',
     href: '/privacy',
   },
 ]
@@ -83,7 +83,7 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join NFTEarth Community" />
+        <SectionTitle title="Join the Community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
