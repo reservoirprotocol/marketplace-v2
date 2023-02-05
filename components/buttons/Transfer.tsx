@@ -1,0 +1,239 @@
+import {useContext, useState} from "react";
+import {
+  Root as DialogRoot,
+  DialogTrigger,
+  DialogPortal,
+  Close
+} from '@radix-ui/react-dialog'
+import {
+  usePrepareContractWrite,
+  useSendTransaction,
+  useWaitForTransaction,
+  useAccount
+} from 'wagmi'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faPaperPlane, faXmark, faWarning, faClose} from "@fortawesome/free-solid-svg-icons";
+import {extractMediaType, TokenMedia, useTokens} from "@nftearth/reservoir-kit-ui";
+import {MutatorCallback} from "swr";
+
+import {Content} from "../primitives/Dialog";
+import {ToastContext} from "../../context/ToastContextProvider";
+import {Box, Button, Flex, Input, Text} from "../primitives";
+
+type TransferProps = {
+  token: ReturnType<typeof useTokens>['data'][0]
+  mutate?: MutatorCallback
+}
+
+const ERC721NFTAbi = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+const ERC1155NFTAbi = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "safeTransferFrom",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
+
+const Transfer = ({ token, mutate } : TransferProps) => {
+  const { addToast } = useContext(ToastContext)
+  const { address } = useAccount()
+  const [transferAddress, setTransferAddress] = useState('');
+  const mediaType = extractMediaType(token?.token)
+  const showPreview =
+    mediaType === 'other' || mediaType === 'html' || mediaType === null
+  const { config, error: preparedError } = usePrepareContractWrite({
+    address: token?.token?.contract,
+    abi: token?.token?.kind === 'erc721' ? ERC721NFTAbi : ERC1155NFTAbi,
+    functionName: 'safeTransferFrom',
+    args: token?.token?.kind === 'erc721' ? [address, transferAddress, token?.token?.tokenId] : [address, transferAddress, token?.token?.tokenId, 1, ''],
+  })
+  console.log(token?.token?.kind);
+  const { data, sendTransaction, isLoading, error } = useSendTransaction(config)
+
+  const { isLoading: isLoadingTransaction, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  })
+
+  return (
+    <DialogRoot modal={false}>
+      <DialogTrigger asChild>
+        <Button
+          css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+          type="button"
+          size="small"
+          color="gray3"
+        >
+          <FontAwesomeIcon icon={faPaperPlane} width={16} height={16} />
+        </Button>
+      </DialogTrigger>
+      <DialogPortal>
+        <Content
+          onInteractOutside={(e) => {
+            e.preventDefault()
+          }}
+          css={{
+            top: '20%',
+            padding: 20,
+            zIndex: 9999,
+            maxWidth: 500,
+            minWidth: 350,
+          }}
+        >
+          {isSuccess ? (
+            <Flex align="center" justify="center">
+              <Text style="h4">
+                {`Your NFT has successfully transferred to ${transferAddress}`}
+              </Text>
+            </Flex>
+          ) : (
+            <>
+              <Close>
+                <Flex
+                  css={{
+                    position: 'fixed',
+                    top: 10,
+                    right: 10,
+                    justifyContent: 'center',
+                    width: '44px',
+                    height: '44px',
+                    alignItems: 'center',
+                    borderRadius: 8,
+                    backgroundColor: '$gray3',
+                    color: '$gray12',
+                    '&:hover': {
+                      backgroundColor: '$gray4',
+                    },
+                  }}
+                >
+                  <FontAwesomeIcon icon={faXmark} width={16} height={16} />
+                </Flex>
+              </Close>
+              <Flex
+                align="center"
+                direction="column"
+                css={{
+                  overflow: 'hidden',
+                }}>
+                <Box css={{ mb: '$4' }}>
+                  <Text style="h4">
+                    Transfer your NFT
+                  </Text>
+                </Box>
+                <TokenMedia
+                  token={token?.token}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    transition: 'transform .3s ease-in-out',
+                    maxHeight: 720,
+                    borderRadius: 0,
+                    aspectRatio: '1/1',
+                    marginBottom: 20,
+                    border: '2px solid #5D770D'
+                  }}
+                  preview={showPreview}
+                  onRefreshToken={() => {
+                    mutate?.()
+                    addToast?.({
+                      title: 'Refresh token',
+                      description: 'Request to refresh this token was accepted.',
+                    })
+                  }}
+                />
+                <Box css={{ mb: 20 }}>
+                  <Box css={{ textAlign: 'center' }}>
+                    {`"${token?.token?.name ? token.token.name : `${token?.token?.collection?.name} #${token?.token?.tokenId}`}" will be transferred to ${transferAddress == '' ? '...' : transferAddress}`}
+                  </Box>
+                  {transferAddress !== '' && (
+                    <Box css={{ color: 'orange', mt: '$4', textAlign: 'center' }}>
+                      <FontAwesomeIcon icon={faWarning} style={{ marginRight: 5 }}/>
+                      {`Items sent to the wrong address cannot be recovered`}
+                    </Box>
+                  )}
+                  {(error && transferAddress !== '') && (
+                    <Box css={{ color: 'red', mt: '$4', textAlign: 'center' }}>
+                      <FontAwesomeIcon icon={faClose} style={{ marginRight: 5 }}/>
+                      {error.message}
+                    </Box>
+                  )}
+                </Box>
+                <Input
+                  disabled={isLoading || isLoadingTransaction}
+                  value={transferAddress}
+                  onChange={(e) => setTransferAddress(e.target.value)}
+                  placeholder={"e.g. 0x21ab235523cdd..."}
+                  containerCss={{
+                    width: '100%',
+                    mb: 20,
+                    px: 10
+                  }}
+                />
+                {isLoadingTransaction ? (
+                  <Text as="h4">Transferring...</Text>
+                ) : (
+                  <Button disabled={isLoading || isLoadingTransaction || !!preparedError} onClick={() => sendTransaction?.()}>
+                    {isLoading ? `Confirm` : 'Transfer'}
+                  </Button>
+                )}
+              </Flex>
+            </>
+          )}
+        </Content>
+      </DialogPortal>
+    </DialogRoot>
+  )
+}
+
+export default Transfer;

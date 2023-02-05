@@ -4,8 +4,8 @@ import {
   Root as DialogRoot,
   DialogTrigger,
   DialogPortal,
+  Close as DialogClose
 } from '@radix-ui/react-dialog'
-import * as RadixDialog from '@radix-ui/react-dialog'
 import {
   faMagnifyingGlass,
   faChevronLeft,
@@ -32,7 +32,7 @@ const MobileSearch = () => {
         align="center"
         justify="between"
       >
-        <RadixDialog.Close>
+        <DialogClose>
           <Flex
             css={{
               justifyContent: 'center',
@@ -49,7 +49,7 @@ const MobileSearch = () => {
           >
             <FontAwesomeIcon icon={faChevronLeft} width={16} height={16} />
           </Flex>
-        </RadixDialog.Close>
+        </DialogClose>
       </Flex>
     </Flex>
   )

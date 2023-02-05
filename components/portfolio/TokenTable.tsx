@@ -27,6 +27,7 @@ import { useMarketplaceChain } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import Transfer from "../buttons/Transfer";
 
 type Props = {
   address: Address | undefined
@@ -182,22 +183,26 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               logoHeight={14}
               css={{ mb: '$3' }}
             />
-            <List
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              mutate={mutate}
-              buttonCss={{
-                width: '100%',
-                maxWidth: '300px',
-                justifyContent: 'center',
-                px: '42px',
-                backgroundColor: '$gray3',
-                color: '$gray12',
-                '&:hover': {
-                  backgroundColor: '$gray4',
-                },
-              }}
-              buttonChildren="List"
-            />
+            <Flex>
+              <Transfer token={token as ReturnType<typeof useTokens>['data'][0]} mutate={mutate} />
+              <List
+                token={token as ReturnType<typeof useTokens>['data'][0]}
+                mutate={mutate}
+                buttonCss={{
+                  width: '100%',
+                  maxWidth: '300px',
+                  justifyContent: 'center',
+                  px: '42px',
+                  backgroundColor: '$gray3',
+                  color: '$gray12',
+                  '&:hover': {
+                    backgroundColor: '$gray4',
+                  },
+                  ml: '$3'
+                }}
+                buttonChildren="List"
+              />
+            </Flex>
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
@@ -304,6 +309,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
+          <Transfer token={token as ReturnType<typeof useTokens>['data'][0]} mutate={mutate} />
           {token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
               token={token as ReturnType<typeof useTokens>['data'][0]}
@@ -325,7 +331,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               mutate={mutate}
             />
           )}
-
           <List
             token={token as ReturnType<typeof useTokens>['data'][0]}
             buttonCss={{

@@ -223,6 +223,7 @@ export default ({
         mutate={mutate}
         buttonCss={{
           position: 'absolute',
+          width: '100%',
           bottom: -44,
           left: 0,
           right: 0,
