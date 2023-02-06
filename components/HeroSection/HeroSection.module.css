@@ -27,7 +27,6 @@
 }
 
 .box h1 {
-  @apply text-4xl font-[900] text-neutral-100 md:text-6xl;
   font-size: 40px;
   line-height: 1.2;
   font-weight: 900;
