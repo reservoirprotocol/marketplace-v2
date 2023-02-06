@@ -7,12 +7,12 @@ const HeroSection = () => {
       <div className={styles.container}>
         <div className={styles.board}>
           <div className={styles.box}>
-            <h1 style={{ color: 'fff' }}>Buy And Sell NFTS on Layer 2</h1>
-            <div style={{ color: 'fff' }}>
-              Discover, collect, and sell digital items on Optimism&apos;s
-              largest NFT marketplace
+            <h1>Buy And Sell NFTS on L2</h1>
+            <div>
+              Discover and Create NFTs and earn rewards on Optimism&apos;s
+              largest NFT marketplace.
             </div>
-            <Link href="/">Explore NFTs</Link>
+            <Link href="/explore">Explore NFTs</Link>
           </div>
           <div className={styles.box}></div>
         </div>
