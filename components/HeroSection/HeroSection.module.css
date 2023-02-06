@@ -1,0 +1,77 @@
+.container {
+  margin: 0 auto;
+  padding: 0 0;
+}
+
+.board {
+  display: grid;
+  width: 100%;
+  padding: 64px 24px;
+  border-radius: 24px;
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  -ms-border-radius: 24px;
+  -o-border-radius: 24px;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)),
+    url('../../public/images/heroSectionBanner.png');
+  background-position: center center;
+}
+
+.box {
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  font-size: 18px;
+}
+
+.box h1 {
+  font-size: 40px;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.box a {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* min-width: 280px; */
+  align-items: center;
+  justify-content: center;
+  padding: 8px 8px;
+  transition: 200ms;
+  -webkit-transition: 200ms;
+  -moz-transition: 200ms;
+  -ms-transition: 200ms;
+  -o-transition: 200ms;
+  font-weight: 600;
+  background-color: #fff;
+  color: #151718;
+  border-radius: 48px;
+  -webkit-border-radius: 48px;
+  -moz-border-radius: 48px;
+  -ms-border-radius: 48px;
+  -o-border-radius: 48px;
+}
+
+.box a:hover {
+  opacity: 0.8;
+}
+
+@media (min-width: 768px) {
+  .board {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 100px 64px;
+  }
+
+  .box h1 {
+    font-size: 64px;
+  }
+
+  .box a {
+    min-width: 280px;
+    width: fit-content;
+    padding: 16px 16px;
+  }
+}
