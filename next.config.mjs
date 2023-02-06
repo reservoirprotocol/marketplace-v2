@@ -7,7 +7,8 @@ const nextConfig = {
     largePageDataBytes: 800 * 1000,
   },
   env: {
-    OPTIMISM_RESERVOIR_API_BASE: process.env.OPTIMISM_RESERVOIR_API_BASE
+    OPTIMISM_RESERVOIR_API_BASE: process.env.OPTIMISM_RESERVOIR_API_BASE,
+    NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID
   }
 }
 
