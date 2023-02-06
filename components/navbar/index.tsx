@@ -65,10 +65,10 @@ const Navbar = () => {
         </Flex>
       </Box>
       <Flex align="center" css={{ gap: '$3' }}>
-        <MobileSearch key={router.asPath} />
+        <MobileSearch key={`${router.asPath}-search`} />
         <ChainSwitcher />
         <ThemeSwitcher />
-        <HamburgerMenu key={router.asPath} />
+        <HamburgerMenu key={`${router.asPath}-hamburger`} />
       </Flex>
     </Flex>
   ) : (
