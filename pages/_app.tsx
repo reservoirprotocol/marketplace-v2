@@ -30,6 +30,8 @@ import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import AnalyticsProvider from 'components/AnalyticsProvider'
 
+import '../styles/global.css'
+
 export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
@@ -144,7 +146,6 @@ function MyApp({
             // Note that you should at the very least configure the source with your own domain
             apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
             disablePoweredByReservoir: true,
-            apiKey: process.env.NEXT_PUBLIC_RESERVOIR_API_KEY,
             marketplaceFee: +`${FEE_BPS || 0}`,
             marketplaceFeeRecipient: FEE_RECIPIENT,
             // Replace source with your domain
