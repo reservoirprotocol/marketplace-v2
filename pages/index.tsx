@@ -14,10 +14,12 @@ import { useCollections } from '@nftearth/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
+import HeroSection from 'components/HeroSection'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const collectionsSetId = "b8411093a868a4e19d8603e6539352953977a81cf2bf401a60ff807248f601d0";
+const collectionsSetId =
+  'b8411093a868a4e19d8603e6539352953977a81cf2bf401a60ff807248f601d0'
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
@@ -39,10 +41,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionsSetId,
   }
 
-  const { data: topData, isFetchingPage: isFetchingTopPage, isValidating: isValidatingTopPage } =
-    useCollections(collectionQuery2, {
-      fallbackData: [ssr.collections[marketplaceChain.id]],
-    })
+  const {
+    data: topData,
+    isFetchingPage: isFetchingTopPage,
+    isValidating: isValidatingTopPage,
+  } = useCollections(collectionQuery2, {
+    fallbackData: [ssr.collections[marketplaceChain.id]],
+  })
 
   let topCollections = topData || []
 
@@ -80,27 +85,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <Flex css={{ my: '$6', mb: '200px', gap: 65 }} direction="column">
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 20,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'column',
-              },
-            }}
-          >
-            <Text style="h2" css={{ color: '$lime10'}} as="h2">
-              Buy and Sell NFTs on L2
-            </Text>
-            <Text style="h4" css={{ color: '$accent'}} as="h4">
-              NFTEarth
-            </Text>
-          </Flex>
-        </Flex>
+        <HeroSection />
         <Flex css={{ my: '$6', mb: '100px', gap: 65 }} direction="column">
           <Flex
             justify="between"
@@ -174,7 +159,7 @@ type TopChainCollections = Record<string, CollectionSchema>
 
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    topCollections: TopChainCollections,
+    topCollections: TopChainCollections
     collections: ChainCollections
   }
 }> = async () => {
@@ -184,7 +169,6 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 12,
     }
-
 
   let collectionQuery2: paths['/collections/v5']['get']['parameters']['query'] =
     {
