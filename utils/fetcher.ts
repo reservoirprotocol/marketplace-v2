@@ -5,22 +5,21 @@ const fetcher = async (
   params: Record<string, any> = {},
   data: RequestInit = {}
 ) => {
-  const headers = new Headers()
+  try {
+    const headers = new Headers()
+    const path = new URL(url)
+    setParams(path, params)
 
-  if (process.env.NEXT_PUBLIC_RESERVOIR_API_KEY) {
-    headers.set('x-api-key', process.env.NEXT_PUBLIC_RESERVOIR_API_KEY)
+    const response = await fetch(path.href, {
+      headers,
+      ...data,
+    })
+    const json = await response.json()
+
+    return { data: json, response }
+  } catch (e: any) {
+    return { data: null, response: { status: 400, ok: false, url: url } }
   }
-
-  const path = new URL(url)
-  setParams(path, params)
-
-  const response = await fetch(path.href, {
-    headers,
-    ...data,
-  })
-  const json = await response.json()
-
-  return { data: json, response }
 }
 
 export const basicFetcher = async (href: string, options?: RequestInit) => {
