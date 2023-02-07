@@ -99,7 +99,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Text>
             <Text style="body1" css={{ mb: 48 }}>
               Reservoir Marketplace is an open-source project that showcases the
-              latest and greatest features of Reservoir Platform.
+              latest and greatest features of the Reservoir Platform.
             </Text>
             <a
               href="https://github.com/reservoirprotocol/marketplace-v2"
