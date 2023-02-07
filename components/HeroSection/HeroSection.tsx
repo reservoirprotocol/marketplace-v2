@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import styles from './HeroSection.module.css'
 
-const HeroSection = () => {
+interface IProp {
+  hideLink?: boolean
+}
+
+const HeroSection = ({ hideLink }: IProp) => {
   return (
     <section>
       <div className={styles.container}>
@@ -12,9 +16,9 @@ const HeroSection = () => {
               Discover and Create NFTs and earn rewards on Optimism&apos;s
               largest NFT marketplace.
             </div>
-            <Link href="/explore">Explore NFTs</Link>
+            {hideLink ?? <Link href="/explore">Explore NFTs</Link>}
           </div>
-          <div className={styles.box}></div>
+          {/* <div className={styles.box}></div> */}
         </div>
       </div>
     </section>
