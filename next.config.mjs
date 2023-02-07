@@ -8,7 +8,8 @@ const nextConfig = {
   },
   env: {
     OPTIMISM_RESERVOIR_API_BASE: process.env.OPTIMISM_RESERVOIR_API_BASE,
-    NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID
+    NEXT_PUBLIC_ALCHEMY_ID: process.env.NEXT_PUBLIC_ALCHEMY_ID,
+    NEXT_PUBLIC_HOST_URL: process.env.NEXT_PUBLIC_HOST_URL
   }
 }
 
