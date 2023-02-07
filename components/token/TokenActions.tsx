@@ -99,7 +99,7 @@ export const TokenActions: FC<Props> = ({
       {!isOwner && (
         <Bid
           tokenId={token?.token?.tokenId}
-          collectionId={token?.token?.contract}
+          collectionId={token?.token?.collection?.id}
           mutate={mutate}
           buttonCss={buttonCss}
         />
