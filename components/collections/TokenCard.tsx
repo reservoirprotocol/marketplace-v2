@@ -198,7 +198,7 @@ export default ({
                     height: 20,
                     borderRadius: '50%',
                   }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.name}/logo/v2`}
+                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
                 />
               )}
             </>
