@@ -67,7 +67,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             </Text>
           )}
         </Flex>
-        {listSourceName && (
+        {(listSourceName && listSourceName !== 'nftearth.exchange') && (
           <a
             href={listSourceRedirect}
             target="_blank"
@@ -112,7 +112,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             </Text>
           )}
         </Flex>
-        {offerSourceName && (
+        {(offerSourceName && offerSourceName !== 'nftearth.exchange') && (
           <a
             href={offerSourceRedirect}
             target="_blank"
