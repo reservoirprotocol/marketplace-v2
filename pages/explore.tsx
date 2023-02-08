@@ -2,7 +2,7 @@ import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import {ComponentPropsWithoutRef, useEffect, useRef} from 'react'
+import { ComponentPropsWithoutRef, useEffect, useRef } from 'react'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@nftearth/reservoir-sdk'
@@ -11,6 +11,7 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
+import HeroSection from 'components/HeroSection'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -57,6 +58,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
+        <HeroSection hideLink={true} />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
@@ -88,7 +90,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
               <LoadingSpinner />
             </Flex>
           )}
-          <div ref={loadMoreRef}/>
+          <div ref={loadMoreRef} />
         </Flex>
       </Box>
     </Layout>
