@@ -170,7 +170,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           css={{
             maxWidth: '100%',
             flex: 1,
-            '@md': { maxWidth: 445, width: '100%' },
+            width: '100%',
+            '@md': { maxWidth: 445 },
             position: 'relative',
             '@sm': {
               '>button': {

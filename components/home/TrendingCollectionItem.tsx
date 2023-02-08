@@ -46,7 +46,7 @@ export const TrendingCollectionItem: FC<Props> = ({
               openseaVerificationStatus={collection?.openseaVerificationStatus}
             />
           </Flex>
-          <Flex>
+          <Flex align="center">
             <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
               Floor
             </Text>
@@ -54,7 +54,7 @@ export const TrendingCollectionItem: FC<Props> = ({
               amount={collection?.floorAsk?.price?.amount?.decimal}
               address={collection?.floorAsk?.price?.currency?.contract}
               decimals={collection?.floorAsk?.price?.currency?.decimals}
-              logoHeight={12}
+              logoHeight={16}
               maximumFractionDigits={2}
               textStyle="subtitle2"
             />
@@ -65,7 +65,7 @@ export const TrendingCollectionItem: FC<Props> = ({
           <FormatCryptoCurrency
             amount={collection?.volume?.[volumeKey]}
             maximumFractionDigits={1}
-            logoHeight={12}
+            logoHeight={16}
             textStyle="subtitle1"
           />
           {volumeKey !== 'allTime' && (

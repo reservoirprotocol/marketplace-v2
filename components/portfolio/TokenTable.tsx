@@ -212,7 +212,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               amount={token?.token?.topBid?.price?.netAmount?.native}
               textStyle="subtitle2"
               logoHeight={14}
-              css={{ mb: '$3' }}
             />
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
@@ -226,6 +225,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   px: '32px',
                   backgroundColor: '$primary9',
                   color: 'white',
+                  mt: '$2',
                   '&:hover': {
                     backgroundColor: '$primary10',
                   },
