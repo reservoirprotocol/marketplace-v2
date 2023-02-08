@@ -6,7 +6,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
 import {
-  TokenMedia,
+  TokenMedia, useAttributes,
   useCollections,
   useTokenOpenseaBanned,
   useTokens,
@@ -72,6 +72,11 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       fallbackData: [ssr.collection],
     }
   )
+  const { data: attributesData }  = useAttributes(collectionId);
+
+  const attributes = attributesData?.filter(
+    (attribute) => attribute.kind != 'number' && attribute.kind != 'range' && attribute.key != 'birthday'
+  )
   const collection = collections && collections[0] ? collections[0] : null
 
   const { data: tokens, mutate } = useTokens(
@@ -81,7 +86,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       includeTopBid: true,
     },
     {
-      fallbackData: [ssr.tokens],
+      fallbackData: ssr.tokens ? [ssr.tokens] : undefined,
     }
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
@@ -375,7 +380,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <RarityRank
                 token={token}
                 collection={collection}
-                collectionAttributes={ssr.attributes?.attributes}
+                collectionAttributes={attributes}
               />
               <PriceData token={token} />
               {isMounted && (
@@ -446,7 +451,6 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
@@ -492,20 +496,8 @@ export const getStaticProps: GetStaticProps<{
 
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
-  let attributes: Props['ssr']['attributes'] | undefined
-  try {
-    const attributesResponse = await fetcher(
-      `${reservoirBaseUrl}/collections/${collectionId}/attributes/all/v2`,
-      {},
-      headers
-    )
-    attributes = attributesResponse['data']
-  } catch (e) {
-    console.log('Failed to load attributes')
-  }
-
   return {
-    props: { collectionId, id, ssr: { collection, tokens, attributes } },
+    props: { collectionId, id, ssr: { collection, tokens } },
     revalidate: 20,
   }
 }

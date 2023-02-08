@@ -192,6 +192,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       },
     },
     media: {
+      xs: '(min-width: 300px)',
       sm: '(min-width: 600px)',
       md: '(min-width: 900px)',
       lg: '(min-width: 1200px)',

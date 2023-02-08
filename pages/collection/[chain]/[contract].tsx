@@ -121,13 +121,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     isFetchingPage,
     hasNextPage,
   } = useTokens(tokenQuery, {
-    fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
+    fallbackData: initialTokenFallbackData && ssr.tokens ? [ssr.tokens] : undefined,
   })
 
-  const { data: attributesData }  = useAttributes(collection.id);
+  const { data: attributesData }  = useAttributes(id);
 
   const attributes = attributesData?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+    (attribute) => attribute.kind != 'number' && attribute.kind != 'range' && attribute.key != 'birthday'
   )
 
   const rarityEnabledCollection = Boolean(

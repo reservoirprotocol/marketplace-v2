@@ -4,12 +4,19 @@ export default styled('span', {
   color: '$gray12',
   fontFamily: '$body',
   letterSpacing: 0,
-
   variants: {
     style: {
+      h1: {
+        fontWeight: 900,
+        fontSize: 64,
+      },
       h2: {
-        fontWeight: 700,
+        fontWeight: 900,
         fontSize: 48,
+      },
+      h3: {
+        fontWeight: 900,
+        fontSize: 40,
       },
       h4: {
         fontWeight: 700,
