@@ -410,7 +410,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="subtitle3" color="subtle">
               To
             </Text>
-            <Link href={`/profile/${activity.fromAddress}`}>
+            <Link href={`/profile/${activity.toAddress}`}>
               <Text
                 style="subtitle3"
                 css={{
