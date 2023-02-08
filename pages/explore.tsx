@@ -58,7 +58,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <HeroSection hideLink={true} />
+        <HeroSection hideLink />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"

@@ -1,12 +1,13 @@
 import Link from 'next/link'
 
 import { Button, Flex, Grid, Text } from './primitives'
+import {FC} from "react";
 
 interface IProp {
   hideLink?: boolean
 }
 
-const HeroSection = ({ hideLink }: IProp) => {
+const HeroSection: FC<IProp> = ({ hideLink }) => {
   return (
     <Flex
       as="section"
