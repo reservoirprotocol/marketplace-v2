@@ -15,6 +15,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
+import CartButton from './CartButton'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -128,6 +129,7 @@ const Navbar = () => {
 
       <Flex css={{ gap: '$3' }} justify="end" align="center">
         <ThemeSwitcher />
+        <CartButton />
         <ChainSwitcher />
         {isConnected ? (
           <ProfileDropdown />

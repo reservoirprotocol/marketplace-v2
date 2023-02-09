@@ -1,10 +1,11 @@
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
   TokenMedia,
-  useTokens,
+  useDynamicTokens,
 } from '@reservoir0x/reservoir-kit-ui'
+import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
 import {
   Box,
@@ -21,7 +22,7 @@ import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
 
 type TokenCardProps = {
-  token: ReturnType<typeof useTokens>['data'][0]
+  token: ReturnType<typeof useDynamicTokens>['data'][0]
   rarityEnabled: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
@@ -47,7 +48,6 @@ export default ({
         borderRadius: 8,
         overflow: 'hidden',
         background: '$neutralBgSubtle',
-
         $$shadowColor: '$colors$panelShadow',
         boxShadow: '0 8px 12px 0px $$shadowColor',
         position: 'relative',
@@ -55,12 +55,33 @@ export default ({
           transform: 'scale(1.1)',
         },
         '@sm': {
-          '&:hover button[aria-haspopup="dialog"]': {
+          '&:hover .token-button-container': {
             bottom: 0,
           },
         },
       }}
     >
+      <Flex
+        justify="center"
+        align="center"
+        css={{
+          borderRadius: '99999px',
+          width: 48,
+          height: 48,
+          backgroundColor: '$primary9',
+          position: 'absolute',
+          right: '$2',
+          zIndex: 1,
+          transition: `visibility 0s linear ${
+            token.isInCart ? '' : '250ms'
+          }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
+          opacity: token.isInCart ? 1 : 0,
+          top: token.isInCart ? '$2' : 50,
+          visibility: token.isInCart ? 'visible' : 'hidden',
+        }}
+      >
+        <FontAwesomeIcon icon={faCheck} width={20} height={20} />
+      </Flex>
       <Link
         passHref
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
@@ -218,22 +239,39 @@ export default ({
           )}
         </Flex>
       </Link>
-      <BuyNow
-        token={token}
-        mutate={mutate}
-        buttonCss={{
-          position: 'absolute',
+      <Flex
+        className="token-button-container"
+        css={{
           width: '100%',
+          transition: 'bottom 0.25s ease-in-out',
+          position: 'absolute',
           bottom: -44,
           left: 0,
           right: 0,
-          justifyContent: 'center',
-          transition: 'bottom 0.25s ease-in-out',
+          gap: 1,
         }}
-        buttonProps={{
-          corners: 'square',
-        }}
-      />
+      >
+        <BuyNow
+          token={token}
+          mutate={mutate}
+          buttonCss={{
+            justifyContent: 'center',
+            flex: 1,
+          }}
+          buttonProps={{
+            corners: 'square',
+          }}
+        />
+        <AddToCart
+          token={token}
+          buttonCss={{
+            width: 52,
+            p: 0,
+            justifyContent: 'center',
+          }}
+          buttonProps={{ corners: 'square' }}
+        />
+      </Flex>
     </Box>
   )
 }

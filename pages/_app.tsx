@@ -20,6 +20,7 @@ import {
   darkTheme as reservoirDarkTheme,
   lightTheme as reservoirLightTheme,
   ReservoirKitTheme,
+  CartProvider,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
@@ -148,17 +149,19 @@ function MyApp({
           }}
           theme={reservoirKitTheme}
         >
-          <Tooltip.Provider>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <ToastContextProvider>
-                <FunctionalComponent {...pageProps} />
-              </ToastContextProvider>
-            </RainbowKitProvider>
-          </Tooltip.Provider>
+          <CartProvider>
+            <Tooltip.Provider>
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
+              >
+                <ToastContextProvider>
+                  <FunctionalComponent {...pageProps} />
+                </ToastContextProvider>
+              </RainbowKitProvider>
+            </Tooltip.Provider>
+          </CartProvider>
         </ReservoirKitProvider>
       </ThemeProvider>
     </HotkeysProvider>
