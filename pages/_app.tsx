@@ -162,7 +162,7 @@ function MyApp({
                 <ToastContextProvider>
                     <FunctionalComponent {...pageProps} />
                     <div>
-                      <p>We are shipping new updates... Regret the inconvenience caused. Hang out in our discord for exciting updates!</p>
+                      <p>We are shipping new updates... We regret the inconvenience caused. Hang out in our discord for exciting updates!</p>
                       <style jsx>{`
                         p {
                           position: fixed;
