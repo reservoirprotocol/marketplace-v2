@@ -76,10 +76,8 @@ const AcceptBid: FC<Props> = ({
         bidId={bidId}
         collectionId={collectionId}
         tokenId={token?.token?.tokenId}
-        onClose={() => {
-          if (mutate) {
-            mutate()
-          }
+        onClose={(data, stepData, currentStep) => {
+          if (mutate && currentStep == 4) mutate()
         }}
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {

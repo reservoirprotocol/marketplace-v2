@@ -102,10 +102,8 @@ const CollectionOffer: FC<Props> = ({
               </Button>
             }
             attribute={attribute}
-            onBidComplete={() => {
-              if (mutate) {
-                mutate()
-              }
+            onClose={(data, stepData, currentStep) => {
+              if (mutate && currentStep == 2) mutate()
             }}
             onBidError={(error) => {
               if (error) {

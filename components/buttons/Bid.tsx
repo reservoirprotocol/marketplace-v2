@@ -70,10 +70,8 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
-        onBidComplete={() => {
-          if (mutate) {
-            mutate()
-          }
+        onClose={(data, stepData, currentStep) => {
+          if (mutate && currentStep == 2) mutate()
         }}
         onBidError={(error) => {
           if (error) {

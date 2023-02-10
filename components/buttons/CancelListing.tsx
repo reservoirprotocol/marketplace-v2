@@ -68,10 +68,8 @@ const CancelListing: FC<Props> = ({
           description: 'The transaction was not completed.',
         })
       }}
-      onClose={() => {
-        if (mutate) {
-          mutate()
-        }
+      onClose={(data, currentStep) => {
+        if (mutate && currentStep == 2) mutate()
       }}
     />
   )

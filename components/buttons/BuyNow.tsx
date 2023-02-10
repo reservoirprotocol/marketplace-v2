@@ -71,10 +71,8 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
       trigger={trigger}
       tokenId={token?.token?.tokenId}
       collectionId={token?.token?.collection?.id}
-      onClose={() => {
-        if (mutate) {
-          mutate()
-        }
+      onClose={(data, stepData, currentStep) => {
+        if (mutate && currentStep == 3) mutate()
       }}
     />
   )

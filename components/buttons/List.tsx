@@ -83,10 +83,8 @@ const List: FC<Props> = ({
         collectionId={contract}
         tokenId={tokenId}
         currencies={listingCurrencies}
-        onListingComplete={() => {
-          if (mutate) {
-            mutate()
-          }
+        onClose={(data, stepData, currentStep) => {
+          if (mutate && currentStep == 3) mutate()
         }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {
