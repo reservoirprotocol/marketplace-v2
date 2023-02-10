@@ -1,4 +1,8 @@
-import { AcceptBidModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  AcceptBidModal,
+  AcceptBidStep,
+  useTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -77,7 +81,7 @@ const AcceptBid: FC<Props> = ({
         collectionId={collectionId}
         tokenId={token?.token?.tokenId}
         onClose={(data, stepData, currentStep) => {
-          if (mutate && currentStep == 4) mutate()
+          if (mutate && currentStep == AcceptBidStep.Complete) mutate()
         }}
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {

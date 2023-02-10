@@ -1,5 +1,5 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { CancelBidModal } from '@reservoir0x/reservoir-kit-ui'
+import { CancelBidModal, CancelBidStep } from '@reservoir0x/reservoir-kit-ui'
 import { FC, ReactElement, cloneElement, useContext } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
@@ -64,7 +64,7 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
         })
       }}
       onClose={(data, currentStep) => {
-        if (mutate && currentStep == 2) mutate()
+        if (mutate && currentStep == CancelBidStep.Complete) mutate()
       }}
     />
   )

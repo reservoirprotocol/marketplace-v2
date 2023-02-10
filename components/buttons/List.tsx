@@ -1,4 +1,4 @@
-import { ListModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { ListModal, ListStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import {
   cloneElement,
@@ -84,7 +84,7 @@ const List: FC<Props> = ({
         tokenId={tokenId}
         currencies={listingCurrencies}
         onClose={(data, stepData, currentStep) => {
-          if (mutate && currentStep == 3) mutate()
+          if (mutate && currentStep == ListStep.Complete) mutate()
         }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {

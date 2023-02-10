@@ -1,7 +1,7 @@
 import React, { ComponentProps, FC } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner } from 'wagmi'
-import { BuyModal, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -72,7 +72,7 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
       tokenId={token?.token?.tokenId}
       collectionId={token?.token?.collection?.id}
       onClose={(data, stepData, currentStep) => {
-        if (mutate && currentStep == 3) mutate()
+        if (mutate && currentStep == BuyStep.Complete) mutate()
       }}
     />
   )
