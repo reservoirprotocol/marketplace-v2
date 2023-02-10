@@ -160,7 +160,25 @@ function MyApp({
                 modalSize="compact"
               >
                 <ToastContextProvider>
-                  <FunctionalComponent {...pageProps} />
+                    <FunctionalComponent {...pageProps} />
+                    <div>
+                      <p>We are shipping new updates... Regret the incovenience caused. Hang out in our discord for exciting updates!</p>
+                      <style jsx>{`
+                        p {
+                          position: fixed;
+                          top: 110px;
+                          left: 10px;
+                          padding: 10px;
+                          background: #fff;
+                          color: orange;
+                          font-size: small;
+                          width: 300px;
+                          border-radius: 10px;
+                          text-align: center;
+                        }
+                      `}
+                      </style>
+                    </div>
                 </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>
