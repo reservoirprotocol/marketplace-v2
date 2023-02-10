@@ -1,6 +1,7 @@
 import { setParams } from '@reservoir0x/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import supportedChains, { DefaultChain } from 'utils/chains'
+import { constants } from 'ethers'
 
 // A proxy API endpoint to redirect all requests to `/api/reservoir/*` to
 // MAINNET: https://api.reservoir.tools/{endpoint}/{query-string}
@@ -33,6 +34,25 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   setParams(url, query)
 
   if (endpoint.includes('redirect/')) {
+    // Redirect eth and weth currency icons to self-hosted
+    // versions without any padding
+    endpoint = endpoint.toLowerCase()
+
+    if (
+      (chainPrefix == 'ethereum' || chainPrefix == 'goerli') &&
+      endpoint.includes('currency')
+    ) {
+      if (endpoint.includes(constants.AddressZero)) {
+        res.redirect('/icons/currency/new-eth.png')
+        return
+      } else if (
+        endpoint.includes('0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2') ||
+        endpoint.includes('0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6')
+      ) {
+        res.redirect('/icons/currency/new-weth.png')
+        return
+      }
+    }
     res.redirect(url.href)
     return
   }
