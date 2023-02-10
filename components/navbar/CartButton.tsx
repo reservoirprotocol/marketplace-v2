@@ -13,6 +13,7 @@ const CartButton = () => {
           css={{
             justifyContent: 'center',
             width: '44px',
+            height: '44px',
             position: 'relative',
           }}
           size="small"
@@ -33,7 +34,9 @@ const CartButton = () => {
                 right: -6,
               }}
             >
-              <Text style="subtitle3">{cartItems.length}</Text>
+              <Text style="subtitle3" css={{ color: 'white' }}>
+                {cartItems.length}
+              </Text>
             </Flex>
           )}
         </Button>

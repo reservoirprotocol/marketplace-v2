@@ -78,6 +78,7 @@ export default ({
           opacity: token.isInCart ? 1 : 0,
           top: token.isInCart ? '$2' : 50,
           visibility: token.isInCart ? 'visible' : 'hidden',
+          color: 'white',
         }}
       >
         <FontAwesomeIcon icon={faCheck} width={20} height={20} />

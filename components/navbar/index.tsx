@@ -68,7 +68,7 @@ const Navbar = () => {
       <Flex align="center" css={{ gap: '$3' }}>
         <MobileSearch key={`${router.asPath}-search`} />
         <ChainSwitcher />
-        <ThemeSwitcher />
+        <CartButton />
         <HamburgerMenu key={`${router.asPath}-hamburger`} />
       </Flex>
     </Flex>
