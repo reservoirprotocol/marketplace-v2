@@ -1,4 +1,4 @@
-import { BidModal } from '@reservoir0x/reservoir-kit-ui'
+import { BidModal, BidStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { cloneElement, ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
@@ -70,10 +70,8 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
-        onBidComplete={() => {
-          if (mutate) {
-            mutate()
-          }
+        onClose={(data, stepData, currentStep) => {
+          if (mutate && currentStep == BidStep.Complete) mutate()
         }}
         onBidError={(error) => {
           if (error) {
