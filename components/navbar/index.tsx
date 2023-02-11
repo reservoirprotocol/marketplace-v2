@@ -60,7 +60,7 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/nftearth-icon.png" style={{ width: '100%' }} />
+              <img src="/nftearth-icon.png" style={{ width: 40, height: 40 }} />
             </Box>
           </Link>
         </Flex>
@@ -100,7 +100,7 @@ const Navbar = () => {
               ) : (
                 <img
                   src="/nftearth-icon.png"
-                  style={{ width: 40 }}
+                  style={{ width: 40, height: 40 }}
                 />
               )}<span style={{ marginLeft: 10, fontWeight: 'bold' }}>NFTEarth</span>
             </Box>
