@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive'
 import { Text, Flex, Box, Input, Switch, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 
-const ExplorePage = () => {
+const LaunchPadDeployPage = () => {
   const { theme } = useTheme();
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' });
 
@@ -38,7 +38,9 @@ const ExplorePage = () => {
             margin: '0 auto'
           }}>
           <Text style="h4" css={{ lineHeight: 1.2 }}>Launchpad Contract Deployer</Text>
-          <Text style="subtitle3" css={{ marginTop: isMobile ? 12 : 6, color: '$gray11' }}>Deploy your own ERC-721 smart contract and manage collection settings, minting, metadata, and allowlist on NFTEarth.</Text>
+          <Text style="subtitle3" css={{ marginTop: isMobile ? 12 : 6, color: '$gray11' }}>
+            Deploy your own ERC-721 smart contract and manage collection settings, minting, metadata, and allowlist on NFTEarth.
+          </Text>
           <Box css={{ marginTop: 32 }}>
             <Box css={{ marginBottom: 32 }}>
               <Text style="h6" css={{ color: '$gray11' }}>Name</Text>
@@ -141,18 +143,17 @@ const ExplorePage = () => {
             </Flex>
           </Box>
           <Button 
-          css={{
-            marginTop: 8,
-            justifyContent: 'center',
-            alignItems: 'center',
-            justifyItems: 'center',
-            px: '$6',
-            py: '$3',
-          }}
-          type="button"
-          size="small"
-          corners="pill"
-          color="primary">
+            css={{
+              marginTop: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+              justifyItems: 'center',
+              px: '$6',
+              py: '$3',
+            }}
+            type="button"
+            size="small"
+            color="primary">
             Deploy Contract
           </Button>
         </Flex>
@@ -161,4 +162,4 @@ const ExplorePage = () => {
   )
 }
 
-export default ExplorePage
+export default LaunchPadDeployPage

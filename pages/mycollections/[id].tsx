@@ -2,7 +2,7 @@ import { Text, Flex, Box } from 'components/primitives'
 import { useMediaQuery } from 'react-responsive'
 import Layout from 'components/Layout'
 
-const LaunchPadPage = () => {
+const MyCollectionDetailPage = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   return (
@@ -16,10 +16,10 @@ const LaunchPadPage = () => {
           },
         }}
       >
-        <div>Launchpad</div>
+        <div>My Collection Detail</div>
       </Box>
     </Layout>
   )
 }
 
-export default LaunchPadPage
+export default MyCollectionDetailPage
