@@ -94,7 +94,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
               />
             )
           })}
-          <div ref={loadMoreRef}></div>
+          <div ref={loadMoreRef}/>
         </Flex>
       )}
       {isValidating && (

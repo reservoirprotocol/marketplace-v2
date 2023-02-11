@@ -32,6 +32,24 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   const url = new URL(endpoint.replace(chainPrefix, ''), chain.reservoirBaseUrl)
   setParams(url, query)
 
+  if (endpoint.includes('/tokens/v5') && query?.tokens) {
+    const tokens = query?.tokens || '';
+
+    if (Array.isArray(tokens)) {
+      for (const t of tokens) {
+        const [contract, tokenId] = t.split(':');
+        await res.revalidate(`/collection/${chain.routePrefix}/${contract}/${tokenId}`).catch(e => {
+          //empty
+        });
+      }
+    } else {
+      const [contract, tokenId] = tokens.split(':');
+      await res.revalidate(`/collection/${chain.routePrefix}/${contract}/${tokenId}`).catch(e => {
+        //empty
+      });
+    }
+  }
+
   if (endpoint.includes('redirect/')) {
     if (endpoint.includes('/currency')) {
       const paths = url.href.split('/');

@@ -498,8 +498,7 @@ export const getStaticProps: GetStaticProps<{
   const tokens: Props['ssr']['tokens'] = tokensResponse['data']
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } },
-    revalidate: 20,
+    props: { collectionId, id, ssr: { collection, tokens } }
   }
 }
 

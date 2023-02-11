@@ -72,6 +72,7 @@ class MyDocument extends Document {
           content="/collection/optimism/${contract}/${tokenId}"
         />
         <body>
+          <script>0</script>
           <Main />
           <NextScript />
         </body>
