@@ -82,7 +82,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
               />
             )
           })}
-          <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
+          <Box ref={loadMoreRef} css={{ height: 20 }}/>
         </Flex>
       )}
       {isValidating && (
@@ -164,8 +164,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={listing?.price?.amount?.native}
+            amount={listing?.price?.amount?.decimal}
             address={listing?.price?.currency?.contract}
+            decimals={listing?.price?.currency?.decimals}
             textStyle="subtitle2"
             logoHeight={14}
           />
@@ -239,8 +240,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={listing?.price?.amount?.native}
+          amount={listing?.price?.amount?.decimal}
           address={listing?.price?.currency?.contract}
+          decimals={listing?.price?.currency?.decimals}
           textStyle="subtitle2"
           logoHeight={14}
         />

@@ -289,6 +289,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       <TableCell>
         <FormatCryptoCurrency
           amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
+          address={token?.ownership?.floorAsk?.price?.currency?.contract}
+          decimals={token?.ownership?.floorAsk?.price?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
         />

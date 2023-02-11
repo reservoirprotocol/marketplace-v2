@@ -26,7 +26,15 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         },
       }}
     >
-      <Grid css={{ gap: 32, flex: 0.5 }}>
+      <Grid css={{
+        gap: 32,
+        '@xs': {
+          flex: 1
+        },
+        '@lg': {
+          flex: 0.5
+        }
+      }}>
         <Text
           style={{
             '@initial': 'h3',
