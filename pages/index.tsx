@@ -19,7 +19,7 @@ import HeroSection from 'components/HeroSection'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const collectionsSetId =
-  'b8411093a868a4e19d8603e6539352953977a81cf2bf401a60ff807248f601d0'
+  'b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4'
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
