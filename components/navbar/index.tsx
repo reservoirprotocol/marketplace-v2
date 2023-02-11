@@ -120,6 +120,9 @@ const Navbar = () => {
             <a href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </a>
+            <Link href="/launch/deploy" legacyBehavior>
+              <NavItem active={router.pathname == '/launch/deploy'}>Launch</NavItem>
+            </Link>
           </Flex>
         </Flex>
       </Box>
