@@ -16,7 +16,7 @@ class MyDocument extends Document {
   render() {
     const description =
       'NFTEarth Exchange is Marketplace, built for layer2 community.'
-    const ogImage = 'https://nftearth.exchange/og-image.png'
+    const ogImage = 'https://nftearth.exchange/render-image-1.png'
     return (
       <Html>
         <Head>
