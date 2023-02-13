@@ -18,6 +18,7 @@ import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
+  useDynamicTokens,
   useTokens,
   useUserCollections,
   useUserTokens,
@@ -220,7 +221,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
                             <TokenCard
                               key={i}
                               token={
-                                token as ReturnType<typeof useTokens>['data'][0]
+                                token as ReturnType<typeof useDynamicTokens>['data'][0]
                               }
                               mutate={mutate}
                               rarityEnabled={false}
