@@ -8,7 +8,7 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 
-const StyledInput = styled('input', {
+const StyledTextArea = styled('textarea', {
   all: 'unset',
   width: '100%',
   px: 16,
@@ -23,9 +23,9 @@ const StyledInput = styled('input', {
   '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },
 })
 
-const Input = forwardRef<
-  ElementRef<typeof StyledInput>,
-  ComponentPropsWithoutRef<typeof StyledInput> & {
+const TextArea = forwardRef<
+  ElementRef<typeof StyledTextArea>,
+  ComponentPropsWithoutRef<typeof StyledTextArea> & {
     icon?: ReactNode
     containerCss?: CSS
   }
@@ -34,10 +34,8 @@ const Input = forwardRef<
     {icon && (
       <div style={{ position: 'absolute', top: 16, left: 16 }}>{icon}</div>
     )}
-    <StyledInput css={{ pl: icon ? 48 : 16 }} ref={forwardedRef} {...props} />
+    <StyledTextArea css={{ pl: icon ? 48 : 16 }} ref={forwardedRef} {...props} />
   </Flex>
 ))
 
-export { StyledInput };
-
-export default Input
+export default TextArea

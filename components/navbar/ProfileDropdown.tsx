@@ -60,7 +60,7 @@ export const ProfileDropdown: FC = () => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuItem as="a" href="/portfolio" css={{ display: 'block' }}>Portfolio</DropdownMenuItem>
-      <DropdownMenuItem as="a" href="/mycollections" css={{ display: 'block' }}>My Collections</DropdownMenuItem>
+      <DropdownMenuItem as="a" href="/collections" css={{ display: 'block' }}>Collections</DropdownMenuItem>
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
           Balance

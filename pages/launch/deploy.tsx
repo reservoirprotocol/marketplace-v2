@@ -23,7 +23,7 @@ const LaunchPadDeployPage = () => {
           p: 14,
           height: '100%',
           '@bp800': {
-            p: '$6',
+            p: '$5',
           },
         }}
       >
@@ -31,7 +31,7 @@ const LaunchPadDeployPage = () => {
           justify="center" 
           direction="column" 
           css={{
-            width: isMobile ? '100%' : '60%',
+            width: isMobile ? '100%' : '50%',
             backgroundColor: isMobile ? 'transparent' : '$gray3',
             borderRadius: 10,
             padding: isMobile ? 8 : 24,
