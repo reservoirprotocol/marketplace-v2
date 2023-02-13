@@ -1,6 +1,9 @@
 import { setParams } from '@reservoir0x/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import supportedChains, { DefaultChain } from 'utils/chains'
+import { constants } from 'ethers'
+import { goerli, mainnet } from 'wagmi'
+import wrappedContracts from 'utils/wrappedContracts'
 
 // A proxy API endpoint to redirect all requests to `/api/reservoir/*` to
 // MAINNET: https://api.reservoir.tools/{endpoint}/{query-string}
@@ -33,6 +36,24 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   setParams(url, query)
 
   if (endpoint.includes('redirect/')) {
+    // Redirect eth and weth currency icons to self-hosted
+    // versions without any padding
+    endpoint = endpoint.toLowerCase()
+    if (
+      [mainnet.id, goerli.id].includes(chain.id) &&
+      endpoint.includes('currency')
+    ) {
+      if (endpoint.includes(constants.AddressZero)) {
+        res.redirect('/icons/currency/no-padding-eth.png')
+        return
+      } else if (
+        endpoint.includes(wrappedContracts['1'].toLowerCase()) ||
+        endpoint.includes(wrappedContracts['5'].toLowerCase())
+      ) {
+        res.redirect('/icons/currency/no-padding-weth.png')
+        return
+      }
+    }
     res.redirect(url.href)
     return
   }
