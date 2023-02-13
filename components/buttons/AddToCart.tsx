@@ -1,5 +1,5 @@
 import {ComponentProps, FC} from "react";
-import { useDynamicTokens } from "@nftearth/reservoir-kit-ui";
+import {useCart, useDynamicTokens} from "@nftearth/reservoir-kit-ui";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faRemove } from '@fortawesome/free-solid-svg-icons'
 
@@ -19,7 +19,7 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
-  const { add, remove } = useDynamicTokens(false);
+  const { add, remove } = useCart(cart => cart.items);
 
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
