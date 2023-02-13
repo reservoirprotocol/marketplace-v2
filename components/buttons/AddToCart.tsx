@@ -53,6 +53,10 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
         color="secondary"
         disabled={isInTheWrongNetwork}
         {...buttonProps}
+        css={{
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
         onClick={() => add([token], Number(activeChain?.id))}
       >
         {icon ? (

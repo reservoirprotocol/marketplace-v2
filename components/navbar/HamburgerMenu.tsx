@@ -21,6 +21,7 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -87,6 +88,9 @@ const HamburgerMenu = () => {
             </Flex>
           </RadixDialog.Close>
         </Flex>
+        <div className="my-2 px-4">
+          <ThemeSwitcher />
+        </div>
         {isConnected ? (
           <Flex
             css={{

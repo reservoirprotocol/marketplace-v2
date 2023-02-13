@@ -60,7 +60,7 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/nftearth-icon.png" style={{ width: 40, height: 40 }} />
+              <img src="/nftearth-icon.png" style={{ width: 34, height: 34 }} />
             </Box>
           </Link>
         </Flex>
@@ -68,7 +68,7 @@ const Navbar = () => {
       <Flex align="center" css={{ gap: '$3' }}>
         <MobileSearch key={`${router.asPath}-search`} />
         <ChainSwitcher />
-        <ThemeSwitcher />
+        <CartMenu />
         <HamburgerMenu key={`${router.asPath}-hamburger`} />
       </Flex>
     </Flex>
