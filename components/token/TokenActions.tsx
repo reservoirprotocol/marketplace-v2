@@ -1,16 +1,17 @@
-import { useTokens } from '@nftearth/reservoir-kit-ui'
+import { ComponentPropsWithoutRef, FC, useState } from 'react'
+import {useDynamicTokens} from '@nftearth/reservoir-kit-ui'
+import { useRouter } from 'next/router'
+import { MutatorCallback } from 'swr'
+import { useAccount } from 'wagmi'
+
+import { Button, Grid } from 'components/primitives'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
-import { Button, Grid } from 'components/primitives'
-import { useRouter } from 'next/router'
-import { ComponentPropsWithoutRef, FC, useState } from 'react'
-import { MutatorCallback } from 'swr'
-import { useAccount } from 'wagmi'
-// import AddToCart from "../buttons/AddToCart";
+import AddToCart from "components/buttons/AddToCart";
 
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0]
+  token: ReturnType<typeof useDynamicTokens>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
@@ -134,9 +135,9 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
-      {/*{!isOwner && isListed && (*/}
-      {/*  <AddToCart token={token}/>*/}
-      {/*)}*/}
+      {!isOwner && isListed && (
+        <AddToCart token={token}/>
+      )}
     </Grid>
   )
 }

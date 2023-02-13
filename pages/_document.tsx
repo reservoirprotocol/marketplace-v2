@@ -22,14 +22,12 @@ class MyDocument extends Document {
         <Head>
           <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <meta name="keywords" content="nft, ethereum, protocol" />
           <link
             rel="shortcut icon"
             type="image/png"
             href="https://nftearth.exchange/nftearth-icon.png"
           />
-          <title>Layer 2 NFT Marketplace</title>
           <meta name="description" content={description} />
           <meta name="keywords" content="NFT, Marketplace, Optimism" />
           {/* Twitter */}
@@ -65,76 +63,6 @@ class MyDocument extends Document {
           <meta
             property="nftearth:token-url-optimism"
             content="/collection/optimism/${contract}/${tokenId}"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Bold.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Bold.woff"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-SemiBold.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-SemiBold.woff"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Regular.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Regular.woff"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Light.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Light.woff"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Italic.woff2"
-            as="font"
-            type="font/woff2"
-            crossOrigin="anonymous"
-          />
-          <link
-            rel="preload"
-            href="/fonts/inter/Inter-Italic.woff"
-            as="font"
-            type="font/woff"
-            crossOrigin="anonymous"
           />
           <style
             id="stitches"

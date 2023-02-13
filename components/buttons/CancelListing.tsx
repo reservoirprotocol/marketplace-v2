@@ -1,5 +1,8 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { CancelListingModal } from '@nftearth/reservoir-kit-ui'
+import {
+  CancelListingModal,
+  CancelListingStep,
+} from '@nftearth/reservoir-kit-ui'
 import { FC, ReactElement, useContext, cloneElement } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
@@ -68,10 +71,8 @@ const CancelListing: FC<Props> = ({
           description: 'The transaction was not completed.',
         })
       }}
-      onClose={() => {
-        if (mutate) {
-          mutate()
-        }
+      onClose={(data, currentStep) => {
+        if (mutate && currentStep == CancelListingStep.Complete) mutate()
       }}
     />
   )

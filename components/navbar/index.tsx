@@ -125,7 +125,7 @@ const Navbar = () => {
       </Box>
       <Flex css={{ gap: '$3' }} justify="end" align="center">
         <ThemeSwitcher />
-        {/*<CartMenu />*/}
+        <CartMenu />
         <ChainSwitcher />
         {isConnected ? (
           <ProfileDropdown />

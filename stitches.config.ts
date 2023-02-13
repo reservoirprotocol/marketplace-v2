@@ -17,6 +17,11 @@ import {
 import { createStitches } from '@stitches/react'
 import type * as Stitches from '@stitches/react'
 import { reset } from 'utils/css/reset'
+import { Inter } from '@next/font/google'
+
+const inter = Inter({
+  subsets: ['latin'],
+})
 
 export const { createTheme, keyframes, styled, globalCss, getCssText } =
   createStitches({
@@ -105,7 +110,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       fontSizes: {},
       fontWeights: {},
       fonts: {
-        body: 'Inter',
+        body: inter.style.fontFamily,
         button: '$body',
       },
       lineHeights: {},

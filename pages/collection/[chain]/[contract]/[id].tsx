@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
 import {
   TokenMedia, useAttributes,
-  useCollections,
+  useCollections, useDynamicTokens,
   useTokenOpenseaBanned,
   useTokens,
   useUserTokens,
@@ -79,13 +79,16 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const collection = collections && collections[0] ? collections[0] : null
 
-  const { data: tokens, mutate } = useTokens(
+  const { data: tokens, mutate } = useDynamicTokens(
     {
       tokens: [`${contract}:${id}`],
       includeAttributes: true,
       includeTopBid: true,
     },
     {
+      isPaused() {
+        return (!contract || !id)
+      },
       fallbackData: ssr.tokens ? [ssr.tokens] : undefined,
     }
   )
@@ -486,6 +489,7 @@ export const getStaticProps: GetStaticProps<{
     tokens: [`${contract}:${id}`],
     includeAttributes: true,
     includeTopBid: true,
+    includeDynamicPricing: true,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 

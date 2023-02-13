@@ -1,96 +1,63 @@
-import {useNetwork, useSigner, useSwitchNetwork} from "wagmi";
-import {useConnectModal} from "@rainbow-me/rainbowkit";
-import {useMarketplaceChain} from "../../hooks";
-import {useRecoilState, useRecoilValue} from "recoil";
-import recoilCartTokens, {getTokensMap, getPricingPools, getCartCurrency} from 'recoil/cart'
-import {Dispatch, FC, SetStateAction} from "react";
-import {useTokens} from "@nftearth/reservoir-kit-ui";
-import {getPricing} from "../../utils/tokenPricing";
+import {ComponentProps, FC} from "react";
+import { useDynamicTokens } from "@nftearth/reservoir-kit-ui";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCartPlus, faRemove } from '@fortawesome/free-solid-svg-icons'
+
+import {useNetwork, useSigner} from "wagmi";
+import {useMarketplaceChain} from "hooks";
 import {Button} from "../primitives";
+import {CSS} from "@stitches/react";
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
-  setClearCartOpen?: Dispatch<SetStateAction<boolean>>
-  setCartToSwap?: Dispatch<SetStateAction<any | undefined>>
+  token?: ReturnType<typeof useDynamicTokens>['data'][0],
+  icon?: boolean,
+  buttonCss?: CSS
+  buttonProps?: ComponentProps<typeof Button>
 }
 
-const AddToCart: FC<Props> = ({ token, setClearCartOpen, setCartToSwap }) => {
+const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
   const { data: signer } = useSigner()
-  const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
-  const cartPools = useRecoilValue(getPricingPools)
-  const cartCurrency = useRecoilValue(getCartCurrency)
-  const [cartTokens, setCartTokens] = useRecoilState(recoilCartTokens)
-  const tokensMap = useRecoilValue(getTokensMap)
+  const { add, remove } = useDynamicTokens(false);
+
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
   )
-  let price = getPricing(cartPools, token)
-  const tokenId = `${token?.token?.contract}:${token?.token?.tokenId}`
-  const isInCart = Boolean(tokensMap[tokenId])
+  const tokenId = `${token?.token?.collection?.id}:${token?.token?.tokenId}`
   const canAddToCart = !!token?.market?.floorAsk?.price?.amount;
 
-  if (isInCart) {
+  if (token?.isInCart) {
     return (
       <Button
-        onClick={() => {
-          const newCartTokens = [...cartTokens]
-          const index = newCartTokens.findIndex(
-            (newCartToken) =>
-              newCartToken.token.contract ===
-              token?.token?.contract &&
-              newCartToken.token.tokenId === token?.token?.tokenId
-          )
-          newCartTokens.splice(index, 1)
-          setCartTokens(newCartTokens)
-        }}
-        color="ghost"
+        onClick={() => remove([
+          tokenId
+        ])}
+        color="gray4"
         css={{
           justifyContent: 'center',
           alignItems: 'center'
         }}
+        {...buttonProps}
       >
-        Remove
+        {icon ? (
+          <FontAwesomeIcon icon={faRemove} />
+        ) : `Remove`}
       </Button>
     )
   }
 
-  if (!isInCart && canAddToCart) {
+  if (!token?.isInCart && canAddToCart) {
     return (
       <Button
         color="secondary"
         disabled={isInTheWrongNetwork}
-        onClick={() => {
-          if (token && token.token && token.market) {
-            if (
-              !cartCurrency ||
-              price?.currency?.contract === cartCurrency?.contract
-            ) {
-              setCartTokens([
-                ...cartTokens,
-                {
-                  token: token.token,
-                  market: token.market,
-                },
-              ])
-            } else {
-              setCartToSwap &&
-              setCartToSwap([
-                {
-                  token: token.token,
-                  market: token.market,
-                },
-              ])
-              setClearCartOpen && setClearCartOpen(true)
-            }
-          }
-        }}
+        {...buttonProps}
+        onClick={() => add([token], Number(activeChain?.id))}
       >
-        Add to Cart
+        {icon ? (
+          <FontAwesomeIcon icon={faCartPlus} />
+        ) : `Add to Cart`}
       </Button>
     )
   }

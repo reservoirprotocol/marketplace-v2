@@ -38,15 +38,19 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     if (Array.isArray(tokens)) {
       for (const t of tokens) {
         const [contract, tokenId] = t.split(':');
+        if (contract && tokenId) {
+          await res.revalidate(`/collection/${chain.routePrefix}/${contract}/${tokenId}`).catch(e => {
+            //empty
+          });
+        }
+      }
+    } else {
+      const [contract, tokenId] = tokens.split(':');
+      if (contract && tokenId) {
         await res.revalidate(`/collection/${chain.routePrefix}/${contract}/${tokenId}`).catch(e => {
           //empty
         });
       }
-    } else {
-      const [contract, tokenId] = tokens.split(':');
-      await res.revalidate(`/collection/${chain.routePrefix}/${contract}/${tokenId}`).catch(e => {
-        //empty
-      });
     }
   }
 

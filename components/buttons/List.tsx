@@ -1,4 +1,4 @@
-import { ListModal, useTokens } from '@nftearth/reservoir-kit-ui'
+import { ListModal, ListStep, useTokens } from '@nftearth/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import {
   cloneElement,
@@ -89,10 +89,8 @@ const List: FC<Props> = ({
         collectionId={contract}
         tokenId={tokenId}
         currencies={listingCurrencies}
-        onListingComplete={() => {
-          if (mutate) {
-            mutate()
-          }
+        onClose={(data, stepData, currentStep) => {
+          if (mutate && currentStep == ListStep.Complete) mutate()
         }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {

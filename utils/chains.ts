@@ -1,4 +1,4 @@
-import { constants } from 'ethers'
+// import { constants } from 'ethers'
 import { optimism, arbitrum } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
