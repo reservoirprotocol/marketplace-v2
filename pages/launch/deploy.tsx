@@ -37,9 +37,9 @@ const LaunchPadDeployPage = () => {
             padding: isMobile ? 8 : 24,
             margin: '0 auto'
           }}>
-          <Text style="h4" css={{ lineHeight: 1.2 }}>Launchpad Contract Deployer</Text>
+          <Text style="h4" css={{ lineHeight: 1.2 }}>NFT Launchpad</Text>
           <Text style="subtitle3" css={{ marginTop: isMobile ? 12 : 6, color: '$gray11' }}>
-            Deploy your own ERC-721 smart contract and manage collection settings, minting, metadata, and allowlist on NFTEarth.
+          Deploy your own NFT collection with NFTEarth’s launchpad and managed the collection settings, minting details, metadata, artwork generation, and allowlist, all from the NFTEarth Hub.
           </Text>
           <Box css={{ marginTop: 32 }}>
             <Box css={{ marginBottom: 32 }}>
@@ -47,7 +47,7 @@ const LaunchPadDeployPage = () => {
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder='Enter a name for the collection'
+                placeholder='Enter the name of your NFT Collection'
                 css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
                 containerCss={{
                   marginTop: 6,
@@ -62,7 +62,7 @@ const LaunchPadDeployPage = () => {
               <Input
                 value={symbol}
                 onChange={(e) => setSymbol(e.target.value)}
-                placeholder='Enter a short symbol for the collection, e.g. SYMBL'
+                placeholder='The token symbol that will show up on block explorers, e.g. TOKEN'
                 css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
                 containerCss={{
                   marginTop: 6,
@@ -75,9 +75,10 @@ const LaunchPadDeployPage = () => {
             <Box css={{ marginBottom: 32 }}>
               <Text style="h6" css={{ color: '$gray11' }}>Supply</Text>
               <Input
+                type="number"
                 value={supply}
                 onChange={(e) => setSupply(e.target.value)}
-                placeholder='Set the maximum number of tokens'
+                placeholder='Set the max tokens allowed per wallet'
                 css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
                 containerCss={{
                   marginTop: 6,
@@ -88,8 +89,9 @@ const LaunchPadDeployPage = () => {
               />
             </Box>
             <Box css={{ marginBottom: 32 }}>
-              <Text style="h6" css={{ color: '$gray11' }}>Allowlist mint</Text>
+              <Text style="h6" css={{ color: '$gray11' }}>Allowlist Settings</Text>
               <Input
+                type="number"
                 value={allowListMint}
                 onChange={(e) => setAllowListMint(e.target.value)}
                 placeholder='Set the max tokens allowed per wallet'
@@ -105,6 +107,7 @@ const LaunchPadDeployPage = () => {
             <Box css={{ marginBottom: 32 }}>
               <Text style="h6" css={{ color: '$gray11' }}>Public mint</Text>
               <Input
+                type="number"
                 value={publicMint}
                 onChange={(e) => setPublicMint(e.target.value)}
                 placeholder='Set the max tokens allowed per wallet'

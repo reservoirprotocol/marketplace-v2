@@ -149,7 +149,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
               left: 16,
               opacity: .8
             }}>
-            https://nftearth.exchange/deploy/
+            https://nftearth.exchange/launch/
           </Text>
           <StyledInput
             value={url}
