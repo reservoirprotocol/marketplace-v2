@@ -65,7 +65,9 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const headers = new Headers()
 
-    if (chain.apiKey) headers.set('x-api-key', chain.apiKey)
+    //'x-api-key: 0x21d426e2B88Fbf8b93adf0591A2D5B08d58F089f'
+
+    if (chain.0x21d426e2B88Fbf8b93adf0591A2D5B08d58F089f) headers.set('x-api-key', chain.0x21d426e2B88Fbf8b93adf0591A2D5B08d58F089f)
 
     if (typeof body === 'object') {
       headers.set('Content-Type', 'application/json')
