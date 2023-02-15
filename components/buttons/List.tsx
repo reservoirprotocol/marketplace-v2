@@ -27,7 +27,11 @@ type Props = {
   mutate?: SWRResponse['mutate']
 }
 
-const CURRENCIES = process.env.NEXT_PUBLIC_LISTING_CURRENCIES
+const CURRENCIES = process.env.NEXT_PUBLIC_LISTING_CURRENCIES_CHAIN
+
+type CurrencyChain = {
+  [chain: number]: ListingCurrencies
+}
 
 const List: FC<Props> = ({
   token,
@@ -52,11 +56,7 @@ const List: FC<Props> = ({
     signer && marketplaceChain.id !== activeChain?.id
   )
 
-  let listingCurrencies: ListingCurrencies = undefined
-
-  if (CURRENCIES) {
-    listingCurrencies = JSON.parse(CURRENCIES)
-  }
+  let listingCurrencies: CurrencyChain = JSON.parse(CURRENCIES as string)
 
   const tokenId = token?.token?.tokenId
   const contract = token?.token?.contract
@@ -88,7 +88,7 @@ const List: FC<Props> = ({
         trigger={trigger}
         collectionId={contract}
         tokenId={tokenId}
-        currencies={listingCurrencies}
+        currencies={listingCurrencies[marketplaceChain.id]}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == ListStep.Complete) mutate()
         }}
