@@ -1,15 +1,17 @@
 import { useState, useEffect, FC, SyntheticEvent } from 'react'
-import { Text, Flex, Box, Input, Button, TextArea, Select } from 'components/primitives'
-import { StyledInput } from "components/primitives/Input";
+import { Text, Flex, Box, Switch } from 'components/primitives'
 
 type Props = {
   activeTab: string | null
 }
 
 const MintStateSettings:FC<Props> = ({ activeTab }) => {
+  const [isPublicMint, setIsPublicMint] = useState(false);
+  const [isAllowlistMint, setIsAllowlistMint] = useState(false);
   
   const resetState = () => {
-   
+   setIsPublicMint(false);
+   setIsAllowlistMint(false);
   }
 
   const handleSubmit = (e: SyntheticEvent) => {
@@ -43,9 +45,28 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
           Mint State Settings
         </Text>
       </Box>
-      <Box css={{ marginBottom: 32 }}>
-        
-      </Box>
+      <Flex css={{ marginBottom: 32 }} justify="between">
+        <Flex direction="column">
+          <Text style="h6" css={{ color: '$gray11' }}>Public mint</Text>
+        </Flex>
+        <Box>
+          <Switch
+            checked={isPublicMint}
+            onCheckedChange={checked => setIsPublicMint(checked)}
+          />
+        </Box>
+      </Flex>
+      <Flex css={{ marginBottom: 32 }} justify="between">
+        <Flex direction="column">
+          <Text style="h6" css={{ color: '$gray11' }}>Allowlist mint</Text>
+        </Flex>
+        <Box>
+          <Switch
+            checked={isAllowlistMint}
+            onCheckedChange={checked => setIsAllowlistMint(checked)}
+          />
+        </Box>
+      </Flex>
     </Box>
   )
 }

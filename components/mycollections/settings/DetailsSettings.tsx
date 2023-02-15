@@ -1,8 +1,9 @@
-import { useState, useEffect, FC, SyntheticEvent } from 'react'
+import { useState, useEffect, FC, SyntheticEvent, useContext } from 'react'
 import { useTheme } from 'next-themes'
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, FileError } from 'react-dropzone';
 import { Text, Flex, Box, Input, Button, TextArea, Select } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
+import { ToastContext } from '../../../context/ToastContextProvider'
 
 type Props = {
   activeTab: string | null
@@ -10,6 +11,7 @@ type Props = {
 
 const DetailsSettings:FC<Props> = ({ activeTab }) => {
   const { theme } = useTheme();
+  const { addToast } = useContext(ToastContext)
 
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
@@ -37,28 +39,52 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
   const { 
     getRootProps: getCollectionImageRootProps, 
     getInputProps: getCollectionImageInputProps } = useDropzone({
-    accept: {
-      'image/*': []
-    },
-    onDrop: acceptedFiles => {
-      setCollectionImages(acceptedFiles.map(file => Object.assign(file, {
-        preview: URL.createObjectURL(file)
-      })));
+      maxSize: 5000000,
+      accept: {
+        'image/*': []
+      },
+      onDrop: (acceptedFiles, rejectedFiles) => {
+        if (rejectedFiles.length > 0) {
+          handleErrorDropImage(rejectedFiles)
+        }
+
+        setCollectionImages(acceptedFiles.map(file => Object.assign(file, {
+          preview: URL.createObjectURL(file)
+        })));
+      }
     }
-  });
+  );
 
   const { 
     getRootProps: getCoverImageRootProps, 
     getInputProps: getCoverImageInputProps } = useDropzone({
-    accept: {
-      'image/*': []
-    },
-    onDrop: acceptedFiles => {
-      setCoverImages(acceptedFiles.map(file => Object.assign(file, {
-        preview: URL.createObjectURL(file)
-      })));
+      maxSize: 1000000,
+      accept: {
+        'image/*': []
+      },
+      onDrop: (acceptedFiles, rejectedFiles) => {
+        if (rejectedFiles.length > 0) {
+          handleErrorDropImage(rejectedFiles)
+        }
+        
+        setCoverImages(acceptedFiles.map(file => Object.assign(file, {
+          preview: URL.createObjectURL(file)
+        })));
+      },
+      onError: err => console.log(err)
     }
-  });
+  );
+
+  const handleErrorDropImage = (rejectedFiles: any) => {
+    rejectedFiles.forEach((file: any) => {
+      file.errors.forEach((err: any) => {
+        addToast?.({
+          title: err.code,
+          description: err.message
+        })
+      });
+    });
+  }
 
   const resetState = () => {
     setName('');
