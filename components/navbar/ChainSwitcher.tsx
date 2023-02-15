@@ -45,7 +45,7 @@ const ChainSwitcher = () => {
             }}
           >
             <Flex align="center" css={{ cursor: 'pointer' }}>
-              <img style={{ width: 17 }} src={chainOption.iconUrl} />
+              <img style={{ height: 17 }} src={chainOption.iconUrl} />
               <Text style="body1" css={{ ml: '$2' }}>
                 {chainOption.name}
               </Text>
