@@ -27,13 +27,13 @@ export const DefaultChain = {
 }
 
 export default [
-  DefaultChain
-  // {
-  //   ...arbitrum,
-  //   iconUrl: `/icons/currency/0x6c0c4816098e13cacfc7ed68da3e89d0066e8893.png`,
-  //   reservoirBaseUrl: process.env.ARBITRUM_RESERVOIR_API_BASE,
-  //   proxyApi: '/api/reservoir/arbitrum',
-  //   routePrefix: 'arbitrum',
-  //   apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
-  // }
+  DefaultChain,
+  {
+    ...arbitrum,
+    iconUrl: `/icons/currency/0x6c0c4816098e13cacfc7ed68da3e89d0066e8893.png`,
+    reservoirBaseUrl: process.env.ARBITRUM_RESERVOIR_API_BASE,
+    proxyApi: '/api/nftearth/arbitrum',
+    routePrefix: 'arbitrum',
+    apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
+  }
 ]

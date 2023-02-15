@@ -18,8 +18,10 @@ import HeroSection from 'components/HeroSection'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const collectionsSetId =
-  'b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4'
+const collectionsSetId: any = {
+  10: "b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4",
+  42161: "3b38ae5b4e28b3b9873d74d3cf397b479a8506fe9bf26a1335b4e2807196e03b"
+}
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
@@ -38,7 +40,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery2: Parameters<typeof useCollections>['0'] = {
     sortBy: '1DayVolume',
     normalizeRoyalties: NORMALIZE_ROYALTIES,
-    collectionsSetId,
+    collectionsSetId: collectionsSetId[marketplaceChain.id],
   }
 
   const {
@@ -174,7 +176,6 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
-      collectionsSetId,
     }
 
   const promises: ReturnType<typeof fetcher>[] = []
@@ -190,6 +191,7 @@ export const getStaticProps: GetStaticProps<{
 
   const promises2: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
+    collectionQuery2.collectionsSetId = collectionsSetId[chain.id];
     promises2.push(
       fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery2, {
         headers: {
