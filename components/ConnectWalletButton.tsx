@@ -4,6 +4,8 @@ import Box from 'components/primitives/Box'
 import Button from 'components/primitives/Button'
 import { FC } from 'react'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import { faWallet } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type Props = {}
 
@@ -31,12 +33,18 @@ export const ConnectWalletButton: FC<Props> = () => {
               if (!mounted || !account || !chain) {
                 return (
                   <Button
-                    css={{ flex: 1, justifyContent: 'center' }}
+                    css={{
+                      height: 44,
+                      width: 44,
+                      p: 0,
+                      justifyContent: 'center'
+                    }}
+                    color='gray3'
                     corners="rounded"
                     onClick={openConnectModal}
                     type="button"
                   >
-                    Connect Wallet
+                    <FontAwesomeIcon icon={faWallet} width={18} height={18} />
                   </Button>
                 )
               }
