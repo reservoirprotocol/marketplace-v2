@@ -96,7 +96,7 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
               <StyledInput
                 value={address.value}
                 onChange={(e) => handleAddressInputChange(index, e.target.value)}
-                placeholder='Please enter whitelist'
+                placeholder='0x7D3E5dD617EAF4A3d....'
                 css={{
                   backgroundColor: theme === 'light' ? '$gray1' : 'initial',
                   marginTop: 6,

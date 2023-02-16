@@ -211,7 +211,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
       </Box>
       <Box css={{ marginBottom: 40 }}>
         <Flex direction='column'>
-          <Text style="h6" css={{ color: '$gray11' }}>Collection Image (Ratio 1:1, 3MB Max)</Text>
+          <Text style="h6" css={{ color: '$gray11' }}>Collection Image</Text>
           <Text style='subtitle3' css={{ color: '$gray11', marginBottom: 6 }}>
             Uploading an image will overide the contract-level metadata (ContractURI) image, if set.
           </Text>
@@ -244,7 +244,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
                 }}>
                 {collectionImages.length === 0 && (
                   <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
-                    Drag 'n' drop some files here, or click to select files
+                    Drag 'n' drop some files here, or click to select
                   </Text>
                 )}
               </Flex>
@@ -274,9 +274,9 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
       </Box>
       <Box css={{ marginBottom: 40 }}>
         <Flex direction='column'>
-          <Text style="h6" css={{ color: '$gray11' }}>Cover Image (Ratio 1:2, 1MB Max)</Text>
+          <Text style="h6" css={{ color: '$gray11' }}>Cover Image</Text>
         </Flex>
-        <Box css={{ position: 'relative', width: 320 }}>
+        <Box css={{ position: 'relative', width: '100%' }}>
           {coverImages.length === 0 ? (
             <Box {...getCoverImageRootProps()}>
               <Input
@@ -300,11 +300,11 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
                   top: '50%',
                   left: '50%',
                   transform: 'translateX(-50%) translateY(-50%)',
-                  height: '100%'
+                  height: '100%',
                 }}>
                 {coverImages.length === 0 && (
                   <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
-                    Drag 'n' drop some files here, or click to select files
+                    Drag 'n' drop some files here, or click to select
                   </Text>
                 )}
               </Flex>
@@ -343,18 +343,31 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
       </Box>
       <Box css={{ marginBottom: 32 }}>
         <Text style="h6" css={{ color: '$gray11' }}>Website Link</Text>
-        <Input
-          value={websiteLink}
-          onChange={(e) => setWebsiteLink(e.target.value)}
-          placeholder=''
-          css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
-          containerCss={{
-            marginTop: 6,
-            width: '100%',
-            border: '1px solid $gray8',
-            borderRadius: 6,
-          }}
-        />
+        <Box css={{ position: 'relative', width: '100%' }}>
+          <Text 
+            css={{ 
+              position: 'absolute',
+              top: 18,
+              left: 16,
+              opacity: .8
+            }}>
+            https://
+          </Text>
+          <StyledInput
+            value={websiteLink}
+            onChange={(e) => setWebsiteLink(e.target.value)}
+            placeholder='nftearth.exchange.com'
+            css={{
+              backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+              marginTop: 6,
+              width: '100%',
+              border: '1px solid $gray8',
+              borderRadius: 6,
+              pl: 72,
+              boxSizing: 'border-box'
+            }}
+          />
+        </Box>
       </Box>
       <Box css={{ marginBottom: 32 }}>
         <Text style="h6" css={{ color: '$gray11' }}>Twitter</Text>

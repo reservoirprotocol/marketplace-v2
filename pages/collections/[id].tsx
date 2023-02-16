@@ -101,7 +101,7 @@ const MyCollectionDetailPage = () => {
                 <Box css={{ width: 16 }}>
                   <FontAwesomeIcon icon={faList} />
                 </Box>
-                <Text css={getCssTab('whitelist').text}>Whitelist</Text>
+                <Text css={getCssTab('whitelist').text}>Allowlist</Text>
               </Flex>
               <Flex 
                 align='center'
