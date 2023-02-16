@@ -26,7 +26,7 @@ import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
-import { useMarketplaceChain } from 'hooks'
+import {useMarketplaceChain, useMounted} from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import AnalyticsProvider from 'components/AnalyticsProvider'
 import Head from "next/head";
@@ -104,6 +104,7 @@ function MyApp({
 
   const { theme } = useTheme()
   const marketplaceChain = useMarketplaceChain()
+  const isMounted = useMounted()
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
@@ -172,7 +173,7 @@ function MyApp({
                   <ToastContextProvider>
                     <FunctionalComponent {...pageProps} />
                   </ToastContextProvider>
-                  {marketplaceChain.id === 42161 && (
+                  {(marketplaceChain.id === 42161 && isMounted) && (
                     <div>
                       <p>Important: Full synchronization of blockchain data for collections is ongoing, and NFT Collections may not reflect real-time data.</p>
                       <style jsx>{`
