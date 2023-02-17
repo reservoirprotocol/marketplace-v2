@@ -89,7 +89,6 @@ This is a Next.js app that can be easily deployed using [Vercel](https://vercel.
 ## Contact
 
 Twitter: [@reservoir0x](https://twitter.com/reservoir0x)
-Discord: [Reservoir](https://discord.gg/j5K9fESNwh)
 Project Link: [Reservoir](https://reservoirprotocol.github.io/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
