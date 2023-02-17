@@ -38,7 +38,7 @@ const ToastRoot = styled(ToastPrimitive.Root, {
   columnGap: '15px',
   alignItems: 'center',
 
-  '&[data-state="closed"]': {
+  '&[data-state="closed"]:first-child': {
     animation: `${hide} 100ms ease-in`,
   },
   '&[data-swipe="move"]': {
