@@ -20,7 +20,6 @@ import * as Tabs from '@radix-ui/react-tabs'
 import {
   useCollectionActivity,
   useDynamicTokens,
-  useTokens,
   useUserCollections,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'

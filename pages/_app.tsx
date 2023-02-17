@@ -143,10 +143,10 @@ function MyApp({
           options={{
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
-            chains: supportedChains.map(({ reservoirBaseUrl, id }) => {
+            chains: supportedChains.map(({ proxyApi, id }) => {
               return {
                 id,
-                baseApiUrl: reservoirBaseUrl,
+                baseApiUrl: `${baseUrl}${marketplaceChain.proxyApi}`,
                 default: marketplaceChain.id === id,
               }
             }),
