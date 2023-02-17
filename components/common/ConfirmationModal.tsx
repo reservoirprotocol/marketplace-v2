@@ -61,7 +61,9 @@ export const ConfirmationModal: FC<Props> = ({
               onOpenChange?.(false)
             }}
           >
-            <Text style="subtitle2">Cancel</Text>
+            <Text style="subtitle2" css={{ color: 'inherit' }}>
+              Cancel
+            </Text>
           </Button>
         </Flex>
       </Flex>

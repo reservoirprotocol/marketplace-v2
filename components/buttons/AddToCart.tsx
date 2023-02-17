@@ -1,7 +1,6 @@
 import React, { ComponentProps, FC, useContext, useState } from 'react'
 import { useAccount, useNetwork } from 'wagmi'
 import { useCart } from '@reservoir0x/reservoir-kit-ui'
-import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
@@ -25,12 +24,6 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
-  const isInTheWrongNetwork = Boolean(
-    isConnected && activeChain?.id !== marketplaceChain.id
-  )
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
 
   if (!token || (!('market' in token) && !('id' in token))) {
@@ -61,20 +54,13 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
         css={buttonCss}
         color="primary"
         onClick={async () => {
-          if (isInTheWrongNetwork && switchNetworkAsync) {
-            const chain = await switchNetworkAsync(marketplaceChain.id)
-            if (chain.id !== marketplaceChain.id) {
-              return false
-            }
-          }
-
           if (!isConnected) {
             openConnectModal?.()
           }
 
           if (isInCart) {
             remove([tokenKey])
-          } else if (cartChain?.id !== marketplaceChain.id) {
+          } else if (cartChain && cartChain?.id !== marketplaceChain.id) {
             setConfirmationOpen(true)
           } else {
             add([token], marketplaceChain.id).then(() => {
