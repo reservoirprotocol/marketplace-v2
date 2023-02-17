@@ -356,7 +356,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     <Flex
                       direction="column"
                       align="center"
-                      css={{ py: '$6', gap: '$4' }}
+                      css={{ py: '$space$6', gap: '$space$4' }}
                     >
                       <Text css={{ color: '$gray11' }}>
                         <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />

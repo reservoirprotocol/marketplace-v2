@@ -86,8 +86,8 @@ export const MobileActivityFilters: FC<Props> = ({
           alignItems: 'center',
           justifyItems: 'center',
           position: 'fixed',
-          px: '$6',
-          py: '$3',
+          px: '$space$6',
+          py: '$space$3',
         }}
         type="button"
         size="small"
