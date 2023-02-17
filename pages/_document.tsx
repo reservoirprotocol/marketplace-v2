@@ -15,7 +15,7 @@ class MyDocument extends Document {
 
   render() {
     const description =
-      'NFTEarth Exchange is Marketplace, built for layer2 community.'
+      'Buy and Sell NFTs on L2 at NFTEarth'
     const ogImage = 'https://nftearth.exchange/render-image-1.png'
     return (
       <Html>
@@ -36,7 +36,7 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta
             name="twitter:title"
-            content="NFTEarth Exchange | Layer 2 NFT Marketplace"
+            content="NFTEarth | L2 NFT Marketplace"
           />
           <meta name="twitter:description" content={description} />
           <meta name="twitter:site" content="@reservoir0x" />
@@ -45,7 +45,7 @@ class MyDocument extends Document {
           {/* https://www.opengraph.xyz/ */}
           <meta
             name="og:title"
-            content="NFTEarth Exchange | Layer 2 NFT Marketplace"
+            content="NFTEarth | L2 NFT Marketplace"
           />
           <meta property="og:type" content="website" />
           <meta property="og:determiner" content="the" />
