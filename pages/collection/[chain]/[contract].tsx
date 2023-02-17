@@ -124,7 +124,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
-  let attributesdata = useAttributes(id, {
+  let attributesdata = useAttributes(id, undefined, {
     fallbackData: ssr.attributes,
   })
 
