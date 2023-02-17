@@ -18,8 +18,10 @@ import HeroSection from 'components/HeroSection'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const collectionsSetId =
-  'b8411093a868a4e19d8603e6539352953977a81cf2bf401a60ff807248f601d0'
+const collectionsSetId: any = {
+  10: "b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4",
+  42161: "3b38ae5b4e28b3b9873d74d3cf397b479a8506fe9bf26a1335b4e2807196e03b"
+}
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
@@ -38,7 +40,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery2: Parameters<typeof useCollections>['0'] = {
     sortBy: '1DayVolume',
     normalizeRoyalties: NORMALIZE_ROYALTIES,
-    collectionsSetId,
+    collectionsSetId: collectionsSetId[marketplaceChain.id],
   }
 
   const {
@@ -78,75 +80,81 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
-          p: 24,
           height: '100%',
-          '@bp800': {
-            p: '$6',
-          },
         }}
       >
         <HeroSection />
-        <Flex css={{ my: '$6', mb: '100px', gap: 65 }} direction="column">
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
+        <Box
+          css={{
+            p: 24,
+            height: '100%',
+            '@bp800': {
+              p: '$6',
+            },
+          }}
           >
-            <Text style="h4" as="h4">
-              Featured Collections
-            </Text>
-          </Flex>
-          {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
-              uniqueKey="featured"
-              chain={marketplaceChain}
-              collections={topCollections}
-              loading={isValidatingTopPage}
-            />
-          )}
-        </Flex>
-        <Flex css={{ my: '$6', mb: '150px', gap: 65 }} direction="column">
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
-          >
-            <Text style="h4" as="h4">
-              Popular Collections
-            </Text>
-            <TrendingCollectionsTimeToggle
-              compact={compactToggleNames && isMounted}
-              option={sortByTime}
-              onOptionSelected={(option) => {
-                setSortByTime(option)
+          <Flex css={{ mb: '100px', gap: 65 }} direction="column">
+            <Flex
+              justify="between"
+              align="start"
+              css={{
+                flexDirection: 'column',
+                gap: 24,
+                '@bp800': {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                },
               }}
-            />
+            >
+              <Text style="h4" as="h4">
+                Featured Collections
+              </Text>
+            </Flex>
+            {isSSR || !isMounted ? null : (
+              <TrendingCollectionsList
+                uniqueKey="featured"
+                chain={marketplaceChain}
+                collections={topCollections}
+                loading={isValidatingTopPage}
+              />
+            )}
           </Flex>
-          {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
-              uniqueKey="popular"
-              chain={marketplaceChain}
-              collections={collections}
-              loading={isValidating}
-              volumeKey={volumeKey}
-            />
-          )}
-        </Flex>
-        <Footer />
+          <Flex css={{ my: '$6', mb: '150px', gap: 65 }} direction="column">
+            <Flex
+              justify="between"
+              align="start"
+              css={{
+                flexDirection: 'column',
+                gap: 24,
+                '@bp800': {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                },
+              }}
+            >
+              <Text style="h4" as="h4">
+                Popular Collections
+              </Text>
+              <TrendingCollectionsTimeToggle
+                compact={compactToggleNames && isMounted}
+                option={sortByTime}
+                onOptionSelected={(option) => {
+                  setSortByTime(option)
+                }}
+              />
+            </Flex>
+            {isSSR || !isMounted ? null : (
+              <TrendingCollectionsList
+                uniqueKey="popular"
+                chain={marketplaceChain}
+                collections={collections}
+                loading={isValidating}
+                volumeKey={volumeKey}
+              />
+            )}
+          </Flex>
+          <Footer />
+        </Box>
       </Box>
     </Layout>
   )
@@ -174,7 +182,6 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
-      collectionsSetId,
     }
 
   const promises: ReturnType<typeof fetcher>[] = []
@@ -190,6 +197,7 @@ export const getStaticProps: GetStaticProps<{
 
   const promises2: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
+    collectionQuery2.collectionsSetId = collectionsSetId[chain.id];
     promises2.push(
       fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery2, {
         headers: {

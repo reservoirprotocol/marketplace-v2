@@ -23,7 +23,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
-    sortBy: '1DayVolume',
+    sortBy: 'allTimeVolume',
   }
 
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
@@ -45,7 +45,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList
-  >['volumeKey'] = '1day'
+  >['volumeKey'] = 'allTime'
 
   return (
     <Layout>

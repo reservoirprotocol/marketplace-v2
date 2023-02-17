@@ -13,7 +13,8 @@
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@nftearth/reservoir-kit-ui": "^0.8.29",
+    "@next/font": "^13.1.6",
+    "@nftearth/reservoir-kit-ui": "^0.8.32",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/popper": "^0.1.0",
     "@radix-ui/react-avatar": "^1.0.1",
@@ -41,7 +42,6 @@
     "react-jazzicon": "^1.0.4",
     "react-markdown": "^8.0.4",
     "react-responsive": "^9.0.0",
-    "recoil": "^0.7.6",
     "swr": "2.0.0-rc.3",
     "usehooks-ts": "^2.9.1",
     "wagmi": "^0.9"

@@ -1,4 +1,4 @@
-import 'fonts/inter.css'
+import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
@@ -14,21 +14,26 @@ import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { RecoilRoot } from 'recoil'
 
 import {
   ReservoirKitProvider,
   darkTheme as reservoirDarkTheme,
   lightTheme as reservoirLightTheme,
   ReservoirKitTheme,
+  CartProvider
 } from '@nftearth/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
-import { useMarketplaceChain } from 'hooks'
+import {useMarketplaceChain, useMounted} from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import AnalyticsProvider from 'components/AnalyticsProvider'
+import Head from "next/head";
+
+const inter = Inter({
+  subsets: ['latin'],
+})
 
 export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
@@ -63,8 +68,8 @@ const wagmiClient = createClient({
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
 const reservoirKitThemeOverrides = {
-  headlineFont: 'Inter',
-  font: 'Inter',
+  headlineFont: inter.style.fontFamily,
+  font: inter.style.fontFamily,
   primaryColor: '#6E56CB',
   primaryHoverColor: '#644fc1',
 }
@@ -99,6 +104,7 @@ function MyApp({
 
   const { theme } = useTheme()
   const marketplaceChain = useMarketplaceChain()
+  const isMounted = useMounted()
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
@@ -129,45 +135,71 @@ function MyApp({
   const FunctionalComponent = Component as FC
 
   return (
-    <HotkeysProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        value={{
-          dark: darkTheme.className,
-          light: 'light',
-        }}
-      >
-        <ReservoirKitProvider
-          options={{
-            //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
-            // Note that you should at the very least configure the source with your own domain
-            apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
-            disablePoweredByReservoir: true,
-            marketplaceFee: +`${FEE_BPS || 0}`,
-            marketplaceFeeRecipient: FEE_RECIPIENT,
-            // Replace source with your domain
-            source: 'nftearth.exchange',
-            normalizeRoyalties: true,
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Layer 2 NFT Marketplace</title>
+      </Head>
+      <HotkeysProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          value={{
+            dark: darkTheme.className,
+            light: 'light',
           }}
-          theme={reservoirKitTheme}
         >
-          <RecoilRoot>
-            <Tooltip.Provider>
-              <RainbowKitProvider
-                chains={chains}
-                theme={rainbowKitTheme}
-                modalSize="compact"
-              >
-                <ToastContextProvider>
-                  <FunctionalComponent {...pageProps} />
-                </ToastContextProvider>
-              </RainbowKitProvider>
-            </Tooltip.Provider>
-          </RecoilRoot>
-        </ReservoirKitProvider>
-      </ThemeProvider>
-    </HotkeysProvider>
+          <ReservoirKitProvider
+            options={{
+              //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
+              // Note that you should at the very least configure the source with your own domain
+              apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
+              disablePoweredByReservoir: true,
+              marketplaceFee: +`${FEE_BPS || 0}`,
+              marketplaceFeeRecipient: FEE_RECIPIENT,
+              // Replace source with your domain
+              source: 'nftearth.exchange',
+              normalizeRoyalties: true,
+            }}
+            theme={reservoirKitTheme}
+          >
+            <CartProvider persist={true}>
+              <Tooltip.Provider>
+                <RainbowKitProvider
+                  chains={chains}
+                  theme={rainbowKitTheme}
+                  modalSize="compact"
+                >
+                  <ToastContextProvider>
+                    <FunctionalComponent {...pageProps} />
+                  </ToastContextProvider>
+                  {(marketplaceChain.id === 42161 && isMounted) && (
+                    <div>
+                      <p>Important: Full synchronization of blockchain data for collections is ongoing, and NFT Collections may not reflect real-time data.</p>
+                      <style jsx>{`
+                        p {
+                          position: fixed;
+                          top: 110px;
+                          left: 10px;
+                          padding: 10px;
+                          background: #fff;
+                          color: orange;
+                          font-size: small;
+                          width: 300px;
+                          border-radius: 10px;
+                          text-align: center;
+                        }
+                      `}
+                      </style>
+                    </div>
+                  )}
+                </RainbowKitProvider>
+              </Tooltip.Provider>
+            </CartProvider>
+          </ReservoirKitProvider>
+        </ThemeProvider>
+      </HotkeysProvider>
+    </>
   )
 }
 

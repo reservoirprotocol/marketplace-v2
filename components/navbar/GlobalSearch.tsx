@@ -43,7 +43,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
         align="center"
       >
         <img
-          src={collection.image || 'https://via.placeholder.com/32'}
+          src={collection.image || 'https://via.placeholder.com/32?text='}
           style={{ width: 32, height: 32, borderRadius: 4 }}
         />
         <Text style="subtitle1" ellipsify>
@@ -72,7 +72,7 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
     <Link href={`/profile/${wallet.name}`}>
       <Flex css={{ p: '$2', gap: '$4' }} align="center">
         <img
-          src={wallet.avatar as string || 'https://via.placeholder.com/32' }
+          src={wallet.avatar as string || 'https://via.placeholder.com/32?text=' }
           style={{ width: 32, height: 32, borderRadius: 4 }}
         />
         <Text style="subtitle1">{wallet.displayName}</Text>

@@ -27,7 +27,7 @@ const FormatCryptoCurrency: FC<Props> = ({
       maximumFractionDigits={maximumFractionDigits}
       decimals={decimals}
     >
-      <CryptoCurrencyIcon css={{ height: logoHeight }} address={address} />
+      <CryptoCurrencyIcon css={{ height: logoHeight, width: logoHeight }} address={address} />
     </FormatCrypto>
   )
 }

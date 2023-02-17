@@ -2,8 +2,7 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
-  TokenMedia,
-  useTokens,
+  TokenMedia, useDynamicTokens,
 } from '@nftearth/reservoir-kit-ui'
 import BuyNow from 'components/buttons/BuyNow'
 import {
@@ -19,9 +18,10 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
+import AddToCart from "../buttons/AddToCart";
 
 type TokenCardProps = {
-  token: ReturnType<typeof useTokens>['data'][0]
+  token: ReturnType<typeof useDynamicTokens>['data'][0]
   rarityEnabled: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
@@ -55,7 +55,7 @@ export default ({
           transform: 'scale(1.1)',
         },
         '@sm': {
-          '&:hover button[aria-haspopup="dialog"]': {
+          '&:hover div': {
             bottom: 0,
           },
         },
@@ -64,11 +64,6 @@ export default ({
       <Link
         passHref
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
-        onClick={(e) => {
-          if (!showPreview || (e.target as HTMLElement)?.tagName === 'BUTTON') {
-            e.preventDefault()
-          }
-        }}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
@@ -218,22 +213,34 @@ export default ({
           )}
         </Flex>
       </Link>
-      <BuyNow
-        token={token}
-        mutate={mutate}
-        buttonCss={{
-          position: 'absolute',
-          width: '100%',
-          bottom: -44,
-          left: 0,
-          right: 0,
-          justifyContent: 'center',
-          transition: 'bottom 0.25s ease-in-out',
-        }}
-        buttonProps={{
-          corners: 'square',
-        }}
-      />
+      <Flex css={{
+        position: 'absolute',
+        width: '100%',
+        bottom: -44,
+        left: 0,
+        right: 0,
+        justifyContent: 'stretch',
+        transition: 'bottom 0.25s ease-in-out',
+      }}>
+        <BuyNow
+          token={token}
+          mutate={mutate}
+          buttonCss={{
+            flex: 1,
+            justifyContent: 'center',
+          }}
+          buttonProps={{
+            corners: 'square',
+          }}
+        />
+        <AddToCart
+          token={token}
+          icon
+          buttonProps={{
+            corners: 'square',
+          }}
+        />
+      </Flex>
     </Box>
   )
 }

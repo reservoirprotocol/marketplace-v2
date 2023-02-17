@@ -1,4 +1,4 @@
-import { ListModal, useTokens } from '@nftearth/reservoir-kit-ui'
+import { ListModal, ListStep, useTokens } from '@nftearth/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import {
   cloneElement,
@@ -27,7 +27,11 @@ type Props = {
   mutate?: SWRResponse['mutate']
 }
 
-const CURRENCIES = process.env.NEXT_PUBLIC_LISTING_CURRENCIES
+const CURRENCIES = process.env.NEXT_PUBLIC_LISTING_CURRENCIES_CHAIN
+
+type CurrencyChain = {
+  [chain: number]: ListingCurrencies
+}
 
 const List: FC<Props> = ({
   token,
@@ -52,11 +56,7 @@ const List: FC<Props> = ({
     signer && marketplaceChain.id !== activeChain?.id
   )
 
-  let listingCurrencies: ListingCurrencies = undefined
-
-  if (CURRENCIES) {
-    listingCurrencies = JSON.parse(CURRENCIES)
-  }
+  let listingCurrencies: CurrencyChain = JSON.parse(CURRENCIES as string)
 
   const tokenId = token?.token?.tokenId
   const contract = token?.token?.contract
@@ -88,11 +88,9 @@ const List: FC<Props> = ({
         trigger={trigger}
         collectionId={contract}
         tokenId={tokenId}
-        currencies={listingCurrencies}
-        onListingComplete={() => {
-          if (mutate) {
-            mutate()
-          }
+        currencies={listingCurrencies[marketplaceChain.id]}
+        onClose={(data, stepData, currentStep) => {
+          if (mutate && currentStep == ListStep.Complete) mutate()
         }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {
