@@ -122,6 +122,15 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         12: '32px',
         13: '34px',
       },
+      zIndexes: {
+        xs: -1,
+        base: 0,
+        sm: 1,
+        md: 5,
+        lg: 10,
+        xl: 1000, 
+        xxl: 9999,
+      },
       fontWeights: {
         regular: 400,
         medium: 500,

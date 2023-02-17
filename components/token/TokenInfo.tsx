@@ -28,8 +28,8 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const isMounted = useMounted()
 
   const CollectionAction = styled(Flex, {
-    px: '$4',
-    py: '$3',
+    px: '$space$4',
+    py: '$space$3',
     color: '$gray12',
     background: '$gray3',
     cursor: 'pointer',

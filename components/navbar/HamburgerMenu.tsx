@@ -56,8 +56,8 @@ const HamburgerMenu = () => {
       >
         <Flex
           css={{
-            py: '$4',
-            px: '$4',
+            py: '$space$4',
+            px: '$space$4',
             width: '100%',
             borderBottom: '1px solid $gray4',
           }}
@@ -97,8 +97,8 @@ const HamburgerMenu = () => {
               flexDirection: 'column',
               justifyContent: 'flex-start',
               height: '100%',
-              py: '$5',
-              px: '$4',
+              py: '$space$5',
+              px: '$space$4',
             }}
           >
             <Link href={`/profile/${address}`} legacyBehavior>

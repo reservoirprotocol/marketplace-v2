@@ -53,10 +53,10 @@ const PortfolioPage: NextPage = () => {
       <Flex
         direction="column"
         css={{
-          px: '$4',
-          py: '$5',
+          px: '$space$4',
+          py: '$space$5',
           '@sm': {
-            px: '$5',
+            px: '$space$5',
           },
         }}
       >

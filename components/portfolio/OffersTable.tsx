@@ -63,7 +63,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
         <Flex
           direction="column"
           align="center"
-          css={{ py: '$6', gap: '$4', width: '100%' }}
+          css={{ py: '$space$6', gap: '$space$4', width: '100%' }}
         >
           <Text css={{ color: '$gray11' }}>
             <FontAwesomeIcon icon={faHand} size="2xl" />
@@ -119,9 +119,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
         direction="column"
         align="start"
         css={{
-          gap: '$3',
+          gap: '$space$3',
           borderBottom: '1px solid $gray3',
-          py: '$3',
+          py: '$space$3',
           width: '100%',
           overflow: 'hidden',
           flex: 1,
