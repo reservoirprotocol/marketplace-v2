@@ -19,8 +19,8 @@ import HeroSection from 'components/HeroSection'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const collectionsSetId: any = {
-  10: "b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4",
-  42161: "3b38ae5b4e28b3b9873d74d3cf397b479a8506fe9bf26a1335b4e2807196e03b"
+  10: 'b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4',
+  42161: '3b38ae5b4e28b3b9873d74d3cf397b479a8506fe9bf26a1335b4e2807196e03b',
 }
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
@@ -92,7 +92,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               p: '$6',
             },
           }}
-          >
+        >
           <Flex css={{ mb: '100px', gap: 65 }} direction="column">
             <Flex
               justify="between"
@@ -106,7 +106,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 },
               }}
             >
-              <Text style="h4" as="h4">
+              <Text style="h3" as="h3">
                 Featured Collections
               </Text>
             </Flex>
@@ -132,7 +132,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 },
               }}
             >
-              <Text style="h4" as="h4">
+              <Text style="h3" as="h3">
                 Popular Collections
               </Text>
               <TrendingCollectionsTimeToggle
@@ -197,7 +197,7 @@ export const getStaticProps: GetStaticProps<{
 
   const promises2: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
-    collectionQuery2.collectionsSetId = collectionsSetId[chain.id];
+    collectionQuery2.collectionsSetId = collectionsSetId[chain.id]
     promises2.push(
       fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery2, {
         headers: {

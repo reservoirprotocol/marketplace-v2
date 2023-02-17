@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Box, Flex } from '../primitives'
+import { Box, Button, Flex } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -15,7 +15,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
-import CartMenu from "./CartMenu";
+import CartMenu from './CartMenu'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -60,7 +60,10 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/nftearth-icon-new.png" style={{ width: 34, height: 34 }} />
+              <img
+                src="/nftearth-icon-new.png"
+                style={{ width: 34, height: 34 }}
+              />
             </Box>
           </Link>
         </Flex>
@@ -82,7 +85,10 @@ const Navbar = () => {
         mx: 'auto',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
-        background: '$neutralBg',
+        background:
+          theme == 'dark'
+            ? 'radial-gradient(circle at 24.1% 68.8%, rgb(50, 50, 50) 0%, $neutralBg 99.4%);'
+            : '$neutralBg',
         position: 'fixed',
         top: 0,
         left: 0,
@@ -94,7 +100,14 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Box
+              css={{
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
               {theme == 'dark' ? (
                 <img src="/nftearth-icon-new.png" style={{ width: 40 }} />
               ) : (
@@ -115,13 +128,52 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/explore" legacyBehavior>
-              <NavItem active={router.pathname == '/explore'}>Explore</NavItem>
+              <NavItem active={router.pathname == '/explore'}>
+                <Box
+                  css={{
+                    padding: 10,
+                    '&:hover': {
+                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                      outline: '1px solid $neutralBgSubtle',
+                      borderRadius: 5,
+                    },
+                  }}
+                >
+                  Explore
+                </Box>
+              </NavItem>
             </Link>
             <a href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>
+                <Box
+                  css={{
+                    padding: 10,
+                    '&:hover': {
+                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                      outline: '1px solid $neutralBgSubtle',
+                      borderRadius: 5,
+                    },
+                  }}
+                >
+                  Sell
+                </Box>
+              </NavItem>
             </a>
             <Link href="/launch" legacyBehavior>
-              <NavItem active={router.pathname == '/launch'}>Launchpad</NavItem>
+              <NavItem active={router.pathname == '/launch'}>
+                <Box
+                  css={{
+                    padding: 10,
+                    '&:hover': {
+                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                      outline: '1px solid $neutralBgSubtle',
+                      borderRadius: 5,
+                    },
+                  }}
+                >
+                  Launchpad
+                </Box>
+              </NavItem>
             </Link>
           </Flex>
         </Flex>

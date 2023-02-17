@@ -1,13 +1,16 @@
 import Link from 'next/link'
 
 import { Button, Flex, Grid, Text } from './primitives'
-import {FC} from "react";
+import { FC } from 'react'
+import { useTheme } from 'next-themes'
 
 interface IProp {
   hideLink?: boolean
 }
 
 const HeroSection: FC<IProp> = ({ hideLink }) => {
+  const { theme } = useTheme()
+
   return (
     <Flex
       as="section"
@@ -25,18 +28,20 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         },
       }}
     >
-      <Grid css={{
-        gap: 32,
-        '@xs': {
-          flex: 1
-        },
-        '@lg': {
-          flex: 0.5
-        }
-      }}>
+      <Grid
+        css={{
+          gap: 32,
+          '@xs': {
+            flex: 1,
+          },
+          '@lg': {
+            flex: 0.5,
+          },
+        }}
+      >
         <Text
           style={{
-            '@initial': 'h3',
+            '@initial': 'h2',
             '@lg': 'h1',
           }}
           as="h1"
@@ -44,24 +49,49 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         >
           Buy And Sell NFTs on L2
         </Text>
-        <Text style="subtitle1" css={{ lineHeight: 1.5, color: '$whiteA12' }}>
+        <Text
+          style="subtitle1"
+          css={{ lineHeight: 1.5, color: '$whiteA12', width: '50%' }}
+        >
           {`Discover and Create NFTs and earn rewards on Optimism's largest NFT marketplace.`}
         </Text>
         {hideLink ?? (
-          <Link href="/explore" passHref legacyBehavior>
-            <Button
-              as="a"
-              color="white"
-              corners="pill"
-              size="large"
-              css={{
-                width: 280,
-                justifyContent: 'center',
-              }}
-            >
-              Explore NFTs
-            </Button>
-          </Link>
+          <Flex css={{ gap: 10 }}>
+            <Link href="/portfolio" passHref legacyBehavior>
+              <Button
+                as="a"
+                color="white"
+                corners="pill"
+                size="large"
+                css={{
+                  width: 50,
+                  borderRadius: 10,
+                  justifyContent: 'center',
+                }}
+              >
+                Sell
+              </Button>
+            </Link>
+            <Link href="/explore" passHref legacyBehavior>
+              <Button
+                as="a"
+                color={theme === 'dark' ? 'ghost' : 'white'}
+                corners="pill"
+                size="large"
+                css={{
+                  width: 100,
+                  borderRadius: 10,
+                  border: '1px solid $neutralBgSubtle',
+                  justifyContent: 'center',
+                  '&:hover': {
+                    background: '$neutralBgSubtle',
+                  },
+                }}
+              >
+                Explore
+              </Button>
+            </Link>
+          </Flex>
         )}
       </Grid>
     </Flex>
