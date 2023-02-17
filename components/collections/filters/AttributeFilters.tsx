@@ -44,7 +44,7 @@ export const AttributeFilters: FC<Props> = ({
           marginBottom: 16,
           background: 'transparent',
           border: 'none',
-          borderRadius: 0,
+          borderRadius: '$base',
         }}
       >
         <Box

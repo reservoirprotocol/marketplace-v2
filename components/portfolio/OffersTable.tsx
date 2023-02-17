@@ -135,7 +135,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
               {imageSrc && (
                 <Image
                   style={{
-                    borderRadius: '4px',
+                    borderRadius: '$sm',
                     objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
@@ -210,7 +210,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
             {imageSrc && (
               <Image
                 style={{
-                  borderRadius: '4px',
+                  borderRadius: '$sm',
                   objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}

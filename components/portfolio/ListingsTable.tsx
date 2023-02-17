@@ -135,7 +135,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               {imageSrc && (
                 <Image
                   style={{
-                    borderRadius: '4px',
+                    borderRadius: '$sm',
                     objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
@@ -210,7 +210,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             {imageSrc && (
               <Image
                 style={{
-                  borderRadius: '4px',
+                  borderRadius: '$sm',
                   objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}

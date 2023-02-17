@@ -81,7 +81,7 @@ export default ({ token, collection, collectionAttributes }: Props) => {
           mr: 'auto',
           px: '$2',
           py: '$1',
-          borderRadius: 4,
+          borderRadius: '$sm',
           gap: '$1',
           cursor: 'pointer',
         }}

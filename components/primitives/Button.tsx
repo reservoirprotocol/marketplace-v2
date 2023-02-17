@@ -66,10 +66,10 @@ const Button = styled('button', {
     },
     corners: {
       square: {
-        borderRadius: 0,
+        borderRadius: '$base',
       },
       rounded: {
-        borderRadius: 8,
+        borderRadius: '$lg',
       },
       pill: {
         borderRadius: 99999,

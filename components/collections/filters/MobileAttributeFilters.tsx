@@ -160,7 +160,7 @@ export const MobileAttributeFilters: FC<Props> = ({
                 width: '44px',
                 height: '44px',
                 alignItems: 'center',
-                borderRadius: 8,
+                borderRadius: '$lg',
                 backgroundColor: '$gray3',
                 color: '$gray12',
                 '&:hover': {

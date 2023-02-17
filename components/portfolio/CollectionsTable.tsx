@@ -134,7 +134,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
               {collection?.collection?.image && (
                 <Image
                   style={{
-                    borderRadius: '4px',
+                    borderRadius: '$sm',
                     objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
@@ -208,7 +208,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
             {collection?.collection?.image && (
               <Image
                 style={{
-                  borderRadius: '4px',
+                  borderRadius: '$sm',
                   objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}

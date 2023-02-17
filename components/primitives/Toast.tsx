@@ -35,7 +35,7 @@ const swipeOut = keyframes({
 
 const ToastRoot = styled(ToastPrimitive.Root, {
   backgroundColor: '$gray3',
-  borderRadius: 6,
+  borderRadius: '$md',
   padding: 12,
   display: 'grid',
   gridTemplateAreas: "'title action' 'description action'",

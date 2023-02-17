@@ -65,7 +65,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 size="large"
                 css={{
                   width: 50,
-                  borderRadius: 10,
+                  borderRadius: '$lg',
                   justifyContent: 'center',
                 }}
               >
@@ -80,7 +80,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 size="large"
                 css={{
                   width: 100,
-                  borderRadius: 10,
+                  borderRadius: '$lg',
                   border: '1px solid $neutralBgSubtle',
                   justifyContent: 'center',
                   '&:hover': {

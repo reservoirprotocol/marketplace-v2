@@ -45,7 +45,7 @@ const Tooltip = ({
               zIndex: 9999,
               $$shadowColor: '$colors$panelShadow',
               boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
-              borderRadius: 8,
+              borderRadius: '$lg',
               overflow: 'hidden',
             }}
           >
@@ -83,7 +83,7 @@ const Tooltip = ({
             zIndex: 9999,
             $$shadowColor: '$colors$panelShadow',
             boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
-            borderRadius: 8,
+            borderRadius: '$lg',
             overflow: 'hidden',
           }}
         >

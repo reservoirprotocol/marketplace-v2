@@ -135,7 +135,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
         </Flex>
         <Flex
           css={{
-            borderRadius: 8,
+            borderRadius: '$lg',
             overflow: 'hidden',
             gap: 1,
             flexShrink: 0,
