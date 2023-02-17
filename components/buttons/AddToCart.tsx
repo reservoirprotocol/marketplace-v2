@@ -1,5 +1,5 @@
 import React, { ComponentProps, FC, useContext, useState } from 'react'
-import { useAccount, useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useCart } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -22,7 +22,6 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
   const { data: cartChain } = useCart((cart) => cart.chain)
   const { isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
-  const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
 
