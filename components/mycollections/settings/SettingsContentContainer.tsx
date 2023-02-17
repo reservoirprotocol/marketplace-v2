@@ -6,13 +6,14 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 type SettingsProps = {
   tab: string,
+  tabLabel: string,
   activeTab: string | null,
   children: ReactNode,
   icon: IconProp,
   setActiveTab: () => void
 }
 
-const SettingsContentContainer: FC<SettingsProps> = ({ tab, activeTab, setActiveTab, icon, children }) => {
+const SettingsContentContainer: FC<SettingsProps> = ({ tab, tabLabel, activeTab, setActiveTab, icon, children }) => {
   const isActiveTab = tab === activeTab
 
   return (
@@ -51,7 +52,7 @@ const SettingsContentContainer: FC<SettingsProps> = ({ tab, activeTab, setActive
               fontWeight: 'bold',
               marginLeft: 8
             }}>
-            {tab}
+            {tabLabel}
           </Text>
         </Flex>
         <FontAwesomeIcon

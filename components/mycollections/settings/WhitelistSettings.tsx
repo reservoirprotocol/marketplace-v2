@@ -76,12 +76,12 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
           marginBottom: 18
         }}>
         <Text style='h4'>
-          Whitelist Settings
+          Allowlist Settings
         </Text>
       </Box>
       <Box css={{ marginBottom: 8 }}>
         <Flex direction='column'>
-          <Text style="h6" css={{ color: '$gray11' }}>Whitelist List</Text>
+          <Text style="h6" css={{ color: '$gray11' }}>Allowlist List</Text>
         </Flex>
       </Box>
       <Box css={{ marginBottom: 8 }}>
@@ -125,7 +125,7 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
         <Button 
           color='ghost' 
           onClick={handleAddWhitelist}>
-          + Add Whitelist
+          + Add Whitelisted Address
         </Button>
       </Flex>
       <Button 

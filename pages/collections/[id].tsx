@@ -92,7 +92,7 @@ const MyCollectionDetailPage = () => {
                 <Box css={{ width: 16 }}>
                   <FontAwesomeIcon icon={faEdit} />
                 </Box>
-                <Text css={getCssTab('mintState').text}>Mint State</Text>
+                <Text css={getCssTab('mintState').text}>Mint Settings</Text>
               </Flex>
               <Flex 
                 align='center'
@@ -120,6 +120,7 @@ const MyCollectionDetailPage = () => {
             }}>
             <SettingsContentContainer 
               tab='details' 
+              tabLabel='details' 
               activeTab={activeTab}
               icon={faGear} 
               setActiveTab={() => setActiveTab('details')}>
@@ -127,6 +128,7 @@ const MyCollectionDetailPage = () => {
             </SettingsContentContainer>
             <SettingsContentContainer 
               tab='royalities' 
+              tabLabel='royalities' 
               activeTab={activeTab}
               icon={faMapPin} 
               setActiveTab={() => setActiveTab('royalities')}>
@@ -134,6 +136,7 @@ const MyCollectionDetailPage = () => {
             </SettingsContentContainer>
             <SettingsContentContainer 
               tab='mintState' 
+              tabLabel='mint settings' 
               activeTab={activeTab}
               icon={faEdit} 
               setActiveTab={() => setActiveTab('mintState')}>
@@ -141,6 +144,7 @@ const MyCollectionDetailPage = () => {
             </SettingsContentContainer>
             <SettingsContentContainer 
               tab='whitelist' 
+              tabLabel='whitelist' 
               activeTab={activeTab}
               icon={faList} 
               setActiveTab={() => setActiveTab('whitelist')}>
@@ -148,6 +152,7 @@ const MyCollectionDetailPage = () => {
             </SettingsContentContainer>
             <SettingsContentContainer 
               tab='metadata' 
+              tabLabel='metadata' 
               activeTab={activeTab}
               icon={faFileImage} 
               setActiveTab={() => setActiveTab('metadata')}>

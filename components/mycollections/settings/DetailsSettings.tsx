@@ -147,7 +147,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
           marginBottom: 18
         }}>
         <Text style='h4'>
-          Details Settings
+          Collection Settings
         </Text>
       </Box>
       <Box css={{ marginBottom: 32 }}>

@@ -1,7 +1,7 @@
 import { useState, useEffect, FC, SyntheticEvent, KeyboardEvent, ChangeEvent } from 'react'
 import { useTheme } from 'next-themes'
 
-import { Text, Flex, Box, Switch } from 'components/primitives'
+import { Text, Flex, Box, Switch, Button } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input"
 
 type Props = {
@@ -57,7 +57,7 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
       <Box css={{ marginBottom: 32 }}>
         <Flex justify="between">
           <Flex direction="column">
-            <Text style="h6" css={{ color: '$gray11' }}>Public mint</Text>
+            <Text style="h6" css={{ color: '$gray11' }}>Public Mint</Text>
           </Flex>
           <Box>
             <Switch
@@ -68,7 +68,7 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
         </Flex>
           {isPublicMint && (
             <Box css={{ width: '100%', marginTop: 12 }}>
-              <Text style='subtitle2' css={{ color: '$gray11', fontWeight: 'bold' }}>Public Mint price</Text>
+              <Text style='subtitle2' css={{ color: '$gray11', fontWeight: 'bold' }}>Public Mint Price</Text>
               <Box 
                 css={{ 
                   position: 'relative', 
@@ -121,7 +121,7 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
       <Box css={{ marginBottom: 32 }}>
         <Flex justify="between">
           <Flex direction="column">
-            <Text style="h6" css={{ color: '$gray11' }}>Allowlist mint</Text>
+            <Text style="h6" css={{ color: '$gray11' }}>Allowlist Mint</Text>
           </Flex>
           <Box>
             <Switch
@@ -132,7 +132,7 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
         </Flex>
           {isAllowlistMint && (
             <Box css={{ width: '100%', marginTop: 12 }}>
-              <Text style='subtitle2' css={{ color: '$gray11', fontWeight: 'bold' }}>Allowlist Mint price</Text>
+              <Text style='subtitle2' css={{ color: '$gray11', fontWeight: 'bold' }}>Allowlist Mint Price</Text>
               <Box 
                 css={{ 
                   position: 'relative', 
@@ -182,6 +182,17 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
           )
         }
       </Box>
+      <Button 
+        onClick={handleSubmit}
+        css={{ 
+          margin: '12px 0',
+          width: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          justifyItems: 'center',
+        }}>
+        Save
+      </Button>
     </Box>
   )
 }

@@ -49,22 +49,7 @@ const MintStateSettings:FC<Props> = ({ activeTab }) => {
         </Text>
       </Box>
       <Box css={{ marginBottom: 32 }}>
-        <Flex css={{ gap: '$1' }}>
-          <Text style="h6" css={{ color: '$gray11' }}>Metadata URL</Text>
-          <Tooltip
-            content={
-              <Flex>
-                <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
-                  The floor price with royalties and fees removed. This is the eth
-                  you would receive if you listed at the floor.
-                </Text>
-              </Flex>
-            }>
-            <Text css={{ color: '$gray9' }}>
-              <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
-            </Text>
-          </Tooltip>
-        </Flex>
+        <Text style="h6" css={{ color: '$gray11' }}>Metadata URL</Text>
         <Input
           value={metadataUrl}
           onChange={(e) => setMetadataUrl(e.target.value)}

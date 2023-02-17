@@ -108,7 +108,7 @@ const RoyalitiesSettings:FC<Props> = ({ activeTab }) => {
         <Flex direction='column'>
           <Text style="h6" css={{ color: '$gray11' }}>Creator Earnings</Text>
           <Text style='subtitle3' css={{ color: '$gray11', marginBottom: 6 }}>
-            Collection owners can collect creator earnings when a user re-sells an item they created. Contact the collection owner to change the collection earnings percentage or the payout address.
+            Collection owners can collect creator earnings when a user re-sells an item they created.
           </Text>
         </Flex>
       </Box>
