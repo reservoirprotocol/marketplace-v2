@@ -80,75 +80,81 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
-          p: 24,
           height: '100%',
-          '@bp800': {
-            p: '$6',
-          },
         }}
       >
         <HeroSection />
-        <Flex css={{ my: '$6', mb: '100px', gap: 65 }} direction="column">
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
+        <Box
+          css={{
+            p: 24,
+            height: '100%',
+            '@bp800': {
+              p: '$6',
+            },
+          }}
           >
-            <Text style="h4" as="h4">
-              Featured Collections
-            </Text>
-          </Flex>
-          {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
-              uniqueKey="featured"
-              chain={marketplaceChain}
-              collections={topCollections}
-              loading={isValidatingTopPage}
-            />
-          )}
-        </Flex>
-        <Flex css={{ my: '$6', mb: '150px', gap: 65 }} direction="column">
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
-          >
-            <Text style="h4" as="h4">
-              Popular Collections
-            </Text>
-            <TrendingCollectionsTimeToggle
-              compact={compactToggleNames && isMounted}
-              option={sortByTime}
-              onOptionSelected={(option) => {
-                setSortByTime(option)
+          <Flex css={{ mb: '100px', gap: 65 }} direction="column">
+            <Flex
+              justify="between"
+              align="start"
+              css={{
+                flexDirection: 'column',
+                gap: 24,
+                '@bp800': {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                },
               }}
-            />
+            >
+              <Text style="h4" as="h4">
+                Featured Collections
+              </Text>
+            </Flex>
+            {isSSR || !isMounted ? null : (
+              <TrendingCollectionsList
+                uniqueKey="featured"
+                chain={marketplaceChain}
+                collections={topCollections}
+                loading={isValidatingTopPage}
+              />
+            )}
           </Flex>
-          {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
-              uniqueKey="popular"
-              chain={marketplaceChain}
-              collections={collections}
-              loading={isValidating}
-              volumeKey={volumeKey}
-            />
-          )}
-        </Flex>
-        <Footer />
+          <Flex css={{ my: '$6', mb: '150px', gap: 65 }} direction="column">
+            <Flex
+              justify="between"
+              align="start"
+              css={{
+                flexDirection: 'column',
+                gap: 24,
+                '@bp800': {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                },
+              }}
+            >
+              <Text style="h4" as="h4">
+                Popular Collections
+              </Text>
+              <TrendingCollectionsTimeToggle
+                compact={compactToggleNames && isMounted}
+                option={sortByTime}
+                onOptionSelected={(option) => {
+                  setSortByTime(option)
+                }}
+              />
+            </Flex>
+            {isSSR || !isMounted ? null : (
+              <TrendingCollectionsList
+                uniqueKey="popular"
+                chain={marketplaceChain}
+                collections={collections}
+                loading={isValidating}
+                volumeKey={volumeKey}
+              />
+            )}
+          </Flex>
+          <Footer />
+        </Box>
       </Box>
     </Layout>
   )

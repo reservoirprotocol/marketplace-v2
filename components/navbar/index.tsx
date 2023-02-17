@@ -60,7 +60,7 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/nftearth-icon.png" style={{ width: 34, height: 34 }} />
+              <img src="/nftearth-icon-new.png" style={{ width: 34, height: 34 }} />
             </Box>
           </Link>
         </Flex>
@@ -94,15 +94,15 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 132, cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+            <Box css={{ cursor: 'pointer', display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
               {theme == 'dark' ? (
-                <img src="/nftearth-icon.png" style={{ width: 40 }} />
+                <img src="/nftearth-icon-new.png" style={{ width: 40 }} />
               ) : (
                 <img
-                  src="/nftearth-icon.png"
+                  src="/nftearth-icon-new.png"
                   style={{ width: 40, height: 40 }}
                 />
-              )}<span style={{ marginLeft: 10, fontWeight: 'bold' }}>NFTEarth</span>
+              )}
             </Box>
           </Link>
           <Box css={{ flex: 1, ml: '$5', px: '$5', maxWidth: 460 }}>
@@ -120,6 +120,9 @@ const Navbar = () => {
             <a href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </a>
+            <Link href="/launch" legacyBehavior>
+              <NavItem active={router.pathname == '/launch'}>Launchpad</NavItem>
+            </Link>
           </Flex>
         </Flex>
       </Box>
