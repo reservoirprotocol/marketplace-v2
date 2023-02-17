@@ -9,6 +9,7 @@ import {
   useCollections,
   useCollectionActivity,
   useDynamicTokens,
+  useAttributes,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -123,9 +124,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
-  const attributes = ssr?.attributes?.attributes?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-  )
+  let attributesdata = useAttributes(id, {
+    fallbackData: ssr.attributes,
+  })
+
+  const attributes =
+    attributesdata.data?.filter(
+      (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+    ) || []
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
@@ -422,8 +428,8 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v5']['get']['responses']['200']['schema']
+    tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
     attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
   id: string | undefined
@@ -432,7 +438,7 @@ export const getStaticProps: GetStaticProps<{
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
-  const headers = {
+  const headers: RequestInit = {
     headers: {
       'x-api-key': apiKey || '',
     },
@@ -445,12 +451,11 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     collection: id,
@@ -461,24 +466,54 @@ export const getStaticProps: GetStaticProps<{
     includeDynamicPricing: true,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
 
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
-  let attributes: Props['ssr']['attributes'] | undefined
-  try {
-    const attributesResponse = await fetcher(
-      `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
-      {},
-      headers
-    )
-    attributes = attributesResponse['data']
-  } catch (e) {
-    console.log('Failed to load attributes')
+  const attributesController = new AbortController()
+
+  const attributesPromise = fetcher(
+    `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
+    {},
+    {
+      ...headers,
+      signal: attributesController.signal,
+    }
+  )
+
+  const attributesTimeout = setTimeout(() => {
+    attributesController.abort()
+  }, 5000)
+
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+    attributesPromise,
+  ])
+  const collection: Props['ssr']['collection'] =
+    promises[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : undefined
+  const tokens: Props['ssr']['tokens'] =
+    promises[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : undefined
+  let attributes: Props['ssr']['attributes'] =
+    promises[2].status === 'fulfilled' && promises[2].value.data
+      ? (promises[2].value.data as Props['ssr']['attributes'])
+      : undefined
+
+  if (attributes?.attributes) {
+    attributes = {
+      attributes: attributes.attributes.filter(
+        (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+      ),
+    }
   }
+
+  clearTimeout(attributesTimeout)
 
   return {
     props: { ssr: { collection, tokens, attributes }, id },

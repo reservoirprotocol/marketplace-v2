@@ -86,11 +86,6 @@ export default ({
       <Link
         passHref
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
-        onClick={(e) => {
-          if (!showPreview || (e.target as HTMLElement)?.tagName === 'BUTTON') {
-            e.preventDefault()
-          }
-        }}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
