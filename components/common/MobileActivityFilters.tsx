@@ -105,7 +105,7 @@ export const MobileActivityFilters: FC<Props> = ({
               backgroundColor: '$gray4',
               borderRadius: '100%',
               fontSize: 'medium',
-              fontWeight: '500',
+              fontWeight: '$medium'
             }}
           >
             {activityTypes.length}

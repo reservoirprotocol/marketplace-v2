@@ -2,14 +2,14 @@ import { styled } from 'stitches.config'
 
 const Button = styled('button', {
   outline: 'none',
-  fontWeight: 700,
+  fontWeight: '$bold',
   fontSize: 16,
   fontFamily: '$button',
   transition: 'background-color 250ms linear',
   gap: '$space$2',
   display: 'inline-flex',
   alignItems: 'center',
-  lineHeight: '20px',
+  lineHeight: '$3',
   $$focusColor: '$colors$gray12',
   '&:focus-visible': {
     boxShadow: '0 0 0 2px $$focusColor',
@@ -83,13 +83,13 @@ const Button = styled('button', {
     size: {
       xs: {
         p: '$space$3',
-        lineHeight: '16px',
+        lineHeight: '$2',
         minHeight: 40,
       },
       small: {
         px: '$space$3',
         py: '$space$4',
-        lineHeight: '12px',
+        lineHeight: '$2',
         minHeight: 44,
       },
       medium: {

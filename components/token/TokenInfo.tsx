@@ -120,7 +120,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               css={{
                 width: 'max-content',
                 color: '$primary11',
-                fontWeight: 500,
+                fontWeight: '$medium',
                 height: 28,
                 minHeight: 28,
                 px: 0,

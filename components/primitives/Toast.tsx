@@ -64,14 +64,14 @@ const ToastRoot = styled(ToastPrimitive.Root, {
 const ToastTitle = styled(ToastPrimitive.Title, {
   gridArea: 'title',
   fontSize: '14px',
-  fontWeight: 500,
+  fontWeight: '$medium',
   marginBottom: '2px',
 })
 
 const ToastDescription = styled(ToastPrimitive.Description, {
   gridArea: 'description',
   fontSize: '12px',
-  fontWeight: 400,
+  fontWeight: '$regular',
   color: '$gray11',
 })
 

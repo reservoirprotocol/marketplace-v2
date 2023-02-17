@@ -85,7 +85,7 @@ export const MobileAttributeFilters: FC<Props> = ({
               backgroundColor: '$gray4',
               borderRadius: '100%',
               fontSize: 'medium',
-              fontWeight: '500',
+              fontWeight: '$medium'
             }}
           >
             {filtersLength}

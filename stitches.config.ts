@@ -162,6 +162,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         '4xl': '49px',
         full: '9999px',
       },
+     // will modify shadows  
       shadows: {
         xs: '0px 2px 7px rgba(0, 0, 0, 0.04)',
         sm: '0px 2px 5px rgba(60, 66, 87, 0.12), 0px 1px 1px rgba(0, 0, 0, 0.08)',
