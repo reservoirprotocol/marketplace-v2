@@ -20,7 +20,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
   css,
 }) => {
   const client = useReservoirClient()
-  const chain = client?.chains.find((chain) =>
+  const chain = client?.chains?.find((chain) =>
     chainId !== undefined ? chain.id === chainId : chain.default
   )
 
