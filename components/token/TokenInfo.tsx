@@ -28,8 +28,8 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const isMounted = useMounted()
 
   const CollectionAction = styled(Flex, {
-    px: '$4',
-    py: '$3',
+    px: '$space$4',
+    py: '$space$3',
     color: '$gray12',
     background: '$gray3',
     cursor: 'pointer',
@@ -120,7 +120,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               css={{
                 width: 'max-content',
                 color: '$primary11',
-                fontWeight: 500,
+                fontWeight: '$medium',
                 height: 28,
                 minHeight: 28,
                 px: 0,
@@ -135,7 +135,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
         </Flex>
         <Flex
           css={{
-            borderRadius: 8,
+            borderRadius: '$lg',
             overflow: 'hidden',
             gap: 1,
             flexShrink: 0,

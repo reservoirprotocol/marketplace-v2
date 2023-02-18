@@ -76,7 +76,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             <Flex
               align="center"
               css={{
-                borderRadius: 4,
+                borderRadius: '$sm',
                 gap: '$1',
                 width: 'max-content',
               }}
@@ -121,7 +121,7 @@ export const PriceData: FC<Props> = ({ token }) => {
             <Flex
               align="center"
               css={{
-                borderRadius: 4,
+                borderRadius: '$sm',
                 gap: '$1',
                 width: 'max-content',
               }}

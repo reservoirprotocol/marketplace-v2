@@ -135,7 +135,7 @@ const Navbar = () => {
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
                       outline: '1px solid $neutralBgSubtle',
-                      borderRadius: 5,
+                      borderRadius: '$md',
                     },
                   }}
                 >
@@ -151,7 +151,7 @@ const Navbar = () => {
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
                       outline: '1px solid $neutralBgSubtle',
-                      borderRadius: 5,
+                      borderRadius: '$md',
                     },
                   }}
                 >
@@ -167,7 +167,7 @@ const Navbar = () => {
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
                       outline: '1px solid $neutralBgSubtle',
-                      borderRadius: 5,
+                      borderRadius: '$md',
                     },
                   }}
                 >

@@ -9,7 +9,7 @@ export const StyledAnchor = styled('a', {
   '&:focus-visible': {
     color: '$gray12',
     outline: 'none',
-    borderRadius: 4,
+    borderRadius: '$sm',
     boxShadow: '0 0 0 2px $$focusColor',
   },
   variants: {

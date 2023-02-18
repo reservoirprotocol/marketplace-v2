@@ -56,8 +56,8 @@ const HamburgerMenu = () => {
       >
         <Flex
           css={{
-            py: '$4',
-            px: '$4',
+            py: '$space$4',
+            px: '$space$4',
             width: '100%',
             borderBottom: '1px solid $gray4',
           }}
@@ -76,7 +76,7 @@ const HamburgerMenu = () => {
                 width: '44px',
                 height: '44px',
                 alignItems: 'center',
-                borderRadius: 8,
+                borderRadius: '$lg',
                 backgroundColor: '$gray3',
                 color: '$gray12',
                 '&:hover': {
@@ -97,8 +97,8 @@ const HamburgerMenu = () => {
               flexDirection: 'column',
               justifyContent: 'flex-start',
               height: '100%',
-              py: '$5',
-              px: '$4',
+              py: '$space$5',
+              px: '$space$4',
             }}
           >
             <Link href={`/profile/${address}`} legacyBehavior>

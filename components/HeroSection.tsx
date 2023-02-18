@@ -65,7 +65,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 size="large"
                 css={{
                   width: 50,
-                  borderRadius: 10,
+                  borderRadius: '$lg',
                   justifyContent: 'center',
                 }}
               >
@@ -75,12 +75,12 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/explore" passHref legacyBehavior>
               <Button
                 as="a"
-                color={theme === 'dark' ? 'ghost' : 'white'}
+                color={theme ? (theme === 'dark' ? 'ghost' : 'white') : 'ghost'}
                 corners="pill"
                 size="large"
                 css={{
                   width: 100,
-                  borderRadius: 10,
+                  borderRadius: '$lg',
                   border: '1px solid $neutralBgSubtle',
                   justifyContent: 'center',
                   '&:hover': {

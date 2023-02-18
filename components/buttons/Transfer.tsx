@@ -170,7 +170,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                     width: '44px',
                     height: '44px',
                     alignItems: 'center',
-                    borderRadius: 8,
+                    borderRadius: '$lg',
                     backgroundColor: '$gray3',
                     color: '$gray12',
                     '&:hover': {
@@ -199,7 +199,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                     height: 150,
                     transition: 'transform .3s ease-in-out',
                     maxHeight: 720,
-                    borderRadius: 0,
+                    borderRadius: '$base',
                     aspectRatio: '1/1',
                     marginBottom: 20,
                     border: '2px solid #5D770D'

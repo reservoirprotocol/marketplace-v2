@@ -86,7 +86,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
             />
           )}
           {(isFetchingPage || isValidating) && collections.length > 12 && (
-            <Flex align="center" justify="center" css={{ py: '$4' }}>
+            <Flex align="center" justify="center" css={{ py: '$space$4' }}>
               <LoadingSpinner />
             </Flex>
           )}

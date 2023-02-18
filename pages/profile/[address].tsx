@@ -259,7 +259,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
                   <Flex
                     direction="column"
                     align="center"
-                    css={{ py: '$6', gap: '$4', width: '100%' }}
+                    css={{ py: '$space$6', gap: '$space$4', width: '100%' }}
                   >
                     <Text css={{ color: '$gray11' }}>
                       <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />

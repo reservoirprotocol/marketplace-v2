@@ -33,7 +33,7 @@ export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
             css={{
               width: '100%',
               height: '100%',
-              borderRadius: '0px',
+              borderRadius: '$base',
               border: '0px',
               minWidth: '100%',
               maxWidth: '100vw',

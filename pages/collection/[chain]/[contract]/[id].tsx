@@ -192,7 +192,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Box
             css={{
               backgroundColor: '$gray3',
-              borderRadius: 8,
+              borderRadius: '$lg',
               '@sm': {
                 button: {
                   height: 0,
@@ -213,7 +213,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 width: '100%',
                 height: 'auto',
                 minHeight: isMounted && isSmallDevice ? 300 : 445,
-                borderRadius: 8,
+                borderRadius: '$lg',
                 overflow: 'hidden',
               }}
               onRefreshToken={() => {
