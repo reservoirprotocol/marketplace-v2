@@ -64,9 +64,9 @@ export const TokenFilters: FC<Props> = ({
               <Flex
                 key={collection?.collection?.id}
                 css={{
-                  py: '$2',
-                  px: '$3',
-                  gap: '$3',
+                  py: '$space$2',
+                  px: '$space$3',
+                  gap: '$space$3',
                   borderRadius: '4px',
                   cursor: 'pointer',
                   '&:hover': {

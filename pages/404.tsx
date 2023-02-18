@@ -10,7 +10,7 @@ const IndexPage: NextPage = () => {
       <Flex
         direction="column"
         align="center"
-        css={{ py: '200px', px: '$3', textAlign: 'center' }}
+        css={{ py: '200px', px: '$space$3', textAlign: 'center' }}
       >
         <Box css={{ color: '$gray11', mb: '30px' }}>
           <FontAwesomeIcon icon={faFolderOpen} size="2xl" />

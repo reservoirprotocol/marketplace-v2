@@ -16,7 +16,7 @@ const CartMenu: FC = () => {
           background: '$gray3',
           width: '44px',
           height: '44px',
-          borderRadius: 8,
+          borderRadius: '$lg',
           position: 'relative'
         }}>
         {(cartItems.length > 0) && (

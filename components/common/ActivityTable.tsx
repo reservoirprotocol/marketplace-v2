@@ -172,7 +172,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   css={{
                     ml: '$2',
                     color: '$gray11',
-                    fontSize: '14px',
+                    fontSize: '$3',
                     minWidth: 0,
                   }}
                 >

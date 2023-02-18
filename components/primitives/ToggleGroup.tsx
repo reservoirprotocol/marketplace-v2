@@ -5,7 +5,7 @@ import {
 import { styled } from 'stitches.config'
 
 const StyledToggleGroupRoot = styled(ToggleGroupRoot, {
-  borderRadius: 8,
+  borderRadius: '$lg',
   overflow: 'hidden',
   display: 'flex',
   gap: 1,

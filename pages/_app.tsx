@@ -70,7 +70,7 @@ const wagmiClient = createClient({
 const reservoirKitThemeOverrides = {
   headlineFont: inter.style.fontFamily,
   font: inter.style.fontFamily,
-  primaryColor: '#6E56CB',
+  primaryColor: '#79ffa8',
   primaryHoverColor: '#644fc1',
 }
 
@@ -138,7 +138,7 @@ function MyApp({
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Layer 2 NFT Marketplace</title>
+        <title>L2 NFT Marketplace</title>
       </Head>
       <HotkeysProvider>
         <ThemeProvider
@@ -175,7 +175,6 @@ function MyApp({
                   </ToastContextProvider>
                   {(marketplaceChain.id === 42161 && isMounted) && (
                     <div>
-                      <p>Important: Full synchronization of blockchain data for collections is ongoing, and NFT Collections may not reflect real-time data.</p>
                       <style jsx>{`
                         p {
                           position: fixed;

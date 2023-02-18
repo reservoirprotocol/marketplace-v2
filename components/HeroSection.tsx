@@ -51,7 +51,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         </Text>
         <Text
           style="subtitle1"
-          css={{ lineHeight: 1.5, color: '$whiteA12', width: '50%' }}
+          css={{ lineHeight: 1.5, color: '$whiteA12', width: '100%', '@lg': {width: '50%'} }}
         >
           {`Discover and Create NFTs and earn rewards on Optimism's largest NFT marketplace.`}
         </Text>
@@ -64,8 +64,8 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 corners="pill"
                 size="large"
                 css={{
-                  width: 50,
-                  borderRadius: 10,
+                  width: 100,
+                  borderRadius: '$lg',
                   justifyContent: 'center',
                 }}
               >
@@ -75,12 +75,12 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/explore" passHref legacyBehavior>
               <Button
                 as="a"
-                color={theme === 'dark' ? 'ghost' : 'white'}
+                color={theme ? (theme === 'dark' ? 'ghost' : 'white') : 'ghost'}
                 corners="pill"
                 size="large"
                 css={{
                   width: 100,
-                  borderRadius: 10,
+                  borderRadius: '$lg',
                   border: '1px solid $neutralBgSubtle',
                   justifyContent: 'center',
                   '&:hover': {

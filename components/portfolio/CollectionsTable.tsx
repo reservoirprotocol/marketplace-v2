@@ -70,7 +70,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
         <Flex
           direction="column"
           align="center"
-          css={{ py: '$6', gap: '$4', width: '100%' }}
+          css={{ py: '$space$6', gap: '$space$4', width: '100%' }}
         >
           <Text css={{ color: '$gray11' }}>
             <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
@@ -134,7 +134,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
               {collection?.collection?.image && (
                 <Image
                   style={{
-                    borderRadius: '4px',
+                    borderRadius: '$sm',
                     objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
@@ -208,7 +208,7 @@ const CollectionTableRow: FC<OfferTableRowProps> = ({
             {collection?.collection?.image && (
               <Image
                 style={{
-                  borderRadius: '4px',
+                  borderRadius: '$sm',
                   objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}

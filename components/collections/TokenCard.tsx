@@ -44,7 +44,7 @@ export default ({
   return (
     <Box
       css={{
-        borderRadius: 8,
+        borderRadius: '$lg',
         overflow: 'hidden',
         background: '$neutralBgSubtle',
 
@@ -73,7 +73,7 @@ export default ({
               transition: 'transform .3s ease-in-out',
               maxHeight: 720,
               height: '100%',
-              borderRadius: 0,
+              borderRadius: '$base',
               aspectRatio: '1/1',
             }}
             preview={showPreview}
@@ -140,7 +140,7 @@ export default ({
                 px: '$1',
                 py: 2,
                 background: '$gray5',
-                borderRadius: 8,
+                borderRadius: '$lg',
                 minWidth: 'max-content',
               }}
             >
