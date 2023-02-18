@@ -5,6 +5,8 @@ export const StyledAnchor = styled('a', {
   cursor: 'pointer',
   fontFamily: '$body',
   fontSize: 16,
+  transition: '0.2s',
+  transitionTimingFunction: 'ease-in-out',
   $$focusColor: '$colors$gray12',
   '&:focus-visible': {
     color: '$gray12',

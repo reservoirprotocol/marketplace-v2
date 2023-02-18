@@ -90,7 +90,11 @@ export const Footer = () => {
             rel="noopener noreferrer"
             href="https://twitter.com/NFTEarth_L2"
           >
-            <Button size="xs" color="gray3">
+            <Button size="xs" color="gray3" css={{
+              '&:hover': {
+                background: 'grey',
+              }
+            }}>
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
             </Button>
           </a>
@@ -99,7 +103,11 @@ export const Footer = () => {
             rel="noopener noreferrer"
             href="https://discord.gg/nftearth"
           >
-            <Button size="xs" color="gray3">
+            <Button size="xs" color="gray3" css={{
+              '&:hover': {
+                background: 'grey',
+              }
+            }}>
               <FontAwesomeIcon icon={faDiscord} width={14} height={14} />
             </Button>
           </a>
