@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Text, Box, Flex, Anchor, Button } from './primitives'
+import { Text, Flex, Anchor, Button } from './primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 

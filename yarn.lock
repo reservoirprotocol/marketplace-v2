@@ -1491,10 +1491,10 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@rainbow-me/rainbowkit@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@rainbow-me/rainbowkit/-/rainbowkit-0.8.1.tgz#de93b55a4629cdd33a9acf6a8699a7cd70b29ccd"
-  integrity sha512-A8BjihvgCY/xjQWOpqgOce+uO4mmIV4Qlo3XMF87kk5WNmyLLaPx2oYTJQz1uOinWE77h4G0HozJr5wnrermgw==
+"@rainbow-me/rainbowkit@^0.9":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@rainbow-me/rainbowkit/-/rainbowkit-0.9.0.tgz#5fc10d799fc59e8992bd7195f955509a81c87b16"
+  integrity sha512-wKG9vrO3LFehyzv7RAP3iHGeSENueZ8xSkUyszq9xRKRUM+4ANzIsj9lJ3nkXK9Vm6Y+g/pefmcCrIK+PpqO9w==
   dependencies:
     "@vanilla-extract/css" "1.9.1"
     "@vanilla-extract/dynamic" "2.0.2"
