@@ -60,13 +60,18 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/portfolio" passHref legacyBehavior>
               <Button
                 as="a"
-                color="white"
+                color={theme ? (theme === 'dark' ? 'ghost' : 'white') : 'ghost'}
                 corners="pill"
                 size="large"
                 css={{
                   width: 100,
                   borderRadius: '$lg',
                   justifyContent: 'center',
+                  border: '2px solid #6BE481',
+                  '&:hover': {
+                    background: '#6BE481',
+                    color: 'black',
+                  },
                 }}
               >
                 Sell
@@ -81,10 +86,11 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 css={{
                   width: 100,
                   borderRadius: '$lg',
-                  border: '1px solid $neutralBgSubtle',
+                  border: '2px solid #6BE481',
                   justifyContent: 'center',
                   '&:hover': {
-                    background: '$neutralBgSubtle',
+                    background: '#6BE481',
+                    color: 'black',
                   },
                 }}
               >
