@@ -31,7 +31,7 @@ import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
+import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
@@ -400,7 +400,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       setOpen={setActivityFiltersOpen}
                     />
                   )}
-                  <CollectionAcivityTable
+                  <CollectionActivityTable
                     id={id}
                     activityTypes={activityTypes}
                   />

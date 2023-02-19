@@ -2,14 +2,16 @@ import {
   faArrowLeft,
   faCircleExclamation,
   faRefresh,
+  faArrowDownUpAcrossLine,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
 import {
-  TokenMedia, useAttributes,
-  useCollections, useDynamicTokens,
+  TokenMedia,
+  useAttributes,
+  useCollections,
+  useDynamicTokens,
   useTokenOpenseaBanned,
-  useTokens,
   useUserTokens,
 } from '@nftearth/reservoir-kit-ui'
 import Layout from 'components/Layout'
@@ -20,10 +22,11 @@ import {
   Tooltip,
   Anchor,
   Grid,
-  Box,
+  Box, CollapsibleContent,
 } from 'components/primitives'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
+import * as Collapsible from '@radix-ui/react-collapsible'
 import AttributeCard from 'components/token/AttributeCard'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
@@ -51,6 +54,8 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
 import Head from 'next/head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import {TokenActivityTable} from "components/token/TokenActivityTable";
+import {NAVBAR_HEIGHT} from "../../../../components/navbar";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -149,7 +154,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         css={{
           maxWidth: 1175,
           mt: 10,
-          pb: 100,
+          pb: 30,
           marginLeft: 'auto',
           marginRight: 'auto',
           px: '$1',
@@ -232,6 +237,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               css={{
                 maxWidth: '100%',
                 width: '100%',
+                maxHeight: 400,
+                overflowY: 'scroll',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '$3',
                 mt: 24,
@@ -411,6 +418,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       css={{
                         gap: '$3',
                         mt: 24,
+                        maxHeight: 300,
+                        overflowY: 'auto',
                         gridTemplateColumns: '1fr',
                         '@sm': {
                           gridTemplateColumns: '1fr 1fr',
@@ -436,6 +445,49 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               </Tabs.Root>
             </>
           )}
+        </Flex>
+      </Flex>
+      <Flex
+        justify="center"
+        css={{
+          maxWidth: 1175,
+          pb: 20,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          px: '$1',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }}>
+        <Flex align="start" justify="start" css={{ flex: 1, px: '$3' }}>
+          <Collapsible.Root style={{ width: '100%' }}>
+            <Collapsible.Trigger asChild>
+              <Flex css={{ backgroundColor: '$primary6', px: '$4', py: '$3', flex: 1, cursor: 'pointer' }} align="center">
+                <FontAwesomeIcon icon={faArrowDownUpAcrossLine}/>
+                <Text style="h6" css={{ ml: '$4' }}>Item Activity</Text>
+              </Flex>
+            </Collapsible.Trigger>
+            <CollapsibleContent
+              css={{
+                position: 'sticky',
+                top: 16 + 80,
+                height: `calc(50vh - ${NAVBAR_HEIGHT}px - 32px)`,
+                overflow: 'auto',
+                marginBottom: 16,
+                borderRadius: '$base',
+                p: '$2'
+              }}
+            >
+              <Box
+                css={{
+                  '& > div:first-of-type': {
+                    pt: 0,
+                  },
+                }}
+              >
+                <TokenActivityTable token={`${collection?.id}:${token?.token?.tokenId}`}/>
+              </Box>
+            </CollapsibleContent>
+          </Collapsible.Root>
         </Flex>
       </Flex>
     </Layout>
