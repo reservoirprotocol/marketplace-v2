@@ -1,4 +1,4 @@
-import { BidModal, Trait } from '@reservoir0x/reservoir-kit-ui'
+import { BidModal, BidStep, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
@@ -102,10 +102,8 @@ const CollectionOffer: FC<Props> = ({
               </Button>
             }
             attribute={attribute}
-            onBidComplete={() => {
-              if (mutate) {
-                mutate()
-              }
+            onClose={(data, stepData, currentStep) => {
+              if (mutate && currentStep == BidStep.Complete) mutate()
             }}
             onBidError={(error) => {
               if (error) {

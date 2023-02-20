@@ -9,6 +9,7 @@ import {
   useCollections,
   useCollectionActivity,
   useDynamicTokens,
+  useAttributes,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -57,7 +58,9 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
+    ssr.hasAttributes ? true : false
+  )
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
@@ -123,9 +126,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
-  const attributes = ssr?.attributes?.attributes?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-  )
+  const attributesData = useAttributes(id)
+
+  const attributes =
+    attributesData.data?.filter(
+      (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+    ) || []
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
@@ -422,9 +428,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v5']['get']['responses']['200']['schema']
+    tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
+    hasAttributes: boolean
   }
   id: string | undefined
 }> = async ({ params }) => {
@@ -432,7 +438,7 @@ export const getStaticProps: GetStaticProps<{
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
-  const headers = {
+  const headers: RequestInit = {
     headers: {
       'x-api-key': apiKey || '',
     },
@@ -445,12 +451,11 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     collection: id,
@@ -459,29 +464,35 @@ export const getStaticProps: GetStaticProps<{
     limit: 20,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     includeDynamicPricing: true,
+    includeAttributes: true,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
 
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
-  let attributes: Props['ssr']['attributes'] | undefined
-  try {
-    const attributesResponse = await fetcher(
-      `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
-      {},
-      headers
-    )
-    attributes = attributesResponse['data']
-  } catch (e) {
-    console.log('Failed to load attributes')
-  }
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+  ]).catch(() => {})
+  const collection: Props['ssr']['collection'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : {}
+  const tokens: Props['ssr']['tokens'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : {}
+
+  const hasAttributes =
+    tokens?.tokens?.some(
+      (token) => (token?.token?.attributes?.length || 0) > 0
+    ) || false
 
   return {
-    props: { ssr: { collection, tokens, attributes }, id },
+    props: { ssr: { collection, tokens, hasAttributes }, id },
     revalidate: 30,
   }
 }

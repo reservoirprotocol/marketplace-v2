@@ -14,7 +14,7 @@ import {
   faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
@@ -275,17 +275,6 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <a href="https://discord.gg/j5K9fESNwh" target="_blank">
-            <Button
-              css={{ justifyContent: 'center', width: '44px', height: '44px' }}
-              type="button"
-              size="small"
-              color="gray3"
-            >
-              <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
-            </Button>
-          </a>
-          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>
