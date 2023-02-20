@@ -7,7 +7,6 @@ import Link from 'next/link'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
-import ChainSwitcher from './ChainSwitcher'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
 import { useTheme } from 'next-themes'
@@ -143,7 +142,7 @@ const Navbar = () => {
             </Link>
             <Link href="/quests">
               <NavItem
-                active={router.pathname == '/portfolio'}
+                active={router.pathname == '/quests'}
                   css={{
                   transition: '0.3s',
                   display: 'block',
@@ -174,7 +173,7 @@ const Navbar = () => {
             </Link>
             <Link href="/claim">
               <NavItem
-                active={router.pathname == '/launch'}
+                active={router.pathname == '/claim'}
                 css={{
                   transition: '0.3s',
                   display: 'block',
