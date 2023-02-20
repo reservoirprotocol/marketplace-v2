@@ -25,7 +25,9 @@ export default async function claim(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (signatures[address.toLowerCase()]) {
-    return signatures[address.toLowerCase()];
+    return res.send({
+      result: signatures[address.toLowerCase()]
+    });
   }
 
   try {
