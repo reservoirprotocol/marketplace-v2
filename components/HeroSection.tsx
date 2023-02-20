@@ -51,7 +51,12 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
         </Text>
         <Text
           style="subtitle1"
-          css={{ lineHeight: 1.5, color: '$whiteA12', width: '100%', '@lg': {width: '50%'} }}
+          css={{
+            lineHeight: 1.5,
+            color: '$whiteA12',
+            width: '100%',
+            '@lg': { width: '50%' },
+          }}
         >
           {`Discover and Create NFTs and earn rewards on Optimism's largest NFT marketplace.`}
         </Text>
@@ -60,14 +65,16 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/portfolio" passHref legacyBehavior>
               <Button
                 as="a"
-                color={theme ? (theme === 'dark' ? 'ghost' : 'white') : 'ghost'}
+                color={
+                  theme ? (theme === 'dark' ? 'ghost' : 'primary') : 'ghost'
+                }
                 corners="pill"
                 size="large"
                 css={{
                   width: 100,
                   borderRadius: '$lg',
                   justifyContent: 'center',
-                  border: '2px solid #6BE481',
+                  border: theme === 'dark' ? '2px solid #6BE481' : 'none',
                   '&:hover': {
                     background: '#6BE481',
                     color: 'black',
@@ -80,13 +87,15 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/explore" passHref legacyBehavior>
               <Button
                 as="a"
-                color={theme ? (theme === 'dark' ? 'ghost' : 'white') : 'ghost'}
+                color={
+                  theme ? (theme === 'dark' ? 'ghost' : 'primary') : 'ghost'
+                }
                 corners="pill"
                 size="large"
                 css={{
                   width: 100,
                   borderRadius: '$lg',
-                  border: '2px solid #6BE481',
+                  border: theme === 'dark' ? '2px solid #6BE481' : 'none',
                   justifyContent: 'center',
                   '&:hover': {
                     background: '#6BE481',
