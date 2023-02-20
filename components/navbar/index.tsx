@@ -127,68 +127,65 @@ const Navbar = () => {
             />
           </Box>
           <Flex align="center" css={{ gap: '$4', mr: '$3' }}>
-            <Link href="/explore" legacyBehavior>
-              <NavItem active={router.pathname == '/explore'}>
-                <Box
-                  css={{
-                    transition: '0.3s',
-                    padding: '$3',
-                    '&:hover': {
-                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      borderRadius: '$md',
-                    },
-                  }}
-                >
-                  Collections
-                </Box>
+            <Link href="/explore">
+              <NavItem
+                active={router.pathname == '/explore'}
+                css={{
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    outline: '1px solid $neutralBgSubtle',
+                    borderRadius: '$md',
+                  },
+                }}>
+                Collections
               </NavItem>
             </Link>
             <Link href="/quests">
-              <NavItem active={router.pathname == '/portfolio'}>
-                <Box
-                  css={{
-                    transition: '0.3s',
-                    padding: '$3',
-                    '&:hover': {
-                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      borderRadius: '$md',
-                    },
-                  }}
-                >
-                  Quests
-                </Box>
+              <NavItem
+                active={router.pathname == '/portfolio'}
+                css={{
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    outline: '1px solid $neutralBgSubtle',
+                    borderRadius: '$md',
+                  },
+                }
+              }>
+                Quests
               </NavItem>
             </Link>
-            <Link href="/launch" legacyBehavior>
-              <NavItem active={router.pathname == '/launch'}>
-                <Box
-                  css={{
-                    transition: '0.3s',
-                    padding: '$3',
-                    '&:hover': {
-                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      borderRadius: '$md',
-                    },
-                  }}
-                >
-                  Launchpad
-                </Box>
+            <Link href="/launch">
+              <NavItem
+                active={router.pathname == '/launch'}
+                css={{
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    outline: '1px solid $neutralBgSubtle',
+                    borderRadius: '$md',
+                  },
+                }}>
+                Launchpad
               </NavItem>
             </Link>
-            <Link href="/claim" legacyBehavior>
-              <NavItem active={router.pathname == '/launch'}>
-                  <Box
-                    css={{
-                      transition: '0.3s',
-                      padding: '$3',
-                      '&:hover': {
-                        background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                        borderRadius: '$md',
-                      },
-                  }}
-                >
-                  Claim
-                </Box>
+            <Link href="/claim">
+              <NavItem
+                active={router.pathname == '/launch'}
+                css={{
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    outline: '1px solid $neutralBgSubtle',
+                    borderRadius: '$md',
+                  },
+                }}>
+                Claim
               </NavItem>
             </Link>
           </Flex>
