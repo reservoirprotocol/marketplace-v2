@@ -56,7 +56,6 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <Box ref={setContainer} />
         <ClaimRewardHeroBanner
           image="/ClaimBG.png"
           title="Claim your Rewards"
