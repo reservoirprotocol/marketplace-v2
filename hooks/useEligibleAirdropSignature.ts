@@ -1,7 +1,7 @@
 import {useAccount} from "wagmi";
 import useSWR from "swr";
 
-export default function useAirdropEligibleAddresses() {
+export default function useEligibleAirdropSignature() {
   const { address: accountAddress } = useAccount()
 
   const response = useSWR(
