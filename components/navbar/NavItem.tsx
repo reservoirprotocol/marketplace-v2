@@ -9,7 +9,7 @@ type NavItemProps = {
 const NavItem = forwardRef<
   HTMLParagraphElement,
   ComponentPropsWithoutRef<typeof Text> & NavItemProps
->(({ children, active, ...props }, forwardedRef) => (
+>(({ children, active, css, ...props }, forwardedRef) => (
   <Text
     {...props}
     ref={forwardedRef}
@@ -19,6 +19,7 @@ const NavItem = forwardRef<
       '&:hover': {
         color: '$gray11',
       },
+      ...css
     }}
     as="p"
     style="subtitle1"
