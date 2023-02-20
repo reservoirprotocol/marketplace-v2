@@ -131,9 +131,10 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/explore'}>
                 <Box
                   css={{
+                    transition: '0.3s',
+                    padding: '$3',
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      outline: '1px solid $neutralBgSubtle',
                       borderRadius: '$md',
                     },
                   }}
@@ -146,9 +147,10 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/portfolio'}>
                 <Box
                   css={{
+                    transition: '0.3s',
+                    padding: '$3',
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      outline: '1px solid $neutralBgSubtle',
                       borderRadius: '$md',
                     },
                   }}
@@ -161,9 +163,10 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/launch'}>
                 <Box
                   css={{
+                    transition: '0.3s',
+                    padding: '$3',
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      outline: '1px solid $neutralBgSubtle',
                       borderRadius: '$md',
                     },
                   }}
@@ -174,13 +177,14 @@ const Navbar = () => {
             </Link>
             <Link href="/claim" legacyBehavior>
               <NavItem active={router.pathname == '/launch'}>
-                <Box
-                  css={{
-                    '&:hover': {
-                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                      outline: '1px solid $neutralBgSubtle',
-                      borderRadius: '$md',
-                    },
+                  <Box
+                    css={{
+                      transition: '0.3s',
+                      padding: '$3',
+                      '&:hover': {
+                        background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                        borderRadius: '$md',
+                      },
                   }}
                 >
                   Claim
