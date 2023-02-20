@@ -26,7 +26,7 @@ class MyDocument extends Document {
           <link
             rel="shortcut icon"
             type="image/png"
-            href="https://nftearth.exchange/nftearth-icon.png"
+            href=""
           />
           <meta name="description" content={description} />
           <meta name="keywords" content="NFT, Marketplace, Optimism" />
@@ -36,7 +36,7 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta
             name="twitter:title"
-            content="NFTEarth | L2 NFT Marketplace"
+            content="NFTEarth: Buy and Sell NFTs on L2"
           />
           <meta name="twitter:description" content={description} />
           <meta name="twitter:site" content="@reservoir0x" />
@@ -45,7 +45,7 @@ class MyDocument extends Document {
           {/* https://www.opengraph.xyz/ */}
           <meta
             name="og:title"
-            content="NFTEarth | L2 NFT Marketplace"
+            content="NFTEarth: Buy and Sell NFTs on L2"
           />
           <meta property="og:type" content="website" />
           <meta property="og:determiner" content="the" />

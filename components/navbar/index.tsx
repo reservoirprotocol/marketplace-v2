@@ -130,11 +130,11 @@ const Navbar = () => {
               <NavItem
                 active={router.pathname == '/explore'}
                 css={{
+                  transition: '0.3s',
                   display: 'block',
                   padding: '12px 15px',
                   '&:hover': {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    outline: '1px solid $neutralBgSubtle',
                     borderRadius: '$md',
                   },
                 }}>
@@ -144,12 +144,12 @@ const Navbar = () => {
             <Link href="/quests">
               <NavItem
                 active={router.pathname == '/portfolio'}
-                css={{
+                  css={{
+                  transition: '0.3s',
                   display: 'block',
                   padding: '12px 15px',
                   '&:hover': {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    outline: '1px solid $neutralBgSubtle',
                     borderRadius: '$md',
                   },
                 }
@@ -161,11 +161,11 @@ const Navbar = () => {
               <NavItem
                 active={router.pathname == '/launch'}
                 css={{
+                  transition: '0.3s',
                   display: 'block',
                   padding: '12px 15px',
                   '&:hover': {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    outline: '1px solid $neutralBgSubtle',
                     borderRadius: '$md',
                   },
                 }}>
@@ -176,11 +176,11 @@ const Navbar = () => {
               <NavItem
                 active={router.pathname == '/launch'}
                 css={{
+                  transition: '0.3s',
                   display: 'block',
                   padding: '12px 15px',
                   '&:hover': {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    outline: '1px solid $neutralBgSubtle',
                     borderRadius: '$md',
                   },
                 }}>
