@@ -76,7 +76,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
             >
               Claim $NFTE
             </Text>
-          </RewardButton> 
+          </RewardButton>
         </Grid>
       </Flex>
     </Box>

@@ -13,9 +13,11 @@ export const ClaimRewardHeroBanner = ({ title, description, image }: Props) => {
       css={{
         width: '100%',
         borderRadius: '20px',
-        backgroundPosition: 'center center',
-        backgroundImage: `linear-gradient(112.1deg, rgb(32, 38, 57) 11.4%, rgb(63, 76, 119) 70.2%);`,
+        backgroundImage: `url(${image})`,
+        backgroundSize: 'cover',
         backgroundColor: '#7B54E9',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
         '@xs': {
           gridTemplateColumns: 'unset',
           padding: '64px 24px',
@@ -39,11 +41,15 @@ export const ClaimRewardHeroBanner = ({ title, description, image }: Props) => {
       >
         <Text
           style={{
-            '@initial': 'h2',
-            '@lg': 'h1',
+            '@initial': 'h3',
+            '@lg': 'h2',
           }}
           as="h1"
-          css={{ color: '$whiteA12', lineHeight: 1.2 }}
+          css={{
+            color: '$whiteA12',
+            lineHeight: 1.2,
+            fontWeight: 700,
+          }}
         >
           {title}
         </Text>
@@ -58,7 +64,6 @@ export const ClaimRewardHeroBanner = ({ title, description, image }: Props) => {
         >
           {description}
         </Text>
-        <img height="100" width="100%" src={image} />
       </Grid>
     </Flex>
   )

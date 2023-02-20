@@ -58,6 +58,7 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
       >
         <Box ref={setContainer} />
         <ClaimRewardHeroBanner
+          image="/ClaimBG.png"
           title="Claim your Rewards"
           description=" Claim your Rewards after listing your NFT on the marketplace. See
           which rewards your are eligible to claim for."
