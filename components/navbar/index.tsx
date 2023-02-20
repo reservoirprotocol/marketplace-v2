@@ -143,7 +143,7 @@ const Navbar = () => {
             </Link>
             <Link href="/quests">
               <NavItem
-                active={router.pathname == '/portfolio'}
+                active={router.pathname == '/quests'}
                   css={{
                   transition: '0.3s',
                   display: 'block',
@@ -174,7 +174,7 @@ const Navbar = () => {
             </Link>
             <Link href="/claim">
               <NavItem
-                active={router.pathname == '/launch'}
+                active={router.pathname == '/claim'}
                 css={{
                   transition: '0.3s',
                   display: 'block',
