@@ -1,25 +1,23 @@
-import React from 'react'
-import { eligibleAddresses } from './utils'
-import { basicFetcher } from 'utils/fetcher'
+import {useAccount} from "wagmi";
+import useSWR from "swr";
 
-export default function useAirdropEligibleAddresses(address: string) {
-  const [isEligible, setIsEligible] = React.useState(false)
+export default function useAirdropEligibleAddresses() {
+  const { address: accountAddress } = useAccount()
 
-  React.useEffect(() => {
-    //call api to fetch all eligible addresses
-    //
-    // const ensResponse = await basicFetcher(
-    //  `https://api.ensideas.com/ens/resolve/${address}`
-    //  )
-    // const eligibleAddresses = ensResponse?.data?.address
-    //
-    //
-    if (eligibleAddresses.includes(address)) {
-      setIsEligible(true)
-    } else {
-      setIsEligible(false)
+  const response = useSWR(
+    `/api/claim?address=${accountAddress}`,
+    (url: string) => {
+      if (!accountAddress) {
+        return null
+      }
+      return fetch(url).then((response) => response.json())
+    },
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      revalidateOnReconnect: false,
     }
-  }, [])
+  )
 
-  return isEligible
+  return response.data?.result;
 }

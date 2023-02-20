@@ -10,17 +10,19 @@ import Link from 'next/link'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
-import { ClaimReward } from 'components/claim/ClaimReward'
 import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import useAirdropEligibleAddresses from "hooks/useAirDropEligibleAddresses";
+import {RewardButton, RewardContent} from "../../components/claim/styled";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const ClaimPage: NextPage<Props> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
   const [container, setContainer] = useState(null)
+  const signature = useAirdropEligibleAddresses()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
@@ -56,18 +58,50 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <Box ref={setContainer} />
         <ClaimRewardHeroBanner
           title="Claim your Rewards"
           description=" Claim your Rewards after listing your NFT on the marketplace. See
           which rewards your are eligible to claim for."
         />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
-          <ClaimReward
-            image="https://nftearth.exchange/render-image-1.png"
-            title="Claim your $500 deposit bonus"
-            description="If you were one of the 1,786 eligible addresses for airdrop 1 and have listed an NFT on NFTEarth, you can claim your $NFTE tokens below."
-          />
+          <Box
+            css={{
+              background: '$gray2',
+              borderRadius: '16px',
+              gap: '$1',
+              height: '100%',
+              width: '100%',
+            }}
+          >
+            <Box
+              css={{
+                borderTopLeftRadius: '20px',
+                borderTopRightRadius: '20px',
+                height: '300px',
+                overflow: 'hidden',
+              }}
+            >
+              <img height="100" width="100%" src={`https://nftearth.exchange/render-image-1.png`} />
+            </Box>
+            <RewardContent>
+              <Text style="subtitle1">{`If you were one of the 1,786 eligible addresses for airdrop 1 and have listed an NFT on NFTEarth, you can claim your $NFTE tokens below.`}</Text>
+            </RewardContent>
+
+            <RewardButton
+              disabled={!signature}
+              css={{background: '#6EE799'}}>
+              <Text
+                css={{
+                  color: 'black',
+                  textAlign: 'center',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+              >
+                Claim $NFTE Airdrop
+              </Text>
+            </RewardButton>
+          </Box>
         </Flex>
       </Box>
 

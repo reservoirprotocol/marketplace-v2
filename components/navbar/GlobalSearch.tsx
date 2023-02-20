@@ -18,8 +18,8 @@ import Link from 'next/link'
 import { paths } from '@nftearth/reservoir-sdk'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import supportedChains, {DefaultChain} from "../../utils/chains";
-import fetcher from "../../utils/fetcher";
+import supportedChains, {DefaultChain} from "utils/chains";
+import fetcher from "utils/fetcher";
 
 type Props = {
   collection: NonNullable<
