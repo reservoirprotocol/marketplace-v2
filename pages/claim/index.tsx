@@ -1,32 +1,39 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { Flex, Box } from 'components/primitives'
+import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
 import { useEffect, useRef, useState } from 'react'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMarketplaceChain } from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
 import { useCollections } from '@nftearth/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
+import Link from 'next/link'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { ClaimReward } from 'components/claim/ClaimReward'
 import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
+import * as Dialog from '@radix-ui/react-dialog'
+import { faWarning } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const ClaimPage: NextPage<Props> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
+  const [container, setContainer] = useState(null)
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
-  const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
-  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(collectionQuery, {
+
+  const { fetchNextPage, isFetchingPage, isValidating } = useCollections(
+    collectionQuery,
+    {
       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-    })
+    }
+  )
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -49,6 +56,7 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
+        <Box ref={setContainer} />
         <ClaimRewardHeroBanner
           title="Claim your Rewards"
           description=" Claim your Rewards after listing your NFT on the marketplace. See
@@ -62,6 +70,45 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           />
         </Flex>
       </Box>
+
+      {/* <Dialog.Root defaultOpen>
+        <Dialog.Portal container={container}>
+          <Dialog.Overlay />
+          <Dialog.Content>
+            <Flex
+              justify="between"
+              css={{
+                borderTop: '1px solid $gray7',
+                borderStyle: 'solid',
+                pt: '$5',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                gap: 36,
+                '@bp600': {
+                  flexDirection: 'row',
+                  gap: 0,
+                },
+              }}
+            >
+              <FontAwesomeIcon icon={faWarning} style={{ marginRight: 5 }} />
+              <Text
+                style="subtitle1"
+                css={{
+                  lineHeight: 1.5,
+                  color: '$whiteA12',
+                  width: '100%',
+                  '@lg': { width: '50%' },
+                }}
+              >
+                Have you "Listed" an NFT on the marketplace?
+              </Text>
+              <Link href="/">
+                <Button>Back to Home</Button>
+              </Link>
+            </Flex>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root> */}
     </Layout>
   )
 }
