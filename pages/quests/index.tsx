@@ -16,7 +16,6 @@ import { QuestsGrid } from 'components/quests/QuestsGrid'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const QuestsPage: NextPage<Props> = ({ ssr }) => {
-  const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const marketplaceChain = useMarketplaceChain()
 
@@ -106,7 +105,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             >
               One-Time Quest
             </Text>
-            {isSSR || !isMounted ? null : <QuestsGrid />}
+            {isMounted && <QuestsGrid />}
           </Box>
           <Box>
             <Text
@@ -116,7 +115,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             >
               Daily Quest
             </Text>
-            {isSSR || !isMounted ? null : <QuestsGrid />}
+            {isMounted && <QuestsGrid />}
           </Box>
           <Box>
             <Text
@@ -126,7 +125,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             >
               Special Quest
             </Text>
-            {isSSR || !isMounted ? null : <QuestsGrid />}
+            {isMounted && <QuestsGrid />}
           </Box>
           <Box>
             <Text
@@ -136,7 +135,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             >
               Finished Quest
             </Text>
-            {isSSR || !isMounted ? null : <QuestsGrid />}
+            {isMounted && <QuestsGrid />}
           </Box>
           <Box>
             <Text
@@ -146,7 +145,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             >
               Claimable Reward(s)
             </Text>
-            {isSSR || !isMounted ? null : <QuestsGrid />}
+            {isMounted && <QuestsGrid />}
           </Box>
           <Box>
             <Text
@@ -156,7 +155,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             >
               Claimed Reward(s)
             </Text>
-            {isSSR || !isMounted ? null : <QuestsGrid />}
+            {isMounted && <QuestsGrid />}
           </Box>
         </Flex>
       </Box>

@@ -26,7 +26,7 @@ class MyDocument extends Document {
           <link
             rel="shortcut icon"
             type="image/png"
-            href=""
+            href="https://nftearth.exchange/nftearth-icon.png"
           />
           <meta name="description" content={description} />
           <meta name="keywords" content="NFT, Marketplace, Optimism" />

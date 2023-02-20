@@ -31,9 +31,9 @@ const ChainToggle: FC<Props> = ({ compact }) => {
           key={`chain-${optionItem.id}`}
           value={`${optionItem.id}`}
           disabled={optionItem.id === chain.id}
-          css={{ py: '$space$3' }}
+          css={{ p: '$space$2' }}
         >
-          <img style={{ height: 17, width: 17 }} src={optionItem.iconUrl} />
+          <img style={{ height: 30, width: 30 }} src={optionItem.iconUrl} />
           {!compact && (
             <Text style="body1" css={{ ml: '$2' }}>
               {optionItem.name}
