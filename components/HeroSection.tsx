@@ -47,7 +47,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           as="h1"
           css={{ color: '$whiteA12', lineHeight: 1.2 }}
         >
-          Buy And Sell NFTs on L2
+          Buy and Sell NFTs on L2
         </Text>
         <Text
           style="subtitle1"
@@ -58,7 +58,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             '@lg': { width: '50%' },
           }}
         >
-          {`Discover and Create NFTs and earn rewards on Optimism's largest NFT marketplace.`}
+          {`Explore, Trade and Create NFTs on the Marketplace Built for L2`}
         </Text>
         {hideLink ?? (
           <Flex css={{ gap: 10 }}>
