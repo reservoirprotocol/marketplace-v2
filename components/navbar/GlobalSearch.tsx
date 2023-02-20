@@ -16,21 +16,21 @@ import { useMediaQuery } from 'react-responsive'
 
 import Link from 'next/link'
 import { paths } from '@nftearth/reservoir-sdk'
-import { useMarketplaceChain } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import supportedChains, {DefaultChain} from "../../utils/chains";
+import fetcher from "../../utils/fetcher";
 
 type Props = {
   collection: NonNullable<
     paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
-  >[0]
+  >[0],
+  chain: typeof DefaultChain,
 }
 
-const CollectionItem: FC<Props> = ({ collection }) => {
-  const { routePrefix } = useMarketplaceChain()
-
+const CollectionItem: FC<Props> = ({ collection, chain }) => {
   return (
-    <Link href={`/collection/${routePrefix}/${collection.collectionId}`}>
+    <Link href={`/collection/${chain.routePrefix}/${collection.collectionId}`}>
       <Flex
         css={{
           p: '$2',
@@ -44,14 +44,25 @@ const CollectionItem: FC<Props> = ({ collection }) => {
       >
         <img
           src={collection.image || 'https://via.placeholder.com/32?text='}
-          style={{ width: 32, height: 32, borderRadius: 4 }}
+          style={{ width: 40, height: 40, borderRadius: 4 }}
         />
-        <Text style="subtitle1" ellipsify>
-          {collection.name}
-        </Text>
-        <OpenSeaVerified
-          openseaVerificationStatus={collection?.openseaVerificationStatus}
-        />
+        <Flex direction="column" css={{ gap: '$1' }}>
+          <Flex css={{ gap: '$2' }}>
+            <Text style="subtitle1" ellipsify>
+              {collection.name}
+            </Text>
+            <OpenSeaVerified
+              openseaVerificationStatus={collection?.openseaVerificationStatus}
+            />
+          </Flex>
+          <Flex align="center" css={{ gap: '$1' }}>
+            <img
+              src={chain.iconUrl || 'https://via.placeholder.com/32?text='}
+              style={{ width: 15, height: 15 }}
+            />
+            <Text style="body2">{`Volume ${(collection?.allTimeVolume || 0).toFixed(2)}`}Ξ</Text>
+          </Flex>
+        </Flex>
       </Flex>
     </Link>
   )
@@ -84,13 +95,14 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
 type SearchResultProps = {
   result: {
     type: 'collection' | 'wallet'
-    data: any
+    data: any;
+    chain: typeof DefaultChain
   }
 }
 
 const SearchResult: FC<SearchResultProps> = ({ result }) => {
   if (result.type == 'collection') {
-    return <CollectionItem collection={result.data} />
+    return <CollectionItem collection={result.data} chain={result.chain} />
   } else {
     return <WalletItem wallet={result.data} />
   }
@@ -106,18 +118,37 @@ const GlobalSearch = forwardRef<
   const [showSearchBox, setShowSearchBox] = useState(false)
 
   const debouncedSearch = useDebounce(search, 500)
-  const marketplaceChain = useMarketplaceChain()
 
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
-      let res = await fetch(
-        `/api/globalSearch?q=${debouncedSearch}&chainId=${marketplaceChain.id}`
-      ).then((res) => res.json())
+      const promises: ReturnType<typeof fetcher>[] = []
+      supportedChains.forEach((chain) => {
+        promises.push(
+          fetcher(`${location.origin}/api/globalSearch`, {
+            q: debouncedSearch,
+            chainId: chain.id
+          })
+        )
+      })
 
-      setResults(res.results)
+      let results: any = [];
+      const responses = await Promise.allSettled(promises)
+      responses.forEach((response, i) => {
+        if (response.status === 'fulfilled' && response.value.data) {
+          results = results.concat(...response.value.data.results.map((d:any) => {
+            d.chain = supportedChains[i];
+            return d;
+          }))
+        }
+      })
+
+      results = [...new Map(results.map((r: any) => [r.type === 'collection' ?
+        `${r.type}:${r.chain.id}:${r.data.collectionId}` :
+        `${r.type}:${r.data.address}`, r])).values()]
+      setResults(results)
       setSearching(false)
     }
     if (debouncedSearch.length >= 2) {
@@ -229,10 +260,9 @@ const GlobalSearch = forwardRef<
               borderRadius: isMobile ? 0 : 8,
               zIndex: 4,
               mt: '$2',
-              border: isMobile ? '' : '1px solid $gray7',
-
-              '& div:not(:last-of-type)': {
-                borderBottom: isMobile ? '' : '1px solid $gray7',
+              border: isMobile ? '' : '1px solid $primary7',
+              '& a:not(:last-of-type) > div': {
+                borderBottom: isMobile ? '' : '1px solid $primary7',
               },
             }}
           >

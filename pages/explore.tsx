@@ -12,6 +12,7 @@ import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import HeroSection from 'components/HeroSection'
+import ChainToggle from "../components/home/ChainToggle";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -75,6 +76,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
             <Text style="h2" as="h2">
               Explore
             </Text>
+            <ChainToggle compact/>
           </Flex>
           {isSSR || !isMounted ? null : (
             <TrendingCollectionsList

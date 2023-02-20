@@ -1,26 +1,27 @@
 import { Text, Box, Flex, FormatCryptoCurrency } from '../primitives'
 import Link from 'next/link'
 import { FC } from 'react'
-import { useMarketplaceChain } from '../../hooks'
 import { TrendingCollections } from 'components/home/TrendingCollectionsList'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import {DefaultChain} from "../../utils/chains";
 
 type Props = {
   rank: string | number
   collection: NonNullable<TrendingCollections>[0]
+  chain: typeof DefaultChain,
   volumeKey?: '1day' | '7day' | '30day' | 'allTime'
 }
 
 export const TrendingCollectionItem: FC<Props> = ({
   rank,
   collection,
+  chain,
   volumeKey = '1day',
 }) => {
-  const { routePrefix } = useMarketplaceChain()
   return (
     <Link
-      href={`/collection/${routePrefix}/${collection.id}`}
+      href={`/collection/${chain.routePrefix}/${collection.id}`}
       style={{ display: 'inline-block', minWidth: 0 }}
     >
       <Flex align="center" css={{ cursor: 'pointer' }}>

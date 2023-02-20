@@ -8,13 +8,14 @@ import TrendingCollectionsTimeToggle, {
 } from 'components/home/TrendingCollectionsTimeToggle'
 import { Footer } from 'components/Footer'
 import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import {useMarketplaceChain, useMounted} from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import HeroSection from 'components/HeroSection'
+import ChainToggle from "components/home/ChainToggle";
+import useCollections from 'hooks/useCollections';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -31,13 +32,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     useState<CollectionsSortingOption>('1DayVolume')
   const marketplaceChain = useMarketplaceChain()
 
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
+  let collectionQuery: Parameters<typeof useCollections>['1'] = {
     limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: sortByTime,
   }
 
-  let collectionQuery2: Parameters<typeof useCollections>['0'] = {
+  let collectionQuery2: Parameters<typeof useCollections>['1'] = {
     sortBy: '1DayVolume',
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     collectionsSetId: collectionsSetId[marketplaceChain.id],
@@ -47,14 +48,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     data: topData,
     isFetchingPage: isFetchingTopPage,
     isValidating: isValidatingTopPage,
-  } = useCollections(collectionQuery2, {
+  } = useCollections(marketplaceChain, collectionQuery2, {
     fallbackData: [ssr.collections[marketplaceChain.id]],
   })
 
   let topCollections = topData || []
 
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(collectionQuery, {
+    useCollections(marketplaceChain, collectionQuery, {
       fallbackData: [ssr.collections[marketplaceChain.id]],
     })
 
@@ -109,10 +110,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               <Text style="h3" as="h3">
                 Featured Collections
               </Text>
+              <ChainToggle compact/>
             </Flex>
             {isSSR || !isMounted ? null : (
               <TrendingCollectionsList
-                uniqueKey="featured"
+                uniqueKey={`featured-${marketplaceChain.id}`}
                 chain={marketplaceChain}
                 collections={topCollections}
                 loading={isValidatingTopPage}
@@ -145,7 +147,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Flex>
             {isSSR || !isMounted ? null : (
               <TrendingCollectionsList
-                uniqueKey="popular"
+                uniqueKey={`popular-${marketplaceChain.id}`}
                 chain={marketplaceChain}
                 collections={collections}
                 loading={isValidating}

@@ -3,12 +3,13 @@ import { Box, Flex, Text } from '../primitives'
 import { ComponentPropsWithoutRef, FC } from 'react'
 import { TrendingCollectionItem } from './TrendingCollectionItem'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import {DefaultChain} from "../../utils/chains";
 
 export type TrendingCollections = ReturnType<typeof useCollections>['data']
 
 type Props = {
-  chain: any,
   uniqueKey: string,
+  chain: typeof DefaultChain,
   collections: TrendingCollections
   loading?: boolean
   volumeKey?: ComponentPropsWithoutRef<
@@ -17,8 +18,8 @@ type Props = {
 }
 
 const TrendingCollectionsList: FC<Props> = ({
-  chain,
   uniqueKey,
+  chain,
   collections,
   volumeKey,
   loading,
@@ -79,7 +80,8 @@ const TrendingCollectionsList: FC<Props> = ({
       >
         {collections?.map((collection, i) => (
             <TrendingCollectionItem
-              key={`${uniqueKey}${chain.id}${collection.id}`}
+              key={`${uniqueKey}${collection.id}`}
+              chain={chain}
               collection={collection}
               rank={i + 1}
               volumeKey={volumeKey}

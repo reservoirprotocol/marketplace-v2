@@ -19,7 +19,6 @@ import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
   useDynamicTokens,
-  useTokens,
   useUserCollections,
   useUserTokens,
 } from '@nftearth/reservoir-kit-ui'
@@ -39,6 +38,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
 import {ActivityTypes} from "../../types/reservoir";
+import ChainToggle from "../../components/home/ChainToggle";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -130,27 +130,32 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           },
         }}
       >
-        <Flex align="center">
-          {ensAvatar ? (
-            <Avatar size="xxl" src={ensAvatar} />
-          ) : (
-            <Jazzicon
-              diameter={64}
-              seed={jsNumberForAddress(address as string)}
-            />
-          )}
-          <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h5">{ensName ? ensName : shortAddress}</Text>
-            <CopyText text={address as string}>
-              <Flex align="center" css={{ cursor: 'pointer' }}>
-                <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
-                  {shortAddress}
-                </Text>
-                <Box css={{ color: '$gray10' }}>
-                  <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                </Box>
-              </Flex>
-            </CopyText>
+        <Flex justify="between">
+          <Flex align="center">
+            {ensAvatar ? (
+              <Avatar size="xxl" src={ensAvatar} />
+            ) : (
+              <Jazzicon
+                diameter={64}
+                seed={jsNumberForAddress(address as string)}
+              />
+            )}
+            <Flex direction="column" css={{ ml: '$4' }}>
+              <Text style="h5">{ensName ? ensName : shortAddress}</Text>
+              <CopyText text={address as string}>
+                <Flex align="center" css={{ cursor: 'pointer' }}>
+                  <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
+                    {shortAddress}
+                  </Text>
+                  <Box css={{ color: '$gray10' }}>
+                    <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                  </Box>
+                </Flex>
+              </CopyText>
+            </Flex>
+          </Flex>
+          <Flex align="center">
+            <ChainToggle compact/>
           </Flex>
         </Flex>
         <Tabs.Root defaultValue="items">

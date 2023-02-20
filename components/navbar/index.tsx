@@ -70,7 +70,6 @@ const Navbar = () => {
       </Box>
       <Flex align="center" css={{ gap: '$3' }}>
         <MobileSearch key={`${router.asPath}-search`} />
-        <ChainSwitcher />
         <CartMenu />
         <HamburgerMenu key={`${router.asPath}-hamburger`} />
       </Flex>
@@ -194,7 +193,6 @@ const Navbar = () => {
       <Flex css={{ gap: '$3' }} justify="end" align="center">
         <ThemeSwitcher />
         <CartMenu />
-        <ChainSwitcher />
         {isConnected ? (
           <ProfileDropdown />
         ) : (

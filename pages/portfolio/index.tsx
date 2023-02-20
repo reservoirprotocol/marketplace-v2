@@ -22,6 +22,7 @@ import {ActivityFilters} from "../../components/common/ActivityFilters";
 import {MobileActivityFilters} from "../../components/common/MobileActivityFilters";
 import {UserActivityTable} from "../../components/profile/UserActivityTable";
 import {ActivityTypes} from "../../types/reservoir";
+import ChainToggle from "../../components/home/ChainToggle";
 
 const PortfolioPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -62,9 +63,12 @@ const PortfolioPage: NextPage = () => {
       >
         {isConnected ? (
           <>
-            <Text style="h4" css={{}}>
-              Portfolio
-            </Text>
+            <Flex direction="row" justify="between">
+              <Text style="h4" css={{}}>
+                Portfolio
+              </Text>
+              <ChainToggle compact/>
+            </Flex>
             <Tabs.Root defaultValue="items">
               <Flex css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}>
                 <TabsList
