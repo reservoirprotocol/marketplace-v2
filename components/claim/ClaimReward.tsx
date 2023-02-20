@@ -1,6 +1,16 @@
 import { Box, Grid, Text, Flex } from 'components/primitives'
 import { RewardContent, RewardButton } from './styled'
 import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
+import {
+  useAccount,
+  useNetwork,
+  usePrepareContractWrite,
+  useSendTransaction,
+  useSwitchNetwork,
+  useWaitForTransaction
+} from "wagmi";
+
+const NFTEAirdropClaimABI = require('abi/NFTEAirdropClaimABI.json');
 
 type Props = {
   title: string
@@ -10,6 +20,22 @@ type Props = {
 
 export const ClaimReward = ({ title, description, image }: Props) => {
   const signature = useEligibleAirdropSignature()
+  const { chain: activeChain } = useNetwork()
+  const { switchNetworkAsync } = useSwitchNetwork();
+  const { address } = useAccount();
+  const { config, error: preparedError } = usePrepareContractWrite({
+    address: '0x4EA9EE08407A06fb62dd2F4B1070c07A8a122525',
+    abi: NFTEAirdropClaimABI,
+    functionName: 'claim',
+    args: [signature],
+    overrides: {
+      from: address,
+    },
+  })
+  const { data, sendTransaction, isLoading, error } = useSendTransaction(config)
+  const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
+    hash: data?.hash,
+  })
 
   return (
     <Box
@@ -63,7 +89,13 @@ export const ClaimReward = ({ title, description, image }: Props) => {
             {description}
           </Text>
           <RewardButton
-            disabled={!signature}
+            disabled={!signature || isLoadingTransaction || !!preparedError || isSuccess}
+            onClick={async () => {
+              if (activeChain?.id !== 10) {
+                await switchNetworkAsync?.(10);
+              }
+              sendTransaction?.();
+            }}
             css={{
               background: '#6BE481',
               borderRadius: '10px',
@@ -81,6 +113,12 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               Claim $NFTE
             </Text>
           </RewardButton>
+          {isSuccess && (
+            <Text css={{ color: 'green' }}>Claim Airdrop Success</Text>
+          )}
+          {(!!preparedError || !!error) && (
+            <Text css={{ color: 'red' }}>{((error || preparedError) as any)?.reason || (error || preparedError)?.message}</Text>
+          )}
         </Grid>
       </Flex>
     </Box>
