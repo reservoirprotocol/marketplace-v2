@@ -2,8 +2,14 @@ import { styled } from '@stitches/react'
 import { Box, Button } from 'components/primitives'
 
 export const RewardButton = styled(Button, {
-  width: '100%',
   textAlign: 'center',
+  width: '20%',
+  '@media (max-width: 768px)': {
+    width: '55%',
+  },
+  '&:hover': {
+    background: 'White',
+  }
 })
 
 export const RewardContent = styled(Box, {

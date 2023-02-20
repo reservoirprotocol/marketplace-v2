@@ -1,4 +1,4 @@
-import { Box, Text } from 'components/primitives'
+import { Box, Grid, Text, Flex } from 'components/primitives'
 import { RewardContent, RewardButton } from './styled'
 
 type Props = {
@@ -11,39 +11,74 @@ export const ClaimReward = ({ title, description, image }: Props) => {
   return (
     <Box
       css={{
-        background: '$gray2',
         borderRadius: '16px',
         gap: '$1',
-        height: '100%',
         width: '100%',
+        position: 'relative',
+        backgroundImage: `url(${image})`,
+        backgroundSize: 'cover',
+        '@xs': {
+          padding: '64px 24px',
+        },
+        '@lg': {
+          padding: '100px 64px',
+        },
       }}
     >
-      <Box
-        css={{
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          height: '300px',
-          overflow: 'hidden',
-        }}
-      >
-        <img height="100" width="100%" src={image} />
-      </Box>
-      <RewardContent>
-        <Text style="subtitle1">{description}</Text>
-      </RewardContent>
-
-      <RewardButton css={{background: '#6EE799'}}>
-        <Text
+      <Flex>
+        <Grid
           css={{
-            color: 'black',
-            textAlign: 'center',
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            gap: 32,
+            '@xs': {
+              flex: 1,
+            },
+            '@lg': {
+              flex: 0.5,
+            },
           }}
         >
-          Claim $NFTE Airdrop
-        </Text>
-      </RewardButton>
+          <Text
+            style={{
+              '@initial': 'h3',
+              '@lg': 'h2',
+            }}
+            css={{
+              fontWeight: 700,
+            }}>
+            {title}
+          </Text>
+        
+          <Text
+            style="subtitle1"
+            css={{
+              lineHeight: '28px',
+              color: '$whiteA12',
+              width: '100%',
+              '@lg': { width: '50%' },
+            }}
+          >
+            {description}
+          </Text>
+          <RewardButton
+            css={{
+              background: '#6BE481',
+              borderRadius: '10px',
+              padding: '15px 0px',
+            }}>
+            <Text
+              css={{
+                color: 'black',
+                textAlign: 'center',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                fontWeight: 700,
+              }}
+            >
+              Claim $NFTE
+            </Text>
+          </RewardButton> 
+        </Grid>
+      </Flex>
     </Box>
   )
 }

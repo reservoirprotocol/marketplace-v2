@@ -50,7 +50,7 @@ export const ClaimRewardHeroBanner = ({ title, description, image }: Props) => {
         <Text
           style="subtitle1"
           css={{
-            lineHeight: 1.5,
+            lineHeight: '28px',
             color: '$whiteA12',
             width: '100%',
             '@lg': { width: '50%' },
@@ -58,6 +58,7 @@ export const ClaimRewardHeroBanner = ({ title, description, image }: Props) => {
         >
           {description}
         </Text>
+        <img height="100" width="100%" src={image} />
       </Grid>
     </Flex>
   )
