@@ -37,6 +37,7 @@ export const TokenOffersTable: FC<Props> = ({ token, floor, account, isOwner }) 
 
   let bidsQuery: Parameters<typeof useBids>['0'] = {
     token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+    sortBy: 'price'
   }
 
   const {
@@ -104,26 +105,26 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer,token,  mutate, address, 
   return (
     <TableRow
       key={offer?.id}
-      css={{ gridTemplateColumns: desktopTemplateColumns }}
+      css={{ gridTemplateColumns: desktopTemplateColumns, borderBottomColor: '$primary6' }}
     >
-      <TableCell css={{ pl: '$2 !important', py: '$1' }}>
+      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Text
           style="subtitle2"
         >
           {offer?.price?.amount?.native}
         </Text>
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$1' }}>
+      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Text
           style="subtitle2"
         >
           {`${(100 * Math.abs( (offerPrice - floor) / ( (offerPrice+floor)/2 ) )).toFixed(0)}% ${offerPrice > floor ? 'above': 'below'}`}
         </Text>
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$1' }}>
+      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$1' }}>
+      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Link href={`/profile/${offer?.maker}`}>
           <Text
             style="subtitle3"
@@ -138,7 +139,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer,token,  mutate, address, 
           </Text>
         </Link>
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$1' }}>
+      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Flex align="center" justify="end">
           {isOwner && (
             <AcceptBid
@@ -193,6 +194,7 @@ const TableHeading = () => (
       display: 'grid',
       gridTemplateColumns: desktopTemplateColumns,
       position: 'sticky',
+      top: 0,
       backgroundColor: '$primary4'
     }}
   >
