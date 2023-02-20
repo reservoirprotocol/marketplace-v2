@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import {
   TokenMedia,
+  useAttributes,
   useCollections,
   useTokenOpenseaBanned,
   useTokens,
@@ -94,6 +95,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
     }
   )
+
+  const attributesData = useAttributes(id)
 
   const isOwner =
     userTokens &&
@@ -376,7 +379,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <RarityRank
                 token={token}
                 collection={collection}
-                collectionAttributes={ssr.attributes?.attributes}
+                collectionAttributes={attributesData?.data}
               />
               <PriceData token={token} />
               {isMounted && (
@@ -447,7 +450,6 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
@@ -471,12 +473,11 @@ export const getStaticProps: GetStaticProps<{
     },
   }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
@@ -485,28 +486,26 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
-
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
-
-  let attributes: Props['ssr']['attributes'] | undefined
-  try {
-    const attributesResponse = await fetcher(
-      `${reservoirBaseUrl}/collections/${collectionId}/attributes/all/v2`,
-      {},
-      headers
-    )
-    attributes = attributesResponse['data']
-  } catch (e) {
-    console.log('Failed to load attributes')
-  }
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+  ]).catch(() => {})
+  const collection: Props['ssr']['collection'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : {}
+  const tokens: Props['ssr']['tokens'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : {}
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens, attributes } },
+    props: { collectionId, id, ssr: { collection, tokens } },
     revalidate: 20,
   }
 }
