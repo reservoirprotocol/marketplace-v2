@@ -48,6 +48,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           css={{ color: '$whiteA12', lineHeight: 1.2 }}
         >
           Buy and Sell NFTs on L2
+          Buy and Sell NFTs on L2
         </Text>
         <Text
           style="subtitle1"
@@ -74,11 +75,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                   width: 100,
                   borderRadius: '$lg',
                   justifyContent: 'center',
-                  border: theme
-                    ? theme === 'dark'
-                      ? '2px solid #6BE481'
-                      : 'none'
-                    : '2px solid #6BE481',
+                  border: '2px solid #6BE481',
                   '&:hover': {
                     background: '#6BE481',
                     color: 'black',
@@ -99,11 +96,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 css={{
                   width: 100,
                   borderRadius: '$lg',
-                  border: theme
-                    ? theme === 'dark'
-                      ? '2px solid #6BE481'
-                      : 'none'
-                    : '2px solid #6BE481',
+                  border: '2px solid #6BE481',
                   justifyContent: 'center',
                   '&:hover': {
                     background: '#6BE481',
