@@ -118,20 +118,19 @@ const Navbar = () => {
               )}
             </Box>
           </Link>
-          <Box css={{ flex: 1, ml: '$5', px: '$5', maxWidth: 460 }}>
+          <Box css={{ flex: 1, px: '$3', width: '100%' }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder="Search items, collections and accounts"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
           </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
+          <Flex align="center" css={{ gap: '$4', mr: '$3' }}>
             <Link href="/explore" legacyBehavior>
               <NavItem active={router.pathname == '/explore'}>
                 <Box
                   css={{
-                    padding: 10,
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
                       outline: '1px solid $neutralBgSubtle',
@@ -139,15 +138,14 @@ const Navbar = () => {
                     },
                   }}
                 >
-                  Explore
+                  Collections
                 </Box>
               </NavItem>
             </Link>
-            <a href="/portfolio">
+            <Link href="/quests">
               <NavItem active={router.pathname == '/portfolio'}>
                 <Box
                   css={{
-                    padding: 10,
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
                       outline: '1px solid $neutralBgSubtle',
@@ -155,15 +153,14 @@ const Navbar = () => {
                     },
                   }}
                 >
-                  Sell
+                  Quests
                 </Box>
               </NavItem>
-            </a>
+            </Link>
             <Link href="/launch" legacyBehavior>
               <NavItem active={router.pathname == '/launch'}>
                 <Box
                   css={{
-                    padding: 10,
                     '&:hover': {
                       background: theme === 'dark' ? '$gray1' : '$panelShadow',
                       outline: '1px solid $neutralBgSubtle',
@@ -172,6 +169,21 @@ const Navbar = () => {
                   }}
                 >
                   Launchpad
+                </Box>
+              </NavItem>
+            </Link>
+            <Link href="/claim" legacyBehavior>
+              <NavItem active={router.pathname == '/launch'}>
+                <Box
+                  css={{
+                    '&:hover': {
+                      background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                      outline: '1px solid $neutralBgSubtle',
+                      borderRadius: '$md',
+                    },
+                  }}
+                >
+                  Claim
                 </Box>
               </NavItem>
             </Link>
