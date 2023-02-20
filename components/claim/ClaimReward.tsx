@@ -1,4 +1,4 @@
-import { Box, Button, Text } from 'components/primitives'
+import { Box, Text } from 'components/primitives'
 import { RewardContent, RewardButton } from './styled'
 
 type Props = {
@@ -29,10 +29,10 @@ export const ClaimReward = ({ title, description, image }: Props) => {
         <img height="100" width="100%" src={image} />
       </Box>
       <RewardContent>
-        <Text style="subtitle2">{description}</Text>
+        <Text style="subtitle1">{description}</Text>
       </RewardContent>
 
-      <RewardButton>
+      <RewardButton css={{background: '#6EE799'}}>
         <Text
           css={{
             color: 'black',
@@ -41,7 +41,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
             marginRight: 'auto',
           }}
         >
-          Claim Reward
+          Claim $NFTE Airdrop
         </Text>
       </RewardButton>
     </Box>

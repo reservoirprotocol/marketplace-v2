@@ -60,17 +60,7 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           <ClaimReward
             image="https://nftearth.exchange/render-image-1.png"
             title="Claim your $500 deposit bonus"
-            description="Register now to claim your $500 deposit bonus and unlock an instant 20% rakeback boost."
-          />
-          <ClaimReward
-            image="https://nftearth.exchange/render-image-1.png"
-            title="Claim your $500 deposit bonus"
-            description="Register now to claim your $500 deposit bonus and unlock an instant 20% rakeback boost."
-          />
-          <ClaimReward
-            image="https://nftearth.exchange/render-image-1.png"
-            title="Claim your $500 deposit bonus"
-            description="Register now to claim your $500 deposit bonus and unlock an instant 20% rakeback boost."
+            description="If you were one of the 1,786 eligible addresses for airdrop 1 and have listed an NFT on NFTEarth, you can claim your $NFTE tokens below."
           />
         </Flex>
       </Box>
