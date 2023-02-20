@@ -1,7 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
 import { useCollections } from '@nftearth/reservoir-kit-ui'
@@ -11,12 +11,14 @@ import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { ClaimReward } from 'components/claim/ClaimReward'
 import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const ClaimPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
+  const [open, setOpen] = useState(false);
   const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
@@ -24,7 +26,7 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
-
+  const wait = () => new Promise((resolve) => setTimeout(resolve, 1000));
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(collectionQuery, {
       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
