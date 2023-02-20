@@ -56,6 +56,7 @@ import Head from 'next/head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import {TokenActivityTable} from "components/token/TokenActivityTable";
 import {NAVBAR_HEIGHT} from "../../../../components/navbar";
+import {TokenOffersTable} from "../../../../components/token/TokenOffersTable";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -399,6 +400,14 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   token={token}
                   isOwner={isOwner}
                   mutate={mutate}
+                  account={account}
+                />
+              )}
+              {isMounted && (
+                <TokenOffersTable
+                  token={token}
+                  floor={collection?.floorAsk?.price?.amount?.native}
+                  isOwner={isOwner}
                   account={account}
                 />
               )}
