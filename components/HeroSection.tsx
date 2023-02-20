@@ -56,7 +56,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           {`Discover and Create NFTs and earn rewards on Optimism's largest NFT marketplace.`}
         </Text>
         {hideLink ?? (
-          <Flex css={{ gap: 10 }}>
+          <Flex css={{ gap: 15 }}>
             <Link href="/portfolio" passHref legacyBehavior>
               <Button
                 as="a"
@@ -95,6 +95,26 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
                 }}
               >
                 Explore
+              </Button>
+            </Link>
+            <Link href="/claim" passHref legacyBehavior>
+              <Button
+                as="a"
+                color={theme ? (theme === 'dark' ? 'ghost' : 'white') : 'ghost'}
+                corners="pill"
+                size="large"
+                css={{
+                  width: 100,
+                  borderRadius: '$lg',
+                  border: '2px solid #6BE481',
+                  justifyContent: 'center',
+                  '&:hover': {
+                    background: '#6BE481',
+                    color: 'black',
+                  },
+                }}
+              >
+                Airdrop
               </Button>
             </Link>
           </Flex>
