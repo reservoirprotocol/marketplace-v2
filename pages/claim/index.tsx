@@ -56,16 +56,16 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <Box ref={setContainer} />
         <ClaimRewardHeroBanner
+          image="/ClaimBG.png"
           title="Claim your Rewards"
           description=" Claim your Rewards after listing your NFT on the marketplace. See
           which rewards your are eligible to claim for."
         />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <ClaimReward
-            image="https://nftearth.exchange/render-image-1.png"
-            title="Claim your $500 deposit bonus"
+            image="/ClaimRewards.png"
+            title="Claim $500 deposit bonus"
             description="If you were one of the 1,786 eligible addresses for airdrop 1 and have listed an NFT on NFTEarth, you can claim your $NFTE tokens below."
           />
         </Flex>

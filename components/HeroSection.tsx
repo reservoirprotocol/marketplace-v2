@@ -48,7 +48,6 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
           css={{ color: '$whiteA12', lineHeight: 1.2 }}
         >
           Buy and Sell NFTs on L2
-          Buy and Sell NFTs on L2
         </Text>
         <Text
           style="subtitle1"
