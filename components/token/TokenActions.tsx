@@ -96,6 +96,10 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
+      {!isOwner && isListed && (
+        <AddToCart token={token}/>
+      )}
+
       {!isOwner && (
         <Bid
           tokenId={token?.token?.tokenId}
@@ -133,10 +137,6 @@ export const TokenActions: FC<Props> = ({
             </Button>
           }
         />
-      )}
-
-      {!isOwner && isListed && (
-        <AddToCart token={token}/>
       )}
     </Grid>
   )

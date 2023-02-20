@@ -4,7 +4,7 @@ import {
   Root as DialogRoot,
   DialogTrigger,
   DialogPortal,
-  Close as DialogClose
+  Close as DialogClose,
 } from '@radix-ui/react-dialog'
 import {
   faMagnifyingGlass,
@@ -22,12 +22,13 @@ const MobileSearch = () => {
         pt: '$4',
       }}
     >
-      <GlobalSearch placeholder="Search collections and addresses" />
+      <GlobalSearch placeholder="Search items, collections and accounts" />
       <Flex
         css={{
           position: 'absolute',
           top: '$4',
           left: '$4',
+          width: '100%',
         }}
         align="center"
         justify="between"
