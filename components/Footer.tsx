@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Text, Flex, Anchor, Button } from './primitives'
+import { Box, Text, Flex, Anchor, Button } from './primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 
@@ -90,11 +90,15 @@ export const Footer = () => {
             rel="noopener noreferrer"
             href="https://twitter.com/NFTEarth_L2"
           >
-            <Button size="xs" color="gray3" css={{
-              '&:hover': {
-                background: 'grey',
-              }
-            }}>
+            <Button
+              size="xs"
+              color="gray3"
+              css={{
+                '&:hover': {
+                  background: 'grey',
+                },
+              }}
+            >
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
             </Button>
           </a>
@@ -103,15 +107,29 @@ export const Footer = () => {
             rel="noopener noreferrer"
             href="https://discord.gg/nftearth"
           >
-            <Button size="xs" color="gray3" css={{
-              '&:hover': {
-                background: 'grey',
-              }
-            }}>
+            <Button
+              size="xs"
+              color="gray3"
+              css={{
+                '&:hover': {
+                  background: 'grey',
+                },
+              }}
+            >
               <FontAwesomeIcon icon={faDiscord} width={14} height={14} />
             </Button>
           </a>
         </Flex>
+        <Box css={{ marginTop: 10 }}>
+          <a href="https://aws.amazon.com/what-is-cloud-computing">
+            <img
+              height="100"
+              width="100"
+              src="https://d0.awsstatic.com/logos/powered-by-aws-white.png"
+              alt="Powered by AWS Cloud Computing"
+            ></img>
+          </a>
+        </Box>
       </Flex>
     </Flex>
   )

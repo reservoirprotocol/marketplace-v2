@@ -11,14 +11,10 @@ import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { ClaimReward } from 'components/claim/ClaimReward'
 import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const ClaimPage: NextPage<Props> = ({ ssr }) => {
-  const isSSR = typeof window === 'undefined'
-  const isMounted = useMounted()
-  const [open, setOpen] = useState(false);
   const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
