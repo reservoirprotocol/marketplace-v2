@@ -14,7 +14,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import Link from "next/link";
 import {useMounted} from "hooks";
 import {RewardButton} from "./styled";
-import {AnimatedOverlay} from "../primitives/Dialog";
+import {AnimatedOverlay, AnimatedContent} from "../primitives/Dialog";
 
 const NFTEAirdropClaimABI = require('abi/NFTEAirdropClaimABI.json');
 
@@ -137,15 +137,11 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                 backdropFilter: '20px',
               }}
             />
-            <Dialog.Content style={{
+            <AnimatedContent style={{
               outline: 'unset',
               position: 'fixed',
-              top: '60%',
               zIndex: 1000,
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '400px',
-              height: '400px',
+              transform: 'translate(-50%, 120%)',
             }}>
               <Flex
                 justify="between"
@@ -153,7 +149,6 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                   pt: '$5',
                   background: '$gray7',
                   padding: '$5',
-                  borderRadius: '20px',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
@@ -188,7 +183,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                   </Link>
                 )}
               </Flex>
-            </Dialog.Content>
+            </AnimatedContent>
           </Dialog.Portal>
         </Dialog.Root>
       )}

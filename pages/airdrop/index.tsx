@@ -10,8 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ClaimReward } from 'components/claim/ClaimReward'
 
 import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
-import {useMounted} from "hooks";
-import {AnimatedOverlay} from "../../components/primitives/Dialog";
+import { useMounted } from "hooks";
+import { AnimatedOverlay, AnimatedContent } from "../../components/primitives/Dialog";
 
 
 const ClaimPage: NextPage = () => {
@@ -57,15 +57,12 @@ const ClaimPage: NextPage = () => {
                 backdropFilter: '20px',
               }}
             />
-            <Dialog.Content style={{
+            <AnimatedContent style={{
               outline: 'unset',
               position: 'fixed',
-              top: '60%',
               zIndex: 1000,
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
+              transform: 'translate(-50%, 120%)',
               width: '400px',
-              height: '400px',
             }}>
               <Flex
                 justify="between"
@@ -75,7 +72,6 @@ const ClaimPage: NextPage = () => {
                   pt: '$5',
                   background: '$gray7',
                   padding: '$5',
-                  borderRadius: '20px',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
@@ -107,7 +103,7 @@ const ClaimPage: NextPage = () => {
                   <Button>List your NFT</Button>
                 </Link>
               </Flex>
-            </Dialog.Content>
+            </AnimatedContent>
           </Dialog.Portal>
         </Dialog.Root>
       )}
