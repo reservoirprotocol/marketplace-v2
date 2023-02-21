@@ -221,12 +221,12 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Explore
+                  Collections
                 </Text>
               </Link>
               <Text
                 as="a"
-                href="/portfolio"
+                href="/quests"
                 style="subtitle1"
                 css={{
                   borderBottom: '1px solid $gray4',
@@ -236,7 +236,35 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                Portfolio
+                Quests
+              </Text>
+              <Text
+                as="a"
+                href="/launch"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Launchpad
+              </Text>
+              <Text
+                as="a"
+                href="/airdrop"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Claim
               </Text>
             </Flex>
             <Box>
