@@ -1,4 +1,3 @@
-import { useState} from "react";
 import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
