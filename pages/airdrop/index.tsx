@@ -44,7 +44,7 @@ const ClaimPage: NextPage = () => {
         </Flex>
       </Box>
       {isMounted && (
-        <Dialog.Root modal={true} open={!signature && !isLoading}>
+        <Dialog.Root defaultOpen open={!signature && !isLoading}>
           <Dialog.Portal>
             <AnimatedOverlay
               style={{
