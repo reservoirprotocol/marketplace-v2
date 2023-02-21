@@ -86,7 +86,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               {description}
             </Text>
             <RewardButton
-              // disabled={!signature}
+              disabled={!signature}
               css={{
                 background: '#6BE481',
                 borderRadius: '10px',
