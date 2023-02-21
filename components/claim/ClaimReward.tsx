@@ -1,6 +1,11 @@
-import { Box, Grid, Text, Flex } from 'components/primitives'
-import { RewardContent, RewardButton } from './styled'
+import { useState } from 'react'
+import { Box, Grid, Text, Flex, Button } from 'components/primitives'
+import Layout from 'components/Layout'
+import { RewardButton } from './styled'
+import * as Dialog from '@radix-ui/react-dialog'
 import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 
 type Props = {
   title: string
@@ -9,7 +14,13 @@ type Props = {
 }
 
 export const ClaimReward = ({ title, description, image }: Props) => {
+
+  // Get Eligable Address with useEligibleAirdropSignature Custom Hook
   const signature = useEligibleAirdropSignature()
+
+  // Set the variable for the Modal
+  const [container, setContainer] = useState(null)
+  const [open, setOpen] = useState(true)
 
   return (
     <Box
@@ -27,6 +38,8 @@ export const ClaimReward = ({ title, description, image }: Props) => {
           padding: '100px 64px',
         },
       }}
+      //@ts-ignore
+      ref={setContainer}
     >
       <Flex>
         <Grid
@@ -86,6 +99,61 @@ export const ClaimReward = ({ title, description, image }: Props) => {
           </RewardButton>
         </Grid>
       </Flex>
+      {/* {!signature && (
+        <Dialog.Root defaultOpen open={open}>
+          <Dialog.Portal container={container}>
+            <Dialog.Overlay />
+            <Dialog.Content>
+              <Flex
+                justify="between"
+                css={{
+                  borderTop: '1px solid $gray7',
+                  borderStyle: 'solid',
+                  pt: '$5',
+                  background: '$gray7',
+                  padding: '$5',
+                  borderRadius: '20px',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: '20px',
+                  '@bp600': {
+                    flexDirection: 'column',
+                    gap: '20px',
+                  },
+                }}
+              >
+                <Flex css={{ width: '100%' }}>
+                  <Dialog.Close asChild>
+                    <button
+                      style={{ marginLeft: 'auto', marginRight: 0 }}
+                      onClick={() => setOpen(!open)}
+                      className="IconButton"
+                      aria-label="Close"
+                      >
+                        ewg
+                    </button>
+                  </Dialog.Close>
+                </Flex>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    lineHeight: 1.5,
+                    color: '$whiteA12',
+                    width: '100%',
+                    '@lg': { width: '50%' },
+                  }}
+                >
+                  Have you "listed" an NFT on the NFTEarth marketplace?
+                </Text>
+                <Link href="/">
+                  <Button>Back to Home</Button>
+                </Link>
+              </Flex>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+        )} */}
     </Box>
   )
 }
