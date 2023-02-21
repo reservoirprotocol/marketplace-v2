@@ -22,7 +22,8 @@ import {
   Tooltip,
   Anchor,
   Grid,
-  Box, CollapsibleContent,
+  Box,
+  CollapsibleContent,
 } from 'components/primitives'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -108,6 +109,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
     }
   )
+
+  const attributesData = useAttributes(id)
 
   const isOwner =
     userTokens &&
@@ -392,7 +395,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <RarityRank
                 token={token}
                 collection={collection}
-                collectionAttributes={attributes}
+                collectionAttributes={attributesData?.data}
               />
               <PriceData token={token} />
               {isMounted && (
@@ -539,12 +542,11 @@ export const getStaticProps: GetStaticProps<{
     },
   }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
@@ -554,16 +556,27 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
-
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+  ]).catch(() => {})
+  const collection: Props['ssr']['collection'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : {}
+  const tokens: Props['ssr']['tokens'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : {}
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } }
+    props: { collectionId, id, ssr: { collection, tokens } },
+    revalidate: 20,
   }
 }
 

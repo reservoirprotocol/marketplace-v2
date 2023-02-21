@@ -7,6 +7,7 @@ import {
   ReactNode,
 } from 'react'
 import { Provider as ToastProvider } from '@radix-ui/react-toast'
+import Toast, { ToastViewport } from 'components/primitives/Toast'
 
 type ToastType = {
   title?: string
@@ -33,7 +34,20 @@ const ToastContextProvider: FC<any> = ({ children }) => {
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, setToasts }}>
-      <ToastProvider duration={5000}>{children}</ToastProvider>
+      <ToastProvider duration={5000}>
+        {children}
+        {toasts.map((toast, idx) => {
+          return (
+            <Toast
+              key={idx}
+              title={toast.title}
+              description={toast.description}
+              action={toast.action}
+            />
+          )
+        })}
+        <ToastViewport />
+      </ToastProvider>
     </ToastContext.Provider>
   )
 }
