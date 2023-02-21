@@ -45,7 +45,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
     hash: data?.hash,
   })
 
-  const tweetText = `I just won an $NFTE Airdrop on @NFTEarth_L2!\n\n🎉 LFG #NFTEarth is #BetterThanBlue 🎉\n\n`
+  const tweetText = `I just claimed my $NFTE #Airdrop on @NFTEarth_L2!\n\n🎉 LFG #NFTE is #BetterThanBlue 🎉\n\n`
 
   return (
     <div>
@@ -182,7 +182,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                     target="_blank"
                     href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://nftearth.exchange/claim`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://nftearth.exchange')}`}>
                     <Button css={{ mt: '$3' }}>
-                      {`Tweet your win!`}
+                      {`Tweet your airdrop win!`}
                       <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
                     </Button>
                   </Link>
