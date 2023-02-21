@@ -4,10 +4,9 @@ import Link from 'next/link'
 import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 import { RewardButton } from './styled'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Dialog from '@radix-ui/react-dialog'
 
-import { Content, Overlay, AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
+import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
 
 type Props = {
   title: string
