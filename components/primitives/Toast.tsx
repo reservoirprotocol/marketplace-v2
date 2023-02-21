@@ -5,7 +5,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 
 const VIEWPORT_PADDING = 25
 
-const ToastViewport = styled(ToastPrimitive.Viewport, {
+export const ToastViewport = styled(ToastPrimitive.Viewport, {
   padding: VIEWPORT_PADDING,
   position: 'fixed',
   bottom: 0,
@@ -23,11 +23,6 @@ const hide = keyframes({
   '100%': { opacity: 0 },
 })
 
-const slideIn = keyframes({
-  from: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
-  to: { transform: 'translateX(0)' },
-})
-
 const swipeOut = keyframes({
   from: { transform: 'translateX(var(--radix-toast-swipe-end-x))' },
   to: { transform: `translateX(calc(100% + ${VIEWPORT_PADDING}px))` },
@@ -43,9 +38,6 @@ const ToastRoot = styled(ToastPrimitive.Root, {
   columnGap: '15px',
   alignItems: 'center',
 
-  '&[data-state="open"]:last-child': {
-    animation: `${slideIn} 150ms cubic-bezier(0.16, 1, 0.3, 1)`,
-  },
   '&[data-state="closed"]:first-child': {
     animation: `${hide} 100ms ease-in`,
   },
@@ -90,7 +82,7 @@ const Toast: FC<Props> = ({ title, description, action }) => {
   return (
     <>
       <ToastRoot
-        duration={5000}
+        key={title}
         onOpenChange={(open) => {
           if (!open) {
             setTimeout(
@@ -106,7 +98,6 @@ const Toast: FC<Props> = ({ title, description, action }) => {
           {action}
         </ToastAction>
       </ToastRoot>
-      <ToastViewport />
     </>
   )
 }

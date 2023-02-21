@@ -58,7 +58,9 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
+    ssr.hasAttributes ? true : false
+  )
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
@@ -124,12 +126,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
-  let attributesdata = useAttributes(id, undefined, {
-    fallbackData: ssr.attributes,
-  })
+  const attributesData = useAttributes(id)
 
   const attributes =
-    attributesdata.data?.filter(
+    attributesData.data?.filter(
       (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
     ) || []
 
@@ -430,7 +430,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: {
     collection?: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
-    attributes?: paths['/collections/{collection}/attributes/all/v2']['get']['responses']['200']['schema']
+    hasAttributes: boolean
   }
   id: string | undefined
 }> = async ({ params }) => {
@@ -464,6 +464,7 @@ export const getStaticProps: GetStaticProps<{
     limit: 20,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     includeDynamicPricing: true,
+    includeAttributes: true,
   }
 
   const tokensPromise = fetcher(
@@ -472,51 +473,26 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
 
-  const attributesController = new AbortController()
-
-  const attributesPromise = fetcher(
-    `${reservoirBaseUrl}/collections/${id}/attributes/all/v2`,
-    {},
-    {
-      ...headers,
-      signal: attributesController.signal,
-    }
-  )
-
-  const attributesTimeout = setTimeout(() => {
-    attributesController.abort()
-  }, 5000)
-
   const promises = await Promise.allSettled([
     collectionsPromise,
     tokensPromise,
-    attributesPromise,
-  ])
+  ]).catch(() => {})
   const collection: Props['ssr']['collection'] =
-    promises[0].status === 'fulfilled' && promises[0].value.data
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
       ? (promises[0].value.data as Props['ssr']['collection'])
-      : undefined
+      : {}
   const tokens: Props['ssr']['tokens'] =
-    promises[1].status === 'fulfilled' && promises[1].value.data
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
       ? (promises[1].value.data as Props['ssr']['tokens'])
-      : undefined
-  let attributes: Props['ssr']['attributes'] =
-    promises[2].status === 'fulfilled' && promises[2].value.data
-      ? (promises[2].value.data as Props['ssr']['attributes'])
-      : undefined
+      : {}
 
-  if (attributes?.attributes) {
-    attributes = {
-      attributes: attributes.attributes.filter(
-        (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-      ),
-    }
-  }
-
-  clearTimeout(attributesTimeout)
+  const hasAttributes =
+    tokens?.tokens?.some(
+      (token) => (token?.token?.attributes?.length || 0) > 0
+    ) || false
 
   return {
-    props: { ssr: { collection, tokens, attributes }, id },
+    props: { ssr: { collection, tokens, hasAttributes }, id },
     revalidate: 30,
   }
 }
