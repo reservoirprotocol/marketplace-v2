@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from "react";
+import { useState} from "react";
 import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
@@ -17,7 +17,6 @@ import {AnimatedOverlay} from "../../components/primitives/Dialog";
 
 const ClaimPage: NextPage = () => {
   const { data: signature, isLoading } = useEligibleAirdropSignature()
-  const [open, setOpen] = useState(false)
   const isMounted = useMounted()
 
   return (
@@ -26,7 +25,6 @@ const ClaimPage: NextPage = () => {
         css={{
           p: 24,
           height: '100%',
-          opacity: open ? '0.3' : 1,
           '@bp800': {
             p: '$6',
           },

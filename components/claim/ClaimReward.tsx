@@ -1,4 +1,3 @@
-import {useRef} from "react";
 import {Box, Grid, Text, Flex, Button} from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -16,7 +15,6 @@ import Link from "next/link";
 import {useMounted} from "hooks";
 import {RewardButton} from "./styled";
 import {AnimatedOverlay} from "../primitives/Dialog";
-import {DialogPortal} from "@radix-ui/react-dialog";
 
 const NFTEAirdropClaimABI = require('abi/NFTEAirdropClaimABI.json');
 
