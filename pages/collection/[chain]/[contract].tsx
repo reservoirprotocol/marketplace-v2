@@ -7,8 +7,8 @@ import {
 import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
-  useTokens,
   useCollectionActivity,
+  useDynamicTokens,
   useAttributes,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -90,7 +90,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   let collection = collections && collections[0]
 
-  let tokenQuery: Parameters<typeof useTokens>['0'] = {
+  let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 20,
     collection: id,
     sortBy: 'floorAskPrice',
@@ -122,7 +122,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     isFetchingInitialData,
     isFetchingPage,
     hasNextPage,
-  } = useTokens(tokenQuery, {
+  } = useDynamicTokens(tokenQuery, {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
@@ -463,6 +463,7 @@ export const getStaticProps: GetStaticProps<{
     sortDirection: 'asc',
     limit: 20,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
+    includeDynamicPricing: true,
     includeAttributes: true,
   }
 

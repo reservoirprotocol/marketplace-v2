@@ -20,6 +20,7 @@ import {
   darkTheme as reservoirDarkTheme,
   lightTheme as reservoirLightTheme,
   ReservoirKitTheme,
+  CartProvider,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
@@ -143,23 +144,31 @@ function MyApp({
           options={{
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
-            apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
+            chains: supportedChains.map(({ proxyApi, id }) => {
+              return {
+                id,
+                baseApiUrl: `${baseUrl}${marketplaceChain.proxyApi}`,
+                default: marketplaceChain.id === id,
+              }
+            }),
             // source: 'YOUR_DOMAIN',
             normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
           theme={reservoirKitTheme}
         >
-          <Tooltip.Provider>
-            <RainbowKitProvider
-              chains={chains}
-              theme={rainbowKitTheme}
-              modalSize="compact"
-            >
-              <ToastContextProvider>
-                <FunctionalComponent {...pageProps} />
-              </ToastContextProvider>
-            </RainbowKitProvider>
-          </Tooltip.Provider>
+          <CartProvider>
+            <Tooltip.Provider>
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
+              >
+                <ToastContextProvider>
+                  <FunctionalComponent {...pageProps} />
+                </ToastContextProvider>
+              </RainbowKitProvider>
+            </Tooltip.Provider>
+          </CartProvider>
         </ReservoirKitProvider>
       </ThemeProvider>
     </HotkeysProvider>

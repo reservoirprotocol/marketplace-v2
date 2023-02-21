@@ -21,6 +21,7 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
+import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()

@@ -1,8 +1,9 @@
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
+import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
-import { Button, Grid } from 'components/primitives'
+import { Button, Flex, Grid } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -46,10 +47,11 @@ export const TokenActions: FC<Props> = ({
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
+    height: 52,
     justifyContent: 'center',
     minWidth: 'max-content',
     '@sm': {
-      maxWidth: '200px',
+      maxWidth: 250,
     },
   }
 
@@ -62,7 +64,7 @@ export const TokenActions: FC<Props> = ({
         width: '100%',
         '@sm': {
           gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
-          width: 'max-content',
+          maxWidth: 500,
         },
       }}
     >
@@ -78,7 +80,25 @@ export const TokenActions: FC<Props> = ({
           }
         />
       ) : (
-        <BuyNow token={token} mutate={mutate} buttonCss={buttonCss} />
+        <Flex
+          css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
+        >
+          <BuyNow
+            token={token}
+            buttonCss={{ flex: 1, justifyContent: 'center' }}
+            buttonProps={{ corners: 'square' }}
+            mutate={mutate}
+          />
+          <AddToCart
+            token={token}
+            buttonCss={{
+              width: 52,
+              p: 0,
+              justifyContent: 'center',
+            }}
+            buttonProps={{ corners: 'square' }}
+          />
+        </Flex>
       )}
       {showAcceptOffer && (
         <AcceptBid
@@ -134,8 +154,6 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-
-      {/* TODO: Add to Cart */}
     </Grid>
   )
 }

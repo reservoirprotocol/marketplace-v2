@@ -9,8 +9,8 @@ import {
   TokenMedia,
   useAttributes,
   useCollections,
+  useDynamicTokens,
   useTokenOpenseaBanned,
-  useTokens,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import Layout from 'components/Layout'
@@ -75,7 +75,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const collection = collections && collections[0] ? collections[0] : null
 
-  const { data: tokens, mutate } = useTokens(
+  const { data: tokens, mutate } = useDynamicTokens(
     {
       tokens: [`${contract}:${id}`],
       includeAttributes: true,
@@ -484,6 +484,7 @@ export const getStaticProps: GetStaticProps<{
     includeAttributes: true,
     includeTopBid: true,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
+    includeDynamicPricing: true,
   }
 
   const tokensPromise = fetcher(

@@ -3,7 +3,6 @@ import { Box, Flex, Text } from '../primitives'
 import { ComponentPropsWithoutRef, FC } from 'react'
 import { TrendingCollectionItem } from './TrendingCollectionItem'
 import LoadingSpinner from 'components/common/LoadingSpinner'
-import { display } from '@datadog/browser-core'
 
 export type TrendingCollections = ReturnType<typeof useCollections>['data']
 
@@ -48,8 +47,8 @@ const TrendingCollectionsList: FC<Props> = ({
       >
         {Array(3)
           .fill(null)
-          .map(() => (
-            <Flex justify="between">
+          .map((_, i) => (
+            <Flex justify="between" key={i}>
               <Text style="subtitle3" color="subtle">
                 Collection
               </Text>

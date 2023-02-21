@@ -19,7 +19,7 @@ import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
   useCollectionActivity,
-  useTokens,
+  useDynamicTokens,
   useUserCollections,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
@@ -237,7 +237,9 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                             <TokenCard
                               key={i}
                               token={
-                                token as ReturnType<typeof useTokens>['data'][0]
+                                token as ReturnType<
+                                  typeof useDynamicTokens
+                                >['data'][0]
                               }
                               mutate={mutate}
                               rarityEnabled={false}
