@@ -17,7 +17,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
       css={{
         width: '100%',
         backgroundPosition: 'center center',
-        backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, #6EE799 91.1%), url('/images/heroSectionBanner.png')`,
+        backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, $primary13 91.1%), url('/images/heroSectionBanner.png')`,
         '@xs': {
           gridTemplateColumns: 'unset',
           padding: '64px 24px',

@@ -12,10 +12,10 @@ const StyledToggleGroupRoot = styled(ToggleGroupRoot, {
 })
 
 const StyledToggleGroupItem = styled(ToggleGroupItem, {
-  background: '$primary8',
+  background: '$primary14',
   color: '#000',
   p: '$3',
-  '&[data-state=on]': { backgroundColor: '$primary9' },
+  '&[data-state=on]': { backgroundColor: '$primary13' },
 })
 
 export {
