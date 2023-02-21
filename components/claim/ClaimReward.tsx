@@ -1,6 +1,6 @@
 import { Box, Grid, Text, Flex } from 'components/primitives'
 import { RewardContent, RewardButton } from './styled'
-import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
+import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 
 type Props = {
   title: string
@@ -47,10 +47,11 @@ export const ClaimReward = ({ title, description, image }: Props) => {
             }}
             css={{
               fontWeight: 700,
-            }}>
+            }}
+          >
             {title}
           </Text>
-        
+
           <Text
             style="subtitle1"
             css={{
@@ -67,8 +68,10 @@ export const ClaimReward = ({ title, description, image }: Props) => {
             css={{
               background: '#6BE481',
               borderRadius: '10px',
-              padding: '15px 0px',
-            }}>
+              padding: '$1',
+              width: '30%',
+            }}
+          >
             <Text
               css={{
                 color: 'black',

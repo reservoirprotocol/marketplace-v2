@@ -14,14 +14,17 @@ import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {RewardButton, RewardContent} from "../../components/claim/styled";
-import {ClaimReward} from "../../components/claim/ClaimReward";
+import { Cross2Icon } from '@radix-ui/react-icons'
+import { ClaimReward } from '../../components/claim/ClaimReward'
+import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const ClaimPage: NextPage<Props> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
+  const signature = useEligibleAirdropSignature()
   const [container, setContainer] = useState(null)
+  const [open, setOpen] = useState(true)
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
@@ -50,8 +53,22 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
+          position: 'fixed',
+          top: '60%',
+          zIndex: 1000,
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '400px',
+          height: '400px',
+        }}
+        //@ts-ignore
+        ref={setContainer}
+      />
+      <Box
+        css={{
           p: 24,
           height: '100%',
+          opacity: open ? '0.3' : 1,
           '@bp800': {
             p: '$6',
           },
@@ -71,45 +88,65 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           />
         </Flex>
       </Box>
-
-      {/* <Dialog.Root defaultOpen>
-        <Dialog.Portal container={container}>
-          <Dialog.Overlay />
-          <Dialog.Content>
-            <Flex
-              justify="between"
-              css={{
-                borderTop: '1px solid $gray7',
-                borderStyle: 'solid',
-                pt: '$5',
-                flexDirection: 'column',
-                alignItems: 'flex-start',
-                gap: 36,
-                '@bp600': {
-                  flexDirection: 'row',
-                  gap: 0,
-                },
-              }}
-            >
-              <FontAwesomeIcon icon={faWarning} style={{ marginRight: 5 }} />
-              <Text
-                style="subtitle1"
+      {!signature && (
+        <Dialog.Root defaultOpen open={open}>
+          <Dialog.Portal container={container}>
+            <Dialog.Overlay />
+            <Dialog.Content>
+              <Flex
+                justify="between"
                 css={{
-                  lineHeight: 1.5,
-                  color: '$whiteA12',
-                  width: '100%',
-                  '@lg': { width: '50%' },
+                  borderTop: '1px solid $gray7',
+                  borderStyle: 'solid',
+                  pt: '$5',
+                  background: '$gray7',
+                  padding: '$5',
+                  borderRadius: '20px',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: '20px',
+                  '@bp600': {
+                    flexDirection: 'column',
+                    gap: '20px',
+                  },
                 }}
               >
-                Have you "Listed" an NFT on the marketplace?
-              </Text>
-              <Link href="/">
-                <Button>Back to Home</Button>
-              </Link>
-            </Flex>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root> */}
+                <Flex css={{ width: '100%' }}>
+                  <FontAwesomeIcon
+                    icon={faWarning}
+                    style={{ marginLeft: '150px', marginRight: 'auto' }}
+                  />
+                  <Dialog.Close asChild>
+                    <button
+                      style={{ marginLeft: 'auto', marginRight: 0 }}
+                      onClick={() => setOpen(!open)}
+                      className="IconButton"
+                      aria-label="Close"
+                    >
+                      <Cross2Icon />
+                    </button>
+                  </Dialog.Close>
+                </Flex>
+                <Text
+                  style="subtitle1"
+                  css={{
+                    lineHeight: 1.5,
+                    color: '$whiteA12',
+                    width: '100%',
+                    '@lg': { width: '50%' },
+                  }}
+                >
+                  Have you "listed" an NFT on the NFTEarth marketplace?
+                </Text>
+                <Link href="/">
+                  <Button>Back to Home</Button>
+                </Link>
+              </Flex>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )}
     </Layout>
   )
 }
