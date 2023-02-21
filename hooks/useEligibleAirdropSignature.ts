@@ -4,7 +4,7 @@ import useSWR from "swr";
 export default function useEligibleAirdropSignature() {
   const { address: accountAddress } = useAccount()
 
-  const response = useSWR(
+  const { data, isLoading } = useSWR(
     `/api/claim?address=${accountAddress}`,
     (url: string) => {
       if (!accountAddress) {
@@ -19,5 +19,8 @@ export default function useEligibleAirdropSignature() {
     }
   )
 
-  return response.data?.result;
+  return {
+    data: data?.result,
+    isLoading
+  };
 }

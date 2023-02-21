@@ -19,7 +19,7 @@ type Props = {
 }
 
 export const ClaimReward = ({ title, description, image }: Props) => {
-  const signature = useEligibleAirdropSignature()
+  const { data: signature } = useEligibleAirdropSignature()
   const { chain: activeChain } = useNetwork()
   const { switchNetworkAsync } = useSwitchNetwork();
   const { address } = useAccount();

@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
@@ -8,14 +8,26 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import { ClaimReward } from '../../components/claim/ClaimReward'
-import useEligibleAirdropSignature from "../../hooks/useEligibleAirdropSignature";
+
+import { ClaimReward } from 'components/claim/ClaimReward'
+
+import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
+import {useMounted} from "hooks";
 
 
 const ClaimPage: NextPage = () => {
-  const [container, setContainer] = useState(null)
+  const container = useRef()
+  const { data: signature, isLoading } = useEligibleAirdropSignature()
   const [open, setOpen] = useState(false)
-  const signature = useEligibleAirdropSignature()
+  const isMounted = useMounted()
+
+  useEffect(() => {
+    if (isMounted && !isLoading && !signature) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [isMounted, signature])
 
   return (
     <Layout>
@@ -30,7 +42,7 @@ const ClaimPage: NextPage = () => {
           height: '400px',
         }}
         //@ts-ignore
-        ref={setContainer}
+        ref={container}
       />
       <Box
         css={{
@@ -56,9 +68,9 @@ const ClaimPage: NextPage = () => {
           />
         </Flex>
       </Box>
-      {!signature && (
+      {isMounted && (
         <Dialog.Root defaultOpen open={open}>
-          <Dialog.Portal container={container}>
+          <Dialog.Portal container={container.current}>
             <Dialog.Overlay />
             <Dialog.Content>
               <Flex
