@@ -1,74 +1,29 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef, useState } from 'react'
-import { useMarketplaceChain } from 'hooks'
-import { paths } from '@nftearth/reservoir-sdk'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
 import Link from 'next/link'
-import { NORMALIZE_ROYALTIES } from '../_app'
-import supportedChains from 'utils/chains'
-import { useIntersectionObserver } from 'usehooks-ts'
 import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Cross2Icon } from '@radix-ui/react-icons'
-import { ClaimReward } from '../../components/claim/ClaimReward'
-import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+import { ClaimReward } from 'components/claim/ClaimReward'
 
-const ClaimPage: NextPage<Props> = ({ ssr }) => {
-  const marketplaceChain = useMarketplaceChain()
-  const signature = useEligibleAirdropSignature()
-  const [container, setContainer] = useState(null)
-  const [open, setOpen] = useState(true)
+import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
+import { useMounted } from "hooks";
+import { AnimatedOverlay, AnimatedContent } from "../../components/primitives/Dialog";
 
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-    sortBy: 'allTimeVolume',
-  }
 
-  const { fetchNextPage, isFetchingPage, isValidating } = useCollections(
-    collectionQuery,
-    {
-      fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-    }
-  )
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+const ClaimPage: NextPage = () => {
+  const { data: signature, isLoading } = useEligibleAirdropSignature()
+  const isMounted = useMounted()
 
   return (
     <Layout>
       <Box
         css={{
-          position: 'fixed',
-          top: '60%',
-          zIndex: 1000,
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '400px',
-          height: '400px',
-        }}
-        //@ts-ignore
-        ref={setContainer}
-      />
-      <Box
-        css={{
           p: 24,
           height: '100%',
-          opacity: open ? '0.3' : 1,
           '@bp800': {
             p: '$6',
           },
@@ -88,11 +43,27 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           />
         </Flex>
       </Box>
-      {!signature && (
-        <Dialog.Root defaultOpen open={open}>
-          <Dialog.Portal container={container}>
-            <Dialog.Overlay />
-            <Dialog.Content>
+      {isMounted && (
+        <Dialog.Root defaultOpen open={!signature && !isLoading}>
+          <Dialog.Portal>
+            <AnimatedOverlay
+              style={{
+                position: 'fixed',
+                zIndex: 1000,
+                inset: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: '20px',
+              }}
+            />
+            <AnimatedContent style={{
+              outline: 'unset',
+              position: 'fixed',
+              zIndex: 1000,
+              transform: 'translate(-50%, 120%)',
+              width: '400px',
+            }}>
               <Flex
                 justify="between"
                 css={{
@@ -101,7 +72,6 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
                   pt: '$5',
                   background: '$gray7',
                   padding: '$5',
-                  borderRadius: '20px',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
@@ -117,16 +87,6 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
                     icon={faWarning}
                     style={{ marginLeft: '150px', marginRight: 'auto' }}
                   />
-                  <Dialog.Close asChild>
-                    <button
-                      style={{ marginLeft: 'auto', marginRight: 0 }}
-                      onClick={() => setOpen(!open)}
-                      className="IconButton"
-                      aria-label="Close"
-                    >
-                      <Cross2Icon />
-                    </button>
-                  </Dialog.Close>
                 </Flex>
                 <Text
                   style="subtitle1"
@@ -137,59 +97,18 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
                     '@lg': { width: '50%' },
                   }}
                 >
-                  Have you "listed" an NFT on the NFTEarth marketplace?
+                  Have you "listed" an NFT on the NFTEarth marketplace ?
                 </Text>
-                <Link href="/">
-                  <Button>Back to Home</Button>
+                <Link href="/portfolio">
+                  <Button>List your NFT</Button>
                 </Link>
               </Flex>
-            </Dialog.Content>
+            </AnimatedContent>
           </Dialog.Portal>
         </Dialog.Root>
       )}
     </Layout>
   )
-}
-
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
-export const getStaticProps: GetStaticProps<{
-  ssr: {
-    exploreCollections: ChainCollections
-  }
-}> = async () => {
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
-    }
-
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-
-  const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
-    }
-  })
-
-  return {
-    props: { ssr: { exploreCollections: collections } },
-    revalidate: 5,
-  }
 }
 
 export default ClaimPage

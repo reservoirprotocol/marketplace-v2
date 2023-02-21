@@ -30,7 +30,9 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(collectionQuery, {
       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-    })
+      revalidateFirstPage: true,
+      revalidateIfStale: true,
+    }, marketplaceChain.id)
 
   let collections = data || []
 
@@ -92,7 +94,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
               <LoadingSpinner />
             </Flex>
           )}
-          <div ref={loadMoreRef} />
+          {hasNextPage && <div ref={loadMoreRef} />}
         </Flex>
       </Box>
     </Layout>

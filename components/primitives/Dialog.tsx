@@ -53,7 +53,7 @@ const AnimatedContent = forwardRef<
   ElementRef<typeof DialogPrimitive.DialogContent>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.DialogContent>
 >(({ children, ...props }, forwardedRef) => (
-  <Content forceMount asChild {...props} css={{transform: 'translateX(-50%) translateY(150%)', minWidth: 400}}>
+  <Content forceMount asChild {...props} css={{minWidth: 400}}>
     <motion.div
       ref={forwardedRef}
       transition={{ type: 'spring', duration: 0.5 }}

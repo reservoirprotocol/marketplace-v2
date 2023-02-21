@@ -22,7 +22,8 @@ import {
   Tooltip,
   Anchor,
   Grid,
-  Box, CollapsibleContent,
+  Box,
+  CollapsibleContent,
 } from 'components/primitives'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -68,7 +69,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const [tabValue, setTabValue] = useState('info')
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const { proxyApi } = useMarketplaceChain()
+  const { id: chainId, proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: collections } = useCollections(
     {
@@ -76,12 +77,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     },
     {
       fallbackData: [ssr.collection],
-    }
-  )
-  const { data: attributesData }  = useAttributes(collectionId);
-
-  const attributes = attributesData?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range' && attribute.key != 'birthday'
+    },
+    chainId
   )
   const collection = collections && collections[0] ? collections[0] : null
 
@@ -96,7 +93,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         return (!contract || !id)
       },
       fallbackData: ssr.tokens ? [ssr.tokens] : undefined,
-    }
+    },
+    chainId
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
@@ -108,6 +106,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
     }
   )
+
+  const attributesData = useAttributes(id, chainId)
 
   const isOwner =
     userTokens &&
@@ -303,7 +303,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 }
                 setIsRefreshing(true)
                 fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  `${proxyApi}/tokens/refresh/v1`,
                   undefined,
                   {
                     method: 'POST',
@@ -392,7 +392,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               <RarityRank
                 token={token}
                 collection={collection}
-                collectionAttributes={attributes}
+                collectionAttributes={attributesData?.data}
               />
               <PriceData token={token} />
               {isMounted && (
@@ -539,12 +539,11 @@ export const getStaticProps: GetStaticProps<{
     },
   }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
@@ -554,16 +553,27 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
-
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+  ]).catch(() => {})
+  const collection: Props['ssr']['collection'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : {}
+  const tokens: Props['ssr']['tokens'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : {}
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } }
+    props: { collectionId, id, ssr: { collection, tokens } },
+    revalidate: 20,
   }
 }
 

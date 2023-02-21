@@ -1,12 +1,22 @@
-import { useState } from 'react'
-import { Box, Grid, Text, Flex, Button } from 'components/primitives'
-import Link from 'next/link'
+import {Box, Grid, Text, Flex, Button} from 'components/primitives'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
-import { RewardButton } from './styled'
-import { Cross2Icon } from '@radix-ui/react-icons'
+import {
+  useAccount,
+  useNetwork,
+  usePrepareContractWrite,
+  useSendTransaction,
+  useSwitchNetwork,
+  useWaitForTransaction
+} from "wagmi";
 import * as Dialog from '@radix-ui/react-dialog'
+import Link from "next/link";
+import {useMounted} from "hooks";
+import {RewardButton} from "./styled";
+import {AnimatedOverlay, AnimatedContent} from "../primitives/Dialog";
 
-import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
+const NFTEAirdropClaimABI = require('abi/NFTEAirdropClaimABI.json');
 
 type Props = {
   title: string
@@ -15,16 +25,30 @@ type Props = {
 }
 
 export const ClaimReward = ({ title, description, image }: Props) => {
-
+  const isMounted = useMounted()
   // Get Eligable Address with useEligibleAirdropSignature Custom Hook
-  const signature = useEligibleAirdropSignature()
+  const { data: signature, isLoading: isLoadingSignature } = useEligibleAirdropSignature()
+  const { chain: activeChain } = useNetwork()
+  const { switchNetworkAsync } = useSwitchNetwork();
+  const { address } = useAccount();
+  const { config, error: preparedError } = usePrepareContractWrite({
+    address: signature ? '0xfA1c8Cd6B3A5eaD9499B8d09F9747c4068f88f37' : '',
+    abi: NFTEAirdropClaimABI,
+    functionName: 'claim',
+    args: [signature],
+    overrides: {
+      from: address,
+    },
+  })
+  const { data, sendTransaction, isLoading: isLoadingWallet, error } = useSendTransaction(config)
+  const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
+    hash: data?.hash,
+  })
 
-  // Set the variable for the Modal
-  const [container, setContainer] = useState<HTMLDivElement | null>(null)
-  const [open, setOpen] = useState(false)
-  
+  const tweetText = `I just claimed my $NFTE #Airdrop on @NFTEarth_L2!\n\n🎉 LFG #NFTE is #BetterThanBlue 🎉\n\n`
+
   return (
-    <div ref={setContainer}>
+    <div>
       <Box
         css={{
           borderRadius: '16px',
@@ -74,41 +98,54 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               {description}
             </Text>
             <RewardButton
-              // disabled={!signature}
+              disabled={!signature || isLoadingTransaction || !isLoadingWallet || !!preparedError || isSuccess}
+              onClick={async () => {
+                if (activeChain?.id !== 10) {
+                  await switchNetworkAsync?.(10);
+                }
+                sendTransaction?.();
+              }}
               css={{
                 background: '#6BE481',
                 borderRadius: '10px',
                 padding: '$1',
                 width: '30%',
+                justifyContent: 'center'
               }}
-              onClick={() => { setOpen(true) }}
             >
-              <Text
-                css={{
-                  color: 'black',
-                  textAlign: 'center',
-                  marginLeft: 'auto',
-                  marginRight: 'auto',
-                  fontWeight: 700,
-                }}
-              >
+              <Text style="h6" css={{ color: 'black' }}>
                 Claim $NFTE
               </Text>
             </RewardButton>
+            {!!preparedError && (
+              <Text style="h6" css={{ color: 'red' }}>{(preparedError as any)?.reason || preparedError?.message}</Text>
+            )}
           </Grid>
         </Flex>
-        </Box>
-        
-      {!signature && (
-        <Dialog.Root open={open}>
-          <Dialog.Portal container={container}>
-            <AnimatedOverlay onClick={() => { setOpen(false) }} />
-            <AnimatedContent >
+      </Box>
+      {isMounted && (
+        <Dialog.Root modal={true} open={!!error || isLoadingWallet || isLoadingTransaction || isSuccess}>
+          <Dialog.Portal>
+            <AnimatedOverlay
+              style={{
+                position: 'fixed',
+                zIndex: 1000,
+                inset: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: '20px',
+              }}
+            />
+            <AnimatedContent style={{
+              outline: 'unset',
+              position: 'fixed',
+              zIndex: 1000,
+              transform: 'translate(-50%, 120%)',
+            }}>
               <Flex
                 justify="between"
                 css={{
-                  borderTop: '1px solid $gray7',
-                  borderStyle: 'solid',
                   pt: '$5',
                   background: '$gray7',
                   padding: '$5',
@@ -122,32 +159,29 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                   },
                 }}
               >
-                <Flex css={{ width: '100%' }}>
-                  <Dialog.Close asChild>
-                    <button
-                      style={{ marginLeft: 'auto', marginRight: 0 }}
-                      onClick={() => setOpen(!open)}
-                      className="IconButton"
-                      aria-label="Close"
-                    >
-                      <Cross2Icon />
-                    </button>
-                  </Dialog.Close>
-                </Flex>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    lineHeight: 1.5,
-                    color: '$whiteA12',
-                    width: '100%',
-                    '@lg': { width: '50%' },
-                  }}
-                >
-                  Processing your claim...
-                </Text>
-                <Link href="/">
-                  <Button>Back to Home</Button>
-                </Link>
+                {isLoadingWallet && (
+                  <Text style="h6">Please confirm in your wallet</Text>
+                )}
+                {isLoadingTransaction && (
+                  <Text style="h6">Processing your claim...</Text>
+                )}
+                {isSuccess && (
+                  <Text style="h6" css={{ color: 'green' }}>Claim Airdrop Success !</Text>
+                )}
+                {!!error && (
+                  <Text style="h6" css={{ color: 'red' }}>{(error as any)?.reason || error?.message}</Text>
+                )}
+                {isSuccess && (
+                  <Link
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://nftearth.exchange/claim`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://nftearth.exchange')}`}>
+                    <Button css={{ mt: '$3' }}>
+                      {`Tweet your airdrop win!`}
+                      <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
+                    </Button>
+                  </Link>
+                )}
               </Flex>
             </AnimatedContent>
           </Dialog.Portal>

@@ -125,7 +125,7 @@ const Navbar = () => {
             />
           </Box>
           <Flex align="center" css={{ gap: '$4', mr: '$3' }}>
-            <Link href="/explore">
+            <Link href="/explore" legacyBehavior>
               <NavItem
                 active={router.pathname == '/explore'}
                 css={{

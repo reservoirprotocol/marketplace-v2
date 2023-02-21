@@ -83,7 +83,7 @@ export const SortTokens: FC = () => {
           )}
         </Button>
       </DropdownMenu.Trigger>
-      <DropdownMenuContent css={{ width: '220px', mt: '$2' }}>
+      <DropdownMenuContent css={{ width: '220px', mt: '$2', zIndex: 1000 }}>
         {Object.keys(options).map((key) => (
           <DropdownMenuItem
             key={key}
