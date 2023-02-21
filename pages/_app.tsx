@@ -29,6 +29,7 @@ import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import AnalyticsProvider from 'components/AnalyticsProvider'
 
+//CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
   subsets: ['latin'],
 })
