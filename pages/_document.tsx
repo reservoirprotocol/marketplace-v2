@@ -34,6 +34,7 @@ class MyDocument extends Document {
           type="image/svg"
           href="https://marketplace.reservoir.tools/reservoir.svg"
         />
+        {/* CONFIGURABLE: You'll probably want to configure this all to have custom meta tags and title to fit your application */}
         <title>Reservoir Market | Open Source NFT Marketplace</title>
         <meta name="description" content={description} />
         <meta name="keywords" content="NFT, API, Protocol" />
@@ -48,8 +49,7 @@ class MyDocument extends Document {
         <meta name="twitter:description" content={description} />
         <meta name="twitter:site" content="@reservoir0x" />
 
-        {/* OG - https://ogp.me/ */}
-        {/* https://www.opengraph.xyz/ */}
+        {/* OG Tags - https://ogp.me/ */}
         <meta
           name="og:title"
           content="Reservoir Market | Open Source NFT Marketplace"
@@ -65,7 +65,7 @@ class MyDocument extends Document {
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Reservoir Market Banner" />
 
-        {/* Reservoir Meta Tags: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
+        {/* CONFIGURABLE: Reservoir meta tags can be configured to your application, learn more here: https://docs.reservoir.tools/docs/reservoir-meta-tags */}
         <meta property="reservoir:title" content="Reservoir Market" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
