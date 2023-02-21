@@ -61,6 +61,7 @@ const ClaimPage: NextPage<Props> = ({ ssr }) => {
           width: '400px',
           height: '400px',
         }}
+        //@ts-ignore
         ref={setContainer}
       />
       <Box
