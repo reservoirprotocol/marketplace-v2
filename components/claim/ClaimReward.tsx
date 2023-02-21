@@ -1,12 +1,13 @@
-import { useState, RefObject, useRef, useEffect } from 'react'
+import { useState } from 'react'
 import { Box, Grid, Text, Flex, Button } from 'components/primitives'
 import Link from 'next/link'
-import Layout from 'components/Layout'
 import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 import { RewardButton } from './styled'
 import { Cross2Icon } from '@radix-ui/react-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Dialog from '@radix-ui/react-dialog'
+
+import { Content, Overlay, AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
 
 type Props = {
   title: string
@@ -22,21 +23,9 @@ export const ClaimReward = ({ title, description, image }: Props) => {
   // Set the variable for the Modal
   const [container, setContainer] = useState<HTMLDivElement | null>(null)
   const [open, setOpen] = useState(false)
-
+  
   return (
-    <div>
-      <Box
-        css={{
-          position: 'fixed',
-          top: '60%',
-          zIndex: 1000,
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '400px',
-          height: '400px',
-        }}
-        ref={setContainer}
-      />
+    <div ref={setContainer}>
       <Box
         css={{
           borderRadius: '16px',
@@ -112,10 +101,10 @@ export const ClaimReward = ({ title, description, image }: Props) => {
         </Box>
         
       {!signature && (
-        <Dialog.Root defaultOpen open={open}>
+        <Dialog.Root open={open}>
           <Dialog.Portal container={container}>
-            <Dialog.Overlay />
-            <Dialog.Content>
+            <AnimatedOverlay onClick={() => { setOpen(false) }} />
+            <AnimatedContent >
               <Flex
                 justify="between"
                 css={{
@@ -124,7 +113,6 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                   pt: '$5',
                   background: '$gray7',
                   padding: '$5',
-                  borderRadius: '20px',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
@@ -162,7 +150,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                   <Button>Back to Home</Button>
                 </Link>
               </Flex>
-            </Dialog.Content>
+            </AnimatedContent>
           </Dialog.Portal>
         </Dialog.Root>
       )}
