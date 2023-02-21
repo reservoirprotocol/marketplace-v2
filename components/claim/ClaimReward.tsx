@@ -105,7 +105,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               {description}
             </Text>
             <RewardButton
-              disabled={!signature || isLoadingTransaction || !isLoadingWallet || !!preparedError || isSuccess}
+              disabled={!signature || !!preparedError || isSuccess}
               onClick={async () => {
                 if (activeChain?.id !== 10) {
                   await switchNetworkAsync?.(10);
