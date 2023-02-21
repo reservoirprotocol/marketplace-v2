@@ -36,7 +36,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
-import { useMounted } from 'hooks'
+import {useMarketplaceChain, useMounted} from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -71,7 +71,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   >()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
+  const marketplaceChain = useMarketplaceChain();
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToTop = () => {
@@ -86,7 +86,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   const { data: collections } = useCollections(collectionQuery, {
     fallbackData: [ssr.collection],
-  })
+  }, marketplaceChain.id)
 
   let collection = collections && collections[0]
 
@@ -126,7 +126,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData && ssr.tokens ? [ssr.tokens] : undefined,
   })
 
-  const attributesData = useAttributes(id)
+  const attributesData = useAttributes(id, marketplaceChain.id)
 
   const attributes =
     attributesData.data?.filter(

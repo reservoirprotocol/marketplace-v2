@@ -69,7 +69,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const [tabValue, setTabValue] = useState('info')
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const { proxyApi } = useMarketplaceChain()
+  const { id: chainId, proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: collections } = useCollections(
     {
@@ -77,7 +77,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     },
     {
       fallbackData: [ssr.collection],
-    }
+    },
+    chainId
   )
   const collection = collections && collections[0] ? collections[0] : null
 
@@ -92,7 +93,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         return (!contract || !id)
       },
       fallbackData: ssr.tokens ? [ssr.tokens] : undefined,
-    }
+    },
+    chainId
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
@@ -105,7 +107,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const attributesData = useAttributes(id)
+  const attributesData = useAttributes(id, chainId)
 
   const isOwner =
     userTokens &&
@@ -301,7 +303,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 }
                 setIsRefreshing(true)
                 fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  `${proxyApi}/tokens/refresh/v1`,
                   undefined,
                   {
                     method: 'POST',

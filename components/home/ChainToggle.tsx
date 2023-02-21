@@ -3,9 +3,6 @@ import {FC, useContext} from 'react'
 import supportedChains from "../../utils/chains";
 import {ChainContext} from "../../context/ChainContextProvider";
 
-const chainOptions = [...supportedChains.map(c => `${c.id}`)] as const
-export type ChainToggleOption = typeof chainOptions[number]
-
 type Props = {
   compact?: boolean
 }

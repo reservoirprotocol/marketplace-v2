@@ -158,13 +158,13 @@ function MyApp({
                 {
                   baseApiUrl: OPTIMISM_RESERVOIR_API_BASE as string,
                   id: optimism.id,
-                  default: true,
+                  default: marketplaceChain.id === optimism.id,
                   apiKey: process.env.OPTIMISM_RESERVOIR_API_BASE,
                 },
                 {
                   baseApiUrl: ARBITRUM_RESERVOIR_API_BASE as string,
                   id: arbitrum.id,
-                  default: false,
+                  default: marketplaceChain.id === arbitrum.id,
                   apiKey: process.env.ARBITRUM_RESERVOIR_API_BASE,
                 },
               ],
