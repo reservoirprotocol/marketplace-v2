@@ -12,9 +12,11 @@ import {
 } from "wagmi";
 import * as Dialog from '@radix-ui/react-dialog'
 import Link from "next/link";
-import {useMounted} from "hooks";
-import {RewardButton} from "./styled";
-import {AnimatedOverlay} from "../primitives/Dialog";
+import { useMounted } from "hooks";
+import { RewardButton } from "./styled";
+import { AnimatedOverlay } from "../primitives/Dialog";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
 
 const NFTEAirdropClaimABI = require('abi/NFTEAirdropClaimABI.json');
 
@@ -26,6 +28,7 @@ type Props = {
 
 export const ClaimReward = ({ title, description, image }: Props) => {
   const isMounted = useMounted()
+  const [open, setOpen] = useState(false)
   // Get Eligable Address with useEligibleAirdropSignature Custom Hook
   const { data: signature, isLoading: isLoadingSignature } = useEligibleAirdropSignature()
   const { chain: activeChain } = useNetwork()
@@ -44,6 +47,10 @@ export const ClaimReward = ({ title, description, image }: Props) => {
   const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
     hash: data?.hash,
   })
+
+  useEffect(() => {
+    setOpen(!!error || isLoadingWallet || isLoadingTransaction || isSuccess);
+  }, [error, isLoadingWallet, isLoadingTransaction, isSuccess])
 
   const tweetText = `I just claimed my $NFTE #Airdrop on @NFTEarth_L2!\n\n🎉 LFG #NFTE is #BetterThanBlue 🎉\n\n`
 
@@ -124,7 +131,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
         </Flex>
       </Box>
       {isMounted && (
-        <Dialog.Root modal={true} open={!!error || isLoadingWallet || isLoadingTransaction || isSuccess}>
+        <Dialog.Root modal={true} open={open}>
           <Dialog.Portal>
             <AnimatedOverlay
               style={{
@@ -164,28 +171,44 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                   },
                 }}
               >
+                {!!error && (
+                  <Dialog.Close asChild>
+                    <button
+                      style={{
+                        position: 'absolute',
+                        top: 10,
+                        right: 15
+                      }}
+                      onClick={() => setOpen(!open)}
+                      className="IconButton"
+                      aria-label="Close"
+                    >
+                      <FontAwesomeIcon icon={faClose} size="xl" />
+                    </button>
+                  </Dialog.Close>
+                )}
                 {isLoadingWallet && (
                   <Text style="h6">Please confirm in your wallet</Text>
                 )}
                 {isLoadingTransaction && (
                   <Text style="h6">Processing your claim...</Text>
                 )}
-                {isSuccess && (
-                  <Text style="h6" css={{ color: 'green' }}>Claim Airdrop Success !</Text>
-                )}
                 {!!error && (
                   <Text style="h6" css={{ color: 'red' }}>{(error as any)?.reason || error?.message}</Text>
                 )}
                 {isSuccess && (
-                  <Link
-                    rel="noreferrer noopener"
-                    target="_blank"
-                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://nftearth.exchange/claim`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://nftearth.exchange')}`}>
-                    <Button css={{ mt: '$3' }}>
-                      {`Tweet your airdrop win!`}
-                      <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
-                    </Button>
-                  </Link>
+                  <>
+                    <Text style="h6" css={{ color: 'green' }}>Claim Airdrop Success !</Text>
+                    <Link
+                      rel="noreferrer noopener"
+                      target="_blank"
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://nftearth.exchange/claim`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://nftearth.exchange')}`}>
+                      <Button>
+                        {`Tweet your airdrop win!`}
+                        <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
+                      </Button>
+                    </Link>
+                  </>
                 )}
               </Flex>
             </Dialog.Content>

@@ -1,14 +1,15 @@
+import {useEffect, useState} from "react";
 import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
 import Link from 'next/link'
 import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
-import { faWarning } from '@fortawesome/free-solid-svg-icons'
+import { faWarning, faClose } from '@fortawesome/free-solid-svg-icons'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { ClaimReward } from 'components/claim/ClaimReward'
-
 import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
 import {useMounted} from "hooks";
 import {AnimatedOverlay} from "../../components/primitives/Dialog";
@@ -16,7 +17,16 @@ import {AnimatedOverlay} from "../../components/primitives/Dialog";
 
 const ClaimPage: NextPage = () => {
   const { data: signature, isLoading } = useEligibleAirdropSignature()
+  const [open, setOpen] = useState(false)
   const isMounted = useMounted()
+
+  useEffect(() => {
+    if (isMounted && !isLoading && !signature) {
+      setOpen(true);
+    } else {
+      setOpen(false);
+    }
+  }, [isMounted, signature])
 
   return (
     <Layout>
@@ -44,7 +54,7 @@ const ClaimPage: NextPage = () => {
         </Flex>
       </Box>
       {isMounted && (
-        <Dialog.Root defaultOpen open={!signature && !isLoading}>
+        <Dialog.Root defaultOpen open={open}>
           <Dialog.Portal>
             <AnimatedOverlay
               style={{
@@ -70,6 +80,7 @@ const ClaimPage: NextPage = () => {
               <Flex
                 justify="between"
                 css={{
+                  position: 'relative',
                   borderTop: '1px solid $gray7',
                   borderStyle: 'solid',
                   pt: '$5',
@@ -86,10 +97,25 @@ const ClaimPage: NextPage = () => {
                   },
                 }}
               >
-                <Flex css={{ width: '100%' }}>
+                <Dialog.Close asChild>
+                  <button
+                    style={{
+                      position: 'absolute',
+                      top: 10,
+                      right: 15
+                    }}
+                    onClick={() => setOpen(!open)}
+                    className="IconButton"
+                    aria-label="Close"
+                  >
+                    <FontAwesomeIcon icon={faClose} size="xl" />
+                  </button>
+                </Dialog.Close>
+                <Flex align="center" justify="center">
                   <FontAwesomeIcon
                     icon={faWarning}
-                    style={{ marginLeft: '150px', marginRight: 'auto' }}
+                    color="orange"
+                    size="2xl"
                   />
                 </Flex>
                 <Text
