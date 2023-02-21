@@ -41,7 +41,7 @@ export const ClaimRewardHeroBanner = ({ title, description, image }: Props) => {
       >
         <Text
           style={{
-            '@initial': 'h3',
+            '@initial': 'h4',
             '@lg': 'h2',
           }}
           as="h1"
