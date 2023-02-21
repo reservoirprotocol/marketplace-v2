@@ -12,7 +12,7 @@ export const DefaultChain = {
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
-  baseApiUrl: process.env.OPTIMISM_RESERVOIR_API_BASE,
+  reservoirBaseUrl: process.env.OPTIMISM_RESERVOIR_API_BASE,
   // Used on the client side portions of the marketplace that need an api key added
   // Prevents the api key from being leaked in the clientside requests
   // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
@@ -23,8 +23,7 @@ export const DefaultChain = {
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-  apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
-  default: true,
+  apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY
 }
 
 export default [
@@ -32,7 +31,7 @@ export default [
   {
     ...arbitrum,
     iconUrl: `/icons/currency/0x6c0c4816098e13cacfc7ed68da3e89d0066e8893.png`,
-    baseApiUrl: process.env.ARBITRUM_RESERVOIR_API_BASE,
+    reservoirBaseUrl: process.env.ARBITRUM_RESERVOIR_API_BASE,
     proxyApi: '/api/nftearth/arbitrum',
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,

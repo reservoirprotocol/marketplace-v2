@@ -15,6 +15,10 @@ export default function (
   swrOptions: SWRInfiniteConfiguration = {}
 ) {
   const client = useReservoirClient();
+  const reservoirChain = client?.chains.find(
+    (chain) => chain.id === chain.id
+  )
+
   const response = useInfiniteApi<CollectionResponse>(
     (pageIndex, previousPageData) => {
       if (!options) {
@@ -38,7 +42,7 @@ export default function (
       }
 
       setParams(url, query)
-      return [url.href, client?.apiKey, client?.version]
+      return [url.href, reservoirChain?.apiKey, client?.version]
     },
     {
       revalidateOnMount: true,

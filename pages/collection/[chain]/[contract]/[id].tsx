@@ -79,11 +79,6 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       fallbackData: [ssr.collection],
     }
   )
-  const { data: attributesData }  = useAttributes(collectionId);
-
-  const attributes = attributesData?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range' && attribute.key != 'birthday'
-  )
   const collection = collections && collections[0] ? collections[0] : null
 
   const { data: tokens, mutate } = useDynamicTokens(

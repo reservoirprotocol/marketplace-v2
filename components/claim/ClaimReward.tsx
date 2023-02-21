@@ -24,7 +24,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
   const { switchNetworkAsync } = useSwitchNetwork();
   const { address } = useAccount();
   const { config, error: preparedError } = usePrepareContractWrite({
-    address: '0x4EA9EE08407A06fb62dd2F4B1070c07A8a122525',
+    address: signature ? '0xfA1c8Cd6B3A5eaD9499B8d09F9747c4068f88f37' : '',
     abi: NFTEAirdropClaimABI,
     functionName: 'claim',
     args: [signature],
