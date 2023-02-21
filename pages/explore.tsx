@@ -22,7 +22,6 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
@@ -94,7 +93,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
               <LoadingSpinner />
             </Flex>
           )}
-          {hasNextPage && <div ref={loadMoreRef} />}
+          <div ref={loadMoreRef} />
         </Flex>
       </Box>
     </Layout>
@@ -113,8 +112,7 @@ export const getStaticProps: GetStaticProps<{
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
+      normalizeRoyalties: NORMALIZE_ROYALTIES
     }
 
   const promises: ReturnType<typeof fetcher>[] = []
