@@ -275,6 +275,7 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
+          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>
