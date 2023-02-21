@@ -7,43 +7,21 @@ import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Cross2Icon } from '@radix-ui/react-icons'
 
 import { ClaimReward } from 'components/claim/ClaimReward'
 
 import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
 import {useMounted} from "hooks";
+import {AnimatedOverlay} from "../../components/primitives/Dialog";
 
 
 const ClaimPage: NextPage = () => {
-  const container = useRef()
   const { data: signature, isLoading } = useEligibleAirdropSignature()
   const [open, setOpen] = useState(false)
   const isMounted = useMounted()
 
-  useEffect(() => {
-    if (isMounted && !isLoading && !signature) {
-      setOpen(true);
-    } else {
-      setOpen(false);
-    }
-  }, [isMounted, signature])
-
   return (
     <Layout>
-      <Box
-        css={{
-          position: 'fixed',
-          top: '60%',
-          zIndex: 1000,
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '400px',
-          height: '400px',
-        }}
-        //@ts-ignore
-        ref={container}
-      />
       <Box
         css={{
           p: 24,
@@ -69,10 +47,29 @@ const ClaimPage: NextPage = () => {
         </Flex>
       </Box>
       {isMounted && (
-        <Dialog.Root defaultOpen open={open}>
-          <Dialog.Portal container={container.current}>
-            <Dialog.Overlay />
-            <Dialog.Content>
+        <Dialog.Root defaultOpen open={!signature && !isLoading}>
+          <Dialog.Portal>
+            <AnimatedOverlay
+              style={{
+                position: 'fixed',
+                zIndex: 1000,
+                inset: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: '20px',
+              }}
+            />
+            <Dialog.Content style={{
+              outline: 'unset',
+              position: 'fixed',
+              top: '60%',
+              zIndex: 1000,
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '400px',
+              height: '400px',
+            }}>
               <Flex
                 justify="between"
                 css={{
@@ -97,16 +94,6 @@ const ClaimPage: NextPage = () => {
                     icon={faWarning}
                     style={{ marginLeft: '150px', marginRight: 'auto' }}
                   />
-                  <Dialog.Close asChild>
-                    <button
-                      style={{ marginLeft: 'auto', marginRight: 0 }}
-                      onClick={() => setOpen(!open)}
-                      className="IconButton"
-                      aria-label="Close"
-                    >
-                      <Cross2Icon />
-                    </button>
-                  </Dialog.Close>
                 </Flex>
                 <Text
                   style="subtitle1"
@@ -117,10 +104,10 @@ const ClaimPage: NextPage = () => {
                     '@lg': { width: '50%' },
                   }}
                 >
-                  Have you "listed" an NFT on the NFTEarth marketplace?
+                  Have you "listed" an NFT on the NFTEarth marketplace ?
                 </Text>
-                <Link href="/">
-                  <Button>Back to Home</Button>
+                <Link href="/portfolio">
+                  <Button>List your NFT</Button>
                 </Link>
               </Flex>
             </Dialog.Content>

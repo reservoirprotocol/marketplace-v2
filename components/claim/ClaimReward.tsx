@@ -1,6 +1,8 @@
-import { Box, Grid, Text, Flex } from 'components/primitives'
-import { RewardContent, RewardButton } from './styled'
-import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
+import {useRef} from "react";
+import {Box, Grid, Text, Flex, Button} from 'components/primitives'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
+import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 import {
   useAccount,
   useNetwork,
@@ -9,6 +11,12 @@ import {
   useSwitchNetwork,
   useWaitForTransaction
 } from "wagmi";
+import * as Dialog from '@radix-ui/react-dialog'
+import Link from "next/link";
+import {useMounted} from "hooks";
+import {RewardButton} from "./styled";
+import {AnimatedOverlay} from "../primitives/Dialog";
+import {DialogPortal} from "@radix-ui/react-dialog";
 
 const NFTEAirdropClaimABI = require('abi/NFTEAirdropClaimABI.json');
 
@@ -19,7 +27,9 @@ type Props = {
 }
 
 export const ClaimReward = ({ title, description, image }: Props) => {
-  const { data: signature } = useEligibleAirdropSignature()
+  const isMounted = useMounted()
+  // Get Eligable Address with useEligibleAirdropSignature Custom Hook
+  const { data: signature, isLoading: isLoadingSignature } = useEligibleAirdropSignature()
   const { chain: activeChain } = useNetwork()
   const { switchNetworkAsync } = useSwitchNetwork();
   const { address } = useAccount();
@@ -32,95 +42,158 @@ export const ClaimReward = ({ title, description, image }: Props) => {
       from: address,
     },
   })
-  const { data, sendTransaction, isLoading, error } = useSendTransaction(config)
+  const { data, sendTransaction, isLoading: isLoadingWallet, error } = useSendTransaction(config)
   const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
     hash: data?.hash,
   })
 
-  return (
-    <Box
-      css={{
-        borderRadius: '16px',
-        gap: '$1',
-        width: '100%',
-        position: 'relative',
-        backgroundImage: `url(${image})`,
-        backgroundSize: 'cover',
-        '@xs': {
-          padding: '64px 24px',
-        },
-        '@lg': {
-          padding: '100px 64px',
-        },
-      }}
-    >
-      <Flex>
-        <Grid
-          css={{
-            gap: 32,
-            '@xs': {
-              flex: 1,
-            },
-            '@lg': {
-              flex: 0.5,
-            },
-          }}
-        >
-          <Text
-            style={{
-              '@initial': 'h3',
-              '@lg': 'h2',
-            }}
-            css={{
-              fontWeight: 700,
-            }}
-          >
-            {title}
-          </Text>
+  const tweetText = `I just won an $NFTE Airdrop on @NFTEarth_L2!\n\n🎉 LFG #NFTEarth is #BetterThanBlue 🎉\n\n`
 
-          <Text
-            style={{
-              '@initial': 'h4',
-              '@lg': 'h4',
-            }}
-          >
-            {description}
-          </Text>
-          <RewardButton
-            disabled={!signature || isLoadingTransaction || !!preparedError || isSuccess}
-            onClick={async () => {
-              if (activeChain?.id !== 10) {
-                await switchNetworkAsync?.(10);
-              }
-              sendTransaction?.();
-            }}
+  return (
+    <div>
+      <Box
+        css={{
+          borderRadius: '16px',
+          gap: '$1',
+          width: '100%',
+          position: 'relative',
+          backgroundImage: `url(${image})`,
+          backgroundSize: 'cover',
+          '@xs': {
+            padding: '64px 24px',
+          },
+          '@lg': {
+            padding: '100px 64px',
+          },
+        }}
+      >
+        <Flex>
+          <Grid
             css={{
-              background: '#6BE481',
-              borderRadius: '10px',
-              padding: '$1',
-              width: '30%',
+              gap: 32,
+              '@xs': {
+                flex: 1,
+              },
+              '@lg': {
+                flex: 0.5,
+              },
             }}
           >
             <Text
+              style={{
+                '@initial': 'h3',
+                '@lg': 'h2',
+              }}
               css={{
-                color: 'black',
-                textAlign: 'center',
-                marginLeft: 'auto',
-                marginRight: 'auto',
                 fontWeight: 700,
               }}
             >
-              Claim $NFTE
+              {title}
             </Text>
-          </RewardButton>
-          {isSuccess && (
-            <Text css={{ color: 'green' }}>Claim Airdrop Success</Text>
-          )}
-          {(!!preparedError || !!error) && (
-            <Text css={{ color: 'red' }}>{((error || preparedError) as any)?.reason || (error || preparedError)?.message}</Text>
-          )}
-        </Grid>
-      </Flex>
-    </Box>
+
+            <Text
+              style={{
+                '@initial': 'h4',
+                '@lg': 'h4',
+              }}
+            >
+              {description}
+            </Text>
+            <RewardButton
+              disabled={!signature || isLoadingTransaction || !isLoadingWallet || !!preparedError || isSuccess}
+              onClick={async () => {
+                if (activeChain?.id !== 10) {
+                  await switchNetworkAsync?.(10);
+                }
+                sendTransaction?.();
+              }}
+              css={{
+                background: '#6BE481',
+                borderRadius: '10px',
+                padding: '$1',
+                width: '30%',
+                justifyContent: 'center'
+              }}
+            >
+              <Text style="h6" css={{ color: 'black' }}>
+                Claim $NFTE
+              </Text>
+            </RewardButton>
+            {!!preparedError && (
+              <Text style="h6" css={{ color: 'red' }}>{(preparedError as any)?.reason || preparedError?.message}</Text>
+            )}
+          </Grid>
+        </Flex>
+      </Box>
+      {isMounted && (
+        <Dialog.Root modal={true} open={!!error || isLoadingWallet || isLoadingTransaction || isSuccess}>
+          <Dialog.Portal>
+            <AnimatedOverlay
+              style={{
+                position: 'fixed',
+                zIndex: 1000,
+                inset: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: '20px',
+              }}
+            />
+            <Dialog.Content style={{
+              outline: 'unset',
+              position: 'fixed',
+              top: '60%',
+              zIndex: 1000,
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '400px',
+              height: '400px',
+            }}>
+              <Flex
+                justify="between"
+                css={{
+                  pt: '$5',
+                  background: '$gray7',
+                  padding: '$5',
+                  borderRadius: '20px',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: '20px',
+                  '@bp600': {
+                    flexDirection: 'column',
+                    gap: '20px',
+                  },
+                }}
+              >
+                {isLoadingWallet && (
+                  <Text style="h6">Please confirm in your wallet</Text>
+                )}
+                {isLoadingTransaction && (
+                  <Text style="h6">Processing your claim...</Text>
+                )}
+                {isSuccess && (
+                  <Text style="h6" css={{ color: 'green' }}>Claim Airdrop Success !</Text>
+                )}
+                {!!error && (
+                  <Text style="h6" css={{ color: 'red' }}>{(error as any)?.reason || error?.message}</Text>
+                )}
+                {isSuccess && (
+                  <Link
+                    rel="noreferrer noopener"
+                    target="_blank"
+                    href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(`https://nftearth.exchange/claim`)}&hashtags=&via=&related=&original_referer=${encodeURIComponent('https://nftearth.exchange')}`}>
+                    <Button css={{ mt: '$3' }}>
+                      {`Tweet your win!`}
+                      <FontAwesomeIcon style={{ marginLeft: 5 }} icon={faTwitter}/>
+                    </Button>
+                  </Link>
+                )}
+              </Flex>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )}
+    </div>
   )
 }
