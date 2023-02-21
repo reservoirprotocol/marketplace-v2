@@ -171,9 +171,9 @@ const Navbar = () => {
                 Launchpad
               </NavItem>
             </Link>
-            <Link href="/claim">
+            <Link href="/airdrop">
               <NavItem
-                active={router.pathname == '/claim'}
+                active={router.pathname == '/airdrop'}
                 css={{
                   transition: '0.3s',
                   display: 'block',
