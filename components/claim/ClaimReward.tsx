@@ -79,12 +79,9 @@ export const ClaimReward = ({ title, description, image }: Props) => {
           </Text>
 
           <Text
-            style="subtitle1"
-            css={{
-              lineHeight: '28px',
-              color: '$whiteA12',
-              width: '100%',
-              '@lg': { width: '50%' },
+            style={{
+              '@initial': 'h4',
+              '@lg': 'h4',
             }}
           >
             {description}
