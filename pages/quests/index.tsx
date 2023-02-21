@@ -42,7 +42,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
 
   return (
     <Layout>
-      <Box
+      {/* <Box
         css={{
           p: 24,
           height: '100%',
@@ -157,6 +157,38 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
             </Text>
             {isMounted && <QuestsGrid />}
           </Box>
+        </Flex>
+      </Box> */}
+      <Box
+        css={{
+          p: 24,
+          height: 'calc(100vh - 80px)',
+          '@bp800': {
+            p: '$6',
+          },
+        }}
+      >
+        <Flex
+          align="center"
+          justify="center"
+          direction="column"
+          css={{
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Text
+            style={{
+              '@initial': 'h3',
+              '@lg': 'h2',
+            }}
+            css={{ lineHeight: 1.2, letterSpacing: 2, color: '$gray10' }}
+          >
+            COMING SOON
+          </Text>
+          <Text css={{ color: '$gray10' }}>
+            This page is under construction
+          </Text>
         </Flex>
       </Box>
     </Layout>
