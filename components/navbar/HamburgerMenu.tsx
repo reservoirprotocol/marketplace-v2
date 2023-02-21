@@ -139,6 +139,48 @@ const HamburgerMenu = () => {
             </Link>
             <Text
               as="a"
+              href="/quests"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              Quests
+            </Text>
+            <Text
+              as="a"
+              href="/launch"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              Launchpad
+            </Text>
+            <Text
+              as="a"
+              href="/airdrop"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              Claim
+            </Text>
+            <Text
+              as="a"
               href="/portfolio"
               style="subtitle1"
               css={{
@@ -221,12 +263,12 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Explore
+                  Collections
                 </Text>
               </Link>
               <Text
                 as="a"
-                href="/portfolio"
+                href="/quests"
                 style="subtitle1"
                 css={{
                   borderBottom: '1px solid $gray4',
@@ -236,7 +278,35 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                Portfolio
+                Quests
+              </Text>
+              <Text
+                as="a"
+                href="/launch"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Launchpad
+              </Text>
+              <Text
+                as="a"
+                href="/airdrop"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Claim
               </Text>
             </Flex>
             <Box>

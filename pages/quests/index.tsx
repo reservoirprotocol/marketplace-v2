@@ -28,7 +28,7 @@ const QuestsPage: NextPage<Props> = ({ ssr }) => {
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(collectionQuery, {
       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-    })
+    }, marketplaceChain.id)
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})

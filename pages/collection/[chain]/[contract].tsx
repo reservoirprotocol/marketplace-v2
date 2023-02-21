@@ -7,9 +7,9 @@ import {
 import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
-  useTokens,
   useCollectionActivity,
-  useAttributes, useDynamicTokens
+  useAttributes,
+  useDynamicTokens
 } from '@nftearth/reservoir-kit-ui'
 import { paths } from '@nftearth/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -36,7 +36,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
-import { useMounted } from 'hooks'
+import {useMarketplaceChain, useMounted} from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -58,7 +58,9 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(true)
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
+    ssr.hasAttributes ? true : false
+  )
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
@@ -69,7 +71,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   >()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
+  const marketplaceChain = useMarketplaceChain();
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
   const scrollToTop = () => {
@@ -84,7 +86,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   const { data: collections } = useCollections(collectionQuery, {
     fallbackData: [ssr.collection],
-  })
+  }, marketplaceChain.id)
 
   let collection = collections && collections[0]
 
@@ -124,11 +126,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData && ssr.tokens ? [ssr.tokens] : undefined,
   })
 
-  const { data: attributesData }  = useAttributes(id);
+  const attributesData = useAttributes(id, marketplaceChain.id)
 
-  const attributes = attributesData?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range' && attribute.key != 'birthday'
-  )
+  const attributes =
+    attributesData.data?.filter(
+      (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+    ) || []
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
@@ -425,8 +428,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v5']['get']['responses']['200']['schema']
+    tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
+    hasAttributes: boolean
   }
   id: string | undefined
 }> = async ({ params }) => {
@@ -434,7 +438,7 @@ export const getStaticProps: GetStaticProps<{
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
-  const headers = {
+  const headers: RequestInit = {
     headers: {
       'x-api-key': apiKey || '',
     },
@@ -447,12 +451,11 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     collection: id,
@@ -460,18 +463,35 @@ export const getStaticProps: GetStaticProps<{
     sortDirection: 'asc',
     limit: 20,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
+    includeAttributes: true,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
 
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+  ]).catch(() => {})
+  const collection: Props['ssr']['collection'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : {}
+  const tokens: Props['ssr']['tokens'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : {}
+
+  const hasAttributes =
+    tokens?.tokens?.some(
+      (token) => (token?.token?.attributes?.length || 0) > 0
+    ) || false
 
   return {
-    props: { ssr: { collection, tokens }, id },
+    props: { ssr: { collection, tokens, hasAttributes }, id },
     revalidate: 30,
   }
 }

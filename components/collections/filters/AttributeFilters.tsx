@@ -1,10 +1,11 @@
 import { useAttributes } from '@nftearth/reservoir-kit-ui'
-import { Box } from 'components/primitives'
+import { Box, Flex } from 'components/primitives'
 import { FC } from 'react'
 import { AttributeSelector } from './AttributeSelector'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 
 type Props = {
   open: boolean
@@ -19,13 +20,6 @@ export const AttributeFilters: FC<Props> = ({
   setOpen,
   scrollToTop,
 }) => {
-  if (
-    (attributes && attributes?.length === 0) ||
-    attributes === null ||
-    attributes === undefined
-  ) {
-    return null
-  }
   return (
     <Collapsible.Root
       open={open}
@@ -64,6 +58,11 @@ export const AttributeFilters: FC<Props> = ({
                   scrollToTop={scrollToTop}
                 />
               ))}
+          {(!attributes || !attributes.length) && (
+            <Flex justify="center" align="center" css={{ height: 150 }}>
+              <LoadingSpinner css={{ justifySelf: 'center' }} />
+            </Flex>
+          )}
         </Box>
       </CollapsibleContent>
     </Collapsible.Root>

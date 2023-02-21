@@ -22,7 +22,6 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
@@ -30,7 +29,9 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(collectionQuery, {
       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-    })
+      revalidateFirstPage: true,
+      revalidateIfStale: true,
+    }, marketplaceChain.id)
 
   let collections = data || []
 
@@ -111,8 +112,7 @@ export const getStaticProps: GetStaticProps<{
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
+      normalizeRoyalties: NORMALIZE_ROYALTIES
     }
 
   const promises: ReturnType<typeof fetcher>[] = []

@@ -10,12 +10,12 @@ import { Footer } from 'components/Footer'
 import { useMediaQuery } from 'react-responsive'
 import {useMarketplaceChain, useMounted} from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
+import { useCollections } from '@nftearth/reservoir-kit-ui';
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import HeroSection from 'components/HeroSection'
 import ChainToggle from "components/home/ChainToggle";
-import useCollections from 'hooks/useCollections';
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -32,13 +32,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     useState<CollectionsSortingOption>('1DayVolume')
   const marketplaceChain = useMarketplaceChain()
 
-  let collectionQuery: Parameters<typeof useCollections>['1'] = {
+  let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: sortByTime,
   }
 
-  let collectionQuery2: Parameters<typeof useCollections>['1'] = {
+  let collectionQuery2: Parameters<typeof useCollections>['0'] = {
     sortBy: '1DayVolume',
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     collectionsSetId: collectionsSetId[marketplaceChain.id],
@@ -48,16 +48,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     data: topData,
     isFetchingPage: isFetchingTopPage,
     isValidating: isValidatingTopPage,
-  } = useCollections(marketplaceChain, collectionQuery2, {
+  } = useCollections(collectionQuery2, {
     fallbackData: [ssr.collections[marketplaceChain.id]],
-  })
+  }, marketplaceChain.id)
 
   let topCollections = topData || []
 
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(marketplaceChain, collectionQuery, {
+    useCollections(collectionQuery, {
       fallbackData: [ssr.collections[marketplaceChain.id]],
-    })
+    }, marketplaceChain.id)
 
   let collections = (data || []).slice(0, 12)
 

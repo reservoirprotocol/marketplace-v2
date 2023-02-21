@@ -14,6 +14,7 @@ import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { optimism, arbitrum } from 'wagmi/chains'
 
 import {
   ReservoirKitProvider,
@@ -49,6 +50,8 @@ export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
 
 const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
+const OPTIMISM_RESERVOIR_API_BASE = process.env.OPTIMISM_RESERVOIR_API_BASE
+const ARBITRUM_RESERVOIR_API_BASE = process.env.ARBITRUM_RESERVOIR_API_BASE
 
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
@@ -151,9 +154,20 @@ function MyApp({
         >
           <ReservoirKitProvider
             options={{
-              //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
-              // Note that you should at the very least configure the source with your own domain
-              apiBase: `${baseUrl}${marketplaceChain.proxyApi}`,
+              chains: [
+                {
+                  baseApiUrl: OPTIMISM_RESERVOIR_API_BASE as string,
+                  id: optimism.id,
+                  default: marketplaceChain.id === optimism.id,
+                  apiKey: process.env.OPTIMISM_RESERVOIR_API_BASE,
+                },
+                {
+                  baseApiUrl: ARBITRUM_RESERVOIR_API_BASE as string,
+                  id: arbitrum.id,
+                  default: marketplaceChain.id === arbitrum.id,
+                  apiKey: process.env.ARBITRUM_RESERVOIR_API_BASE,
+                },
+              ],
               disablePoweredByReservoir: true,
               marketplaceFee: +`${FEE_BPS || 0}`,
               marketplaceFeeRecipient: FEE_RECIPIENT,

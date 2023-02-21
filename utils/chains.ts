@@ -23,7 +23,7 @@ export const DefaultChain = {
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-  apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
+  apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY
 }
 
 export default [
