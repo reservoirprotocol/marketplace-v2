@@ -20,7 +20,7 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
-import ThemeSwitcher from "./ThemeSwitcher";
+import ThemeSwitcher from './ThemeSwitcher'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -307,6 +307,20 @@ const HamburgerMenu = () => {
                 }}
               >
                 Claim
+              </Text>
+              <Text
+                as="a"
+                href="/airdrop"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Token
               </Text>
             </Flex>
             <Box>
