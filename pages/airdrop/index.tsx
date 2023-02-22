@@ -47,7 +47,7 @@ const ClaimPage: NextPage = () => {
       divRef.current.innerHTML = ''
       //@ts-ignore
       divRef.current.appendChild(doc)
-    })
+    }, [open])
 
     return <div ref={divRef} />
   })
@@ -69,7 +69,7 @@ const ClaimPage: NextPage = () => {
             borderRadius: '20px',
           }}
         >
-          <InjectScript script={scriptForClaim} />
+          {open && <InjectScript script={scriptForClaim} />}
         </Box>
         <ClaimRewardHeroBanner
           image="/ClaimBG.png"
