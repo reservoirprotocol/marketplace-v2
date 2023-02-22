@@ -107,6 +107,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     isFetchingInitialData,
     hasNextPage,
     isFetchingPage,
+    isLoading,
   } = useUserTokens(address || '', tokenQuery, {
     fallbackData: filterCollection ? undefined : ssrTokens,
   })
@@ -124,7 +125,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, isLoading])
 
   if (!isMounted) {
     return null

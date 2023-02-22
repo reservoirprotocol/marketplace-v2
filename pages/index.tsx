@@ -40,10 +40,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery.community = COMMUNITY
   }
 
-  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(collectionQuery, {
-      fallbackData: [ssr.collections[marketplaceChain.id]],
-    })
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingPage,
+    isValidating,
+    isLoading,
+  } = useCollections(collectionQuery, {
+    fallbackData: [ssr.collections[marketplaceChain.id]],
+  })
 
   let collections = data || []
   const showViewAllButton = collections.length <= 12 && hasNextPage
@@ -59,7 +65,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, isLoading])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList

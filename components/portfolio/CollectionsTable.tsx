@@ -55,6 +55,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     fetchNextPage,
     isFetchingPage,
     isValidating,
+    isLoading,
   } = useUserCollections(address as string, collectionQuery)
 
   useEffect(() => {
@@ -62,7 +63,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, isLoading])
 
   return (
     <>

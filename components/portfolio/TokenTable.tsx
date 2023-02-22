@@ -57,6 +57,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
     mutate,
     isFetchingPage,
     isValidating,
+    isLoading,
   } = useUserTokens(address, tokenQuery, {})
 
   useEffect(() => {
@@ -64,7 +65,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, isLoading])
 
   return (
     <>

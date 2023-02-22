@@ -121,6 +121,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fetchNextPage,
     isFetchingInitialData,
     isFetchingPage,
+    isLoading,
     hasNextPage,
   } = useDynamicTokens(tokenQuery, {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
@@ -145,7 +146,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, isLoading])
 
   useEffect(() => {
     if (isMounted && initialTokenFallbackData) {

@@ -60,7 +60,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
     if (isVisible) {
       data.fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, data.isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, data.isLoading])
 
   return (
     <>

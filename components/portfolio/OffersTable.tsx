@@ -48,6 +48,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
     mutate,
     isValidating,
     isFetchingPage,
+    isLoading,
   } = useBids(bidsQuery)
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting, isLoading])
 
   return (
     <>
