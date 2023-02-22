@@ -136,14 +136,15 @@ const Navbar = () => {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
                     borderRadius: '$md',
                   },
-                }}>
+                }}
+              >
                 Collections
               </NavItem>
             </Link>
             <Link href="/quests">
               <NavItem
                 active={router.pathname == '/quests'}
-                  css={{
+                css={{
                   transition: '0.3s',
                   display: 'block',
                   padding: '12px 15px',
@@ -151,8 +152,8 @@ const Navbar = () => {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
                     borderRadius: '$md',
                   },
-                }
-              }>
+                }}
+              >
                 Quests
               </NavItem>
             </Link>
@@ -167,7 +168,8 @@ const Navbar = () => {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
                     borderRadius: '$md',
                   },
-                }}>
+                }}
+              >
                 Launchpad
               </NavItem>
             </Link>
@@ -182,8 +184,25 @@ const Navbar = () => {
                     background: theme === 'dark' ? '$gray1' : '$panelShadow',
                     borderRadius: '$md',
                   },
-                }}>
+                }}
+              >
                 Claim
+              </NavItem>
+            </Link>
+            <Link href="/token">
+              <NavItem
+                active={router.pathname == '/airdrop'}
+                css={{
+                  transition: '0.3s',
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    borderRadius: '$md',
+                  },
+                }}
+              >
+                Token
               </NavItem>
             </Link>
           </Flex>
