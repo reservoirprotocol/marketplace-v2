@@ -147,7 +147,7 @@ function MyApp({
             chains: supportedChains.map(({ proxyApi, id }) => {
               return {
                 id,
-                baseApiUrl: `${baseUrl}${marketplaceChain.proxyApi}`,
+                baseApiUrl: `${baseUrl}${proxyApi}`,
                 default: marketplaceChain.id === id,
               }
             }),
