@@ -189,22 +189,6 @@ const Navbar = () => {
                 Claim
               </NavItem>
             </Link>
-            <Link href="/token">
-              <NavItem
-                active={router.pathname == '/airdrop'}
-                css={{
-                  transition: '0.3s',
-                  display: 'block',
-                  padding: '12px 15px',
-                  '&:hover': {
-                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    borderRadius: '$md',
-                  },
-                }}
-              >
-                Token
-              </NavItem>
-            </Link>
           </Flex>
         </Flex>
       </Box>
