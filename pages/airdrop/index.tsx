@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
@@ -19,6 +19,10 @@ import {
 } from '../../components/primitives/Dialog'
 import { scriptForClaim } from '../../components/claim'
 
+interface InjectScriptProps {
+  script: string;
+}
+
 const ClaimPage: NextPage = () => {
   const { data: signature, isLoading } = useEligibleAirdropSignature()
   const [open, setOpen] = useState(false)
@@ -32,9 +36,8 @@ const ClaimPage: NextPage = () => {
     }
   }, [isMounted, signature])
 
-  //@ts-ignore
-  const InjectScript = memo(({ script }: any) => {
-    const divRef = useRef(null)
+  const InjectScript = memo(({ script }: InjectScriptProps) => {
+    const divRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
       if (divRef.current === null) {
@@ -43,9 +46,7 @@ const ClaimPage: NextPage = () => {
 
       const doc = document.createRange().createContextualFragment(script)
 
-      //@ts-ignore
       divRef.current.innerHTML = ''
-      //@ts-ignore
       divRef.current.appendChild(doc)
     }, [open])
 
