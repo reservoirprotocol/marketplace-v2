@@ -23,35 +23,40 @@ interface InjectScriptProps {
   script: string;
 }
 
+const InjectScript = memo(({ script }: InjectScriptProps) => {
+  const divRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (divRef.current === null) {
+      return
+    }
+
+    const doc = document.createRange().createContextualFragment(script)
+
+    divRef.current.innerHTML = ''
+    divRef.current.appendChild(doc)
+  })
+
+  return <div ref={divRef} />
+})
+
 const ClaimPage: NextPage = () => {
   const { data: signature, isLoading } = useEligibleAirdropSignature()
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const isMounted = useMounted()
+
+  // Count Down State if the user didn't claim
+  const [showCountDown, setShowCountDown] = useState(false);
 
   useEffect(() => {
     if (isMounted && !isLoading && !signature) {
       setOpen(true)
+      setShowCountDown(true);
     } else {
       setOpen(false)
+      setShowCountDown(false);
     }
   }, [isMounted, signature])
-
-  const InjectScript = memo(({ script }: InjectScriptProps) => {
-    const divRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-      if (divRef.current === null) {
-        return
-      }
-
-      const doc = document.createRange().createContextualFragment(script)
-
-      divRef.current.innerHTML = ''
-      divRef.current.appendChild(doc)
-    }, [open])
-
-    return <div ref={divRef} />
-  })
 
   return (
     <Layout>
@@ -70,7 +75,7 @@ const ClaimPage: NextPage = () => {
             borderRadius: '20px',
           }}
         >
-          {open && <InjectScript script={scriptForClaim} />}
+          {showCountDown && <InjectScript script={scriptForClaim} />}
         </Box>
         <ClaimRewardHeroBanner
           image="/ClaimBG.png"
