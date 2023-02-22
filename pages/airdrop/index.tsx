@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 import { NextPage } from 'next'
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Layout from 'components/Layout'
@@ -10,10 +10,14 @@ import { faWarning, faClose } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 import { ClaimReward } from 'components/claim/ClaimReward'
-import useEligibleAirdropSignature from "hooks/useEligibleAirdropSignature";
-import { useMounted } from "hooks";
-import { AnimatedOverlay, AnimatedContent } from "../../components/primitives/Dialog";
-
+import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
+import { useMounted } from 'hooks'
+import '../../components/claim'
+import {
+  AnimatedOverlay,
+  AnimatedContent,
+} from '../../components/primitives/Dialog'
+import { scriptForClaim } from '../../components/claim'
 
 const ClaimPage: NextPage = () => {
   const { data: signature, isLoading } = useEligibleAirdropSignature()
@@ -22,11 +26,31 @@ const ClaimPage: NextPage = () => {
 
   useEffect(() => {
     if (isMounted && !isLoading && !signature) {
-      setOpen(true);
+      setOpen(true)
     } else {
-      setOpen(false);
+      setOpen(false)
     }
   }, [isMounted, signature])
+
+  //@ts-ignore
+  const InjectScript = memo(({ script }: any) => {
+    const divRef = useRef(null)
+
+    useEffect(() => {
+      if (divRef.current === null) {
+        return
+      }
+
+      const doc = document.createRange().createContextualFragment(script)
+
+      //@ts-ignore
+      divRef.current.innerHTML = ''
+      //@ts-ignore
+      divRef.current.appendChild(doc)
+    })
+
+    return <div ref={divRef} />
+  })
 
   return (
     <Layout>
@@ -39,6 +63,14 @@ const ClaimPage: NextPage = () => {
           },
         }}
       >
+        <Box
+          css={{
+            p: 24,
+            borderRadius: '20px',
+          }}
+        >
+          <InjectScript script={scriptForClaim} />
+        </Box>
         <ClaimRewardHeroBanner
           image="/ClaimBG.png"
           title="Claim your $NFTE tokens after completing a listing on the NFTEarth marketplace"
@@ -67,13 +99,15 @@ const ClaimPage: NextPage = () => {
                 backdropFilter: '20px',
               }}
             />
-            <AnimatedContent style={{
-              outline: 'unset',
-              position: 'fixed',
-              zIndex: 1000,
-              transform: 'translate(-50%, 120%)',
-              width: '400px',
-            }}>
+            <AnimatedContent
+              style={{
+                outline: 'unset',
+                position: 'fixed',
+                zIndex: 1000,
+                transform: 'translate(-50%, 120%)',
+                width: '400px',
+              }}
+            >
               <Flex
                 justify="between"
                 css={{
@@ -98,7 +132,7 @@ const ClaimPage: NextPage = () => {
                     style={{
                       position: 'absolute',
                       top: 10,
-                      right: 15
+                      right: 15,
                     }}
                     onClick={() => setOpen(!open)}
                     className="IconButton"
@@ -108,11 +142,7 @@ const ClaimPage: NextPage = () => {
                   </button>
                 </Dialog.Close>
                 <Flex align="center" justify="center">
-                  <FontAwesomeIcon
-                    icon={faWarning}
-                    color="orange"
-                    size="2xl"
-                  />
+                  <FontAwesomeIcon icon={faWarning} color="orange" size="2xl" />
                 </Flex>
                 <Text
                   style="subtitle1"
