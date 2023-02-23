@@ -241,6 +241,11 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                                   typeof useDynamicTokens
                                 >['data'][0]
                               }
+                              tokenCount={
+                                token?.token?.kind === 'erc1155'
+                                  ? token.ownership?.tokenCount
+                                  : undefined
+                              }
                               mutate={mutate}
                               rarityEnabled={false}
                               onMediaPlayed={(e) => {
