@@ -1,11 +1,7 @@
 import { NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
-import { useMarketplaceChain, useMounted } from 'hooks'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
-import { NORMALIZE_ROYALTIES } from '../_app'
-import { useIntersectionObserver } from 'usehooks-ts'
+import { useMounted } from 'hooks'
 import { LearnGrid } from 'components/learn-nfts/LearnGrid'
 import LearnHeroSection from 'components/learn-nfts/LearnHeroSection'
 
@@ -13,7 +9,7 @@ const EducationPage: NextPage = () => {
   const isMounted = useMounted()
 
   return (
-    <Layout>
+    <>
       <Box
         css={{
           p: 24,
@@ -82,9 +78,9 @@ const EducationPage: NextPage = () => {
               </Text>
             </Box>
           </Flex>
-        </Flex>
+        </Flex> 
       </Flex>
-    </Layout>
+    </>
   )
 }
 

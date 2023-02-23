@@ -1,11 +1,25 @@
-import { Box } from 'components/primitives'
-import { useTokens } from '@nftearth/reservoir-kit-ui'
-import { Grid } from './styled'
+import { Text, Flex, Box, Grid } from 'components/primitives'
 import { LearnTile } from './LearnTile'
 
 export const LearnGrid = () => {
   return (
-    <Grid>
+    <Flex>
+      <Grid
+        css={{
+          gap: 32,
+          width: '95%',
+          margin: '0 auto',
+          '@xs': {
+            gridTemplateColumns: 'unset',
+          },
+          '@sm': {
+            gridTemplateColumns: 'repeat(2, 1fr)',
+          },
+          '@lg': {
+            gridTemplateColumns: 'repeat(3, 1fr)',
+          },
+        }}
+      >
       <Box>
         <LearnTile
           title="Introduction To NFTs"
@@ -29,19 +43,11 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="Introduction To NFTs"
+          title="Creating"
           numArticles={3}
           articles={[
             {
-              title: 'How Do NFTs work?',
-              link: '/',
-            },
-            {
-              title: 'The History of NFTs',
-              link: '/',
-            },
-            {
-              title: 'What are NFTs',
+              title: 'How to Create NFTs?',
               link: '/',
             },
           ]}
@@ -50,19 +56,19 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="Introduction To NFTs"
+          title="Selling"
           numArticles={3}
           articles={[
             {
-              title: 'How Do NFTs work?',
+              title: 'The 4 Best Ways to Promote Your NFT',
               link: '/',
             },
             {
-              title: 'The History of NFTs',
+              title: 'How to Value NFT Art?',
               link: '/',
             },
             {
-              title: 'What are NFTs',
+              title: 'How Much Does It Cost to Sell NFTs?',
               link: '/',
             },
           ]}
@@ -71,19 +77,19 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="Introduction To NFTs"
+          title="Buying"
           numArticles={3}
           articles={[
             {
-              title: 'How Do NFTs work?',
+              title: 'Where to Buy NFTs?',
               link: '/',
             },
             {
-              title: 'The History of NFTs',
+              title: 'How to Find NFT Projects Early',
               link: '/',
             },
             {
-              title: 'What are NFTs',
+              title: 'NFT Collectors vs. Speculators',
               link: '/',
             },
           ]}
@@ -92,19 +98,19 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="Introduction To NFTs"
+          title="What Can You Do With NFTs?"
           numArticles={3}
           articles={[
             {
-              title: 'How Do NFTs work?',
+              title: 'What is NFT Farming and How to Earn from it?',
               link: '/',
             },
             {
-              title: 'The History of NFTs',
+              title: 'How to Earn from NFTs?',
               link: '/',
             },
             {
-              title: 'What are NFTs',
+              title: 'How to Make Money From the NFT Industry',
               link: '/',
             },
           ]}
@@ -113,88 +119,26 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="Introduction To NFTs"
+          title="Security"
           numArticles={3}
           articles={[
             {
-              title: 'How Do NFTs work?',
+              title: 'What is Escrowed Peer-To-Peer Trading?',
               link: '/',
             },
             {
-              title: 'The History of NFTs',
+              title: 'How to Avoid NFT Scams?',
               link: '/',
             },
             {
-              title: 'What are NFTs',
+              title: 'What Copy & Paste is NOT how NFTs Work',
               link: '/',
             },
           ]}
           color="#1fada5"
         />
-      </Box>
-      <Box>
-        <LearnTile
-          title="Introduction To NFTs"
-          numArticles={3}
-          articles={[
-            {
-              title: 'How Do NFTs work?',
-              link: '/',
-            },
-            {
-              title: 'The History of NFTs',
-              link: '/',
-            },
-            {
-              title: 'What are NFTs',
-              link: '/',
-            },
-          ]}
-          color="#8b1207"
-        />
-      </Box>
-      <Box>
-        <LearnTile
-          title="Introduction To NFTs"
-          numArticles={3}
-          articles={[
-            {
-              title: 'How Do NFTs work?',
-              link: '/',
-            },
-            {
-              title: 'The History of NFTs',
-              link: '/',
-            },
-            {
-              title: 'What are NFTs',
-              link: '/',
-            },
-          ]}
-          color="#ee899d"
-        />
-      </Box>
-      <Box>
-        <LearnTile
-          title="Introduction To NFTs"
-          numArticles={3}
-          articles={[
-            {
-              title: 'How Do NFTs work?',
-              link: '/',
-            },
-            {
-              title: 'The History of NFTs',
-              link: '/',
-            },
-            {
-              title: 'What are NFTs',
-              link: '/',
-            },
-          ]}
-          color="#11fd4e"
-        />
-      </Box>
-    </Grid>
+        </Box>
+        </Grid>
+      </Flex>
   )
 }
