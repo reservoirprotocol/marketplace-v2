@@ -59,7 +59,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList
@@ -161,7 +161,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               View All
             </Button>
           )}
-          {!showViewAllButton && <Box ref={loadMoreRef}></Box>}
+          {!showViewAllButton && (
+            <Box
+              ref={loadMoreRef}
+              css={{
+                display: isFetchingPage ? 'none' : 'block',
+              }}
+            ></Box>
+          )}
         </Flex>
         <Footer />
       </Box>

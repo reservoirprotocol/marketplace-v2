@@ -124,7 +124,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   if (!isMounted) {
     return null
@@ -260,18 +260,24 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                             />
                           )
                       })}
-                  <Box ref={loadMoreRef}>
+                  <Box
+                    ref={loadMoreRef}
+                    css={{
+                      display: isFetchingPage ? 'none' : 'block',
+                    }}
+                  >
                     {hasNextPage && !isFetchingInitialData && <LoadingCard />}
                   </Box>
-                  {hasNextPage && (
-                    <>
-                      {Array(10)
-                        .fill(null)
-                        .map((_, index) => (
-                          <LoadingCard key={`loading-card-${index}`} />
-                        ))}
-                    </>
-                  )}
+                  {(hasNextPage || isFetchingPage) &&
+                    !isFetchingInitialData && (
+                      <>
+                        {Array(6)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))}
+                      </>
+                    )}
                 </Grid>
                 {tokens.length === 0 && !isFetchingPage && (
                   <Flex
