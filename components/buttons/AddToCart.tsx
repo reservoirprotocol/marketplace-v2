@@ -3,7 +3,7 @@ import {useCart, useDynamicTokens} from "@nftearth/reservoir-kit-ui";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faRemove } from '@fortawesome/free-solid-svg-icons'
 
-import {useNetwork, useSigner} from "wagmi";
+import {useNetwork, useSigner, useSwitchNetwork} from "wagmi";
 import {useMarketplaceChain} from "hooks";
 import {Button} from "../primitives";
 import {CSS} from "@stitches/react";
@@ -19,6 +19,9 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
   const { add, remove } = useCart(cart => cart.items);
 
   const isInTheWrongNetwork = Boolean(
@@ -51,13 +54,17 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
     return (
       <Button
         color="secondary"
-        disabled={isInTheWrongNetwork}
         {...buttonProps}
         css={{
           justifyContent: 'center',
           alignItems: 'center'
         }}
-        onClick={() => add([token], Number(activeChain?.id))}
+        onClick={async () => {
+          if (isInTheWrongNetwork) {
+            await switchNetworkAsync?.()
+          }
+          await add([token], Number(activeChain?.id))
+        }}
       >
         {icon ? (
           <FontAwesomeIcon icon={faCartPlus} />
