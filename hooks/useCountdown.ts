@@ -24,11 +24,11 @@ const useCountdown = (targetDate: number): CountDownValues => {
 };
 
 const getReturnValues = (countDown: number): CountDownValues => {
-  
-  let days: number = Math.floor((countDown / (1000 * 60 * 60 * 24)));
-  let hours: number = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  let minutes: number = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
-  let seconds: number = Math.floor((countDown % (1000 * 60)) / 1000);
+
+  let days    : number = Math.floor((countDown / (1000 * 60 * 60 * 24)));
+  let hours   : number = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  let minutes : number = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60));
+  let seconds : number = Math.floor((countDown % (1000 * 60)) / 1000);
 
   if (days < 0) { days = 0; }
   if (hours < 0) { hours = 0; }

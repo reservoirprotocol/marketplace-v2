@@ -29,7 +29,7 @@ const ClaimPage: NextPage = () => {
 
   // Count Down State if the user didn't claim
   const showCountDown = useMemo(() => {
-    return isMounted && !signature
+    return isMounted && signature
   }, [isMounted, signature])
 
   useEffect(() => {
