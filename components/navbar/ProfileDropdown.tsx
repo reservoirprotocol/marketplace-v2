@@ -33,6 +33,7 @@ export const ProfileDropdown: FC = () => {
       css={{
         justifyContent: 'center',
       }}
+      aria-label="Profile"
       corners="circle"
       type="button"
       color="gray3"

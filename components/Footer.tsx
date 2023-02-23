@@ -89,6 +89,7 @@ export const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             href="https://twitter.com/NFTEarth_L2"
+            aria-label="Twitter"
           >
             <Button
               size="xs"
@@ -98,6 +99,7 @@ export const Footer = () => {
                   background: 'grey',
                 },
               }}
+              aria-label="Twitter"
             >
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
             </Button>
@@ -106,6 +108,7 @@ export const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             href="https://discord.gg/nftearth"
+            aria-label="Discord"
           >
             <Button
               size="xs"
@@ -115,6 +118,7 @@ export const Footer = () => {
                   background: 'grey',
                 },
               }}
+              aria-label="Discord"
             >
               <FontAwesomeIcon icon={faDiscord} width={14} height={14} />
             </Button>
@@ -125,9 +129,9 @@ export const Footer = () => {
             <img
               height="100"
               width="100"
-              src="https://d0.awsstatic.com/logos/powered-by-aws-white.png"
+              src="/images/powered-by-aws-white.png"
               alt="Powered by AWS Cloud Computing"
-            ></img>
+            />
           </a>
         </Box>
       </Flex>

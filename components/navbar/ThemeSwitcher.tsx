@@ -56,6 +56,7 @@ const ThemeSwitcher = () => {
         onClick={() => (theme == 'dark' ? setTheme('light') : setTheme('dark'))}
         size="small"
         color="gray3"
+        aria-label="Theme Switcher"
       >
         {theme == 'dark' ? (
           <FontAwesomeIcon icon={faSun} width={16} height={16} />

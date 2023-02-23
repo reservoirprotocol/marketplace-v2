@@ -60,6 +60,7 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <img
+                alt="NFTEarth Logo"
                 src="/nftearth-icon-new.png"
                 style={{ width: 34, height: 34 }}
               />
@@ -107,11 +108,12 @@ const Navbar = () => {
               }}
             >
               {theme == 'dark' ? (
-                <img src="/nftearth-icon-new.png" style={{ width: 40 }} />
+                <img alt="NFTEarth Logo" src="/nftearth-icon-new.png" style={{ width: 34, height: 34 }} />
               ) : (
                 <img
+                  alt="NFTEarth Logo"
                   src="/nftearth-icon-new.png"
-                  style={{ width: 40, height: 40 }}
+                  style={{ width: 34, height: 34 }}
                 />
               )}
             </Box>

@@ -19,7 +19,7 @@ export const OpenSeaVerified: FC<Props> = ({ openseaVerificationStatus }) => {
           </Text>
         }
       >
-        <img src="/icons/opensea-verified.svg" style={{ width: 20, height: 20 }} />
+        <img src="/icons/opensea-verified.svg" alt="Verified by NFTEarth" style={{ width: 20, height: 20 }} />
       </Tooltip>
     )
   else return null
