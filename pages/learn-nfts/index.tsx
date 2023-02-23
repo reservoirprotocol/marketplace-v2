@@ -1,50 +1,15 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import { NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
-import { useMarketplaceChain, useMounted } from 'hooks'
-import { paths } from '@nftearth/reservoir-sdk'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../_app'
-import supportedChains from 'utils/chains'
-import { useIntersectionObserver } from 'usehooks-ts'
+import { useMounted } from 'hooks'
 import { LearnGrid } from 'components/learn-nfts/LearnGrid'
 import LearnHeroSection from 'components/learn-nfts/LearnHeroSection'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
-
-const EducationPage: NextPage<Props> = ({ ssr }) => {
+const EducationPage: NextPage = () => {
   const isMounted = useMounted()
-  const marketplaceChain = useMarketplaceChain()
-
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-    sortBy: 'allTimeVolume',
-  }
-
-  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(
-      collectionQuery,
-      {
-        fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-      },
-      marketplaceChain.id
-    )
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   return (
-    <Layout>
+    <>
       <Box
         css={{
           p: 24,
@@ -113,51 +78,10 @@ const EducationPage: NextPage<Props> = ({ ssr }) => {
               </Text>
             </Box>
           </Flex>
-        </Flex>
+        </Flex> 
       </Flex>
-    </Layout>
+    </>
   )
-}
-
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
-export const getStaticProps: GetStaticProps<{
-  ssr: {
-    exploreCollections: ChainCollections
-  }
-}> = async () => {
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
-    }
-
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-
-  const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
-    }
-  })
-
-  return {
-    props: { ssr: { exploreCollections: collections } },
-    revalidate: 5,
-  }
 }
 
 export default EducationPage
