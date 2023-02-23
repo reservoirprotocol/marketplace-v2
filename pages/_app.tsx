@@ -50,8 +50,6 @@ export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
 
 const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
-const OPTIMISM_RESERVOIR_API_BASE = process.env.OPTIMISM_RESERVOIR_API_BASE
-const ARBITRUM_RESERVOIR_API_BASE = process.env.ARBITRUM_RESERVOIR_API_BASE
 
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
@@ -156,16 +154,14 @@ function MyApp({
             options={{
               chains: [
                 {
-                  baseApiUrl: OPTIMISM_RESERVOIR_API_BASE as string,
+                  baseApiUrl: `${process.env.NEXT_PUBLIC_HOST_URL}/api/nftearth/optimism`,
                   id: optimism.id,
                   default: marketplaceChain.id === optimism.id,
-                  apiKey: process.env.OPTIMISM_RESERVOIR_API_BASE,
                 },
                 {
-                  baseApiUrl: ARBITRUM_RESERVOIR_API_BASE as string,
+                  baseApiUrl: `${process.env.NEXT_PUBLIC_HOST_URL}/api/nftearth/arbitrum`,
                   id: arbitrum.id,
-                  default: marketplaceChain.id === arbitrum.id,
-                  apiKey: process.env.ARBITRUM_RESERVOIR_API_BASE,
+                  default: marketplaceChain.id === arbitrum.id
                 },
               ],
               disablePoweredByReservoir: true,
