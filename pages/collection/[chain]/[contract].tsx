@@ -146,7 +146,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isLoading])
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   useEffect(() => {
     if (isMounted && initialTokenFallbackData) {
@@ -341,20 +341,26 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             }}
                           />
                         ))}
-                    <Box ref={loadMoreRef}>
-                      {(hasNextPage || isFetchingPage) &&
-                        !isFetchingInitialData && <LoadingCard />}
-                    </Box>
-                    {(hasNextPage || isFetchingPage) &&
-                      !isFetchingInitialData && (
-                        <>
-                          {Array(10)
-                            .fill(null)
-                            .map((_, index) => (
-                              <LoadingCard key={`loading-card-${index}`} />
-                            ))}
-                        </>
+                    <Box
+                      ref={loadMoreRef}
+                      css={{
+                        display: isFetchingPage ? 'none' : 'block',
+                        border: '1px red solid',
+                      }}
+                    >
+                      {isFetchingPage && !isFetchingInitialData && (
+                        <LoadingCard />
                       )}
+                    </Box>
+                    {isFetchingPage && !isFetchingInitialData && (
+                      <>
+                        {Array(10)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))}
+                      </>
+                    )}
                   </Grid>
                   {tokens.length == 0 && !isFetchingPage && (
                     <Flex
