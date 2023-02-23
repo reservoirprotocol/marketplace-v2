@@ -31,14 +31,14 @@ export const LearnTile = ({ title, numArticles, articles, color }: Props) => {
               color: 'white',
               fontWeight: '900',
             }}
-            style="subtitle1"
+            style="h4"
             ellipsify
           >
             {title}
           </Text>
         </LearnTileHeader>
         <LearnTileSubTitle>
-          <Text style="body2" css={{ color: '#ff0', fontWeight: 900 }}>
+          <Text style="h6" css={{ color: '#ff0', fontWeight: 900 }}>
             {numArticles} articles
           </Text>
         </LearnTileSubTitle>
@@ -49,7 +49,9 @@ export const LearnTile = ({ title, numArticles, articles, color }: Props) => {
                 <Text
                   as="a"
                   href={article.link}
-                  style="subtitle3"
+                  style={{
+                    '@xs': 'h6',
+                  }}
                   css={{
                     borderBottom: '1px solid $gray4',
                     cursor: 'pointer',
