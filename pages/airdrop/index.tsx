@@ -1,45 +1,22 @@
-import {memo, useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import { NextPage } from 'next'
-import { Flex, Box, Button, Text } from 'components/primitives'
-import Layout from 'components/Layout'
 import Link from 'next/link'
-import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
-import { faWarning, faClose } from '@fortawesome/free-solid-svg-icons'
+import {useTheme} from "next-themes";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-import { ClaimReward } from 'components/claim/ClaimReward'
-import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
-import useCountdown from 'hooks/useCountdown'
-import { useMounted } from 'hooks'
+import Layout from 'components/Layout'
+import { Flex, Box, Button, Text } from 'components/primitives'
 import {
   AnimatedOverlay,
   AnimatedContent,
 } from 'components/primitives/Dialog'
-import {useTheme} from "next-themes";
-import {useMediaQuery} from "react-responsive";
-
-interface InjectScriptProps {
-  script: string;
-}
-
-const InjectScript = memo(({ script }: InjectScriptProps) => {
-  const divRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (divRef.current === null) {
-      return
-    }
-
-    const doc = document.createRange().createContextualFragment(script)
-
-    divRef.current.innerHTML = ''
-    divRef.current.appendChild(doc)
-  })
-
-  return <div ref={divRef} />
-})
+import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
+import { faWarning, faClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ClaimReward } from 'components/claim/ClaimReward'
+import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
+import useCountdown from 'hooks/useCountdown'
+import { useMounted } from 'hooks'
 
 const endClaimTime = 1677609000000;
 
@@ -49,7 +26,6 @@ const ClaimPage: NextPage = () => {
   const [open, setOpen] = useState(false);
   const isMounted = useMounted()
   const [days, hours, minutes, seconds] = useCountdown(endClaimTime);
-  const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
 
   // Count Down State if the user didn't claim
   const showCountDown = useMemo(() => {
@@ -93,11 +69,14 @@ const ClaimPage: NextPage = () => {
                 <Text style="h1">{hours}</Text>
                 <Text style="h5">HOURS</Text>
               </Flex>
-              {!isMobile && (
-                <Flex direction="column" align="center">
-                  <Text style="h1">:</Text>
-                </Flex>
-              )}
+              <Flex direction="column" align="center" css={{
+                display: 'none',
+                '@md': {
+                  display: 'flex'
+                }
+              }}>
+                <Text style="h1">:</Text>
+              </Flex>
               <Flex direction="column" align="center" css={{ width: 100 }}>
                 <Text style="h1">{minutes}</Text>
                 <Text style="h5">MINUTES</Text>
