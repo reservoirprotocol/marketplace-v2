@@ -4,6 +4,7 @@ import {
   extractMediaType,
   TokenMedia,
   useDynamicTokens,
+  useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
@@ -28,6 +29,7 @@ type TokenCardProps = {
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
+  tokenCount?: string
 }
 
 export default ({
@@ -35,6 +37,7 @@ export default ({
   rarityEnabled = true,
   mutate,
   onMediaPlayed,
+  tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
@@ -61,6 +64,26 @@ export default ({
         },
       }}
     >
+      {tokenCount && (
+        <Flex
+          justify="center"
+          align="center"
+          css={{
+            borderRadius: 8,
+            px: '$2',
+            py: '$1',
+            mr: '$2',
+            backgroundColor: '$gray4',
+            position: 'absolute',
+            left: '$2',
+            top: '$2',
+            zIndex: 1,
+            maxWidth: '50%',
+          }}
+        >
+          <Text ellipsify>x{tokenCount}</Text>
+        </Flex>
+      )}
       <Flex
         justify="center"
         align="center"
