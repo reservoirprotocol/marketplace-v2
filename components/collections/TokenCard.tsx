@@ -41,6 +41,7 @@ export default ({
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
+  const tokenIsInCart = token && token?.isInCart
 
   return (
     <Box
@@ -73,11 +74,11 @@ export default ({
           right: '$2',
           zIndex: 1,
           transition: `visibility 0s linear ${
-            token.isInCart ? '' : '250ms'
+            tokenIsInCart ? '' : '250ms'
           }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
-          opacity: token.isInCart ? 1 : 0,
-          top: token.isInCart ? '$2' : 50,
-          visibility: token.isInCart ? 'visible' : 'hidden',
+          opacity: tokenIsInCart ? 1 : 0,
+          top: tokenIsInCart ? '$2' : 50,
+          visibility: tokenIsInCart ? 'visible' : 'hidden',
           color: 'white',
         }}
       >
