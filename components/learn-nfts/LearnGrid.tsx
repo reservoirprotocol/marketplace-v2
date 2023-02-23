@@ -11,12 +11,15 @@ export const LearnGrid = () => {
           margin: '0 auto',
           '@xs': {
             gridTemplateColumns: 'unset',
+            width: '80%',
           },
           '@sm': {
             gridTemplateColumns: 'repeat(2, 1fr)',
+            width: '95%',
           },
           '@lg': {
             gridTemplateColumns: 'repeat(3, 1fr)',
+            width: '95%',
           },
         }}
       >
