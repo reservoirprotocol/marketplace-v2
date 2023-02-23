@@ -64,7 +64,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
