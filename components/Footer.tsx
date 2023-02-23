@@ -46,6 +46,10 @@ const companySectionLinks = [
     name: 'Privacy',
     href: '/privacy',
   },
+  {
+    name: 'Token',
+    href: '/token',
+  },
 ]
 
 export const Footer = () => {
