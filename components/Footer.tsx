@@ -50,6 +50,10 @@ const companySectionLinks = [
     name: 'Token',
     href: '/token',
   },
+  {
+    name: 'Education',
+    href: '/learn-nfts',
+  },
 ]
 
 export const Footer = () => {
