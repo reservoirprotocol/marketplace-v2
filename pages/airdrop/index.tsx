@@ -18,6 +18,7 @@ import {
   AnimatedContent,
 } from 'components/primitives/Dialog'
 import {useTheme} from "next-themes";
+import {useMediaQuery} from "react-responsive";
 
 interface InjectScriptProps {
   script: string;
@@ -48,6 +49,7 @@ const ClaimPage: NextPage = () => {
   const [open, setOpen] = useState(false);
   const isMounted = useMounted()
   const [days, hours, minutes, seconds] = useCountdown(endClaimTime);
+  const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
 
   // Count Down State if the user didn't claim
   const showCountDown = useMemo(() => {
@@ -74,35 +76,38 @@ const ClaimPage: NextPage = () => {
         }}
       >
         {showCountDown && (
-          <Flex align="center" direction="column" css={{ mb: 50, backgroundColor: '$gray6', p: 24, borderRadius: 20 }}>
+          <Flex align="center" direction="column" css={{ mb: 50, backgroundColor: '$gray6', p: 24, borderRadius: 20, textAlign: 'center' }}>
             <Text style="h2" css={{
-              color: theme === 'dark' ? '$primary9' : '$primary8'
+              color: theme === 'dark' ? '$primary9' : '$primary8',
+              fontSize: 30,
             }}>$NFTE Airdrop 1 Claiming Closes</Text>
-            <Flex justify="between" direction="row">
+            <Flex justify="between" direction="row" css={{ flexWrap: 'wrap'}}>
               <Flex direction="column" align="center" css={{ width: 130 }}>
                 <Text style="h1">{days}</Text>
-                <Text style="h4">DAYS</Text>
+                <Text style="h5">DAYS</Text>
               </Flex>
               <Flex direction="column" align="center">
                 <Text style="h1">:</Text>
               </Flex>
               <Flex direction="column" align="center" css={{ width: 130 }}>
                 <Text style="h1">{hours}</Text>
-                <Text style="h4">HOURS</Text>
+                <Text style="h5">HOURS</Text>
               </Flex>
-              <Flex direction="column" align="center">
-                <Text style="h1">:</Text>
-              </Flex>
+              {!isMobile && (
+                <Flex direction="column" align="center">
+                  <Text style="h1">:</Text>
+                </Flex>
+              )}
               <Flex direction="column" align="center" css={{ width: 100 }}>
                 <Text style="h1">{minutes}</Text>
-                <Text style="h4">MINUTES</Text>
+                <Text style="h5">MINUTES</Text>
               </Flex>
               <Flex direction="column" align="center">
                 <Text style="h1">:</Text>
               </Flex>
               <Flex direction="column" align="center" css={{ width: 130 }}>
                 <Text style="h1" css={{ color: '$red9'}}>{seconds}</Text>
-                <Text style="h4">SECONDS</Text>
+                <Text style="h5">SECONDS</Text>
               </Flex>
             </Flex>
           </Flex>
