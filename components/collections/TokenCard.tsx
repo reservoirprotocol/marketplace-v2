@@ -4,7 +4,6 @@ import {
   extractMediaType,
   TokenMedia,
   useDynamicTokens,
-  useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
