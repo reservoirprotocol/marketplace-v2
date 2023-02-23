@@ -18,6 +18,8 @@ const CartMenu: FC = () => {
         <Flex
           align="center"
           justify="center"
+          role="button"
+          aria-haspopup="dialog"
           css={{
             background: '$gray3',
             width: '44px',
