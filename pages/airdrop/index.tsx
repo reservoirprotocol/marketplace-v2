@@ -25,11 +25,11 @@ const ClaimPage: NextPage = () => {
   const { data: signature, isLoading } = useEligibleAirdropSignature()
   const [open, setOpen] = useState(false);
   const isMounted = useMounted()
-  const [days, hours, minutes, seconds] = useCountdown(endClaimTime);
+  const { days, hours, minutes, seconds } = useCountdown(endClaimTime);
 
   // Count Down State if the user didn't claim
   const showCountDown = useMemo(() => {
-    return isMounted && signature
+    return isMounted && !signature
   }, [isMounted, signature])
 
   useEffect(() => {
