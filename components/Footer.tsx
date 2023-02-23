@@ -35,6 +35,21 @@ const developerSectionLinks = [
     name: 'GitHub',
     href: 'https://github.com/NFTEarth',
   },
+  {
+    name: 'API',
+    href: 'https://api.nftearth.exchange',
+  },
+]
+
+const resourcesSectionLinks = [
+  {
+    name: 'Education',
+    href: '/learn-nfts',
+  },
+  {
+    name: 'Token',
+    href: '/token',
+  },
 ]
 
 const companySectionLinks = [
@@ -45,14 +60,6 @@ const companySectionLinks = [
   {
     name: 'Privacy',
     href: '/privacy',
-  },
-  {
-    name: 'Token',
-    href: '/token',
-  },
-  {
-    name: 'Education',
-    href: '/learn-nfts',
   },
 ]
 
@@ -73,18 +80,28 @@ export const Footer = () => {
         },
       }}
     >
-      <Flex css={{ gap: 80, '@bp600': { gap: 136 } }}>
+      <Flex css={{ gap: 40, '@bp600': { gap: 136 }, flexWrap: 'wrap' }}>
         <Flex direction="column">
-          <SectionTitle title="Developers" />
-          {developerSectionLinks.map((props) => (
-            <SectionLink key={props.name} {...props} />
-          ))}
+          <Flex direction="column">
+            <SectionTitle title="Developers" />
+            {developerSectionLinks.map((props) => (
+              <SectionLink key={props.name} {...props} />
+            ))}
+          </Flex>
         </Flex>
         <Flex direction="column">
           <SectionTitle title="Company" />
           {companySectionLinks.map((props) => (
             <SectionLink key={props.name} {...props} />
           ))}
+        </Flex>
+        <Flex direction="column">
+          <Flex direction="column">
+            <SectionTitle title="Resources" />
+            {resourcesSectionLinks.map((props) => (
+              <SectionLink key={props.name} {...props} />
+            ))}
+          </Flex>
         </Flex>
       </Flex>
       <Flex
