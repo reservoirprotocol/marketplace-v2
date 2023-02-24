@@ -101,7 +101,7 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="What Can You Do With NFTs?"
+          title="What Can You Do?"
           numArticles={3}
           articles={[
             {
