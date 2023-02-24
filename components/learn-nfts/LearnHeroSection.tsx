@@ -1,117 +1,91 @@
-import Link from 'next/link'
-
-import { Button, Flex, Text } from '../primitives'
+import { Box, Flex, Text } from '../primitives'
 import { FC } from 'react'
 import { useTheme } from 'next-themes'
+import { useMediaQuery } from 'react-responsive'
 
-interface IProp {
-  hideLink?: boolean
-}
-
-const LearnHeroSection: FC<IProp> = ({ hideLink }) => {
+const LearnHeroSection: FC = () => {
   const { theme } = useTheme()
+  const isMobile = useMediaQuery({ query: '(max-width: 968px)' })
 
   return (
     <Flex
       as="section"
       css={{
+        marginBottom: '$4',
         width: '100%',
+        borderTopLeftRadius: '20px',
+        borderTopRightRadius: '20px',
         backgroundPosition: 'center center',
         backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, $primary13 91.1%), url('/images/heroSectionBanner.png')`,
         '@xs': {
-          gridTemplateColumns: 'unset',
-          padding: '64px 24px',
+          display: 'block',
         },
-        '@lg': {
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          padding: '100px 64px',
+        '@bp1000': {
+          display: 'flex',
         },
       }}
     >
       <Flex
+        direction="column"
         css={{
-          textAlign: 'center',
-          flexDirection: 'column',
-          marginLeft: 'auto',
-          marginRight: 'auto',
+          flex: 1,
+          '@xs': {
+            padding: '64px 24px',
+          },
+          '@lg': {
+            padding: '80px 64px',
+          },
         }}
       >
         <Text
-          as="h1"
-          css={{
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            color: '$whiteA12',
-            lineHeight: 1.2,
+          css={{ color: '$whiteA12', lineHeight: 1.2 }}
+          style={{
+            '@initial': 'h3',
+            '@lg': 'h1',
           }}
-          style="h1"
         >
-          NFTEarth Education is Live!
+          NFTEarth <br/> Education is Live!
         </Text>
         <Text
-          style="subtitle1"
+          style={{
+            '@initial': 'subtitle2',
+            '@lg': 'subtitle1',
+          }}
           css={{
             lineHeight: 1.5,
-            color: '$whiteA12',
             width: '100%',
             marginTop: '$3',
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            '@lg': { width: '50%' },
+            '@lg': {
+              width: '50%',
+            },
+            color: '$whiteA12',
           }}
         >
           Learn about NFTs, hone your skills and knowledge about NFTs before the
           next bull run to not miss the opportunity!
         </Text>
-        {hideLink ?? (
-          <Flex css={{ gap: 10 }}>
-            <Link href="/portfolio" passHref legacyBehavior>
-              <Button
-                as="a"
-                color={
-                  theme ? (theme === 'dark' ? 'ghost' : 'primary') : 'ghost'
-                }
-                corners="pill"
-                size="large"
-                css={{
-                  width: 100,
-                  borderRadius: '$lg',
-                  justifyContent: 'center',
-                  border: '2px solid #6BE481',
-                  '&:hover': {
-                    background: '#6BE481',
-                    color: 'black',
-                  },
-                }}
-              >
-                Sell
-              </Button>
-            </Link>
-            <Link href="/explore" passHref legacyBehavior>
-              <Button
-                as="a"
-                color={
-                  theme ? (theme === 'dark' ? 'ghost' : 'primary') : 'ghost'
-                }
-                corners="pill"
-                size="large"
-                css={{
-                  width: 100,
-                  borderRadius: '$lg',
-                  border: '2px solid #6BE481',
-                  justifyContent: 'center',
-                  '&:hover': {
-                    background: '#6BE481',
-                    color: 'black',
-                  },
-                }}
-              >
-                Explore
-              </Button>
-            </Link>
-          </Flex>
-        )}
       </Flex>
+      <Box
+        css={{
+          // backgroundImage: `url(/images/LearnNFT.png)`,
+          // backgroundPosition: 'center',
+          // backgroundRepeat: 'no-repeat',
+          flex: 0.6,
+          '@xs': {
+          },
+          '@md': {
+          },
+        }}
+      >
+        {
+          isMobile ? <img src="/images/LearnNFT.png" style={{
+          marginTop: '-50px',
+          height: '200px',
+          }} /> : <img src="/images/LearnNFT.png" style={{
+            marginTop: '-50px',
+          }} />
+      }
+      </Box>
     </Flex>
   )
 }
