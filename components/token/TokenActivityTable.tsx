@@ -18,8 +18,6 @@ export const TokenActivityTable: FC<Props> = ({ token }) => {
     }
   )
 
-  console.log(data);
-
   useEffect(() => {
     data.mutate()
     return () => {

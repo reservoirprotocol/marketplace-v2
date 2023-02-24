@@ -3,6 +3,8 @@ import {
   faCircleExclamation,
   faRefresh,
   faArrowDownUpAcrossLine,
+  faUserGroup,
+  faTableCells
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
@@ -24,7 +26,16 @@ import {
   Grid,
   Box,
   CollapsibleContent,
+  TableCell,
+  TableRow,
+  HeaderRow,
 } from 'components/primitives'
+import {
+  Root as DialogRoot,
+  DialogTrigger,
+  DialogPortal,
+  Close
+} from '@radix-ui/react-dialog'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import * as Collapsible from '@radix-ui/react-collapsible'
@@ -45,6 +56,7 @@ import fetcher from 'utils/fetcher'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
+import {useTheme} from "next-themes";
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext, useEffect, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
@@ -58,10 +70,13 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { TokenActivityTable } from 'components/token/TokenActivityTable'
 import { NAVBAR_HEIGHT } from '../../../../components/navbar'
 import { TokenOffersTable } from '../../../../components/token/TokenOffersTable'
+import {Content} from "../../../../components/primitives/Dialog";
+import {OwnersModal} from "../../../../components/token/OwnersModal";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+  const { theme } = useTheme()
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -371,20 +386,31 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           </Flex>
           {token && (
             <>
-              <Flex align="center" css={{ mt: '$2' }}>
-                <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
-                  Owner
-                </Text>
-                <Jazzicon
-                  diameter={16}
-                  seed={jsNumberForAddress(owner || '')}
-                />
-                <Link href={`/profile/${owner}`} legacyBehavior={true}>
-                  <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                    {isMounted ? ownerFormatted : ''}
-                  </Anchor>
-                </Link>
-              </Flex>
+              {token.token?.kind === 'erc1155' ? (
+                <OwnersModal token={`${token.token?.collection?.id}:${token.token?.tokenId}`}>
+                  <Button color="ghost" css={{ mt: '$2', mr: '$6' }}>
+                    <FontAwesomeIcon icon={faUserGroup} size="lg" />
+                    <Text style="subtitle3" color="subtle" css={{ mx: '$2' }}>
+                      {`Multiple Owners`}
+                    </Text>
+                  </Button>
+                </OwnersModal>
+              ) : (
+                <Flex align="center" css={{ mt: '$2' }}>
+                  <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
+                    Owner
+                  </Text>
+                  <Jazzicon
+                    diameter={16}
+                    seed={jsNumberForAddress(owner || '')}
+                  />
+                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                    <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
+                      {isMounted ? ownerFormatted : ''}
+                    </Anchor>
+                  </Link>
+                </Flex>
+              )}
               <RarityRank
                 token={token}
                 collection={collection}
@@ -469,7 +495,9 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Collapsible.Trigger asChild>
               <Flex
                 css={{
-                  backgroundColor: '$primary6',
+                  backgroundColor: theme === 'light'
+                    ? '$primary11'
+                    : '$primary6',
                   px: '$4',
                   py: '$3',
                   flex: 1,

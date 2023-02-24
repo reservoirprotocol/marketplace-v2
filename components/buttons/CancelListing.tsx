@@ -65,7 +65,6 @@ const CancelListing: FC<Props> = ({
         })
       }}
       onCancelError={(error: any, data: any) => {
-        console.log('Listing Cancel Error', error, data)
         addToast?.({
           title: 'Could not cancel listing',
           description: 'The transaction was not completed.',

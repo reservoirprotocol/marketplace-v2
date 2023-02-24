@@ -60,7 +60,7 @@ const ThemeSwitcher = () => {
           },
         }}
         type="button"
-        onClick={() => (theme == 'dark' ? setTheme('light') : setTheme('dark'))}
+        onClick={() => setTheme(theme == 'dark' ? 'light' : 'dark')}
         size="small"
         color="gray3"
         aria-label="Theme Switcher"

@@ -54,7 +54,7 @@ const ClaimPage: NextPage = () => {
         {showCountDown && (
           <Flex align="center" direction="column" css={{ mb: 50, backgroundColor: '$gray6', p: 24, borderRadius: 20, textAlign: 'center' }}>
             <Text style="h2" css={{
-              color: theme === 'dark' ? '$primary9' : '$primary8',
+              color: theme === 'light' ? '$primary8' : '$primary9',
               fontSize: 30,
             }}>$NFTE Airdrop 1 Claiming Closes</Text>
             <Flex justify="between" direction="row" css={{ flexWrap: 'wrap'}}>

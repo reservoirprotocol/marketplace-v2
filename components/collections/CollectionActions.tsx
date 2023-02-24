@@ -58,9 +58,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const etherscanImage = (
     <img
       src={
-        isMounted && theme === 'dark'
-          ? '/icons/etherscan-logo-light-circle.svg'
-          : '/icons/etherscan-logo-circle.svg'
+        isMounted && theme === 'light'
+          ? '/icons/etherscan-logo-circle.svg'
+          : '/icons/etherscan-logo-light-circle.svg'
       }
       alt={marketplaceChain.blockExplorers?.default.name || 'Etherscan'}
       style={{

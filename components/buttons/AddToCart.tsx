@@ -51,9 +51,7 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
   if (!token?.isInCart && canAddToCart) {
     return (
       <Button
-        color={
-          theme ? (theme === 'dark' ? 'secondary' : 'tertiary') : 'secondary'
-        }
+        color={theme === 'light' ? 'tertiary' : 'secondary'}
         {...buttonProps}
         css={{
           justifyContent: 'center',
