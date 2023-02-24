@@ -469,7 +469,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Collapsible.Trigger asChild>
               <Flex
                 css={{
-                  backgroundColor: '$primary11',
+                  backgroundColor: '$primary6',
                   px: '$4',
                   py: '$3',
                   flex: 1,
