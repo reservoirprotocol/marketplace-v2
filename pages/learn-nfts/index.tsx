@@ -41,7 +41,7 @@ const EducationPage: NextPage = () => {
             Choose what you would like to learn about NFTs
           </Text>
         </Box>
-        {isMounted && <LearnCarousel />}
+        {isMounted && <LearnGrid />}
       </Box>
       <Flex
         justify="between"
