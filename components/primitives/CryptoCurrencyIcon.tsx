@@ -18,6 +18,7 @@ const CryptoCurrencyIcon: FC<Props> = ({
 
   return (
     <StyledImg
+      alt={address}
       src={`${chain?.proxyApi}/redirect/currency/${address}/icon/v1`}
       css={css}
     />

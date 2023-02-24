@@ -147,7 +147,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
             <CollectionAction>{etherscanImage}</CollectionAction>
           </a>
           {twitterLink && (
-            <a href={twitterLink} target="_blank" rel="noopener noreferrer">
+            <a href={twitterLink} aria-label="twitter" target="_blank" rel="noopener noreferrer">
               <CollectionAction>
                 <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
               </CollectionAction>
@@ -158,6 +158,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               href={collection.discordUrl}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="discord"
             >
               <CollectionAction>
                 <FontAwesomeIcon icon={faDiscord} width={16} height={16} />
@@ -169,6 +170,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               href={collection.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Website"
             >
               <CollectionAction>
                 <FontAwesomeIcon icon={faGlobe} width={16} height={16} />

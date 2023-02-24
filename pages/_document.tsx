@@ -18,7 +18,7 @@ class MyDocument extends Document {
       'Buy and Sell NFTs on L2 at NFTEarth'
     const ogImage = 'https://nftearth.exchange/render-image-1.png'
     return (
-      <Html>
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />

@@ -35,6 +35,21 @@ const developerSectionLinks = [
     name: 'GitHub',
     href: 'https://github.com/NFTEarth',
   },
+  {
+    name: 'API',
+    href: 'https://api.nftearth.exchange',
+  },
+]
+
+const resourcesSectionLinks = [
+  {
+    name: 'Education',
+    href: '/learn-nfts',
+  },
+  {
+    name: 'Token',
+    href: '/token',
+  },
 ]
 
 const companySectionLinks = [
@@ -45,10 +60,6 @@ const companySectionLinks = [
   {
     name: 'Privacy',
     href: '/privacy',
-  },
-  {
-    name: 'Token',
-    href: '/token',
   },
 ]
 
@@ -69,18 +80,28 @@ export const Footer = () => {
         },
       }}
     >
-      <Flex css={{ gap: 80, '@bp600': { gap: 136 } }}>
+      <Flex css={{ gap: 40, '@bp600': { gap: 136 }, flexWrap: 'wrap' }}>
         <Flex direction="column">
-          <SectionTitle title="Developers" />
-          {developerSectionLinks.map((props) => (
-            <SectionLink key={props.name} {...props} />
-          ))}
+          <Flex direction="column">
+            <SectionTitle title="Developers" />
+            {developerSectionLinks.map((props) => (
+              <SectionLink key={props.name} {...props} />
+            ))}
+          </Flex>
         </Flex>
         <Flex direction="column">
           <SectionTitle title="Company" />
           {companySectionLinks.map((props) => (
             <SectionLink key={props.name} {...props} />
           ))}
+        </Flex>
+        <Flex direction="column">
+          <Flex direction="column">
+            <SectionTitle title="Resources" />
+            {resourcesSectionLinks.map((props) => (
+              <SectionLink key={props.name} {...props} />
+            ))}
+          </Flex>
         </Flex>
       </Flex>
       <Flex
@@ -93,6 +114,7 @@ export const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             href="https://twitter.com/NFTEarth_L2"
+            aria-label="Twitter"
           >
             <Button
               size="xs"
@@ -102,6 +124,7 @@ export const Footer = () => {
                   background: 'grey',
                 },
               }}
+              aria-label="Twitter"
             >
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
             </Button>
@@ -110,6 +133,7 @@ export const Footer = () => {
             target="_blank"
             rel="noopener noreferrer"
             href="https://discord.gg/nftearth"
+            aria-label="Discord"
           >
             <Button
               size="xs"
@@ -119,6 +143,7 @@ export const Footer = () => {
                   background: 'grey',
                 },
               }}
+              aria-label="Discord"
             >
               <FontAwesomeIcon icon={faDiscord} width={14} height={14} />
             </Button>
@@ -129,9 +154,9 @@ export const Footer = () => {
             <img
               height="100"
               width="100"
-              src="https://d0.awsstatic.com/logos/powered-by-aws-white.png"
+              src="/images/powered-by-aws-white.png"
               alt="Powered by AWS Cloud Computing"
-            ></img>
+            />
           </a>
         </Box>
       </Flex>

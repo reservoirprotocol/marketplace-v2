@@ -1,60 +1,42 @@
-import { memo, useEffect, useRef, useState } from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import { NextPage } from 'next'
-import { Flex, Box, Button, Text } from 'components/primitives'
-import Layout from 'components/Layout'
 import Link from 'next/link'
-import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
 import * as Dialog from '@radix-ui/react-dialog'
-import { faWarning, faClose } from '@fortawesome/free-solid-svg-icons'
+import {useTheme} from "next-themes";
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
-import { ClaimReward } from 'components/claim/ClaimReward'
-import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
-import { useMounted } from 'hooks'
-import '../../components/claim'
+import Layout from 'components/Layout'
+import { Flex, Box, Button, Text } from 'components/primitives'
 import {
   AnimatedOverlay,
   AnimatedContent,
-} from '../../components/primitives/Dialog'
-import { scriptForClaim } from '../../components/claim'
+} from 'components/primitives/Dialog'
+import { ClaimRewardHeroBanner } from 'components/claim/ClaimRewardHeroBanner'
+import { faWarning, faClose } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ClaimReward } from 'components/claim/ClaimReward'
+import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
+import useCountdown from 'hooks/useCountdown'
+import { useMounted } from 'hooks'
 
-interface InjectScriptProps {
-  script: string;
-}
-
-const InjectScript = memo(({ script }: InjectScriptProps) => {
-  const divRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (divRef.current === null) {
-      return
-    }
-
-    const doc = document.createRange().createContextualFragment(script)
-
-    divRef.current.innerHTML = ''
-    divRef.current.appendChild(doc)
-  })
-
-  return <div ref={divRef} />
-})
+const endClaimTime = 1677609000000;
 
 const ClaimPage: NextPage = () => {
+  const { theme } = useTheme();
   const { data: signature, isLoading } = useEligibleAirdropSignature()
   const [open, setOpen] = useState(false);
   const isMounted = useMounted()
+  const { days, hours, minutes, seconds } = useCountdown(endClaimTime);
 
   // Count Down State if the user didn't claim
-  const [showCountDown, setShowCountDown] = useState(false);
+  const showCountDown = useMemo(() => {
+    return isMounted && signature
+  }, [isMounted, signature])
 
   useEffect(() => {
     if (isMounted && !isLoading && !signature) {
       setOpen(true)
-      setShowCountDown(true);
     } else {
       setOpen(false)
-      setShowCountDown(false);
     }
   }, [isMounted, signature])
 
@@ -69,14 +51,46 @@ const ClaimPage: NextPage = () => {
           },
         }}
       >
-        <Box
-          css={{
-            p: 24,
-            borderRadius: '20px',
-          }}
-        >
-          {showCountDown && <InjectScript script={scriptForClaim} />}
-        </Box>
+        {showCountDown && (
+          <Flex align="center" direction="column" css={{ mb: 50, backgroundColor: '$gray6', p: 24, borderRadius: 20, textAlign: 'center' }}>
+            <Text style="h2" css={{
+              color: theme === 'dark' ? '$primary9' : '$primary8',
+              fontSize: 30,
+            }}>$NFTE Airdrop 1 Claiming Closes</Text>
+            <Flex justify="between" direction="row" css={{ flexWrap: 'wrap'}}>
+              <Flex direction="column" align="center" css={{ width: 130 }}>
+                <Text style="h1">{days}</Text>
+                <Text style="h5">DAYS</Text>
+              </Flex>
+              <Flex direction="column" align="center">
+                <Text style="h1">:</Text>
+              </Flex>
+              <Flex direction="column" align="center" css={{ width: 130 }}>
+                <Text style="h1">{hours}</Text>
+                <Text style="h5">HOURS</Text>
+              </Flex>
+              <Flex direction="column" align="center" css={{
+                display: 'none',
+                '@md': {
+                  display: 'flex'
+                }
+              }}>
+                <Text style="h1">:</Text>
+              </Flex>
+              <Flex direction="column" align="center" css={{ width: 100 }}>
+                <Text style="h1">{minutes}</Text>
+                <Text style="h5">MINUTES</Text>
+              </Flex>
+              <Flex direction="column" align="center">
+                <Text style="h1">:</Text>
+              </Flex>
+              <Flex direction="column" align="center" css={{ width: 130 }}>
+                <Text style="h1" css={{ color: '$red9'}}>{seconds}</Text>
+                <Text style="h5">SECONDS</Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        )}
         <ClaimRewardHeroBanner
           image="/ClaimBG.png"
           title="Claim your $NFTE tokens after completing a listing on the NFTEarth marketplace"

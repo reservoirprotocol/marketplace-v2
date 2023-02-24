@@ -29,6 +29,7 @@ export const TrendingCollectionItem: FC<Props> = ({
           {rank}
         </Text>
         <img
+          alt={collection?.name}
           src={collection?.image || 'https://via.placeholder.com/56?text='}
           style={{ borderRadius: 8, width: 56, height: 56, objectFit: 'cover', backgroundColor: '#ddd' }}
         />

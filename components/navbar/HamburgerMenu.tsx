@@ -65,7 +65,7 @@ const HamburgerMenu = () => {
         >
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/nftearth-icon.png" style={{ width: '100%' }} />
+              <img alt="NFTEarth Logo" src="/nftearth-icon.png" style={{ width: 34, height: 34 }} />
             </Box>
           </Link>
           <RadixDialog.Close>
@@ -324,22 +324,24 @@ const HamburgerMenu = () => {
             borderTop: '1px solid $gray4',
           }}
         >
-          <a href="https://twitter.com/NFTEarth_L2" target="_blank">
+          <a aria-label="Twitter" href="https://twitter.com/NFTEarth_L2" target="_blank">
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
               size="small"
               color="gray3"
+              aria-label="Twitter"
             >
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <a href="https://discord.gg/nftearth" target="_blank">
+          <a aria-label="Discord" href="https://discord.gg/nftearth" target="_blank">
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
               size="small"
               color="gray3"
+              aria-label="Discord"
             >
               <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
             </Button>
