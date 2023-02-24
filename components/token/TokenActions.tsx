@@ -105,7 +105,6 @@ export const TokenActions: FC<Props> = ({
           tokenId={token?.token?.tokenId}
           collectionId={token?.token?.collection?.id}
           mutate={mutate}
-          buttonCss={buttonCss}
         />
       )}
 
