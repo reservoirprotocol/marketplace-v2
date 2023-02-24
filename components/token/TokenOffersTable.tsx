@@ -67,7 +67,15 @@ export const TokenOffersTable: FC<Props> = ({
       <Flex
         direction="row"
         align="center"
-        css={{ p: '$4', backgroundColor: '$primary9', mt: 40 }}
+        css={{
+          p: '$4',
+          backgroundColor: theme
+            ? theme === 'dark'
+              ? '$primary6'
+              : '$primary11'
+            : '$primary6',
+          mt: 40,
+        }}
       >
         <FontAwesomeIcon icon={faListDots} />
         <Text style="h6" css={{ ml: '$4' }}>
@@ -134,7 +142,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         borderBottomColor: theme
           ? theme === 'dark'
             ? '$primary6'
-            : '$primary9'
+            : '$primary11'
           : '$primary6',
       }}
     >
@@ -182,7 +190,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                 maxWidth: '300px',
                 justifyContent: 'center',
                 px: '5px',
-                backgroundColor: '$primary9',
+                backgroundColor: '$primary11',
                 color: 'white',
                 '&:hover': {
                   backgroundColor: '$primary10',
@@ -219,25 +227,32 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
 
 const headings = ['Price', 'Floor Difference', 'Expiration', 'From', '']
 
-const TableHeading = () => (
-  <HeaderRow
-    css={{
-      display: 'grid',
-      gridTemplateColumns: desktopTemplateColumns,
-      position: 'sticky',
-      top: 0,
-      backgroundColor: '$primary9',
-    }}
-  >
-    {headings.map((heading) => (
-      <TableCell
-        key={heading}
-        css={{ pl: '$2 !important', py: '$1', border: '1px solid $primary2' }}
-      >
-        <Text as={'div'} style="subtitle3">
-          {heading}
-        </Text>
-      </TableCell>
-    ))}
-  </HeaderRow>
-)
+const TableHeading = () => {
+  const { theme } = useTheme()
+  return (
+    <HeaderRow
+      css={{
+        display: 'grid',
+        gridTemplateColumns: desktopTemplateColumns,
+        position: 'sticky',
+        top: 0,
+        backgroundColor: theme
+          ? theme === 'dark'
+            ? '$primary6'
+            : '$primary11'
+          : '$primary6',
+      }}
+    >
+      {headings.map((heading) => (
+        <TableCell
+          key={heading}
+          css={{ pl: '$2 !important', py: '$1', border: '1px solid $primary2' }}
+        >
+          <Text as={'div'} style="subtitle3">
+            {heading}
+          </Text>
+        </TableCell>
+      ))}
+    </HeaderRow>
+  )
+}

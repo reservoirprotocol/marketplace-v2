@@ -48,6 +48,7 @@ export const TokenActions: FC<Props> = ({
     width: '100%',
     justifyContent: 'center',
     minWidth: 'max-content',
+    background: '$primary9',
     '@sm': {
       maxWidth: '200px',
     },
