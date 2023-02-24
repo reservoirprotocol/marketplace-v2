@@ -26,8 +26,8 @@
     "@radix-ui/react-toast": "^1.1.2",
     "@radix-ui/react-toggle-group": "^1.0.1",
     "@radix-ui/react-tooltip": "^1.0.2",
-    "@rainbow-me/rainbowkit": "^0.9",
-    "@reservoir0x/reservoir-kit-ui": "0.9.3",
+    "@reservoir0x/reservoir-kit-ui": "^0.10.0",
+    "connectkit": "^1.1.4",
     "dayjs": "^1.11.6",
     "ethers": "^5.6.9",
     "framer-motion": "^6.3.6",
@@ -42,7 +42,7 @@
     "react-responsive": "^9.0.0",
     "swr": "2.0.0-rc.3",
     "usehooks-ts": "^2.9.1",
-    "wagmi": "^0.9"
+    "wagmi": "^0.10.11"
   },
   "prettier": {
     "semi": false,

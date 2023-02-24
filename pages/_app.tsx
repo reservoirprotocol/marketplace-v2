@@ -3,13 +3,7 @@ import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
-import '@rainbow-me/rainbowkit/styles.css'
-import {
-  RainbowKitProvider,
-  getDefaultWallets,
-  darkTheme as rainbowDarkTheme,
-  lightTheme as rainbowLightTheme,
-} from '@rainbow-me/rainbowkit'
+import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
@@ -52,7 +46,7 @@ const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ])
 
-const { connectors } = getDefaultWallets({
+const { connectors } = getDefaultClient({
   appName: 'Reservoir Hub',
   chains,
 })
@@ -104,27 +98,12 @@ function MyApp({
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
-  const [rainbowKitTheme, setRainbowKitTheme] = useState<
-    | ReturnType<typeof rainbowDarkTheme>
-    | ReturnType<typeof rainbowLightTheme>
-    | undefined
-  >()
 
   useEffect(() => {
     if (theme == 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
-      setRainbowKitTheme(
-        rainbowDarkTheme({
-          borderRadius: 'small',
-        })
-      )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
-      setRainbowKitTheme(
-        rainbowLightTheme({
-          borderRadius: 'small',
-        })
-      )
     }
   }, [theme])
 
@@ -147,7 +126,7 @@ function MyApp({
             chains: supportedChains.map(({ proxyApi, id }) => {
               return {
                 id,
-                baseApiUrl: `${baseUrl}${marketplaceChain.proxyApi}`,
+                baseApiUrl: `${baseUrl}${proxyApi}`,
                 default: marketplaceChain.id === id,
               }
             }),
@@ -158,15 +137,14 @@ function MyApp({
         >
           <CartProvider>
             <Tooltip.Provider>
-              <RainbowKitProvider
-                chains={chains}
-                theme={rainbowKitTheme}
-                modalSize="compact"
+              <ConnectKitProvider
+                mode={theme == 'dark' ? 'dark' : 'light'}
+                options={{ initialChainId: 0 }}
               >
                 <ToastContextProvider>
                   <FunctionalComponent {...pageProps} />
                 </ToastContextProvider>
-              </RainbowKitProvider>
+              </ConnectKitProvider>
             </Tooltip.Provider>
           </CartProvider>
         </ReservoirKitProvider>

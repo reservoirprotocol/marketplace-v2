@@ -28,6 +28,7 @@ type TokenCardProps = {
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
+  tokenCount?: string
 }
 
 export default ({
@@ -35,12 +36,14 @@ export default ({
   rarityEnabled = true,
   mutate,
   onMediaPlayed,
+  tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
+  const tokenIsInCart = token && token?.isInCart
 
   return (
     <Box
@@ -61,6 +64,26 @@ export default ({
         },
       }}
     >
+      {tokenCount && (
+        <Flex
+          justify="center"
+          align="center"
+          css={{
+            borderRadius: 8,
+            px: '$2',
+            py: '$1',
+            mr: '$2',
+            backgroundColor: '$gray4',
+            position: 'absolute',
+            left: '$2',
+            top: '$2',
+            zIndex: 1,
+            maxWidth: '50%',
+          }}
+        >
+          <Text ellipsify>x{tokenCount}</Text>
+        </Flex>
+      )}
       <Flex
         justify="center"
         align="center"
@@ -73,11 +96,11 @@ export default ({
           right: '$2',
           zIndex: 1,
           transition: `visibility 0s linear ${
-            token.isInCart ? '' : '250ms'
+            tokenIsInCart ? '' : '250ms'
           }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
-          opacity: token.isInCart ? 1 : 0,
-          top: token.isInCart ? '$2' : 50,
-          visibility: token.isInCart ? 'visible' : 'hidden',
+          opacity: tokenIsInCart ? 1 : 0,
+          top: tokenIsInCart ? '$2' : 50,
+          visibility: tokenIsInCart ? 'visible' : 'hidden',
           color: 'white',
         }}
       >

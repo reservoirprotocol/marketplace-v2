@@ -28,7 +28,6 @@ export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
   const data = useUsersActivity(user ? [user] : undefined, activityQuery, {
     revalidateOnMount: true,
     fallbackData: [],
-    revalidateFirstPage: true,
   })
 
   useEffect(() => {
