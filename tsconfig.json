@@ -25,7 +25,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-  ],
+, "components/learn-nfts/LearnCarousel.tsx", "components/learn-nfts/LearnCarousel.tsx"  ],
   "exclude": [
     "node_modules"
   ]

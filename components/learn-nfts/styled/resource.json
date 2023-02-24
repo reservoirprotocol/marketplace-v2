@@ -1,0 +1,58 @@
+{
+  "items": {
+    "bootstrap": [
+    ],
+    "elastic": [
+      {
+        "id": 1,
+        "title": "Introduction to NFTs",
+        "imageUrl": "/images/LearnNFT_1.png",
+        "Links": [
+          {"learnTitle": "How do NFTs work", "learnLink": ""},
+          {"learnTitle": "History of NFTs", "learnLink": ""},
+          {"learnTitle": "What are NFTs", "learnLink": ""}
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Invest in your future",
+        "imageUrl": "/images/LearnNFT_2.png",
+        "Links": [
+          {"learnTitle": "Future of NFTs", "learnLink": ""},
+          {"learnTitle": "Era of NFTs", "learnLink": ""},
+          {"learnTitle": "Who can buy NFTs ...", "learnLink": ""}
+        ]
+      },
+      {
+        "id": 3,
+        "title": "NFTs: New Age",
+        "imageUrl": "/images/LearnNFT_3.png",
+        "Links": [
+          {"learnTitle": "Futurism & NFT", "learnLink": ""},
+          {"learnTitle": "Past, Present & Future NFTs", "learnLink": ""},
+          {"learnTitle": "New era NFTs", "learnLink": ""}
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Introduction to NFTs",
+        "imageUrl": "/images/LearnNFT_1.png",
+        "Links": [
+          {"learnTitle": "How do NFTs work", "learnLink": ""},
+          {"learnTitle": "History of NFTs", "learnLink": ""},
+          {"learnTitle": "What are NFTs", "learnLink": ""}
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Invest in your future",
+        "imageUrl": "/images/LearnNFT_2.png",
+        "Links": [
+          {"learnTitle": "How do NFTs work", "learnLink": ""},
+          {"learnTitle": "History of NFTs", "learnLink": ""},
+          {"learnTitle": "What are NFTs", "learnLink": ""}
+        ]
+      }
+    ]
+  }
+}
