@@ -37,7 +37,10 @@ export const ConnectWalletButton: FC<Props> = () => {
                       height: 44,
                       width: 44,
                       p: 0,
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      '&:hover': {
+                        background: '$gray8',
+                      },
                     }}
                     color='gray3'
                     corners="rounded"

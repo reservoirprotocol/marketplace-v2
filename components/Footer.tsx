@@ -121,7 +121,7 @@ export const Footer = () => {
               color="gray3"
               css={{
                 '&:hover': {
-                  background: 'grey',
+                  background: '$gray8',
                 },
               }}
               aria-label="Twitter"
@@ -140,7 +140,7 @@ export const Footer = () => {
               color="gray3"
               css={{
                 '&:hover': {
-                  background: 'grey',
+                  background: '$gray8',
                 },
               }}
               aria-label="Discord"

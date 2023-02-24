@@ -51,7 +51,14 @@ const ThemeSwitcher = () => {
   return (
     <Box>
       <Button
-        css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+        css={{
+          justifyContent: 'center',
+          width: '44px',
+          height: '44px',
+          '&:hover': {
+            background: '$gray8',
+          },
+        }}
         type="button"
         onClick={() => (theme == 'dark' ? setTheme('light') : setTheme('dark'))}
         size="small"
