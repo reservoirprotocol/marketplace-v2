@@ -3,6 +3,8 @@ import {
   faCircleExclamation,
   faRefresh,
   faArrowDownUpAcrossLine,
+  faUserGroup,
+  faTableCells
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
@@ -375,20 +377,37 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           </Flex>
           {token && (
             <>
-              <Flex align="center" css={{ mt: '$2' }}>
-                <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
-                  Owner
-                </Text>
-                <Jazzicon
-                  diameter={16}
-                  seed={jsNumberForAddress(owner || '')}
-                />
-                <Link href={`/profile/${owner}`} legacyBehavior={true}>
-                  <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                    {isMounted ? ownerFormatted : ''}
-                  </Anchor>
-                </Link>
-              </Flex>
+              {token.token?.kind === 'erc1155' ? (
+                <Flex>
+                  <Flex align="center" css={{ mt: '$2', mr: '$6' }}>
+                    <FontAwesomeIcon icon={faUserGroup} size="lg" />
+                    <Text style="subtitle3" color="subtle" css={{ mx: '$2' }}>
+                      {` owners`}
+                    </Text>
+                  </Flex>
+                  <Flex align="center" css={{ mt: '$2' }}>
+                    <FontAwesomeIcon icon={faTableCells} size="lg" />
+                    <Text style="subtitle3" color="subtle" css={{ mx: '$2' }}>
+                      {` items`}
+                    </Text>
+                  </Flex>
+                </Flex>
+              ) : (
+                <Flex align="center" css={{ mt: '$2' }}>
+                  <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
+                    Owner
+                  </Text>
+                  <Jazzicon
+                    diameter={16}
+                    seed={jsNumberForAddress(owner || '')}
+                  />
+                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                    <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
+                      {isMounted ? ownerFormatted : ''}
+                    </Anchor>
+                  </Link>
+                </Flex>
+              )}
               <RarityRank
                 token={token}
                 collection={collection}
