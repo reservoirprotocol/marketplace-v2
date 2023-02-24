@@ -25,7 +25,11 @@ const CartMenu: FC = () => {
             width: '44px',
             height: '44px',
             borderRadius: '$lg',
-            position: 'relative'
+            position: 'relative',
+            transition: '0.5s',
+            '&:hover': {
+              background: '$gray8',
+            },
           }}>
           {(cartItems.length > 0) && (
             <Flex
