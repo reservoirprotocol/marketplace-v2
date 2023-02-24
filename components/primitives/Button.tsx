@@ -38,6 +38,14 @@ const Button = styled('button', {
           backgroundColor: '$secondary5',
         },
       },
+      tertiary: {
+        backgroundColor: 'transparent',
+        color: '$black',
+        outline: '1px solid $primary13',
+        '&:hover': {
+          backgroundColor: '$primary12',
+        },
+      },
       gray3: {
         backgroundColor: '$gray3',
         color: '$gray12',

@@ -12,32 +12,39 @@ import {
 import { faListDots } from '@fortawesome/free-solid-svg-icons'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import {useBids, useTokens} from '@nftearth/reservoir-kit-ui'
+import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-import {useENSResolver, useTimeSince} from 'hooks'
+import { useENSResolver, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
-import {AcceptBid} from "../buttons";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faBolt} from "@fortawesome/free-solid-svg-icons";
-import {useAccount} from "wagmi";
+import { AcceptBid } from '../buttons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBolt } from '@fortawesome/free-solid-svg-icons'
+import { useAccount } from 'wagmi'
+import { useTheme } from 'next-themes'
 
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0],
-  floor: number | undefined,
-  account: ReturnType<typeof useAccount>,
+  token: ReturnType<typeof useTokens>['data'][0]
+  floor: number | undefined
+  account: ReturnType<typeof useAccount>
   isOwner: boolean
 }
 
 const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
-export const TokenOffersTable: FC<Props> = ({ token, floor, account, isOwner }) => {
-  const { address } = account || {};
+export const TokenOffersTable: FC<Props> = ({
+  token,
+  floor,
+  account,
+  isOwner,
+}) => {
+  const { address } = account || {}
+  const { theme } = useTheme()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   let bidsQuery: Parameters<typeof useBids>['0'] = {
     token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
-    sortBy: 'price'
+    sortBy: 'price',
   }
 
   const {
@@ -57,11 +64,20 @@ export const TokenOffersTable: FC<Props> = ({ token, floor, account, isOwner }) 
 
   return (
     <>
-      <Flex direction="row" align="center" css={{ p: '$4', backgroundColor: '$primary6', mt: 40 }}>
+      <Flex
+        direction="row"
+        align="center"
+        css={{ p: '$4', backgroundColor: '$primary9', mt: 40 }}
+      >
         <FontAwesomeIcon icon={faListDots} />
-        <Text style="h6" css={{ ml: '$4'}}>Offers</Text>
+        <Text style="h6" css={{ ml: '$4' }}>
+          Offers
+        </Text>
       </Flex>
-      <Flex direction="column" css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}>
+      <Flex
+        direction="column"
+        css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
+      >
         <TableHeading />
         {offers.map((offer, i) => {
           return (
@@ -76,7 +92,7 @@ export const TokenOffersTable: FC<Props> = ({ token, floor, account, isOwner }) 
             />
           )
         })}
-        <Box ref={loadMoreRef} css={{ height: 20 }}/>
+        <Box ref={loadMoreRef} css={{ height: 20 }} />
       </Flex>
       {isValidating && (
         <Flex align="center" justify="center" css={{ py: '$5' }}>
@@ -90,35 +106,46 @@ export const TokenOffersTable: FC<Props> = ({ token, floor, account, isOwner }) 
 type OfferTableRowProps = {
   offer: ReturnType<typeof useBids>['data'][0]
   token: ReturnType<typeof useTokens>['data'][0]
-  mutate?: MutatorCallback,
-  address: `0x${string}` | undefined,
-  floor: number | undefined,
+  mutate?: MutatorCallback
+  address: `0x${string}` | undefined
+  floor: number | undefined
   isOwner: boolean
 }
 
-const OfferTableRow: FC<OfferTableRowProps> = ({ offer,token,  mutate, address, floor = 0, isOwner }) => {
+const OfferTableRow: FC<OfferTableRowProps> = ({
+  offer,
+  token,
+  mutate,
+  address,
+  floor = 0,
+  isOwner,
+}) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const expiration = useTimeSince(offer?.expiration)
   const { displayName: makerDisplayName } = useENSResolver(offer?.maker)
-  const offerPrice = offer?.price?.amount?.native || 0;
+  const offerPrice = offer?.price?.amount?.native || 0
+  const { theme } = useTheme()
 
   return (
     <TableRow
       key={offer?.id}
-      css={{ gridTemplateColumns: desktopTemplateColumns, borderBottomColor: '$primary6' }}
+      css={{
+        gridTemplateColumns: desktopTemplateColumns,
+        borderBottomColor: theme
+          ? theme === 'dark'
+            ? '$primary6'
+            : '$primary9'
+          : '$primary6',
+      }}
     >
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Text
-          style="subtitle2"
-        >
-          {offer?.price?.amount?.native}
-        </Text>
+        <Text style="subtitle2">{offer?.price?.amount?.native}</Text>
       </TableCell>
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Text
-          style="subtitle2"
-        >
-          {`${(100 * Math.abs( (offerPrice - floor) / ( (offerPrice+floor)/2 ) )).toFixed(0)}% ${offerPrice > floor ? 'above': 'below'}`}
+        <Text style="subtitle2">
+          {`${(
+            100 * Math.abs((offerPrice - floor) / ((offerPrice + floor) / 2))
+          ).toFixed(0)}% ${offerPrice > floor ? 'above' : 'below'}`}
         </Text>
       </TableCell>
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
@@ -148,7 +175,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer,token,  mutate, address, 
               token={token}
               mutate={mutate}
               buttonProps={{
-                size: isSmallDevice ? 'xs' : 'medium'
+                size: isSmallDevice ? 'xs' : 'medium',
               }}
               buttonCss={{
                 width: '100%',
@@ -174,7 +201,11 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer,token,  mutate, address, 
               bidId={offer?.id as string}
               mutate={mutate}
               trigger={
-                <Button css={{ color: '$red11', px: '5px', }} size={isSmallDevice ? 'xs' : 'medium'} color="gray3">
+                <Button
+                  css={{ color: '$red11', px: '5px' }}
+                  size={isSmallDevice ? 'xs' : 'medium'}
+                  color="gray3"
+                >
                   Cancel
                 </Button>
               }
@@ -195,12 +226,15 @@ const TableHeading = () => (
       gridTemplateColumns: desktopTemplateColumns,
       position: 'sticky',
       top: 0,
-      backgroundColor: '$primary4'
+      backgroundColor: '$primary9',
     }}
   >
     {headings.map((heading) => (
-      <TableCell key={heading} css={{ pl: '$2 !important', py: '$1', border: '1px solid $primary2' }}>
-        <Text as={'div'} style="subtitle3" color="subtle">
+      <TableCell
+        key={heading}
+        css={{ pl: '$2 !important', py: '$1', border: '1px solid $primary2' }}
+      >
+        <Text as={'div'} style="subtitle3">
           {heading}
         </Text>
       </TableCell>

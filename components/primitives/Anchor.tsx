@@ -17,9 +17,9 @@ export const StyledAnchor = styled('a', {
   variants: {
     color: {
       primary: {
-        color: '$primary11',
+        color: '$primary9',
         '&:hover': {
-          color: '$primary10',
+          color: '$primary12',
         },
       },
       gray: {

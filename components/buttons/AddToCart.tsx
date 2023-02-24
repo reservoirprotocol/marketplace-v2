@@ -1,16 +1,17 @@
-import {ComponentProps, FC} from "react";
-import {useCart, useDynamicTokens} from "@nftearth/reservoir-kit-ui";
+import { ComponentProps, FC } from 'react'
+import { useCart, useDynamicTokens } from '@nftearth/reservoir-kit-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCartPlus, faRemove } from '@fortawesome/free-solid-svg-icons'
 
-import {useNetwork, useSigner, useSwitchNetwork} from "wagmi";
-import {useMarketplaceChain} from "hooks";
-import {Button} from "../primitives";
-import {CSS} from "@stitches/react";
+import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import { useMarketplaceChain } from 'hooks'
+import { useTheme } from 'next-themes'
+import { Button } from '../primitives'
+import { CSS } from '@stitches/react'
 
 type Props = {
-  token?: ReturnType<typeof useDynamicTokens>['data'][0],
-  icon?: boolean,
+  token?: ReturnType<typeof useDynamicTokens>['data'][0]
+  icon?: boolean
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
 }
@@ -18,34 +19,31 @@ type Props = {
 const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
+  const { theme } = useTheme()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
-  const { add, remove } = useCart(cart => cart.items);
+  const { add, remove } = useCart((cart) => cart.items)
 
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
   )
   const tokenId = `${token?.token?.collection?.id}:${token?.token?.tokenId}`
-  const canAddToCart = !!token?.market?.floorAsk?.price?.amount;
+  const canAddToCart = !!token?.market?.floorAsk?.price?.amount
 
   if (token?.isInCart) {
     return (
       <Button
-        onClick={() => remove([
-          tokenId
-        ])}
+        onClick={() => remove([tokenId])}
         color="gray4"
         css={{
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
         {...buttonProps}
       >
-        {icon ? (
-          <FontAwesomeIcon icon={faRemove} />
-        ) : `Remove`}
+        {icon ? <FontAwesomeIcon icon={faRemove} /> : `Remove`}
       </Button>
     )
   }
@@ -53,11 +51,13 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
   if (!token?.isInCart && canAddToCart) {
     return (
       <Button
-        color="secondary"
+        color={
+          theme ? (theme === 'dark' ? 'secondary' : 'tertiary') : 'secondary'
+        }
         {...buttonProps}
         css={{
           justifyContent: 'center',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
         onClick={async () => {
           if (isInTheWrongNetwork) {
@@ -66,14 +66,12 @@ const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
           await add([token], Number(activeChain?.id))
         }}
       >
-        {icon ? (
-          <FontAwesomeIcon icon={faCartPlus} />
-        ) : `Add to Cart`}
+        {icon ? <FontAwesomeIcon icon={faCartPlus} /> : `Add to Cart`}
       </Button>
     )
   }
 
-  return null;
+  return null
 }
 
-export default AddToCart;
+export default AddToCart

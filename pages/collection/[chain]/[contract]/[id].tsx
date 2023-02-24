@@ -470,7 +470,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         <Flex align="start" justify="start" css={{ flex: 1, px: '$3' }}>
           <Collapsible.Root style={{ width: '100%' }}>
             <Collapsible.Trigger asChild>
-              <Flex css={{ backgroundColor: '$primary6', px: '$4', py: '$3', flex: 1, cursor: 'pointer' }} align="center">
+              <Flex css={{ backgroundColor: '$primary9', px: '$4', py: '$3', flex: 1, cursor: 'pointer' }} align="center">
                 <FontAwesomeIcon icon={faArrowDownUpAcrossLine}/>
                 <Text style="h6" css={{ ml: '$4' }}>Item Activity</Text>
               </Flex>
