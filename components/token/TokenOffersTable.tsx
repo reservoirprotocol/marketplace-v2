@@ -156,9 +156,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           <Text
             style="subtitle3"
             css={{
-              color: '$primary11',
+              color: '$primary13',
               '&:hover': {
-                color: '$primary10',
+                color: '$primary14',
               },
             }}
           >
