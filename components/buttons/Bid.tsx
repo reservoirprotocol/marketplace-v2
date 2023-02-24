@@ -51,12 +51,13 @@ const Bid: FC<Props> = ({
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
     justifyContent: 'center',
+    background: theme ? (theme === 'dark' ? 'none' : '$primary11') : 'none',
     minWidth: 'max-content',
     border: theme
       ? theme === 'dark'
-        ? '1px solid $primary9'
+        ? '1px solid $primary11'
         : 'none'
-      : '1px solid $primary9',
+      : '1px solid $primary11',
     '@sm': {
       maxWidth: '200px',
     },

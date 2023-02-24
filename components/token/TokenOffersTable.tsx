@@ -72,7 +72,7 @@ export const TokenOffersTable: FC<Props> = ({
           backgroundColor: theme
             ? theme === 'dark'
               ? '$primary6'
-              : '$primary9'
+              : '$primary11'
             : '$primary6',
           mt: 40,
         }}
@@ -142,7 +142,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         borderBottomColor: theme
           ? theme === 'dark'
             ? '$primary6'
-            : '$primary9'
+            : '$primary11'
           : '$primary6',
       }}
     >
@@ -190,7 +190,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                 maxWidth: '300px',
                 justifyContent: 'center',
                 px: '5px',
-                backgroundColor: '$primary9',
+                backgroundColor: '$primary11',
                 color: 'white',
                 '&:hover': {
                   backgroundColor: '$primary10',
@@ -239,7 +239,7 @@ const TableHeading = () => {
         backgroundColor: theme
           ? theme === 'dark'
             ? '$primary6'
-            : '$primary9'
+            : '$primary11'
           : '$primary6',
       }}
     >
