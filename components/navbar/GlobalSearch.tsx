@@ -15,23 +15,22 @@ import { useDebounce } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 
 import Link from 'next/link'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import { useMarketplaceChain } from 'hooks'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import { SearchCollection } from 'pages/api/globalSearch'
+import { ChainIcon } from 'connectkit'
 
 type Props = {
-  collection: NonNullable<
-    paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
-  >[0]
+  collection: SearchCollection
 }
 
 const CollectionItem: FC<Props> = ({ collection }) => {
-  const { routePrefix } = useMarketplaceChain()
-
   return (
-    <Link href={`/collection/${routePrefix}/${collection.collectionId}`}>
+    <Link
+      href={`/collection/${collection.chainName}/${collection.collectionId}`}
+      style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}
+    >
       <Flex
         css={{
           p: '$2',
@@ -40,19 +39,25 @@ const CollectionItem: FC<Props> = ({ collection }) => {
           '&:hover': {
             background: '$gray4',
           },
+          minWidth: 0,
+          width: '100%',
         }}
         align="center"
+        justify="between"
       >
-        <img
-          src={collection.image}
-          style={{ width: 32, height: 32, borderRadius: 4 }}
-        />
-        <Text style="subtitle1" ellipsify>
-          {collection.name}
-        </Text>
-        <OpenSeaVerified
-          openseaVerificationStatus={collection?.openseaVerificationStatus}
-        />
+        <Flex align="center" css={{ gap: '$2', minWidth: 0 }}>
+          <img
+            src={collection.image}
+            style={{ width: 32, height: 32, borderRadius: 4 }}
+          />
+          <Text style="subtitle1" ellipsify>
+            {collection.name}
+          </Text>
+          <OpenSeaVerified
+            openseaVerificationStatus={collection?.openseaVerificationStatus}
+          />
+        </Flex>
+        <ChainIcon id={collection.chainId} size={16} />
       </Flex>
     </Link>
   )
@@ -123,16 +128,15 @@ const GlobalSearch = forwardRef<
   const [showSearchBox, setShowSearchBox] = useState(false)
 
   const debouncedSearch = useDebounce(search, 500)
-  const marketplaceChain = useMarketplaceChain()
 
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
-      let res = await fetch(
-        `/api/globalSearch?q=${debouncedSearch}&chainId=${marketplaceChain.id}`
-      ).then((res) => res.json())
+      let res = await fetch(`/api/globalSearch?q=${debouncedSearch}`).then(
+        (res) => res.json()
+      )
 
       setResults(res.results)
       setSearching(false)
@@ -251,11 +255,13 @@ const GlobalSearch = forwardRef<
               '& div:not(:last-of-type)': {
                 borderBottom: isMobile ? '' : '1px solid $gray7',
               },
+              overflow: 'hidden',
+              width: '100%',
             }}
           >
             {results &&
               results
-                .slice(0, 8)
+                // .slice(0, 8)
                 .map((result) => <SearchResult result={result} />)}
 
             {searching && (
