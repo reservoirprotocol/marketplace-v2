@@ -69,10 +69,8 @@ export const TokenOffersTable: FC<Props> = ({
         align="center"
         css={{
           p: '$4',
-          backgroundColor: theme
-            ? theme === 'dark'
-              ? '$primary6'
-              : '$primary11'
+          backgroundColor: theme === 'light'
+            ? '$primary11'
             : '$primary6',
           mt: 40,
         }}
@@ -139,10 +137,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
       key={offer?.id}
       css={{
         gridTemplateColumns: desktopTemplateColumns,
-        borderBottomColor: theme
-          ? theme === 'dark'
-            ? '$primary6'
-            : '$primary11'
+        borderBottomColor: theme === 'light'
+          ? '$primary11'
           : '$primary6',
       }}
     >
@@ -236,11 +232,9 @@ const TableHeading = () => {
         gridTemplateColumns: desktopTemplateColumns,
         position: 'sticky',
         top: 0,
-        backgroundColor: theme
-          ? theme === 'dark'
-            ? '$primary6'
-            : '$primary11'
-          : '$primary6',
+        backgroundColor: theme === 'light'
+          ? '$primary10'
+          : '$primary5',
       }}
     >
       {headings.map((heading) => (

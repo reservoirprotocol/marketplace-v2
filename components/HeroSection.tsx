@@ -65,9 +65,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/portfolio" passHref legacyBehavior>
               <Button
                 as="a"
-                color={
-                  theme ? (theme === 'dark' ? 'ghost' : 'primary') : 'ghost'
-                }
+                color={theme === 'light' ? 'primary' : 'ghost'}
                 corners="pill"
                 size="large"
                 css={{
@@ -87,9 +85,7 @@ const HeroSection: FC<IProp> = ({ hideLink }) => {
             <Link href="/explore" passHref legacyBehavior>
               <Button
                 as="a"
-                color={
-                  theme ? (theme === 'dark' ? 'ghost' : 'primary') : 'ghost'
-                }
+                color={theme === 'light' ? 'primary' : 'ghost'}
                 corners="pill"
                 size="large"
                 css={{
