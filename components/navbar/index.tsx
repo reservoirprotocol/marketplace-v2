@@ -4,6 +4,7 @@ import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
@@ -60,7 +61,12 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/reservoirLogo.svg" style={{ width: '100%' }} />
+              <Image
+                src="/reservoirLogo.svg"
+                width={34}
+                height={39}
+                alt="Reservoir"
+              />
             </Box>
           </Link>
         </Flex>
@@ -96,11 +102,18 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
-                <img src="/reservoirMarketLogo.svg" style={{ width: '100%' }} />
+                <Image
+                  src="/reservoirMarketLogo.svg"
+                  width={112}
+                  height={36}
+                  alt="Reservoir"
+                />
               ) : (
-                <img
+                <Image
                   src="/reservoirMarketLogoLight.svg"
-                  style={{ width: '100%' }}
+                  width={112}
+                  height={36}
+                  alt="Reservoir"
                 />
               )}
             </Box>
