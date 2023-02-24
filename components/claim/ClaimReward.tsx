@@ -91,6 +91,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               }}
               css={{
                 fontWeight: 700,
+                color: '$whiteA12',
               }}
             >
               {title}
@@ -100,6 +101,9 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               style={{
                 '@initial': 'h4',
                 '@lg': 'h4',
+              }}
+              css={{
+                color: '$whiteA12',
               }}
             >
               {description}
