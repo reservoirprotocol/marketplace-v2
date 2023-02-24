@@ -55,9 +55,9 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
 import Head from 'next/head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import {TokenActivityTable} from "components/token/TokenActivityTable";
-import {NAVBAR_HEIGHT} from "../../../../components/navbar";
-import {TokenOffersTable} from "../../../../components/token/TokenOffersTable";
+import { TokenActivityTable } from 'components/token/TokenActivityTable'
+import { NAVBAR_HEIGHT } from '../../../../components/navbar'
+import { TokenOffersTable } from '../../../../components/token/TokenOffersTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -90,7 +90,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     },
     {
       isPaused() {
-        return (!contract || !id)
+        return !contract || !id
       },
       fallbackData: ssr.tokens ? [ssr.tokens] : undefined,
     },
@@ -302,17 +302,13 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   return
                 }
                 setIsRefreshing(true)
-                fetcher(
-                  `${proxyApi}/tokens/refresh/v1`,
-                  undefined,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ token: `${contract}:${id}` }),
-                  }
-                )
+                fetcher(`${proxyApi}/tokens/refresh/v1`, undefined, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ token: `${contract}:${id}` }),
+                })
                   .then(({ response }) => {
                     if (response.status === 200) {
                       addToast?.({
@@ -465,14 +461,26 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           marginRight: 'auto',
           px: '$1',
           flexDirection: 'row',
-          alignItems: 'center'
-        }}>
+          alignItems: 'center',
+        }}
+      >
         <Flex align="start" justify="start" css={{ flex: 1, px: '$3' }}>
           <Collapsible.Root style={{ width: '100%' }}>
             <Collapsible.Trigger asChild>
-              <Flex css={{ backgroundColor: '$primary9', px: '$4', py: '$3', flex: 1, cursor: 'pointer' }} align="center">
-                <FontAwesomeIcon icon={faArrowDownUpAcrossLine}/>
-                <Text style="h6" css={{ ml: '$4' }}>Item Activity</Text>
+              <Flex
+                css={{
+                  backgroundColor: '$primary6',
+                  px: '$4',
+                  py: '$3',
+                  flex: 1,
+                  cursor: 'pointer',
+                }}
+                align="center"
+              >
+                <FontAwesomeIcon icon={faArrowDownUpAcrossLine} />
+                <Text style="h6" css={{ ml: '$4' }}>
+                  Item Activity
+                </Text>
               </Flex>
             </Collapsible.Trigger>
             <CollapsibleContent
@@ -483,7 +491,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 overflow: 'auto',
                 marginBottom: 16,
                 borderRadius: '$base',
-                p: '$2'
+                p: '$2',
               }}
             >
               <Box
@@ -493,7 +501,9 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   },
                 }}
               >
-                <TokenActivityTable token={`${collection?.id}:${token?.token?.tokenId}`}/>
+                <TokenActivityTable
+                  token={`${collection?.id}:${token?.token?.tokenId}`}
+                />
               </Box>
             </CollapsibleContent>
           </Collapsible.Root>

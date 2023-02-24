@@ -27,7 +27,7 @@ import { useMarketplaceChain } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import Transfer from "../buttons/Transfer";
+import Transfer from '../buttons/Transfer'
 
 type Props = {
   address: Address | undefined
@@ -94,7 +94,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
               />
             )
           })}
-          <div ref={loadMoreRef}/>
+          <div ref={loadMoreRef} />
         </Flex>
       )}
       {isValidating && (
@@ -184,7 +184,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               css={{ mb: '$3' }}
             />
             <Flex>
-              <Transfer token={token as ReturnType<typeof useTokens>['data'][0]} mutate={mutate} />
+              <Transfer
+                token={token as ReturnType<typeof useTokens>['data'][0]}
+                mutate={mutate}
+              />
               <List
                 token={token as ReturnType<typeof useTokens>['data'][0]}
                 mutate={mutate}
@@ -198,7 +201,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   '&:hover': {
                     backgroundColor: '$gray4',
                   },
-                  ml: '$3'
+                  ml: '$3',
                 }}
                 buttonChildren="List"
               />
@@ -312,7 +315,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
-          <Transfer token={token as ReturnType<typeof useTokens>['data'][0]} mutate={mutate} />
+          <Transfer
+            token={token as ReturnType<typeof useTokens>['data'][0]}
+            mutate={mutate}
+          />
           {token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
               token={token as ReturnType<typeof useTokens>['data'][0]}
@@ -365,7 +371,7 @@ const TableHeading = () => (
     }}
   >
     <TableCell>
-      <Text style="subtitle3" color="subtle">
+      <Text css={{ marginLeft: '10px' }} style="subtitle3" color="subtle">
         Items
       </Text>
     </TableCell>
