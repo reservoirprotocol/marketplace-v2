@@ -47,7 +47,7 @@ const { chains, provider } = configureChains(supportedChains, [
 ])
 
 const { connectors } = getDefaultClient({
-  appName: 'Reservoir Hub',
+  appName: 'Reservoir Marketplace',
   chains,
 })
 
