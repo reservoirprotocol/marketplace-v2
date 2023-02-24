@@ -377,7 +377,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       weight="normal"
                       css={{ ml: '$1', fontSize: 12 }}
                     >
-                      Sell Item
+                      Sell
                     </Anchor>
                   </Link>
                 </Flex>
