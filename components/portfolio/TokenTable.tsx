@@ -65,7 +65,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
@@ -279,9 +279,31 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 overflow: 'hidden',
               }}
             >
-              <Text style="subtitle3" ellipsify color="subtle">
-                {token?.token?.collection?.name}
-              </Text>
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="subtitle3" ellipsify color="subtle">
+                  {token?.token?.collection?.name}
+                </Text>
+                {token?.token?.kind === 'erc1155' &&
+                  token?.ownership?.tokenCount && (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      css={{
+                        borderRadius: 9999,
+                        backgroundColor: '$gray4',
+                        maxWidth: '50%',
+                      }}
+                    >
+                      <Text
+                        ellipsify
+                        style="subtitle3"
+                        css={{ px: '$2', fontSize: 10 }}
+                      >
+                        x{token?.ownership?.tokenCount}
+                      </Text>
+                    </Flex>
+                  )}
+              </Flex>
               <Text style="subtitle2" ellipsify>
                 #{token?.token?.tokenId}
               </Text>

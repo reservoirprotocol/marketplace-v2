@@ -59,7 +59,6 @@ export default function (
     }).then(() => {
       globalMutate(
         (key) => {
-          console.log(key);
           const url = key && key[0] ? key[0] : null
           if (url) {
             return keys.includes(url)

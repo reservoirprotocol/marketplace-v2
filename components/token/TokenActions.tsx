@@ -1,17 +1,16 @@
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
-import {useDynamicTokens} from '@nftearth/reservoir-kit-ui'
+import { useTokens } from '@nftearth/reservoir-kit-ui'
+import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
+import AddToCart from 'components/buttons/AddToCart'
+import CancelBid from 'components/buttons/CancelBid'
+import CancelListing from 'components/buttons/CancelListing'
+import { Button, Flex, Grid } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { MutatorCallback } from 'swr'
 import { useAccount } from 'wagmi'
 
-import { Button, Grid } from 'components/primitives'
-import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
-import CancelBid from 'components/buttons/CancelBid'
-import CancelListing from 'components/buttons/CancelListing'
-import AddToCart from "components/buttons/AddToCart";
-
 type Props = {
-  token: ReturnType<typeof useDynamicTokens>['data'][0]
+  token: ReturnType<typeof useTokens>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
@@ -46,11 +45,12 @@ export const TokenActions: FC<Props> = ({
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
+    height: 52,
     justifyContent: 'center',
     minWidth: 'max-content',
     background: '$primary9',
     '@sm': {
-      maxWidth: '200px',
+      maxWidth: 250,
     },
   }
 
@@ -63,7 +63,7 @@ export const TokenActions: FC<Props> = ({
         width: '100%',
         '@sm': {
           gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
-          width: 'max-content',
+          maxWidth: 500,
         },
       }}
     >
@@ -79,7 +79,25 @@ export const TokenActions: FC<Props> = ({
           }
         />
       ) : (
-        <BuyNow token={token} mutate={mutate} buttonCss={buttonCss} />
+        <Flex
+          css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
+        >
+          <BuyNow
+            token={token}
+            buttonCss={{ flex: 1, justifyContent: 'center' }}
+            buttonProps={{ corners: 'square' }}
+            mutate={mutate}
+          />
+          <AddToCart
+            token={token}
+            buttonCss={{
+              width: 52,
+              p: 0,
+              justifyContent: 'center',
+            }}
+            buttonProps={{ corners: 'square' }}
+          />
+        </Flex>
       )}
       {showAcceptOffer && (
         <AcceptBid
@@ -97,15 +115,12 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
-      {!isOwner && isListed && (
-        <AddToCart token={token}/>
-      )}
-
       {!isOwner && (
         <Bid
           tokenId={token?.token?.tokenId}
           collectionId={token?.token?.collection?.id}
           mutate={mutate}
+          buttonCss={buttonCss}
         />
       )}
 

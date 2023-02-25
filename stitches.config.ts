@@ -23,6 +23,12 @@ const inter = Inter({
   subsets: ['latin'],
 })
 
+// CONFIGURABLE: Here you can update all your theming (outside of ReservoirKit which can be configured in the app.tsx)
+// The theme colors are all already hooked up to stitches scales, so you just need to swap them.
+// Don't forget to check the dark mode themes below.
+// More on Stitches theme tokens: https://stitches.dev/docs/tokens
+// More on Radix color scales: https://www.radix-ui.com/docs/colors/palette-composition/the-scales
+
 export const { createTheme, keyframes, styled, globalCss, getCssText } =
   createStitches({
     theme: {

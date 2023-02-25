@@ -13,6 +13,7 @@ const Overlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: '$neutralBg',
   position: 'fixed',
   inset: 0,
+  zIndex: 5000,
 })
 
 const AnimatedOverlay = forwardRef<
@@ -26,7 +27,7 @@ const AnimatedOverlay = forwardRef<
       initial={{
         opacity: 0,
       }}
-      animate={{ opacity: 0.6 }}
+      animate={{ opacity: props['style']?.opacity }}
       exit={{ opacity: 0 }}
     />
   </Overlay>
@@ -47,6 +48,7 @@ const Content = styled(DialogPrimitive.Content, {
   maxHeight: '85vh',
   overflowY: 'auto',
   '&:focus': { outline: 'none' },
+  zIndex: 5000,
 })
 
 const AnimatedContent = forwardRef<
@@ -76,33 +78,56 @@ const AnimatedContent = forwardRef<
 ))
 
 type Props = {
-  trigger: ReactNode
+  trigger?: ReactNode
   portalProps?: DialogPrimitive.PortalProps
+  overlayProps?: DialogPrimitive.DialogOverlayProps
+  open?: ComponentPropsWithoutRef<typeof DialogPrimitive.Root>['open']
+  onOpenChange: ComponentPropsWithoutRef<
+    typeof DialogPrimitive.Root
+  >['onOpenChange']
 }
 
 const Dialog = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & Props
->(({ children, trigger, portalProps, ...props }, forwardedRef) => {
-  const [open, setOpen] = useState(false)
+>(
+  (
+    {
+      children,
+      trigger,
+      portalProps,
+      overlayProps,
+      open,
+      onOpenChange,
+      ...props
+    },
+    forwardedRef
+  ) => {
+    const [_open, _onOpenChange] = useState(false)
 
-  return (
-    <DialogPrimitive.Root onOpenChange={setOpen} open={open}>
-      <DialogPrimitive.DialogTrigger asChild>
-        {trigger}
-      </DialogPrimitive.DialogTrigger>
-      <AnimatePresence>
-        {open && (
-          <DialogPrimitive.DialogPortal forceMount {...portalProps}>
-            <AnimatedOverlay />
-            <AnimatedContent ref={forwardedRef} {...props} forceMount>
-              {children}
-            </AnimatedContent>
-          </DialogPrimitive.DialogPortal>
+    return (
+      <DialogPrimitive.Root
+        onOpenChange={onOpenChange || _onOpenChange}
+        open={open || _open}
+      >
+        {trigger && (
+          <DialogPrimitive.DialogTrigger asChild>
+            {trigger}
+          </DialogPrimitive.DialogTrigger>
         )}
-      </AnimatePresence>
-    </DialogPrimitive.Root>
-  )
-})
+        <AnimatePresence>
+          {open && (
+            <DialogPrimitive.DialogPortal forceMount {...portalProps}>
+              <AnimatedOverlay style={{ opacity: 1 }} {...overlayProps} />
+              <AnimatedContent ref={forwardedRef} {...props} forceMount>
+                {children}
+              </AnimatedContent>
+            </DialogPrimitive.DialogPortal>
+          )}
+        </AnimatePresence>
+      </DialogPrimitive.Root>
+    )
+  }
+)
 
 export { Dialog, Content, AnimatedContent, Overlay, AnimatedOverlay }

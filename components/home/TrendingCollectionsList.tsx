@@ -52,7 +52,7 @@ const TrendingCollectionsList: FC<Props> = ({
       >
         {Array(3)
           .fill(null)
-          .map((a, i) => (
+          .map((_, i) => (
             <Flex justify="between" key={`label-${i}`}>
               <Text style="subtitle3" color="subtle">
                 Collection

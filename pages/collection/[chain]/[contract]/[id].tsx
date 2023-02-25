@@ -26,16 +26,7 @@ import {
   Grid,
   Box,
   CollapsibleContent,
-  TableCell,
-  TableRow,
-  HeaderRow,
 } from 'components/primitives'
-import {
-  Root as DialogRoot,
-  DialogTrigger,
-  DialogPortal,
-  Close
-} from '@radix-ui/react-dialog'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import * as Collapsible from '@radix-ui/react-collapsible'
@@ -68,10 +59,10 @@ import { spin } from 'components/common/LoadingSpinner'
 import Head from 'next/head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { TokenActivityTable } from 'components/token/TokenActivityTable'
-import { NAVBAR_HEIGHT } from '../../../../components/navbar'
-import { TokenOffersTable } from '../../../../components/token/TokenOffersTable'
-import {Content} from "../../../../components/primitives/Dialog";
-import {OwnersModal} from "../../../../components/token/OwnersModal";
+import { NAVBAR_HEIGHT } from 'components/navbar'
+import { TokenOffersTable } from 'components/token/TokenOffersTable'
+import {OwnersModal} from "components/token/OwnersModal";
+import {formatNumber} from "utils/numbers";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -102,6 +93,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
       includeAttributes: true,
       includeTopBid: true,
+      includeOwnerCount: true,
+      includeItemCount: true
     },
     {
       isPaused() {
@@ -387,14 +380,22 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           {token && (
             <>
               {token.token?.kind === 'erc1155' ? (
-                <OwnersModal token={`${token.token?.collection?.id}:${token.token?.tokenId}`}>
-                  <Button color="ghost" css={{ mt: '$2', mr: '$6' }}>
-                    <FontAwesomeIcon icon={faUserGroup} size="lg" />
+                <Flex>
+                  <OwnersModal token={`${token.token?.collection?.id}:${token.token?.tokenId}`}>
+                    <Button color="ghost" css={{ mt: '$2', mr: '$6' }}>
+                      <FontAwesomeIcon icon={faUserGroup} size="lg" />
+                      <Text style="subtitle3" color="subtle" css={{ mx: '$2' }}>
+                        {`${formatNumber(token.token?.ownerCount)} owners`}
+                      </Text>
+                    </Button>
+                  </OwnersModal>
+                  <Flex align="center" css={{ mt: '$2' }}>
+                    <FontAwesomeIcon icon={faTableCells} size="lg" />
                     <Text style="subtitle3" color="subtle" css={{ mx: '$2' }}>
-                      {`Multiple Owners`}
+                      {`${formatNumber(token.token?.itemCount)} items`}
                     </Text>
-                  </Button>
-                </OwnersModal>
+                  </Flex>
+                </Flex>
               ) : (
                 <Flex align="center" css={{ mt: '$2' }}>
                   <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>

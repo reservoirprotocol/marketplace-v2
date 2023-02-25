@@ -39,7 +39,7 @@ class MyDocument extends Document {
             content="NFTEarth: Buy and Sell NFTs on L2"
           />
           <meta name="twitter:description" content={description} />
-          <meta name="twitter:site" content="@reservoir0x" />
+          <meta name="twitter:site" content="@NFTEarth_L2" />
 
           {/* OG - https://ogp.me/ */}
           {/* https://www.opengraph.xyz/ */}
@@ -74,7 +74,6 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <script>0</script>
           <Main />
           <NextScript />
         </body>

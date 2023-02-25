@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { paths } from '@nftearth/reservoir-sdk'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import supportedChains, {DefaultChain} from "utils/chains";
 import fetcher from "utils/fetcher";
 
@@ -80,12 +81,28 @@ type WalletItemProps = {
 
 const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
   return (
-    <Link href={`/profile/${wallet.name}`}>
-      <Flex css={{ p: '$2', gap: '$4' }} align="center">
-        <img
-          src={wallet.avatar as string || 'https://via.placeholder.com/32?text=' }
-          style={{ width: 32, height: 32, borderRadius: 4 }}
-        />
+    <Link href={`/profile/${wallet.address}`}>
+      <Flex
+        css={{
+          p: '$2',
+          gap: '$4',
+          '&:hover': {
+            background: '$gray4',
+          },
+        }}
+        align="center"
+      >
+        {wallet.avatar ? (
+          <img
+            src={wallet.avatar as string}
+            style={{ width: 32, height: 32, borderRadius: 4 }}
+          />
+        ) : (
+          <Jazzicon
+            diameter={32}
+            seed={jsNumberForAddress(wallet.address as string)}
+          />
+        )}
         <Text style="subtitle1">{wallet.displayName}</Text>
       </Flex>
     </Link>

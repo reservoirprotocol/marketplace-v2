@@ -1,75 +1,96 @@
-import { ComponentProps, FC } from 'react'
-import { useCart, useDynamicTokens } from '@nftearth/reservoir-kit-ui'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartPlus, faRemove } from '@fortawesome/free-solid-svg-icons'
-
-import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
-import { useMarketplaceChain } from 'hooks'
-import { useTheme } from 'next-themes'
-import { Button } from '../primitives'
+import React, { ComponentProps, FC, useContext, useState } from 'react'
+import { useAccount } from 'wagmi'
+import { useCart } from '@nftearth/reservoir-kit-ui'
+import { Button } from 'components/primitives'
+import { useModal } from 'connectkit'
 import { CSS } from '@stitches/react'
+import { useMarketplaceChain } from 'hooks'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMinus, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { ToastContext } from 'context/ToastContextProvider'
+import { ConfirmationModal } from 'components/common/ConfirmationModal'
 
 type Props = {
-  token?: ReturnType<typeof useDynamicTokens>['data'][0]
-  icon?: boolean
+  token?: Parameters<ReturnType<typeof useCart>['add']>[0][0]
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
 }
 
-const AddToCart: FC<Props> = ({ token, icon, buttonCss, buttonProps }) => {
-  const { data: signer } = useSigner()
-  const { chain: activeChain } = useNetwork()
-  const { theme } = useTheme()
+const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
+  const { addToast } = useContext(ToastContext)
+  const { data: items, add, remove, clear } = useCart((cart) => cart.items)
+  const { data: cartChain } = useCart((cart) => cart.chain)
+  const { isConnected } = useAccount()
+  const { setOpen } = useModal()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
-  const { add, remove } = useCart((cart) => cart.items)
+  const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
 
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
+  if (!token || (!('market' in token) && !('id' in token))) {
+    return null
+  }
+
+  if (
+    'market' in token &&
+    (token?.market?.floorAsk?.price?.amount === null ||
+      token?.market?.floorAsk?.price?.amount === undefined)
+  ) {
+    return null
+  }
+
+  let tokenKey = ''
+  if ('id' in token) {
+    tokenKey = token.id
+  } else {
+    tokenKey = `${token.token?.collection?.id}:${token.token?.tokenId}`
+  }
+  const isInCart = items.find(
+    (item) => `${item.collection.id}:${item.token.id}` === tokenKey
   )
-  const tokenId = `${token?.token?.collection?.id}:${token?.token?.tokenId}`
-  const canAddToCart = !!token?.market?.floorAsk?.price?.amount
 
-  if (token?.isInCart) {
-    return (
+  return (
+    <>
       <Button
-        onClick={() => remove([tokenId])}
-        color="gray4"
-        css={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        {...buttonProps}
-      >
-        {icon ? <FontAwesomeIcon icon={faRemove} /> : `Remove`}
-      </Button>
-    )
-  }
-
-  if (!token?.isInCart && canAddToCart) {
-    return (
-      <Button
-        color={theme === 'light' ? 'tertiary' : 'secondary'}
-        {...buttonProps}
-        css={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
+        css={buttonCss}
+        color="primary"
         onClick={async () => {
-          if (isInTheWrongNetwork) {
-            await switchNetworkAsync?.()
+          if (!isConnected) {
+            setOpen(true)
           }
-          await add([token], Number(activeChain?.id))
-        }}
-      >
-        {icon ? <FontAwesomeIcon icon={faCartPlus} /> : `Add to Cart`}
-      </Button>
-    )
-  }
 
-  return null
+          if (isInCart) {
+            remove([tokenKey])
+          } else if (cartChain && cartChain?.id !== marketplaceChain.id) {
+            setConfirmationOpen(true)
+          } else {
+            add([token], marketplaceChain.id).then(() => {
+              addToast?.({
+                title: 'Added to cart',
+              })
+            })
+          }
+        }}
+        {...buttonProps}
+      >
+        <FontAwesomeIcon
+          icon={isInCart ? faMinus : faShoppingCart}
+          width="16"
+          height="16"
+        />
+      </Button>
+      <ConfirmationModal
+        title="Could not add item to cart"
+        message="Your cart has items from a different chain than the item you are trying to add. Adding this item will clear your existing cart and start a new one."
+        open={confirmationOpen}
+        onOpenChange={setConfirmationOpen}
+        onConfirmed={(confirmed) => {
+          if (confirmed) {
+            clear()
+            add([token], marketplaceChain.id)
+          }
+        }}
+      />
+    </>
+  )
 }
 
 export default AddToCart

@@ -8,8 +8,8 @@ import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
+  useDynamicTokens,
   useAttributes,
-  useDynamicTokens
 } from '@nftearth/reservoir-kit-ui'
 import { paths } from '@nftearth/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -59,7 +59,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
-    ssr.hasAttributes ? true : false
+    !!ssr.hasAttributes
   )
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
@@ -82,6 +82,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
     includeTopBid: true,
+    includeOwnerCount: true,
+    includeItemCount: true,
   }
 
   const { data: collections } = useCollections(collectionQuery, {
@@ -145,7 +147,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
     if (isMounted && initialTokenFallbackData) {
@@ -201,7 +203,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     borderRadius: '$lg',
                     objectFit: 'cover',
                   }}
-                />
+                 alt={collection.name}/>
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
                     <Text style="h5" as="h6" ellipsify>
@@ -340,14 +342,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             }}
                           />
                         ))}
-                    <Box ref={loadMoreRef}>
+                    <Box
+                      ref={loadMoreRef}
+                      css={{
+                        display: isFetchingPage ? 'none' : 'block',
+                      }}
+                    >
                       {(hasNextPage || isFetchingPage) &&
                         !isFetchingInitialData && <LoadingCard />}
                     </Box>
                     {(hasNextPage || isFetchingPage) &&
                       !isFetchingInitialData && (
                         <>
-                          {Array(10)
+                          {Array(6)
                             .fill(null)
                             .map((_, index) => (
                               <LoadingCard key={`loading-card-${index}`} />
@@ -463,6 +470,7 @@ export const getStaticProps: GetStaticProps<{
     sortDirection: 'asc',
     limit: 20,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
+    includeDynamicPricing: true,
     includeAttributes: true,
   }
 
