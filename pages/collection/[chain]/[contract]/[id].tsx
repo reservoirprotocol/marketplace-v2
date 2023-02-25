@@ -3,9 +3,9 @@ import {
   faArrowLeft,
   faCircleExclamation,
   faRefresh,
-  faList,
+  faRectangleList,
   faUserGroup,
-  faTableCells, faListDots
+  faTableCells,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
@@ -282,7 +282,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     cursor: 'pointer',
                   }}
                 >
-                  <FontAwesomeIcon icon={faList} />
+                  <FontAwesomeIcon icon={faRectangleList} />
                   <Text style="h6" css={{ ml: '$4' }}>
                     Description
                   </Text>
