@@ -95,7 +95,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { config, error: preparedError } = usePrepareContractWrite({
-    address: token?.token?.contract,
+    address: token?.token?.contract as `0x${string}`,
     abi: token?.token?.kind === 'erc721' ? ERC721NFTAbi : ERC1155NFTAbi,
     functionName: 'safeTransferFrom',
     args: token?.token?.kind === 'erc721' ? [address, transferAddress, token?.token?.tokenId] : [address, transferAddress, token?.token?.tokenId, quantity, ''],
