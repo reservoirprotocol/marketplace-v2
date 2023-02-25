@@ -30,15 +30,15 @@ export const LearnGrid = () => {
           articles={[
             {
               title: 'How Do NFTs work?',
-              link: '/',
+              link: '/how-do-nfts-work',
             },
             {
               title: 'The History of NFTs',
-              link: '/',
+              link: '/history-of-nfts',
             },
             {
               title: 'What are NFTs',
-              link: '/',
+              link: '/what-are-nfts',
             },
           ]}
           color="#34b2e5"
@@ -51,7 +51,7 @@ export const LearnGrid = () => {
           articles={[
             {
               title: 'How to Create NFTs?',
-              link: '/',
+              link: '/create-nfts',
             },
           ]}
           color="#d3311a"
@@ -64,15 +64,15 @@ export const LearnGrid = () => {
           articles={[
             {
               title: 'The 4 Best Ways to Promote Your NFT',
-              link: '/',
+              link: '/promote-your-nft',
             },
             {
               title: 'How to Value NFT Art?',
-              link: '/',
+              link: '/value-nft-art',
             },
             {
               title: 'How Much Does It Cost to Sell NFTs?',
-              link: '/',
+              link: '/costs-to-sell-nfts',
             },
           ]}
           color="#b7f279"
@@ -85,15 +85,15 @@ export const LearnGrid = () => {
           articles={[
             {
               title: 'Where to Buy NFTs?',
-              link: '/',
+              link: '/buy-nfts',
             },
             {
               title: 'How to Find NFT Projects Early',
-              link: '/',
+              link: '/find-nft-projects',
             },
             {
               title: 'NFT Collectors vs. Speculators',
-              link: '/',
+              link: '/collectors-vs-speculators',
             },
           ]}
           color="#068d01"
@@ -101,20 +101,20 @@ export const LearnGrid = () => {
       </Box>
       <Box>
         <LearnTile
-          title="What Can You Do With NFTs?"
+          title="What Can You Do?"
           numArticles={3}
           articles={[
             {
               title: 'What is NFT Farming and How to Earn from it?',
-              link: '/',
+              link: '/nft-farming',
             },
             {
               title: 'How to Earn from NFTs?',
-              link: '/',
+              link: '/earn',
             },
             {
               title: 'How to Make Money From the NFT Industry',
-              link: '/',
+              link: '/make-money',
             },
           ]}
           color="#f53d4c"
@@ -127,15 +127,15 @@ export const LearnGrid = () => {
           articles={[
             {
               title: 'What is Escrowed Peer-To-Peer Trading?',
-              link: '/',
+              link: '/escrowed-trading',
             },
             {
               title: 'How to Avoid NFT Scams?',
-              link: '/',
+              link: '/avoid-scams',
             },
             {
               title: 'What Copy & Paste is NOT how NFTs Work',
-              link: '/',
+              link: '/copy-paste',
             },
           ]}
           color="#1fada5"

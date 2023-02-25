@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Box, Flex, Text } from '../primitives'
 import { FC } from 'react'
 import { useTheme } from 'next-themes'
-import Carousel from "react-elastic-carousel";
+// import Carousel from "react-elastic-carousel";
 import { items } from './styled/resource.json'
 
 const breakPoints = [
@@ -19,9 +19,9 @@ const LearnCarousel: FC = () => {
 
   return (
     <Box>
-      <Box>
+      {/* <Box> */}
         {/* @ts-ignore */}
-        <Carousel breakPoints={breakPoints}>
+        {/* <Carousel breakPoints={breakPoints}>
           {
             elastic.map((item) => (
               <Flex
@@ -73,7 +73,7 @@ const LearnCarousel: FC = () => {
             ))
           }
         </Carousel>
-      </Box>
+      </Box> */}
     </Box>
   )
 }

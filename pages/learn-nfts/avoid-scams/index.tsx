@@ -6,7 +6,7 @@ import { LearnGrid } from 'components/learn-nfts/LearnGrid'
 import LearnHeroSection from 'components/learn-nfts/LearnHeroSection'
 import LearnCarousel from 'components/learn-nfts/LearnCarousel'
 
-const EducationPage: NextPage = () => {
+const HowToAvoidScam: NextPage = () => {
   const isMounted = useMounted()
 
   return (
@@ -111,4 +111,4 @@ const EducationPage: NextPage = () => {
   )
 }
 
-export default EducationPage
+export default HowToAvoidScam
