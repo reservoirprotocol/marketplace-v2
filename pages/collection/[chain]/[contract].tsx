@@ -59,7 +59,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
-    ssr.hasAttributes ? true : false
+    !!ssr.hasAttributes
   )
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
@@ -82,6 +82,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
     includeTopBid: true,
+    includeOwnerCount: true
   }
 
   const { data: collections } = useCollections(collectionQuery, {
@@ -201,7 +202,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     borderRadius: '$lg',
                     objectFit: 'cover',
                   }}
-                />
+                 alt={collection.name}/>
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
                     <Text style="h5" as="h6" ellipsify>

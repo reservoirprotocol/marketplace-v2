@@ -3,7 +3,7 @@ import { Text, Box, FormatCryptoCurrency, Grid } from 'components/primitives'
 import { useMounted } from 'hooks'
 import { FC, ReactNode } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { formatNumber } from 'utils/numbers'
+import {formatNumber} from 'utils/numbers'
 
 type Props = {
   label: string
@@ -36,6 +36,10 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
     ((collection?.onSaleCount ? +collection.onSaleCount : 0) /
       (collection?.tokenCount ? +collection.tokenCount : 0)) *
     100
+  const uniqueOwnersPercentage =
+    ((collection?.ownerCount ? +collection.ownerCount : 0) /
+      (collection?.tokenCount ? +collection.tokenCount : 0)) *
+    100
 
   return (
     <Grid
@@ -45,11 +49,20 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         gap: 1,
         gridTemplateColumns: '1fr 1fr',
         '@sm': {
-          gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+          gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 1fr 1fr',
           marginRight: 'auto',
         },
       }}
     >
+      <StatBox label="Total Volume">
+        <FormatCryptoCurrency
+          amount={collection.volume?.allTime}
+          logoHeight={18}
+          textStyle={'h6'}
+          maximumFractionDigits={4}
+        />
+      </StatBox>
+
       <StatBox label="Floor">
         <FormatCryptoCurrency
           amount={collection?.floorAsk?.price?.amount?.decimal}
@@ -72,23 +85,22 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         />
       </StatBox>
 
+      <StatBox label="Unique Items">
+        <Text style="h6">{formatNumber(collection?.tokenCount)}</Text>
+      </StatBox>
+
       {!isSmallDevice && (
         <StatBox label="Listed">
           <Text style="h6">{formatNumber(listedPercentage)}%</Text>
         </StatBox>
       )}
 
-      <StatBox label="Total Volume">
-        <FormatCryptoCurrency
-          amount={collection.volume?.allTime}
-          logoHeight={18}
-          textStyle={'h6'}
-          maximumFractionDigits={4}
-        />
+      <StatBox label="Owner Count">
+        <Text style="h6">{formatNumber(collection?.ownerCount)}</Text>
       </StatBox>
 
-      <StatBox label="Count">
-        <Text style="h6">{formatNumber(collection?.tokenCount)}</Text>
+      <StatBox label="Unique Owners">
+        <Text style="h6">{formatNumber(uniqueOwnersPercentage)}%</Text>
       </StatBox>
     </Grid>
   )

@@ -15,6 +15,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@next/font": "^13.1.6",
     "@nftearth/reservoir-kit-ui": "^0.8.37",
+    "@nftearth/sdk": "^0.0.326",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/popper": "^0.1.0",
     "@radix-ui/react-avatar": "^1.0.1",
