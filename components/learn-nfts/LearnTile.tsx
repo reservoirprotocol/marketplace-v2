@@ -16,7 +16,6 @@ type Article = {
 
 export const LearnTile = ({ title, numArticles, articles, color }: Props) => {
   return (
-    <Link href={''}>
       <Box
         css={{
           background: '$gray2',
@@ -46,27 +45,27 @@ export const LearnTile = ({ title, numArticles, articles, color }: Props) => {
           <ul>
             {articles.map((article: Article) => (
               <li>
-                <Text
-                  as="a"
-                  href={article.link}
-                  style={{
-                    '@xs': 'h6',
-                  }}
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$6',
-                    pt: '$6',
-                    width: '100%',
-                  }}
-                >
-                  • {article.title}
-                </Text>
+                <Link href={'learn-nfts' + article.link}>
+                  <Text
+                    style={{
+                      '@xs': 'h6',
+                    }}
+                    css={{
+                      cursor: 'pointer',
+                      width: '100%',
+                      transition: '0.3s',
+                      '&:hover': {
+                        color: '$crimson10'
+                      }
+                    }}
+                  >
+                    • {article.title}
+                  </Text>
+                </Link>
               </li>
             ))}
           </ul>
         </LearnTileContent>
       </Box>
-    </Link>
   )
 }
