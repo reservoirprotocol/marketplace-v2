@@ -9,54 +9,50 @@ import {
   Button,
   Box, FormatCryptoCurrency, CollapsibleContent,
 } from '../primitives'
-import {faListDots} from '@fortawesome/free-solid-svg-icons'
+import { faTag } from '@fortawesome/free-solid-svg-icons'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
+import { useListings, useTokens } from '@nftearth/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useENSResolver, useTimeSince } from 'hooks'
-import CancelBid from 'components/buttons/CancelBid'
-import { AcceptBid } from '../buttons'
+import {BuyNow} from '../buttons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBolt } from '@fortawesome/free-solid-svg-icons'
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
+import CancelListing from "../buttons/CancelListing";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import {NAVBAR_HEIGHT} from "../navbar";
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
-  floor: number | undefined
   account: ReturnType<typeof useAccount>
-  isOwner: boolean
 }
 
 const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
 const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
-export const TokenOffersTable: FC<Props> = ({
+export const TokenListingsTable: FC<Props> = ({
   token,
-  floor,
   account,
-  isOwner,
 }) => {
   const { address } = account || {}
   const { theme } = useTheme()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let bidsQuery: Parameters<typeof useBids>['0'] = {
+  let listingQuery: Parameters<typeof useListings>['0'] = {
     token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
     sortBy: 'price',
+    native: true
   }
 
   const {
-    data: offers,
+    data: orders,
     fetchNextPage,
     mutate,
     isValidating,
     isFetchingPage,
-  } = useBids(bidsQuery)
+  } = useListings(listingQuery)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -84,9 +80,9 @@ export const TokenOffersTable: FC<Props> = ({
             cursor: 'pointer',
           }}
         >
-          <FontAwesomeIcon icon={faListDots} />
+          <FontAwesomeIcon icon={faTag} />
           <Text style="h6" css={{ ml: '$4' }}>
-            Offers
+            Listings
           </Text>
         </Flex>
       </Collapsible.Trigger>
@@ -113,15 +109,13 @@ export const TokenOffersTable: FC<Props> = ({
             css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
           >
             <TableHeading />
-            {offers.map((offer, i) => {
+            {orders.map((order, i) => {
               return (
-                <OfferTableRow
-                  key={`${offer?.id}-${i}`}
-                  offer={offer}
+                <ListingTableRow
+                  key={`${order?.id}-${i}`}
+                  order={order}
                   mutate={mutate}
                   token={token}
-                  floor={floor}
-                  isOwner={isOwner}
                   address={address}
                 />
               )
@@ -139,32 +133,27 @@ export const TokenOffersTable: FC<Props> = ({
   )
 }
 
-type OfferTableRowProps = {
-  offer: ReturnType<typeof useBids>['data'][0]
+type ListingTableRowProps = {
+  order: ReturnType<typeof useListings>['data'][0]
   token: ReturnType<typeof useTokens>['data'][0]
   mutate?: MutatorCallback
   address: `0x${string}` | undefined
-  floor: number | undefined
-  isOwner: boolean
 }
 
-const OfferTableRow: FC<OfferTableRowProps> = ({
-  offer,
+const ListingTableRow: FC<ListingTableRowProps> = ({
+  order,
   token,
   mutate,
   address,
-  floor = 0,
-  isOwner,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const expiration = useTimeSince(offer?.expiration)
-  const { displayName: makerDisplayName } = useENSResolver(offer?.maker)
-  const offerPrice = offer?.price?.amount?.native || 0
+  const expiration = useTimeSince(order?.validUntil)
+  const { displayName: makerDisplayName } = useENSResolver(order?.maker)
   const { theme } = useTheme()
 
   return (
     <TableRow
-      key={offer?.id}
+      key={order?.id}
       css={{
         gridTemplateColumns: isSmallDevice ? mobileTemplateColumns : desktopTemplateColumns,
         borderBottomColor: theme === 'light'
@@ -174,7 +163,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
     >
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <FormatCryptoCurrency
-          amount={offer?.price?.amount?.native}
+          amount={order?.price?.amount?.native}
           logoHeight={14}
           textStyle={'subtitle2'}
           maximumFractionDigits={4}
@@ -183,9 +172,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
       {!isSmallDevice && (
         <TableCell css={{ pl: '$2 !important', py: '$3' }}>
           <Text style="subtitle2">
-            {`${(
-              100 * Math.abs((offerPrice - floor) / ((offerPrice + floor) / 2))
-            ).toFixed(0)}% ${offerPrice > floor ? 'above' : 'below'}`}
+            {order?.quantityRemaining}
           </Text>
         </TableCell>
       )}
@@ -193,7 +180,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Link href={`/profile/${offer?.maker}`}>
+        <Link href={`/profile/${order?.maker}`}>
           <Text
             style="subtitle3"
             css={{
@@ -209,41 +196,25 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
       </TableCell>
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Flex align="center" justify="end">
-          {isOwner && (
-            <AcceptBid
-              bidId={offer?.id}
-              collectionId={offer?.criteria?.data?.collection?.id}
+          {order?.maker !== address?.toLowerCase() && (
+            <BuyNow
+              order={order}
               token={token}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
               mutate={mutate}
               buttonProps={{
                 size: isSmallDevice ? 'xs' : 'medium',
               }}
-              buttonCss={{
-                width: '100%',
-                maxWidth: '300px',
-                justifyContent: 'center',
-                px: '5px',
-                backgroundColor: '$primary11',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '$primary10',
-                },
-              }}
-              buttonChildren={
-                <Flex align="center" css={{ gap: '$2' }}>
-                  <FontAwesomeIcon icon={faBolt} />
-                  Sell
-                </Flex>
-              }
+              compact
             />
           )}
-          {offer?.maker === address?.toLowerCase() && (
-            <CancelBid
-              bidId={offer?.id as string}
+          {order?.maker === address?.toLowerCase() && (
+            <CancelListing
+              listingId={order?.id as string}
               mutate={mutate}
               trigger={
                 <Button
-                  css={{ color: '$red11', px: '5px' }}
+                  css={{ flex: 1, justifyContent: 'center', color: '$red11', px: '5px' }}
                   size={isSmallDevice ? 'xs' : 'medium'}
                   color="gray3"
                 >
@@ -259,9 +230,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
 }
 
 const TableHeading = () => {
-  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = isSmallDevice ? ['Price', 'Expiration', 'From', ''] : ['Price', 'Floor Difference', 'Expiration', 'From', '']
   const { theme } = useTheme()
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const headings = isSmallDevice ? ['Price', 'Expiration', 'From', ''] : ['Price', 'Quantity', 'Expiration', 'From', '']
   return (
     <HeaderRow
       css={{
