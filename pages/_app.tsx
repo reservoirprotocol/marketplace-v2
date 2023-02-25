@@ -7,6 +7,7 @@ import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
+import { infuraProvider } from 'wagmi/providers/infura'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 
 import {
@@ -46,8 +47,9 @@ const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 
 const { chains, provider } = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
-  publicProvider(),
+  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '', priority: 0 }),
+  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID || '', priority: 1 }),
+  publicProvider({ priority: 2 }),
 ])
 
 const { connectors } = getDefaultClient({
