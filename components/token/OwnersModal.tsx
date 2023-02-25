@@ -68,8 +68,6 @@ export const OwnersModal: FC<Props> = ({ token, children }) => {
     }
   )
 
-  console.log(owners);
-
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {

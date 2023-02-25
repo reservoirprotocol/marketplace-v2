@@ -55,7 +55,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>

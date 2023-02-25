@@ -15,12 +15,13 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
-import ThemeSwitcher from './ThemeSwitcher'
+import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -65,7 +66,12 @@ const HamburgerMenu = () => {
         >
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img alt="NFTEarth Logo" src="/nftearth-icon.png" style={{ width: 34, height: 34 }} />
+              <img
+                src="/nftearth-icon.png"
+                width={34}
+                height={34}
+                alt="NFTEarth Logo"
+              />
             </Box>
           </Link>
           <RadixDialog.Close>
@@ -346,6 +352,7 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
             </Button>
           </a>
+          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>

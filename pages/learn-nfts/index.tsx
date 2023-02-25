@@ -5,7 +5,6 @@ import { useMounted } from 'hooks'
 import { LearnGrid } from 'components/learn-nfts/LearnGrid'
 import LearnHeroSection from 'components/learn-nfts/LearnHeroSection'
 import LearnCarousel from 'components/learn-nfts/LearnCarousel'
-import { BoxIcon } from '@radix-ui/react-icons'
 
 const EducationPage: NextPage = () => {
   const isMounted = useMounted()
