@@ -1,4 +1,4 @@
-import { Box } from 'components/primitives'
+import { Box, Flex } from 'components/primitives'
 import Layout from 'components/Layout'
 
 const LaunchPadMint = () => {
@@ -13,7 +13,11 @@ const LaunchPadMint = () => {
           },
         }}
       >
-        <div>Launchpad Mint</div>
+        <Flex justify="between">
+          <Box>
+            <img src="/images/heroSectionBanner.png" />
+          </Box>
+        </Flex>
       </Box>
     </Layout>
   )
