@@ -5,17 +5,17 @@ import {
 import { styled } from 'stitches.config'
 
 const StyledToggleGroupRoot = styled(ToggleGroupRoot, {
-  borderRadius: 8,
+  borderRadius: '$lg',
   overflow: 'hidden',
   display: 'flex',
   gap: 1,
 })
 
 const StyledToggleGroupItem = styled(ToggleGroupItem, {
-  background: '$primary8',
+  background: '$primary14',
   color: '#000',
   p: '$3',
-  '&[data-state=on]': { backgroundColor: '$primary9' },
+  '&[data-state=on]': { backgroundColor: '$primary13' },
 })
 
 export {

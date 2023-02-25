@@ -18,7 +18,7 @@ class MyDocument extends Document {
       'Buy and Sell NFTs on L2 at NFTEarth'
     const ogImage = 'https://nftearth.exchange/render-image-1.png'
     return (
-      <Html>
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
@@ -36,7 +36,7 @@ class MyDocument extends Document {
           <meta name="twitter:card" content="summary_large_image" />
           <meta
             name="twitter:title"
-            content="NFTEarth | L2 NFT Marketplace"
+            content="NFTEarth: Buy and Sell NFTs on L2"
           />
           <meta name="twitter:description" content={description} />
           <meta name="twitter:site" content="@reservoir0x" />
@@ -45,7 +45,7 @@ class MyDocument extends Document {
           {/* https://www.opengraph.xyz/ */}
           <meta
             name="og:title"
-            content="NFTEarth | L2 NFT Marketplace"
+            content="NFTEarth: Buy and Sell NFTs on L2"
           />
           <meta property="og:type" content="website" />
           <meta property="og:determiner" content="the" />
@@ -63,6 +63,10 @@ class MyDocument extends Document {
           <meta
             property="nftearth:token-url-optimism"
             content="/collection/optimism/${contract}/${tokenId}"
+          />
+          <meta
+            property="nftearth:token-url-arbitrum"
+            content="/collection/arbitrum/${contract}/${tokenId}"
           />
           <style
             id="stitches"

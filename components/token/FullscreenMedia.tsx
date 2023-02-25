@@ -74,7 +74,7 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
               zIndex: 2000,
               top: '50%',
               border: 'none',
-              borderRadius: 0,
+              borderRadius: '$base',
               background: 'none',
               transform: 'translate(-50%, -50%)',
             }}
@@ -108,7 +108,7 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
                 <TokenMedia
                   token={token?.token}
                   style={{
-                    borderRadius: 0,
+                    borderRadius: '$base',
                     width: '100vw',
                     height: 'auto',
                     padding: '4px',

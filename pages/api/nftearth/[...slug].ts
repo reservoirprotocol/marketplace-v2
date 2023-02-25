@@ -121,4 +121,10 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 }
 
+export const config = {
+  api: {
+    responseLimit: false,
+  },
+}
+
 export default proxy

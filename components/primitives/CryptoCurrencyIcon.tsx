@@ -1,11 +1,8 @@
-import React, { FC } from 'react'
-import { useChainCurrency } from '../../hooks'
+import React, {FC, useContext} from 'react'
 import { constants } from 'ethers'
 import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
-import Box from './Box'
-import wrappedContracts from '../../utils/wrappedContracts'
-import { useReservoirClient } from '@nftearth/reservoir-kit-ui'
+import {ChainContext} from "../../context/ChainContextProvider";
 
 type Props = {
   address: string
@@ -17,11 +14,12 @@ const CryptoCurrencyIcon: FC<Props> = ({
   address = constants.AddressZero,
   css,
 }) => {
-  const client = useReservoirClient()
+  const { chain } = useContext(ChainContext)
 
   return (
     <StyledImg
-      src={`${client?.apiBase}/redirect/currency/${address}/icon/v1`}
+      alt={address}
+      src={`${chain?.proxyApi}/redirect/currency/${address}/icon/v1`}
       css={css}
     />
   )

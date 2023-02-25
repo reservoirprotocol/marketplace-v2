@@ -48,6 +48,7 @@ export const TokenActions: FC<Props> = ({
     width: '100%',
     justifyContent: 'center',
     minWidth: 'max-content',
+    background: '$primary9',
     '@sm': {
       maxWidth: '200px',
     },
@@ -96,12 +97,15 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
+      {!isOwner && isListed && (
+        <AddToCart token={token}/>
+      )}
+
       {!isOwner && (
         <Bid
           tokenId={token?.token?.tokenId}
           collectionId={token?.token?.collection?.id}
           mutate={mutate}
-          buttonCss={buttonCss}
         />
       )}
 
@@ -133,10 +137,6 @@ export const TokenActions: FC<Props> = ({
             </Button>
           }
         />
-      )}
-
-      {!isOwner && isListed && (
-        <AddToCart token={token}/>
       )}
     </Grid>
   )

@@ -12,6 +12,7 @@ import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import HeroSection from 'components/HeroSection'
+import ChainToggle from "../components/home/ChainToggle";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -21,7 +22,6 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
@@ -29,7 +29,9 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(collectionQuery, {
       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-    })
+      revalidateFirstPage: true,
+      revalidateIfStale: true,
+    }, marketplaceChain.id)
 
   let collections = data || []
 
@@ -75,6 +77,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
             <Text style="h2" as="h2">
               Explore
             </Text>
+            <ChainToggle compact/>
           </Flex>
           {isSSR || !isMounted ? null : (
             <TrendingCollectionsList
@@ -86,7 +89,7 @@ const ExplorePage: NextPage<Props> = ({ ssr }) => {
             />
           )}
           {(isFetchingPage || isValidating) && collections.length > 12 && (
-            <Flex align="center" justify="center" css={{ py: '$4' }}>
+            <Flex align="center" justify="center" css={{ py: '$space$4' }}>
               <LoadingSpinner />
             </Flex>
           )}
@@ -109,8 +112,7 @@ export const getStaticProps: GetStaticProps<{
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
+      normalizeRoyalties: NORMALIZE_ROYALTIES
     }
 
   const promises: ReturnType<typeof fetcher>[] = []

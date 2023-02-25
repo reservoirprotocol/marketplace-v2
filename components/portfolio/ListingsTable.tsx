@@ -119,9 +119,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         direction="column"
         align="start"
         css={{
-          gap: '$3',
+          gap: '$space$3',
           borderBottom: '1px solid $gray3',
-          py: '$3',
+          py: '$space$3',
           width: '100%',
           overflow: 'hidden',
           flex: 1,
@@ -135,7 +135,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               {imageSrc && (
                 <Image
                   style={{
-                    borderRadius: '4px',
+                    borderRadius: '$sm',
                     objectFit: 'cover',
                     aspectRatio: '1/1',
                   }}
@@ -210,7 +210,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             {imageSrc && (
               <Image
                 style={{
-                  borderRadius: '4px',
+                  borderRadius: '$sm',
                   objectFit: 'cover',
                   aspectRatio: '1/1',
                 }}

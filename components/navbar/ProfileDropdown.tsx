@@ -11,14 +11,15 @@ import {
   Text,
 } from 'components/primitives'
 import Link from 'next/link'
-import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import {  faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useENSResolver } from 'hooks'
-import CopyText from 'components/common/CopyText'
+import {formatBN} from "../../utils/numbers";
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
-  const { data: balance } = useBalance({ address })
+  const { data: opBalance } = useBalance({ chainId: 10, address })
+  const { data: arbBalance } = useBalance({ chainId: 42161, address })
   const { disconnect } = useDisconnect()
   const {
     name: ensName,
@@ -32,6 +33,7 @@ export const ProfileDropdown: FC = () => {
       css={{
         justifyContent: 'center',
       }}
+      aria-label="Profile"
       corners="circle"
       type="button"
       color="gray3"
@@ -64,22 +66,37 @@ export const ProfileDropdown: FC = () => {
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
           Balance
-          <FormatCryptoCurrency
-            amount={balance?.value}
-            decimals={balance?.decimals}
-            textStyle="body1"
-            logoHeight={14}
-          />
+          <Flex direction="column">
+            <Flex align="center" css={{ gap: '$2' }}>
+              <img
+                src={`/icons/currency/0x4200000000000000000000000000000000000042.png`}
+                style={{
+                  height: 17,
+                  width: 17
+                }}
+              />
+              <Text>{`${formatBN(opBalance?.value, 4, opBalance?.decimals)}Ξ`}</Text>
+            </Flex>
+            <Flex align="center" css={{ gap: '$2' }}>
+              <img
+                src={`/icons/currency/0x6c0c4816098e13cacfc7ed68da3e89d0066e8893.png`}
+                style={{
+                  height: 17,
+                  width: 17
+                }}
+              />
+              <Text>{`${formatBN(arbBalance?.value, 4, arbBalance?.decimals)}Ξ`}</Text>
+            </Flex>
+          </Flex>
         </Flex>
       </DropdownMenuItem>
-      <DropdownMenuItem>
+      <DropdownMenuItem onClick={() => disconnect()}>
         <Flex
           justify="between"
           align="center"
           css={{
             cursor: 'pointer',
           }}
-          onClick={() => disconnect()}
         >
           <Text style="body1">Logout</Text>
           <Box css={{ color: '$gray10' }}>
@@ -95,6 +112,6 @@ export const ProfileDropdown: FC = () => {
       trigger={trigger}
       children={children}
       contentProps={{ style: { width: '264px', marginTop: '8px' } }}
-    ></Dropdown>
+    />
   )
 }

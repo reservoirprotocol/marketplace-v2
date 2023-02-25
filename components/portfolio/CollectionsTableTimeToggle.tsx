@@ -46,7 +46,7 @@ const CollectionsTableTimeToggle: FC<Props> = ({
           key={optionItem}
           value={optionItem}
           disabled={optionItem === option}
-          css={{ py: '$3' }}
+          css={{ py: '$space$3' }}
         >
           <Text style="subtitle1">
             {nameForSortingOption(optionItem, compact)}

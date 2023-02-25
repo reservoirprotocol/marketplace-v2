@@ -58,9 +58,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const etherscanImage = (
     <img
       src={
-        isMounted && theme === 'dark'
-          ? '/icons/etherscan-logo-light-circle.svg'
-          : '/icons/etherscan-logo-circle.svg'
+        isMounted && theme === 'light'
+          ? '/icons/etherscan-logo-circle.svg'
+          : '/icons/etherscan-logo-light-circle.svg'
       }
       alt={marketplaceChain.blockExplorers?.default.name || 'Etherscan'}
       style={{
@@ -78,7 +78,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
     : null
 
   const containerCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
-    borderRadius: 8,
+    borderRadius: '$lg',
     overflow: 'hidden',
     gap: 1,
     flexShrink: 0,
@@ -198,7 +198,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
               </a>
             )}
             {twitterLink && (
-              <a href={twitterLink} target="_blank" rel="noopener noreferrer">
+              <a href={twitterLink} aria-label="twitter" target="_blank" rel="noopener noreferrer">
                 <CollectionActionDropdownItem>
                   <FontAwesomeIcon icon={faTwitter} width={16} height={16} />{' '}
                   Twitter
@@ -218,7 +218,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
         <CollectionAction>{etherscanImage}</CollectionAction>
       </a>
       {twitterLink && (
-        <a href={twitterLink} target="_blank" rel="noopener noreferrer">
+        <a href={twitterLink} aria-label="twitter" target="_blank" rel="noopener noreferrer">
           <CollectionAction>
             <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
           </CollectionAction>
@@ -229,6 +229,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
           href={collection.discordUrl}
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Discord"
         >
           <CollectionAction>
             <FontAwesomeIcon icon={faDiscord} width={16} height={16} />

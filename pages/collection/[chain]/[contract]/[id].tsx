@@ -2,14 +2,18 @@ import {
   faArrowLeft,
   faCircleExclamation,
   faRefresh,
+  faArrowDownUpAcrossLine,
+  faUserGroup,
+  faTableCells
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
 import {
-  TokenMedia, useAttributes,
-  useCollections, useDynamicTokens,
+  TokenMedia,
+  useAttributes,
+  useCollections,
+  useDynamicTokens,
   useTokenOpenseaBanned,
-  useTokens,
   useUserTokens,
 } from '@nftearth/reservoir-kit-ui'
 import Layout from 'components/Layout'
@@ -21,9 +25,20 @@ import {
   Anchor,
   Grid,
   Box,
+  CollapsibleContent,
+  TableCell,
+  TableRow,
+  HeaderRow,
 } from 'components/primitives'
+import {
+  Root as DialogRoot,
+  DialogTrigger,
+  DialogPortal,
+  Close
+} from '@radix-ui/react-dialog'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
+import * as Collapsible from '@radix-ui/react-collapsible'
 import AttributeCard from 'components/token/AttributeCard'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
@@ -41,6 +56,7 @@ import fetcher from 'utils/fetcher'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
+import {useTheme} from "next-themes";
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { useContext, useEffect, useState } from 'react'
 import { ToastContext } from 'context/ToastContextProvider'
@@ -51,10 +67,16 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
 import Head from 'next/head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import { TokenActivityTable } from 'components/token/TokenActivityTable'
+import { NAVBAR_HEIGHT } from '../../../../components/navbar'
+import { TokenOffersTable } from '../../../../components/token/TokenOffersTable'
+import {Content} from "../../../../components/primitives/Dialog";
+import {OwnersModal} from "../../../../components/token/OwnersModal";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+  const { theme } = useTheme()
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -62,7 +84,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const [tabValue, setTabValue] = useState('info')
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const { proxyApi } = useMarketplaceChain()
+  const { id: chainId, proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: collections } = useCollections(
     {
@@ -70,12 +92,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     },
     {
       fallbackData: [ssr.collection],
-    }
-  )
-  const { data: attributesData }  = useAttributes(collectionId);
-
-  const attributes = attributesData?.filter(
-    (attribute) => attribute.kind != 'number' && attribute.kind != 'range' && attribute.key != 'birthday'
+    },
+    chainId
   )
   const collection = collections && collections[0] ? collections[0] : null
 
@@ -87,10 +105,11 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     },
     {
       isPaused() {
-        return (!contract || !id)
+        return !contract || !id
       },
       fallbackData: ssr.tokens ? [ssr.tokens] : undefined,
-    }
+    },
+    chainId
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
@@ -102,6 +121,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
     }
   )
+
+  const attributesData = useAttributes(id, chainId)
 
   const isOwner =
     userTokens &&
@@ -149,7 +170,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         css={{
           maxWidth: 1175,
           mt: 10,
-          pb: 100,
+          pb: 30,
           marginLeft: 'auto',
           marginRight: 'auto',
           px: '$1',
@@ -192,7 +213,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Box
             css={{
               backgroundColor: '$gray3',
-              borderRadius: 8,
+              borderRadius: '$lg',
               '@sm': {
                 button: {
                   height: 0,
@@ -213,7 +234,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 width: '100%',
                 height: 'auto',
                 minHeight: isMounted && isSmallDevice ? 300 : 445,
-                borderRadius: 8,
+                borderRadius: '$lg',
                 overflow: 'hidden',
               }}
               onRefreshToken={() => {
@@ -232,6 +253,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               css={{
                 maxWidth: '100%',
                 width: '100%',
+                maxHeight: 400,
+                overflowY: 'scroll',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '$3',
                 mt: 24,
@@ -294,17 +317,13 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   return
                 }
                 setIsRefreshing(true)
-                fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
-                  undefined,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ token: `${contract}:${id}` }),
-                  }
-                )
+                fetcher(`${proxyApi}/tokens/refresh/v1`, undefined, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ token: `${contract}:${id}` }),
+                })
                   .then(({ response }) => {
                     if (response.status === 200) {
                       addToast?.({
@@ -367,24 +386,35 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           </Flex>
           {token && (
             <>
-              <Flex align="center" css={{ mt: '$2' }}>
-                <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
-                  Owner
-                </Text>
-                <Jazzicon
-                  diameter={16}
-                  seed={jsNumberForAddress(owner || '')}
-                />
-                <Link href={`/profile/${owner}`} legacyBehavior={true}>
-                  <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                    {isMounted ? ownerFormatted : ''}
-                  </Anchor>
-                </Link>
-              </Flex>
+              {token.token?.kind === 'erc1155' ? (
+                <OwnersModal token={`${token.token?.collection?.id}:${token.token?.tokenId}`}>
+                  <Button color="ghost" css={{ mt: '$2', mr: '$6' }}>
+                    <FontAwesomeIcon icon={faUserGroup} size="lg" />
+                    <Text style="subtitle3" color="subtle" css={{ mx: '$2' }}>
+                      {`Multiple Owners`}
+                    </Text>
+                  </Button>
+                </OwnersModal>
+              ) : (
+                <Flex align="center" css={{ mt: '$2' }}>
+                  <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
+                    Owner
+                  </Text>
+                  <Jazzicon
+                    diameter={16}
+                    seed={jsNumberForAddress(owner || '')}
+                  />
+                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                    <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
+                      {isMounted ? ownerFormatted : ''}
+                    </Anchor>
+                  </Link>
+                </Flex>
+              )}
               <RarityRank
                 token={token}
                 collection={collection}
-                collectionAttributes={attributes}
+                collectionAttributes={attributesData?.data}
               />
               <PriceData token={token} />
               {isMounted && (
@@ -392,6 +422,14 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   token={token}
                   isOwner={isOwner}
                   mutate={mutate}
+                  account={account}
+                />
+              )}
+              {isMounted && (
+                <TokenOffersTable
+                  token={token}
+                  floor={collection?.floorAsk?.price?.amount?.native}
+                  isOwner={isOwner}
                   account={account}
                 />
               )}
@@ -411,6 +449,8 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       css={{
                         gap: '$3',
                         mt: 24,
+                        maxHeight: 300,
+                        overflowY: 'auto',
                         gridTemplateColumns: '1fr',
                         '@sm': {
                           gridTemplateColumns: '1fr 1fr',
@@ -436,6 +476,65 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               </Tabs.Root>
             </>
           )}
+        </Flex>
+      </Flex>
+      <Flex
+        justify="center"
+        css={{
+          maxWidth: 1175,
+          pb: 20,
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          px: '$1',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+      >
+        <Flex align="start" justify="start" css={{ flex: 1, px: '$3' }}>
+          <Collapsible.Root style={{ width: '100%' }}>
+            <Collapsible.Trigger asChild>
+              <Flex
+                css={{
+                  backgroundColor: theme === 'light'
+                    ? '$primary11'
+                    : '$primary6',
+                  px: '$4',
+                  py: '$3',
+                  flex: 1,
+                  cursor: 'pointer',
+                }}
+                align="center"
+              >
+                <FontAwesomeIcon icon={faArrowDownUpAcrossLine} />
+                <Text style="h6" css={{ ml: '$4' }}>
+                  Item Activity
+                </Text>
+              </Flex>
+            </Collapsible.Trigger>
+            <CollapsibleContent
+              css={{
+                position: 'sticky',
+                top: 16 + 80,
+                height: `calc(50vh - ${NAVBAR_HEIGHT}px - 32px)`,
+                overflow: 'auto',
+                marginBottom: 16,
+                borderRadius: '$base',
+                p: '$2',
+              }}
+            >
+              <Box
+                css={{
+                  '& > div:first-of-type': {
+                    pt: 0,
+                  },
+                }}
+              >
+                <TokenActivityTable
+                  token={`${collection?.id}:${token?.token?.tokenId}`}
+                />
+              </Box>
+            </CollapsibleContent>
+          </Collapsible.Root>
         </Flex>
       </Flex>
     </Layout>
@@ -478,12 +577,11 @@ export const getStaticProps: GetStaticProps<{
     },
   }
 
-  const collectionsResponse = await fetcher(
+  const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v5`,
     collectionQuery,
     headers
   )
-  const collection: Props['ssr']['collection'] = collectionsResponse['data']
 
   let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
@@ -493,16 +591,27 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
   }
 
-  const tokensResponse = await fetcher(
+  const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v5`,
     tokensQuery,
     headers
   )
-
-  const tokens: Props['ssr']['tokens'] = tokensResponse['data']
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+    tokensPromise,
+  ]).catch(() => {})
+  const collection: Props['ssr']['collection'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['collection'])
+      : {}
+  const tokens: Props['ssr']['tokens'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['tokens'])
+      : {}
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } }
+    props: { collectionId, id, ssr: { collection, tokens } },
+    revalidate: 20,
   }
 }
 

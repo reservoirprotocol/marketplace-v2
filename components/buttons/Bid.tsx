@@ -1,12 +1,19 @@
 import { BidModal, BidStep } from '@nftearth/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { cloneElement, ComponentProps, FC, useContext } from 'react'
+import {
+  cloneElement,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  useContext,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { useTheme } from 'next-themes'
 
 type Props = {
   tokenId?: string | undefined
@@ -23,7 +30,6 @@ const Bid: FC<Props> = ({
   collectionId,
   disabled,
   openState,
-  buttonCss,
   buttonProps,
   mutate,
 }) => {
@@ -34,13 +40,24 @@ const Bid: FC<Props> = ({
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
-
+  const { theme } = useTheme()
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
     signer && marketplaceChain.id !== activeChain?.id
   )
+
+  const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
+    width: '100%',
+    justifyContent: 'center',
+    background: theme === 'light' ? '$primary12' : 'none',
+    minWidth: 'max-content',
+    border: theme === 'light' ? 'none' : '1px solid $primary12',
+    '@sm': {
+      maxWidth: '200px',
+    },
+  }
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">

@@ -26,7 +26,7 @@ const AnimatedOverlay = forwardRef<
       initial={{
         opacity: 0,
       }}
-      animate={{ opacity: 1 }}
+      animate={{ opacity: 0.6 }}
       exit={{ opacity: 0 }}
     />
   </Overlay>
@@ -34,9 +34,9 @@ const AnimatedOverlay = forwardRef<
 
 const Content = styled(DialogPrimitive.Content, {
   backgroundColor: '$neutralBg',
-  borderRadius: 8,
+  borderRadius: '$lg',
   $$shadowColor: '$colors$gray7',
-  boxShadow: 'box-shadow: 0px 2px 16px $$shadowColor',
+  boxShadow: '0px 2px 16px $$shadowColor',
   border: '1px solid $gray7',
   position: 'fixed',
   top: '12.5%',
@@ -53,13 +53,13 @@ const AnimatedContent = forwardRef<
   ElementRef<typeof DialogPrimitive.DialogContent>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.DialogContent>
 >(({ children, ...props }, forwardedRef) => (
-  <Content forceMount asChild {...props}>
+  <Content forceMount asChild {...props} css={{minWidth: 400}}>
     <motion.div
       ref={forwardedRef}
       transition={{ type: 'spring', duration: 0.5 }}
       initial={{
         opacity: 0,
-        top: '14%',
+        top: '30%',
       }}
       animate={{
         opacity: 1,

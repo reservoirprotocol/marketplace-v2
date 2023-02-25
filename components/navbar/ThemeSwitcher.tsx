@@ -2,8 +2,8 @@ import { useTheme } from 'next-themes'
 import { Box, Button, ToggleGroupRoot, ToggleGroupItem } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
-import {useMounted} from "../../hooks";
-import {useMediaQuery} from "react-responsive";
+import { useMounted } from '../../hooks'
+import { useMediaQuery } from 'react-responsive'
 
 const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme()
@@ -16,7 +16,7 @@ const ThemeSwitcher = () => {
         type="single"
         defaultValue={theme}
         css={{
-          borderRadius: 0
+          borderRadius: 0,
         }}
         aria-label="Change theme"
       >
@@ -27,7 +27,7 @@ const ThemeSwitcher = () => {
           aria-label="Light Mode"
           css={{
             flex: 0.5,
-            p: '$1'
+            p: '$1',
           }}
         >
           <FontAwesomeIcon icon={faSun} width={16} height={16} />
@@ -39,7 +39,7 @@ const ThemeSwitcher = () => {
           aria-label="Dark Mode"
           css={{
             flex: 0.5,
-            p: '$1'
+            p: '$1',
           }}
         >
           <FontAwesomeIcon icon={faMoon} width={16} height={16} />
@@ -51,16 +51,24 @@ const ThemeSwitcher = () => {
   return (
     <Box>
       <Button
-        css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+        css={{
+          justifyContent: 'center',
+          width: '44px',
+          height: '44px',
+          '&:hover': {
+            background: '$gray8',
+          },
+        }}
         type="button"
-        onClick={() => (theme == 'dark' ? setTheme('light') : setTheme('dark'))}
+        onClick={() => setTheme(theme == 'dark' ? 'light' : 'dark')}
         size="small"
         color="gray3"
+        aria-label="Theme Switcher"
       >
         {theme == 'dark' ? (
-          <FontAwesomeIcon icon={faMoon} width={16} height={16} />
-        ) : (
           <FontAwesomeIcon icon={faSun} width={16} height={16} />
+        ) : (
+          <FontAwesomeIcon icon={faMoon} width={16} height={16} />
         )}
       </Button>
     </Box>

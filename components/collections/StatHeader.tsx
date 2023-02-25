@@ -40,7 +40,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
   return (
     <Grid
       css={{
-        borderRadius: 8,
+        borderRadius: '$lg',
         overflow: 'hidden',
         gap: 1,
         gridTemplateColumns: '1fr 1fr',

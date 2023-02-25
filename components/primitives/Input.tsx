@@ -13,7 +13,7 @@ const StyledInput = styled('input', {
   width: '100%',
   px: 16,
   py: 12,
-  borderRadius: 8,
+  borderRadius: '$lg',
   fontFamily: '$body',
   fontSize: 16,
   color: '$gray12',

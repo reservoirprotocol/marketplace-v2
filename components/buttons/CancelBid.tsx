@@ -56,8 +56,7 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
           description: 'You have canceled the bid.',
         })
       }}
-      onCancelError={(error: any, data: any) => {
-        console.log('Bid Cancel Error', error, data)
+      onCancelError={() => {
         addToast?.({
           title: 'Could not cancel bid',
           description: 'The transaction was not completed.',

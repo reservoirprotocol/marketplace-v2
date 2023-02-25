@@ -8,19 +8,20 @@ import TrendingCollectionsTimeToggle, {
 } from 'components/home/TrendingCollectionsTimeToggle'
 import { Footer } from 'components/Footer'
 import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import {useMarketplaceChain, useMounted} from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
+import { useCollections } from '@nftearth/reservoir-kit-ui';
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import HeroSection from 'components/HeroSection'
+import ChainToggle from "components/home/ChainToggle";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const collectionsSetId: any = {
-  10: "b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4",
-  42161: "3b38ae5b4e28b3b9873d74d3cf397b479a8506fe9bf26a1335b4e2807196e03b"
+  10: 'b03e080953a3a1cc77cee63968ecc126a918c8557838a2396e1651bae030b6b4',
+  42161: '3b38ae5b4e28b3b9873d74d3cf397b479a8506fe9bf26a1335b4e2807196e03b',
 }
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
@@ -49,14 +50,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     isValidating: isValidatingTopPage,
   } = useCollections(collectionQuery2, {
     fallbackData: [ssr.collections[marketplaceChain.id]],
-  })
+  }, marketplaceChain.id)
 
   let topCollections = topData || []
 
   const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
     useCollections(collectionQuery, {
       fallbackData: [ssr.collections[marketplaceChain.id]],
-    })
+    }, marketplaceChain.id)
 
   let collections = (data || []).slice(0, 12)
 
@@ -92,7 +93,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               p: '$6',
             },
           }}
-          >
+        >
           <Flex css={{ mb: '100px', gap: 65 }} direction="column">
             <Flex
               justify="between"
@@ -106,13 +107,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 },
               }}
             >
-              <Text style="h4" as="h4">
+              <Text style="h3" as="h3">
                 Featured Collections
               </Text>
+              <ChainToggle compact/>
             </Flex>
             {isSSR || !isMounted ? null : (
               <TrendingCollectionsList
-                uniqueKey="featured"
+                uniqueKey={`featured-${marketplaceChain.id}`}
                 chain={marketplaceChain}
                 collections={topCollections}
                 loading={isValidatingTopPage}
@@ -132,7 +134,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 },
               }}
             >
-              <Text style="h4" as="h4">
+              <Text style="h3" as="h3">
                 Popular Collections
               </Text>
               <TrendingCollectionsTimeToggle
@@ -145,7 +147,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Flex>
             {isSSR || !isMounted ? null : (
               <TrendingCollectionsList
-                uniqueKey="popular"
+                uniqueKey={`popular-${marketplaceChain.id}`}
                 chain={marketplaceChain}
                 collections={collections}
                 loading={isValidating}
@@ -197,7 +199,7 @@ export const getStaticProps: GetStaticProps<{
 
   const promises2: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
-    collectionQuery2.collectionsSetId = collectionsSetId[chain.id];
+    collectionQuery2.collectionsSetId = collectionsSetId[chain.id]
     promises2.push(
       fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery2, {
         headers: {

@@ -22,6 +22,7 @@ import {ActivityFilters} from "../../components/common/ActivityFilters";
 import {MobileActivityFilters} from "../../components/common/MobileActivityFilters";
 import {UserActivityTable} from "../../components/profile/UserActivityTable";
 import {ActivityTypes} from "../../types/reservoir";
+import ChainToggle from "../../components/home/ChainToggle";
 
 const PortfolioPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -53,18 +54,21 @@ const PortfolioPage: NextPage = () => {
       <Flex
         direction="column"
         css={{
-          px: '$4',
-          py: '$5',
+          px: '$space$4',
+          py: '$space$5',
           '@sm': {
-            px: '$5',
+            px: '$space$5',
           },
         }}
       >
         {isConnected ? (
           <>
-            <Text style="h4" css={{}}>
-              Portfolio
-            </Text>
+            <Flex direction="row" justify="between">
+              <Text style="h4" css={{}}>
+                Portfolio
+              </Text>
+              <ChainToggle compact/>
+            </Flex>
             <Tabs.Root defaultValue="items">
               <Flex css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}>
                 <TabsList
@@ -193,8 +197,7 @@ const PortfolioPage: NextPage = () => {
               style="body1"
               css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
             >
-              Connect wallet to instant sell your token across all major
-              marketplaces.
+              Connect wallet to instant sell your token on NFTEarth marketplace
             </Text>
             <ConnectWalletButton />
           </Flex>

@@ -1,5 +1,4 @@
 import {
-  Anchor,
   Box,
   Button,
   Flex,
@@ -21,7 +20,7 @@ import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
-import ThemeSwitcher from "./ThemeSwitcher";
+import ThemeSwitcher from './ThemeSwitcher'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -56,8 +55,8 @@ const HamburgerMenu = () => {
       >
         <Flex
           css={{
-            py: '$4',
-            px: '$4',
+            py: '$space$4',
+            px: '$space$4',
             width: '100%',
             borderBottom: '1px solid $gray4',
           }}
@@ -66,7 +65,7 @@ const HamburgerMenu = () => {
         >
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img src="/nftearth-icon.png" style={{ width: '100%' }} />
+              <img alt="NFTEarth Logo" src="/nftearth-icon.png" style={{ width: 34, height: 34 }} />
             </Box>
           </Link>
           <RadixDialog.Close>
@@ -76,7 +75,7 @@ const HamburgerMenu = () => {
                 width: '44px',
                 height: '44px',
                 alignItems: 'center',
-                borderRadius: 8,
+                borderRadius: '$lg',
                 backgroundColor: '$gray3',
                 color: '$gray12',
                 '&:hover': {
@@ -97,8 +96,8 @@ const HamburgerMenu = () => {
               flexDirection: 'column',
               justifyContent: 'flex-start',
               height: '100%',
-              py: '$5',
-              px: '$4',
+              py: '$space$5',
+              px: '$space$4',
             }}
           >
             <Link href={`/profile/${address}`} legacyBehavior>
@@ -138,6 +137,48 @@ const HamburgerMenu = () => {
                 Explore
               </Text>
             </Link>
+            <Text
+              as="a"
+              href="/quests"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              Quests
+            </Text>
+            <Text
+              as="a"
+              href="/launch"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              Launchpad
+            </Text>
+            <Text
+              as="a"
+              href="/airdrop"
+              style="subtitle1"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              Claim
+            </Text>
             <Text
               as="a"
               href="/portfolio"
@@ -235,12 +276,12 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Explore
+                  Collections
                 </Text>
               </Link>
               <Text
                 as="a"
-                href="/portfolio"
+                href="/quests"
                 style="subtitle1"
                 css={{
                   borderBottom: '1px solid $gray4',
@@ -250,7 +291,35 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                Portfolio
+                Quests
+              </Text>
+              <Text
+                as="a"
+                href="/launch"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Launchpad
+              </Text>
+              <Text
+                as="a"
+                href="/airdrop"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Claim
               </Text>
               <Link href="/launch/deploy" legacyBehavior>
                 <Text
@@ -282,22 +351,24 @@ const HamburgerMenu = () => {
             borderTop: '1px solid $gray4',
           }}
         >
-          <a href="https://twitter.com/reservoir0x" target="_blank">
+          <a aria-label="Twitter" href="https://twitter.com/NFTEarth_L2" target="_blank">
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
               size="small"
               color="gray3"
+              aria-label="Twitter"
             >
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <a href="https://discord.gg/j5K9fESNwh" target="_blank">
+          <a aria-label="Discord" href="https://discord.gg/nftearth" target="_blank">
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
               size="small"
               color="gray3"
+              aria-label="Discord"
             >
               <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
             </Button>

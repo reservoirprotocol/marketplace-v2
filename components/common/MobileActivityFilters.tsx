@@ -86,8 +86,8 @@ export const MobileActivityFilters: FC<Props> = ({
           alignItems: 'center',
           justifyItems: 'center',
           position: 'fixed',
-          px: '$6',
-          py: '$3',
+          px: '$space$6',
+          py: '$space$3',
         }}
         type="button"
         size="small"
@@ -105,7 +105,7 @@ export const MobileActivityFilters: FC<Props> = ({
               backgroundColor: '$gray4',
               borderRadius: '100%',
               fontSize: 'medium',
-              fontWeight: '500',
+              fontWeight: '$medium'
             }}
           >
             {activityTypes.length}

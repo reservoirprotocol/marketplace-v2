@@ -19,7 +19,7 @@ const nameForSortingOption = (
 ) => {
   switch (option) {
     case '1DayVolume':
-      return compact ? '24h' : '24 hours'
+      return compact ? '1d' : '24 hours'
     case '7DayVolume':
       return compact ? '7d' : '7 days'
     case '30DayVolume':
