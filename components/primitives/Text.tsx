@@ -55,6 +55,9 @@ export default styled('span', {
       subtle: {
         color: '$gray11',
       },
+      error: {
+        color: '$red11',
+      },
     },
     italic: {
       true: {

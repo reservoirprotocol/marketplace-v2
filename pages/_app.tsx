@@ -3,18 +3,11 @@ import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
-import '@rainbow-me/rainbowkit/styles.css'
-import {
-  RainbowKitProvider,
-  getDefaultWallets,
-  darkTheme as rainbowDarkTheme,
-  lightTheme as rainbowLightTheme,
-} from '@rainbow-me/rainbowkit'
+import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { optimism, arbitrum } from 'wagmi/chains'
 
 import {
   ReservoirKitProvider,
@@ -32,6 +25,7 @@ import ChainContextProvider from 'context/ChainContextProvider'
 import AnalyticsProvider from 'components/AnalyticsProvider'
 import Head from "next/head";
 
+//CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
   subsets: ['latin'],
 })
@@ -56,7 +50,7 @@ const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ])
 
-const { connectors } = getDefaultWallets({
+const { connectors } = getDefaultClient({
   appName: 'NFTEarth Exchange',
   chains,
 })
@@ -109,27 +103,12 @@ function MyApp({
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
-  const [rainbowKitTheme, setRainbowKitTheme] = useState<
-    | ReturnType<typeof rainbowDarkTheme>
-    | ReturnType<typeof rainbowLightTheme>
-    | undefined
-  >()
 
   useEffect(() => {
     if (theme == 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
-      setRainbowKitTheme(
-        rainbowDarkTheme({
-          borderRadius: 'small',
-        })
-      )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
-      setRainbowKitTheme(
-        rainbowLightTheme({
-          borderRadius: 'small',
-        })
-      )
     }
   }, [theme])
 
@@ -152,33 +131,28 @@ function MyApp({
         >
           <ReservoirKitProvider
             options={{
-              chains: [
-                {
-                  baseApiUrl: `${process.env.NEXT_PUBLIC_HOST_URL}/api/nftearth/optimism`,
-                  id: optimism.id,
-                  default: marketplaceChain.id === optimism.id,
-                },
-                {
-                  baseApiUrl: `${process.env.NEXT_PUBLIC_HOST_URL}/api/nftearth/arbitrum`,
-                  id: arbitrum.id,
-                  default: marketplaceChain.id === arbitrum.id
-                },
-              ],
+              //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
+              // Note that you should at the very least configure the source with your own domain
+              chains: supportedChains.map(({ proxyApi, id }) => {
+                return {
+                  id,
+                  baseApiUrl: `${baseUrl}${proxyApi}`,
+                  default: marketplaceChain.id === id,
+                }
+              }),
               disablePoweredByReservoir: true,
               marketplaceFee: +`${FEE_BPS || 0}`,
               marketplaceFeeRecipient: FEE_RECIPIENT,
-              // Replace source with your domain
               source: 'nftearth.exchange',
-              normalizeRoyalties: true,
+              normalizeRoyalties: NORMALIZE_ROYALTIES,
             }}
             theme={reservoirKitTheme}
           >
-            <CartProvider persist={true}>
+            <CartProvider>
               <Tooltip.Provider>
-                <RainbowKitProvider
-                  chains={chains}
-                  theme={rainbowKitTheme}
-                  modalSize="compact"
+                <ConnectKitProvider
+                  mode={theme == 'dark' ? 'dark' : 'light'}
+                  options={{ initialChainId: 10 }}
                 >
                   <ToastContextProvider>
                     <FunctionalComponent {...pageProps} />
@@ -202,7 +176,7 @@ function MyApp({
                       </style>
                     </div>
                   )}
-                </RainbowKitProvider>
+                </ConnectKitProvider>
               </Tooltip.Provider>
             </CartProvider>
           </ReservoirKitProvider>

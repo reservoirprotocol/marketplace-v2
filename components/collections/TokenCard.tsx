@@ -1,9 +1,11 @@
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
-  TokenMedia, useDynamicTokens,
+  TokenMedia,
+  useDynamicTokens,
 } from '@nftearth/reservoir-kit-ui'
+import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
 import {
   Box,
@@ -18,7 +20,6 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
-import AddToCart from "../buttons/AddToCart";
 
 type TokenCardProps = {
   token: ReturnType<typeof useDynamicTokens>['data'][0]
@@ -27,6 +28,7 @@ type TokenCardProps = {
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
+  tokenCount?: string
 }
 
 export default ({
@@ -34,12 +36,14 @@ export default ({
   rarityEnabled = true,
   mutate,
   onMediaPlayed,
+  tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
+  const tokenIsInCart = token && token?.isInCart
 
   return (
     <Box
@@ -47,7 +51,6 @@ export default ({
         borderRadius: '$lg',
         overflow: 'hidden',
         background: '$neutralBgSubtle',
-
         $$shadowColor: '$colors$panelShadow',
         boxShadow: '0 8px 12px 0px $$shadowColor',
         position: 'relative',
@@ -55,12 +58,54 @@ export default ({
           transform: 'scale(1.1)',
         },
         '@sm': {
-          '&:hover div': {
+          '&:hover .token-button-container': {
             bottom: 0,
           },
         },
       }}
     >
+      {tokenCount && (
+        <Flex
+          justify="center"
+          align="center"
+          css={{
+            borderRadius: 8,
+            px: '$2',
+            py: '$1',
+            mr: '$2',
+            backgroundColor: '$gray4',
+            position: 'absolute',
+            left: '$2',
+            top: '$2',
+            zIndex: 1,
+            maxWidth: '50%',
+          }}
+        >
+          <Text ellipsify>x{tokenCount}</Text>
+        </Flex>
+      )}
+      <Flex
+        justify="center"
+        align="center"
+        css={{
+          borderRadius: '99999px',
+          width: 48,
+          height: 48,
+          backgroundColor: '$primary9',
+          position: 'absolute',
+          right: '$2',
+          zIndex: 1,
+          transition: `visibility 0s linear ${
+            tokenIsInCart ? '' : '250ms'
+          }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
+          opacity: tokenIsInCart ? 1 : 0,
+          top: tokenIsInCart ? '$2' : 50,
+          visibility: tokenIsInCart ? 'visible' : 'hidden',
+          color: 'white',
+        }}
+      >
+        <FontAwesomeIcon icon={faCheck} width={20} height={20} />
+      </Flex>
       <Link
         passHref
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
@@ -213,21 +258,24 @@ export default ({
           )}
         </Flex>
       </Link>
-      <Flex css={{
-        position: 'absolute',
-        width: '100%',
-        bottom: -44,
-        left: 0,
-        right: 0,
-        justifyContent: 'stretch',
-        transition: 'bottom 0.25s ease-in-out',
-      }}>
+      <Flex
+        className="token-button-container"
+        css={{
+          width: '100%',
+          transition: 'bottom 0.25s ease-in-out',
+          position: 'absolute',
+          bottom: -44,
+          left: 0,
+          right: 0,
+          gap: 1,
+        }}
+      >
         <BuyNow
           token={token}
           mutate={mutate}
           buttonCss={{
-            flex: 1,
             justifyContent: 'center',
+            flex: 1,
           }}
           buttonProps={{
             corners: 'square',
@@ -235,10 +283,12 @@ export default ({
         />
         <AddToCart
           token={token}
-          icon
-          buttonProps={{
-            corners: 'square',
+          buttonCss={{
+            width: 52,
+            p: 0,
+            justifyContent: 'center',
           }}
+          buttonProps={{ corners: 'square' }}
         />
       </Flex>
     </Box>

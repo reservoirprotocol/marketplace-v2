@@ -18,6 +18,7 @@ import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
+  useCollectionActivity,
   useDynamicTokens,
   useUserCollections,
   useUserTokens,
@@ -108,7 +109,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
     if (isVisible) {
       fetchNextPage()
     }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  }, [loadMoreObserver?.isIntersecting])
 
   if (!isMounted) {
     return null
@@ -226,7 +227,14 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
                             <TokenCard
                               key={i}
                               token={
-                                token as ReturnType<typeof useDynamicTokens>['data'][0]
+                                token as ReturnType<
+                                  typeof useDynamicTokens
+                                >['data'][0]
+                              }
+                              tokenCount={
+                                token?.token?.kind === 'erc1155'
+                                  ? token.ownership?.tokenCount
+                                  : undefined
                               }
                               mutate={mutate}
                               rarityEnabled={false}
@@ -247,18 +255,24 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
                             />
                           )
                       })}
-                  <Box ref={loadMoreRef}>
+                  <Box
+                    ref={loadMoreRef}
+                    css={{
+                      display: isFetchingPage ? 'none' : 'block',
+                    }}
+                  >
                     {hasNextPage && !isFetchingInitialData && <LoadingCard />}
                   </Box>
-                  {hasNextPage && (
-                    <>
-                      {Array(10)
-                        .fill(null)
-                        .map((_, index) => (
-                          <LoadingCard key={`loading-card-${index}`} />
-                        ))}
-                    </>
-                  )}
+                  {(hasNextPage || isFetchingPage) &&
+                    !isFetchingInitialData && (
+                      <>
+                        {Array(6)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))}
+                      </>
+                    )}
                 </Grid>
                 {tokens.length === 0 && !isFetchingPage && (
                   <Flex

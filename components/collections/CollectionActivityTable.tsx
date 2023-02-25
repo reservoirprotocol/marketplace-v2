@@ -15,7 +15,6 @@ export const CollectionActivityTable: FC<Props> = ({ id, activityTypes }) => {
     {
       revalidateOnMount: true,
       fallbackData: [],
-      revalidateFirstPage: true,
     }
   )
 

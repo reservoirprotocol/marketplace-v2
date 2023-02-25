@@ -34,11 +34,11 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
   const listedPercentage =
     ((collection?.onSaleCount ? +collection.onSaleCount : 0) /
-      (collection?.tokenCount ? +collection.tokenCount : 0)) *
+      (collection?.itemCount ? +collection.itemCount : 0)) *
     100
   const uniqueOwnersPercentage =
     ((collection?.ownerCount ? +collection.ownerCount : 0) /
-      (collection?.tokenCount ? +collection.tokenCount : 0)) *
+      (collection?.itemCount ? +collection.itemCount : 0)) *
     100
 
   return (
@@ -91,7 +91,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
 
       {!isSmallDevice && (
         <StatBox label="Listed">
-          <Text style="h6">{formatNumber(listedPercentage)}%</Text>
+          <Text style="h6">{formatNumber(listedPercentage, 4)}%</Text>
         </StatBox>
       )}
 

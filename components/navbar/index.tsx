@@ -1,9 +1,10 @@
 import { useRef } from 'react'
-import { Box, Button, Flex } from '../primitives'
+import { Box, Flex } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
@@ -14,7 +15,7 @@ import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
-import CartMenu from './CartMenu'
+import CartButton from './CartButton'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -59,10 +60,11 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <img
-                alt="NFTEarth Logo"
+              <Image
                 src="/nftearth-icon-new.png"
-                style={{ width: 34, height: 34 }}
+                width={34}
+                height={34}
+                alt="NFTEarth Logo"
               />
             </Box>
           </Link>
@@ -70,7 +72,7 @@ const Navbar = () => {
       </Box>
       <Flex align="center" css={{ gap: '$3' }}>
         <MobileSearch key={`${router.asPath}-search`} />
-        <CartMenu />
+        <CartButton />
         <HamburgerMenu key={`${router.asPath}-hamburger`} />
       </Flex>
     </Flex>
@@ -107,15 +109,12 @@ const Navbar = () => {
                 alignItems: 'center',
               }}
             >
-              {theme == 'dark' ? (
-                <img alt="NFTEarth Logo" src="/nftearth-icon-new.png" style={{ width: 34, height: 34 }} />
-              ) : (
-                <img
-                  alt="NFTEarth Logo"
-                  src="/nftearth-icon-new.png"
-                  style={{ width: 34, height: 34 }}
-                />
-              )}
+              <img
+                src="/nftearth-icon-new.png"
+                width={34}
+                height={34}
+                alt="NFTEarth Logo"
+              />
             </Box>
           </Link>
           <Box css={{ flex: 1, px: '$3', width: '100%' }}>
@@ -196,7 +195,7 @@ const Navbar = () => {
       </Box>
       <Flex css={{ gap: '$3' }} justify="end" align="center">
         <ThemeSwitcher />
-        <CartMenu />
+        <CartButton />
         {isConnected ? (
           <ProfileDropdown />
         ) : (
