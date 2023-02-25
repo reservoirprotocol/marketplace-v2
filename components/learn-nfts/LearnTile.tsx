@@ -45,7 +45,7 @@ export const LearnTile = ({ title, numArticles, articles, color }: Props) => {
           <ul>
             {articles.map((article: Article) => (
               <li>
-                <Link href={'learn-nfts' + article.link}>
+                <Link href={'/learn-nfts' + article.link}>
                   <Text
                     style={{
                       '@xs': 'h6',
