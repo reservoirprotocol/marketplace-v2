@@ -6,8 +6,7 @@ import { darkTheme, globalReset } from 'stitches.config'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
-import { publicProvider } from 'wagmi/providers/public'
-import { infuraProvider } from 'wagmi/providers/infura'
+import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 
 import {
@@ -47,9 +46,25 @@ const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 
 const { chains, provider } = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '', priority: 0 }),
-  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_ID || '', priority: 1 }),
-  publicProvider({ priority: 2 }),
+  jsonRpcProvider({ rpc: (chain) => {
+    let subDomain = 'opt-mainnet'
+    let apiKey = process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID;
+    switch (chain.id) {
+      case 42161:
+        subDomain = 'arb-mainnet'
+        apiKey = process.env.NEXT_PUBLIC_ALCHEMY_ARBITRUM_ID;
+        break;
+      case 10:
+        subDomain = 'opt-mainnet'
+        apiKey = process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID;
+        break;
+    }
+
+    return {
+      http: `https://${subDomain}.g.alchemy.com/v2/${apiKey}`,
+      webSocket: `wss://${subDomain}.g.alchemy.com/v2/${apiKey}`
+    }
+  }, priority: 0})
 ])
 
 const { connectors } = getDefaultClient({
