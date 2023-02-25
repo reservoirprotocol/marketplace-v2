@@ -104,7 +104,7 @@ export default ({
           color: 'white',
         }}
       >
-        <FontAwesomeIcon icon={faCheck} width={20} height={20} />
+        <FontAwesomeIcon icon={faCheck} width={20} height={20} color="#000"/>
       </Flex>
       <Link
         passHref

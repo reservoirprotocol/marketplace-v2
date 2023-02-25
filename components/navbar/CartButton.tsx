@@ -39,7 +39,7 @@ const CartButton = () => {
                 right: -6,
               }}
             >
-              <Text style="subtitle3" css={{ color: 'white' }}>
+              <Text style="subtitle3" css={{ color: '#000' }}>
                 {cartItems.length}
               </Text>
             </Flex>

@@ -82,8 +82,10 @@ const wagmiClient = createClient({
 const reservoirKitThemeOverrides = {
   headlineFont: inter.style.fontFamily,
   font: inter.style.fontFamily,
-  primaryColor: '#79ffa8',
-  primaryHoverColor: '#644fc1',
+  buttonTextColor: '#000',
+  buttonTextHoverColor: '#000',
+  primaryColor: '#47FF88',
+  primaryHoverColor: '#7AFFA9',
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {

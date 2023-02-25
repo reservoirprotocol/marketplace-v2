@@ -57,7 +57,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary11: 'hsl(141,100%,74%)',
         primary12: 'hsl(141,100%,88%)',
         primary13: 'hsl(141, 72%, 67%)',
-        primary14: 'hsl(142, 34%, 51%)',
+        primary14: 'hsl(142,34%,51%)',
 
         //Secondary
         secondary1: '$limeA1',
