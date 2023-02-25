@@ -1,5 +1,5 @@
 import { styled } from '@stitches/react'
-import { Box } from 'components/primitives'
+import { Box, Button } from 'components/primitives'
 
 export const Grid = styled(Box, {
   display: 'grid',
@@ -26,4 +26,16 @@ export const LaunchTileContent = styled(Box, {
   textOverflow: 'ellipsis',
   wordWrap: 'break-word',
   overflow: 'hidden',
+})
+
+export const MintInfoBtn = styled(Box, {
+  padding: '5px 10px',
+  borderRadius: '5px',
+  border: '2px solid $gray9',
+  cursor: 'pointer',
+  transition: '0.2s',
+  transitionTimingFunction: 'ease-in-out',
+  '&:hover': {
+    background: '$gray9'
+  }
 })
