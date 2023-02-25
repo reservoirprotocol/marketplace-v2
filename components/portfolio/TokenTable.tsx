@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -81,7 +81,7 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
           <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
       ) : (
-        <Flex direction="column" css={{ width: '100%' }}>
+        <Flex direction="column" css={{ width: '100%', mb: 80 }}>
           <TableHeading />
           {tokens.map((token, i) => {
             if (!token) return null
@@ -222,17 +222,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 token={token as ReturnType<typeof useTokens>['data'][0]}
                 collectionId={token?.token?.contract}
                 mutate={mutate}
-                buttonCss={{
-                  width: '100%',
-                  maxWidth: '300px',
-                  justifyContent: 'center',
-                  px: '32px',
-                  backgroundColor: '$primary9',
-                  color: 'white',
-                  mt: '$2',
-                  '&:hover': {
-                    backgroundColor: '$primary10',
-                  },
+                buttonCss={{ justifyContent: 'center' }}
+                buttonProps={{
+                  size: isSmallDevice ? 'xs' : 'medium',
                 }}
                 buttonChildren={
                   <Flex align="center" css={{ gap: '$2' }}>
@@ -341,17 +333,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             token={token as ReturnType<typeof useTokens>['data'][0]}
             mutate={mutate}
           />
-          {token?.token?.topBid?.price?.amount?.decimal && (
+          {!!token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
               token={token as ReturnType<typeof useTokens>['data'][0]}
               collectionId={token?.token?.contract}
-              buttonCss={{
-                px: '32px',
-                backgroundColor: '$primary9',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '$primary10',
-                },
+              buttonCss={{ justifyContent: 'center' }}
+              buttonProps={{
+                size: isSmallDevice ? 'xs' : 'medium',
               }}
               buttonChildren={
                 <Flex align="center" css={{ gap: '$2' }}>

@@ -184,6 +184,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         <Flex
           direction="column"
           css={{
+            position: 'relative',
             px: '$4',
             pt: '$5',
             pb: 0,
@@ -203,7 +204,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     borderRadius: '$lg',
                     objectFit: 'cover',
                   }}
-                 alt={collection.name}/>
+                  alt={collection.name}/>
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
                     <Text style="h5" as="h6" ellipsify>
@@ -316,32 +317,32 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   >
                     {isFetchingInitialData
                       ? Array(10)
-                          .fill(null)
-                          .map((_, index) => (
-                            <LoadingCard key={`loading-card-${index}`} />
-                          ))
+                        .fill(null)
+                        .map((_, index) => (
+                          <LoadingCard key={`loading-card-${index}`} />
+                        ))
                       : tokens.map((token, i) => (
-                          <TokenCard
-                            key={i}
-                            token={token}
-                            mutate={mutate}
-                            rarityEnabled={rarityEnabledCollection}
-                            onMediaPlayed={(e) => {
-                              if (
-                                playingElement &&
-                                playingElement !== e.nativeEvent.target
-                              ) {
-                                playingElement.pause()
-                              }
-                              const element =
-                                (e.nativeEvent.target as HTMLAudioElement) ||
-                                (e.nativeEvent.target as HTMLVideoElement)
-                              if (element) {
-                                setPlayingElement(element)
-                              }
-                            }}
-                          />
-                        ))}
+                        <TokenCard
+                          key={i}
+                          token={token}
+                          mutate={mutate}
+                          rarityEnabled={rarityEnabledCollection}
+                          onMediaPlayed={(e) => {
+                            if (
+                              playingElement &&
+                              playingElement !== e.nativeEvent.target
+                            ) {
+                              playingElement.pause()
+                            }
+                            const element =
+                              (e.nativeEvent.target as HTMLAudioElement) ||
+                              (e.nativeEvent.target as HTMLVideoElement)
+                            if (element) {
+                              setPlayingElement(element)
+                            }
+                          }}
+                        />
+                      ))}
                     <Box
                       ref={loadMoreRef}
                       css={{
@@ -349,18 +350,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       }}
                     >
                       {(hasNextPage || isFetchingPage) &&
-                        !isFetchingInitialData && <LoadingCard />}
+                      !isFetchingInitialData && <LoadingCard />}
                     </Box>
                     {(hasNextPage || isFetchingPage) &&
-                      !isFetchingInitialData && (
-                        <>
-                          {Array(6)
-                            .fill(null)
-                            .map((_, index) => (
-                              <LoadingCard key={`loading-card-${index}`} />
-                            ))}
-                        </>
-                      )}
+                    !isFetchingInitialData && (
+                      <>
+                        {Array(6)
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))}
+                      </>
+                    )}
                   </Grid>
                   {tokens.length == 0 && !isFetchingPage && (
                     <Flex

@@ -3,7 +3,7 @@ import {
   AcceptBidStep,
   useTokens,
 } from '@nftearth/reservoir-kit-ui'
-import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
+import React, { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
@@ -52,7 +52,7 @@ const AcceptBid: FC<Props> = ({
   )
 
   const trigger = (
-    <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
+    <Button css={buttonCss} color="primary" disabled={disabled} {...buttonProps}>
       {buttonChildren}
     </Button>
   )

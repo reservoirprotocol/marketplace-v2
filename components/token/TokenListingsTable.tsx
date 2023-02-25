@@ -7,9 +7,11 @@ import {
   TableRow,
   HeaderRow,
   Button,
-  Box, FormatCryptoCurrency, CollapsibleContent,
+  Box,
+  FormatCryptoCurrency,
+  CollapsibleContent,
 } from '../primitives'
-import { faTag } from '@fortawesome/free-solid-svg-icons'
+import {faBolt, faTag} from '@fortawesome/free-solid-svg-icons'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import { useListings, useTokens } from '@nftearth/reservoir-kit-ui'
@@ -63,7 +65,7 @@ export const TokenListingsTable: FC<Props> = ({
 
   return (
     <Collapsible.Root
-      defaultOpen={true}
+      defaultOpen={token?.token?.kind === 'erc1155'}
       style={{ width: '100%' }}
     >
       <Collapsible.Trigger asChild>
@@ -200,12 +202,19 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
             <BuyNow
               order={order}
               token={token}
-              buttonCss={{ flex: 1, justifyContent: 'center' }}
               mutate={mutate}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
               buttonProps={{
                 size: isSmallDevice ? 'xs' : 'medium',
               }}
-              compact
+              buttonChildren={
+                <Flex align="center" css={{ gap: '$2' }}>
+                  <FontAwesomeIcon icon={faBolt} />
+                  {!isSmallDevice && (
+                    `Buy`
+                  )}
+                </Flex>
+              }
             />
           )}
           {order?.maker === address?.toLowerCase() && (

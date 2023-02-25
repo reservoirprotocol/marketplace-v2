@@ -17,7 +17,7 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useENSResolver, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
-import { AcceptBid } from '../buttons'
+import {AcceptBid, BuyNow} from '../buttons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt } from '@fortawesome/free-solid-svg-icons'
 import { useAccount } from 'wagmi'
@@ -215,24 +215,16 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               collectionId={offer?.criteria?.data?.collection?.id}
               token={token}
               mutate={mutate}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
               buttonProps={{
                 size: isSmallDevice ? 'xs' : 'medium',
-              }}
-              buttonCss={{
-                width: '100%',
-                maxWidth: '300px',
-                justifyContent: 'center',
-                px: '5px',
-                backgroundColor: '$primary11',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '$primary10',
-                },
               }}
               buttonChildren={
                 <Flex align="center" css={{ gap: '$2' }}>
                   <FontAwesomeIcon icon={faBolt} />
-                  Sell
+                  {!isSmallDevice && (
+                    `Sell`
+                  )}
                 </Flex>
               }
             />
