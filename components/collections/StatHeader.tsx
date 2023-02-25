@@ -91,7 +91,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
 
       {!isSmallDevice && (
         <StatBox label="Listed">
-          <Text style="h6">{formatNumber(listedPercentage, 4)}%</Text>
+          <Text style="h6">{formatNumber(listedPercentage, 2)}%</Text>
         </StatBox>
       )}
 
