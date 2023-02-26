@@ -6,8 +6,8 @@ import { darkTheme, globalReset } from 'stitches.config'
 import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { publicProvider } from "wagmi/providers/public";
 
 import {
   ReservoirKitProvider,
@@ -46,25 +46,25 @@ const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 
 const { chains, provider } = configureChains(supportedChains, [
-  jsonRpcProvider({ rpc: (chain) => {
-    let subDomain = 'opt-mainnet'
-    let apiKey = process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID;
-    switch (chain.id) {
-      case 42161:
-        subDomain = 'arb-mainnet'
-        apiKey = process.env.NEXT_PUBLIC_ALCHEMY_ARBITRUM_ID;
-        break;
-      case 10:
-        subDomain = 'opt-mainnet'
-        apiKey = process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID;
-        break;
-    }
-
-    return {
-      http: `https://${subDomain}.g.alchemy.com/v2/${apiKey}`,
-      webSocket: `wss://${subDomain}.g.alchemy.com/v2/${apiKey}`
-    }
-  }, priority: 0})
+  alchemyProvider({
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID as string,
+    stallTimeout: 1000,
+    priority: 0,
+    weight: 1
+  }),
+  alchemyProvider({
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ARBITRUM_ID as string,
+    stallTimeout: 1000,
+    priority: 0,
+    weight: 1
+  }),
+  alchemyProvider({
+    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_ID as string,
+    stallTimeout: 1000,
+    priority: 0,
+    weight: 1
+  }),
+  publicProvider({ priority: 1, weight: 2 }),
 ])
 
 const { connectors } = getDefaultClient({
@@ -171,13 +171,14 @@ function MyApp({
               <Tooltip.Provider>
                 <ConnectKitProvider
                   mode={theme == 'dark' ? 'dark' : 'light'}
-                  options={{ initialChainId: 10 }}
+                  options={{ initialChainId: marketplaceChain.id }}
                 >
                   <ToastContextProvider>
                     <FunctionalComponent {...pageProps} />
                   </ToastContextProvider>
-                  {(marketplaceChain.id === 42161 && isMounted) && (
+                  {(marketplaceChain.id === 137 && isMounted) && (
                     <div>
+                      <p>Important: Full synchronization of blockchain data for collections is ongoing, and NFT Collections may not reflect real-time data.</p>
                       <style jsx>{`
                         p {
                           position: fixed;
