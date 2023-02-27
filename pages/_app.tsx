@@ -124,7 +124,7 @@ function MyApp({
   >()
 
   useEffect(() => {
-    if (theme == 'dark') {
+    if (theme === 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))

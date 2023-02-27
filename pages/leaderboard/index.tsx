@@ -10,6 +10,7 @@ import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
+import { data } from 'components/leaderboard/enums'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -23,24 +24,24 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     sortBy: 'allTimeVolume',
   }
 
-  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(
-      collectionQuery,
-      {
-        fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-      },
-      marketplaceChain.id
-    )
+  // const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
+  //   useCollections(
+  //     collectionQuery,
+  //     {
+  //       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
+  //     },
+  //     marketplaceChain.id
+  //   )
 
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+  // const loadMoreRef = useRef<HTMLDivElement>(null)
+  // const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  // useEffect(() => {
+  //   let isVisible = !!loadMoreObserver?.isIntersecting
+  //   if (isVisible) {
+  //     fetchNextPage()
+  //   }
+  // }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   return (
     <Layout>
@@ -83,38 +84,46 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             width: '100%',
           }}
         >
-          <Flex>
-            <Box css={{ width: '100%' }}>
-              <Box css={{textAlign: 'center'}}>
+          <Flex
+            css={{ backgroundImage: `url(/ClaimRewards.png)`, width: '100%' }}
+          >
+            <Box css={{ width: '100%', height: '25vh' }}>
+              <Flex css={{ textAlign: 'center', gap: '$4' }}>
                 <Text
                   style={{
                     '@initial': 'h3',
                     '@lg': 'h2',
                   }}
-                  css={{ lineHeight: 1.2, letterSpacing: 2, color: '$primary9', textAlign: 'center' }}
+                  css={{
+                    lineHeight: 1.2,
+                    letterSpacing: 2,
+                    marginTop: '75px',
+                    color: '$primary9',
+                    textAlign: 'center',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                  }}
                 >
-                  Leaderboard
+                  Leaderboard 📈
                 </Text>
-              </Box>
-              <Box css={{textAlign: 'center'}}>
+              </Flex>
+              <Box css={{ textAlign: 'center' }}>
                 <Text css={{ color: '$primary11', textAlign: 'center' }}>
                   Increase your position on the leaderboard by completing
-                  quests!
+                  quests! 💰
                 </Text>
               </Box>
             </Box>
-       
           </Flex>
           <Flex
-              align="center"
-              direction="column"
-              css={{
-                width: '100%',
-                marginTop: '100px',
-                alignItems: 'center',
-              }}
-            >
-          <LeaderboardTable />
+            align="center"
+            direction="column"
+            css={{
+              width: '100%',
+              alignItems: 'center',
+            }}
+          >
+            <LeaderboardTable data={data} />
           </Flex>
         </Flex> */}
       </Box>

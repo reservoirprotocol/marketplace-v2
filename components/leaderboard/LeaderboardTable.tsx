@@ -1,100 +1,185 @@
+import React, { FC, useEffect, useRef } from 'react'
+import { useMediaQuery } from 'react-responsive'
 import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
-import { useState, useReducer } from 'react'
-import { defaultData } from './enums'
+  Text,
+  Flex,
+  TableCell,
+  TableRow,
+  HeaderRow,
+  Button,
+  Box,
+  FormatCryptoCurrency,
+  CollapsibleContent,
+} from '../primitives'
+import { faListDots } from '@fortawesome/free-solid-svg-icons'
+import { useIntersectionObserver } from 'usehooks-ts'
+import LoadingSpinner from '../common/LoadingSpinner'
+import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
+import Link from 'next/link'
+import { MutatorCallback } from 'swr'
+import { useENSResolver, useTimeSince } from 'hooks'
+import CancelBid from 'components/buttons/CancelBid'
+import { AcceptBid, BuyNow } from '../buttons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBolt } from '@fortawesome/free-solid-svg-icons'
+import { useAccount } from 'wagmi'
+import { useTheme } from 'next-themes'
+import * as Collapsible from '@radix-ui/react-collapsible'
+import { NAVBAR_HEIGHT } from '../navbar'
 
-const columnHelper = createColumnHelper()
+type Props = {
+  data: User[]
+}
 
-const columns = [
-  // @ts-ignore
-  columnHelper.accessor('rank', {
-    cell: (info) => info.getValue(),
-    header: () => <span>Rank</span>,
-  }),
-  // @ts-ignore
-  columnHelper.accessor((row) => row.codeName, {
-    id: 'codeName',
-    cell: (info) => <i>{info.getValue()}</i>,
-    header: () => <span>Code Name</span>,
-  }),
-  // @ts-ignore
-  columnHelper.accessor('volume', {
-    header: () => 'Volume',
-    cell: (info) => info.renderValue(),
-  }),
-  // @ts-ignore
-  columnHelper.accessor('potentialReward', {
-    header: () => <span>Potential Reward</span>,
-  }),
-]
+type User = {
+  rank: number
+  username: string
+  volume: number
+  reward: number
+}
 
-export const LeaderboardTable = () => {
-  const [data, setData] = useState(() => [...defaultData])
-  const rerender = useReducer(() => ({}), {})[1]
+const desktopTemplateColumns = '.75fr repeat(3, 1fr)'
+const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
+export const LeaderboardTable: FC<Props> = ({ data }) => {
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  })
+  //@ts-ignore
+  const users: User[] = data
 
   return (
-    <table
-      style={{
-        width: '100%',
-        border: '2px solid green',
-        padding: '20px',
-        height: '100%',
-        borderRadius: '10px',
+    <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
+      <CollapsibleContent
+        css={{
+          position: 'sticky',
+          top: 16 + 80,
+          height: '55vh',
+          overflow: 'auto',
+          marginBottom: 16,
+          borderRadius: '$base',
+          p: '$2',
+        }}
+      >
+        <Box
+          css={{
+            '& > div:first-of-type': {
+              pt: 0,
+            },
+          }}
+        >
+          <Flex
+            direction="column"
+            css={{ width: '100%', height: '87vh', pb: '$2' }}
+          >
+            <TableHeading />
+            {users.map((user: User, i: number) => {
+              return (
+                <LeaderboardTableRow
+                  key={i}
+                  rank={user.rank}
+                  username={user.username}
+                  volume={user.volume}
+                  reward={user.reward}
+                />
+              )
+            })}
+            <Box ref={loadMoreRef} css={{ height: 20 }} />
+          </Flex>
+        </Box>
+      </CollapsibleContent>
+    </Collapsible.Root>
+  )
+}
+
+type LeaderboardTableRowProps = {
+  rank: number
+  username: string
+  volume: number
+  reward: number
+}
+
+const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
+  rank,
+  username,
+  volume,
+  reward,
+}) => {
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const { theme } = useTheme()
+
+  return (
+    <TableRow
+      css={{
+        gridTemplateColumns: isSmallDevice
+          ? mobileTemplateColumns
+          : desktopTemplateColumns,
+        borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
-      <thead>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <tr key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody>
-        {table.getRowModel().rows.map((row) => (
-          <tr style={{ textAlign: 'center' }} key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <td key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-      <tfoot>
-        {table.getFooterGroups().map((footerGroup) => (
-          <tr key={footerGroup.id}>
-            {footerGroup.headers.map((header) => (
-              <th key={header.id}>
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.footer,
-                      header.getContext()
-                    )}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </tfoot>
-    </table>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+        <Text>{rank}</Text>
+      </TableCell>
+
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+        <Text style="subtitle2">{username}</Text>
+      </TableCell>
+
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+        <Text style="subtitle2">{volume} </Text>
+      </TableCell>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+        <Flex css={{ gap: '$3', marginLeft: '100px' }}>
+          <Text
+            style="subtitle3"
+            css={{
+              color: '$primary13',
+              marginTop: '$1',
+              '&:hover': {
+                color: '$primary14',
+              },
+            }}
+          >
+            {reward}
+          </Text>
+          <Box>
+            <img src="/nftearth-icon.png" width={25} height={25} />
+          </Box>
+        </Flex>
+      </TableCell>
+    </TableRow>
+  )
+}
+
+const TableHeading = () => {
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const headings = ['Rank', 'Codename', 'Volume', 'Potential Reward']
+  const { theme } = useTheme()
+  return (
+    <HeaderRow
+      css={{
+        display: 'grid',
+        gridTemplateColumns: isSmallDevice
+          ? mobileTemplateColumns
+          : desktopTemplateColumns,
+        position: 'sticky',
+        top: 0,
+        backgroundColor: theme === 'light' ? '$primary10' : '$primary5',
+      }}
+    >
+      {headings.map((heading) => (
+        <TableCell
+          key={heading}
+          css={{
+            textAlign: 'center',
+            pl: '$2 !important',
+            py: '$1',
+            border: '1px solid $primary2',
+          }}
+        >
+          <Text as={'div'} style="subtitle1">
+            {heading}
+          </Text>
+        </TableCell>
+      ))}
+    </HeaderRow>
   )
 }
