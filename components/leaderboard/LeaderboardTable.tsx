@@ -7,9 +7,11 @@ import {
   TableRow,
   HeaderRow,
   Button,
-  Box, FormatCryptoCurrency, CollapsibleContent,
+  Box,
+  FormatCryptoCurrency,
+  CollapsibleContent,
 } from '../primitives'
-import {faListDots} from '@fortawesome/free-solid-svg-icons'
+import { faListDots } from '@fortawesome/free-solid-svg-icons'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
@@ -17,13 +19,13 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useENSResolver, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
-import {AcceptBid, BuyNow} from '../buttons'
+import { AcceptBid, BuyNow } from '../buttons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt } from '@fortawesome/free-solid-svg-icons'
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
-import * as Collapsible from "@radix-ui/react-collapsible";
-import {NAVBAR_HEIGHT} from "../navbar";
+import * as Collapsible from '@radix-ui/react-collapsible'
+import { NAVBAR_HEIGHT } from '../navbar'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -66,30 +68,7 @@ export const LeaderboardTable: FC<Props> = ({
   }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   return (
-    <Collapsible.Root
-      defaultOpen={true}
-      style={{ width: '100%' }}
-    >
-      <Collapsible.Trigger asChild>
-        <Flex
-          direction="row"
-          align="center"
-          css={{
-            px: '$4',
-            py: '$3',
-            backgroundColor: theme === 'light'
-              ? '$primary11'
-              : '$primary6',
-            mt: 30,
-            cursor: 'pointer',
-          }}
-        >
-          <FontAwesomeIcon icon={faListDots} />
-          <Text style="h6" css={{ ml: '$4' }}>
-            Offers
-          </Text>
-        </Flex>
-      </Collapsible.Trigger>
+    <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
       <CollapsibleContent
         css={{
           position: 'sticky',
@@ -166,10 +145,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
     <TableRow
       key={offer?.id}
       css={{
-        gridTemplateColumns: isSmallDevice ? mobileTemplateColumns : desktopTemplateColumns,
-        borderBottomColor: theme === 'light'
-          ? '$primary11'
-          : '$primary6',
+        gridTemplateColumns: isSmallDevice
+          ? mobileTemplateColumns
+          : desktopTemplateColumns,
+        borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
@@ -222,9 +201,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               buttonChildren={
                 <Flex align="center" css={{ gap: '$2' }}>
                   <FontAwesomeIcon icon={faBolt} />
-                  {!isSmallDevice && (
-                    `Sell`
-                  )}
+                  {!isSmallDevice && `Sell`}
                 </Flex>
               }
             />
@@ -258,12 +235,12 @@ const TableHeading = () => {
     <HeaderRow
       css={{
         display: 'grid',
-        gridTemplateColumns: isSmallDevice ? mobileTemplateColumns : desktopTemplateColumns,
+        gridTemplateColumns: isSmallDevice
+          ? mobileTemplateColumns
+          : desktopTemplateColumns,
         position: 'sticky',
         top: 0,
-        backgroundColor: theme === 'light'
-          ? '$primary10'
-          : '$primary5',
+        backgroundColor: theme === 'light' ? '$primary10' : '$primary5',
       }}
     >
       {headings.map((heading) => (
