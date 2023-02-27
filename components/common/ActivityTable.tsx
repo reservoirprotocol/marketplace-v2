@@ -1,6 +1,5 @@
 import {
   useCollectionActivity,
-  useUsersActivity,
 } from '@nftearth/reservoir-kit-ui'
 import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -33,16 +32,10 @@ import LoadingSpinner from './LoadingSpinner'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
-export type CollectionActivityTypes = NonNullable<
-  Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
->['types']
 
 type UsersActivityResponse = ReturnType<typeof useCollectionActivity>
 type UsersActivity = UsersActivityResponse['data'][0]
 type ActivityResponse = CollectionActivityResponse | UsersActivityResponse
-export type UserActivityTypes = NonNullable<
-  Exclude<Parameters<typeof useUsersActivity>['1'], boolean>
->['types']
 
 type Activity = CollectionActivity | UsersActivity
 type Props = {
