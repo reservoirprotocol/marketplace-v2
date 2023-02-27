@@ -63,7 +63,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
         >
           <Flex>
             <Box css={{ width: '100%' }}>
-              <Box css={{ textAlign: 'center' }}>
+              <Flex css={{ textAlign: 'center', gap: '$4' }}>
                 <Text
                   style={{
                     '@initial': 'h3',
@@ -72,13 +72,18 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                   css={{
                     lineHeight: 1.2,
                     letterSpacing: 2,
+                    marginTop: '$2',
                     color: '$primary9',
                     textAlign: 'center',
                   }}
                 >
-                  Leaderboard
+                  Leaderboard 
                 </Text>
-              </Box>
+                <img
+                      style={{ width: 75, height: 75, color: 'green' }}
+                      src="/icons/activity-icon.svg"
+                    />
+              </Flex>
               <Box css={{ textAlign: 'center' }}>
                 <Text css={{ color: '$primary11', textAlign: 'center' }}>
                   Increase your position on the leaderboard by completing

@@ -34,7 +34,7 @@ type Props = {
   isOwner: boolean
 }
 
-const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
+const desktopTemplateColumns = '.75fr repeat(3, 1fr)'
 const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
 export const LeaderboardTable: FC<Props> = ({
   token,
@@ -53,7 +53,7 @@ export const LeaderboardTable: FC<Props> = ({
   }
 
   const {
-    data: offers,
+    data: users,
     fetchNextPage,
     mutate,
     isValidating,
@@ -92,7 +92,7 @@ export const LeaderboardTable: FC<Props> = ({
             css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
           >
             <TableHeading />
-            {offers.map((offer, i) => {
+            {users.map((offer, i) => {
               return (
                 <OfferTableRow
                   key={`${offer?.id}-${i}`}
@@ -186,43 +186,6 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           </Text>
         </Link>
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Flex align="center" justify="end">
-          {isOwner && (
-            <AcceptBid
-              bidId={offer?.id}
-              collectionId={offer?.criteria?.data?.collection?.id}
-              token={token}
-              mutate={mutate}
-              buttonCss={{ flex: 1, justifyContent: 'center' }}
-              buttonProps={{
-                size: isSmallDevice ? 'xs' : 'medium',
-              }}
-              buttonChildren={
-                <Flex align="center" css={{ gap: '$2' }}>
-                  <FontAwesomeIcon icon={faBolt} />
-                  {!isSmallDevice && `Sell`}
-                </Flex>
-              }
-            />
-          )}
-          {offer?.maker === address?.toLowerCase() && (
-            <CancelBid
-              bidId={offer?.id as string}
-              mutate={mutate}
-              trigger={
-                <Button
-                  css={{ color: '$red11', px: '5px' }}
-                  size={isSmallDevice ? 'xs' : 'medium'}
-                  color="gray3"
-                >
-                  Cancel
-                </Button>
-              }
-            />
-          )}
-        </Flex>
-      </TableCell>
     </TableRow>
   )
 }
@@ -248,7 +211,7 @@ const TableHeading = () => {
           key={heading}
           css={{ pl: '$2 !important', py: '$1', border: '1px solid $primary2' }}
         >
-          <Text as={'div'} style="subtitle3">
+          <Text as={'div'} style="subtitle1">
             {heading}
           </Text>
         </TableCell>
