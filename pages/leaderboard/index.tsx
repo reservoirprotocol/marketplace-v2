@@ -55,28 +55,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
       >
         <Flex
           align="center"
-          justify="center"
-          direction="column"
-          css={{
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          <Text
-            style={{
-              '@initial': 'h3',
-              '@lg': 'h2',
-            }}
-            css={{ lineHeight: 1.2, letterSpacing: 2, color: '$gray10' }}
-          >
-            COMING SOON
-          </Text>
-          <Text css={{ color: '$gray10' }}>
-            This page is under construction
-          </Text>
-        </Flex>
-        {/* <Flex
-          align="center"
           direction="column"
           css={{
             height: '100%',
@@ -85,38 +63,42 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
         >
           <Flex>
             <Box css={{ width: '100%' }}>
-              <Box css={{textAlign: 'center'}}>
+              <Box css={{ textAlign: 'center' }}>
                 <Text
                   style={{
                     '@initial': 'h3',
                     '@lg': 'h2',
                   }}
-                  css={{ lineHeight: 1.2, letterSpacing: 2, color: '$primary9', textAlign: 'center' }}
+                  css={{
+                    lineHeight: 1.2,
+                    letterSpacing: 2,
+                    color: '$primary9',
+                    textAlign: 'center',
+                  }}
                 >
                   Leaderboard
                 </Text>
               </Box>
-              <Box css={{textAlign: 'center'}}>
+              <Box css={{ textAlign: 'center' }}>
                 <Text css={{ color: '$primary11', textAlign: 'center' }}>
                   Increase your position on the leaderboard by completing
                   quests!
                 </Text>
               </Box>
             </Box>
-       
           </Flex>
           <Flex
-              align="center"
-              direction="column"
-              css={{
-                width: '100%',
-                marginTop: '100px',
-                alignItems: 'center',
-              }}
-            >
-          <LeaderboardTable />
+            align="center"
+            direction="column"
+            css={{
+              width: '100%',
+              marginTop: '100px',
+              alignItems: 'center',
+            }}
+          >
+            <LeaderboardTable />
           </Flex>
-        </Flex> */}
+        </Flex>
       </Box>
     </Layout>
   )
