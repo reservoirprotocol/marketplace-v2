@@ -62,8 +62,10 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             width: '100%',
           }}
         >
-          <Flex>
-            <Box css={{ width: '100%' }}>
+          <Flex
+            css={{ backgroundImage: `url(/ClaimRewards.png)`, width: '100%' }}
+          >
+            <Box css={{ width: '100%', height: '25vh' }}>
               <Flex css={{ textAlign: 'center', gap: '$4' }}>
                 <Text
                   style={{
@@ -73,7 +75,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                   css={{
                     lineHeight: 1.2,
                     letterSpacing: 2,
-                    marginTop: '$2',
+                    marginTop: '75px',
                     color: '$primary9',
                     textAlign: 'center',
                     marginLeft: 'auto',
@@ -96,7 +98,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             direction="column"
             css={{
               width: '100%',
-              marginTop: '100px',
               alignItems: 'center',
             }}
           >

@@ -52,7 +52,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
         css={{
           position: 'sticky',
           top: 16 + 80,
-          height: '60vh',
+          height: '55vh',
           overflow: 'auto',
           marginBottom: 16,
           borderRadius: '$base',
