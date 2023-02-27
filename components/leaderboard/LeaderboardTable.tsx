@@ -43,6 +43,7 @@ const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
 export const LeaderboardTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
+  //@ts-ignore
   const users: User[] = data
 
   return (
@@ -51,7 +52,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
         css={{
           position: 'sticky',
           top: 16 + 80,
-          height: `calc(50vh - ${NAVBAR_HEIGHT}px - 32px)`,
+          height: '60vh',
           overflow: 'auto',
           marginBottom: 16,
           borderRadius: '$base',
@@ -67,7 +68,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
         >
           <Flex
             direction="column"
-            css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
+            css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
             {users.map((user: User, i: number) => {
@@ -114,29 +115,35 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
         <Text>{rank}</Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
         <Text style="subtitle2">{username}</Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
-        <Text style="subtitle2">{volume}</Text>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+        <Text style="subtitle2">{volume} </Text>
       </TableCell>
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
-        <Text
-          style="subtitle3"
-          css={{
-            color: '$primary13',
-            '&:hover': {
-              color: '$primary14',
-            },
-          }}
-        >
-          {reward}
-        </Text>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+        <Flex css={{ gap: '$3', marginLeft: '100px' }}>
+          <Text
+            style="subtitle3"
+            css={{
+              color: '$primary13',
+              marginTop: '$1',
+              '&:hover': {
+                color: '$primary14',
+              },
+            }}
+          >
+            {reward}
+          </Text>
+          <Box>
+            <img src="/nftearth-icon.png" width={25} height={25} />
+          </Box>
+        </Flex>
       </TableCell>
     </TableRow>
   )
