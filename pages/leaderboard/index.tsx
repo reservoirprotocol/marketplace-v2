@@ -56,6 +56,28 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
       >
         <Flex
           align="center"
+          justify="center"
+          direction="column"
+          css={{
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Text
+            style={{
+              '@initial': 'h3',
+              '@lg': 'h2',
+            }}
+            css={{ lineHeight: 1.2, letterSpacing: 2, color: '$gray10' }}
+          >
+            COMING SOON
+          </Text>
+          <Text css={{ color: '$gray10' }}>
+            This page is under construction
+          </Text>
+        </Flex>
+        {/* <Flex
+          align="center"
           direction="column"
           css={{
             height: '100%',
@@ -103,7 +125,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           >
             <LeaderboardTable data={data} />
           </Flex>
-        </Flex>
+        </Flex> */}
       </Box>
     </Layout>
   )
