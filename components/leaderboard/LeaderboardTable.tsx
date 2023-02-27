@@ -28,7 +28,7 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 import { NAVBAR_HEIGHT } from '../navbar'
 
 type Props = {
-  data: User
+  data: User[]
 }
 
 type User = {
