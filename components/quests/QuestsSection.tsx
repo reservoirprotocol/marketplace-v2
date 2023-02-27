@@ -32,22 +32,24 @@ const QuestsSection: FC = () => {
         <img src="/images/Quests_1.png" />
       </Box>
         <Text
-          style={{
-            '@initial': 'h3',
-            '@md': 'h2',
-            '@lg': 'h1',
-          }}
-          as="h1"
           css={{
             color: '$whiteA12',
             lineHeight: 1.2,
             '@xs': {
               textAlign: 'center',
+              margin: 'auto',
               marginBottom: '$5',
+              fontSize: '40px',
+              fontWeight: '700'
             },
-            '@bp1000': {
+            '@sm': {
+              fontSize: '50px',  
+            },
+            '@bp900': {
               margin: 'auto',
               textAlign: 'left',
+              fontSize: '60px',
+              fontWeight: '700'
             },
           }}
         >
