@@ -28,44 +28,22 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 import { NAVBAR_HEIGHT } from '../navbar'
 
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0]
-  floor: number | undefined
-  account: ReturnType<typeof useAccount>
-  isOwner: boolean
+  data: User
+}
+
+type User = {
+  rank: number
+  username: string
+  volume: number
+  reward: number
 }
 
 const desktopTemplateColumns = '.75fr repeat(3, 1fr)'
 const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
-export const LeaderboardTable: FC<Props> = ({
-  token,
-  floor,
-  account,
-  isOwner,
-}) => {
-  const { address } = account || {}
-  const { theme } = useTheme()
+export const LeaderboardTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let bidsQuery: Parameters<typeof useBids>['0'] = {
-    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
-    sortBy: 'price',
-  }
-
-  const {
-    data: users,
-    fetchNextPage,
-    mutate,
-    isValidating,
-    isFetchingPage,
-  } = useBids(bidsQuery)
-
-  useEffect(() => {
-    const isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  const users: User[] = data
 
   return (
     <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
@@ -92,58 +70,43 @@ export const LeaderboardTable: FC<Props> = ({
             css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
           >
             <TableHeading />
-            {users.map((offer, i) => {
+            {users.map((user: User, i: number) => {
               return (
-                <OfferTableRow
-                  key={`${offer?.id}-${i}`}
-                  offer={offer}
-                  mutate={mutate}
-                  token={token}
-                  floor={floor}
-                  isOwner={isOwner}
-                  address={address}
+                <LeaderboardTableRow
+                  key={i}
+                  rank={user.rank}
+                  username={user.username}
+                  volume={user.volume}
+                  reward={user.reward}
                 />
               )
             })}
             <Box ref={loadMoreRef} css={{ height: 20 }} />
           </Flex>
-          {isValidating && (
-            <Flex align="center" justify="center" css={{ py: '$5' }}>
-              <LoadingSpinner />
-            </Flex>
-          )}
         </Box>
       </CollapsibleContent>
     </Collapsible.Root>
   )
 }
 
-type OfferTableRowProps = {
-  offer: ReturnType<typeof useBids>['data'][0]
-  token: ReturnType<typeof useTokens>['data'][0]
-  mutate?: MutatorCallback
-  address: `0x${string}` | undefined
-  floor: number | undefined
-  isOwner: boolean
+type LeaderboardTableRowProps = {
+  rank: number
+  username: string
+  volume: number
+  reward: number
 }
 
-const OfferTableRow: FC<OfferTableRowProps> = ({
-  offer,
-  token,
-  mutate,
-  address,
-  floor = 0,
-  isOwner,
+const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
+  rank,
+  username,
+  volume,
+  reward,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const expiration = useTimeSince(offer?.expiration)
-  const { displayName: makerDisplayName } = useENSResolver(offer?.maker)
-  const offerPrice = offer?.price?.amount?.native || 0
   const { theme } = useTheme()
 
   return (
     <TableRow
-      key={offer?.id}
       css={{
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
@@ -151,40 +114,29 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
-      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <FormatCryptoCurrency
-          amount={offer?.price?.amount?.native}
-          logoHeight={14}
-          textStyle={'subtitle2'}
-          maximumFractionDigits={4}
-        />
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
+        <Text>{rank}</Text>
       </TableCell>
-      {!isSmallDevice && (
-        <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-          <Text style="subtitle2">
-            {`${(
-              100 * Math.abs((offerPrice - floor) / ((offerPrice + floor) / 2))
-            ).toFixed(0)}% ${offerPrice > floor ? 'above' : 'below'}`}
-          </Text>
-        </TableCell>
-      )}
-      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Text style="subtitle2">{expiration}</Text>
+
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
+        <Text style="subtitle2">{username}</Text>
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Link href={`/profile/${offer?.maker}`}>
-          <Text
-            style="subtitle3"
-            css={{
-              color: '$primary13',
-              '&:hover': {
-                color: '$primary14',
-              },
-            }}
-          >
-            {makerDisplayName}
-          </Text>
-        </Link>
+
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
+        <Text style="subtitle2">{volume}</Text>
+      </TableCell>
+      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$3' }}>
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {reward}
+        </Text>
       </TableCell>
     </TableRow>
   )
@@ -209,7 +161,12 @@ const TableHeading = () => {
       {headings.map((heading) => (
         <TableCell
           key={heading}
-          css={{ pl: '$2 !important', py: '$1', border: '1px solid $primary2' }}
+          css={{
+            textAlign: 'center',
+            pl: '$2 !important',
+            py: '$1',
+            border: '1px solid $primary2',
+          }}
         >
           <Text as={'div'} style="subtitle1">
             {heading}
