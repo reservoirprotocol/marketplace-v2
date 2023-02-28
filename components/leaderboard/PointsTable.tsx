@@ -35,10 +35,7 @@ export const PointsTable: FC = () => {
             },
           }}
         >
-          <Flex
-            direction="column"
-            css={{ width: '100%', pb: '$2' }}
-          >
+          <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
             <TableHeading />
 
             <PointsTableRow
@@ -79,15 +76,15 @@ const PointsTableRow: FC<PointsTableRowProps> = ({
       }}
     >
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text>{bidPoints}</Text>
+        <Text css={{ color: '#39FF14' }}>{bidPoints}</Text>
       </TableCell>
 
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{listPoints}</Text>
+        <Text css={{ color: '#39FF14' }} style="subtitle2">{listPoints}</Text>
       </TableCell>
 
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{listingLoyalty} %</Text>
+        <Text css={{ color: '#39FF14' }} style="subtitle2">{listingLoyalty} %</Text>
       </TableCell>
     </TableRow>
   )
@@ -106,7 +103,6 @@ const TableHeading = () => {
           : desktopTemplateColumns,
         position: 'sticky',
         top: 0,
-        backgroundColor: theme === 'light' ? '$primary10' : '$primary5',
       }}
     >
       {headings.map((heading) => (
@@ -119,7 +115,7 @@ const TableHeading = () => {
             border: '1px solid $primary2',
           }}
         >
-          <Text as={'div'} style="subtitle1">
+          <Text css={{ color: '$gray11' }} as={'div'} style="subtitle1">
             {heading}
           </Text>
         </TableCell>
