@@ -129,7 +129,7 @@ export default async function handler(req: Request) {
   } else {
     // Get current usd prices for each chain
     const usdCoinPrices = await fetch(
-      'http://localhost:3000/api/usdCoinConversion'
+      'http://localhost:3000/api/usdCoinConversion' // TODO: update url
     ).then((res) => res.json())
 
     const responses = await Promise.all(promises)
@@ -143,16 +143,17 @@ export default async function handler(req: Request) {
             chainId: supportedChains[index].id,
             searchIcon: supportedChains[index].searchIcon,
             allTimeUsdVolume:
-              collection.allTimeVolume &&
-              collection.allTimeVolume *
-                usdCoinPrices.prices[index].current_price,
+              (collection.allTimeVolume &&
+                collection.allTimeVolume *
+                  usdCoinPrices.prices[index].current_price) ||
+              0,
           },
         })
       )
       searchResults = [...searchResults, ...chainSearchResults]
     })
 
-    // Sort by all time usd volume
+    // Sort results by all time usd volume
     searchResults = searchResults.sort(
       (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
     )
