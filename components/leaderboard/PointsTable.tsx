@@ -14,7 +14,7 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 
 const desktopTemplateColumns = '.75fr repeat(2, 1fr)'
 const mobileTemplateColumns = 'repeat(2, 1fr) 55px'
-export const PointsTable: FC<Props> = ({ data }) => {
+export const PointsTable: FC = () => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   return (
@@ -22,10 +22,8 @@ export const PointsTable: FC<Props> = ({ data }) => {
       <CollapsibleContent
         css={{
           position: 'sticky',
-          top: 16 + 80,
-          height: '55vh',
           overflow: 'auto',
-          marginBottom: 16,
+          marginTop: 20,
           borderRadius: '$base',
           p: '$2',
         }}
@@ -39,12 +37,11 @@ export const PointsTable: FC<Props> = ({ data }) => {
         >
           <Flex
             direction="column"
-            css={{ width: '100%', height: '87vh', pb: '$2' }}
+            css={{ width: '100%', pb: '$2' }}
           >
             <TableHeading />
 
             <PointsTableRow
-              key={i}
               bidPoints={1000}
               listPoints={5000}
               listingLoyalty={0}

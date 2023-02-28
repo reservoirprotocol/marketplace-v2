@@ -10,6 +10,7 @@ import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
+import { PointsTable } from 'components/leaderboard/PointsTable'
 import { data } from 'components/leaderboard/enums'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -129,6 +130,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             rewards have not been revealed yet, but for the next 30 days, all
             bidding and listing points have been doubled.
           </Text>
+          <PointsTable />
           <Text
             as="a"
             href="/collections"
