@@ -24,7 +24,7 @@ export const DefaultChain = {
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
   apiKey: process.env.ETH_RESERVOIR_API_KEY,
-  // Coingecko id, used to convert the chains native prices to usd. Can be found here:
+  // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'ethereum',
   // Any url to display the logo of the chain in the search results
