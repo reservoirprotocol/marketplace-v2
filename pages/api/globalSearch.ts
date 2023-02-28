@@ -3,6 +3,8 @@ import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import supportedChains from 'utils/chains'
 
+const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
+
 const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
   ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
   : undefined
@@ -128,8 +130,8 @@ export default async function handler(req: Request) {
     }
   } else {
     // Get current usd prices for each chain
-    const usdCoinPrices = await fetch('/api/usdCoinConversion').then((res) =>
-      res.json()
+    const usdCoinPrices = await fetch(`${HOST_URL}/api/usdCoinConversion`).then(
+      (res) => res.json()
     )
 
     const responses = await Promise.all(promises)
