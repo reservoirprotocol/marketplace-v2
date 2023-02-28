@@ -4,14 +4,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderBlank } from '@fortawesome/free-solid-svg-icons'
 import Layout from 'components/Layout'
 import { useCollections } from '@nftearth/reservoir-kit-ui'
-import { CollectionCard } from 'components/collections/CollectionCard'
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { paths } from '@nftearth/reservoir-sdk'
+import { CollectionCard } from 'components/mycollections/CollectionCard'
+import { CollectionGrid } from 'components/mycollections/CollectionGrid'
+import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import supportedChains from 'utils/chains'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import fetcher from 'utils/fetcher'
-import { CollectionGrid } from 'components/collections/CollectionGrid'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 

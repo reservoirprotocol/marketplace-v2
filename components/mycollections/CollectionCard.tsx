@@ -10,7 +10,7 @@ type Props = {
 
 export const CollectionCard: FC<Props> = ({ collection, heroImg }) => {
   return (
-    <Link href={``} style={{ display: 'inline-block', minWidth: 0 }}>
+    <Link href={`/my-collections/${collection.id}`} style={{ display: 'inline-block', minWidth: 0 }}>
       <Flex
         css={{
           cursor: 'pointer',

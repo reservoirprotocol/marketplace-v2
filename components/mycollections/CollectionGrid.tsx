@@ -1,11 +1,14 @@
 import { Text, Flex, Box, Grid } from 'components/primitives'
 import { ReactNode, FC } from 'react'
+import { paths } from '@nftearth/reservoir-sdk';
 
 type Props = {
   children: ReactNode
 }
 
 export const CollectionGrid: FC<Props> = ({ children }) => {
+
+
   return (
     <Flex css={{ marginTop: '40px' }}>
       <Grid
