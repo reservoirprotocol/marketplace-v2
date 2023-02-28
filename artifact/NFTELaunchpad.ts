@@ -1,4 +1,5 @@
-export default `// SPDX-License-Identifier: MIT
+export default `
+// SPDX-License-Identifier: MIT
 // File: @openzeppelin/contracts/security/ReentrancyGuard.sol
 
 
@@ -132,81 +133,81 @@ library Math {
         uint256 y,
         uint256 denominator
     ) internal pure returns (uint256 result) {
-    unchecked {
-        // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use
-        // use the Chinese Remainder Theorem to reconstruct the 512 bit result. The result is stored in two 256
-        // variables such that product = prod1 * 2^256 + prod0.
-        uint256 prod0; // Least significant 256 bits of the product
-        uint256 prod1; // Most significant 256 bits of the product
-        assembly {
-            let mm := mulmod(x, y, not(0))
-            prod0 := mul(x, y)
-            prod1 := sub(sub(mm, prod0), lt(mm, prod0))
+        unchecked {
+            // 512-bit multiply [prod1 prod0] = x * y. Compute the product mod 2^256 and mod 2^256 - 1, then use
+            // use the Chinese Remainder Theorem to reconstruct the 512 bit result. The result is stored in two 256
+            // variables such that product = prod1 * 2^256 + prod0.
+            uint256 prod0; // Least significant 256 bits of the product
+            uint256 prod1; // Most significant 256 bits of the product
+            assembly {
+                let mm := mulmod(x, y, not(0))
+                prod0 := mul(x, y)
+                prod1 := sub(sub(mm, prod0), lt(mm, prod0))
+            }
+
+            // Handle non-overflow cases, 256 by 256 division.
+            if (prod1 == 0) {
+                return prod0 / denominator;
+            }
+
+            // Make sure the result is less than 2^256. Also prevents denominator == 0.
+            require(denominator > prod1);
+
+            ///////////////////////////////////////////////
+            // 512 by 256 division.
+            ///////////////////////////////////////////////
+
+            // Make division exact by subtracting the remainder from [prod1 prod0].
+            uint256 remainder;
+            assembly {
+                // Compute remainder using mulmod.
+                remainder := mulmod(x, y, denominator)
+
+                // Subtract 256 bit number from 512 bit number.
+                prod1 := sub(prod1, gt(remainder, prod0))
+                prod0 := sub(prod0, remainder)
+            }
+
+            // Factor powers of two out of denominator and compute largest power of two divisor of denominator. Always >= 1.
+            // See https://cs.stackexchange.com/q/138556/92363.
+
+            // Does not overflow because the denominator cannot be zero at this stage in the function.
+            uint256 twos = denominator & (~denominator + 1);
+            assembly {
+                // Divide denominator by twos.
+                denominator := div(denominator, twos)
+
+                // Divide [prod1 prod0] by twos.
+                prod0 := div(prod0, twos)
+
+                // Flip twos such that it is 2^256 / twos. If twos is zero, then it becomes one.
+                twos := add(div(sub(0, twos), twos), 1)
+            }
+
+            // Shift in bits from prod1 into prod0.
+            prod0 |= prod1 * twos;
+
+            // Invert denominator mod 2^256. Now that denominator is an odd number, it has an inverse modulo 2^256 such
+            // that denominator * inv = 1 mod 2^256. Compute the inverse by starting with a seed that is correct for
+            // four bits. That is, denominator * inv = 1 mod 2^4.
+            uint256 inverse = (3 * denominator) ^ 2;
+
+            // Use the Newton-Raphson iteration to improve the precision. Thanks to Hensel's lifting lemma, this also works
+            // in modular arithmetic, doubling the correct bits in each step.
+            inverse *= 2 - denominator * inverse; // inverse mod 2^8
+            inverse *= 2 - denominator * inverse; // inverse mod 2^16
+            inverse *= 2 - denominator * inverse; // inverse mod 2^32
+            inverse *= 2 - denominator * inverse; // inverse mod 2^64
+            inverse *= 2 - denominator * inverse; // inverse mod 2^128
+            inverse *= 2 - denominator * inverse; // inverse mod 2^256
+
+            // Because the division is now exact we can divide by multiplying with the modular inverse of denominator.
+            // This will give us the correct result modulo 2^256. Since the preconditions guarantee that the outcome is
+            // less than 2^256, this is the final result. We don't need to compute the high bits of the result and prod1
+            // is no longer required.
+            result = prod0 * inverse;
+            return result;
         }
-
-        // Handle non-overflow cases, 256 by 256 division.
-        if (prod1 == 0) {
-            return prod0 / denominator;
-        }
-
-        // Make sure the result is less than 2^256. Also prevents denominator == 0.
-        require(denominator > prod1);
-
-        ///////////////////////////////////////////////
-        // 512 by 256 division.
-        ///////////////////////////////////////////////
-
-        // Make division exact by subtracting the remainder from [prod1 prod0].
-        uint256 remainder;
-        assembly {
-        // Compute remainder using mulmod.
-            remainder := mulmod(x, y, denominator)
-
-        // Subtract 256 bit number from 512 bit number.
-            prod1 := sub(prod1, gt(remainder, prod0))
-            prod0 := sub(prod0, remainder)
-        }
-
-        // Factor powers of two out of denominator and compute largest power of two divisor of denominator. Always >= 1.
-        // See https://cs.stackexchange.com/q/138556/92363.
-
-        // Does not overflow because the denominator cannot be zero at this stage in the function.
-        uint256 twos = denominator & (~denominator + 1);
-        assembly {
-        // Divide denominator by twos.
-            denominator := div(denominator, twos)
-
-        // Divide [prod1 prod0] by twos.
-            prod0 := div(prod0, twos)
-
-        // Flip twos such that it is 2^256 / twos. If twos is zero, then it becomes one.
-            twos := add(div(sub(0, twos), twos), 1)
-        }
-
-        // Shift in bits from prod1 into prod0.
-        prod0 |= prod1 * twos;
-
-        // Invert denominator mod 2^256. Now that denominator is an odd number, it has an inverse modulo 2^256 such
-        // that denominator * inv = 1 mod 2^256. Compute the inverse by starting with a seed that is correct for
-        // four bits. That is, denominator * inv = 1 mod 2^4.
-        uint256 inverse = (3 * denominator) ^ 2;
-
-        // Use the Newton-Raphson iteration to improve the precision. Thanks to Hensel's lifting lemma, this also works
-        // in modular arithmetic, doubling the correct bits in each step.
-        inverse *= 2 - denominator * inverse; // inverse mod 2^8
-        inverse *= 2 - denominator * inverse; // inverse mod 2^16
-        inverse *= 2 - denominator * inverse; // inverse mod 2^32
-        inverse *= 2 - denominator * inverse; // inverse mod 2^64
-        inverse *= 2 - denominator * inverse; // inverse mod 2^128
-        inverse *= 2 - denominator * inverse; // inverse mod 2^256
-
-        // Because the division is now exact we can divide by multiplying with the modular inverse of denominator.
-        // This will give us the correct result modulo 2^256. Since the preconditions guarantee that the outcome is
-        // less than 2^256, this is the final result. We don't need to compute the high bits of the result and prod1
-        // is no longer required.
-        result = prod0 * inverse;
-        return result;
-    }
     }
 
     /**
@@ -251,26 +252,26 @@ library Math {
         // since it is the square root of a uint256. Newton's method converges quadratically (precision doubles at
         // every iteration). We thus need at most 7 iteration to turn our partial result with one bit of precision
         // into the expected uint128 result.
-    unchecked {
-        result = (result + a / result) >> 1;
-        result = (result + a / result) >> 1;
-        result = (result + a / result) >> 1;
-        result = (result + a / result) >> 1;
-        result = (result + a / result) >> 1;
-        result = (result + a / result) >> 1;
-        result = (result + a / result) >> 1;
-        return min(result, a / result);
-    }
+        unchecked {
+            result = (result + a / result) >> 1;
+            result = (result + a / result) >> 1;
+            result = (result + a / result) >> 1;
+            result = (result + a / result) >> 1;
+            result = (result + a / result) >> 1;
+            result = (result + a / result) >> 1;
+            result = (result + a / result) >> 1;
+            return min(result, a / result);
+        }
     }
 
     /**
      * @notice Calculates sqrt(a), following the selected rounding direction.
      */
     function sqrt(uint256 a, Rounding rounding) internal pure returns (uint256) {
-    unchecked {
-        uint256 result = sqrt(a);
-        return result + (rounding == Rounding.Up && result * result < a ? 1 : 0);
-    }
+        unchecked {
+            uint256 result = sqrt(a);
+            return result + (rounding == Rounding.Up && result * result < a ? 1 : 0);
+        }
     }
 
     /**
@@ -279,39 +280,39 @@ library Math {
      */
     function log2(uint256 value) internal pure returns (uint256) {
         uint256 result = 0;
-    unchecked {
-        if (value >> 128 > 0) {
-            value >>= 128;
-            result += 128;
+        unchecked {
+            if (value >> 128 > 0) {
+                value >>= 128;
+                result += 128;
+            }
+            if (value >> 64 > 0) {
+                value >>= 64;
+                result += 64;
+            }
+            if (value >> 32 > 0) {
+                value >>= 32;
+                result += 32;
+            }
+            if (value >> 16 > 0) {
+                value >>= 16;
+                result += 16;
+            }
+            if (value >> 8 > 0) {
+                value >>= 8;
+                result += 8;
+            }
+            if (value >> 4 > 0) {
+                value >>= 4;
+                result += 4;
+            }
+            if (value >> 2 > 0) {
+                value >>= 2;
+                result += 2;
+            }
+            if (value >> 1 > 0) {
+                result += 1;
+            }
         }
-        if (value >> 64 > 0) {
-            value >>= 64;
-            result += 64;
-        }
-        if (value >> 32 > 0) {
-            value >>= 32;
-            result += 32;
-        }
-        if (value >> 16 > 0) {
-            value >>= 16;
-            result += 16;
-        }
-        if (value >> 8 > 0) {
-            value >>= 8;
-            result += 8;
-        }
-        if (value >> 4 > 0) {
-            value >>= 4;
-            result += 4;
-        }
-        if (value >> 2 > 0) {
-            value >>= 2;
-            result += 2;
-        }
-        if (value >> 1 > 0) {
-            result += 1;
-        }
-    }
         return result;
     }
 
@@ -320,10 +321,10 @@ library Math {
      * Returns 0 if given 0.
      */
     function log2(uint256 value, Rounding rounding) internal pure returns (uint256) {
-    unchecked {
-        uint256 result = log2(value);
-        return result + (rounding == Rounding.Up && 1 << result < value ? 1 : 0);
-    }
+        unchecked {
+            uint256 result = log2(value);
+            return result + (rounding == Rounding.Up && 1 << result < value ? 1 : 0);
+        }
     }
 
     /**
@@ -332,35 +333,35 @@ library Math {
      */
     function log10(uint256 value) internal pure returns (uint256) {
         uint256 result = 0;
-    unchecked {
-        if (value >= 10**64) {
-            value /= 10**64;
-            result += 64;
+        unchecked {
+            if (value >= 10**64) {
+                value /= 10**64;
+                result += 64;
+            }
+            if (value >= 10**32) {
+                value /= 10**32;
+                result += 32;
+            }
+            if (value >= 10**16) {
+                value /= 10**16;
+                result += 16;
+            }
+            if (value >= 10**8) {
+                value /= 10**8;
+                result += 8;
+            }
+            if (value >= 10**4) {
+                value /= 10**4;
+                result += 4;
+            }
+            if (value >= 10**2) {
+                value /= 10**2;
+                result += 2;
+            }
+            if (value >= 10**1) {
+                result += 1;
+            }
         }
-        if (value >= 10**32) {
-            value /= 10**32;
-            result += 32;
-        }
-        if (value >= 10**16) {
-            value /= 10**16;
-            result += 16;
-        }
-        if (value >= 10**8) {
-            value /= 10**8;
-            result += 8;
-        }
-        if (value >= 10**4) {
-            value /= 10**4;
-            result += 4;
-        }
-        if (value >= 10**2) {
-            value /= 10**2;
-            result += 2;
-        }
-        if (value >= 10**1) {
-            result += 1;
-        }
-    }
         return result;
     }
 
@@ -369,10 +370,10 @@ library Math {
      * Returns 0 if given 0.
      */
     function log10(uint256 value, Rounding rounding) internal pure returns (uint256) {
-    unchecked {
-        uint256 result = log10(value);
-        return result + (rounding == Rounding.Up && 10**result < value ? 1 : 0);
-    }
+        unchecked {
+            uint256 result = log10(value);
+            return result + (rounding == Rounding.Up && 10**result < value ? 1 : 0);
+        }
     }
 
     /**
@@ -383,27 +384,27 @@ library Math {
      */
     function log256(uint256 value) internal pure returns (uint256) {
         uint256 result = 0;
-    unchecked {
-        if (value >> 128 > 0) {
-            value >>= 128;
-            result += 16;
+        unchecked {
+            if (value >> 128 > 0) {
+                value >>= 128;
+                result += 16;
+            }
+            if (value >> 64 > 0) {
+                value >>= 64;
+                result += 8;
+            }
+            if (value >> 32 > 0) {
+                value >>= 32;
+                result += 4;
+            }
+            if (value >> 16 > 0) {
+                value >>= 16;
+                result += 2;
+            }
+            if (value >> 8 > 0) {
+                result += 1;
+            }
         }
-        if (value >> 64 > 0) {
-            value >>= 64;
-            result += 8;
-        }
-        if (value >> 32 > 0) {
-            value >>= 32;
-            result += 4;
-        }
-        if (value >> 16 > 0) {
-            value >>= 16;
-            result += 2;
-        }
-        if (value >> 8 > 0) {
-            result += 1;
-        }
-    }
         return result;
     }
 
@@ -412,10 +413,10 @@ library Math {
      * Returns 0 if given 0.
      */
     function log256(uint256 value, Rounding rounding) internal pure returns (uint256) {
-    unchecked {
-        uint256 result = log256(value);
-        return result + (rounding == Rounding.Up && 1 << (result * 8) < value ? 1 : 0);
-    }
+        unchecked {
+            uint256 result = log256(value);
+            return result + (rounding == Rounding.Up && 1 << (result * 8) < value ? 1 : 0);
+        }
     }
 }
 
@@ -438,34 +439,34 @@ library Strings {
      * @dev Converts a \`uint256\` to its ASCII \`string\` decimal representation.
      */
     function toString(uint256 value) internal pure returns (string memory) {
-    unchecked {
-        uint256 length = Math.log10(value) + 1;
-        string memory buffer = new string(length);
-        uint256 ptr;
-        /// @solidity memory-safe-assembly
-        assembly {
-            ptr := add(buffer, add(32, length))
-        }
-        while (true) {
-            ptr--;
+        unchecked {
+            uint256 length = Math.log10(value) + 1;
+            string memory buffer = new string(length);
+            uint256 ptr;
             /// @solidity memory-safe-assembly
             assembly {
-                mstore8(ptr, byte(mod(value, 10), _SYMBOLS))
+                ptr := add(buffer, add(32, length))
             }
-            value /= 10;
-            if (value == 0) break;
+            while (true) {
+                ptr--;
+                /// @solidity memory-safe-assembly
+                assembly {
+                    mstore8(ptr, byte(mod(value, 10), _SYMBOLS))
+                }
+                value /= 10;
+                if (value == 0) break;
+            }
+            return buffer;
         }
-        return buffer;
-    }
     }
 
     /**
      * @dev Converts a \`uint256\` to its ASCII \`string\` hexadecimal representation.
      */
     function toHexString(uint256 value) internal pure returns (string memory) {
-    unchecked {
-        return toHexString(value, Math.log256(value) + 1);
-    }
+        unchecked {
+            return toHexString(value, Math.log256(value) + 1);
+        }
     }
 
     /**
@@ -1194,7 +1195,7 @@ contract ERC721A is IERC721A {
     // The \`Transfer\` event signature is given by:
     // \`keccak256(bytes("Transfer(address,address,uint256)"))\`.
     bytes32 private constant _TRANSFER_EVENT_SIGNATURE =
-    0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
+        0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef;
 
     // =============================================================
     //                            STORAGE
@@ -1276,9 +1277,9 @@ contract ERC721A is IERC721A {
     function totalSupply() public view virtual override returns (uint256) {
         // Counter underflow is impossible as _burnCounter cannot be incremented
         // more than \`_currentIndex - _startTokenId()\` times.
-    unchecked {
-        return _currentIndex - _burnCounter - _startTokenId();
-    }
+        unchecked {
+            return _currentIndex - _burnCounter - _startTokenId();
+        }
     }
 
     /**
@@ -1287,9 +1288,9 @@ contract ERC721A is IERC721A {
     function _totalMinted() internal view virtual returns (uint256) {
         // Counter underflow is impossible as \`_currentIndex\` does not decrement,
         // and it is initialized to \`_startTokenId()\`.
-    unchecked {
-        return _currentIndex - _startTokenId();
-    }
+        unchecked {
+            return _currentIndex - _startTokenId();
+        }
     }
 
     /**
@@ -1365,9 +1366,9 @@ contract ERC721A is IERC721A {
         // See: [ERC165](https://eips.ethereum.org/EIPS/eip-165)
         // (e.g. \`bytes4(i.functionA.selector ^ i.functionB.selector ^ ...)\`)
         return
-        interfaceId == 0x01ffc9a7 || // ERC165 interface ID for ERC165.
-        interfaceId == 0x80ac58cd || // ERC165 interface ID for ERC721.
-        interfaceId == 0x5b5e139f; // ERC165 interface ID for ERC721Metadata.
+            interfaceId == 0x01ffc9a7 || // ERC165 interface ID for ERC165.
+            interfaceId == 0x80ac58cd || // ERC165 interface ID for ERC721.
+            interfaceId == 0x5b5e139f; // ERC165 interface ID for ERC721Metadata.
     }
 
     // =============================================================
@@ -1452,28 +1453,28 @@ contract ERC721A is IERC721A {
     function _packedOwnershipOf(uint256 tokenId) private view returns (uint256) {
         uint256 curr = tokenId;
 
-    unchecked {
-        if (_startTokenId() <= curr)
-            if (curr < _currentIndex) {
-                uint256 packed = _packedOwnerships[curr];
-                // If not burned.
-                if (packed & _BITMASK_BURNED == 0) {
-                    // Invariant:
-                    // There will always be an initialized ownership slot
-                    // (i.e. \`ownership.addr != address(0) && ownership.burned == false\`)
-                    // before an unintialized ownership slot
-                    // (i.e. \`ownership.addr == address(0) && ownership.burned == false\`)
-                    // Hence, \`curr\` will not underflow.
-                    //
-                    // We can directly compare the packed value.
-                    // If the address is zero, packed will be zero.
-                    while (packed == 0) {
-                        packed = _packedOwnerships[--curr];
+        unchecked {
+            if (_startTokenId() <= curr)
+                if (curr < _currentIndex) {
+                    uint256 packed = _packedOwnerships[curr];
+                    // If not burned.
+                    if (packed & _BITMASK_BURNED == 0) {
+                        // Invariant:
+                        // There will always be an initialized ownership slot
+                        // (i.e. \`ownership.addr != address(0) && ownership.burned == false\`)
+                        // before an unintialized ownership slot
+                        // (i.e. \`ownership.addr == address(0) && ownership.burned == false\`)
+                        // Hence, \`curr\` will not underflow.
+                        //
+                        // We can directly compare the packed value.
+                        // If the address is zero, packed will be zero.
+                        while (packed == 0) {
+                            packed = _packedOwnerships[--curr];
+                        }
+                        return packed;
                     }
-                    return packed;
                 }
-            }
-    }
+        }
         revert OwnerQueryForNonexistentToken();
     }
 
@@ -1492,9 +1493,9 @@ contract ERC721A is IERC721A {
      */
     function _packOwnershipData(address owner, uint256 flags) private view returns (uint256 result) {
         assembly {
-        // Mask \`owner\` to the lower 160 bits, in case the upper bits somehow aren't clean.
+            // Mask \`owner\` to the lower 160 bits, in case the upper bits somehow aren't clean.
             owner := and(owner, _BITMASK_ADDRESS)
-        // \`owner | (block.timestamp << _BITPOS_START_TIMESTAMP) | flags\`.
+            // \`owner | (block.timestamp << _BITPOS_START_TIMESTAMP) | flags\`.
             result := or(owner, or(shl(_BITPOS_START_TIMESTAMP, timestamp()), flags))
         }
     }
@@ -1505,7 +1506,7 @@ contract ERC721A is IERC721A {
     function _nextInitializedFlag(uint256 quantity) private pure returns (uint256 result) {
         // For branchless setting of the \`nextInitialized\` flag.
         assembly {
-        // \`(quantity == 1) << _BITPOS_NEXT_INITIALIZED\`.
+            // \`(quantity == 1) << _BITPOS_NEXT_INITIALIZED\`.
             result := shl(_BITPOS_NEXT_INITIALIZED, eq(quantity, 1))
         }
     }
@@ -1587,9 +1588,9 @@ contract ERC721A is IERC721A {
      */
     function _exists(uint256 tokenId) internal view virtual returns (bool) {
         return
-        _startTokenId() <= tokenId &&
-        tokenId < _currentIndex && // If within bounds,
-        _packedOwnerships[tokenId] & _BITMASK_BURNED == 0; // and not burned.
+            _startTokenId() <= tokenId &&
+            tokenId < _currentIndex && // If within bounds,
+            _packedOwnerships[tokenId] & _BITMASK_BURNED == 0; // and not burned.
     }
 
     /**
@@ -1601,11 +1602,11 @@ contract ERC721A is IERC721A {
         address msgSender
     ) private pure returns (bool result) {
         assembly {
-        // Mask \`owner\` to the lower 160 bits, in case the upper bits somehow aren't clean.
+            // Mask \`owner\` to the lower 160 bits, in case the upper bits somehow aren't clean.
             owner := and(owner, _BITMASK_ADDRESS)
-        // Mask \`msgSender\` to the lower 160 bits, in case the upper bits somehow aren't clean.
+            // Mask \`msgSender\` to the lower 160 bits, in case the upper bits somehow aren't clean.
             msgSender := and(msgSender, _BITMASK_ADDRESS)
-        // \`msgSender == owner || msgSender == approvedAddress\`.
+            // \`msgSender == owner || msgSender == approvedAddress\`.
             result := or(eq(msgSender, owner), eq(msgSender, approvedAddress))
         }
     }
@@ -1614,9 +1615,9 @@ contract ERC721A is IERC721A {
      * @dev Returns the storage slot and value for the approved address of \`tokenId\`.
      */
     function _getApprovedSlotAndAddress(uint256 tokenId)
-    private
-    view
-    returns (uint256 approvedAddressSlot, address approvedAddress)
+        private
+        view
+        returns (uint256 approvedAddressSlot, address approvedAddress)
     {
         TokenApprovalRef storage tokenApproval = _tokenApprovals[tokenId];
         // The following is equivalent to \`approvedAddress = _tokenApprovals[tokenId].value\`.
@@ -1665,7 +1666,7 @@ contract ERC721A is IERC721A {
         // Clear approvals from the previous owner.
         assembly {
             if approvedAddress {
-            // This is equivalent to \`delete _tokenApprovals[tokenId]\`.
+                // This is equivalent to \`delete _tokenApprovals[tokenId]\`.
                 sstore(approvedAddressSlot, 0)
             }
         }
@@ -1673,34 +1674,34 @@ contract ERC721A is IERC721A {
         // Underflow of the sender's balance is impossible because we check for
         // ownership above and the recipient's balance can't realistically overflow.
         // Counter overflow is incredibly unrealistic as \`tokenId\` would have to be 2**256.
-    unchecked {
-        // We can directly increment and decrement the balances.
-        --_packedAddressData[from]; // Updates: \`balance -= 1\`.
-        ++_packedAddressData[to]; // Updates: \`balance += 1\`.
+        unchecked {
+            // We can directly increment and decrement the balances.
+            --_packedAddressData[from]; // Updates: \`balance -= 1\`.
+            ++_packedAddressData[to]; // Updates: \`balance += 1\`.
 
-        // Updates:
-        // - \`address\` to the next owner.
-        // - \`startTimestamp\` to the timestamp of transfering.
-        // - \`burned\` to \`false\`.
-        // - \`nextInitialized\` to \`true\`.
-        _packedOwnerships[tokenId] = _packOwnershipData(
-            to,
-            _BITMASK_NEXT_INITIALIZED | _nextExtraData(from, to, prevOwnershipPacked)
-        );
+            // Updates:
+            // - \`address\` to the next owner.
+            // - \`startTimestamp\` to the timestamp of transfering.
+            // - \`burned\` to \`false\`.
+            // - \`nextInitialized\` to \`true\`.
+            _packedOwnerships[tokenId] = _packOwnershipData(
+                to,
+                _BITMASK_NEXT_INITIALIZED | _nextExtraData(from, to, prevOwnershipPacked)
+            );
 
-        // If the next slot may not have been initialized (i.e. \`nextInitialized == false\`) .
-        if (prevOwnershipPacked & _BITMASK_NEXT_INITIALIZED == 0) {
-            uint256 nextTokenId = tokenId + 1;
-            // If the next slot's address is zero and not burned (i.e. packed value is zero).
-            if (_packedOwnerships[nextTokenId] == 0) {
-                // If the next slot is within bounds.
-                if (nextTokenId != _currentIndex) {
-                    // Initialize the next slot to maintain correctness for \`ownerOf(tokenId + 1)\`.
-                    _packedOwnerships[nextTokenId] = prevOwnershipPacked;
+            // If the next slot may not have been initialized (i.e. \`nextInitialized == false\`) .
+            if (prevOwnershipPacked & _BITMASK_NEXT_INITIALIZED == 0) {
+                uint256 nextTokenId = tokenId + 1;
+                // If the next slot's address is zero and not burned (i.e. packed value is zero).
+                if (_packedOwnerships[nextTokenId] == 0) {
+                    // If the next slot is within bounds.
+                    if (nextTokenId != _currentIndex) {
+                        // Initialize the next slot to maintain correctness for \`ownerOf(tokenId + 1)\`.
+                        _packedOwnerships[nextTokenId] = prevOwnershipPacked;
+                    }
                 }
             }
         }
-    }
 
         emit Transfer(from, to, tokenId);
         _afterTokenTransfers(from, to, tokenId, 1);
@@ -1845,60 +1846,60 @@ contract ERC721A is IERC721A {
         // Overflows are incredibly unrealistic.
         // \`balance\` and \`numberMinted\` have a maximum limit of 2**64.
         // \`tokenId\` has a maximum limit of 2**256.
-    unchecked {
-        // Updates:
-        // - \`balance += quantity\`.
-        // - \`numberMinted += quantity\`.
-        //
-        // We can directly add to the \`balance\` and \`numberMinted\`.
-        _packedAddressData[to] += quantity * ((1 << _BITPOS_NUMBER_MINTED) | 1);
+        unchecked {
+            // Updates:
+            // - \`balance += quantity\`.
+            // - \`numberMinted += quantity\`.
+            //
+            // We can directly add to the \`balance\` and \`numberMinted\`.
+            _packedAddressData[to] += quantity * ((1 << _BITPOS_NUMBER_MINTED) | 1);
 
-        // Updates:
-        // - \`address\` to the owner.
-        // - \`startTimestamp\` to the timestamp of minting.
-        // - \`burned\` to \`false\`.
-        // - \`nextInitialized\` to \`quantity == 1\`.
-        _packedOwnerships[startTokenId] = _packOwnershipData(
-            to,
-            _nextInitializedFlag(quantity) | _nextExtraData(address(0), to, 0)
-        );
+            // Updates:
+            // - \`address\` to the owner.
+            // - \`startTimestamp\` to the timestamp of minting.
+            // - \`burned\` to \`false\`.
+            // - \`nextInitialized\` to \`quantity == 1\`.
+            _packedOwnerships[startTokenId] = _packOwnershipData(
+                to,
+                _nextInitializedFlag(quantity) | _nextExtraData(address(0), to, 0)
+            );
 
-        uint256 toMasked;
-        uint256 end = startTokenId + quantity;
+            uint256 toMasked;
+            uint256 end = startTokenId + quantity;
 
-        // Use assembly to loop and emit the \`Transfer\` event for gas savings.
-        // The duplicated \`log4\` removes an extra check and reduces stack juggling.
-        // The assembly, together with the surrounding Solidity code, have been
-        // delicately arranged to nudge the compiler into producing optimized opcodes.
-        assembly {
-        // Mask \`to\` to the lower 160 bits, in case the upper bits somehow aren't clean.
-            toMasked := and(to, _BITMASK_ADDRESS)
-        // Emit the \`Transfer\` event.
-            log4(
-            0, // Start of data (0, since no data).
-            0, // End of data (0, since no data).
-            _TRANSFER_EVENT_SIGNATURE, // Signature.
-            0, // \`address(0)\`.
-            toMasked, // \`to\`.
-            startTokenId // \`tokenId\`.
-            )
+            // Use assembly to loop and emit the \`Transfer\` event for gas savings.
+            // The duplicated \`log4\` removes an extra check and reduces stack juggling.
+            // The assembly, together with the surrounding Solidity code, have been
+            // delicately arranged to nudge the compiler into producing optimized opcodes.
+            assembly {
+                // Mask \`to\` to the lower 160 bits, in case the upper bits somehow aren't clean.
+                toMasked := and(to, _BITMASK_ADDRESS)
+                // Emit the \`Transfer\` event.
+                log4(
+                    0, // Start of data (0, since no data).
+                    0, // End of data (0, since no data).
+                    _TRANSFER_EVENT_SIGNATURE, // Signature.
+                    0, // \`address(0)\`.
+                    toMasked, // \`to\`.
+                    startTokenId // \`tokenId\`.
+                )
 
-        // The \`iszero(eq(,))\` check ensures that large values of \`quantity\`
-        // that overflows uint256 will make the loop run out of gas.
-        // The compiler will optimize the \`iszero\` away for performance.
-            for {
-                let tokenId := add(startTokenId, 1)
-            } iszero(eq(tokenId, end)) {
-                tokenId := add(tokenId, 1)
-            } {
-            // Emit the \`Transfer\` event. Similar to above.
-                log4(0, 0, _TRANSFER_EVENT_SIGNATURE, 0, toMasked, tokenId)
+                // The \`iszero(eq(,))\` check ensures that large values of \`quantity\`
+                // that overflows uint256 will make the loop run out of gas.
+                // The compiler will optimize the \`iszero\` away for performance.
+                for {
+                    let tokenId := add(startTokenId, 1)
+                } iszero(eq(tokenId, end)) {
+                    tokenId := add(tokenId, 1)
+                } {
+                    // Emit the \`Transfer\` event. Similar to above.
+                    log4(0, 0, _TRANSFER_EVENT_SIGNATURE, 0, toMasked, tokenId)
+                }
             }
-        }
-        if (toMasked == 0) revert MintToZeroAddress();
+            if (toMasked == 0) revert MintToZeroAddress();
 
-        _currentIndex = end;
-    }
+            _currentIndex = end;
+        }
         _afterTokenTransfers(address(0), to, startTokenId, quantity);
     }
 
@@ -1932,28 +1933,28 @@ contract ERC721A is IERC721A {
         _beforeTokenTransfers(address(0), to, startTokenId, quantity);
 
         // Overflows are unrealistic due to the above check for \`quantity\` to be below the limit.
-    unchecked {
-        // Updates:
-        // - \`balance += quantity\`.
-        // - \`numberMinted += quantity\`.
-        //
-        // We can directly add to the \`balance\` and \`numberMinted\`.
-        _packedAddressData[to] += quantity * ((1 << _BITPOS_NUMBER_MINTED) | 1);
+        unchecked {
+            // Updates:
+            // - \`balance += quantity\`.
+            // - \`numberMinted += quantity\`.
+            //
+            // We can directly add to the \`balance\` and \`numberMinted\`.
+            _packedAddressData[to] += quantity * ((1 << _BITPOS_NUMBER_MINTED) | 1);
 
-        // Updates:
-        // - \`address\` to the owner.
-        // - \`startTimestamp\` to the timestamp of minting.
-        // - \`burned\` to \`false\`.
-        // - \`nextInitialized\` to \`quantity == 1\`.
-        _packedOwnerships[startTokenId] = _packOwnershipData(
-            to,
-            _nextInitializedFlag(quantity) | _nextExtraData(address(0), to, 0)
-        );
+            // Updates:
+            // - \`address\` to the owner.
+            // - \`startTimestamp\` to the timestamp of minting.
+            // - \`burned\` to \`false\`.
+            // - \`nextInitialized\` to \`quantity == 1\`.
+            _packedOwnerships[startTokenId] = _packOwnershipData(
+                to,
+                _nextInitializedFlag(quantity) | _nextExtraData(address(0), to, 0)
+            );
 
-        emit ConsecutiveTransfer(startTokenId, startTokenId + quantity - 1, address(0), to);
+            emit ConsecutiveTransfer(startTokenId, startTokenId + quantity - 1, address(0), to);
 
-        _currentIndex = startTokenId + quantity;
-    }
+            _currentIndex = startTokenId + quantity;
+        }
         _afterTokenTransfers(address(0), to, startTokenId, quantity);
     }
 
@@ -1977,19 +1978,19 @@ contract ERC721A is IERC721A {
     ) internal virtual {
         _mint(to, quantity);
 
-    unchecked {
-        if (to.code.length != 0) {
-            uint256 end = _currentIndex;
-            uint256 index = end - quantity;
-            do {
-                if (!_checkContractOnERC721Received(address(0), to, index++, _data)) {
-                    revert TransferToNonERC721ReceiverImplementer();
-                }
-            } while (index < end);
-            // Reentrancy protection.
-            if (_currentIndex != end) revert();
+        unchecked {
+            if (to.code.length != 0) {
+                uint256 end = _currentIndex;
+                uint256 index = end - quantity;
+                do {
+                    if (!_checkContractOnERC721Received(address(0), to, index++, _data)) {
+                        revert TransferToNonERC721ReceiverImplementer();
+                    }
+                } while (index < end);
+                // Reentrancy protection.
+                if (_currentIndex != end) revert();
+            }
         }
-    }
     }
 
     /**
@@ -2038,7 +2039,7 @@ contract ERC721A is IERC721A {
         // Clear approvals from the previous owner.
         assembly {
             if approvedAddress {
-            // This is equivalent to \`delete _tokenApprovals[tokenId]\`.
+                // This is equivalent to \`delete _tokenApprovals[tokenId]\`.
                 sstore(approvedAddressSlot, 0)
             }
         }
@@ -2046,46 +2047,46 @@ contract ERC721A is IERC721A {
         // Underflow of the sender's balance is impossible because we check for
         // ownership above and the recipient's balance can't realistically overflow.
         // Counter overflow is incredibly unrealistic as \`tokenId\` would have to be 2**256.
-    unchecked {
-        // Updates:
-        // - \`balance -= 1\`.
-        // - \`numberBurned += 1\`.
-        //
-        // We can directly decrement the balance, and increment the number burned.
-        // This is equivalent to \`packed -= 1; packed += 1 << _BITPOS_NUMBER_BURNED;\`.
-        _packedAddressData[from] += (1 << _BITPOS_NUMBER_BURNED) - 1;
+        unchecked {
+            // Updates:
+            // - \`balance -= 1\`.
+            // - \`numberBurned += 1\`.
+            //
+            // We can directly decrement the balance, and increment the number burned.
+            // This is equivalent to \`packed -= 1; packed += 1 << _BITPOS_NUMBER_BURNED;\`.
+            _packedAddressData[from] += (1 << _BITPOS_NUMBER_BURNED) - 1;
 
-        // Updates:
-        // - \`address\` to the last owner.
-        // - \`startTimestamp\` to the timestamp of burning.
-        // - \`burned\` to \`true\`.
-        // - \`nextInitialized\` to \`true\`.
-        _packedOwnerships[tokenId] = _packOwnershipData(
-            from,
-            (_BITMASK_BURNED | _BITMASK_NEXT_INITIALIZED) | _nextExtraData(from, address(0), prevOwnershipPacked)
-        );
+            // Updates:
+            // - \`address\` to the last owner.
+            // - \`startTimestamp\` to the timestamp of burning.
+            // - \`burned\` to \`true\`.
+            // - \`nextInitialized\` to \`true\`.
+            _packedOwnerships[tokenId] = _packOwnershipData(
+                from,
+                (_BITMASK_BURNED | _BITMASK_NEXT_INITIALIZED) | _nextExtraData(from, address(0), prevOwnershipPacked)
+            );
 
-        // If the next slot may not have been initialized (i.e. \`nextInitialized == false\`) .
-        if (prevOwnershipPacked & _BITMASK_NEXT_INITIALIZED == 0) {
-            uint256 nextTokenId = tokenId + 1;
-            // If the next slot's address is zero and not burned (i.e. packed value is zero).
-            if (_packedOwnerships[nextTokenId] == 0) {
-                // If the next slot is within bounds.
-                if (nextTokenId != _currentIndex) {
-                    // Initialize the next slot to maintain correctness for \`ownerOf(tokenId + 1)\`.
-                    _packedOwnerships[nextTokenId] = prevOwnershipPacked;
+            // If the next slot may not have been initialized (i.e. \`nextInitialized == false\`) .
+            if (prevOwnershipPacked & _BITMASK_NEXT_INITIALIZED == 0) {
+                uint256 nextTokenId = tokenId + 1;
+                // If the next slot's address is zero and not burned (i.e. packed value is zero).
+                if (_packedOwnerships[nextTokenId] == 0) {
+                    // If the next slot is within bounds.
+                    if (nextTokenId != _currentIndex) {
+                        // Initialize the next slot to maintain correctness for \`ownerOf(tokenId + 1)\`.
+                        _packedOwnerships[nextTokenId] = prevOwnershipPacked;
+                    }
                 }
             }
         }
-    }
 
         emit Transfer(from, address(0), tokenId);
         _afterTokenTransfers(from, address(0), tokenId, 1);
 
         // Overflow not possible, as _burnCounter cannot be exceed _currentIndex times.
-    unchecked {
-        _burnCounter++;
-    }
+        unchecked {
+            _burnCounter++;
+        }
     }
 
     // =============================================================
@@ -2158,39 +2159,39 @@ contract ERC721A is IERC721A {
      */
     function _toString(uint256 value) internal pure virtual returns (string memory str) {
         assembly {
-        // The maximum value of a uint256 contains 78 digits (1 byte per digit), but
-        // we allocate 0xa0 bytes to keep the free memory pointer 32-byte word aligned.
-        // We will need 1 word for the trailing zeros padding, 1 word for the length,
-        // and 3 words for a maximum of 78 digits. Total: 5 * 0x20 = 0xa0.
+            // The maximum value of a uint256 contains 78 digits (1 byte per digit), but
+            // we allocate 0xa0 bytes to keep the free memory pointer 32-byte word aligned.
+            // We will need 1 word for the trailing zeros padding, 1 word for the length,
+            // and 3 words for a maximum of 78 digits. Total: 5 * 0x20 = 0xa0.
             let m := add(mload(0x40), 0xa0)
-        // Update the free memory pointer to allocate.
+            // Update the free memory pointer to allocate.
             mstore(0x40, m)
-        // Assign the \`str\` to the end.
+            // Assign the \`str\` to the end.
             str := sub(m, 0x20)
-        // Zeroize the slot after the string.
+            // Zeroize the slot after the string.
             mstore(str, 0)
 
-        // Cache the end of the memory to calculate the length later.
+            // Cache the end of the memory to calculate the length later.
             let end := str
 
-        // We write the string from rightmost digit to leftmost digit.
-        // The following is essentially a do-while loop that also handles the zero case.
-        // prettier-ignore
+            // We write the string from rightmost digit to leftmost digit.
+            // The following is essentially a do-while loop that also handles the zero case.
+            // prettier-ignore
             for { let temp := value } 1 {} {
                 str := sub(str, 1)
-            // Write the character to the pointer.
-            // The ASCII index of the '0' character is 48.
+                // Write the character to the pointer.
+                // The ASCII index of the '0' character is 48.
                 mstore8(str, add(48, mod(temp, 10)))
-            // Keep dividing \`temp\` until zero.
+                // Keep dividing \`temp\` until zero.
                 temp := div(temp, 10)
-            // prettier-ignore
+                // prettier-ignore
                 if iszero(temp) { break }
             }
 
             let length := sub(end, str)
-        // Move the pointer 32 bytes leftwards to make room for the length.
+            // Move the pointer 32 bytes leftwards to make room for the length.
             str := sub(str, 0x20)
-        // Store the length.
+            // Store the length.
             mstore(str, length)
         }
     }
@@ -2222,7 +2223,7 @@ contract NFTELaunchpad is ERC721A, Ownable, ReentrancyGuard {
         uint256 publicPrice;
     }
 
-    string private _URI = "";
+    string public _URI = "";
     address private signer;
     uint256 public presalePrice = 0 ether;
     uint256 public publicPrice = 0 ether;

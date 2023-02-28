@@ -16,7 +16,7 @@ import ReactMarkdown from 'react-markdown'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0] | null
+  token: ReturnType<typeof useTokens>['data'][0] | null | undefined
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0] | null
 }
 

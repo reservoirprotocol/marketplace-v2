@@ -1,7 +1,7 @@
-import React, { ComponentProps, FC } from 'react'
+import React, {ComponentProps, FC, ReactNode} from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner } from 'wagmi'
-import { BuyModal, BuyStep, useTokens } from '@nftearth/reservoir-kit-ui'
+import {BuyModal, BuyStep, useListings, useTokens} from '@nftearth/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useModal } from 'connectkit'
@@ -9,13 +9,16 @@ import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
+  token?: ReturnType<typeof useTokens>['data'][0],
+  order?: ReturnType<typeof useListings>['data'][0]
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
-  mutate?: SWRResponse['mutate']
+  buttonChildren?: ReactNode
+  mutate?: SWRResponse['mutate'],
+  compact?: boolean
 }
 
-const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
+const BuyNow: FC<Props> = ({ token, order, mutate, buttonCss, buttonProps = {}, buttonChildren }) => {
   const { data: signer } = useSigner()
   const { setOpen } = useModal()
   const { chain: activeChain } = useNetwork()
@@ -36,7 +39,7 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
-      Buy Now
+      {buttonChildren || `Buy Now`}
     </Button>
   )
   const canBuy =
@@ -64,11 +67,12 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
       }}
       {...buttonProps}
     >
-      Buy Now
+      {buttonChildren || `Buy Now`}
     </Button>
   ) : (
     <BuyModal
       trigger={trigger}
+      orderId={order?.id}
       tokenId={token?.token?.tokenId}
       collectionId={token?.token?.collection?.id}
       onClose={(data, stepData, currentStep) => {

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -7,9 +7,9 @@ import {
   TableRow,
   HeaderRow,
   Button,
-  Box,
+  Box, FormatCryptoCurrency, CollapsibleContent,
 } from '../primitives'
-import { faListDots } from '@fortawesome/free-solid-svg-icons'
+import {faListDots} from '@fortawesome/free-solid-svg-icons'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
@@ -17,11 +17,13 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useENSResolver, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
-import { AcceptBid } from '../buttons'
+import {AcceptBid, BuyNow} from '../buttons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBolt } from '@fortawesome/free-solid-svg-icons'
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
+import * as Collapsible from "@radix-ui/react-collapsible";
+import {NAVBAR_HEIGHT} from "../navbar";
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
@@ -31,6 +33,7 @@ type Props = {
 }
 
 const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
+const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
 export const TokenOffersTable: FC<Props> = ({
   token,
   floor,
@@ -63,49 +66,76 @@ export const TokenOffersTable: FC<Props> = ({
   }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   return (
-    <>
-      <Flex
-        direction="row"
-        align="center"
+    <Collapsible.Root
+      defaultOpen={true}
+      style={{ width: '100%' }}
+    >
+      <Collapsible.Trigger asChild>
+        <Flex
+          direction="row"
+          align="center"
+          css={{
+            px: '$4',
+            py: '$3',
+            backgroundColor: theme === 'light'
+              ? '$primary11'
+              : '$primary6',
+            mt: 30,
+            cursor: 'pointer',
+          }}
+        >
+          <FontAwesomeIcon icon={faListDots} />
+          <Text style="h6" css={{ ml: '$4' }}>
+            Offers
+          </Text>
+        </Flex>
+      </Collapsible.Trigger>
+      <CollapsibleContent
         css={{
-          p: '$4',
-          backgroundColor: theme === 'light'
-            ? '$primary11'
-            : '$primary6',
-          mt: 40,
+          position: 'sticky',
+          top: 16 + 80,
+          height: `calc(50vh - ${NAVBAR_HEIGHT}px - 32px)`,
+          overflow: 'auto',
+          marginBottom: 16,
+          borderRadius: '$base',
+          p: '$2',
         }}
       >
-        <FontAwesomeIcon icon={faListDots} />
-        <Text style="h6" css={{ ml: '$4' }}>
-          Offers
-        </Text>
-      </Flex>
-      <Flex
-        direction="column"
-        css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
-      >
-        <TableHeading />
-        {offers.map((offer, i) => {
-          return (
-            <OfferTableRow
-              key={`${offer?.id}-${i}`}
-              offer={offer}
-              mutate={mutate}
-              token={token}
-              floor={floor}
-              isOwner={isOwner}
-              address={address}
-            />
-          )
-        })}
-        <Box ref={loadMoreRef} css={{ height: 20 }} />
-      </Flex>
-      {isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$5' }}>
-          <LoadingSpinner />
-        </Flex>
-      )}
-    </>
+        <Box
+          css={{
+            '& > div:first-of-type': {
+              pt: 0,
+            },
+          }}
+        >
+          <Flex
+            direction="column"
+            css={{ width: '100%', maxHeight: 300, overflowY: 'auto', pb: '$2' }}
+          >
+            <TableHeading />
+            {offers.map((offer, i) => {
+              return (
+                <OfferTableRow
+                  key={`${offer?.id}-${i}`}
+                  offer={offer}
+                  mutate={mutate}
+                  token={token}
+                  floor={floor}
+                  isOwner={isOwner}
+                  address={address}
+                />
+              )
+            })}
+            <Box ref={loadMoreRef} css={{ height: 20 }} />
+          </Flex>
+          {isValidating && (
+            <Flex align="center" justify="center" css={{ py: '$5' }}>
+              <LoadingSpinner />
+            </Flex>
+          )}
+        </Box>
+      </CollapsibleContent>
+    </Collapsible.Root>
   )
 }
 
@@ -136,22 +166,29 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
     <TableRow
       key={offer?.id}
       css={{
-        gridTemplateColumns: desktopTemplateColumns,
+        gridTemplateColumns: isSmallDevice ? mobileTemplateColumns : desktopTemplateColumns,
         borderBottomColor: theme === 'light'
           ? '$primary11'
           : '$primary6',
       }}
     >
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Text style="subtitle2">{offer?.price?.amount?.native}</Text>
+        <FormatCryptoCurrency
+          amount={offer?.price?.amount?.native}
+          logoHeight={14}
+          textStyle={'subtitle2'}
+          maximumFractionDigits={4}
+        />
       </TableCell>
-      <TableCell css={{ pl: '$2 !important', py: '$3' }}>
-        <Text style="subtitle2">
-          {`${(
-            100 * Math.abs((offerPrice - floor) / ((offerPrice + floor) / 2))
-          ).toFixed(0)}% ${offerPrice > floor ? 'above' : 'below'}`}
-        </Text>
-      </TableCell>
+      {!isSmallDevice && (
+        <TableCell css={{ pl: '$2 !important', py: '$3' }}>
+          <Text style="subtitle2">
+            {`${(
+              100 * Math.abs((offerPrice - floor) / ((offerPrice + floor) / 2))
+            ).toFixed(0)}% ${offerPrice > floor ? 'above' : 'below'}`}
+          </Text>
+        </TableCell>
+      )}
       <TableCell css={{ pl: '$2 !important', py: '$3' }}>
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
@@ -178,24 +215,16 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               collectionId={offer?.criteria?.data?.collection?.id}
               token={token}
               mutate={mutate}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
               buttonProps={{
                 size: isSmallDevice ? 'xs' : 'medium',
-              }}
-              buttonCss={{
-                width: '100%',
-                maxWidth: '300px',
-                justifyContent: 'center',
-                px: '5px',
-                backgroundColor: '$primary11',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: '$primary10',
-                },
               }}
               buttonChildren={
                 <Flex align="center" css={{ gap: '$2' }}>
                   <FontAwesomeIcon icon={faBolt} />
-                  Sell
+                  {!isSmallDevice && (
+                    `Sell`
+                  )}
                 </Flex>
               }
             />
@@ -221,15 +250,15 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
   )
 }
 
-const headings = ['Price', 'Floor Difference', 'Expiration', 'From', '']
-
 const TableHeading = () => {
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const headings = isSmallDevice ? ['Price', 'Expiration', 'From', ''] : ['Price', 'Floor Difference', 'Expiration', 'From', '']
   const { theme } = useTheme()
   return (
     <HeaderRow
       css={{
         display: 'grid',
-        gridTemplateColumns: desktopTemplateColumns,
+        gridTemplateColumns: isSmallDevice ? mobileTemplateColumns : desktopTemplateColumns,
         position: 'sticky',
         top: 0,
         backgroundColor: theme === 'light'

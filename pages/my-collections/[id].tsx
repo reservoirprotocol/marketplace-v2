@@ -11,11 +11,53 @@ import RoyalitiesSettings from 'components/mycollections/settings/RoyalitiesSett
 import MintStateSettings from 'components/mycollections/settings/MintStateSettings'
 import WhitelistSettings from 'components/mycollections/settings/WhitelistSettings'
 import MetadataSettings from 'components/mycollections/settings/MetadataSettings'
+import {useContractReads} from "wagmi"
+import {useRouter} from "next/router"
+import launchpadArtifact from 'artifact/NFTELaunchpad.json'
+import { ethers } from "ethers";
 
 const MyCollectionDetailPage = () => {
   const { theme } = useTheme();
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const [activeTab, setActiveTab] = useState<string | null>('details')
+  const router = useRouter()
+
+  const launchpadContract = {
+    address: router.query.id as `0x${string}`,
+    abi: launchpadArtifact.abi,
+  }
+
+  const { data: contractData, isError, isLoading } = useContractReads({
+    contracts: [
+      {
+        ...launchpadContract,
+        functionName: 'activeSale',
+        args: [1]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'activeSale',
+        args: [2]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'presalePrice'
+      },
+      {
+        ...launchpadContract,
+        functionName: 'publicPrice'
+      },
+      {
+        ...launchpadContract,
+        functionName: '_URI'
+      }
+    ]
+  })
+
+  const [activePresale, activePublic, presalePrice, publicPrice, URI ] = contractData || [];
+
+  console.log(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
+  console.log(`URI : ${URI}`);
 
   const getCssTab = (tab: string) => ({
     tab: {

@@ -1,10 +1,11 @@
+import React, { useContext, useEffect, useState } from 'react'
 import {
   faArrowLeft,
   faCircleExclamation,
   faRefresh,
-  faArrowDownUpAcrossLine,
+  faRectangleList,
   faUserGroup,
-  faTableCells
+  faTableCells,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { paths } from '@nftearth/reservoir-sdk'
@@ -47,22 +48,22 @@ import fetcher from 'utils/fetcher'
 import { useAccount } from 'wagmi'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { useMediaQuery } from 'react-responsive'
-import {useTheme} from "next-themes";
-import FullscreenMedia from 'components/token/FullscreenMedia'
-import { useContext, useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import Head from 'next/head'
 import { ToastContext } from 'context/ToastContextProvider'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
-import { useRouter } from 'next/router'
-import supportedChains, { DefaultChain } from 'utils/chains'
 import { spin } from 'components/common/LoadingSpinner'
-import Head from 'next/head'
+import FullscreenMedia from 'components/token/FullscreenMedia'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { TokenActivityTable } from 'components/token/TokenActivityTable'
-import { NAVBAR_HEIGHT } from 'components/navbar'
-import { TokenOffersTable } from 'components/token/TokenOffersTable'
 import {OwnersModal} from "components/token/OwnersModal";
+import { TokenActivityTable } from 'components/token/TokenActivityTable'
+import { TokenOffersTable } from 'components/token/TokenOffersTable'
+import {TokenListingsTable} from "components/token/TokenListingsTable";
 import {formatNumber} from "utils/numbers";
+import supportedChains, { DefaultChain } from 'utils/chains'
+import {NAVBAR_HEIGHT} from "components/navbar";
+import {useTheme} from "next-themes";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -73,7 +74,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const account = useAccount()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
-  const [tabValue, setTabValue] = useState('info')
+  const [tabValue, setTabValue] = useState('description')
   const [isRefreshing, setIsRefreshing] = useState(false)
   const { id: chainId, proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
@@ -135,7 +136,7 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   useEffect(() => {
     isMounted && isSmallDevice && hasAttributes
       ? setTabValue('attributes')
-      : setTabValue('info')
+      : setTabValue('description')
   }, [isSmallDevice])
 
   const pageTitle = token?.token?.name
@@ -240,13 +241,12 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             />
             <FullscreenMedia token={token} />
           </Box>
-
-          {token?.token?.attributes && !isSmallDevice && (
+          {hasAttributes && !isSmallDevice && (
             <Grid
               css={{
                 maxWidth: '100%',
                 width: '100%',
-                maxHeight: 400,
+                maxHeight: 600,
                 overflowY: 'scroll',
                 gridTemplateColumns: '1fr 1fr',
                 gap: '$3',
@@ -262,6 +262,56 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
               ))}
             </Grid>
+          )}
+          {!isSmallDevice && (
+            <Collapsible.Root
+              defaultOpen={true}
+              style={{ width: '100%' }}
+            >
+              <Collapsible.Trigger asChild>
+                <Flex
+                  direction="row"
+                  align="center"
+                  css={{
+                    px: '$4',
+                    py: '$3',
+                    backgroundColor: theme === 'light'
+                      ? '$primary11'
+                      : '$primary6',
+                    mt: 30,
+                    cursor: 'pointer',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRectangleList} />
+                  <Text style="h6" css={{ ml: '$4' }}>
+                    Description
+                  </Text>
+                </Flex>
+              </Collapsible.Trigger>
+              <CollapsibleContent
+                css={{
+                  position: 'sticky',
+                  top: 16 + 80,
+                  height: `calc(50vh - ${NAVBAR_HEIGHT}px - 32px)`,
+                  overflow: 'auto',
+                  marginBottom: 16,
+                  borderRadius: '$base',
+                  p: '$2',
+                }}
+              >
+                <Box
+                  css={{
+                    '& > div:first-of-type': {
+                      p: '$4',
+                    },
+                  }}
+                >
+                  {collection && (
+                    <TokenInfo token={token} collection={collection} />
+                  )}
+                </Box>
+              </CollapsibleContent>
+            </Collapsible.Root>
           )}
         </Flex>
         <Flex
@@ -426,6 +476,55 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   account={account}
                 />
               )}
+              {isSmallDevice && (
+                <Tabs.Root
+                  value={tabValue}
+                  onValueChange={(value) => setTabValue(value)}
+                >
+                  <TabsList>
+                    <TabsTrigger value="description">Description</TabsTrigger>
+                    {isMounted && hasAttributes && (
+                      <TabsTrigger value="attributes">Attributes</TabsTrigger>
+                    )}
+                  </TabsList>
+                  <TabsContent value="description">
+                    {collection && (
+                      <TokenInfo token={token} collection={collection} />
+                    )}
+                  </TabsContent>
+                  <TabsContent value="attributes">
+                    {token?.token?.attributes && (
+                      <Grid
+                        css={{
+                          gap: '$3',
+                          mt: 24,
+                          maxHeight: 300,
+                          overflowY: 'auto',
+                          gridTemplateColumns: '1fr',
+                          '@sm': {
+                            gridTemplateColumns: '1fr 1fr',
+                          },
+                        }}
+                      >
+                        {token?.token?.attributes?.map((attribute) => (
+                          <AttributeCard
+                            key={`${attribute.key}-${attribute.value}`}
+                            attribute={attribute}
+                            collectionTokenCount={collection?.tokenCount || 0}
+                            collectionId={collection?.id}
+                          />
+                        ))}
+                      </Grid>
+                    )}
+                  </TabsContent>
+                </Tabs.Root>
+              )}
+              {isMounted && (
+                <TokenListingsTable
+                  token={token}
+                  account={account}
+                />
+              )}
               {isMounted && (
                 <TokenOffersTable
                   token={token}
@@ -434,47 +533,6 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   account={account}
                 />
               )}
-              <Tabs.Root
-                value={tabValue}
-                onValueChange={(value) => setTabValue(value)}
-              >
-                <TabsList>
-                  {isMounted && isSmallDevice && hasAttributes && (
-                    <TabsTrigger value="attributes">Attributes</TabsTrigger>
-                  )}
-                  <TabsTrigger value="info">Info</TabsTrigger>
-                </TabsList>
-                <TabsContent value="attributes">
-                  {token?.token?.attributes && (
-                    <Grid
-                      css={{
-                        gap: '$3',
-                        mt: 24,
-                        maxHeight: 300,
-                        overflowY: 'auto',
-                        gridTemplateColumns: '1fr',
-                        '@sm': {
-                          gridTemplateColumns: '1fr 1fr',
-                        },
-                      }}
-                    >
-                      {token?.token?.attributes?.map((attribute) => (
-                        <AttributeCard
-                          key={`${attribute.key}-${attribute.value}`}
-                          attribute={attribute}
-                          collectionTokenCount={collection?.tokenCount || 0}
-                          collectionId={collection?.id}
-                        />
-                      ))}
-                    </Grid>
-                  )}
-                </TabsContent>
-                <TabsContent value="info">
-                  {collection && (
-                    <TokenInfo token={token} collection={collection} />
-                  )}
-                </TabsContent>
-              </Tabs.Root>
             </>
           )}
         </Flex>
@@ -492,50 +550,9 @@ const TokenPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         }}
       >
         <Flex align="start" justify="start" css={{ flex: 1, px: '$3' }}>
-          <Collapsible.Root style={{ width: '100%' }}>
-            <Collapsible.Trigger asChild>
-              <Flex
-                css={{
-                  backgroundColor: theme === 'light'
-                    ? '$primary11'
-                    : '$primary6',
-                  px: '$4',
-                  py: '$3',
-                  flex: 1,
-                  cursor: 'pointer',
-                }}
-                align="center"
-              >
-                <FontAwesomeIcon icon={faArrowDownUpAcrossLine} />
-                <Text style="h6" css={{ ml: '$4' }}>
-                  Item Activity
-                </Text>
-              </Flex>
-            </Collapsible.Trigger>
-            <CollapsibleContent
-              css={{
-                position: 'sticky',
-                top: 16 + 80,
-                height: `calc(50vh - ${NAVBAR_HEIGHT}px - 32px)`,
-                overflow: 'auto',
-                marginBottom: 16,
-                borderRadius: '$base',
-                p: '$2',
-              }}
-            >
-              <Box
-                css={{
-                  '& > div:first-of-type': {
-                    pt: 0,
-                  },
-                }}
-              >
-                <TokenActivityTable
-                  token={`${collection?.id}:${token?.token?.tokenId}`}
-                />
-              </Box>
-            </CollapsibleContent>
-          </Collapsible.Root>
+          <TokenActivityTable
+            token={`${collection?.id}:${token?.token?.tokenId}`}
+          />
         </Flex>
       </Flex>
     </Layout>

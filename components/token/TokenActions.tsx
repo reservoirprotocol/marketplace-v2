@@ -45,10 +45,9 @@ export const TokenActions: FC<Props> = ({
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
-    height: 52,
+    height: 44,
     justifyContent: 'center',
     minWidth: 'max-content',
-    background: '$primary9',
     '@sm': {
       maxWidth: 250,
     },
@@ -72,6 +71,9 @@ export const TokenActions: FC<Props> = ({
           token={token}
           mutate={mutate}
           buttonCss={buttonCss}
+          buttonProps={{
+            color: 'primary'
+          }}
           buttonChildren={
             token?.market?.floorAsk?.price?.amount?.decimal
               ? 'Create New Listing'
@@ -84,8 +86,14 @@ export const TokenActions: FC<Props> = ({
         >
           <BuyNow
             token={token}
-            buttonCss={{ flex: 1, justifyContent: 'center' }}
-            buttonProps={{ corners: 'square' }}
+            buttonCss={{
+              flex: 1,
+              borderRight: '1px solid $primary6',
+              justifyContent: 'center'
+            }}
+            buttonProps={{
+              corners: 'square',
+            }}
             mutate={mutate}
           />
           <AddToCart
@@ -95,7 +103,9 @@ export const TokenActions: FC<Props> = ({
               p: 0,
               justifyContent: 'center',
             }}
-            buttonProps={{ corners: 'square' }}
+            buttonProps={{
+              corners: 'square',
+            }}
           />
         </Flex>
       )}
@@ -111,6 +121,9 @@ export const TokenActions: FC<Props> = ({
           }
           mutate={mutate}
           buttonCss={buttonCss}
+          buttonProps={{
+            color: 'secondary'
+          }}
           buttonChildren="Accept Offer"
         />
       )}

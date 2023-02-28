@@ -95,7 +95,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
         </StatBox>
       )}
 
-      <StatBox label="Owner Count">
+      <StatBox label="Owners">
         <Text style="h6">{formatNumber(collection?.ownerCount)}</Text>
       </StatBox>
 

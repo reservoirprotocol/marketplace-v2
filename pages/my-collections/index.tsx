@@ -8,32 +8,50 @@ import { paths } from '@nftearth/reservoir-sdk'
 import { CollectionCard } from 'components/mycollections/CollectionCard'
 import { CollectionGrid } from 'components/mycollections/CollectionGrid'
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import {useMarketplaceChain} from 'hooks'
 import supportedChains from 'utils/chains'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import fetcher from 'utils/fetcher'
+import {useEffect, useRef} from "react";
+import {useIntersectionObserver} from "usehooks-ts";
+import useLaunchpads from "../../hooks/useLaunchpads";
+import {useAccount} from "wagmi";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
-  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
+  const { address } = useAccount();
   const marketplaceChain = useMarketplaceChain()
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-    sortBy: 'allTimeVolume',
-  }
-  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(
-      collectionQuery,
-      {
-        fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-        revalidateFirstPage: true,
-        revalidateIfStale: true,
-      },
-      marketplaceChain.id
-    )
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let collections = data || []
+  const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
+    creator: address,
+    limit: 20,
+  }
+
+  const {
+    data: launchpads,
+    isFetchingPage,
+    isValidating,
+    fetchNextPage
+  } = useLaunchpads(
+    marketplaceChain,
+    launchpadsQuery,
+    {
+      revalidateOnMount: true,
+      fallbackData: [],
+      revalidateFirstPage: true,
+    }
+  )
+
+  useEffect(() => {
+    const isVisible = !!loadMoreObserver?.isIntersecting
+    if (isVisible) {
+      fetchNextPage()
+    }
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+
   return (
     <Layout>
       <Box
@@ -93,7 +111,7 @@ const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
               <Button>Create a collection</Button>
             </Box>
             <CollectionGrid>
-              {collections?.map((collection, i) => (
+              {launchpads?.map((collection, i) => (
                 <CollectionCard heroImg="" key={i} collection={collection} />
               ))}
             </CollectionGrid>
