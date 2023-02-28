@@ -49,13 +49,15 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
+          p: 24,
+          height: 'calc(100vh - 80px)',
           width: '100vw',
           '@bp800': {
             p: '$6',
           },
         }}
       >
-        {/* <Flex
+        <Flex
           align="center"
           justify="center"
           direction="column"
@@ -76,8 +78,8 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           <Text css={{ color: '$gray10' }}>
             This page is under construction
           </Text>
-        </Flex> */}
-        <Flex
+        </Flex>
+        {/* <Flex
           align="center"
           direction="column"
           css={{
@@ -232,7 +234,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           >
             <LeaderboardTable data={data} />
           </Flex>
-        </Flex>
+        </Flex> */}
       </Box>
     </Layout>
   )
