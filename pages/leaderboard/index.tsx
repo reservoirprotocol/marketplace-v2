@@ -82,7 +82,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           css={{
             height: '100%',
             width: '100%',
-            background: `url(/ClaimRewards.png)`,
+            // background: `url(/ClaimRewards.png)`,
           }}
         >
           <Text
