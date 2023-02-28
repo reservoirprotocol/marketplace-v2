@@ -75,16 +75,81 @@ const PointsTableRow: FC<PointsTableRowProps> = ({
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text css={{ color: '#39FF14' }}>{bidPoints}</Text>
+      <TableCell
+        css={{
+          border: theme
+            ? theme === 'dark'
+              ? '1px solid #39FF14'
+              : '1px solid $primary13'
+            : '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          css={{
+            color: theme
+              ? theme === 'dark'
+                ? '#39FF14'
+                : '$gray11'
+              : '#39FF14',
+          }}
+        >
+          {bidPoints}
+        </Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text css={{ color: '#39FF14' }} style="subtitle2">{listPoints}</Text>
+      <TableCell
+        css={{
+          border: theme
+            ? theme === 'dark'
+              ? '1px solid #39FF14'
+              : '1px solid $primary13'
+            : '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          css={{
+            color: theme
+              ? theme === 'dark'
+                ? '#39FF14'
+                : '$gray11'
+              : '#39FF14',
+          }}
+          style="subtitle2"
+        >
+          {listPoints}
+        </Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text css={{ color: '#39FF14' }} style="subtitle2">{listingLoyalty} %</Text>
+      <TableCell
+        css={{
+          border: theme
+            ? theme === 'dark'
+              ? '1px solid #39FF14'
+              : '1px solid $primary13'
+            : '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          css={{
+            color: theme
+              ? theme === 'dark'
+                ? '#39FF14'
+                : '$gray11'
+              : '#39FF14',
+          }}
+          style="subtitle2"
+        >
+          {listingLoyalty} %
+        </Text>
       </TableCell>
     </TableRow>
   )
@@ -112,10 +177,24 @@ const TableHeading = () => {
             textAlign: 'center',
             pl: '$2 !important',
             py: '$1',
-            border: '1px solid $primary2',
+            border: theme
+              ? theme === 'dark'
+                ? '1px solid #39FF14'
+                : '1px solid $primary13'
+              : '1px solid #39FF14',
           }}
         >
-          <Text css={{ color: '$gray11' }} as={'div'} style="subtitle1">
+          <Text
+            css={{
+              color: theme
+                ? theme === 'dark'
+                  ? '$primary9'
+                  : '$gray11'
+                : '$primary9',
+            }}
+            as={'div'}
+            style="subtitle1"
+          >
             {heading}
           </Text>
         </TableCell>

@@ -9,6 +9,7 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
+import { useTheme } from 'next-themes'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
 import { PointsTable } from 'components/leaderboard/PointsTable'
 import { data } from 'components/leaderboard/enums'
@@ -18,7 +19,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const marketplaceChain = useMarketplaceChain()
-
+  const { theme } = useTheme()
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
@@ -48,7 +49,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
-      
           width: '100vw',
           '@bp800': {
             p: '$6',
@@ -97,14 +97,19 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
-              textShadow: `0 0 7px green,
+              color: theme ? (theme === 'dark' ? 'none' : '$black') : 'none',
+              textShadow: theme
+                ? theme === 'dark'
+                  ? `0 0 7px green,
               0 0 10px green,
               0 0 21px green,
               0 0 42px green,
               0 0 82px green,
               0 0 92px green,
               0 0 102px green,
-              0 0 151px green`,
+              0 0 151px green`
+                  : 'none'
+                : 'none',
             }}
           >
             NFTEARTH AIDRDROP SEASON 2
@@ -119,7 +124,11 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               letterSpacing: 2,
               marginTop: '35px',
               marginBottom: '35px',
-              color: '#39FF14',
+              color: theme
+                ? theme === 'dark'
+                  ? '#39FF14'
+                  : '$black'
+                : '#39FF14',
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -141,7 +150,11 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               lineHeight: 1.2,
               letterSpacing: 2,
               marginTop: '75px',
-              color: '#39FF14',
+              color: theme
+                ? theme === 'dark'
+                  ? '#39FF14'
+                  : '$black'
+                : '#39FF14',
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -169,21 +182,39 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                   textAlign: 'center',
                   marginLeft: 'auto',
                   marginRight: 'auto',
-                  textShadow: `0 0 7px green,
-                    0 0 10px green,
-                    0 0 21px green,
-                    0 0 42px green,
-                    0 0 82px green,
-                    0 0 92px green,
-                    0 0 102px green,
-                    0 0 151px green`,
+                  color: theme
+                    ? theme === 'dark'
+                      ? 'none'
+                      : '$black'
+                    : 'none',
+                  textShadow: theme
+                    ? theme === 'dark'
+                      ? `0 0 7px green,
+                  0 0 10px green,
+                  0 0 21px green,
+                  0 0 42px green,
+                  0 0 82px green,
+                  0 0 92px green,
+                  0 0 102px green,
+                  0 0 151px green`
+                      : 'none'
+                    : 'none',
                 }}
               >
                 ROLLING 24HR LEADERBOARD
               </Text>
             </Flex>
             <Box css={{ textAlign: 'center' }}>
-              <Text css={{ color: '#39FF14', textAlign: 'center' }}>
+              <Text
+                css={{
+                  color: theme
+                    ? theme === 'dark'
+                      ? '#39FF14'
+                      : '$black'
+                    : '#39FF14',
+                  textAlign: 'center',
+                }}
+              >
                 Increase your position on the leaderboard by completing quests!
                 💰
               </Text>
