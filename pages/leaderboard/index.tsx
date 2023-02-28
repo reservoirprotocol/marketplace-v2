@@ -48,7 +48,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
-          height: 'calc(100vh - 80px)',
+      
           width: '100vw',
           '@bp800': {
             p: '$6',
@@ -81,7 +81,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           align="center"
           direction="column"
           css={{
-            height: '100%',
             width: '100%',
             // background: `url(/ClaimRewards.png)`,
           }}
@@ -98,15 +97,14 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
-              textShadow:
-              `0 0 7px green,
+              textShadow: `0 0 7px green,
               0 0 10px green,
               0 0 21px green,
               0 0 42px green,
               0 0 82px green,
               0 0 92px green,
               0 0 102px green,
-              0 0 151px green`
+              0 0 151px green`,
             }}
           >
             NFTEARTH AIDRDROP SEASON 2
@@ -119,7 +117,8 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             css={{
               lineHeight: 1.2,
               letterSpacing: 2,
-              marginTop: '75px',
+              marginTop: '35px',
+              marginBottom: '35px',
               color: '#39FF14',
               textAlign: 'center',
               marginLeft: 'auto',
@@ -151,55 +150,53 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           >
             View Collections
           </Text>
-          <Flex
-            css={{  width: '100%' }}
-          >
-            <Box css={{ width: '100%', height: '25vh' }}>
-              <Flex
-                align="center"
-                direction="column"
-                css={{ textAlign: 'center', gap: '$4' }}
-              >
-                <Text
-                  style={{
-                    '@initial': 'h3',
-                    '@lg': 'h2',
-                  }}
-                  css={{
-                    lineHeight: 1.2,
-                    letterSpacing: 2,
-                    marginTop: '75px',
-                    textAlign: 'center',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                    textShadow:
-                    `0 0 7px green,
+
+          <Box css={{ width: '100%' }}>
+            <Flex
+              align="center"
+              direction="column"
+              css={{ textAlign: 'center', gap: '$4' }}
+            >
+              <Text
+                style={{
+                  '@initial': 'h3',
+                  '@lg': 'h2',
+                }}
+                css={{
+                  lineHeight: 1.2,
+                  letterSpacing: 2,
+                  marginTop: '75px',
+                  textAlign: 'center',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  textShadow: `0 0 7px green,
                     0 0 10px green,
                     0 0 21px green,
                     0 0 42px green,
                     0 0 82px green,
                     0 0 92px green,
                     0 0 102px green,
-                    0 0 151px green`
-                  }}
-                >
-                  ROLLING 24HR LEADERBOARD
-                </Text>
-              </Flex>
-              <Box css={{ textAlign: 'center' }}>
-                <Text css={{ color: '#39FF14', textAlign: 'center' }}>
-                  Increase your position on the leaderboard by completing
-                  quests! 💰
-                </Text>
-              </Box>
+                    0 0 151px green`,
+                }}
+              >
+                ROLLING 24HR LEADERBOARD
+              </Text>
+            </Flex>
+            <Box css={{ textAlign: 'center' }}>
+              <Text css={{ color: '#39FF14', textAlign: 'center' }}>
+                Increase your position on the leaderboard by completing quests!
+                💰
+              </Text>
             </Box>
-          </Flex>
+          </Box>
+
           <Flex
             align="center"
             direction="column"
             css={{
               width: '100%',
               alignItems: 'center',
+              marginTop: '50px',
             }}
           >
             <LeaderboardTable data={data} />
