@@ -11,7 +11,6 @@ type Props = {
 }
 
 export const initializeAnalytics = () => {
-  debugger
   if (typeof window !== 'undefined' && !datadogRum.getInitConfiguration()) {
     if (!ddApplicationId || !ddClientToken) return
 
