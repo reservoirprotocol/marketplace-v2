@@ -27,8 +27,10 @@ export const TokenActions: FC<Props> = ({
 
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
+  const is1155 = token?.token?.kind === 'erc1155'
 
   const showAcceptOffer =
+    !is1155 &&
     token?.market?.topBid?.id !== null &&
     token?.market?.topBid?.id !== undefined &&
     isOwner &&
@@ -40,10 +42,7 @@ export const TokenActions: FC<Props> = ({
     account.isConnected &&
     token?.market?.topBid?.maker?.toLowerCase() ===
       account?.address?.toLowerCase()
-
-  const isListed = token
-    ? token?.market?.floorAsk?.id !== null && token?.token?.kind !== 'erc1155'
-    : false
+  const isListed = token ? token?.market?.floorAsk?.id !== null : false
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
@@ -68,7 +67,7 @@ export const TokenActions: FC<Props> = ({
         },
       }}
     >
-      {isOwner ? (
+      {isOwner && !is1155 && (
         <List
           token={token}
           mutate={mutate}
@@ -79,7 +78,8 @@ export const TokenActions: FC<Props> = ({
               : 'List for Sale'
           }
         />
-      ) : (
+      )}
+      {(!isOwner || is1155) && isListed && (
         <Flex
           css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
         >
@@ -116,7 +116,7 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
-      {!isOwner && (
+      {(!isOwner || is1155) && (
         <Bid
           tokenId={token?.token?.tokenId}
           collectionId={token?.token?.collection?.id}
@@ -125,7 +125,7 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
-      {isTopBidder && (
+      {isTopBidder && !is1155 && (
         <CancelBid
           bidId={token?.market?.topBid?.id as string}
           mutate={mutate}
@@ -140,7 +140,7 @@ export const TokenActions: FC<Props> = ({
         />
       )}
 
-      {isOwner && isListed && (
+      {isOwner && isListed && !is1155 && (
         <CancelListing
           listingId={token?.market?.floorAsk?.id as string}
           mutate={mutate}

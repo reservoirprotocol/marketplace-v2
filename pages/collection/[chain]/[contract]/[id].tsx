@@ -87,10 +87,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
   const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
-  const checkUserOwnership = token?.token?.kind === 'erc1155'
+  const is1155 = token?.token?.kind === 'erc1155'
 
   const { data: userTokens } = useUserTokens(
-    checkUserOwnership ? account.address : undefined,
+    is1155 ? account.address : undefined,
     {
       tokens: [`${contract}:${id}`],
     }
@@ -98,13 +98,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const attributesData = useAttributes(id)
 
-  const isOwner =
-    userTokens &&
-    userTokens[0] &&
-    userTokens[0].ownership?.tokenCount &&
-    +userTokens[0].ownership.tokenCount > 0
-      ? true
-      : token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
+  let countOwned = 0
+  if (is1155) {
+    countOwned = Number(userTokens?.[0]?.ownership?.tokenCount || 0)
+  } else {
+    countOwned =
+      token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
+        ? 1
+        : 0
+  }
+
+  const isOwner = countOwned > 0
   const owner = isOwner ? account?.address : token?.token?.owner
   const { displayName: ownerFormatted } = useENSResolver(token?.token?.owner)
 
@@ -362,20 +366,38 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           </Flex>
           {token && (
             <>
-              <Flex align="center" css={{ mt: '$2' }}>
-                <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
-                  Owner
-                </Text>
-                <Jazzicon
-                  diameter={16}
-                  seed={jsNumberForAddress(owner || '')}
-                />
-                <Link href={`/profile/${owner}`} legacyBehavior={true}>
-                  <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
-                    {isMounted ? ownerFormatted : ''}
-                  </Anchor>
-                </Link>
-              </Flex>
+              {is1155 && countOwned > 0 && (
+                <Flex align="center" css={{ mt: '$2' }}>
+                  <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
+                    You own {countOwned}
+                  </Text>
+                  <Link href={`/portfolio`} legacyBehavior={true}>
+                    <Anchor
+                      color="primary"
+                      weight="normal"
+                      css={{ ml: '$1', fontSize: 12 }}
+                    >
+                      Sell
+                    </Anchor>
+                  </Link>
+                </Flex>
+              )}
+              {!is1155 && (
+                <Flex align="center" css={{ mt: '$2' }}>
+                  <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
+                    Owner
+                  </Text>
+                  <Jazzicon
+                    diameter={16}
+                    seed={jsNumberForAddress(owner || '')}
+                  />
+                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                    <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
+                      {isMounted ? ownerFormatted : ''}
+                    </Anchor>
+                  </Link>
+                </Flex>
+              )}
               <RarityRank
                 token={token}
                 collection={collection}
