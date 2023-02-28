@@ -128,9 +128,9 @@ export default async function handler(req: Request) {
     }
   } else {
     // Get current usd prices for each chain
-    const usdCoinPrices = await fetch(
-      'http://localhost:3000/api/usdCoinConversion' // TODO: update url
-    ).then((res) => res.json())
+    const usdCoinPrices = await fetch('/api/usdCoinConversion').then((res) =>
+      res.json()
+    )
 
     const responses = await Promise.all(promises)
     await responses.forEach((response, index) => {
