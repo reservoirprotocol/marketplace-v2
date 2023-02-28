@@ -30,7 +30,7 @@ export const QuestXPButton = styled(Box, {
     padding: '10px 30px',
 })
 
-export const QuestJoinButton = styled(Box, {
+export const QuestJoinButton = styled(Button, {
     background: '#6BE481',
     borderRadius: '10px',
     padding: '10px 30px',
