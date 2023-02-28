@@ -19,7 +19,6 @@ import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { SearchCollection } from 'pages/api/globalSearch'
-import { ChainIcon } from 'connectkit'
 
 type Props = {
   collection: SearchCollection
@@ -34,7 +33,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
       <Flex
         css={{
           p: '$2',
-          gap: '$2',
+          gap: '$3',
           cursor: 'pointer',
           '&:hover': {
             background: '$gray4',
@@ -57,7 +56,9 @@ const CollectionItem: FC<Props> = ({ collection }) => {
             openseaVerificationStatus={collection?.openseaVerificationStatus}
           />
         </Flex>
-        <ChainIcon id={collection.chainId} size={16} />
+        <Box css={{ height: 12, minWidth: 'max-content' }}>
+          <img src={collection.searchIcon} />
+        </Box>
       </Flex>
     </Link>
   )
@@ -251,17 +252,13 @@ const GlobalSearch = forwardRef<
               zIndex: 4,
               mt: '$2',
               border: isMobile ? '' : '1px solid $gray7',
-
-              '& div:not(:last-of-type)': {
-                borderBottom: isMobile ? '' : '1px solid $gray7',
-              },
               overflow: 'hidden',
               width: '100%',
             }}
           >
             {results &&
               results
-                // .slice(0, 8)
+                .slice(0, 8)
                 .map((result) => <SearchResult result={result} />)}
 
             {searching && (

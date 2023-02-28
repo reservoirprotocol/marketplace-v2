@@ -13,7 +13,7 @@ const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
 
 export type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
->[0] & { chainName: string; chainId: number }
+>[0] & { chainName: string; chainId: number; searchIcon: string }
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -80,6 +80,7 @@ export default async function handler(req: Request) {
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
           chainId: chain.id,
+          searchIcon: chain.searchIcon,
         }
         return {
           type: 'collection',
@@ -126,8 +127,13 @@ export default async function handler(req: Request) {
       ]
     }
   } else {
+    // Get current usd prices for each chain
+    const usdCoinPrices = await fetch(
+      'http://localhost:3000/api/usdCoinConversion'
+    ).then((res) => res.json())
+
     const responses = await Promise.all(promises)
-    responses.forEach((response, index) => {
+    await responses.forEach((response, index) => {
       const chainSearchResults = response.data.collections.map(
         (collection: SearchCollection) => ({
           type: 'collection',
@@ -135,14 +141,21 @@ export default async function handler(req: Request) {
             ...collection,
             chainName: supportedChains[index].name.toLowerCase(),
             chainId: supportedChains[index].id,
+            searchIcon: supportedChains[index].searchIcon,
+            allTimeUsdVolume:
+              collection.allTimeVolume &&
+              collection.allTimeVolume *
+                usdCoinPrices.prices[index].current_price,
           },
         })
       )
       searchResults = [...searchResults, ...chainSearchResults]
     })
-    // Convert all time volume to usdc
-    // Sort by all time volume
-    // searchResults = searchResults.sort((a, b) => b.chainName - a.chainName)
+
+    // Sort by all time usd volume
+    searchResults = searchResults.sort(
+      (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
+    )
   }
   return new Response(
     JSON.stringify({
