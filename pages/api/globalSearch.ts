@@ -1,7 +1,9 @@
 import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import supportedChains, { DefaultChain } from 'utils/chains'
+import supportedChains from 'utils/chains'
+
+const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
 
 const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
   ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
@@ -11,10 +13,9 @@ const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
   ? process.env.NEXT_PUBLIC_COMMUNITY
   : undefined
 
-
-type SearchCollection = NonNullable<
+export type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
->[0]
+>[0] & { chainName: string; chainId: number; searchIcon: string }
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -27,58 +28,73 @@ export const config = {
 export default async function handler(req: Request) {
   const { searchParams } = new URL(req.url)
   const q = searchParams.get('q')
-  const chainId = Number(searchParams.get('chainId') || 1)
-  let searchResults = []
+  let searchResults: any[] = []
+
+  const promises: ReturnType<typeof fetcher>[] = []
+
+  let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] =
+    {
+      name: q as string,
+      limit: 6,
+    }
+
+  if (COLLECTION_SET_ID) {
+    queryParams.collectionsSetId = COLLECTION_SET_ID
+  } else if (COMMUNITY) {
+    queryParams.community = COMMUNITY
+  }
+
+  supportedChains.forEach(async (chain) => {
+    const { reservoirBaseUrl, apiKey } = chain
+    const headers = {
+      headers: {
+        'x-api-key': apiKey || '',
+      },
+    }
+    promises.push(
+      fetcher(`${reservoirBaseUrl}/search/collections/v1`, queryParams, headers)
+    )
+  })
 
   let isAddress = ethers.utils.isAddress(q as string)
 
-  const { reservoirBaseUrl, apiKey } =
-    supportedChains.find((chain) => chain.id == chainId) || DefaultChain
-  const headers = {
-    headers: {
-      'x-api-key': apiKey || '',
-    },
-  }
-
-  let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] = {
-    name: q as string,
-    limit: 6
-  }
-
-  if (COLLECTION_SET_ID) {
-   queryParams.collectionsSetId = COLLECTION_SET_ID
- } else if (COMMUNITY){
-   queryParams.community = COMMUNITY
- }
-
-  // start fetching search preemptively
-  let collectionQuery = fetcher(
-    `${reservoirBaseUrl}/search/collections/v1`,
-    queryParams,
-    headers
-  )
-
   if (isAddress) {
-    let { data } = await fetcher(
-      `${reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`,
-      {},
-      headers
-    )
-    if (data.collections.length) {
-      searchResults = data.collections.map((collection: Collection) => {
-        let processedCollection: SearchCollection = {
+    const promises = supportedChains.map(async (chain) => {
+      const { reservoirBaseUrl, apiKey } = chain
+      const headers = {
+        headers: {
+          'x-api-key': apiKey || '',
+        },
+      }
+      const { data } = await fetcher(
+        `${reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`,
+        {},
+        headers
+      )
+      return data.collections.map((collection: Collection) => {
+        const processedCollection: SearchCollection = {
           collectionId: collection.id,
           contract: collection.primaryContract,
           image: collection.image,
           name: collection.name,
           allTimeVolume: collection.volume?.allTime,
           floorAskPrice: collection.floorAsk?.price?.amount?.decimal,
-          openseaVerificationStatus: collection.openseaVerificationStatus
+          openseaVerificationStatus: collection.openseaVerificationStatus,
+          chainName: chain.name.toLowerCase(),
+          chainId: chain.id,
+          searchIcon: chain.searchIcon,
         }
         return {
-        type: 'collection',
-        data: processedCollection,
-      }})
+          type: 'collection',
+          data: processedCollection,
+        }
+      })
+    })
+
+    let results = await Promise.all(promises).then((results) => results.flat())
+
+    if (results.length > 0) {
+      searchResults = results
     } else {
       let ensData = await fetch(
         `https://api.ensideas.com/ens/resolve/${q}`
@@ -113,14 +129,37 @@ export default async function handler(req: Request) {
       ]
     }
   } else {
-    let { data } = await collectionQuery
+    // Get current usd prices for each chain
+    const usdCoinPrices = await fetch(`${HOST_URL}/api/usdCoinConversion`).then(
+      (res) => res.json()
+    )
 
-    searchResults = data.collections.map((collection: SearchCollection) => ({
-      type: 'collection',
-      data: collection,
-    }))
+    const responses = await Promise.all(promises)
+    await responses.forEach((response, index) => {
+      const chainSearchResults = response.data.collections.map(
+        (collection: SearchCollection) => ({
+          type: 'collection',
+          data: {
+            ...collection,
+            chainName: supportedChains[index].name.toLowerCase(),
+            chainId: supportedChains[index].id,
+            searchIcon: supportedChains[index].searchIcon,
+            allTimeUsdVolume:
+              (collection.allTimeVolume &&
+                collection.allTimeVolume *
+                  usdCoinPrices.prices[index].current_price) ||
+              0,
+          },
+        })
+      )
+      searchResults = [...searchResults, ...chainSearchResults]
+    })
+
+    // Sort results by all time usd volume
+    searchResults = searchResults.sort(
+      (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
+    )
   }
-
   return new Response(
     JSON.stringify({
       results: searchResults,
