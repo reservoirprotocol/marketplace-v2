@@ -12,23 +12,10 @@ import {
 import { useTheme } from 'next-themes'
 import * as Collapsible from '@radix-ui/react-collapsible'
 
-type Props = {
-  data: Point[]
-}
-
-type Point = {
-  bidPoints: number
-  listPoints: number
-  listingLoyalty: number
-}
-
 const desktopTemplateColumns = '.75fr repeat(2, 1fr)'
 const mobileTemplateColumns = 'repeat(2, 1fr) 55px'
 export const PointsTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
-
-  //@ts-ignore
-  const points: Point[] = data
 
   return (
     <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
@@ -55,16 +42,14 @@ export const PointsTable: FC<Props> = ({ data }) => {
             css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
-            {points.map((point: Point, i: number) => {
-              return (
-                <PointsTableRow
-                  key={i}
-                  bidPoints={point.bidPoints}
-                  listPoints={point.listPoints}
-                  listingLoyalty={point.listingLoyalty}
-                />
-              )
-            })}
+
+            <PointsTableRow
+              key={i}
+              bidPoints={1000}
+              listPoints={5000}
+              listingLoyalty={0}
+            />
+
             <Box ref={loadMoreRef} css={{ height: 20 }} />
           </Flex>
         </Box>
@@ -105,7 +90,7 @@ const PointsTableRow: FC<PointsTableRowProps> = ({
       </TableCell>
 
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{listingLoyalty} </Text>
+        <Text style="subtitle2">{listingLoyalty} %</Text>
       </TableCell>
     </TableRow>
   )
