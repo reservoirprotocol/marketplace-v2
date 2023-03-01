@@ -135,7 +135,7 @@ const GlobalSearch = forwardRef<
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
-      let res = await fetch(`/api/globalSearch?q=${debouncedSearch}`).then(
+      let res = await fetch(`/api/globalSearch?query=${debouncedSearch}`).then(
         (res) => res.json()
       )
 

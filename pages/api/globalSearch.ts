@@ -27,14 +27,14 @@ export const config = {
 
 export default async function handler(req: Request) {
   const { searchParams } = new URL(req.url)
-  const q = searchParams.get('q')
+  const query = searchParams.get('query')
   let searchResults: any[] = []
 
   const promises: ReturnType<typeof fetcher>[] = []
 
   let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] =
     {
-      name: q as string,
+      name: query as string,
       limit: 6,
     }
 
@@ -56,7 +56,7 @@ export default async function handler(req: Request) {
     )
   })
 
-  let isAddress = ethers.utils.isAddress(q as string)
+  let isAddress = ethers.utils.isAddress(query as string)
 
   if (isAddress) {
     const promises = supportedChains.map(async (chain) => {
@@ -67,7 +67,7 @@ export default async function handler(req: Request) {
         },
       }
       const { data } = await fetcher(
-        `${reservoirBaseUrl}/collections/v5?contract=${q}&limit=6`,
+        `${reservoirBaseUrl}/collections/v5?contract=${query}&limit=6`,
         {},
         headers
       )
@@ -91,32 +91,34 @@ export default async function handler(req: Request) {
       })
     })
 
-    let results = await Promise.all(promises).then((results) => results.flat())
+    let results = await Promise.allSettled(promises).then((results) =>
+      results.flat()
+    )
 
     if (results.length > 0) {
       searchResults = results
     } else {
       let ensData = await fetch(
-        `https://api.ensideas.com/ens/resolve/${q}`
+        `https://api.ensideas.com/ens/resolve/${query}`
       ).then((res) => res.json())
       searchResults = [
         {
           type: 'wallet',
           data: {
             ...ensData,
-            address: q,
+            address: query,
           },
         },
       ]
     }
   } else if (
     /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(
-      q as string
+      query as string
     )
   ) {
-    let ensData = await fetch(`https://api.ensideas.com/ens/resolve/${q}`).then(
-      (res) => res.json()
-    )
+    let ensData = await fetch(
+      `https://api.ensideas.com/ens/resolve/${query}`
+    ).then((res) => res.json())
 
     if (ensData.address) {
       searchResults = [
@@ -135,7 +137,7 @@ export default async function handler(req: Request) {
     )
 
     const responses = await Promise.all(promises)
-    await responses.forEach((response, index) => {
+    responses.forEach((response, index) => {
       const chainSearchResults = response.data.collections.map(
         (collection: SearchCollection) => ({
           type: 'collection',
