@@ -133,6 +133,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
     ) || []
 
+  if (attributeFiltersOpen && attributesData.response && !attributes.length) {
+    setAttributeFiltersOpen(false)
+  }
+
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
       +collection.tokenCount >= 2 &&
