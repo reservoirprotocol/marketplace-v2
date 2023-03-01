@@ -26,26 +26,21 @@ const TrendingCollectionsList: FC<Props> = ({
           position: 'relative',
           mb: '$3',
           display: 'grid',
-          gridTemplateColumns: '1fr',
+          gridTemplateColumns: 'minmax(0, 1fr)',
           columnGap: 48,
           rowGap: '$5',
           'div:not(:first-child)': {
             display: 'none',
           },
           '@bp900': {
-            gridTemplateColumns: '1fr 1fr',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
             'div:not(:first-child)': {
               display: 'flex',
             },
-            'div:last-child': { display: 'none' },
-          },
-          '@bp1100': {
-            gridTemplateColumns: '1fr 1fr 1fr',
-            'div:last-child': { display: 'flex' },
           },
         }}
       >
-        {Array(3)
+        {Array(2)
           .fill(null)
           .map((_, i) => (
             <Flex justify="between" key={i}>
@@ -62,14 +57,13 @@ const TrendingCollectionsList: FC<Props> = ({
         css={{
           position: 'relative',
           display: 'grid',
-          gridTemplateColumns: '1fr',
+          gridTemplateRows: 'repeat(10, minmax(0, 1fr))',
           columnGap: 48,
           rowGap: '$5',
+          gridAutoFlow: 'column',
           '@bp900': {
-            gridTemplateColumns: '1fr 1fr',
-          },
-          '@bp1100': {
-            gridTemplateColumns: '1fr 1fr 1fr',
+            gridTemplateRows: 'repeat(5, minmax(0, 1fr))',
+            gridAutoColumns: 'calc(-24px + 50%)',
           },
         }}
       >

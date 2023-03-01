@@ -2,7 +2,7 @@ import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useState } from 'react'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
 } from 'components/home/TrendingCollectionsTimeToggle'
@@ -10,13 +10,12 @@ import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { useAccount } from 'wagmi'
-import LoadingSpinner from 'components/common/LoadingSpinner'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
-import { useIntersectionObserver } from 'usehooks-ts'
+import Link from 'next/link'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -30,7 +29,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const { isDisconnected } = useAccount()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
+    limit: 10,
     sortBy: sortByTime,
   }
 
@@ -40,26 +39,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery.community = COMMUNITY
   }
 
-  const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-    useCollections(collectionQuery, {
-      fallbackData: [ssr.collections[marketplaceChain.id]],
-    })
+  const { data, isValidating } = useCollections(collectionQuery, {
+    fallbackData: [ssr.collections[marketplaceChain.id]],
+  })
 
   let collections = data || []
-  const showViewAllButton = collections.length <= 12 && hasNextPage
-  if (showViewAllButton) {
-    collections = collections?.slice(0, 12)
-  }
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList
@@ -136,39 +120,23 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           {isSSR || !isMounted ? null : (
             <TrendingCollectionsList
               collections={collections}
-              loading={isValidating && showViewAllButton}
+              loading={isValidating}
               volumeKey={volumeKey}
             />
           )}
-          {(isFetchingPage || isValidating) && !showViewAllButton && (
-            <Flex align="center" justify="center" css={{ py: '$4' }}>
-              <LoadingSpinner />
-            </Flex>
-          )}
-          {showViewAllButton && (
-            <Button
-              disabled={isValidating}
-              onClick={() => {
-                fetchNextPage()
-              }}
-              css={{
-                minWidth: 224,
-                justifyContent: 'center',
-                alignSelf: 'center',
-              }}
-              size="large"
-            >
-              View All
-            </Button>
-          )}
-          {!showViewAllButton && (
-            <Box
-              ref={loadMoreRef}
-              css={{
-                display: isFetchingPage ? 'none' : 'block',
-              }}
-            ></Box>
-          )}
+          <Box css={{ alignSelf: 'center' }}>
+            <Link href="/collections">
+              <Button
+                css={{
+                  minWidth: 224,
+                  justifyContent: 'center',
+                }}
+                size="large"
+              >
+                View All
+              </Button>
+            </Link>
+          </Box>
         </Flex>
         <Footer />
       </Box>
@@ -189,7 +157,7 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
+      limit: 10,
     }
 
   if (COLLECTION_SET_ID) {

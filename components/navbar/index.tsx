@@ -128,7 +128,9 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/">
-              <NavItem active={router.pathname == '/'}>Explore</NavItem>
+              <NavItem active={router.pathname == '/collections'}>
+                Collections
+              </NavItem>
             </Link>
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
