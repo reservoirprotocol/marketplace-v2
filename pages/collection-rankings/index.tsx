@@ -1,21 +1,19 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { Text, Flex, Box, Button } from 'components/primitives'
+import { Text, Flex, Box } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useState } from 'react'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
 } from 'components/home/TrendingCollectionsTimeToggle'
-import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
-import { useAccount } from 'wagmi'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
+import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from '../_app'
 import supportedChains from 'utils/chains'
-import Link from 'next/link'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -26,10 +24,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('1DayVolume')
   const marketplaceChain = useMarketplaceChain()
-  const { isDisconnected } = useAccount()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 10,
+    limit: 20,
     sortBy: sortByTime,
   }
 
@@ -72,27 +69,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        {isDisconnected && (
-          <Flex
-            direction="column"
-            align="center"
-            css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
-          >
-            <Text style="h3" css={{ mb: 24 }}>
-              Open Source Marketplace
-            </Text>
-            <Text style="body1" css={{ mb: 48 }}>
-              Reservoir Marketplace is an open-source project that showcases the
-              latest and greatest features of the Reservoir Platform.
-            </Text>
-            <a
-              href="https://github.com/reservoirprotocol/marketplace-v2"
-              target="_blank"
-            >
-              <Button color="gray3">View Source Code</Button>
-            </a>
-          </Flex>
-        )}
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
@@ -107,7 +83,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" as="h4">
-              Popular Collections
+              Collection Rankings
             </Text>
             <TrendingCollectionsTimeToggle
               compact={compactToggleNames && isMounted}
@@ -118,27 +94,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             />
           </Flex>
           {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
-              collections={collections}
-              loading={isValidating}
-              volumeKey={volumeKey}
-            />
+            // <TrendingCollectionsList
+            //   collections={collections}
+            //   loading={isValidating}
+            //   volumeKey={volumeKey}
+            // />
+            <CollectionRankingsTable />
           )}
-          <Box css={{ alignSelf: 'center' }}>
-            <Link href="/collection-rankings">
-              <Button
-                css={{
-                  minWidth: 224,
-                  justifyContent: 'center',
-                }}
-                size="large"
-              >
-                View All
-              </Button>
-            </Link>
-          </Box>
         </Flex>
-        <Footer />
       </Box>
     </Layout>
   )
@@ -157,7 +120,7 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 10,
+      limit: 20,
     }
 
   if (COLLECTION_SET_ID) {
