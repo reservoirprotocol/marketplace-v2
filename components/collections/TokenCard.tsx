@@ -47,6 +47,7 @@ export default ({
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
+  const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
 
   return (
     <Box
@@ -261,7 +262,7 @@ export default ({
           )}
         </Flex>
       </Link>
-      {token?.token?.owner?.toLowerCase() !== address?.toLowerCase() ? (
+      {isOwner ? (
         <Flex
           className="token-button-container"
           css={{
