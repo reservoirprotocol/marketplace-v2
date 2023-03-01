@@ -121,7 +121,7 @@ export const QuestPostProofModalContent = () => {
     <Flex direction="column" css={{ gap: '$4' }}>
       <Box>
         <Text style="h3" css={{ color: '$primary9' }}>
-          Post proof of Listing 🎁
+          List NFT in $NFTE on NFTEarth 🎁
         </Text>
       </Box>
       <Box>
@@ -131,7 +131,7 @@ export const QuestPostProofModalContent = () => {
       </Box>
       <Box>
         <Text style="h6" css={{ color: '$primary9' }}>
-          Please post the post proof list 
+          List any NFT on NFTEarth in $NFTE with any listing duration time. Quest is fulfilled just by listing any NFT on Optimism or Arbitrum for any price of $NFTE and valid even if listing is not sold. You don't need to post any proof, we will check that automatically.
         </Text>
       </Box>
       <Box>
