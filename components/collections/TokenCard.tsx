@@ -20,9 +20,11 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
+import { Address } from 'wagmi'
 
 type TokenCardProps = {
   token: ReturnType<typeof useDynamicTokens>['data'][0]
+  address: Address
   rarityEnabled: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
@@ -33,6 +35,7 @@ type TokenCardProps = {
 
 export default ({
   token,
+  address,
   rarityEnabled = true,
   mutate,
   onMediaPlayed,
@@ -258,39 +261,41 @@ export default ({
           )}
         </Flex>
       </Link>
-      <Flex
-        className="token-button-container"
-        css={{
-          width: '100%',
-          transition: 'bottom 0.25s ease-in-out',
-          position: 'absolute',
-          bottom: -44,
-          left: 0,
-          right: 0,
-          gap: 1,
-        }}
-      >
-        <BuyNow
-          token={token}
-          mutate={mutate}
-          buttonCss={{
-            justifyContent: 'center',
-            flex: 1,
+      {token?.token?.owner?.toLowerCase() !== address?.toLowerCase() ? (
+        <Flex
+          className="token-button-container"
+          css={{
+            width: '100%',
+            transition: 'bottom 0.25s ease-in-out',
+            position: 'absolute',
+            bottom: -44,
+            left: 0,
+            right: 0,
+            gap: 1,
           }}
-          buttonProps={{
-            corners: 'square',
-          }}
-        />
-        <AddToCart
-          token={token}
-          buttonCss={{
-            width: 52,
-            p: 0,
-            justifyContent: 'center',
-          }}
-          buttonProps={{ corners: 'square' }}
-        />
-      </Flex>
+        >
+          <BuyNow
+            token={token}
+            mutate={mutate}
+            buttonCss={{
+              justifyContent: 'center',
+              flex: 1,
+            }}
+            buttonProps={{
+              corners: 'square',
+            }}
+          />
+          <AddToCart
+            token={token}
+            buttonCss={{
+              width: 52,
+              p: 0,
+              justifyContent: 'center',
+            }}
+            buttonProps={{ corners: 'square' }}
+          />
+        </Flex>
+      ) : null}
     </Box>
   )
 }

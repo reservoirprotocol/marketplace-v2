@@ -38,6 +38,7 @@ import { useENSResolver } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
+import { Address, useAccount } from 'wagmi'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -57,6 +58,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     shortAddress,
   } = useENSResolver(address)
   ensName = resolvedEnsName ? resolvedEnsName : ensName
+  const account = useAccount()
+
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
@@ -232,15 +235,22 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                           <LoadingCard key={`loading-card-${index}`} />
                         ))
                     : tokens.map((token, i) => {
-                        if (token)
+                        if (token) {
+                          let dynamicToken = token as ReturnType<
+                            typeof useDynamicTokens
+                          >['data'][0]
+
+                          if (dynamicToken.token) {
+                            dynamicToken.token.owner = address
+                          }
+                          dynamicToken.market = {
+                            floorAsk: token?.ownership?.floorAsk,
+                          }
                           return (
                             <TokenCard
                               key={i}
-                              token={
-                                token as ReturnType<
-                                  typeof useDynamicTokens
-                                >['data'][0]
-                              }
+                              token={dynamicToken}
+                              address={account.address as Address}
                               tokenCount={
                                 token?.token?.kind === 'erc1155'
                                   ? token.ownership?.tokenCount
@@ -264,6 +274,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                               }}
                             />
                           )
+                        }
                       })}
                   <Box
                     ref={loadMoreRef}
