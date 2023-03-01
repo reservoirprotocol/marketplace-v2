@@ -258,6 +258,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                               }
                               mutate={mutate}
                               rarityEnabled={false}
+                              addToCartEnabled={false}
                               onMediaPlayed={(e) => {
                                 if (
                                   playingElement &&

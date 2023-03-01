@@ -26,6 +26,7 @@ type TokenCardProps = {
   token: ReturnType<typeof useDynamicTokens>['data'][0]
   address: Address
   rarityEnabled: boolean
+  addToCartEnabled?: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
@@ -37,6 +38,7 @@ export default ({
   token,
   address,
   rarityEnabled = true,
+  addToCartEnabled = true,
   mutate,
   onMediaPlayed,
   tokenCount,
@@ -286,15 +288,17 @@ export default ({
               corners: 'square',
             }}
           />
-          <AddToCart
-            token={token}
-            buttonCss={{
-              width: 52,
-              p: 0,
-              justifyContent: 'center',
-            }}
-            buttonProps={{ corners: 'square' }}
-          />
+          {addToCartEnabled ? (
+            <AddToCart
+              token={token}
+              buttonCss={{
+                width: 52,
+                p: 0,
+                justifyContent: 'center',
+              }}
+              buttonProps={{ corners: 'square' }}
+            />
+          ) : null}
         </Flex>
       ) : null}
     </Box>
