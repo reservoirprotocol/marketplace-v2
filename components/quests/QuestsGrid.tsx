@@ -27,7 +27,7 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       <Box>
         <Quest
           title="Retweet a tweet from NFTEarth"
-          description="Retweet this Tweet with Hashtag #NFTE and earn XP points now!"
+          description="Retweet this Tweet with Hashtag $NFTE and earn XP points now!"
           points={25}
           locked={false}
           link=""
@@ -38,10 +38,10 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="Follow us on Twitter"
-          description="Assign a username to your wallet from the Profile Settings page."
+          title="Post proof of Listing in NFTE"
+          description="List your item in NFTE and earn your own XP points for the next level!"
           points={25}
-          locked={true}
+          locked={false}
           link=""
           setOpen={setOpen}
           setQuest={setQuest}

@@ -9,17 +9,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
 import { useState, useEffect } from 'react'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
-import { QuestRetweetModalContent } from 'components/quests/templates'
+import { QuestRetweetModalContent, QuestPostProofModalContent } from 'components/quests/templates'
 
 const QuestsPage: NextPage = () => {
   const isMounted = useMounted()
   const [open, setOpen] = useState(false)
-  const [quest, setQuest] = useState<number>(1)
+  const [quest, setQuest] = useState<number>(0);
 
   const displayContent = (value: number) => {
     switch (value) {
       case 1:
         return <QuestRetweetModalContent />
+      case 2:
+        return <QuestPostProofModalContent />
       default:
         return null
     }
@@ -48,16 +50,19 @@ const QuestsPage: NextPage = () => {
                     inset: 0,
                     width: '100vw',
                     height: '100vh',
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
                     backdropFilter: '20px',
+                    opacity: '0.5',
                   }}
+                  onClick={() => setOpen(false)}
                 />
                 <AnimatedContent
                   style={{
                     outline: 'unset',
                     position: 'fixed',
                     zIndex: 1000,
-                    transform: 'translate(-50%, 30%)',
+                    transform: 'translate(-50%, 20%)',
+                    height: '600px'
                   }}
                 >
                   <Flex

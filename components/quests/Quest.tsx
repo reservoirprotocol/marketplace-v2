@@ -82,7 +82,7 @@ export const Quest = ({
               }}
             >
               <QuestXPButton>{points} XP</QuestXPButton>
-              <QuestJoinButton>
+              <QuestJoinButton disabled>
                 <Text
                   css={{
                     color: 'black',
