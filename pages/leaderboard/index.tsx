@@ -9,7 +9,9 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
+import { useTheme } from 'next-themes'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
+import { PointsTable } from 'components/leaderboard/PointsTable'
 import { data } from 'components/leaderboard/enums'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -17,7 +19,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const marketplaceChain = useMarketplaceChain()
-
+  const { theme } = useTheme()
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 12,
     normalizeRoyalties: NORMALIZE_ROYALTIES,
@@ -47,6 +49,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     <Layout>
       <Box
         css={{
+          p: 24,
           height: 'calc(100vh - 80px)',
           width: '100vw',
           '@bp800': {
@@ -80,47 +83,153 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           align="center"
           direction="column"
           css={{
-            height: '100%',
             width: '100%',
+            // background: `url(/ClaimRewards.png)`,
           }}
         >
-          <Flex
-            css={{ backgroundImage: `url(/ClaimRewards.png)`, width: '100%' }}
+          <Text
+            style={{
+              '@initial': 'h3',
+              '@lg': 'h2',
+            }}
+            css={{
+              lineHeight: 1.2,
+              letterSpacing: 2,
+              marginTop: '75px',
+              textAlign: 'center',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              color: theme ? (theme === 'dark' ? 'none' : '$black') : 'none',
+              textShadow: theme
+                ? theme === 'dark'
+                  ? `0 0 7px green,
+              0 0 10px green,
+              0 0 21px green,
+              0 0 42px green,
+              0 0 82px green,
+              0 0 92px green,
+              0 0 102px green,
+              0 0 151px green`
+                  : 'none'
+                : 'none',
+            }}
           >
-            <Box css={{ width: '100%', height: '25vh' }}>
-              <Flex css={{ textAlign: 'center', gap: '$4' }}>
-                <Text
-                  style={{
-                    '@initial': 'h3',
-                    '@lg': 'h2',
-                  }}
-                  css={{
-                    lineHeight: 1.2,
-                    letterSpacing: 2,
-                    marginTop: '75px',
-                    color: '$primary9',
-                    textAlign: 'center',
-                    marginLeft: 'auto',
-                    marginRight: 'auto',
-                  }}
-                >
-                  Leaderboard 📈
-                </Text>
-              </Flex>
-              <Box css={{ textAlign: 'center' }}>
-                <Text css={{ color: '$primary11', textAlign: 'center' }}>
-                  Increase your position on the leaderboard by completing
-                  quests! 💰
-                </Text>
-              </Box>
+            NFTEARTH AIDRDROP SEASON 2
+          </Text>
+          <Text
+            style={{
+              '@initial': 'h4',
+              '@lg': 'h5',
+            }}
+            css={{
+              lineHeight: 1.2,
+              letterSpacing: 2,
+              marginTop: '35px',
+              marginBottom: '35px',
+              color: theme
+                ? theme === 'dark'
+                  ? '#39FF14'
+                  : '$black'
+                : '#39FF14',
+              textAlign: 'center',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+            }}
+          >
+            Season 1 was just the beginning. There's a lot more coming. Season 2
+            rewards have not been revealed yet, but for the next 30 days, all
+            bidding and listing points have been doubled.
+          </Text>
+          <PointsTable />
+          <Text
+            as="a"
+            href="/collections"
+            style={{
+              '@initial': 'h4',
+              '@lg': 'h5',
+            }}
+            css={{
+              lineHeight: 1.2,
+              letterSpacing: 2,
+              marginTop: '75px',
+              color: theme
+                ? theme === 'dark'
+                  ? '#39FF14'
+                  : '$black'
+                : '#39FF14',
+              textAlign: 'center',
+              marginLeft: 'auto',
+              marginRight: 'auto',
+              cursor: 'pointer',
+            }}
+          >
+            View Collections
+          </Text>
+
+          <Box css={{ width: '100%' }}>
+            <Flex
+              align="center"
+              direction="column"
+              css={{ textAlign: 'center', gap: '$4' }}
+            >
+              <Text
+                style={{
+                  '@initial': 'h3',
+                  '@lg': 'h2',
+                }}
+                css={{
+                  lineHeight: 1.2,
+                  letterSpacing: 2,
+                  marginTop: '75px',
+                  textAlign: 'center',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  color: theme
+                    ? theme === 'dark'
+                      ? 'none'
+                      : '$black'
+                    : 'none',
+                  textShadow: theme
+                    ? theme === 'dark'
+                      ? `0 0 7px green,
+                  0 0 10px green,
+                  0 0 21px green,
+                  0 0 42px green,
+                  0 0 82px green,
+                  0 0 92px green,
+                  0 0 102px green,
+                  0 0 151px green`
+                      : 'none'
+                    : 'none',
+                }}
+              >
+                ROLLING 24HR LEADERBOARD
+              </Text>
+            </Flex>
+            <Box css={{ textAlign: 'center' }}>
+              <Text
+                css={{
+                  color: theme
+                    ? theme === 'dark'
+                      ? '#39FF14'
+                      : '$black'
+                    : '#39FF14',
+                  textAlign: 'center',
+                }}
+              >
+                Increase your position on the leaderboard by completing quests!
+                💰
+              </Text>
             </Box>
-          </Flex>
+          </Box>
+
           <Flex
             align="center"
             direction="column"
             css={{
               width: '100%',
               alignItems: 'center',
+              marginTop: '50px',
             }}
           >
             <LeaderboardTable data={data} />

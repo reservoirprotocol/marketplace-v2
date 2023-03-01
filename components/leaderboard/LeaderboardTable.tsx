@@ -175,7 +175,7 @@ const TableHeading = () => {
             border: '1px solid $primary2',
           }}
         >
-          <Text as={'div'} style="subtitle1">
+          <Text css={{ color: '$gray11' }} as={'div'} style="subtitle1">
             {heading}
           </Text>
         </TableCell>
