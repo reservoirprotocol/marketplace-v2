@@ -171,7 +171,7 @@ const HamburgerMenu = () => {
             >
               Launchpad
             </Text>
-            <Text
+            {/* <Text
               as="a"
               href="/airdrop"
               style="subtitle1"
@@ -184,7 +184,7 @@ const HamburgerMenu = () => {
               }}
             >
               Claim
-            </Text>
+            </Text> */}
             <Text
               as="a"
               href="/portfolio"
@@ -330,7 +330,11 @@ const HamburgerMenu = () => {
             borderTop: '1px solid $gray4',
           }}
         >
-          <a aria-label="Twitter" href="https://twitter.com/NFTEarth_L2" target="_blank">
+          <a
+            aria-label="Twitter"
+            href="https://twitter.com/NFTEarth_L2"
+            target="_blank"
+          >
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
@@ -341,7 +345,11 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <a aria-label="Discord" href="https://discord.gg/nftearth" target="_blank">
+          <a
+            aria-label="Discord"
+            href="https://discord.gg/nftearth"
+            target="_blank"
+          >
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"
