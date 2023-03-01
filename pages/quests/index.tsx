@@ -21,50 +21,6 @@ const QuestsPage: NextPage = () => {
       >
         <QuestSecion />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
-          {/* <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
-          >
-            <Box css={{ width: '100%' }}>
-              <Text
-                style="h4"
-                as="h4"
-                css={{ marginBottom: '15px', marginLeft: '5px' }}
-              >
-                My Points
-              </Text>
-              <Flex
-                css={{
-                  flexDirection: 'row',
-                  background: '$gray4',
-                  width: '100%',
-                  borderRadius: '20px',
-                  padding: '10px',
-                }}
-              >
-                <Box css={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                  <Text
-                    css={{ marginBottom: '15px', marginLeft: '5px' }}
-                    style="h4"
-                    as="h4"
-                  >
-                    Connect your Wallet
-                  </Text>
-                  <Box css={{ marginLeft: '100px', marginRight: 'auto' }}>
-                    <ConnectWalletButton />
-                  </Box>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex> */}
           <Box>
             <Text
               css={{ marginBottom: '15px', marginLeft: '5px' }}
