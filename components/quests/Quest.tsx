@@ -1,4 +1,5 @@
 import { Box, Text, Flex } from 'components/primitives'
+import { Dispatch } from 'react'
 import { QuestContent, QuestXPButton, QuestJoinButton } from './styled'
 
 type Props = {
@@ -7,9 +8,24 @@ type Props = {
   points: number
   locked: boolean
   link: string
+  setOpen: Dispatch<React.SetStateAction<boolean>>
+  setQuest: Dispatch<React.SetStateAction<number>>
+  number: number
 }
 
-export const Quest = ({ title, description, points, locked, link }: Props) => {
+export const Quest = ({
+  title,
+  description,
+  points,
+  locked,
+  setOpen,
+  setQuest,
+  number,
+}: Props) => {
+  const displayQuest = () => {
+    setQuest(number)
+    setOpen(true)
+  }
   return (
     <Flex
       justify="center"
@@ -106,14 +122,14 @@ export const Quest = ({ title, description, points, locked, link }: Props) => {
             }}
           >
             <QuestXPButton>{points} XP</QuestXPButton>
-            <QuestJoinButton disabled={true}>
+            <QuestJoinButton onClick={displayQuest} disabled={locked}>
               <Text
                 css={{
                   color: 'black',
                   fontWeight: '700',
                 }}
               >
-                Join
+                View
               </Text>
             </QuestJoinButton>
           </Flex>
