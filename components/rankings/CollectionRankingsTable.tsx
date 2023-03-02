@@ -2,7 +2,6 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { TrendingCollectionItem } from 'components/home/TrendingCollectionItem'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import {
   Box,
@@ -22,9 +21,7 @@ import { useMediaQuery } from 'react-responsive'
 type Props = {
   collections: ReturnType<typeof useCollections>['data']
   loading?: boolean
-  volumeKey: ComponentPropsWithoutRef<
-    typeof TrendingCollectionItem
-  >['volumeKey']
+  volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
 const desktopTemplateColumns = '1.75fr 1.75fr repeat(5, 0.7fr)'
@@ -88,7 +85,7 @@ type RankingsTableRowProps = {
   collection: ReturnType<typeof useCollections>['data'][0]
   rank: number
   volumeKey: ComponentPropsWithoutRef<
-    typeof TrendingCollectionItem
+    typeof CollectionRankingsTable
   >['volumeKey']
 }
 
