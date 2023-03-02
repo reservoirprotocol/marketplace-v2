@@ -92,7 +92,11 @@ export default async function handler(req: Request) {
     })
 
     let results = await Promise.allSettled(promises).then((results) =>
-      results.flat()
+      results
+        .filter(
+          (result) => result.status === 'fulfilled' && result.value.length > 0
+        )
+        .flatMap((result) => (result as PromiseFulfilledResult<any>).value)
     )
 
     if (results.length > 0) {
@@ -162,6 +166,7 @@ export default async function handler(req: Request) {
       (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
     )
   }
+
   return new Response(
     JSON.stringify({
       results: searchResults,
