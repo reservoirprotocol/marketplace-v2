@@ -81,6 +81,7 @@ const IndexPage: NextPage = () => {
                 </TabsList>
               </Flex>
 
+/** Content to edit is below */
               <TabsContent value="items">
                 <Flex
                   css={{
