@@ -1,7 +1,8 @@
 import { Box, Flex, Text, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import MintInfo from 'components/launch/MintInfo'
-// import * as Progress from '@radix-ui/react-progress'
+import {useLaunchpads, useMarketplaceChain} from 'hooks';
+import {useRouter} from "next/router";
 
 interface mintType {
   price: string;
@@ -19,6 +20,29 @@ const mintInfo: mintType = {
 }
 
 const LaunchPadMint = () => {
+  const router = useRouter()
+  const marketplaceChain = useMarketplaceChain()
+  const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
+    slug: router.query.slug,
+    limit: 1,
+  }
+
+  const {
+    data: launchpads,
+    isFetchingPage,
+    isValidating,
+    fetchNextPage
+  } = useLaunchpads(
+    marketplaceChain,
+    launchpadsQuery,
+    {
+      revalidateOnMount: true,
+      fallbackData: [],
+      revalidateFirstPage: true,
+    }
+  )
+
+  const launchpad = launchpads[0] || [];
 
   return (
     <Layout>
@@ -66,7 +90,7 @@ const LaunchPadMint = () => {
             },
           }}>
             <Flex direction="column" css={{ gap: 15, }}>
-              <img src="/images/heroSectionBanner.png" style={{ borderRadius: '10px', }} />
+              <img src={launchpad?.image} style={{ borderRadius: '10px', }} />
               <Flex
                 justify="between"
                 css={{

@@ -3,18 +3,16 @@ import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderBlank } from '@fortawesome/free-solid-svg-icons'
 import Layout from 'components/Layout'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
 import { paths } from '@nftearth/reservoir-sdk'
 import { CollectionCard } from 'components/mycollections/CollectionCard'
 import { CollectionGrid } from 'components/mycollections/CollectionGrid'
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import {useMarketplaceChain} from 'hooks'
+import {useMarketplaceChain, useLaunchpads } from 'hooks'
 import supportedChains from 'utils/chains'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import fetcher from 'utils/fetcher'
 import {useEffect, useRef} from "react";
 import {useIntersectionObserver} from "usehooks-ts";
-import useLaunchpads from "../../hooks/useLaunchpads";
 import {useAccount} from "wagmi";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>

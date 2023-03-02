@@ -15,6 +15,7 @@ import {useContractReads} from "wagmi"
 import {useRouter} from "next/router"
 import launchpadArtifact from 'artifact/NFTELaunchpad.json'
 import { ethers } from "ethers";
+import {ContractsConfig} from "@wagmi/core/internal";
 
 const MyCollectionDetailPage = () => {
   const { theme } = useTheme();
@@ -69,7 +70,7 @@ const MyCollectionDetailPage = () => {
       marginBottom: 20
     },
     text: {
-      ml: 12, 
+      ml: 12,
       fontSize: 14,
       fontWeight: 'bold',
       color: activeTab === tab ? (theme === 'light' ? '$primary8' : '$primary10') : 'initial',
@@ -89,9 +90,9 @@ const MyCollectionDetailPage = () => {
         <Text style='h6' css={{ fontWeight: 'bold' }}>
           Collection Settings
         </Text>
-        <Grid css={{ 
+        <Grid css={{
           marginTop: 18,
-          widht: '100%', 
+          widht: '100%',
           '@md': {
             gridTemplateColumns: '3fr 9fr',
           },
@@ -99,17 +100,17 @@ const MyCollectionDetailPage = () => {
             gridTemplateColumns: '2fr 10fr',
           },
         }}>
-          <Flex 
+          <Flex
             direction='column'
-            css={{ 
-            widht: '100%', 
+            css={{
+            widht: '100%',
             display: 'none',
             '@md': {
                 display: 'flex'
               },
             }}>
             <Box>
-              <Flex 
+              <Flex
                 align='center'
                 onClick={() => setActiveTab('details')}
                 css={getCssTab('details').tab}>
@@ -118,7 +119,7 @@ const MyCollectionDetailPage = () => {
                 </Box>
                 <Text css={getCssTab('details').text}>Details</Text>
               </Flex>
-              <Flex 
+              <Flex
                 align='center'
                 onClick={() => setActiveTab('royalities')}
                 css={getCssTab('royalities').tab}>
@@ -127,7 +128,7 @@ const MyCollectionDetailPage = () => {
                 </Box>
                 <Text css={getCssTab('royalities').text}>Royalities</Text>
               </Flex>
-              <Flex 
+              <Flex
                 align='center'
                 onClick={() => setActiveTab('mintState')}
                 css={getCssTab('mintState').tab}>
@@ -136,7 +137,7 @@ const MyCollectionDetailPage = () => {
                 </Box>
                 <Text css={getCssTab('mintState').text}>Mint Settings</Text>
               </Flex>
-              <Flex 
+              <Flex
                 align='center'
                 onClick={() => setActiveTab('whitelist')}
                 css={getCssTab('whitelist').tab}>
@@ -145,7 +146,7 @@ const MyCollectionDetailPage = () => {
                 </Box>
                 <Text css={getCssTab('whitelist').text}>Allowlist</Text>
               </Flex>
-              <Flex 
+              <Flex
                 align='center'
                 onClick={() => setActiveTab('metadata')}
                 css={getCssTab('metadata').tab}>
@@ -156,47 +157,47 @@ const MyCollectionDetailPage = () => {
               </Flex>
             </Box>
           </Flex>
-          <Box 
-            css={{ 
+          <Box
+            css={{
               width: '100%'
             }}>
-            <SettingsContentContainer 
-              tab='details' 
-              tabLabel='details' 
+            <SettingsContentContainer
+              tab='details'
+              tabLabel='details'
               activeTab={activeTab}
-              icon={faGear} 
+              icon={faGear}
               setActiveTab={() => setActiveTab('details')}>
               <DetailsSettings activeTab={activeTab} />
             </SettingsContentContainer>
-            <SettingsContentContainer 
-              tab='royalities' 
-              tabLabel='royalities' 
+            <SettingsContentContainer
+              tab='royalities'
+              tabLabel='royalities'
               activeTab={activeTab}
-              icon={faMapPin} 
+              icon={faMapPin}
               setActiveTab={() => setActiveTab('royalities')}>
               <RoyalitiesSettings activeTab={activeTab} />
             </SettingsContentContainer>
-            <SettingsContentContainer 
-              tab='mintState' 
-              tabLabel='mint settings' 
+            <SettingsContentContainer
+              tab='mintState'
+              tabLabel='mint settings'
               activeTab={activeTab}
-              icon={faEdit} 
+              icon={faEdit}
               setActiveTab={() => setActiveTab('mintState')}>
               <MintStateSettings activeTab={activeTab} />
             </SettingsContentContainer>
-            <SettingsContentContainer 
-              tab='whitelist' 
-              tabLabel='whitelist' 
+            <SettingsContentContainer
+              tab='whitelist'
+              tabLabel='whitelist'
               activeTab={activeTab}
-              icon={faList} 
+              icon={faList}
               setActiveTab={() => setActiveTab('whitelist')}>
               <WhitelistSettings activeTab={activeTab} />
             </SettingsContentContainer>
-            <SettingsContentContainer 
-              tab='metadata' 
-              tabLabel='metadata' 
+            <SettingsContentContainer
+              tab='metadata'
+              tabLabel='metadata'
               activeTab={activeTab}
-              icon={faFileImage} 
+              icon={faFileImage}
               setActiveTab={() => setActiveTab('metadata')}>
               <MetadataSettings activeTab={activeTab} />
             </SettingsContentContainer>
