@@ -31,7 +31,6 @@ const IndexPage: NextPage = () => {
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
-    collection: filterCollection,
   }
 
   if (COLLECTION_SET_ID) {
