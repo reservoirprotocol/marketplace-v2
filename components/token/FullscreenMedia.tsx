@@ -17,7 +17,7 @@ import {
 import { motion } from 'framer-motion'
 
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0]
+  token?: ReturnType<typeof useTokens>['data'][0]
 }
 
 const FullscreenMedia: FC<Props> = ({ token }) => {
