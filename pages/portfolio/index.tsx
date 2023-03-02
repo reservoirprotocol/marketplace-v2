@@ -31,7 +31,7 @@ const IndexPage: NextPage = () => {
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
-    collection: filterCollection,
+    // collection: filterCollection,
   }
 
   if (COLLECTION_SET_ID) {
@@ -80,8 +80,7 @@ const IndexPage: NextPage = () => {
                   <TabsTrigger value="offers">Offers Made</TabsTrigger>
                 </TabsList>
               </Flex>
-
-/** Content to edit is below */
+              
               <TabsContent value="items">
                 <Flex
                   css={{
