@@ -50,10 +50,10 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="Complete your first transaction"
-          description="Assign a username to your wallet from the Profile Settings page."
+          title="Join NFTEarth's Discord Server"
+          description="Join NFTEarth's Discord server and say hello! to earn XP points!"
           points={25}
-          locked={true}
+          locked={false}
           link=""
           setOpen={setOpen}
           setQuest={setQuest}

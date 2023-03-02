@@ -22,7 +22,7 @@ export const QuestRetweetModalContent = () => {
         </Text>
       </Box>
       <Box>
-        <Flex justify="center" css={{padding: '$3'}}>
+        <Flex justify="center" css={{ padding: '$3' }}>
           <Text style="h4" css={{ marginLeft: '40px', color: '$primary9' }}>
             Step 1: Retweet the following tweet using your verified twitter
             account:
@@ -57,7 +57,7 @@ export const QuestRetweetModalContent = () => {
         </Box>
       </Box>
 
-      <Box css={{padding: '$3', margin: '0 auto'}}>
+      <Box css={{ padding: '$3', margin: '0 auto' }}>
         <Text style="h4" css={{ color: '$primary9' }}>
           Step 2: Post the screenshot of the retweet into NFTEarth Discord's
           community channel ⚡ #quest-proof
@@ -131,11 +131,14 @@ export const QuestPostProofModalContent = () => {
       </Box>
       <Box>
         <Text style="h6" css={{ color: '$primary9' }}>
-          List any NFT on NFTEarth in $NFTE with any listing duration time. Quest is fulfilled just by listing any NFT on Optimism or Arbitrum for any price of $NFTE and valid even if listing is not sold. You don't need to post any proof, we will check that automatically.
+          List any NFT on NFTEarth in $NFTE with any listing duration time.
+          Quest is fulfilled just by listing any NFT on Optimism or Arbitrum for
+          any price of $NFTE and valid even if listing is not sold. You don't
+          need to post any proof, we will check that automatically.
         </Text>
       </Box>
       <Box>
-        <Flex justify="center" css={{padding: '$3'}}>
+        <Flex justify="center" css={{ padding: '$3' }}>
           <Text style="h4" css={{ color: '$primary9' }}>
             Step 1: List your items. Below you can see the listed item shows.
           </Text>
@@ -144,14 +147,17 @@ export const QuestPostProofModalContent = () => {
           </Box>
         </Flex>
 
-        <Box css={{ marginTop: '20px', display: 'flex', justifyContent: 'center'}}>
+        <Box
+          css={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
+        >
           <img src="/images/Quest_ListItem.png" width={500} />
         </Box>
       </Box>
 
-      <Box css={{padding: '$3'}}>
+      <Box css={{ padding: '$3' }}>
         <Text style="h4" css={{ color: '$primary9' }}>
-          Step 2: Post the screenshot of your listed item on our Discord Channel. We will get back to you asap.
+          Step 2: Post the screenshot of your listed item on our Discord
+          Channel. We will get back to you asap.
         </Text>
         <Box>
           <Box css={{ marginTop: '20px' }}>
@@ -159,6 +165,108 @@ export const QuestPostProofModalContent = () => {
               target="_blank"
               rel="noopener noreferrer"
               href="https://discord.com/channels/1062256160264171520/1080351212022538281"
+              aria-label="Discord"
+            >
+              <Button
+                size="xs"
+                color="gray3"
+                css={{
+                  background: '#5865f2',
+
+                  '&:hover': {
+                    background: '$gray8',
+                  },
+                }}
+                aria-label="Discord"
+              >
+                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
+              </Button>
+            </a>
+          </Box>
+        </Box>
+      </Box>
+      <Box css={{ marginTop: '20px' }}>
+        <Text style="subtitle2" css={{ color: '$primary9' }}>
+          Conditions:
+        </Text>
+        <ul>
+          <li>
+            <Text style="subtitle2" css={{ color: '$primary9' }}>
+              *First 20 users to complete Quest are eligible
+            </Text>
+          </li>
+
+          <li>
+            <Text style="subtitle2" css={{ color: '$primary9' }}>
+              *Reward is 100 $NFTE tokens
+            </Text>
+          </li>
+        </ul>
+      </Box>
+    </Flex>
+  )
+}
+
+export const QuestJoinDiscordModalContent = () => {
+  return (
+    <Flex direction="column" css={{ gap: '$4' }}>
+      <Box>
+        <Text style="h3" css={{ color: '$primary9' }}>
+          Join NFTEarth's Discord Community Channel🎁
+        </Text>
+      </Box>
+      <Box>
+        <Text style="h4" css={{ color: '$primary9' }}>
+          Instructions:
+        </Text>
+      </Box>
+      <Box>
+        <Text style="h6" css={{ color: '$primary9' }}>
+          Join NFTEarth's Discord Community Server and earn XP!
+        </Text>
+      </Box>
+      <Box>
+        <Text style="h4" css={{ color: '$primary9' }}>
+          Step 1: Join NFTEarth's Discord community server at the link below:
+        </Text>
+        <Box>
+          <Box css={{ marginTop: '20px' }}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://discord.gg/nftearth"
+              aria-label="Discord"
+            >
+              <Button
+                size="xs"
+                color="gray3"
+                css={{
+                  background: '#5865f2',
+
+                  '&:hover': {
+                    background: '$gray8',
+                  },
+                }}
+                aria-label="Discord"
+              >
+                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
+              </Button>
+            </a>
+          </Box>
+        </Box>
+      </Box>
+
+      <Box css={{ padding: '$3' }}>
+        <Text style="h4" css={{ color: '$primary9' }}>
+          Step 2: Say hello! in the 👋 # welcome channel in NFTEarth's discord
+          community server
+        </Text>
+        <Box>
+          <Box css={{ marginTop: '20px' }}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://discord.com/channels/1062256160264171520/1062256161107230745"
               aria-label="Discord"
             >
               <Button
