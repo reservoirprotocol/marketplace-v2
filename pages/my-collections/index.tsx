@@ -1,5 +1,4 @@
 import { Text, Flex, Box, Button } from 'components/primitives'
-import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderBlank } from '@fortawesome/free-solid-svg-icons'
 import Layout from 'components/Layout'
