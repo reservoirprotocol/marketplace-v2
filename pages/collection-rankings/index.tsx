@@ -31,8 +31,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     limit: 20,
     sortBy: sortByTime,
     includeTopBid: true,
-    // includeSalesCount: true,
-    // includeOwnerCount: true, TODO: uncomment when this is fixed
   }
 
   if (COLLECTION_SET_ID) {
@@ -118,11 +116,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               loading={isValidating}
             />
           )}
-          {(isFetchingPage || isValidating) && (
-            <Flex align="center" justify="center" css={{ py: '$4' }}>
-              <LoadingSpinner />
-            </Flex>
-          )}
           <Box
             ref={loadMoreRef}
             css={{
@@ -130,6 +123,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           ></Box>
         </Flex>
+        {(isFetchingPage || isValidating) && (
+          <Flex align="center" justify="center" css={{ py: '$4' }}>
+            <LoadingSpinner />
+          </Flex>
+        )}
       </Box>
     </Layout>
   )
@@ -150,8 +148,6 @@ export const getStaticProps: GetStaticProps<{
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 20,
       includeTopBid: true,
-      // includeSalesCount: true,
-      // includeOwnerCount: true, TODO: uncomment when this is fixed
     }
 
   if (COLLECTION_SET_ID) {

@@ -24,7 +24,7 @@ type Props = {
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
-const desktopTemplateColumns = '1.75fr 1.75fr repeat(5, 0.7fr)'
+const desktopTemplateColumns = '1.6fr 1.6fr repeat(3, 0.6fr)'
 
 export const CollectionRankingsTable: FC<Props> = ({
   collections,
@@ -277,28 +277,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             address={collection?.topBid?.price?.currency?.contract}
           />
         </TableCell>
-        <TableCell>
-          <Text style="subtitle2">892</Text>{' '}
-          {/* Is this onSaleCount or salesCount?*/}
-        </TableCell>
-        <TableCell>
-          <Text style="subtitle2">2</Text>{' '}
-          {/* Todo: switch to collection?.ownerCount  */}
-        </TableCell>
       </TableRow>
     )
   }
 }
 
-const headings = [
-  'Collection',
-  '',
-  'Volume',
-  'Floor Price',
-  'Top Offer',
-  'Sales',
-  'Owners',
-]
+const headings = ['Collection', '', 'Volume', 'Floor Price', 'Top Offer']
 
 const TableHeading = () => (
   <HeaderRow
