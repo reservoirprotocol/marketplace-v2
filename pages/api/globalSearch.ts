@@ -91,9 +91,7 @@ export default async function handler(req: Request) {
       })
     })
 
-    let results = await Promise.allSettled(promises).then((results) =>
-      results.flat()
-    )
+    let results = await Promise.all(promises).then((results) => results.flat())
 
     if (results.length > 0) {
       searchResults = results
