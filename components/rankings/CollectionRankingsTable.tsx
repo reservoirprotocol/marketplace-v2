@@ -24,7 +24,7 @@ type Props = {
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
-const desktopTemplateColumns = '1.6fr 1.6fr repeat(3, 0.6fr)'
+const desktopTemplateColumns = '1.5fr 1.7fr repeat(3, 0.6fr)'
 
 export const CollectionRankingsTable: FC<Props> = ({
   collections,
@@ -220,7 +220,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           </Link>
         </TableCell>
         <TableCell>
-          <Flex css={{ gap: '$3', minWidth: 0, overflowX: 'scroll' }}>
+          <Flex
+            css={{
+              gap: '$3',
+              minWidth: 0,
+            }}
+          >
             {collection?.sampleImages?.map((image, i) => (
               <img
                 key={image + i}
