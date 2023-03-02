@@ -111,12 +111,12 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   )
 }
 
-type OfferTableRowProps = {
+type CollectionTableRowProps = {
   collection: ReturnType<typeof useUserCollections>['data'][0]
   sortByTime: CollectionsTableSortingOption
 }
 
-const CollectionTableRow: FC<OfferTableRowProps> = ({
+const CollectionTableRow: FC<CollectionTableRowProps> = ({
   collection,
   sortByTime,
 }) => {

@@ -128,7 +128,7 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href="/collections" legacyBehavior>
+            <Link href="/collection-rankings" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{

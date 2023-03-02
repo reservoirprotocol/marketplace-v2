@@ -2,7 +2,7 @@ import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
 import TrendingCollectionsTimeToggle, {
   CollectionsSortingOption,
 } from 'components/home/TrendingCollectionsTimeToggle'
@@ -14,6 +14,8 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from '../_app'
 import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
+import { useIntersectionObserver } from 'usehooks-ts'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -28,6 +30,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 20,
     sortBy: sortByTime,
+    includeTopBid: true,
+    // includeSalesCount: true,
+    // includeOwnerCount: true, TODO: uncomment when this is fixed
   }
 
   if (COLLECTION_SET_ID) {
@@ -36,11 +41,24 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery.community = COMMUNITY
   }
 
-  const { data, isValidating } = useCollections(collectionQuery, {
-    fallbackData: [ssr.collections[marketplaceChain.id]],
-  })
+  const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
+    collectionQuery,
+    {
+      fallbackData: [ssr.collections[marketplaceChain.id]],
+    }
+  )
 
   let collections = data || []
+
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+
+  useEffect(() => {
+    let isVisible = !!loadMoreObserver?.isIntersecting
+    if (isVisible) {
+      fetchNextPage()
+    }
+  }, [loadMoreObserver?.isIntersecting])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof TrendingCollectionsList
@@ -94,13 +112,23 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             />
           </Flex>
           {isSSR || !isMounted ? null : (
-            // <TrendingCollectionsList
-            //   collections={collections}
-            //   loading={isValidating}
-            //   volumeKey={volumeKey}
-            // />
-            <CollectionRankingsTable />
+            <CollectionRankingsTable
+              collections={collections}
+              volumeKey={volumeKey}
+              loading={isValidating}
+            />
           )}
+          {(isFetchingPage || isValidating) && (
+            <Flex align="center" justify="center" css={{ py: '$4' }}>
+              <LoadingSpinner />
+            </Flex>
+          )}
+          <Box
+            ref={loadMoreRef}
+            css={{
+              display: isFetchingPage ? 'none' : 'block',
+            }}
+          ></Box>
         </Flex>
       </Box>
     </Layout>
@@ -121,6 +149,9 @@ export const getStaticProps: GetStaticProps<{
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 20,
+      includeTopBid: true,
+      // includeSalesCount: true,
+      // includeOwnerCount: true, TODO: uncomment when this is fixed
     }
 
   if (COLLECTION_SET_ID) {
