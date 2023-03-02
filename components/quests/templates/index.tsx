@@ -2,28 +2,32 @@ import { Flex, Box, Button, Text } from 'components/primitives'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
+interface ModalProps {
+  header: string;
+  instruction: string;
+  children: React.ReactNode;
+}
+
+const BasicModal = ({header, instruction, children}: ModalProps) => {
+  return (
+    <Flex direction="column" css={{ gap: '$4', minHeight: '53.1vh', justifyContent: 'center', padding: '$3' }}>
+      <Box><Text style={{ '@initial': 'h4', '@lg': 'h3' }} css={{ color: '$primary9' }}> {header} </Text></Box>
+      <Box><Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ color: '$primary9' }}> Instructions: </Text></Box>
+      <Box><Text style={{ '@initial': 'h6', '@lg': 'h5' }} css={{ color: '$primary9' }}> {instruction}</Text></Box>
+      {children}
+    </Flex>
+  )
+}
+
 export const QuestRetweetModalContent = () => {
   return (
-    <Flex direction="column" css={{ gap: '$4' }}>
-      <Box>
-        <Text style="h3" css={{ color: '$primary9' }}>
-          Retweet Quest 🎁
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h4" css={{ color: '$primary9' }}>
-          Instructions:
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h6" css={{ color: '$primary9' }}>
-          Retweet this Tweet with Hashtag #NFTE and post it into the NFTEarth
-          community channel Quest Proof
-        </Text>
-      </Box>
+    <BasicModal
+      header="Retweet Quest 🎁"
+      instruction="Retweet this Tweet with Hashtag #NFTE and post it into the NFTEarth community channel Quest Proof"
+    >
       <Box>
         <Flex justify="center" css={{ padding: '$3' }}>
-          <Text style="h4" css={{ marginLeft: '40px', color: '$primary9' }}>
+          <Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ marginLeft: '40px', color: '$primary9' }}>
             Step 1: Retweet the following tweet using your verified twitter
             account:
           </Text>
@@ -31,7 +35,6 @@ export const QuestRetweetModalContent = () => {
             <img src="/images/verified.png" width={40} />
           </Box>
         </Flex>
-
         <Box css={{ marginTop: '20px' }}>
           <a
             target="_blank"
@@ -56,9 +59,8 @@ export const QuestRetweetModalContent = () => {
           </a>
         </Box>
       </Box>
-
       <Box css={{ padding: '$3', margin: '0 auto' }}>
-        <Text style="h4" css={{ color: '$primary9' }}>
+        <Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ color: '$primary9' }}>
           Step 2: Post the screenshot of the retweet into NFTEarth Discord's
           community channel ⚡ #quest-proof
         </Text>
@@ -89,73 +91,37 @@ export const QuestRetweetModalContent = () => {
         </Box>
       </Box>
       <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
+        <Text style="subtitle2" css={{ color: '$primary9' }}>Conditions:</Text>
         <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 10 users to complete Quest are eligible
-            </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 50 $NFTE tokens
-            </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Must be real Twitter account
-            </Text>
-          </li>
+          <li><Text style="subtitle2" css={{ color: '$primary9' }}>*First 10 users to complete Quest are eligible</Text></li>
+          <li><Text style="subtitle2" css={{ color: '$primary9' }}>*Reward is 50 $NFTE tokens</Text></li>
+          <li><Text style="subtitle2" css={{ color: '$primary9' }}>*Must be real Twitter account</Text></li>
         </ul>
       </Box>
-    </Flex>
+    </BasicModal>
   )
 }
 
 export const QuestPostProofModalContent = () => {
   return (
-    <Flex direction="column" css={{ gap: '$4' }}>
-      <Box>
-        <Text style="h3" css={{ color: '$primary9' }}>
-          List NFT in $NFTE on NFTEarth 🎁
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h4" css={{ color: '$primary9' }}>
-          Instructions:
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h6" css={{ color: '$primary9' }}>
-          List any NFT on NFTEarth in $NFTE with any listing duration time.
-          Quest is fulfilled just by listing any NFT on Optimism or Arbitrum for
-          any price of $NFTE and valid even if listing is not sold. You don't
-          need to post any proof, we will check that automatically.
-        </Text>
-      </Box>
+    <BasicModal
+      header='List NFT in $NFTE on NFTEarth 🎁'
+      instruction="List any NFT on NFTEarth in $NFTE with any listing duration time.
+      Quest is fulfilled just by listing any NFT on Optimism or Arbitrum for
+      any price of $NFTE and valid even if listing is not sold. You don't
+      need to post any proof, we will check that automatically."
+    >
       <Box>
         <Flex justify="center" css={{ padding: '$3' }}>
-          <Text style="h4" css={{ color: '$primary9' }}>
-            Step 1: List your items. Below you can see the listed item shows.
-          </Text>
-          <Box>
-            <img src="/images/verified.png" width={40} />
-          </Box>
+          <Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ color: '$primary9' }}>Step 1: List your items. Below you can see the listed item shows.</Text>
+          <Box><img src="/images/verified.png" width={40} /></Box>
         </Flex>
-
-        <Box
-          css={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
-        >
+        <Box css={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
           <img src="/images/Quest_ListItem.png" width={500} />
         </Box>
       </Box>
-
       <Box css={{ padding: '$3' }}>
-        <Text style="h4" css={{ color: '$primary9' }}>
+        <Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ color: '$primary9' }}>
           Step 2: Post the screenshot of your listed item on our Discord
           Channel. We will get back to you asap.
         </Text>
@@ -172,7 +138,6 @@ export const QuestPostProofModalContent = () => {
                 color="gray3"
                 css={{
                   background: '#5865f2',
-
                   '&:hover': {
                     background: '$gray8',
                   },
@@ -186,47 +151,24 @@ export const QuestPostProofModalContent = () => {
         </Box>
       </Box>
       <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
+        <Text style="subtitle2" css={{ color: '$primary9' }}>Conditions:</Text>
         <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 20 users to complete Quest are eligible
-            </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 100 $NFTE tokens
-            </Text>
-          </li>
+          <li><Text style="subtitle2" css={{ color: '$primary9' }}>*First 20 users to complete Quest are eligible</Text></li>
+          <li><Text style="subtitle2" css={{ color: '$primary9' }}>*Reward is 100 $NFTE tokens</Text></li>
         </ul>
       </Box>
-    </Flex>
+    </BasicModal>
   )
 }
 
 export const QuestJoinDiscordModalContent = () => {
   return (
-    <Flex direction="column" css={{ gap: '$4' }}>
+    <BasicModal
+      header="Join NFTEarth's Discord Community Channel🎁"
+      instruction="Join NFTEarth's Discord Community Server and earn XP!"
+    >
       <Box>
-        <Text style="h3" css={{ color: '$primary9' }}>
-          Join NFTEarth's Discord Community Channel🎁
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h4" css={{ color: '$primary9' }}>
-          Instructions:
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h6" css={{ color: '$primary9' }}>
-          Join NFTEarth's Discord Community Server and earn XP!
-        </Text>
-      </Box>
-      <Box>
-        <Text style="h4" css={{ color: '$primary9' }}>
+        <Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ color: '$primary9' }}>
           Step 1: Join NFTEarth's Discord community server at the link below:
         </Text>
         <Box>
@@ -257,7 +199,7 @@ export const QuestJoinDiscordModalContent = () => {
       </Box>
 
       <Box css={{ padding: '$3' }}>
-        <Text style="h4" css={{ color: '$primary9' }}>
+        <Text style={{ '@initial': 'h6', '@lg': 'h4' }} css={{ color: '$primary9' }}>
           Step 2: Say hello! in the 👋 # welcome channel in NFTEarth's discord
           community server
         </Text>
@@ -305,6 +247,46 @@ export const QuestJoinDiscordModalContent = () => {
           </li>
         </ul>
       </Box>
-    </Flex>
+    </BasicModal>
+  )
+}
+
+export const QuestListNFTOnANYChain = () => {
+  return (
+      <BasicModal
+        header="List at least ANY 1 NFT 🎁"
+        instruction="List at least ANY 1 NFT in ANY currency at ANY price on ANY chain"
+      >
+        <Box>
+          <Flex justify="center" css={{ padding: '$3' }}>
+            <Text style={{
+              '@initial': 'h6',
+              '@lg': 'h4',
+            }} css={{ color: '$primary9' }}>
+              This is easy part. Have you listed NFT?
+              If not, Please list a NFT in ANY currency at ANY price on ANY chain.
+              Once you list your NFT, you will get XP for this.
+            </Text>
+          </Flex>
+        </Box>
+        <Box css={{ marginTop: '20px' }}>
+          <Text style="subtitle2" css={{ color: '$primary9' }}>
+            Conditions:
+          </Text>
+          <ul>
+            <li>
+              <Text style="subtitle2" css={{ color: '$primary9' }}>
+                *First 20 users to complete Quest are eligible
+              </Text>
+            </li>
+
+            <li>
+              <Text style="subtitle2" css={{ color: '$primary9' }}>
+                *Reward is 100 $NFTE tokens
+              </Text>
+            </li>
+          </ul>
+        </Box>
+      </BasicModal>
   )
 }

@@ -13,6 +13,7 @@ import {
   QuestRetweetModalContent,
   QuestJoinDiscordModalContent,
   QuestPostProofModalContent,
+  QuestListNFTOnANYChain
 } from 'components/quests/templates'
 
 const QuestsPage: NextPage = () => {
@@ -28,6 +29,8 @@ const QuestsPage: NextPage = () => {
         return <QuestPostProofModalContent />
       case 3:
         return <QuestJoinDiscordModalContent />
+      case 4:
+        return <QuestListNFTOnANYChain />
       default:
         return null
     }
@@ -68,7 +71,7 @@ const QuestsPage: NextPage = () => {
                     position: 'fixed',
                     zIndex: 1000,
                     transform: 'translate(-50%, 20%)',
-                    height: '600px',
+                    height: '60vh',
                   }}
                 >
                   <Flex
@@ -110,50 +113,6 @@ const QuestsPage: NextPage = () => {
               </Dialog.Portal>
             </Dialog.Root>
           )}
-          {/* <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
-          >
-            <Box css={{ width: '100%' }}>
-              <Text
-                style="h4"
-                as="h4"
-                css={{ marginBottom: '15px', marginLeft: '5px' }}
-              >
-                My Points
-              </Text>
-              <Flex
-                css={{
-                  flexDirection: 'row',
-                  background: '$gray4',
-                  width: '100%',
-                  borderRadius: '20px',
-                  padding: '10px',
-                }}
-              >
-                <Box css={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                  <Text
-                    css={{ marginBottom: '15px', marginLeft: '5px' }}
-                    style="h4"
-                    as="h4"
-                  >
-                    Connect your Wallet
-                  </Text>
-                  <Box css={{ marginLeft: '100px', marginRight: 'auto' }}>
-                    <ConnectWalletButton />
-                  </Box>
-                </Box>
-              </Flex>
-            </Box>
-          </Flex> */}
           <Box>
             <Text
               css={{ marginBottom: '15px', marginLeft: '5px' }}
