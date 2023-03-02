@@ -44,6 +44,7 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import { Address, useAccount } from 'wagmi'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -58,6 +59,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
+  const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
     ssr.hasAttributes ? true : false
   )
@@ -132,6 +134,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     attributesData.data?.filter(
       (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
     ) || []
+
+  if (attributeFiltersOpen && attributesData.response && !attributes.length) {
+    setAttributeFiltersOpen(false)
+  }
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
@@ -322,6 +328,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <TokenCard
                             key={i}
                             token={token}
+                            address={address as Address}
                             mutate={mutate}
                             rarityEnabled={rarityEnabledCollection}
                             onMediaPlayed={(e) => {

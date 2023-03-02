@@ -1,3 +1,8 @@
+import AnalyticsProvider, {
+  initializeAnalytics,
+} from 'components/AnalyticsProvider'
+initializeAnalytics()
+
 import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
@@ -22,7 +27,6 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
-import AnalyticsProvider from 'components/AnalyticsProvider'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -47,7 +51,7 @@ const { chains, provider } = configureChains(supportedChains, [
 ])
 
 const { connectors } = getDefaultClient({
-  appName: 'Reservoir Hub',
+  appName: 'Reservoir Marketplace',
   chains,
 })
 
