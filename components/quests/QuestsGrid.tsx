@@ -74,10 +74,10 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="Register a username"
-          description="Assign a username to your wallet from the Profile Settings page."
+          title="List your NFT in NFTE currency on ANY chain"
+          description="List at least ANY 1 NFT in NFTE currency at ANY price on ANY chain"
           points={25}
-          locked={true}
+          locked={false}
           link=""
           setOpen={setOpen}
           setQuest={setQuest}
