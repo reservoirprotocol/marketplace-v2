@@ -145,7 +145,7 @@ function MyApp({
                 default: marketplaceChain.id === id,
               }
             }),
-            source: process.env.NEXT_PUBLIC_MARKETPLACE_SOURCE,
+            source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
           theme={reservoirKitTheme}
