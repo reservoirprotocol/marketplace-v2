@@ -274,7 +274,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
                 <span>-</span>
               )}
             </Flex>
-
             <Flex align="baseline" css={{ gap: '$2' }}>
               <Text
                 style="subtitle3"
@@ -361,9 +360,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
                   textStyle="subtitle1"
                   css={{ mr: '$2', fontSize: '14px' }}
                 />
-                <Text css={{ fontSize: '14px', color: '$gray11' }}>
-                  $20,000
-                </Text>
+                <Text css={{ fontSize: '14px', color: '$gray11' }}></Text>
               </Flex>
             ) : (
               <span>-</span>
@@ -371,7 +368,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
           </Flex>
         </TableCell>
         <TableCell>
-          <Flex align="center" justify="end" css={{ gap: '$3' }}>
+          <Flex
+            align="center"
+            justify="end"
+            css={{
+              gap: '$3',
+            }}
+          >
             {!!activity.order?.source?.icon && (
               <img
                 width="20px"
@@ -394,13 +397,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
               </Anchor>
             )}
           </Flex>
-          <Flex align="baseline" justify="end" css={{ gap: '$2' }}>
-            <Text
-              style="subtitle3"
-              css={{ fontSize: '12px', color: '$gray11' }}
-            >
-              From
-            </Text>
+          <Flex
+            align="baseline"
+            justify="end"
+            css={{
+              gap: '$2',
+            }}
+          >
             {activity.fromAddress &&
             activity.fromAddress !== constants.AddressZero ? (
               <Link href={`/profile/${activity.fromAddress}`}>
