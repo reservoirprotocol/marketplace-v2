@@ -29,5 +29,5 @@ export const TokenActivityTable: FC<Props> = ({ id, activityTypes }) => {
     }
   }, [])
 
-  return <ActivityTable source="token" data={data} />
+  return <ActivityTable data={data} />
 }
