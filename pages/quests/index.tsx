@@ -14,7 +14,8 @@ import {
   QuestJoinDiscordModalContent,
   QuestPostProofModalContent,
   QuestListNFTOnANYChain,
-  QuestListNFTInNFTEOnAnyChain
+  QuestListNFTInNFTEOnAnyChain,
+  QuestBuyNFTInNFTEOnAnyChain,
 } from 'components/quests/templates'
 
 const QuestsPage: NextPage = () => {
@@ -34,6 +35,8 @@ const QuestsPage: NextPage = () => {
         return <QuestListNFTOnANYChain />
       case 5:
         return <QuestListNFTInNFTEOnAnyChain />
+      case 6:
+        return <QuestBuyNFTInNFTEOnAnyChain />
       default:
         return null
     }

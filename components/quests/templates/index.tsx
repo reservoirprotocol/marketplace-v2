@@ -448,3 +448,79 @@ export const QuestListNFTInNFTEOnAnyChain = () => {
     </BasicModal>
   )
 }
+
+
+
+export const QuestBuyNFTInNFTEOnAnyChain = () => {
+  return (
+    <BasicModal
+      header="Buy at NFT for ANY amount and currency on ANY chain🎁"
+      instruction="Buy at least 1 NFT for ANY amount and currency on ANY chain"
+    >
+      <Box>
+        <Flex justify="center" css={{ padding: '$3' }}>
+          <Text
+            style={{
+              '@initial': 'h6',
+              '@lg': 'h4',
+            }}
+            css={{ color: '$primary9' }}
+          >
+            Purchase a NFT on NFTEarth at ANY price on ANY chain. Earn XP once done!
+          </Text>
+        </Flex>
+      </Box>
+      <Box>
+        <Text
+          style={{ '@initial': 'h6', '@lg': 'h4' }}
+          css={{ color: '$primary9' }}
+        >
+          Check out our collections page, Purchase an NFT on any chain at the link below:
+        </Text>
+        <Box>
+          <Box css={{ marginTop: '20px' }}>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://nftearth.exchange/explore"
+              aria-label="Discord"
+            >
+              <Button
+                size="xs"
+                color="gray3"
+                css={{
+                  background: '#5865f2',
+
+                  '&:hover': {
+                    background: '$gray8',
+                  },
+                }}
+                aria-label="Discord"
+              >
+                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
+              </Button>
+            </a>
+          </Box>
+        </Box>
+      </Box>
+      <Box css={{ marginTop: '20px' }}>
+        <Text style="subtitle2" css={{ color: '$primary9' }}>
+          Conditions:
+        </Text>
+        <ul>
+          <li>
+            <Text style="subtitle2" css={{ color: '$primary9' }}>
+              *First 20 users to complete Quest are eligible
+            </Text>
+          </li>
+
+          <li>
+            <Text style="subtitle2" css={{ color: '$primary9' }}>
+              *Reward is 100 $NFTE tokens
+            </Text>
+          </li>
+        </ul>
+      </Box>
+    </BasicModal>
+  )
+}
