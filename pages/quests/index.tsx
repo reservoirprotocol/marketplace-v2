@@ -13,7 +13,8 @@ import {
   QuestRetweetModalContent,
   QuestJoinDiscordModalContent,
   QuestPostProofModalContent,
-  QuestListNFTOnANYChain
+  QuestListNFTOnANYChain,
+  QuestListNFTInNFTEOnAnyChain
 } from 'components/quests/templates'
 
 const QuestsPage: NextPage = () => {
@@ -31,6 +32,8 @@ const QuestsPage: NextPage = () => {
         return <QuestJoinDiscordModalContent />
       case 4:
         return <QuestListNFTOnANYChain />
+      case 5:
+        return <QuestListNFTInNFTEOnAnyChain />
       default:
         return null
     }
