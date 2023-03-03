@@ -92,13 +92,10 @@ export const ActivityFilters: FC<Props> = ({
           direction="column"
           css={{
             '& > div:first-of-type': {
-              pt: 0,
+              mt: '$2',
             },
           }}
         >
-          <Text style="subtitle1" css={{ mb: '$4', whiteSpace: 'nowrap' }}>
-            Event Type
-          </Text>
           {filters.map((filter) => (
             <Flex
               key={filter.type}

@@ -16,7 +16,7 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { ActivityFilters } from 'components/common/ActivityFilters'
+import { ActivityFilters } from 'components/token/ActivityFilters'
 import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
@@ -81,7 +81,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
 
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
