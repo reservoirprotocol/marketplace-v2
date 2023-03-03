@@ -1,27 +1,4 @@
 import {
-  useCollectionActivity,
-  useTokenActivity,
-  useUsersActivity,
-} from '@reservoir0x/reservoir-kit-ui'
-import { FC, useEffect, useRef } from 'react'
-import { useMediaQuery } from 'react-responsive'
-import {
-  Text,
-  Flex,
-  FormatCryptoCurrency,
-  Anchor,
-  TableCell,
-  TableRow,
-  Box,
-  FormatCurrency,
-} from '../primitives'
-import { useIntersectionObserver } from 'usehooks-ts'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
-import { constants } from 'ethers'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
   faExternalLink,
   faHand,
   faRightLeft,
@@ -31,7 +8,29 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  useCollectionActivity,
+  useTokenActivity,
+  useUsersActivity,
+} from '@reservoir0x/reservoir-kit-ui'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import { constants } from 'ethers'
+import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
+import Image from 'next/image'
+import Link from 'next/link'
+import { FC, useEffect, useRef } from 'react'
+import { useMediaQuery } from 'react-responsive'
+import { useIntersectionObserver } from 'usehooks-ts'
+import {
+  Anchor,
+  Box,
+  Flex,
+  FormatCryptoCurrency,
+  TableCell,
+  TableRow,
+  Text,
+} from '../primitives'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
