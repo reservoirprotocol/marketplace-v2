@@ -16,7 +16,7 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { ActivityFilters } from 'components/token/ActivityFilters'
+import { ActivityFilters } from 'components/token/filters/ActivityFilters'
 import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
