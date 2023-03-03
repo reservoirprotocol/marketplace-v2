@@ -151,7 +151,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         py: '$3',
       }}
     >
-      {isSmallDevice ? null : <Text style="body1">All Events</Text>}
+      {isSmallDevice ? null : (
+        <Text style="body1">{activityTypes.join(' ,') || 'All Events'}</Text>
+      )}
       <Text css={{ color: '$slate10' }}>
         <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
       </Text>
@@ -515,7 +517,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   )}
                   <TokenActivityTable
                     id={`${token.token?.collection?.id}:${token?.token?.tokenId}`}
-                    activityTypes={undefined}
+                    activityTypes={activityTypes}
                   />
                 </TabsContent>
               </Tabs.Root>
