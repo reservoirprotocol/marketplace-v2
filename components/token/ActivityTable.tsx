@@ -86,6 +86,8 @@ export const ActivityTable: FC<Props> = ({ source, data }) => {
         <Flex
           direction="column"
           css={{
+            height: '500px', // TO DO ->
+            overflowY: 'scroll',
             width: '100%',
             pb: '$2',
           }}
