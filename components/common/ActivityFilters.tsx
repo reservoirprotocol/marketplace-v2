@@ -26,7 +26,6 @@ type Filters = {
   type: ArrayItemTypes<ActivityTypes>
   name: string
   icon: IconDefinition
-  label?: string
 }[]
 
 type Props = {
