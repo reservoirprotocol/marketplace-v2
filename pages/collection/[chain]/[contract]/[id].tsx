@@ -57,6 +57,7 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
+import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -152,7 +153,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       }}
     >
       {isSmallDevice ? null : (
-        <Text style="body1">{activityTypes.join(' ,') || 'All Events'}</Text>
+        <Text style="body1">
+          {activityTypes.map(titleCase).join(', ') || 'All Events'}
+        </Text>
       )}
       <Text css={{ color: '$slate10' }}>
         <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
