@@ -74,7 +74,7 @@ export const QuestRetweetModalContent = () => {
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://twitter.com/NFTEarth_L2/status/1630717556288831488?s=20"
+            href="https://twitter.com/NFTEarth_L2/status/1631555869778276354"
             aria-label="Twitter"
           >
             <Button
