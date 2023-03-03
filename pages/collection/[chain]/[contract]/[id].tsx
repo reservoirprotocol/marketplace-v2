@@ -147,7 +147,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       size="medium"
       css={{
         justifyContent: 'space-between',
-        width: '320px',
+        width: '336px', // (8 + 8) -> 16px -> 336px; || 350px
         py: '$3',
       }}
     >
