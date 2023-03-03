@@ -113,6 +113,17 @@ function MyApp({
 
   const FunctionalComponent = Component as FC
 
+  let source = process.env.NEXT_PUBLIC_MARKETPLACE_SOURCE
+
+  if (!source && process.env.NEXT_PUBLIC_HOST_URL) {
+    try {
+      const url = new URL(process.env.NEXT_PUBLIC_HOST_URL)
+      source = url.host
+    } catch (e) {}
+  }
+
+  console.log(source)
+
   return (
     <HotkeysProvider>
       <ThemeProvider
@@ -134,7 +145,7 @@ function MyApp({
                 default: marketplaceChain.id === id,
               }
             }),
-            // source: 'YOUR_DOMAIN',
+            source: process.env.NEXT_PUBLIC_MARKETPLACE_SOURCE,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
           theme={reservoirKitTheme}
