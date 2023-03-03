@@ -1,6 +1,6 @@
-import { FC, useEffect } from 'react'
-import { ActivityTable } from 'components/common/ActivityTable'
-import { useCollectionActivity, useTokenActivity } from '@reservoir0x/reservoir-kit-ui'
+import { useTokenActivity } from '@reservoir0x/reservoir-kit-ui';
+import { ActivityTable } from 'components/common/ActivityTable';
+import { FC, useEffect } from 'react';
 
 type Props = {
   // id: string | undefined
@@ -27,5 +27,5 @@ export const TokenActivityTable: FC<Props> = ({ id, activityTypes }) => {
     }
   }, [])
 
-  return <ActivityTable data={data} />
+  return <ActivityTable source='token' data={data} />
 }
