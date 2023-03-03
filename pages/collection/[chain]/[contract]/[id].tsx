@@ -81,7 +81,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
 
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
