@@ -7,7 +7,7 @@ import QuestSecion from 'components/quests/QuestsSection'
 import * as Dialog from '@radix-ui/react-dialog'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import {
   QuestRetweetModalContent,
@@ -119,17 +119,17 @@ const QuestsPage: NextPage = () => {
               </Dialog.Portal>
             </Dialog.Root>
           )}
-          <Box>
-            <Text
-              css={{ marginBottom: '15px', marginLeft: '5px' }}
-              style="h4"
-              as="h4"
-            >
-              Now ! Earn points for every quest
-            </Text>
-            {isMounted && <QuestsGrid setOpen={setOpen} setQuest={setQuest} />}
-          </Box>
         </Flex>
+        <Box>
+          <Text
+            css={{ marginBottom: '15px', marginLeft: '5px' }}
+            style="h4"
+            as="h4"
+          >
+            Now ! Earn points for every quest
+          </Text>
+          {isMounted && <QuestsGrid setOpen={setOpen} setQuest={setQuest} />}
+        </Box>
       </Box>
     </Layout>
   )
