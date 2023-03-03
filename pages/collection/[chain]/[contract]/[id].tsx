@@ -1,5 +1,6 @@
 import {
   faArrowLeft,
+  faChevronDown,
   faCircleExclamation,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
@@ -141,10 +142,19 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     token?.token?.attributes && token?.token?.attributes.length > 0
 
   const trigger = (
-    <Button color="gray3" size="medium" css={{ py: '$3' }}>
-      {isSmallDevice ? null : (
-        <Text style="body1">{activityTypes.join(' , ') || 'All Events'}</Text>
-      )}
+    <Button
+      color="gray3"
+      size="medium"
+      css={{
+        justifyContent: 'space-between',
+        width: '320px',
+        py: '$3',
+      }}
+    >
+      {isSmallDevice ? null : <Text style="body1">All Events</Text>}
+      <Text css={{ color: '$slate10' }}>
+        <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
+      </Text>
     </Button>
   )
 
@@ -489,7 +499,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       setActivityTypes={setActivityTypes}
                     />
                   ) : (
-                    <Dropdown trigger={trigger} >
+                    <Dropdown
+                      trigger={trigger}
+                      contentProps={{
+                        sideOffset: 8,
+                      }}
+                    >
                       <ActivityFilters
                         open={activityFiltersOpen}
                         setOpen={setActivityFiltersOpen}

@@ -177,6 +177,128 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
   const { displayName: toDisplayName } = useENSResolver(activity?.toAddress)
   const { displayName: fromDisplayName } = useENSResolver(activity?.fromAddress)
 
+  if (source === 'token') {
+    return (
+      <TableRow
+        key={activity.txHash}
+        css={{
+          gridTemplateColumns: '1fr 1fr',
+        }}
+      >
+        <TableCell css={{ color: '$gray11' }}>
+          <Flex direction="column">
+            <Flex align="center">
+              {activity.type && logos[activity.type]}
+              <Text
+                style="subtitle1"
+                css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+              >
+                {activityDescription}
+              </Text>
+            </Flex>
+            {activity.price &&
+            activity.price !== 0 &&
+            activity.type &&
+            !['transfer', 'mint'].includes(activity.type) ? (
+              <Flex align="center">
+                <FormatCryptoCurrency
+                  amount={activity.price}
+                  logoHeight={16}
+                  textStyle="subtitle1"
+                  css={{ mr: '$2', fontSize: '14px' }}
+                />
+                <Text css={{ fontSize: '14px', color: '$gray11' }}></Text>
+              </Flex>
+            ) : (
+              <span>-</span>
+            )}
+          </Flex>
+        </TableCell>
+        <TableCell>
+          <Flex
+            align="center"
+            justify="end"
+            css={{
+              gap: '$3',
+            }}
+          >
+            {!!activity.order?.source?.icon && (
+              <img
+                width="20px"
+                height="20px"
+                src={(activity.order?.source?.icon as string) || ''}
+                alt={`${activity.order?.source?.name} Source`}
+              />
+            )}
+            <Text style="subtitle3" color="subtle">
+              {useTimeSince(activity?.timestamp)}
+            </Text>
+            {activity.txHash && (
+              <Anchor
+                href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
+                color="primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
+              </Anchor>
+            )}
+          </Flex>
+          <Flex
+            align="baseline"
+            justify="end"
+            css={{
+              gap: '$2',
+            }}
+          >
+            {activity.fromAddress &&
+            activity.fromAddress !== constants.AddressZero ? (
+              <Link href={`/profile/${activity.fromAddress}`}>
+                <Text
+                  style="subtitle3"
+                  css={{
+                    color: '$primary11',
+                    '&:hover': {
+                      color: '$primary10',
+                    },
+                  }}
+                >
+                  {fromDisplayName}
+                </Text>
+              </Link>
+            ) : (
+              <span>-</span>
+            )}
+            <Text
+              style="subtitle3"
+              css={{ fontSize: '12px', color: '$gray11' }}
+            >
+              to
+            </Text>
+            {activity.toAddress &&
+            activity.toAddress !== constants.AddressZero ? (
+              <Link href={`/profile/${activity.toAddress}`}>
+                <Text
+                  style="subtitle3"
+                  css={{
+                    color: '$primary11',
+                    '&:hover': {
+                      color: '$primary10',
+                    },
+                  }}
+                >
+                  {toDisplayName}
+                </Text>
+              </Link>
+            ) : (
+              <span>-</span>
+            )}
+          </Flex>
+        </TableCell>
+      </TableRow>
+    )
+  }
+
   if (isSmallDevice) {
     return (
       <TableRow key={activity.txHash} css={{ gridTemplateColumns: '1fr' }}>
@@ -330,127 +452,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
     )
   }
 
-  if (source === 'token') {
-    return (
-      <TableRow
-        key={activity.txHash}
-        css={{
-          gridTemplateColumns: '1fr 1fr',
-        }}
-      >
-        <TableCell css={{ color: '$gray11' }}>
-          <Flex direction="column">
-            <Flex align="center">
-              {activity.type && logos[activity.type]}
-              <Text
-                style="subtitle1"
-                css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
-              >
-                {activityDescription}
-              </Text>
-            </Flex>
-            {activity.price &&
-            activity.price !== 0 &&
-            activity.type &&
-            !['transfer', 'mint'].includes(activity.type) ? (
-              <Flex align="center">
-                <FormatCryptoCurrency
-                  amount={activity.price}
-                  logoHeight={16}
-                  textStyle="subtitle1"
-                  css={{ mr: '$2', fontSize: '14px' }}
-                />
-                <Text css={{ fontSize: '14px', color: '$gray11' }}></Text>
-              </Flex>
-            ) : (
-              <span>-</span>
-            )}
-          </Flex>
-        </TableCell>
-        <TableCell>
-          <Flex
-            align="center"
-            justify="end"
-            css={{
-              gap: '$3',
-            }}
-          >
-            {!!activity.order?.source?.icon && (
-              <img
-                width="20px"
-                height="20px"
-                src={(activity.order?.source?.icon as string) || ''}
-                alt={`${activity.order?.source?.name} Source`}
-              />
-            )}
-            <Text style="subtitle3" color="subtle">
-              {useTimeSince(activity?.timestamp)}
-            </Text>
-            {activity.txHash && (
-              <Anchor
-                href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
-                color="primary"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
-              </Anchor>
-            )}
-          </Flex>
-          <Flex
-            align="baseline"
-            justify="end"
-            css={{
-              gap: '$2',
-            }}
-          >
-            {activity.fromAddress &&
-            activity.fromAddress !== constants.AddressZero ? (
-              <Link href={`/profile/${activity.fromAddress}`}>
-                <Text
-                  style="subtitle3"
-                  css={{
-                    color: '$primary11',
-                    '&:hover': {
-                      color: '$primary10',
-                    },
-                  }}
-                >
-                  {fromDisplayName}
-                </Text>
-              </Link>
-            ) : (
-              <span>-</span>
-            )}
-            <Text
-              style="subtitle3"
-              css={{ fontSize: '12px', color: '$gray11' }}
-            >
-              to
-            </Text>
-            {activity.toAddress &&
-            activity.toAddress !== constants.AddressZero ? (
-              <Link href={`/profile/${activity.toAddress}`}>
-                <Text
-                  style="subtitle3"
-                  css={{
-                    color: '$primary11',
-                    '&:hover': {
-                      color: '$primary10',
-                    },
-                  }}
-                >
-                  {toDisplayName}
-                </Text>
-              </Link>
-            ) : (
-              <span>-</span>
-            )}
-          </Flex>
-        </TableCell>
-      </TableRow>
-    )
-  }
   return (
     <TableRow
       key={activity.txHash}
