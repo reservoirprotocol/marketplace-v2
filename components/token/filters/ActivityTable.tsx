@@ -1,5 +1,6 @@
 import {
   useCollectionActivity,
+  useTokenActivity,
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useRef } from 'react'
@@ -12,6 +13,7 @@ import {
   TableCell,
   TableRow,
   Box,
+  FormatCurrency,
 } from '../primitives'
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
@@ -29,7 +31,7 @@ import {
   faTrash,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
-import LoadingSpinner from './LoadingSpinner'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -44,12 +46,21 @@ export type UserActivityTypes = NonNullable<
   Exclude<Parameters<typeof useUsersActivity>['1'], boolean>
 >['types']
 
-type Activity = CollectionActivity | UsersActivity
+type TokenActivityResponse = ReturnType<typeof useTokenActivity>
+type TokenActivity = TokenActivityResponse['data'][0]
+export type TokenActivityTypes = NonNullable<
+  Exclude<Parameters<typeof useTokenActivity>['1'], boolean>
+>['types']
+
+type Activity = CollectionActivity | UsersActivity | TokenActivity
+type Source = 'token' | 'user' | 'collection'
+
 type Props = {
   data: ActivityResponse
+  source?: Source
 }
 
-export const ActivityTable: FC<Props> = ({ data }) => {
+export const ActivityTable: FC<Props> = ({ source, data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
@@ -73,13 +84,20 @@ export const ActivityTable: FC<Props> = ({ data }) => {
           <Text>No activity yet</Text>
         </Flex>
       ) : (
-        <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
+        <Flex
+          direction="column"
+          css={{
+            width: '100%',
+            pb: '$2',
+          }}
+        >
           {activities.map((activity, i) => {
             if (!activity) return null
 
             return (
               <ActivityTableRow
                 key={`${activity?.txHash}-${i}`}
+                source={source}
                 activity={activity}
               />
             )
@@ -97,6 +115,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
 }
 
 type ActivityTableRowProps = {
+  source?: Source
   activity: Activity
 }
 
@@ -134,7 +153,7 @@ const activityTypeToDesciption = (activityType: string) => {
   return activityTypeToDesciptionMap[activityType] || activityType
 }
 
-const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
+const ActivityTableRow: FC<ActivityTableRowProps> = ({ source, activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const marketplaceChain = useMarketplaceChain()
   const blockExplorerBaseUrl =
@@ -157,6 +176,128 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
 
   const { displayName: toDisplayName } = useENSResolver(activity?.toAddress)
   const { displayName: fromDisplayName } = useENSResolver(activity?.fromAddress)
+
+  if (source === 'token') {
+    return (
+      <TableRow
+        key={activity.txHash}
+        css={{
+          gridTemplateColumns: '1fr 1fr',
+        }}
+      >
+        <TableCell css={{ color: '$gray11' }}>
+          <Flex direction="column">
+            <Flex align="center">
+              {activity.type && logos[activity.type]}
+              <Text
+                style="subtitle1"
+                css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+              >
+                {activityDescription}
+              </Text>
+            </Flex>
+            {activity.price &&
+            activity.price !== 0 &&
+            activity.type &&
+            !['transfer', 'mint'].includes(activity.type) ? (
+              <Flex align="center">
+                <FormatCryptoCurrency
+                  amount={activity.price}
+                  logoHeight={16}
+                  textStyle="subtitle1"
+                  css={{ mr: '$2', fontSize: '14px' }}
+                />
+                <Text css={{ fontSize: '14px', color: '$gray11' }}></Text>
+              </Flex>
+            ) : (
+              <span>-</span>
+            )}
+          </Flex>
+        </TableCell>
+        <TableCell>
+          <Flex
+            align="center"
+            justify="end"
+            css={{
+              gap: '$3',
+            }}
+          >
+            {!!activity.order?.source?.icon && (
+              <img
+                width="20px"
+                height="20px"
+                src={(activity.order?.source?.icon as string) || ''}
+                alt={`${activity.order?.source?.name} Source`}
+              />
+            )}
+            <Text style="subtitle3" color="subtle">
+              {useTimeSince(activity?.timestamp)}
+            </Text>
+            {activity.txHash && (
+              <Anchor
+                href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
+                color="primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
+              </Anchor>
+            )}
+          </Flex>
+          <Flex
+            align="baseline"
+            justify="end"
+            css={{
+              gap: '$2',
+            }}
+          >
+            {activity.fromAddress &&
+            activity.fromAddress !== constants.AddressZero ? (
+              <Link href={`/profile/${activity.fromAddress}`}>
+                <Text
+                  style="subtitle3"
+                  css={{
+                    color: '$primary11',
+                    '&:hover': {
+                      color: '$primary10',
+                    },
+                  }}
+                >
+                  {fromDisplayName}
+                </Text>
+              </Link>
+            ) : (
+              <span>-</span>
+            )}
+            <Text
+              style="subtitle3"
+              css={{ fontSize: '12px', color: '$gray11' }}
+            >
+              to
+            </Text>
+            {activity.toAddress &&
+            activity.toAddress !== constants.AddressZero ? (
+              <Link href={`/profile/${activity.toAddress}`}>
+                <Text
+                  style="subtitle3"
+                  css={{
+                    color: '$primary11',
+                    '&:hover': {
+                      color: '$primary10',
+                    },
+                  }}
+                >
+                  {toDisplayName}
+                </Text>
+              </Link>
+            ) : (
+              <span>-</span>
+            )}
+          </Flex>
+        </TableCell>
+      </TableRow>
+    )
+  }
 
   if (isSmallDevice) {
     return (
@@ -255,7 +396,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <span>-</span>
               )}
             </Flex>
-
             <Flex align="baseline" css={{ gap: '$2' }}>
               <Text
                 style="subtitle3"
@@ -315,7 +455,9 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   return (
     <TableRow
       key={activity.txHash}
-      css={{ gridTemplateColumns: '.75fr 1.25fr .9fr 1fr 1fr 1fr 1.1fr' }}
+      css={{
+        gridTemplateColumns: '.75fr 1.25fr .9fr 1fr 1fr 1fr 1.1fr',
+      }}
     >
       <TableCell css={{ color: '$gray11' }}>
         <Flex align="center">
