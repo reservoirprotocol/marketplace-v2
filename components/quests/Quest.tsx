@@ -1,4 +1,5 @@
 import { Box, Text, Flex } from 'components/primitives'
+import { Dispatch } from 'react'
 import { QuestContent, QuestXPButton, QuestJoinButton } from './styled'
 
 type Props = {
@@ -7,9 +8,24 @@ type Props = {
   points: number
   locked: boolean
   link: string
+  setOpen: Dispatch<React.SetStateAction<boolean>>
+  setQuest: Dispatch<React.SetStateAction<number>>
+  number: number
 }
 
-export const Quest = ({ title, description, points, locked, link }: Props) => {
+export const Quest = ({
+  title,
+  description,
+  points,
+  locked,
+  setOpen,
+  setQuest,
+  number,
+}: Props) => {
+  const displayQuest = () => {
+    setQuest(number)
+    setOpen(true)
+  }
   return (
     <Flex
       justify="center"
@@ -19,7 +35,8 @@ export const Quest = ({ title, description, points, locked, link }: Props) => {
         height: '100%',
         padding: '20px 30px',
         border: '2px solid #6BE481',
-        background: '$gray1',
+        background: '$gray6',
+        opacity: 0.4,
       }}
     >
       {locked === true ? (
@@ -66,7 +83,7 @@ export const Quest = ({ title, description, points, locked, link }: Props) => {
               }}
             >
               <QuestXPButton>{points} XP</QuestXPButton>
-              <QuestJoinButton>
+              <QuestJoinButton disabled>
                 <Text
                   css={{
                     color: 'black',
@@ -106,14 +123,14 @@ export const Quest = ({ title, description, points, locked, link }: Props) => {
             }}
           >
             <QuestXPButton>{points} XP</QuestXPButton>
-            <QuestJoinButton disabled={true}>
+            <QuestJoinButton onClick={displayQuest} disabled={true}>
               <Text
                 css={{
                   color: 'black',
                   fontWeight: '700',
                 }}
               >
-                Join
+                View
               </Text>
             </QuestJoinButton>
           </Flex>

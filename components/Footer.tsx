@@ -39,16 +39,24 @@ const developerSectionLinks = [
     name: 'API',
     href: 'https://api.nftearth.exchange',
   },
+  {
+    name: 'Status',
+    href: 'https://status.nftearth.exchange/',
+  },
 ]
 
 const resourcesSectionLinks = [
   {
-    name: 'Education',
+    name: 'Learn About NFTs',
     href: '/learn-nfts',
   },
   {
-    name: 'Token',
-    href: '/token',
+    name: '$NFTE Token',
+    href: 'https://www.coingecko.com/en/coins/nftearth',
+  },
+  {
+    name: 'Brand',
+    href: 'https://docs.nftearth.exchange/resources/brand-assets',
   },
 ]
 
@@ -108,7 +116,7 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join the Community" />
+        <SectionTitle title="Join the community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
