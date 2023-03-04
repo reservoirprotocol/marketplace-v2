@@ -2,7 +2,7 @@ import { NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import { useMounted } from 'hooks'
-import { QuestsGrid } from 'components/quests/QuestsGrid'
+import QuestsOneTime from 'components/quests/QuestsOneTime'
 import QuestSecion from 'components/quests/QuestsSection'
 import * as Dialog from '@radix-ui/react-dialog'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,9 +10,11 @@ import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
 import { useState } from 'react'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import {
-  QuestRetweetModalContent,
-  QuestJoinDiscordModalContent,
-  QuestPostProofModalContent,
+  QuestRegisterUserName,
+  QuestFollowTwitter,
+  QuestRetweet,
+  QuestJoinDiscord,
+  QuestListNFT,
   QuestListNFTOnANYChain,
   QuestListNFTInNFTEOnAnyChain,
   QuestBuyNFTInNFTEOnAnyChain,
@@ -26,15 +28,15 @@ const QuestsPage: NextPage = () => {
   const displayContent = (value: number) => {
     switch (value) {
       case 1:
-        return <QuestRetweetModalContent />
+        return <QuestRegisterUserName />
       case 2:
-        return <QuestPostProofModalContent />
+        return <QuestFollowTwitter />
       case 3:
-        return <QuestJoinDiscordModalContent />
+        return <QuestRetweet />
       case 4:
-        return <QuestListNFTOnANYChain />
+        return <QuestJoinDiscord />
       case 5:
-        return <QuestListNFTInNFTEOnAnyChain />
+        return <QuestListNFT />
       case 6:
         return <QuestBuyNFTInNFTEOnAnyChain />
       default:
@@ -54,7 +56,7 @@ const QuestsPage: NextPage = () => {
         }}
       >
         <QuestSecion />
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+        <Flex css={{ my: '$5', gap: 65 }} direction="column">
           {isMounted && (
             <Dialog.Root defaultOpen open={open} modal>
               <Dialog.Portal>
@@ -67,9 +69,9 @@ const QuestsPage: NextPage = () => {
                     height: '100vh',
                     backgroundColor: 'rgba(0, 0, 0, 0.9)',
                     backdropFilter: '20px',
-                    opacity: '0.5',
+                    opacity: '0.9',
                   }}
-                  onClick={() => setOpen(false)}
+                  onClick={() => setOpen( false)}
                 />
                 <AnimatedContent
                   style={{
@@ -84,14 +86,13 @@ const QuestsPage: NextPage = () => {
                     justify="between"
                     css={{
                       position: 'relative',
-                      borderTop: '1px solid $gray7',
+                      borderTop: '1px solid $blackA11',
                       borderStyle: 'solid',
                       pt: '$5',
-                      background: '$gray7',
+                      background: '$gray1',
                       padding: '$5',
                       flexDirection: 'column',
                       alignItems: 'center',
-                      textAlign: 'center',
                       gap: '20px',
                       '@bp600': {
                         flexDirection: 'column',
@@ -126,9 +127,9 @@ const QuestsPage: NextPage = () => {
             style="h4"
             as="h4"
           >
-            Now ! Earn points for every quest
+            One-Time Quest
           </Text>
-          {isMounted && <QuestsGrid setOpen={setOpen} setQuest={setQuest} />}
+          {isMounted && <QuestsOneTime setOpen={setOpen} setQuest={setQuest} />}
         </Box>
       </Box>
     </Layout>

@@ -1,4 +1,6 @@
 import { Flex, Box, Button, Text } from 'components/primitives'
+import Image from 'next/image'
+import Link from 'next/link'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -15,511 +17,374 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
       css={{
         gap: '$4',
         minHeight: '53.1vh',
-        justifyContent: 'center',
         padding: '$3',
       }}
     >
-      <Box>
-        <Text
-          style={{ '@initial': 'h4', '@lg': 'h3' }}
-          css={{ color: '$primary9' }}
-        >
-          {' '}
-          {header}{' '}
-        </Text>
-      </Box>
-      <Box>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          {' '}
-          Instructions:{' '}
-        </Text>
-      </Box>
-      <Box>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h5' }}
-          css={{ color: '$primary9' }}
-        >
-          {' '}
-          {instruction}
-        </Text>
-      </Box>
+      <Flex css={{gap: '$5', alignItems: 'center'}}>
+        <Image
+          src="/nftearth-icon-new.png"
+          width={50}
+          height={50}
+          alt="NFTEarth Logo"
+        />
+        <Flex direction="column">
+          <Text
+            style={{ '@initial': 'h5', '@lg': 'h4' }}
+          >
+            {header}
+          </Text>
+          <Text
+            style={{ '@initial': 'subtitle2', '@lg': 'subtitle1' }}
+            css={{ color: '$gray11' }}
+          >
+            {instruction}
+          </Text>
+        </Flex>
+      </Flex>
       {children}
     </Flex>
   )
 }
 
-export const QuestRetweetModalContent = () => {
+export const QuestRegisterUserName = () => {
   return (
     <BasicModal
-      header="Retweet Quest 🎁"
+      header="Register a Username 🎁"
       instruction="Retweet this Tweet with Hashtag #NFTE and post it into the NFTEarth community channel Quest Proof"
     >
       <Box>
-        <Flex justify="center" css={{ padding: '$3' }}>
-          <Text
-            style={{ '@initial': 'h6', '@lg': 'h4' }}
-            css={{ marginLeft: '40px', color: '$primary9' }}
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px'
+            }}
           >
-            Step 1: Retweet the following tweet using your verified twitter
-            account:
-          </Text>
-          <Box>
-            <img src="/images/verified.png" width={40} />
-          </Box>
+            <Text>Rewards</Text>
+            <Text style="h4" css={{color: '$primary10'}}>25 XP</Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+            >
+              Step 1: Create your NFTEarth account
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Connect your Wallet on NFTEarth</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 2: Get Your XP !
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+          </Flex>
         </Flex>
-        <Box css={{ marginTop: '20px' }}>
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://twitter.com/NFTEarth_L2/status/1631555869778276354"
-            aria-label="Twitter"
-          >
-            <Button
-              size="xs"
-              color="gray3"
-              css={{
-                background: '#1DA1F2',
-
-                '&:hover': {
-                  background: '$gray8',
-                },
-              }}
-              aria-label="Twitter"
-            >
-              <FontAwesomeIcon icon={faTwitter} width={25} height={25} />
-            </Button>
-          </a>
-        </Box>
-      </Box>
-      <Box css={{ padding: '$3', margin: '0 auto' }}>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          Step 2: Post the screenshot of the retweet into NFTEarth Discord's
-          community channel ⚡ #quest-proof
-        </Text>
-        <Box>
-          <Box css={{ marginTop: '20px' }}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://discord.com/channels/1062256160264171520/1080351212022538281"
-              aria-label="Discord"
-            >
-              <Button
-                size="xs"
-                color="gray3"
-                css={{
-                  background: '#5865f2',
-
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
-              </Button>
-            </a>
-          </Box>
-        </Box>
-      </Box>
-      <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
-        <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 10 users to complete Quest are eligible
-            </Text>
-          </li>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 50 $NFTE tokens
-            </Text>
-          </li>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Must be real Twitter account
-            </Text>
-          </li>
-        </ul>
       </Box>
     </BasicModal>
   )
 }
 
-export const QuestPostProofModalContent = () => {
+export const QuestFollowTwitter = () => {
   return (
     <BasicModal
-      header="List NFT in $NFTE on NFTEarth 🎁"
-      instruction="List any NFT on NFTEarth in $NFTE with any listing duration time.
-      Quest is fulfilled just by listing any NFT on Optimism or Arbitrum for
-      any price of $NFTE and valid even if listing is not sold. You don't
-      need to post any proof, we will check that automatically."
+      header="Follow @NFTEarth on Twitter 🎁"
+      instruction="Connect Twitter account to your NFTEarth account and follow @NFTEarth on Twitter to Get Your XP."
     >
       <Box>
-        <Flex justify="center" css={{ padding: '$3' }}>
-          <Text
-            style={{ '@initial': 'h6', '@lg': 'h4' }}
-            css={{ color: '$primary9' }}
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px'
+            }}
           >
-            Step 1: List your items. Below you can see the listed item shows.
-          </Text>
-          <Box>
-            <img src="/images/verified.png" width={40} />
-          </Box>
-        </Flex>
-        <Box
-          css={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}
-        >
-          <img src="/images/Quest_ListItem.png" width={500} />
-        </Box>
-      </Box>
-      <Box css={{ padding: '$3' }}>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          Step 2: Post the screenshot of your listed item on our Discord
-          Channel. We will get back to you asap.
-        </Text>
-        <Box>
-          <Box css={{ marginTop: '20px' }}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://discord.com/channels/1062256160264171520/1080351212022538281"
-              aria-label="Discord"
+            <Text>Rewards</Text>
+            <Text style="h4" css={{color: '$primary10'}}>25 XP</Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',  
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              <Button
-                size="xs"
-                color="gray3"
-                css={{
-                  background: '#5865f2',
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
-              </Button>
-            </a>
-          </Box>
-        </Box>
-      </Box>
-      <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
-        <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 20 users to complete Quest are eligible
+              Step 1: Link a Twitter account to your Zonic account
             </Text>
-          </li>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 100 $NFTE tokens
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Browse to the Profile Settings page and link a Twitter account to your Zonic account.</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 2: Follow @NFTEarth on Twitter
             </Text>
-          </li>
-        </ul>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @ZonicApp.</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 3: Get Your XP !
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Twitter account must be at least 30 days old.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11' }}>Each Twitter account can only be used to claim for this type of reward once in the system.</Text>
+          </Flex>
+        </Flex>
       </Box>
     </BasicModal>
   )
 }
 
-export const QuestJoinDiscordModalContent = () => {
+export const QuestRetweet = () => {
   return (
     <BasicModal
-      header="Join NFTEarth's Discord Community Channel🎁"
+      header="Retweet a NFTEarth tweet 🎁"
+      instruction="Retweet this tweet with #NFTE to earn XP now!"
+    >
+      <Box>
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px'
+            }}
+          >
+            <Text>Rewards</Text>
+            <Text style="h4" css={{color: '$primary10'}}>125 XP</Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',  
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+            >
+              Step 1: Retweet a @NFTEarth's tweet
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Retweet this
+              <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
+                <Text css={{color: '$primary10'}}> tweet</Text>
+              </Link>.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 2: Get Your XP !
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Twitter account must be at least 30 days old.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11' }}>Each Twitter account can only be used to claim for this type of reward once in the system.</Text>
+          </Flex>
+        </Flex>
+      </Box>
+    </BasicModal>
+  )
+}
+
+export const QuestListNFT = () => {
+  return (
+    <BasicModal
+      header="List NFT for sale on NFTEarth 🎁"
+      instruction="List Any NFT of any supported blockchain (Optimism, Arbitrum) for sale on NFTEarth."
+    >
+      <Box>
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px'
+            }}
+          >
+            <Text>Rewards</Text>
+            <Text style="h4" css={{color: '$primary10'}}>125 XP</Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',  
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+            >
+              Step 1: Check the NFTs you own
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Go to the
+              <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
+                <Text css={{color: '$primary10'}}> My NFTs </Text>
+              </Link>page, and then connect your wallet to view the NFTs you own.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 2: List any NFT for sale
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Click on the NFTs you want to list for sale and then click at "Sell NFT" button to list them on the marketplace. You need to list at least 3 NFTs to be eligible to claim the reward.</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 3: Get Your XP !
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and get your XP from the box below.</Text>
+          </Flex>
+        </Flex>
+      </Box>
+    </BasicModal>
+  )
+}
+
+export const QuestJoinDiscord = () => {
+  return (
+    <BasicModal
+      header="Join NFTEarth's Discord Community Channel 🎁"
       instruction="Join NFTEarth's Discord Community Server and earn XP!"
     >
       <Box>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          Step 1: Join NFTEarth's Discord community server at the link below:
-        </Text>
-        <Box>
-          <Box css={{ marginTop: '20px' }}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://discord.gg/nftearth"
-              aria-label="Discord"
-            >
-              <Button
-                size="xs"
-                color="gray3"
-                css={{
-                  background: '#5865f2',
-
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
-              </Button>
-            </a>
-          </Box>
-        </Box>
-      </Box>
-
-      <Box css={{ padding: '$3' }}>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          Step 2: Say hello! in the 👋 # welcome channel in NFTEarth's discord
-          community server
-        </Text>
-        <Box>
-          <Box css={{ marginTop: '20px' }}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://discord.com/channels/1062256160264171520/1062256161107230745"
-              aria-label="Discord"
-            >
-              <Button
-                size="xs"
-                color="gray3"
-                css={{
-                  background: '#5865f2',
-
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
-              </Button>
-            </a>
-          </Box>
-        </Box>
-      </Box>
-      <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
-        <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 20 users to complete Quest are eligible
-            </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 100 $NFTE tokens
-            </Text>
-          </li>
-        </ul>
-      </Box>
-    </BasicModal>
-  )
-}
-
-export const QuestListNFTOnANYChain = () => {
-  return (
-    <BasicModal
-      header="List at least ANY 1 NFT 🎁"
-      instruction="List at least ANY 1 NFT in ANY currency at ANY price on ANY chain"
-    >
-      <Box>
-        <Flex justify="center" css={{ padding: '$3' }}>
-          <Text
-            style={{
-              '@initial': 'h6',
-              '@lg': 'h4',
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px'
             }}
-            css={{ color: '$primary9' }}
           >
-            This is easy part. Have you listed NFT? If not, Please list a NFT in
-            ANY currency at ANY price on ANY chain. Once you list your NFT, you
-            will get XP for this.
-          </Text>
+            <Text>Rewards</Text>
+            <Text style="h4" css={{color: '$primary10'}}>125 XP</Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',  
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+            >
+              Step 1: Join us on Discord
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Join.
+              <Link href="https://discord.gg/nftearth">
+                <Text css={{color: '$primary10'}}> NFTEarth Discord</Text>
+              </Link>.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 2: Verify your account
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify your account on ✅╎join-our-guild channel on our Discord server</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 3: Get Your XP !
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Each Discord account can only be used to claim for a reward once in the system.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11' }}>It might takes up to 5 minutes for our system to refresh the member list. If you just join the Discord server, please wait for 5-10 minutes and try to claim the reward again.</Text>
+          </Flex>
         </Flex>
       </Box>
-      <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
-        <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 20 users to complete Quest are eligible
-            </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 100 $NFTE tokens
-            </Text>
-          </li>
-        </ul>
-      </Box>
     </BasicModal>
   )
 }
-
-export const QuestListNFTInNFTEOnAnyChain = () => {
-  return (
-    <BasicModal
-      header="List at least ANY 1 NFT in NFTE🎁"
-      instruction="List at least ANY 1 NFT in NFTE currency at ANY price on ANY chain"
-    >
-      <Box>
-        <Flex justify="center" css={{ padding: '$3' }}>
-          <Text
-            style={{
-              '@initial': 'h6',
-              '@lg': 'h4',
-            }}
-            css={{ color: '$primary9' }}
-          >
-            This is easy part. Have you listed NFT? If not, Please list a NFT in
-            $NFTE at ANY price on ANY chain. Earn XP once done!
-          </Text>
-        </Flex>
-      </Box>
-      <Box>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          List your NFT in $NFTE on any chain at the link below:
-        </Text>
-        <Box>
-          <Box css={{ marginTop: '20px' }}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://nftearth.exchange/portfolio"
-              aria-label="Discord"
-            >
-              <Button
-                size="xs"
-                color="gray3"
-                css={{
-                  background: '#5865f2',
-
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
-              </Button>
-            </a>
-          </Box>
-        </Box>
-      </Box>
-      <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
-        <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 20 users to complete Quest are eligible
-            </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 100 $NFTE tokens
-            </Text>
-          </li>
-        </ul>
-      </Box>
-    </BasicModal>
-  )
-}
-
-
 
 export const QuestBuyNFTInNFTEOnAnyChain = () => {
   return (
     <BasicModal
-      header="Buy at NFT for ANY amount and currency on ANY chain🎁"
-      instruction="Buy at least 1 NFT for ANY amount and currency on ANY chain"
+      header="NFT Trader 🎁"
+      instruction="Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward."
     >
       <Box>
-        <Flex justify="center" css={{ padding: '$3' }}>
-          <Text
-            style={{
-              '@initial': 'h6',
-              '@lg': 'h4',
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px'
             }}
-            css={{ color: '$primary9' }}
           >
-            Purchase a NFT on NFTEarth at ANY price on ANY chain. Earn XP once done!
-          </Text>
-        </Flex>
-      </Box>
-      <Box>
-        <Text
-          style={{ '@initial': 'h6', '@lg': 'h4' }}
-          css={{ color: '$primary9' }}
-        >
-          Check out our collections page, Purchase an NFT on any chain at the link below:
-        </Text>
-        <Box>
-          <Box css={{ marginTop: '20px' }}>
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://nftearth.exchange/explore"
-              aria-label="Discord"
+            <Text>Rewards</Text>
+            <Text style="h4" css={{color: '$primary10'}}>200 XP</Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',  
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              <Button
-                size="xs"
-                color="gray3"
-                css={{
-                  background: '#5865f2',
-
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                aria-label="Discord"
-              >
-                <FontAwesomeIcon icon={faDiscord} width={25} height={25} />
-              </Button>
-            </a>
-          </Box>
-        </Box>
-      </Box>
-      <Box css={{ marginTop: '20px' }}>
-        <Text style="subtitle2" css={{ color: '$primary9' }}>
-          Conditions:
-        </Text>
-        <ul>
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *First 20 users to complete Quest are eligible
+              Step 1: Purchasing NFT on Zonic
             </Text>
-          </li>
-
-          <li>
-            <Text style="subtitle2" css={{ color: '$primary9' }}>
-              *Reward is 100 $NFTE tokens
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              <Link href="https://nftearth.exchange/explore">
+                <Text css={{color: '$primary10'}}>Explore </Text>
+              </Link>NFTs on Optimism, Arbitrum using NFTEarth and make a purchase of any NFT you like until the total buying volume reaches 0.1 ETH.
             </Text>
-          </li>
-        </ul>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 2: Follow @NFTEarth on Twitter
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @ZonicApp.</Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{marginTop: '20px'}}
+            >
+              Step 3: Get Your XP !
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+          </Flex>
+        </Flex>
       </Box>
     </BasicModal>
   )

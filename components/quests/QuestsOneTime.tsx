@@ -7,7 +7,7 @@ type Props = {
   setQuest: Dispatch<React.SetStateAction<number>>
 }
 
-export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
+export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
   return (
     <Flex
       css={{
@@ -26,8 +26,8 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
     >
       <Box>
         <Quest
-          title="Retweet a tweet from NFTEarth"
-          description="Retweet this Tweet with Hashtag $NFTE and earn XP points now!"
+          title="Create account on NFTEarth"
+          description="Connect your Wallet and create your account on NFTEarth"
           points={25}
           locked={false}
           link=""
@@ -38,8 +38,8 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="Post proof of Listing in NFTE"
-          description="List your item in NFTE and earn your own XP points for the next level!"
+          title="Follow @NFTEarth on Twitter"
+          description="Connect Twitter to your NFTEarth account and follow us on Twitter."
           points={25}
           locked={false}
           link=""
@@ -50,8 +50,8 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="Join NFTEarth's Discord Server"
-          description="Join NFTEarth's Discord server and say hello! to earn XP points!"
+          title="Retweet @NFTEarth's tweet"
+          description="Retweet a specific tweet posted by NFTEarth and get XP now."
           points={25}
           locked={false}
           link=""
@@ -62,8 +62,8 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="List your NFT on ANY chain"
-          description="List at least ANY 1 NFT in ANY currency at ANY price on ANY chain."
+          title="Join us on Discord"
+          description="Connect NFTEarth Discord and join us on Discord to get XP."
           points={25}
           locked={false}
           link=""
@@ -74,8 +74,8 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="List your NFT in NFTE currency on ANY chain"
-          description="List at least ANY 1 NFT in NFTE currency at ANY price on ANY chain"
+          title="List NFT for sale on NFTEarth"
+          description="List Any NFT of any supported blockchain for sale on NFTEarth."
           points={25}
           locked={false}
           link=""
@@ -86,8 +86,8 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
       </Box>
       <Box>
         <Quest
-          title="Buy ANY NFT for ANY amount and currency on ANY chain"
-          description="Buy at least 1 NFT for ANY amount and currency on ANY chain"
+          title="NFT Trader"
+          description="Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward."
           points={25}
           locked={false}
           link=""
@@ -99,3 +99,5 @@ export const QuestsGrid = ({ setOpen, setQuest }: Props) => {
     </Flex>
   )
 }
+
+export default QuestsOneTime
