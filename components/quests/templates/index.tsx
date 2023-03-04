@@ -21,9 +21,9 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
     >
       <Flex css={{gap: '$5', alignItems: 'center'}}>
         <Image
-          src="/nftearth-icon-new.png"
-          width={50}
-          height={50}
+          src="/images/NFTQuest.png"
+          width={130}
+          height={100}
           alt="NFTEarth Logo"
         />
         <Flex direction="column">
