@@ -1,13 +1,17 @@
-<h2 align="center">NFTEarth v2 </h2>
- <p align="center">
-  
+# The L2 NFT Markerplace Built For Earth
+
+Buy and Sell NFTs on L2 at NFTEarth! NFTs are for everyone - NFTEarth is for all.
+ 
+ <h1 align="center"> 
 NFTEarth is an opensource L2 NFT marketplace built with Reservoir.
-
+ <p align="center">
+ 
 ![NFTEArth](https://user-images.githubusercontent.com/29180454/217692985-4e705c2e-0656-4354-a241-0153c3f60bfd.png)
-
+[![npm version](https://img.shields.io/npm/v/generator-awesome-list.svg?style=flat-square)](https://www.npmjs.com/package/generator-awesome-list)
 
 <!-- ABOUT THE PROJECT -->
-![image](https://user-images.githubusercontent.com/29180454/220004645-1586249c-ab2c-4638-8a5f-0b9c21351cfb.png)
+
+![image](https://user-images.githubusercontent.com/29180454/222880577-0043c5bc-0484-49ac-b174-5e5283ed603f.png)
 
 
 
@@ -19,6 +23,12 @@ NFTEarth is an opensource L2 NFT marketplace built with Reservoir.
 
 <p align="center">
 
-## Twitter: [@NFTEarth_L2](https://twitter.com/NFTEarth_L2)| Discord: [NFTEarth](https://discord.gg/nftearth) | Application: [NFTEarth](https://nftearth.exchange)| Documentation: [Docs](https://docs.nftearth.exchange)
+## Twitter: [NFTEarth](https://twitter.com/NFTEarth_L2)
 
-<p align="right"><a href="#top">Stay Optimistic</a></p>
+## Discord: [NFTEarth](https://discord.gg/nftearth)
+
+## App: [NFTEarth](https://nftearth.exchange) 
+
+## Documentation: [Docs](https://docs.nftearth.exchange)
+
+</p>
