@@ -1,4 +1,3 @@
-import FormData from 'form-data';
 import {NextApiRequest, NextApiResponse} from "next";
 import {ethers} from "ethers";
 import artifact from "artifact/NFTELaunchpad.json";

@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderBlank } from '@fortawesome/free-solid-svg-icons'
 import Layout from 'components/Layout'
 import { paths } from '@nftearth/reservoir-sdk'
-import { CollectionCard } from 'components/mycollections/CollectionCard'
-import { CollectionGrid } from 'components/mycollections/CollectionGrid'
+import { CollectionCard } from 'components/my-collections/CollectionCard'
+import { CollectionGrid } from 'components/my-collections/CollectionGrid'
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import {useMarketplaceChain, useLaunchpads } from 'hooks'
 import supportedChains from 'utils/chains'
@@ -19,7 +19,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
   const { address } = useAccount();
   const marketplaceChain = useMarketplaceChain()
-  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {

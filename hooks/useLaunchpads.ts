@@ -8,7 +8,7 @@ import {useState} from "react";
 type LaunchpadQuery = paths['/launchpads/v1']['get']['parameters']['query']
 
 export default function (
-  chain:  typeof DefaultChain,
+  chain: typeof DefaultChain,
   options?: LaunchpadQuery | false,
   swrOptions: SWRInfiniteConfiguration = {}
 ) {

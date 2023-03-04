@@ -23,7 +23,7 @@ const LaunchPadMint = () => {
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
-    slug: router.query.slug,
+    slug: router.query.slug as string,
     limit: 1,
   }
 

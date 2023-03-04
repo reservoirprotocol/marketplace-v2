@@ -42,15 +42,9 @@ export default async function claim(req: NextApiRequest, res: NextApiResponse) {
       )
     })
 
-    let results: paths["/orders/asks/v4"]["get"]["responses"]["200"]["schema"]["orders"] = [];
     const responses = await Promise.allSettled(promises)
-    responses.forEach((response, i) => {
-      if (response.status === 'fulfilled' && response.value.data) {
-        results = results?.concat(response.value.data.orders);
-      }
-    })
 
-    if (results.length > 0) {
+    if (responses.flat().filter(response => response.status === 'fulfilled').length > 0) {
       // let message = `0x000000000000000000000000${address.substring(2)}`;
       // let {signature} = signer.sign(message);
 

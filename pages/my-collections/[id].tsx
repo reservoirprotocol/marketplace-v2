@@ -5,17 +5,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faMapPin, faEdit, faList, faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { Text, Flex, Box, Grid } from 'components/primitives'
 import Layout from 'components/Layout'
-import SettingsContentContainer from "components/mycollections/settings/SettingsContentContainer"
-import DetailsSettings from 'components/mycollections/settings/DetailsSettings'
-import RoyalitiesSettings from 'components/mycollections/settings/RoyalitiesSettings'
-import MintStateSettings from 'components/mycollections/settings/MintStateSettings'
-import WhitelistSettings from 'components/mycollections/settings/WhitelistSettings'
-import MetadataSettings from 'components/mycollections/settings/MetadataSettings'
+import SettingsContentContainer from "components/my-collections/settings/SettingsContentContainer"
+import DetailsSettings from 'components/my-collections/settings/DetailsSettings'
+import RoyalitiesSettings from 'components/my-collections/settings/RoyalitiesSettings'
+import MintStateSettings from 'components/my-collections/settings/MintStateSettings'
+import WhitelistSettings from 'components/my-collections/settings/WhitelistSettings'
+import MetadataSettings from 'components/my-collections/settings/MetadataSettings'
 import {useContractReads} from "wagmi"
 import {useRouter} from "next/router"
 import launchpadArtifact from 'artifact/NFTELaunchpad.json'
 import { ethers } from "ethers";
-import {ContractsConfig} from "@wagmi/core/internal";
+
+type ContractStatusFunctions = 'activeSale' | 'presalePrice' | 'publicPrice' | '_URI';
 
 const MyCollectionDetailPage = () => {
   const { theme } = useTheme();

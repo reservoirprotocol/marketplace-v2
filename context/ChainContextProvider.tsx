@@ -16,7 +16,7 @@ export const ChainContext = createContext<{
 })
 
 const ChainContextProvider: FC<any> = ({ children }) => {
-  const [lastSelectedChain, setLastSelectedChain] = useState(DefaultChain.id)
+  const [lastSelectedChain, setLastSelectedChain] = useState<number>(DefaultChain.id)
   const router = useRouter()
   useEffect(() => {
     if (typeof window === 'undefined') {

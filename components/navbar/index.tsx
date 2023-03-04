@@ -174,7 +174,7 @@ const Navbar = () => {
                 Launchpad
               </NavItem>
             </Link>
-            <Link href="/airdrop">
+            {/* <Link href="/airdrop">
               <NavItem
                 active={router.pathname == '/airdrop'}
                 css={{
@@ -189,7 +189,7 @@ const Navbar = () => {
               >
                 Claim
               </NavItem>
-            </Link>
+            </Link> */}
           </Flex>
         </Flex>
       </Box>

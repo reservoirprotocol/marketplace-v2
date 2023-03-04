@@ -10,7 +10,7 @@ import { ethers } from 'ethers';
 import { getContractAddress } from '@ethersproject/address';
 import { useNetwork } from 'wagmi';
 import detectEthereumProvider from '@metamask/detect-provider'
-import {ExternalProvider} from "@ethersproject/providers/src.ts/web3-provider";
+import {ExternalProvider} from "@ethersproject/providers";
 import supportedChains, {DefaultChain} from 'utils/chains'
 
 const LaunchPadDeployPage = () => {
