@@ -5,8 +5,8 @@ import { intersectionBy } from "utils/array"
 import { discordRefreshToken } from "lib/discord"
 import db from 'lib/db'
 import {paths} from "@nftearth/reservoir-sdk"
-import fetcher from "../../../utils/fetcher"
-import supportedChains from "../../../utils/chains"
+import fetcher from "utils/fetcher"
+import supportedChains from "utils/chains"
 import type {NextApiRequest, NextApiResponse} from "next"
 
 const redis = Redis.fromEnv()

@@ -6,7 +6,7 @@ const account = db.collection('account');
 export const accessTokenURL = 'https://api.twitter.com/oauth/access_token';
 
 const handleTwitterVerify = async (req, res) => {
-  const { oauth_verifier, oauth_token, wallet } = req.query;
+  const { oauth_verifier, oauth_token, state: wallet } = req.query;
 
   if (wallet) {
     return res.json({

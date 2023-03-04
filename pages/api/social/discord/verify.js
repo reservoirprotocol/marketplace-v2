@@ -3,7 +3,7 @@ import db  from "lib/db";
 const account = db.collection('account');
 
 const handleDiscordVerify = async (req, res) => {
-  const { code, wallet } = req.query;
+  const { code, state: wallet } = req.query;
 
   if (!wallet) {
     return res.json({
@@ -20,7 +20,8 @@ const handleDiscordVerify = async (req, res) => {
       client_secret: process.env.DISCORD_CLIENT_SECRET,
       code,
       grant_type: 'authorization_code',
-      redirect_uri: `${process.env.NEXTAUTH_URL}/api/discord/verify`,
+      state: wallet,
+      redirect_uri: `${process.env.NEXTAUTH_URL}/api/social/discord/verify`,
       scope: 'identify guilds guilds.members.read',
     }).toString(),
     headers: {

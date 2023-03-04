@@ -15,6 +15,7 @@ export const oauth = new OAuth({
 });
 
 const handleTwitter = async (req, res) => {
+  const { wallet } = req.query;
 
   async function requestToken() {
     const authHeader = oauth.toHeader(oauth.authorize({
@@ -27,7 +28,7 @@ const handleTwitter = async (req, res) => {
       headers: {
         Authorization: authHeader["Authorization"]
       },
-      body: `oauth_callback=${process.env.NEXTAUTH_URL}/api/twitter/verify`
+      body: `oauth_callback=${process.env.NEXTAUTH_URL}/api/twitter/verify&state=${wallet}`
     }).then(async res => {
       const text = await res.text();
       return qs.parse(text);
