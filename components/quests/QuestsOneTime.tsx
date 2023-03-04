@@ -1,6 +1,9 @@
 import { Box, Flex } from 'components/primitives'
 import { Dispatch } from 'react'
 import { Quest } from './Quest'
+import quests from 'data/quests.json'
+import { useQuestEntries } from "hooks";
+import {QuestTask} from "../../pages/api/quest/entry";
 
 type Props = {
   setOpen: Dispatch<React.SetStateAction<boolean>>
@@ -8,6 +11,8 @@ type Props = {
 }
 
 export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
+  const { data: entries } = useQuestEntries()
+
   return (
     <Flex
       css={{
@@ -24,78 +29,21 @@ export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
         },
       }}
     >
-      <Box>
-        <Quest
-          title="Create account on NFTEarth"
-          description="Connect your Wallet and create your account on NFTEarth"
-          points={25}
-          locked={false}
-          link=""
-          setOpen={setOpen}
-          setQuest={setQuest}
-          number={1}
-        />
-      </Box>
-      <Box>
-        <Quest
-          title="Follow @NFTEarth on Twitter"
-          description="Connect Twitter to your NFTEarth account and follow us on Twitter."
-          points={25}
-          locked={false}
-          link=""
-          setOpen={setOpen}
-          setQuest={setQuest}
-          number={2}
-        />
-      </Box>
-      <Box>
-        <Quest
-          title="Retweet @NFTEarth's tweet"
-          description="Retweet a specific tweet posted by NFTEarth and get XP now."
-          points={25}
-          locked={false}
-          link=""
-          setOpen={setOpen}
-          setQuest={setQuest}
-          number={3}
-        />
-      </Box>
-      <Box>
-        <Quest
-          title="Join us on Discord"
-          description="Connect NFTEarth Discord and join us on Discord to get XP."
-          points={25}
-          locked={false}
-          link=""
-          setOpen={setOpen}
-          setQuest={setQuest}
-          number={4}
-        />
-      </Box>
-      <Box>
-        <Quest
-          title="List NFT for sale on NFTEarth"
-          description="List Any NFT of any supported blockchain for sale on NFTEarth."
-          points={25}
-          locked={false}
-          link=""
-          setOpen={setOpen}
-          setQuest={setQuest}
-          number={5}
-        />
-      </Box>
-      <Box>
-        <Quest
-          title="NFT Trader"
-          description="Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward."
-          points={25}
-          locked={false}
-          link=""
-          setOpen={setOpen}
-          setQuest={setQuest}
-          number={6}
-        />
-      </Box>
+      {quests.map(quest => (
+        <Box>
+          <Quest
+            key={`quest-${quest.id}`}
+            title={quest.title}
+            description={quest.description}
+            points={quest.exp}
+            locked={(entries || []).find((entry: any) => entry.quest_id === quest.id)}
+            tasks={quest.tasks as QuestTask[]}
+            setOpen={setOpen}
+            setQuest={setQuest}
+            number={quest.id}
+          />
+        </Box>
+      ))}
     </Flex>
   )
 }

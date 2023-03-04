@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "title": "Create account on NFTEarth",
+    "description": "Connect your Wallet and create your account on NFTEarth",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "connection",
+        "name": "wallet"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 2,
+    "title": "Follow @NFTEarth on Twitter",
+    "description": "Connect Twitter to your NFTEarth account and follow us on Twitter.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "connection",
+        "name": "twitter"
+      },
+      {
+        "type": "twitter_follow",
+        "user": "NFTEarth_L2"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 3,
+    "title": "Retweet @NFTEarth's tweet",
+    "description": "Retweet a specific tweet posted by NFTEarth and get XP now.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "twitter_retweet",
+        "id": "1631555869778276354"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 4,
+    "title": "Join us on Discord",
+    "description": "Connect NFTEarth Discord and join us on Discord to get XP.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "connection",
+        "name": "discord"
+      },
+      {
+        "type": "discord",
+        "id": "1062256160264171520"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 5,
+    "title": "List NFT for sale on NFTEarth",
+    "description": "List Any NFT of any supported blockchain for sale on NFTEarth.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "list"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 6,
+    "title": "NFT Trader",
+    "description": "Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "buy"
+      }
+    ],
+    "exp": 25
+  }
+]
