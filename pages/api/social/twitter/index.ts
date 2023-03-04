@@ -29,7 +29,7 @@ const handleTwitter = async (req: NextApiRequest, res: NextApiResponse) => {
       headers: {
         Authorization: authHeader["Authorization"]
       },
-      body: `oauth_callback=${process.env.NEXTAUTH_URL}/api/twitter/verify&state=${wallet}`
+      body: `oauth_callback=${process.env.NEXT_PUBLIC_HOST_URL}/api/twitter/verify&state=${wallet}`
     }).then(async res => {
       const text = await res.text()
       return qs.parse(text)

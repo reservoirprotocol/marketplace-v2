@@ -74,7 +74,7 @@ const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     })
   }
 
-  return res.redirect('/quest')
+  return res.redirect('/quests')
 }
 
 export default handleTwitterVerify

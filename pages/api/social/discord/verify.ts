@@ -22,7 +22,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
       code: code as string,
       grant_type: 'authorization_code',
       state: wallet as string,
-      redirect_uri: `${process.env.NEXTAUTH_URL}/api/social/discord/verify`,
+      redirect_uri: `${process.env.NEXT_PUBLIC_HOST_URL}/api/social/discord/verify`,
       scope: 'identify guilds guilds.members.read',
     }).toString(),
     headers: {
@@ -90,7 +90,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     });
   }
 
-  return res.redirect('/quest');
+  return res.redirect('/quests');
 }
 
 export default handleDiscordVerify;
