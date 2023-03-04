@@ -1,8 +1,9 @@
-import db  from "lib/db";
+import db  from "lib/db"
+import type {NextApiRequest, NextApiResponse} from "next"
 
-const account = db.collection('account');
+const account = db.collection('account')
 
-const handleDiscordVerify = async (req, res) => {
+const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) => {
   const { code, state: wallet } = req.query;
 
   if (!wallet) {
@@ -16,11 +17,11 @@ const handleDiscordVerify = async (req, res) => {
   const authData = await fetch('https://discord.com/api/oauth2/token', {
     method: 'POST',
     body: new URLSearchParams({
-      client_id: process.env.DISCORD_CLIENT_ID,
-      client_secret: process.env.DISCORD_CLIENT_SECRET,
-      code,
+      client_id: process.env.DISCORD_CLIENT_ID as string,
+      client_secret: process.env.DISCORD_CLIENT_SECRET as string,
+      code: code as string,
       grant_type: 'authorization_code',
-      state: wallet,
+      state: wallet as string,
       redirect_uri: `${process.env.NEXTAUTH_URL}/api/social/discord/verify`,
       scope: 'identify guilds guilds.members.read',
     }).toString(),
@@ -90,6 +91,6 @@ const handleDiscordVerify = async (req, res) => {
   }
 
   return res.redirect('/quest');
-};
+}
 
 export default handleDiscordVerify;

@@ -1,12 +1,13 @@
-import { oauth } from "./";
-import qs from "querystring";
-import db  from "lib/db";
+import { oauth } from "./"
+import qs from "querystring"
+import db  from "lib/db"
+import type {NextApiRequest, NextApiResponse} from "next"
 
-const account = db.collection('account');
-export const accessTokenURL = 'https://api.twitter.com/oauth/access_token';
+const account = db.collection('account')
+export const accessTokenURL = 'https://api.twitter.com/oauth/access_token'
 
-const handleTwitterVerify = async (req, res) => {
-  const { oauth_verifier, oauth_token, state: wallet } = req.query;
+const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { oauth_verifier, oauth_token, state: wallet } = req.query
 
   if (wallet) {
     return res.json({
@@ -19,28 +20,28 @@ const handleTwitterVerify = async (req, res) => {
   const authHeader = oauth.toHeader(oauth.authorize({
     url: accessTokenURL,
     method: 'POST'
-  }));
-  const path = `${accessTokenURL}/?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`;
-  const data = await fetch(path, {
+  }))
+  const path = `${accessTokenURL}/?oauth_token=${oauth_token}&oauth_verifier=${oauth_verifier}`
+  const data: any = await fetch(path, {
     method: 'POST',
     headers: {
       Authorization: authHeader["Authorization"]
     }
   }).then(async res => {
-    const text = await res.text();
-    return qs.parse(text);
+    const text = await res.text()
+    return qs.parse(text)
   }).catch((e) => {
     console.error(e.message)
     return {
       username: 'USER'
     }
-  });
+  })
 
   if (data.username !== 'USER') {
     const otherAccount = await account.findOne({
       twitter_id: data.user_id,
-      wallet: {$ne: session?.wallet}
-    }).catch(() => null);
+      wallet: {$ne: wallet}
+    }).catch(() => null)
 
     if (otherAccount) {
       return res.json({
@@ -52,7 +53,7 @@ const handleTwitterVerify = async (req, res) => {
 
     const existingAccount = await account.findOne({
       wallet: wallet
-    }).catch(() => null);
+    }).catch(() => null)
 
     if (!existingAccount) {
       await account.insertOne({
@@ -70,10 +71,10 @@ const handleTwitterVerify = async (req, res) => {
         twitter_oauth_token: data.oauth_token,
         twitter_oauth_token_secret: data.oauth_token_secret,
       }
-    });
+    })
   }
 
-  return res.redirect('/quest');
-};
+  return res.redirect('/quest')
+}
 
-export default handleTwitterVerify;
+export default handleTwitterVerify
