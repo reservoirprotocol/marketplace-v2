@@ -138,16 +138,16 @@ export const QuestFollowTwitter = () => {
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              Step 1: Link a Twitter account to your Zonic account
+              Step 1: Link a Twitter account to your NFTEarth account
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Browse to the Profile Settings page and link a Twitter account to your Zonic account.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Browse to the Profile Settings page and link a Twitter account to your NFTEarth account.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
               Step 2: Follow @NFTEarth on Twitter
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @ZonicApp.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @NFTEarth.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
@@ -373,7 +373,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              Step 1: Purchasing NFT on Zonic
+              Step 1: Purchasing NFT on NFTEarth
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               <Link href="https://nftearth.exchange/explore">
@@ -386,7 +386,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
             >
               Step 2: Follow @NFTEarth on Twitter
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @ZonicApp.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @NFTEarth.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
