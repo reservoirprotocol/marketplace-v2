@@ -1,8 +1,7 @@
 import { Flex, Box, Button, Text } from 'components/primitives'
 import Image from 'next/image'
 import Link from 'next/link'
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
 
 interface ModalProps {
   header: string
@@ -42,6 +41,18 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
         </Flex>
       </Flex>
       {children}
+      <Flex direction="column" css={{ padding: '0 12px'}}>
+        <Flex
+          direction="column"  
+          css={{
+            background: '$gray4',
+            borderRadius: '$xl',
+            padding: '20px 30px'
+          }}
+        >
+          <ConnectWalletButton />
+        </Flex>
+      </Flex>
     </Flex>
   )
 }

@@ -15,8 +15,6 @@ import {
   QuestRetweet,
   QuestJoinDiscord,
   QuestListNFT,
-  QuestListNFTOnANYChain,
-  QuestListNFTInNFTEOnAnyChain,
   QuestBuyNFTInNFTEOnAnyChain,
 } from 'components/quests/templates'
 
