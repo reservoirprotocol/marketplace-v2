@@ -71,10 +71,17 @@ type QuestTwitterLikeRetweet = {
 
 type QuestListMarket = {
   type: 'list'
+  currency?: string
   passes: boolean
 }
 
-export type QuestRequirement = QuestConnection | QuestDiscord | QuestTwitterFollow | QuestTwitterRetweet | QuestTwitterLike | QuestTwitterLikeRetweet | QuestListMarket
+type QuestBuyMarket = {
+  type: 'buy'
+  currency?: string
+  passes: boolean
+}
+
+export type QuestRequirement = QuestConnection | QuestDiscord | QuestTwitterFollow | QuestTwitterRetweet | QuestTwitterLike | QuestTwitterLikeRetweet | QuestListMarket | QuestBuyMarket
 
 const getMember = (guild_id: string, access_token: string) => fetch(`https://discord.com/api/v10/users/@me/guilds/${guild_id}/member`, {
   headers: {
@@ -385,27 +392,129 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (r.type === 'list') {
-      const listingQuery: paths["/orders/asks/v4"]["get"]["parameters"]["query"] = {
-        source: 'nftearth.exchange',
-        includePrivate: true,
-        maker: wallet,
-        limit: 1
+      const getListing = async (continuation: any) => {
+        const listingQuery: paths["/orders/asks/v4"]["get"]["parameters"]["query"] = {
+          source: 'nftearth.exchange',
+          includePrivate: true,
+          maker: wallet,
+          limit: r.currency ? 1000 : 1
+        }
+
+        const promises: ReturnType<typeof fetcher>[] = []
+        supportedChains.forEach((chain, i) => {
+          if (continuation[i] !== null) {
+            if (continuation[i]) {
+              listingQuery.continuation = continuation[i]
+            }
+
+            promises.push(
+              fetcher(`${chain.reservoirBaseUrl}/orders/asks/v4`, listingQuery, {
+                headers: {
+                  'x-api-key': chain.apiKey || '',
+                },
+              })
+            )
+          }
+        })
+
+        const responses = await Promise.allSettled(promises)
+        let results: paths["/orders/asks/v4"]["get"]["responses"]["200"]["schema"]["orders"] = [];
+        let newContinuation: any = [];
+        responses.forEach((response, i) => {
+          newContinuation[i] = null;
+          if (response.status === 'fulfilled' && response.value.data) {
+            results = results?.concat(response.value.data.orders);
+            newContinuation[i] = response.value.data.continuation;
+          }
+        })
+
+        return {
+          data: results,
+          continuation: newContinuation
+        };
       }
 
-      const promises: ReturnType<typeof fetcher>[] = []
-      supportedChains.forEach((chain) => {
-        promises.push(
-          fetcher(`${chain.reservoirBaseUrl}/orders/asks/v4`, listingQuery, {
-            headers: {
-              'x-api-key': chain.apiKey || '',
-            },
-          })
-        )
-      })
+      let hasNextPage = true
+      let continuation = new Array(supportedChains.length).fill(undefined);
 
-      const responses = await Promise.allSettled(promises)
+      while (hasNextPage && !r.passes) {
+        let resp: any = await getListing(continuation)
+        if (resp && resp.data && resp.data.length > 0) {
+          r.passes = true;
 
-      r.passes = responses.length > 0
+          if (r.currency) {
+            r.passes = !!resp.data.find((r: any) => r.price.currency.symbol === r.currency)
+          }
+
+          if (!!resp.continuation.find((c: string) => c !== null)) {
+            continuation = resp.continuation
+          } else {
+            hasNextPage = false
+          }
+        } else {
+          hasNextPage = false
+        }
+      }
+    }
+
+    if (r.type === 'buy') {
+      const getBuy = async (continuation: any) => {
+        const buyQuery: paths["/users/activity/v5"]["get"]["parameters"]["query"] = {
+          users: wallet,
+          limit: 1000
+        }
+
+        const promises: ReturnType<typeof fetcher>[] = []
+        supportedChains.forEach((chain, i) => {
+          if (continuation[i] !== null) {
+            if (continuation[i]) {
+              buyQuery.continuation = continuation[i]
+            }
+
+            promises.push(
+              fetcher(`${chain.reservoirBaseUrl}/users/activity/v5`, buyQuery, {
+                headers: {
+                  'x-api-key': chain.apiKey || '',
+                },
+              })
+            )
+          }
+        })
+
+        const responses = await Promise.allSettled(promises)
+        let results: paths["/users/activity/v5"]["get"]["responses"]["200"]["schema"]["activities"] = [];
+        let newContinuation: any = [];
+        responses.forEach((response, i) => {
+          newContinuation[i] = null;
+          if (response.status === 'fulfilled' && response.value.data) {
+            results = results?.concat(response.value.data.activities);
+            newContinuation[i] = response.value.data.continuation;
+          }
+        })
+
+        return {
+          data: results,
+          continuation: newContinuation
+        };
+      }
+
+      let hasNextPage = true
+      let continuation = new Array(supportedChains.length).fill(undefined);
+
+      while (hasNextPage && !r.passes) {
+        let resp: any = await getBuy(continuation)
+        if (resp && resp.data && resp.data.length > 0) {
+          r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange').length > 0;
+
+          if (!!resp.continuation.find((c: string) => c !== null)) {
+            continuation = resp.continuation
+          } else {
+            hasNextPage = false
+          }
+        } else {
+          hasNextPage = false
+        }
+      }
     }
 
     return r
