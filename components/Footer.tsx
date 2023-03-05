@@ -108,7 +108,7 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join the Community" />
+        <SectionTitle title="Join the community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
