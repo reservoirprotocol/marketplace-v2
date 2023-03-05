@@ -1,13 +1,12 @@
-import { FC, ReactNode, useState } from 'react'
+import { useState } from 'react'
 import { useTheme } from 'next-themes'
-import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faMapPin, faEdit, faList, faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { Text, Flex, Box, Grid } from 'components/primitives'
 import Layout from 'components/Layout'
 import SettingsContentContainer from "components/my-collections/settings/SettingsContentContainer"
 import DetailsSettings from 'components/my-collections/settings/DetailsSettings'
-import RoyalitiesSettings from 'components/my-collections/settings/RoyalitiesSettings'
+import RoyaltiesSettings from 'components/my-collections/settings/RoyaltiesSettings'
 import MintStateSettings from 'components/my-collections/settings/MintStateSettings'
 import WhitelistSettings from 'components/my-collections/settings/WhitelistSettings'
 import MetadataSettings from 'components/my-collections/settings/MetadataSettings'
@@ -15,17 +14,40 @@ import {useContractReads} from "wagmi"
 import {useRouter} from "next/router"
 import launchpadArtifact from 'artifact/NFTELaunchpad.json'
 import { ethers } from "ethers";
-
-type ContractStatusFunctions = 'activeSale' | 'presalePrice' | 'publicPrice' | '_URI';
+import {useLaunchpads, useMarketplaceChain} from "hooks";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 const MyCollectionDetailPage = () => {
   const { theme } = useTheme();
-  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const [activeTab, setActiveTab] = useState<string | null>('details')
   const router = useRouter()
+  const marketplaceChain = useMarketplaceChain()
+
+  const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
+    id: router.query.id as string,
+    limit: 1,
+  }
+
+  const {
+    data: launchpads,
+    mutate,
+    isFetchingPage,
+    isValidating,
+  } = useLaunchpads(
+    marketplaceChain,
+    launchpadsQuery,
+    {
+      revalidateOnMount: false,
+      fallbackData: [],
+      revalidateFirstPage: false,
+      revalidateIfStale: false,
+    }
+  )
+
+  const launchpad: ReturnType<typeof useLaunchpads>['data'][0] = launchpads[0]
 
   const launchpadContract = {
-    address: router.query.id as `0x${string}`,
+    address: launchpad?.id as `0x${string}`,
     abi: launchpadArtifact.abi,
   }
 
@@ -53,13 +75,11 @@ const MyCollectionDetailPage = () => {
         ...launchpadContract,
         functionName: '_URI'
       }
-    ]
+    ],
+    cacheTime: 5_000
   })
 
   const [activePresale, activePublic, presalePrice, publicPrice, URI ] = contractData || [];
-
-  console.log(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
-  console.log(`URI : ${URI}`);
 
   const getCssTab = (tab: string) => ({
     tab: {
@@ -77,6 +97,16 @@ const MyCollectionDetailPage = () => {
       color: activeTab === tab ? (theme === 'light' ? '$primary8' : '$primary10') : 'initial',
     }
   })
+
+  if (!launchpad) {
+    return (
+      <Layout>
+        <Flex align="center" justify="center" css={{ py: '40vh' }}>
+          <LoadingSpinner />
+        </Flex>
+      </Layout>
+    )
+  }
 
   return (
     <Layout>
@@ -168,7 +198,9 @@ const MyCollectionDetailPage = () => {
               activeTab={activeTab}
               icon={faGear}
               setActiveTab={() => setActiveTab('details')}>
-              <DetailsSettings activeTab={activeTab} />
+              <DetailsSettings
+                launchpad={launchpad}
+              />
             </SettingsContentContainer>
             <SettingsContentContainer
               tab='royalities'
@@ -176,7 +208,10 @@ const MyCollectionDetailPage = () => {
               activeTab={activeTab}
               icon={faMapPin}
               setActiveTab={() => setActiveTab('royalities')}>
-              <RoyalitiesSettings activeTab={activeTab} />
+              <RoyaltiesSettings
+                royalties={launchpad.royalties || []}
+                allRoyalties={launchpad.allRoyalties || {}}
+              />
             </SettingsContentContainer>
             <SettingsContentContainer
               tab='mintState'
@@ -184,7 +219,12 @@ const MyCollectionDetailPage = () => {
               activeTab={activeTab}
               icon={faEdit}
               setActiveTab={() => setActiveTab('mintState')}>
-              <MintStateSettings activeTab={activeTab} />
+              <MintStateSettings
+                activePresale={activePresale as boolean}
+                presalePrice={ethers.utils.formatEther(`${presalePrice || '0'}`).toString()}
+                activePublic={activePublic as boolean}
+                publicPrice={ethers.utils.formatEther(`${publicPrice || '0'}`).toString()}
+              />
             </SettingsContentContainer>
             <SettingsContentContainer
               tab='whitelist'
@@ -192,7 +232,9 @@ const MyCollectionDetailPage = () => {
               activeTab={activeTab}
               icon={faList}
               setActiveTab={() => setActiveTab('whitelist')}>
-              <WhitelistSettings activeTab={activeTab} />
+              <WhitelistSettings
+                allowlist={launchpad.allowlists}
+              />
             </SettingsContentContainer>
             <SettingsContentContainer
               tab='metadata'
@@ -200,7 +242,9 @@ const MyCollectionDetailPage = () => {
               activeTab={activeTab}
               icon={faFileImage}
               setActiveTab={() => setActiveTab('metadata')}>
-              <MetadataSettings activeTab={activeTab} />
+              <MetadataSettings
+                uri={`${URI}`}
+              />
             </SettingsContentContainer>
           </Box>
         </Grid>

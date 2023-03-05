@@ -5,27 +5,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
 
 type Props = {
-  activeTab: string | null
+  uri: string | undefined
 }
 
-const MintStateSettings:FC<Props> = ({ activeTab }) => {
+const MintStateSettings:FC<Props> = ({ uri }) => {
   const { theme } = useTheme();
 
-  const [metadataUrl, setMetadataUrl] = useState('')
-  
-  const resetState = () => {
-   setMetadataUrl('')
-  }
+  const [metadataUrl, setMetadataUrl] = useState(uri)
+
+  useEffect(() => {
+    setMetadataUrl(uri)
+  }, [uri])
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
     // TODO: Fetch to API
   }
-
-  useEffect(() => {
-    if (activeTab !== 'royalities') resetState();
-  }, [activeTab])
 
   return (
     <Box

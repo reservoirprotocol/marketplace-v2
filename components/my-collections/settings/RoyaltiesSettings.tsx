@@ -6,7 +6,8 @@ import { Text, Flex, Box, Input, Button, Grid } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
 
 type Props = {
-  activeTab: string | null
+  royalties: any
+  allRoyalties: any
 }
 
 type AddressType = {
@@ -14,9 +15,8 @@ type AddressType = {
   percentage: string
 }
 
-const RoyalitiesSettings:FC<Props> = ({ activeTab }) => {
+const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
   const { theme } = useTheme();
-
   const [addresses, setAddresses] = useState<AddressType[]>([])
   const [errorPercentage, setErrorPercentage] = useState(false)
   const [sumPercentage, setSumPercentage] = useState(0)
@@ -26,6 +26,13 @@ const RoyalitiesSettings:FC<Props> = ({ activeTab }) => {
 
     // TODO: Fetch to API
   }
+
+  useEffect(() => {
+    setAddresses(royalties.map((royalty: any) => ({
+      value: royalty.address,
+      percentage: royalty.bps * 0.001
+    })))
+  }, [royalties, allRoyalties])
 
   const handleAddAddresses = () => {
     const addressesStateCopy = addresses.slice()
@@ -48,7 +55,7 @@ const RoyalitiesSettings:FC<Props> = ({ activeTab }) => {
     inputType: 'value' | 'percentage', 
     inputValue: string
   ) => {
-    const validValueRegexp = /^([0-9]|10)$/
+    const validValueRegexp = /^([0-9.]{1,3})$/
     const isValidPercentageValue = validValueRegexp.test(inputValue)
 
     if (
@@ -66,10 +73,6 @@ const RoyalitiesSettings:FC<Props> = ({ activeTab }) => {
 
     setAddresses(addressesStateCopy)
   }
-
-  useEffect(() => {
-    if (activeTab !== 'royalities') setAddresses([]);
-  }, [activeTab])
 
   useEffect(() => {
     const sumAllPercentageValue = addresses.reduce((a, b) => a + +b.percentage, 0)
@@ -214,4 +217,4 @@ const RoyalitiesSettings:FC<Props> = ({ activeTab }) => {
   )
 }
 
-export default RoyalitiesSettings
+export default RoyaltiesSettings

@@ -6,17 +6,16 @@ import { Text, Flex, Box, Input, Button, Grid } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
 
 type Props = {
-  activeTab: string | null
+  allowlist: string[]
 }
 
-type AddressType = {
-  value: string
-}
-
-const WhitelistSettings:FC<Props> = ({ activeTab }) => {
+const WhitelistSettings:FC<Props> = ({ allowlist }) => {
   const { theme } = useTheme();
+  const [whitelist, setWhitelist] = useState<string[]>(allowlist || [])
 
-  const [whitelist, setWhitelist] = useState<AddressType[]>([])
+  useEffect(() => {
+    setWhitelist(allowlist || []);
+  }, [allowlist])
   
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -27,7 +26,7 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
   const handleAddWhitelist = () => {
     const whitelistStateCopy = whitelist.slice()
 
-    whitelistStateCopy.push({ value: '' })
+    whitelistStateCopy.push('')
 
     setWhitelist(whitelistStateCopy)
   }
@@ -46,17 +45,10 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
   ) => {
     const whitelistStateCopy = whitelist.slice()
 
-    whitelistStateCopy.splice(addressIdx, 1, {
-      ...whitelistStateCopy[addressIdx],
-      value: inputValue
-    })
+    whitelistStateCopy[addressIdx] = inputValue;
 
     setWhitelist(whitelistStateCopy)
   }
-
-  useEffect(() => {
-    if (activeTab !== 'whitelist') setWhitelist([]);
-  }, [activeTab])
 
   return (
     <Box
@@ -81,7 +73,7 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
       </Box>
       <Box css={{ marginBottom: 8 }}>
         <Flex direction='column'>
-          <Text style="h6" css={{ color: '$gray11' }}>Allowlist List</Text>
+          <Text style="h6" css={{ color: '$gray11' }}>Allowlist</Text>
         </Flex>
       </Box>
       <Box css={{ marginBottom: 8 }}>
@@ -94,7 +86,7 @@ const WhitelistSettings:FC<Props> = ({ activeTab }) => {
             }}>
             <Box css={{ position: 'relative', width: '100%' }}>
               <StyledInput
-                value={address.value}
+                value={address}
                 onChange={(e) => handleAddressInputChange(index, e.target.value)}
                 placeholder='0x7D3E5dD617EAF4A3d....'
                 css={{

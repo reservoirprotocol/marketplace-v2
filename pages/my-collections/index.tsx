@@ -13,6 +13,8 @@ import fetcher from 'utils/fetcher'
 import {useEffect, useRef} from "react";
 import {useIntersectionObserver} from "usehooks-ts";
 import {useAccount} from "wagmi";
+import ChainToggle from "../../components/home/ChainToggle";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -60,17 +62,22 @@ const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <Flex direction="column">
-          <Text css={{ ml: '25px' }} style="h4">
-            My Collections
-          </Text>
-          <Text
-            style="subtitle2"
-            css={{ marginTop: 4, marginLeft: '25px', color: '$gray11' }}
-          >
-            Create, curate, and manage collections of unique NFTs to share and
-            sell.
-          </Text>
+        <Flex justify="between">
+          <Flex direction="column">
+            <Text css={{ ml: '25px' }} style="h4">
+              My Collections
+            </Text>
+            <Text
+              style="subtitle2"
+              css={{ marginTop: 4, marginLeft: '25px', color: '$gray11' }}
+            >
+              Create, curate, and manage collections of unique NFTs to share and
+              sell.
+            </Text>
+          </Flex>
+          <Box>
+            <ChainToggle compact/>
+          </Box>
         </Flex>
         <Flex
           direction="column"
@@ -111,6 +118,12 @@ const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
               {launchpads?.map((collection, i) => (
                 <CollectionCard heroImg="" key={i} collection={collection} />
               ))}
+              <Box ref={loadMoreRef} css={{ height: 20 }}/>
+              {isValidating && (
+                <Flex align="center" justify="center" css={{ py: '$5' }}>
+                  <LoadingSpinner />
+                </Flex>
+              )}
             </CollectionGrid>
           </Box>
         </Flex>

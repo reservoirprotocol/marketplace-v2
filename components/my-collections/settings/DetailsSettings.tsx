@@ -6,18 +6,38 @@ import { StyledInput } from "components/primitives/Input";
 import { ToastContext } from '../../../context/ToastContextProvider'
 
 type Props = {
-  activeTab: string | null
+  launchpad: any
 }
 
-const DetailsSettings:FC<Props> = ({ activeTab }) => {
+const Thumbs = ({ image } : { image: string }) => (
+  <Box
+    css={{
+      height: '100%',
+      boxSizing: 'border-box',
+      position: 'relative'
+    }}>
+    <Flex
+      css={{
+        overflow: 'hidden',
+        height: '100%',
+      }}>
+      <img
+        src={image}
+        style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
+        onLoad={() => { URL.revokeObjectURL(image) }}/>
+    </Flex>
+  </Box>
+);
+
+const DetailsSettings:FC<Props> = ({ launchpad }) => {
   const { theme } = useTheme();
   const { addToast } = useContext(ToastContext)
 
   const [name, setName] = useState('')
   const [url, setUrl] = useState('')
   const [description, setDescription] = useState('')
-  const [collectionImages, setCollectionImages] = useState<File[]>([])
-  const [coverImages, setCoverImages] = useState<File[]>([])
+  const [collectionImage, setCollectionImage] = useState<string | undefined>(undefined)
+  const [coverImage, setCoverImage] = useState<string | undefined>(undefined)
   const [category, setCategory] = useState<string | undefined>()
   const [websiteLink, setWebsiteLink] = useState('')
   const [twitter, setTwitter] = useState('')
@@ -36,6 +56,19 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
     { label: 'No Category', value: 'no_category' },
   ]
 
+  useEffect(() => {
+    if (launchpad) {
+      setName(launchpad.name)
+      setUrl(launchpad.slug)
+      setDescription(launchpad.description)
+      setCollectionImage(launchpad.image)
+      setCoverImage(launchpad.banner)
+      setWebsiteLink(launchpad.externalUrl)
+      setTwitter(launchpad.twitterUsername)
+      setDiscord(launchpad.discordUrl)
+    }
+  }, [launchpad])
+
   const { 
     getRootProps: getCollectionImageRootProps, 
     getInputProps: getCollectionImageInputProps } = useDropzone({
@@ -48,9 +81,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
           handleErrorDropImage(rejectedFiles)
         }
 
-        setCollectionImages(acceptedFiles.map(file => Object.assign(file, {
-          preview: URL.createObjectURL(file)
-        })));
+        setCollectionImage(URL.createObjectURL(acceptedFiles[0]));
       }
     }
   );
@@ -66,10 +97,8 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
         if (rejectedFiles.length > 0) {
           handleErrorDropImage(rejectedFiles)
         }
-        
-        setCoverImages(acceptedFiles.map(file => Object.assign(file, {
-          preview: URL.createObjectURL(file)
-        })));
+
+        setCoverImage(URL.createObjectURL(acceptedFiles[0]));
       },
       onError: err => console.log(err)
     }
@@ -90,8 +119,8 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
     setName('');
     setUrl('');
     setDescription('');
-    setCollectionImages([]);
-    setCoverImages([]);
+    setCollectionImage(undefined);
+    setCoverImage(undefined);
     setCategory(undefined);
     setWebsiteLink('');
     setTwitter('');
@@ -103,31 +132,6 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
 
     // TODO: Fetch to API
   }
-
-  useEffect(() => {
-    if (activeTab !== 'details') resetState();
-  }, [activeTab])
-
-  const renderThumbs = (images: any, state: string) => images.map((file: any) => (
-    <Box 
-      key={file.name}
-      css={{
-        height: '100%',
-        boxSizing: 'border-box',
-        position: 'relative'
-      }}>
-      <Flex 
-        css={{
-          overflow: 'hidden',
-          height: '100%',
-        }}>
-        <img
-          src={file.preview}
-          style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }}
-          onLoad={() => { URL.revokeObjectURL(file.preview) }}/>
-      </Flex>
-    </Box>
-  ));
   
   return (
     <Box
@@ -217,7 +221,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
           </Text>
         </Flex>
         <Box css={{ position: 'relative', width: 160 }}>
-          {collectionImages.length === 0 ? (
+          {!collectionImage ? (
             <Box {...getCollectionImageRootProps()}>
               <Input
                 {...getCollectionImageInputProps()}
@@ -242,11 +246,9 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
                   transform: 'translateX(-50%) translateY(-50%)',
                   height: '100%'
                 }}>
-                {collectionImages.length === 0 && (
-                  <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
-                    Drag 'n' drop some files here, or click to select
-                  </Text>
-                )}
+                <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
+                  Drag 'n' drop some files here, or click to select
+                </Text>
               </Flex>
             </Box>
           ) : (
@@ -259,15 +261,13 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
                 marginTop: 6,
                 borderRadius: 6
               }}>
-              {renderThumbs(collectionImages, 'collectionImages')}
-              {collectionImages.length > 0 && (
-                <Button 
-                  color='ghost' 
-                  css={{ padding: 0, fontSize: 14 }}
-                  onClick={() => setCollectionImages([])}>
-                  Reset
-                </Button>
-              )}
+              <Thumbs image={collectionImage} />
+              <Button
+                color='ghost'
+                css={{ padding: 0, fontSize: 14 }}
+                onClick={() => setCollectionImage(undefined)}>
+                Reset
+              </Button>
             </Box>
           )}
         </Box>
@@ -277,7 +277,7 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
           <Text style="h6" css={{ color: '$gray11' }}>Cover Image</Text>
         </Flex>
         <Box css={{ position: 'relative', width: '100%' }}>
-          {coverImages.length === 0 ? (
+          {!coverImage ? (
             <Box {...getCoverImageRootProps()}>
               <Input
                 {...getCoverImageInputProps()}
@@ -302,11 +302,9 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
                   transform: 'translateX(-50%) translateY(-50%)',
                   height: '100%',
                 }}>
-                {coverImages.length === 0 && (
-                  <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
-                    Drag 'n' drop some files here, or click to select
-                  </Text>
-                )}
+                <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
+                  Drag 'n' drop some files here, or click to select
+                </Text>
               </Flex>
             </Box>
           ) : (
@@ -319,15 +317,13 @@ const DetailsSettings:FC<Props> = ({ activeTab }) => {
                 marginTop: 6,
                 borderRadius: 6
               }}>
-              {renderThumbs(coverImages, 'coverImages')}
-              {coverImages.length > 0 && (
-                <Button 
-                  color='ghost' 
-                  css={{ padding: 0, fontSize: 14 }}
-                  onClick={() => setCoverImages([])}>
-                  Reset
-                </Button>
-              )}
+              <Thumbs image={coverImage} />
+              <Button
+                color='ghost'
+                css={{ padding: 0, fontSize: 14 }}
+                onClick={() => setCoverImage(undefined)}>
+                Reset
+              </Button>
             </Box>
           )}
         </Box>

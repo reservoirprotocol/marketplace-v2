@@ -1,4 +1,4 @@
-import {useState, ChangeEvent, KeyboardEvent, useMemo} from 'react'
+import {useState, ChangeEvent, KeyboardEvent, useMemo, useEffect} from 'react'
 import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { Text, Flex, Box, Input, Switch, Button } from 'components/primitives'
@@ -7,16 +7,27 @@ import { StyledInput } from 'components/primitives/Input'
 import LaunchHeroSection from 'components/launch/LaunchHeroSection'
 import artifact from 'artifact/NFTELaunchpad.json';
 import { ethers } from 'ethers';
+import { useModal } from 'connectkit'
 import { getContractAddress } from '@ethersproject/address';
-import { useNetwork } from 'wagmi';
 import detectEthereumProvider from '@metamask/detect-provider'
+import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi'
 import {ExternalProvider} from "@ethersproject/providers";
 import supportedChains, {DefaultChain} from 'utils/chains'
+import * as Dialog from "@radix-ui/react-dialog";
+import {AnimatedContent, AnimatedOverlay} from "components/primitives/Dialog";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCheckCircle} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import {useMounted, useMarketplaceChain} from "hooks";
+import LoadingSpinner from "components/common/LoadingSpinner";
+import {truncateAddress} from "utils/truncate";
+import ChainToggle from "components/home/ChainToggle";
 
 const LaunchPadDeployPage = () => {
   const { theme } = useTheme()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const { chain: activeChain } = useNetwork();
+  const isMounted = useMounted()
   const [step, setStep] = useState(0);
   const [name, setName] = useState('')
   const [symbol, setSymbol] = useState('')
@@ -28,8 +39,17 @@ const LaunchPadDeployPage = () => {
   const [isReserveTokens, setIsReserveTokens] = useState(false)
   const [allowlistMintPrice, setAllowlistMintPrice] = useState('')
   const [publicMintPrice, setPublicMintPrice] = useState('')
+  const [txHash, setTxHash] = useState('')
   const [error, setError] = useState(undefined);
+  const [open, setOpen] = useState(true);
+  const [deployedAddress, setDeployedAddress] = useState<string>('')
   const { proxyApi } = supportedChains.find(c => c.id === activeChain?.id) || DefaultChain;
+  const { id: marketChainId } = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketChainId,
+  })
+  const { setOpen: setConnectModalOpen, open: isConnectModalOpened } = useModal();
+  const { isConnected } = useAccount()
 
   const publicSupply = useMemo(() => {
     return +supply - +allowlistSupply - +reservedSupply;
@@ -39,8 +59,8 @@ const LaunchPadDeployPage = () => {
     return [
       name,
       symbol,
-      "",
-      "0x7D3E5dD617EAF4A3d42EA550C41097086605c4aF",
+      "ipfs://",
+      "0xA0eF81115da438102B3c8afC3F66fcf9D757913E",
       +supply || 1,
       +maxPerWallet || +supply || 1,
       +reservedSupply || 0,
@@ -64,27 +84,43 @@ const LaunchPadDeployPage = () => {
   const handleDeployContract = async (e: any) => {
     console.log('Deploying contract');
     e.preventDefault();
-    setError(undefined);
     try {
       // Approve Wallet
-      setStep(1);
+      setError(undefined);
+
+      if (!isConnected && !isConnectModalOpened) {
+        setStep(1);
+        setConnectModalOpen(true);
+        return;
+      }
+
+      if (activeChain?.id !== marketChainId) {
+        setStep(2);
+        await switchNetworkAsync?.();
+      }
+
+      setStep(3);
       const browserProvider = await detectEthereumProvider() as ExternalProvider;
       const provider = new ethers.providers.Web3Provider(browserProvider);
       const signer = provider.getSigner()
-      // // Using the signing account to deploy the contract
-      const factory = new ethers.ContractFactory(artifact.abi, artifact.data.bytecode.object, signer);
-      const contract = await factory.deploy(constructorArgs);
-      // Deploying Contract...
-      // Check your transaction at [activeChain?.blockExplorers?.default?.name] = `${activeChain?.blockExplorers?.default?.url}/tx/${contract.deployTransaction.hash}`
-      setStep(2);
-      console.log(`${activeChain?.blockExplorers?.default?.url}/tx/${contract.deployTransaction.hash}`);
-
       const transactionCount = await signer.getTransactionCount()
       const deployer = await signer.getAddress();
       const futureAddress = getContractAddress({
         from: deployer,
         nonce: transactionCount
       })
+      // // Using the signing account to deploy the contract
+      const factory = new ethers.ContractFactory(artifact.abi, artifact.data.bytecode.object, signer);
+
+      const contract = await factory.deploy(constructorArgs);
+      // Deploying Contract...
+      // Check your transaction at [activeChain?.blockExplorers?.default?.name] = `${activeChain?.blockExplorers?.default?.url}/tx/${contract.deployTransaction.hash}`
+      setStep(4);
+
+      setTxHash(contract.deployTransaction.hash)
+
+      // Waiting for the transaction to be mined
+      await contract.deployTransaction.wait(6);
 
       await fetch(`${proxyApi}/launchpad/create/v1`,{
         method: 'POST',
@@ -98,10 +134,8 @@ const LaunchPadDeployPage = () => {
           bytecode: artifact.data.bytecode.object,
           deployer: deployer
         })
-      }).catch(console.error)
+      })
 
-      // Waiting for the transaction to be mined
-      await contract.deployTransaction.wait(6);
       await fetch(`/api/launchpad/verify`,{
         method: 'POST',
         headers: {
@@ -117,13 +151,21 @@ const LaunchPadDeployPage = () => {
 
       // Contract Deployed
       // Your contract deployed at [0xsadsadasdasdsad] = `${activeChain?.blockExplorers?.default?.url}/address/${futureAddress}`
-      console.log(`Contract deployed at : ${futureAddress}`);
-      setStep(3);
+      setDeployedAddress(futureAddress);
+      setStep(5);
     } catch (e: any) {
-      setError(e.message);
+      setError(e.reason || e.message);
       setStep(0);
     }
   }
+
+  useEffect(() => {
+    if (isMounted && step > 1) {
+      setOpen(true)
+    } else {
+      setOpen(false)
+    }
+  }, [isMounted, step])
 
   return (
     <Layout>
@@ -148,8 +190,10 @@ const LaunchPadDeployPage = () => {
             }}
           >
             <LaunchHeroSection />
-            {step}
             <Box css={{ marginTop: 32 }}>
+              <Flex justify="center">
+                <ChainToggle />
+              </Flex>
               <Box css={{ marginBottom: 32 }}>
                 <Text style="h6" css={{ color: '$white' }}>
                   Name
@@ -199,6 +243,7 @@ const LaunchPadDeployPage = () => {
                   required
                   type="number"
                   value={supply}
+                  min={1}
                   onChange={(e) => setSupply(e.target.value)}
                   placeholder="Max collection supply"
                   css={{
@@ -219,6 +264,7 @@ const LaunchPadDeployPage = () => {
                 <Input
                   type="number"
                   value={maxPerWallet}
+                  min={1}
                   onChange={(e) => setMaxPerWallet(e.target.value)}
                   placeholder="Set the max tokens allowed per wallet, default: max supply"
                   css={{
@@ -239,6 +285,8 @@ const LaunchPadDeployPage = () => {
                 <Input
                   type="number"
                   value={allowlistSupply}
+                  min={1}
+                  max={supply}
                   onChange={(e) => setAllowlistSupply(e.target.value)}
                   placeholder="Set max allowlisted token"
                   css={{
@@ -442,8 +490,14 @@ const LaunchPadDeployPage = () => {
                 </Box>
               )}
             </Box>
-            {step}
+            {error && (
+              <Text css={{ color: 'red', mb: '$4' }}>{/429/.test(error) ? 'Please try again in 1 minute' : error}</Text>
+            )}
             <Button
+              type="submit"
+              size="small"
+              color="primary"
+              disabled={step !== 0}
               css={{
                 marginTop: 8,
                 justifyContent: 'center',
@@ -452,15 +506,154 @@ const LaunchPadDeployPage = () => {
                 px: '$6',
                 py: '$3',
               }}
-              type="submit"
-              size="small"
-              color="primary"
             >
               Deploy Contract
             </Button>
           </Flex>
         </Box>
       </form>
+      {isMounted && (
+        <Dialog.Root defaultOpen open={open}>
+          <Dialog.Portal>
+            <AnimatedOverlay
+              style={{
+                position: 'fixed',
+                zIndex: 1000,
+                inset: 0,
+                width: '100vw',
+                height: '100vh',
+                backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                backdropFilter: '20px',
+              }}
+            />
+            <AnimatedContent
+              style={{
+                outline: 'unset',
+                position: 'fixed',
+                zIndex: 1000,
+                transform: 'translate(-50%, 120%)',
+                width: '400px',
+              }}
+            >
+              <Flex
+                justify="between"
+                css={{
+                  position: 'relative',
+                  borderTop: '1px solid $gray7',
+                  borderStyle: 'solid',
+                  pt: '$5',
+                  background: '$gray7',
+                  padding: '$5',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  gap: '20px',
+                  '@bp600': {
+                    flexDirection: 'column',
+                    gap: '20px',
+                  },
+                }}
+              >
+                <Flex align="center" justify="center">
+                  {step < 5 ? (
+                    <LoadingSpinner />
+                  ): (
+                    <FontAwesomeIcon icon={faCheckCircle} color="var(--colors-primary9)" size="2xl" />
+                  )}
+                </Flex>
+                {step === 2 && (
+                  <>
+                    <Flex>
+                      <Text style="h5">
+                        Switching Network
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text style="body1">
+                        Switching your network
+                      </Text>
+                    </Flex>
+                  </>
+                )}
+                {step === 3 && (
+                  <>
+                    <Flex>
+                      <Text style="h5">
+                        Confirm Transaction
+                      </Text>
+                    </Flex>
+                    <Flex>
+                      <Text style="body1">
+                        Confirm transaction in your wallet
+                      </Text>
+                    </Flex>
+                  </>
+                )}
+                {step === 4 && (
+                  <>
+                    <Flex>
+                      <Text style="h5">
+                        Deploying Contract
+                      </Text>
+                    </Flex>
+                    <Flex direction="column">
+                      <Text style="body1">
+                        {`Deploy transaction in process, View your transaction :`}
+                      </Text>
+                      <Link
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        href={`${activeChain?.blockExplorers?.default?.url}/tx/${txHash}`}
+                        style={{ marginLeft: 10 }}
+                      >
+                        {`[${truncateAddress(deployedAddress as string)}]`}
+                      </Link>
+                    </Flex>
+                  </>
+                )}
+                {step === 5 && (
+                  <>
+                    <Flex>
+                      <Text style="h5">
+                        Contract Deployed
+                      </Text>
+                    </Flex>
+                    <Flex direction="column">
+                      <Text style="body1">
+                        {`Your contract deployed at `}
+                      </Text>
+                      <Link
+                        target="_blank"
+                        rel="noreferrer noopener"
+                        href={`${activeChain?.blockExplorers?.default?.url}/address/${deployedAddress}`}
+                        style={{ marginLeft: 10 }}
+                      >
+                        {`[${truncateAddress(deployedAddress as string)}]`}
+                      </Link>
+                    </Flex>
+                  </>
+                )}
+                <Text
+                  style="subtitle1"
+                  css={{
+                    lineHeight: 1.5,
+                    color: '$whiteA12',
+                    width: '100%',
+                    '@lg': { width: '50%' },
+                  }}
+                >
+
+                </Text>
+                {step === 5 && (
+                  <Link href={`/my-collections/${deployedAddress}`}>
+                    <Button>Continue</Button>
+                  </Link>
+                )}
+              </Flex>
+            </AnimatedContent>
+          </Dialog.Portal>
+        </Dialog.Root>
+      )}
     </Layout>
   )
 }

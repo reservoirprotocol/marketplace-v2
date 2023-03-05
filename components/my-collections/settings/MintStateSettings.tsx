@@ -5,33 +5,31 @@ import { Text, Flex, Box, Switch, Button } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input"
 
 type Props = {
-  activeTab: string | null
+  activePresale: boolean
+  presalePrice: string
+  activePublic: boolean
+  publicPrice: string
 }
 
-const MintStateSettings:FC<Props> = ({ activeTab }) => {
+const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0', activePublic = false, publicPrice = '0' }) => {
   const { theme } = useTheme();
+  const [isAllowlistMint, setIsAllowlistMint] = useState(activePresale);
+  const [allowlistMintPrice, setAllowlistMintPrice] = useState(presalePrice);
+  const [isPublicMint, setIsPublicMint] = useState(activePublic);
+  const [publicMintPrice, setPublicMintPrice] = useState(publicPrice);
 
-  const [isPublicMint, setIsPublicMint] = useState(false);
-  const [isAllowlistMint, setIsAllowlistMint] = useState(false);
-  const [publicMintPrice, setPublicMintPrice] = useState('');
-  const [allowlistMintPrice, setAllowlistMintPrice] = useState('');
-  
-  const resetState = () => {
-   setIsPublicMint(false);
-   setIsAllowlistMint(false);
-   setPublicMintPrice('');
-   setAllowlistMintPrice('');
-  }
+  useEffect(() => {
+    setIsAllowlistMint(activePresale);
+    setAllowlistMintPrice(presalePrice);
+    setIsPublicMint(false);
+    setPublicMintPrice('');
+  }, [activePresale, activePublic, presalePrice, publicPrice])
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
     // TODO: Fetch to API
   }
-
-  useEffect(() => {
-    if (activeTab !== 'royalities') resetState();
-  }, [activeTab])
 
   return (
     <Box
