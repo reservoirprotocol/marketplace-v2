@@ -165,14 +165,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
-            <TabsTrigger
-              css={{
-                borderBottom: '1px solid red',
-              }}
-              value="items"
-            >
-              NFTs
-            </TabsTrigger>
+            <TabsTrigger value="items">NFTs</TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
 
