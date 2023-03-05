@@ -29,7 +29,7 @@ const QuestsSection: FC = () => {
           margin: 0,
         },
       }}>
-        <img src="/images/Quests_1.png" />
+        <img src="/images/NFTQuest_1.png" />
       </Box>
         <Text
           css={{
