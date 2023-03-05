@@ -64,7 +64,7 @@ const QuestsPage: NextPage = () => {
         <QuestSecion />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           {isMounted && (
-            <Dialog.Root defaultOpen>
+            <Dialog.Root defaultOpen open={open} modal>
               <Dialog.Portal>
                 <AnimatedOverlay
                   style={{
