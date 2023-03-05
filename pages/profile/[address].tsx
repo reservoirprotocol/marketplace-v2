@@ -136,8 +136,8 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
         <Flex css={{}}> </Flex>
         <Flex justify="between">
           <Flex direction="column">
-            {ensAvatar ? (
-              <Avatar size="xxl" src={ensAvatar} />
+            {!ensAvatar ? (
+              <Avatar size="xxxl" corners="rounded" src={ensAvatar} />
             ) : (
               <Jazzicon
                 diameter={240}
