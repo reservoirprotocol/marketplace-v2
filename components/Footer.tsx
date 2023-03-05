@@ -47,8 +47,8 @@ const resourcesSectionLinks = [
     href: '/learn-nfts',
   },
   {
-    name: 'Token',
-    href: '/token',
+    name: '$NFTE Token',
+    href: 'https://www.coingecko.com/en/coins/nftearth',
   },
 ]
 
