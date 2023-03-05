@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "title": "Create account on NFTEarth",
-    "description": "Connect your Wallet and create your account on NFTEarth",
+    "title": "Create your NFTEarth user profile",
+    "description": "Connect your web3 wallet to create your NFTEarth profile",
     "type": "one-time",
     "tasks": [
       {
@@ -14,8 +14,8 @@
   },
   {
     "id": 2,
-    "title": "Follow @NFTEarth on Twitter",
-    "description": "Connect Twitter to your NFTEarth account and follow us on Twitter.",
+    "title": "Follow [NFTEarth](https://twitter.com/NFTEarth_L2) on Twitter",
+    "description": "Link your Twitter handle to your NFTEarth user profile and follow us on Twitter!",
     "type": "one-time",
     "tasks": [
       {
@@ -31,8 +31,8 @@
   },
   {
     "id": 3,
-    "title": "Retweet @NFTEarth's tweet",
-    "description": "Retweet a specific tweet posted by NFTEarth and get XP now.",
+    "title": "Retweet [NFTEarth's](https://twitter.com/NFTEarth_L2) tweet",
+    "description": "Retweet a specific tweet posted by NFTEarth to earn XP now.",
     "type": "one-time",
     "tasks": [
       {
@@ -44,8 +44,8 @@
   },
   {
     "id": 4,
-    "title": "Join us on Discord",
-    "description": "Connect NFTEarth Discord and join us on Discord to get XP.",
+    "title": "Join the community in Discord",
+    "description": "Join the NFTEarth comunity in Discord and earn XP.",
     "type": "one-time",
     "tasks": [
       {
@@ -61,8 +61,8 @@
   },
   {
     "id": 5,
-    "title": "List NFT for sale on NFTEarth",
-    "description": "List Any NFT of any supported blockchain for sale on NFTEarth.",
+    "title": "List an NFT for sale on NFTEarth",
+    "description": "List Any NFT of any supported L2 network (Optimism, Arbitrum, Polygon) for sale on NFTEarth.",
     "type": "one-time",
     "tasks": [
       {
@@ -73,8 +73,8 @@
   },
   {
     "id": 6,
-    "title": "NFT Trader",
-    "description": "Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward.",
+    "title": "Active NFT Trader",
+    "description": "Trade over .1 $ETH in total volume on all NFTEarth supported blockchains to earn XP, NFTs, and potential $NFTE airdrops!",
     "type": "one-time",
     "tasks": [
       {

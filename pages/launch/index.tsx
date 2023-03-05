@@ -34,7 +34,7 @@ const LaunchPadPage = () => {
             COMING SOON
           </Text>
           <Text css={{ color: '$gray10' }}>
-            This page is under construction
+            Launching Soon!
           </Text>
         </Flex>
       </Box>

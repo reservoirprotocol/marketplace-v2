@@ -125,7 +125,7 @@ const QuestsPage: NextPage = () => {
             style="h4"
             as="h4"
           >
-            One-Time Quest
+          One-time Quests
           </Text>
           {isMounted && <QuestsOneTime setOpen={setOpen} setQuest={setQuest} />}
         </Box>
