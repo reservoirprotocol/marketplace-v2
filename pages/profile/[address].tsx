@@ -126,18 +126,21 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           px: '$4',
           pt: '$5',
           pb: 0,
+          backgroundColor: 'rgb(243, 234, 0)',
+          height: '25vh',
           '@sm': {
             px: '$5',
           },
         }}
       >
+        <Flex css={{}}> </Flex>
         <Flex justify="between">
           <Flex direction="column">
             {ensAvatar ? (
               <Avatar size="xxl" src={ensAvatar} />
             ) : (
               <Jazzicon
-                diameter={64}
+                diameter={240}
                 paperStyles={{ borderRadius: '10px' }}
                 seed={jsNumberForAddress(address as string)}
               />
