@@ -138,6 +138,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
             ) : (
               <Jazzicon
                 diameter={64}
+                paperStyles={{ borderRadius: '10px' }}
                 seed={jsNumberForAddress(address as string)}
               />
             )}
