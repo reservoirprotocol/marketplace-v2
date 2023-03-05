@@ -393,7 +393,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
             >
               Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>erify claim your XP by clicking the button below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify claim your XP by clicking the button below.</Text>
           </Flex>
         </Flex>
       </Box>
