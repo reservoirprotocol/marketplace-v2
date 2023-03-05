@@ -94,5 +94,18 @@
       }
     ],
     "exp": 25
+  },
+  {
+    "id": 8,
+    "title": "Make Offer for ANY NFT on NFTEarth",
+    "description": "Make offer on ANY NFT for ANY amount and currency on on all NFTEarth supported blockchains to earn XP",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "buy"
+      }
+    ],
+    "exp": 25
   }
 ]
+
