@@ -104,6 +104,8 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
     fallbackData: filterCollection ? undefined : ssrCollections,
   })
 
+  const randomColor = Math.floor(Math.random() * 16777215).toString(16)
+
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
@@ -126,7 +128,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           px: '$4',
           pt: '$5',
           pb: 0,
-          backgroundColor: 'rgb(243, 234, 0)',
+          backgroundColor: `#${randomColor}`,
           height: '25vh',
           '@sm': {
             px: '$5',
