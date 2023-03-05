@@ -96,7 +96,7 @@ export const QuestRegisterUserName = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Start earning XP, NFTs, and $NFTE!
+              Step 2: Start earning XP, rewards, and $NFTE!
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and claim your XP and rewards by clicking the button below.</Text>
           </Flex>
@@ -109,8 +109,8 @@ export const QuestRegisterUserName = () => {
 export const QuestFollowTwitter = () => {
   return (
     <BasicModal
-      header="Follow @NFTEarth on Twitter 🎁"
-      instruction="Connect your Twitter account with your NFTEarth user profile and follow @NFTEarth on Twitter and earn XP."
+      header="Follow NFTEarth on Twitter 🎁"
+      instruction="Connect your Twitter account with your NFTEarth user profile and follow NFTEarth on Twitter and earn XP."
     >
       <Box>
         <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
@@ -145,7 +145,7 @@ export const QuestFollowTwitter = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Follow Verify and claim your XP and rewards by clicking the button below. on Twitter
+              Step 2: Follow NFTEarth, then Verify and claim your XP and rewards by clicking the button below
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>Follow NFTEarth.</Text>
             <Text
@@ -196,7 +196,7 @@ export const QuestRetweet = () => {
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              Step 1: Retweet a @NFTEarth's tweet
+              Step 1: Retweet a NFTEarth's tweet
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>Retweet this
               <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
@@ -207,9 +207,9 @@ export const QuestRetweet = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Get Your XP !
+              Step 2: Earn you XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and claim your XP by clicking the button below.</Text>
             <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Twitter account must be at least 30 days old.</Text>
             <Text style="subtitle2" css={{ color: '$gray11' }}>Each Twitter account can only be used to claim for this type of reward once in the system.</Text>
           </Flex>
@@ -251,7 +251,7 @@ export const QuestListNFT = () => {
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              Step 1: Check the NFTs you own
+              Step 1: See your portfolio of NFTs
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>Go to the
               <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
@@ -264,14 +264,14 @@ export const QuestListNFT = () => {
             >
               Step 2: List any NFT for sale
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Click on the NFTs you want to list for sale and then click List to list the NFT on the marketplace. You need to list at least 3 NFTs to be eligible to claim the reward.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Click on the NFTs you want to trade and click List to sell it on the NFT on the marketplace. You need to list at least 3 NFTs to be eligible to claim the reward.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
               Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify claim your XP by clicking the button below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and claim your XP by clicking the button below.</Text>
           </Flex>
         </Flex>
       </Box>
@@ -384,7 +384,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Follow NFTEarth on Twitter
+              Step 2: Follow on Twitter
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>Follow [NFTEarth](https://twitter.com/NFTEarth_L2).</Text>
             <Text
@@ -393,7 +393,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
             >
               Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify claim your XP by clicking the button below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and claim your XP by clicking the button below.</Text>
           </Flex>
         </Flex>
       </Box>
