@@ -127,7 +127,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           pt: '$5',
           pb: 0,
           backgroundColor: 'rgb(243, 234, 0)',
-          height: '250px',
+          height: '225px',
           '@sm': {
             px: '$5',
           },
