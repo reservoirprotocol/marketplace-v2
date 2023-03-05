@@ -61,7 +61,7 @@ export const QuestRegisterUserName = () => {
   return (
     <BasicModal
       header="Register a Username 🎁"
-      instruction="Retweet this Tweet with Hashtag #NFTE and post it into the NFTEarth community channel Quest Proof"
+      instruction="Retweet this Tweet with the hashtage #NFTE and then post a screenshot into the NFTEarth community channel in Discord: Quest Proof"
     >
       <Box>
         <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
@@ -91,14 +91,14 @@ export const QuestRegisterUserName = () => {
             >
               Step 1: Create your NFTEarth account
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Connect your Wallet on NFTEarth</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Connect your wallet on NFTEarth</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Get Your XP !
+              Step 2: Start earning XP, NFTs, and $NFTE!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and claim your XP and rewards by clicking the button below.</Text>
           </Flex>
         </Flex>
       </Box>
@@ -110,7 +110,7 @@ export const QuestFollowTwitter = () => {
   return (
     <BasicModal
       header="Follow @NFTEarth on Twitter 🎁"
-      instruction="Connect Twitter account to your NFTEarth account and follow @NFTEarth on Twitter to Get Your XP."
+      instruction="Connect your Twitter account with your NFTEarth user profile and follow @NFTEarth on Twitter and earn XP."
     >
       <Box>
         <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
@@ -138,25 +138,25 @@ export const QuestFollowTwitter = () => {
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              Step 1: Link a Twitter account to your NFTEarth account
+              Step 1: Link a Twitter account to your NFTEarth user profile
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Browse to the Profile Settings page and link a Twitter account to your NFTEarth account.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Head to the Profile Settings page and link your Twitter account to your NFTEarth user profile.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Follow @NFTEarth on Twitter
+              Step 2: Follow Verify and claim your XP and rewards by clicking the button below. on Twitter
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @NFTEarth.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow NFTEarth.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 3: Get Your XP !
+              Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and claim your XP and rewards by clicking the button below.</Text>
             <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Twitter account must be at least 30 days old.</Text>
-            <Text style="subtitle2" css={{ color: '$gray11' }}>Each Twitter account can only be used to claim for this type of reward once in the system.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11' }}>Each Twitter account can only be used to claim for this type of reward one-time.</Text>
           </Flex>
         </Flex>
       </Box>
@@ -168,7 +168,7 @@ export const QuestRetweet = () => {
   return (
     <BasicModal
       header="Retweet a NFTEarth tweet 🎁"
-      instruction="Retweet this tweet with #NFTE to earn XP now!"
+      instruction="Retweet this tweet with the hashtag #NFTE to earn XP now!"
     >
       <Box>
         <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
@@ -264,14 +264,14 @@ export const QuestListNFT = () => {
             >
               Step 2: List any NFT for sale
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Click on the NFTs you want to list for sale and then click at "Sell NFT" button to list them on the marketplace. You need to list at least 3 NFTs to be eligible to claim the reward.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Click on the NFTs you want to list for sale and then click List to list the NFT on the marketplace. You need to list at least 3 NFTs to be eligible to claim the reward.</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 3: Get Your XP !
+              Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and get your XP from the box below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify claim your XP by clicking the button below.</Text>
           </Flex>
         </Flex>
       </Box>
@@ -329,11 +329,11 @@ export const QuestJoinDiscord = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 3: Get Your XP !
+              Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
-            <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Each Discord account can only be used to claim for a reward once in the system.</Text>
-            <Text style="subtitle2" css={{ color: '$gray11' }}>It might takes up to 5 minutes for our system to refresh the member list. If you just join the Discord server, please wait for 5-10 minutes and try to claim the reward again.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify claim your XP by clicking the button below.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11', marginTop: '10px' }}>Each Discord account can only be used to claim for a reward one time.</Text>
+            <Text style="subtitle2" css={{ color: '$gray11' }}>It may take up to 5 minutes for the system to refresh your user profile. If you just joined the Discord server, please wait for 5-10 minutes and try to claim the reward again if it is not working immediately.</Text>
           </Flex>
         </Flex>
       </Box>
@@ -373,27 +373,27 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
             >
-              Step 1: Purchasing NFT on NFTEarth
+              Step 1: Buying NFTs on NFTEarth
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               <Link href="https://nftearth.exchange/explore">
                 <Text css={{color: '$primary10'}}>Explore </Text>
-              </Link>NFTs on Optimism, Arbitrum using NFTEarth and make a purchase of any NFT you like until the total buying volume reaches 0.1 ETH.
+              </Link>NFTs on Optimism, Arbitrum using NFTEarth and trade over .1 $ETH in total volume.
             </Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 2: Follow @NFTEarth on Twitter
+              Step 2: Follow NFTEarth on Twitter
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow @NFTEarth.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>Follow [NFTEarth](https://twitter.com/NFTEarth_L2).</Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
-              Step 3: Get Your XP !
+              Step 3: Earn your XP!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>Verify and Get Your XP from the box below.</Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>erify claim your XP by clicking the button below.</Text>
           </Flex>
         </Flex>
       </Box>

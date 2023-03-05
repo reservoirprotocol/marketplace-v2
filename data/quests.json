@@ -14,7 +14,7 @@
   },
   {
     "id": 2,
-    "title": "Follow [NFTEarth](https://twitter.com/NFTEarth_L2) on Twitter",
+    "title": "Follow NFTEarth on Twitter",
     "description": "Link your Twitter handle to your NFTEarth user profile and follow us on Twitter!",
     "type": "one-time",
     "tasks": [
@@ -31,7 +31,7 @@
   },
   {
     "id": 3,
-    "title": "Retweet [NFTEarth's](https://twitter.com/NFTEarth_L2) tweet",
+    "title": "Retweet NFTEarth's tweet",
     "description": "Retweet a specific tweet posted by NFTEarth to earn XP now.",
     "type": "one-time",
     "tasks": [
@@ -44,7 +44,7 @@
   },
   {
     "id": 4,
-    "title": "Join the community in Discord",
+    "title": "Join Discord",
     "description": "Join the NFTEarth comunity in Discord and earn XP.",
     "type": "one-time",
     "tasks": [
