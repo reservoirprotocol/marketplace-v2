@@ -38,8 +38,8 @@ import { useENSResolver } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
-import {ActivityTypes} from "../../types/reservoir";
-import ChainToggle from "../../components/home/ChainToggle";
+import { ActivityTypes } from '../../types/reservoir'
+import ChainToggle from '../../components/home/ChainToggle'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -132,19 +132,23 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
         }}
       >
         <Flex justify="between">
-          <Flex align="center">
+          <Flex direction="column">
             {ensAvatar ? (
-              <Avatar size="xxl" src={ensAvatar} />
+              <Avatar
+                size="xxl"
+                css={{ width: '200px', height: '200px' }}
+                src={ensAvatar}
+              />
             ) : (
               <Jazzicon
                 diameter={64}
                 seed={jsNumberForAddress(address as string)}
               />
             )}
-            <Flex direction="column" css={{ ml: '$4' }}>
+            <Flex direction="column">
               <Text style="h5">{ensName ? ensName : shortAddress}</Text>
               <CopyText text={address as string}>
-                <Flex align="center" css={{ cursor: 'pointer' }}>
+                <Flex css={{ cursor: 'pointer' }}>
                   <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
                     {shortAddress}
                   </Text>
@@ -156,12 +160,14 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
             </Flex>
           </Flex>
           <Flex align="center">
-            <ChainToggle compact/>
+            <ChainToggle compact />
           </Flex>
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
-            <TabsTrigger value="items">Items</TabsTrigger>
+            <TabsTrigger value="items">
+              NFTs
+            </TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
 
