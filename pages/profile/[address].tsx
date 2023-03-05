@@ -134,18 +134,14 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
         <Flex justify="between">
           <Flex direction="column">
             {ensAvatar ? (
-              <Avatar
-                size="xxl"
-                css={{ width: '200px', height: '200px' }}
-                src={ensAvatar}
-              />
+              <Avatar size="xxl" src={ensAvatar} />
             ) : (
               <Jazzicon
                 diameter={64}
                 seed={jsNumberForAddress(address as string)}
               />
             )}
-            <Flex direction="column">
+            <Flex direction="column" css={{ marginTop: '$2', gap: '$3' }}>
               <Text style="h5">{ensName ? ensName : shortAddress}</Text>
               <CopyText text={address as string}>
                 <Flex css={{ cursor: 'pointer' }}>
@@ -157,15 +153,20 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
                   </Box>
                 </Flex>
               </CopyText>
+              <Flex align="center">
+                <ChainToggle compact />
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex align="center">
-            <ChainToggle compact />
           </Flex>
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
-            <TabsTrigger value="items">
+            <TabsTrigger
+              css={{
+                borderBottom: '1px solid red',
+              }}
+              value="items"
+            >
               NFTs
             </TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
