@@ -104,8 +104,6 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
     fallbackData: filterCollection ? undefined : ssrCollections,
   })
 
-  const randomColor = Math.floor(Math.random() * 16777215).toString(16)
-
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
@@ -128,8 +126,8 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           px: '$4',
           pt: '$5',
           pb: 0,
-          backgroundColor: `#${randomColor}`,
-          height: '25vh',
+          backgroundColor: 'rgb(243, 234, 0)',
+          height: '250px',
           '@sm': {
             px: '$5',
           },
@@ -138,7 +136,7 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
         <Flex css={{}}> </Flex>
         <Flex justify="between">
           <Flex direction="column">
-            {!ensAvatar ? (
+            {ensAvatar ? (
               <Avatar size="xxxl" corners="rounded" src={ensAvatar} />
             ) : (
               <Jazzicon
