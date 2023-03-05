@@ -10,7 +10,7 @@ const QuestsSection: FC = () => {
         width: '100%',
         backgroundPosition: 'center center',
         flexWrap: 'wrap',
-        backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, $primary13 91.1%), url('/images/heroSectionBanner.png')`,
+        backgroundImage: `linear-gradient(109.6deg, rgb(0, 0, 0) 11.2%, $primary13 91.1%), url('/images/heroSectionBanner.png')`, 
         borderRadius: '16px',
         '@xs': {
           padding: '0 50px',
