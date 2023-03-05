@@ -145,6 +145,7 @@ export const QuestFollowTwitter = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{marginTop: '20px'}}
             >
+              
               Step 2: Follow NFTEarth, then Verify and claim your XP and rewards by clicking the button below
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>Follow NFTEarth.</Text>
