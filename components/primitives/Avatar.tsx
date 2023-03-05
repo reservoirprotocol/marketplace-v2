@@ -37,6 +37,9 @@ const AvatarRoot = styled(AvatarPrimitive.Root, {
       xxl: {
         size: 64,
       },
+      xxxl: {
+        size: 240,
+      }
     },
     corners: {
       rounded: {

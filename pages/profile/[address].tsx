@@ -38,8 +38,8 @@ import { useENSResolver } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
-import {ActivityTypes} from "../../types/reservoir";
-import ChainToggle from "../../components/home/ChainToggle";
+import { ActivityTypes } from '../../types/reservoir'
+import ChainToggle from '../../components/home/ChainToggle'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -126,25 +126,29 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           px: '$4',
           pt: '$5',
           pb: 0,
+          backgroundColor: 'rgb(243, 234, 0)',
+          height: '225px',
           '@sm': {
             px: '$5',
           },
         }}
       >
+        <Flex css={{}}> </Flex>
         <Flex justify="between">
-          <Flex align="center">
+          <Flex direction="column">
             {ensAvatar ? (
-              <Avatar size="xxl" src={ensAvatar} />
+              <Avatar size="xxxl" corners="rounded" src={ensAvatar} />
             ) : (
               <Jazzicon
-                diameter={64}
+                diameter={240}
+                paperStyles={{ borderRadius: '10px' }}
                 seed={jsNumberForAddress(address as string)}
               />
             )}
-            <Flex direction="column" css={{ ml: '$4' }}>
+            <Flex direction="column" css={{ marginTop: '$2', gap: '$3' }}>
               <Text style="h5">{ensName ? ensName : shortAddress}</Text>
               <CopyText text={address as string}>
-                <Flex align="center" css={{ cursor: 'pointer' }}>
+                <Flex css={{ cursor: 'pointer' }}>
                   <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
                     {shortAddress}
                   </Text>
@@ -153,15 +157,15 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
                   </Box>
                 </Flex>
               </CopyText>
+              <Flex align="center">
+                <ChainToggle compact />
+              </Flex>
             </Flex>
-          </Flex>
-          <Flex align="center">
-            <ChainToggle compact/>
           </Flex>
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
-            <TabsTrigger value="items">Items</TabsTrigger>
+            <TabsTrigger value="items">NFTs</TabsTrigger>
             <TabsTrigger value="activity">Activity</TabsTrigger>
           </TabsList>
 
