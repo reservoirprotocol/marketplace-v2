@@ -64,7 +64,6 @@ const QuestsSection: FC = () => {
           display: 'block'
         },
       }}>
-        <img src="/images/Quests_2.png" />
       </Box>
     </Flex>
   )
