@@ -465,3 +465,72 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
     </BasicModal>
   )
 }
+
+
+export const QuestListNFTInNFTEOnAnyChain = () => {
+  return (
+    <BasicModal
+      header="List NFT for sale on NFTEarth on NFTE currency🎁"
+      instruction="List Any NFT of any supported blockchain (Optimism, Arbitrum) in $NFTE for sale on NFTEarth."
+    >
+      <Box>
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px',
+            }}
+          >
+            <Text>Rewards</Text>
+            <Text style="h4" css={{ color: '$primary10' }}>
+              125 XP
+            </Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text style={{ '@initial': 'h6', '@lg': 'h4' }}>
+              Step 1: See your portfolio of NFTs
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Go to the
+              <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
+                <Text css={{ color: '$primary10' }}> My NFTs </Text>
+              </Link>
+              page, and then connect your wallet to view the NFTs you own.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 2: List any NFT for sale in $NFTE currency
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Click on the NFTs you want to trade and click List to sell it on
+              the NFT on the marketplace. You need to list at least 3 NFTs to be
+              eligible to claim the reward. Double XP is listed more than 5. 
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 3: Earn your XP!
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Verify and claim your XP by clicking the button below.
+            </Text>
+          </Flex>
+        </Flex>
+      </Box>
+    </BasicModal>
+  )
+}

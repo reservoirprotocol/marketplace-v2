@@ -82,5 +82,17 @@
       }
     ],
     "exp": 25
+  },
+  {
+    "id": 7,
+    "title": "List an NFT for sale in $NFTE on NFTEarth",
+    "description": "List Any NFT of any supported L2 network (Optimism, Arbitrum, Polygon) for sale in $NFTE on NFTEarth.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "buy"
+      }
+    ],
+    "exp": 25
   }
 ]

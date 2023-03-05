@@ -16,6 +16,7 @@ import {
   QuestJoinDiscord,
   QuestListNFT,
   QuestBuyNFTInNFTEOnAnyChain,
+  QuestListNFTInNFTEOnAnyChain
 } from 'components/quests/templates'
 
 const QuestsPage: NextPage = () => {
@@ -37,6 +38,8 @@ const QuestsPage: NextPage = () => {
         return <QuestListNFT />
       case 6:
         return <QuestBuyNFTInNFTEOnAnyChain />
+      case 7:
+        return <QuestListNFTInNFTEOnAnyChain />
       default:
         return null
     }
