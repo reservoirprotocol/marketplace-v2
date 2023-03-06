@@ -1,5 +1,5 @@
 import { constants } from 'ethers'
-import { goerli, mainnet, polygon } from 'wagmi/chains'
+import { arbitrum, goerli, mainnet, polygon } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -42,6 +42,17 @@ export default [
     apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
     coingeckoId: 'matic-network',
     searchIcon: '/icons/matic-search-icon.svg',
+  },
+  {
+    ...arbitrum,
+    name: 'Arbitrum',
+    iconUrl: '/icons/arbitrum-icon.svg',
+    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum',
+    routePrefix: 'arbitrum',
+    apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    searchIcon: '/icons/arbitrum-icon.svg',
   },
   {
     ...goerli,
