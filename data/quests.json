@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "title": "Create your NFTEarth user profile",
+    "title": "Create NFTEarth user profile",
     "description": "Connect your web3 wallet to create your NFTEarth profile",
     "type": "one-time",
     "tasks": [
@@ -73,15 +73,15 @@
   },
   {
     "id": 6,
-    "title": "Active NFT Trader",
-    "description": "Trade over .1 $ETH in total volume on all NFTEarth supported blockchains to earn XP, NFTs, and potential $NFTE airdrops!",
+    "title": "Make Offer for ANY NFT on NFTEarth",
+    "description": "Make offer on ANY NFT for ANY amount and currency on on all NFTEarth supported blockchains to earn XP",
     "type": "one-time",
     "tasks": [
       {
         "type": "buy"
       }
     ],
-    "exp": 200
+    "exp": 125
   },
   {
     "id": 7,
@@ -97,15 +97,15 @@
   },
   {
     "id": 8,
-    "title": "Make Offer for ANY NFT on NFTEarth",
-    "description": "Make offer on ANY NFT for ANY amount and currency on on all NFTEarth supported blockchains to earn XP",
+    "title": "Active NFT Trader",
+    "description": "Trade over .1 $ETH in total volume on all NFTEarth supported blockchains to earn XP, NFTs, and potential $NFTE airdrops!",
     "type": "one-time",
     "tasks": [
       {
         "type": "buy"
       }
     ],
-    "exp": 125
+    "exp": 200
   }
 ]
 

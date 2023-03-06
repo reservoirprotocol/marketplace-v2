@@ -38,11 +38,11 @@ const QuestsPage: NextPage = () => {
       case 5:
         return <QuestListNFT />
       case 6:
-        return <QuestBuyNFTInNFTEOnAnyChain />
+        return <QuestMakeOfferForNFT />
       case 7:
         return <QuestListNFTInNFTEOnAnyChain />
       case 8:
-        return <QuestMakeOfferForNFT />
+        return <QuestBuyNFTInNFTEOnAnyChain />
       default:
         return null
     }

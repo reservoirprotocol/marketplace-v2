@@ -41,7 +41,11 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
       </Flex>
       {children}
       <Flex direction="column" css={{ padding: '0 12px' }}>
-        {isConnected ? null : (
+        {isConnected ? <Flex>
+            <Button>
+              Verify and Claim
+            </Button>
+          </Flex> : (
           <Flex
             direction="column"
             css={{
@@ -49,8 +53,14 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
               borderRadius: '$xl',
               padding: '20px 30px',
             }}
-          >
-            <ConnectWalletButton />
+            >
+              <Text style="h5" css={{
+                textAlign: 'center',
+                marginBottom: '$3'
+              }}>
+                Connect your Wallet First
+              </Text>
+              <ConnectWalletButton />
           </Flex>
         )}
       </Flex>
@@ -153,8 +163,7 @@ export const QuestFollowTwitter = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Follow NFTEarth, then Verify and claim your XP and rewards
-              by clicking the button below
+              Step 2: Follow NFTEarth on Twitter
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Follow NFTEarth.
@@ -301,7 +310,7 @@ export const QuestListNFT = () => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Click on the NFTs you want to trade and click List to sell it on
-              the NFT on the marketplace. You need to list at least 3 NFTs in any currency to be
+              the NFT on the marketplace. You need to list Any NFT in any currency to be
               eligible to claim the reward.
             </Text>
             <Text
@@ -435,7 +444,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
               Step 1: Buying NFTs on NFTEarth
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              <Link href="https://nftearth.exchange/explore">
+              <Link href="/explore">
                 <Text css={{ color: '$primary10' }}>Explore </Text>
               </Link>
               NFTs on Optimism, Arbitrum using NFTEarth and trade over .1 $ETH
@@ -493,7 +502,7 @@ export const QuestListNFTInNFTEOnAnyChain = () => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Go to the
-              <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
+              <Link href="/portfolio">
                 <Text css={{ color: '$primary10' }}> My NFTs </Text>
               </Link>
               page, and then connect your wallet to view the NFTs you own.
@@ -562,7 +571,7 @@ export const QuestMakeOfferForNFT = () => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Go to the
-              <Link href="https://nftearth.exchange/explore">
+              <Link href="/explore">
                 <Text css={{ color: '$primary10' }}> Collections </Text>
               </Link>
               page, and view the different collections of NFTs on the
