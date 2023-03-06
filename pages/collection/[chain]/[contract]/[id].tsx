@@ -4,7 +4,7 @@ import {
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { paths } from '@reservoir0x/reservoir-sdk'
+import * as Tabs from '@radix-ui/react-tabs'
 import {
   TokenMedia,
   useAttributes,
@@ -13,45 +13,45 @@ import {
   useTokenOpenseaBanned,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import { spin } from 'components/common/LoadingSpinner'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Layout from 'components/Layout'
 import {
-  Flex,
-  Text,
-  Button,
-  Tooltip,
   Anchor,
-  Grid,
   Box,
+  Button,
+  Flex,
+  Grid,
+  Text,
+  Tooltip,
 } from 'components/primitives'
-import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
-import * as Tabs from '@radix-ui/react-tabs'
+import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
 import AttributeCard from 'components/token/AttributeCard'
+import FullscreenMedia from 'components/token/FullscreenMedia'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
 import { TokenActions } from 'components/token/TokenActions'
+import { TokenInfo } from 'components/token/TokenInfo'
+import { ToastContext } from 'context/ToastContextProvider'
+import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
 import {
-  GetStaticProps,
   GetStaticPaths,
+  GetStaticProps,
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
+import Head from 'next/head'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
+import { useContext, useEffect, useState } from 'react'
 import { jsNumberForAddress } from 'react-jazzicon'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
+import { useMediaQuery } from 'react-responsive'
+import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 import { useAccount } from 'wagmi'
-import { TokenInfo } from 'components/token/TokenInfo'
-import { useMediaQuery } from 'react-responsive'
-import FullscreenMedia from 'components/token/FullscreenMedia'
-import { useContext, useEffect, useState } from 'react'
-import { ToastContext } from 'context/ToastContextProvider'
-import { NORMALIZE_ROYALTIES } from 'pages/_app'
-import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
-import { useRouter } from 'next/router'
-import supportedChains, { DefaultChain } from 'utils/chains'
-import { spin } from 'components/common/LoadingSpinner'
-import Head from 'next/head'
-import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -263,7 +263,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${router.query.chain}/${collection?.id}`}
+                href={`/collection/${router.query.chain}/${token?.token?.collection?.id}`}
                 legacyBehavior={true}
               >
                 <Anchor
