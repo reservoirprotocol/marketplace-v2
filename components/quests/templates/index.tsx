@@ -499,7 +499,7 @@ export const QuestListNFTInNFTEOnAnyChain = () => {
           >
             <Text>Rewards</Text>
             <Text style="h4" css={{ color: '$primary10' }}>
-              125 XP
+              150 XP
             </Text>
           </Flex>
           <Flex
