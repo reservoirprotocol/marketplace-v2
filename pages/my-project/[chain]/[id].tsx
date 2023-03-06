@@ -1,36 +1,39 @@
-import {useLayoutEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import { useTheme } from 'next-themes'
-import {useContractReads, useSignMessage} from "wagmi"
+import {useAccount, useContractReads, useSignMessage} from "wagmi"
 import {useRouter} from "next/router"
-import { ethers } from "ethers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faMapPin, faEdit, faList, faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { Text, Flex, Box, Grid } from 'components/primitives'
 import Layout from 'components/Layout'
-import SettingsContentContainer from "components/my-collections/settings/SettingsContentContainer"
-import DetailsSettings from 'components/my-collections/settings/DetailsSettings'
-import RoyaltiesSettings from 'components/my-collections/settings/RoyaltiesSettings'
-import MintStateSettings from 'components/my-collections/settings/MintStateSettings'
-import WhitelistSettings from 'components/my-collections/settings/WhitelistSettings'
-import MetadataSettings from 'components/my-collections/settings/MetadataSettings'
+import SettingsContentContainer from "components/my-project/settings/SettingsContentContainer"
+import DetailsSettings from 'components/my-project/settings/DetailsSettings'
+import RoyaltiesSettings from 'components/my-project/settings/RoyaltiesSettings'
+import MintStateSettings from 'components/my-project/settings/MintStateSettings'
+import WhitelistSettings from 'components/my-project/settings/WhitelistSettings'
+import MetadataSettings from 'components/my-project/settings/MetadataSettings'
 import LoadingSpinner from "components/common/LoadingSpinner";
 import {useLaunchpads, useMarketplaceChain} from "hooks";
 import launchpadArtifact from 'artifact/NFTELaunchpad.json'
+import {BigNumber} from "@ethersproject/bignumber";
 
-const MyCollectionDetailPage = () => {
+const MyProjectDetailPage = () => {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<string | null>('details')
   const router = useRouter()
+  const { address } = useAccount()
   const marketplaceChain = useMarketplaceChain()
-  const { signMessageAsync } = useSignMessage();
+  const { signMessageAsync } = useSignMessage({
+    message: "Confirm account ownership"
+  });
 
-  useLayoutEffect(() => {
-    signMessageAsync({
-      message: "Confirm account ownership"
-    }).catch(() => {
-      location.href = '/my-collections'
-    })
-  }, [])
+  useEffect(() => {
+    if (address) {
+      signMessageAsync().catch(() => {
+        location.href = '/my-project'
+      })
+    }
+  }, [address])
 
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
     id: router.query.id as string,
@@ -83,12 +86,25 @@ const MyCollectionDetailPage = () => {
       {
         ...launchpadContract,
         functionName: '_URI'
-      }
+      },
+      {
+        ...launchpadContract,
+        functionName: 'supply',
+        args: [0]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'supply',
+        args: [1]
+      },
     ],
     cacheTime: 5_000
   })
 
-  const [activePresale, activePublic, presalePrice, publicPrice, URI ] = contractData || [];
+  const [activePresale, activePublic, presalePrice, publicPrice, URI, reservedSupply, presaleSupply ] = contractData || [];
+  const numReservedSupply = (reservedSupply as BigNumber)?.toNumber() || 0
+  const numPresaleSupply = (presaleSupply as BigNumber)?.toNumber() || 0
+
 
   const getCssTab = (tab: string) => ({
     tab: {
@@ -177,15 +193,17 @@ const MyCollectionDetailPage = () => {
                 </Box>
                 <Text css={getCssTab('mintState').text}>Mint Settings</Text>
               </Flex>
-              <Flex
-                align='center'
-                onClick={() => setActiveTab('whitelist')}
-                css={getCssTab('whitelist').tab}>
-                <Box css={{ width: 16 }}>
-                  <FontAwesomeIcon icon={faList} />
-                </Box>
-                <Text css={getCssTab('whitelist').text}>Allowlist</Text>
-              </Flex>
+              {numPresaleSupply > 0 && (
+                <Flex
+                  align='center'
+                  onClick={() => setActiveTab('whitelist')}
+                  css={getCssTab('whitelist').tab}>
+                  <Box css={{ width: 16 }}>
+                    <FontAwesomeIcon icon={faList} />
+                  </Box>
+                  <Text css={getCssTab('whitelist').text}>Allowlist</Text>
+                </Flex>
+              )}
               <Flex
                 align='center'
                 onClick={() => setActiveTab('metadata')}
@@ -235,16 +253,18 @@ const MyCollectionDetailPage = () => {
                 publicPrice={publicPrice as string}
               />
             </SettingsContentContainer>
-            <SettingsContentContainer
-              tab='whitelist'
-              tabLabel='whitelist'
-              activeTab={activeTab}
-              icon={faList}
-              setActiveTab={() => setActiveTab('whitelist')}>
-              <WhitelistSettings
-                launchpad={launchpad}
-              />
-            </SettingsContentContainer>
+            {numPresaleSupply > 0 && (
+              <SettingsContentContainer
+                tab='whitelist'
+                tabLabel='whitelist'
+                activeTab={activeTab}
+                icon={faList}
+                setActiveTab={() => setActiveTab('whitelist')}>
+                <WhitelistSettings
+                  launchpad={launchpad}
+                />
+              </SettingsContentContainer>
+            )}
             <SettingsContentContainer
               tab='metadata'
               tabLabel='metadata'
@@ -263,4 +283,4 @@ const MyCollectionDetailPage = () => {
   )
 }
 
-export default MyCollectionDetailPage
+export default MyProjectDetailPage

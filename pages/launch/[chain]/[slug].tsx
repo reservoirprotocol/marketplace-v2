@@ -1,16 +1,21 @@
+import {SyntheticEvent, useContext, useState} from "react";
+import {GetStaticPaths, GetStaticProps, InferGetStaticPropsType, NextPage} from "next";
+import Link from "next/link";
+import Head from "next/head";
+import {paths} from "@nftearth/reservoir-sdk";
+import {BigNumber} from "@ethersproject/bignumber";
+import {useAccount, useContractReads, useContractWrite} from "wagmi";
 import { Box, Flex, Text, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import MintInfo from 'components/launch/MintInfo'
 import {useLaunchpads, useMarketplaceChain, useSignature} from 'hooks';
-import {useRouter} from "next/router";
-import {useAccount, useContractReads, useContractWrite} from "wagmi";
-import {BigNumber} from "@ethersproject/bignumber";
 import {formatNumber} from "utils/numbers";
+import {ToastContext} from "context/ToastContextProvider";
+import supportedChains, {DefaultChain} from "utils/chains";
+import fetcher from "utils/fetcher";
+
 import launchpadArtifact from "artifact/NFTELaunchpad.json";
-import Link from "next/link";
-import LaunchpadArtifact from "../../../artifact/NFTELaunchpad.json";
-import {SyntheticEvent, useContext, useState} from "react";
-import {ToastContext} from "../../../context/ToastContextProvider";
+import LaunchpadArtifact from "artifact/NFTELaunchpad.json";
 
 interface mintType {
   price: string;
@@ -27,14 +32,15 @@ const mintInfo: mintType = {
   ],
 }
 
-const LaunchPadMint = () => {
-  const router = useRouter()
+type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+const LaunchpadMintPage : NextPage<Props> = ({ slug, chain, ssr }) => {
   const { address } = useAccount()
   const { addToast } = useContext(ToastContext)
   const [ loading, setLoading ] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
-    slug: router.query.slug as string,
+    slug: slug,
     limit: 1,
   }
 
@@ -48,7 +54,7 @@ const LaunchPadMint = () => {
     launchpadsQuery,
     {
       revalidateOnMount: true,
-      fallbackData: [],
+      fallbackData: [ssr.launchpads],
       revalidateFirstPage: true,
     }
   )
@@ -215,6 +221,29 @@ const LaunchPadMint = () => {
 
   return (
     <Layout>
+      <Head>
+        <title>{ssr?.launchpads?.launchpads?.[0]?.name}</title>
+        <meta
+          name="description"
+          content={ssr?.launchpads?.launchpads?.[0]?.description as string}
+        />
+        <meta
+          property="twitter:title"
+          content={ssr?.launchpads?.launchpads?.[0]?.name}
+        />
+        <meta
+          name="twitter:image"
+          content={ssr?.launchpads?.launchpads?.[0]?.banner}
+        />
+        <meta
+          property="og:title"
+          content={ssr?.launchpads?.launchpads?.[0]?.name}
+        />
+        <meta
+          property="og:image"
+          content={ssr?.launchpads?.launchpads?.[0]?.banner}
+        />
+      </Head>
       <Box
         css={{
           p: 24,
@@ -396,7 +425,7 @@ const LaunchPadMint = () => {
                     }}> Mint NFT </Button>
                   </Box>
                 )}
-                <Link href={`/collection/${router.query.chain}/${launchpad.id}`}>
+                <Link href={`/collection/${chain}/${launchpad.id}`}>
                   <Button css={{
                     minWidth: '140px',
                     "@bp800": {
@@ -414,4 +443,56 @@ const LaunchPadMint = () => {
   )
 }
 
-export default LaunchPadMint
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps<{
+  ssr: {
+    launchpads?: paths['/launchpads/v1']['get']['responses']['200']['schema']
+  }
+  slug: string | undefined
+  chain: string | undefined
+}> = async ({ params }) => {
+  const slug = params?.slug?.toString()
+  const chain = params?.chain?.toString()
+  const { reservoirBaseUrl, apiKey } =
+  supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
+  DefaultChain
+  const headers: RequestInit = {
+    headers: {
+      'x-api-key': apiKey || '',
+    },
+  }
+
+  let launchpadQuery: paths['/launchpads/v1']['get']['parameters']['query'] =
+    {
+      slug,
+      limit: 1
+    }
+
+  const collectionsPromise = fetcher(
+    `${reservoirBaseUrl}/launchpads/v1`,
+    launchpadQuery,
+    headers
+  )
+
+
+  const promises = await Promise.allSettled([
+    collectionsPromise,
+  ]).catch(() => {})
+  const launchpads: Props['ssr']['launchpads'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['launchpads'])
+      : {}
+
+  return {
+    props: { ssr: { launchpads }, slug, chain },
+    revalidate: 30,
+  }
+}
+
+export default LaunchpadMintPage

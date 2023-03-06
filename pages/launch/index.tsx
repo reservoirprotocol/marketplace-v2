@@ -23,7 +23,7 @@ import LoadingSpinner from "components/common/LoadingSpinner";
 import {truncateAddress} from "utils/truncate";
 import ChainToggle from "components/home/ChainToggle";
 
-const LaunchPadDeployPage = () => {
+const LaunchpadDeployPage = () => {
   const { theme } = useTheme()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const { chain: activeChain } = useNetwork();
@@ -201,6 +201,7 @@ const LaunchPadDeployPage = () => {
                 <Input
                   required
                   value={name}
+                  disabled={step !== 0}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter the name of your NFT Collection"
                   css={{
@@ -220,7 +221,7 @@ const LaunchPadDeployPage = () => {
                 </Text>
                 <Input
                   required
-
+                  disabled={step !== 0}
                   value={symbol}
                   onChange={(e) => setSymbol(e.target.value)}
                   placeholder="The token symbol that will show up on block explorers, e.g. TOKEN"
@@ -244,6 +245,7 @@ const LaunchPadDeployPage = () => {
                   type="number"
                   value={supply}
                   min={1}
+                  disabled={step !== 0}
                   onChange={(e) => setSupply(e.target.value)}
                   placeholder="Max collection supply"
                   css={{
@@ -265,6 +267,7 @@ const LaunchPadDeployPage = () => {
                   type="number"
                   value={maxPerWallet}
                   min={1}
+                  disabled={step !== 0}
                   onChange={(e) => setMaxPerWallet(e.target.value)}
                   placeholder="Set the max tokens allowed per wallet, default: max supply"
                   css={{
@@ -285,8 +288,9 @@ const LaunchPadDeployPage = () => {
                 <Input
                   type="number"
                   value={allowlistSupply}
-                  min={1}
+                  min={0}
                   max={supply}
+                  disabled={step !== 0}
                   onChange={(e) => setAllowlistSupply(e.target.value)}
                   placeholder="Set max allowlisted token"
                   css={{
@@ -309,6 +313,7 @@ const LaunchPadDeployPage = () => {
                   </Flex>
                   <Box>
                     <Switch
+                      disabled={step !== 0}
                       checked={isFreeMint}
                       onCheckedChange={(checked) => setIsFreeMint(checked)}
                     />
@@ -335,6 +340,7 @@ const LaunchPadDeployPage = () => {
                         <StyledInput
                           required
                           type="number"
+                          disabled={step !== 0}
                           value={allowlistMintPrice}
                           placeholder="0"
                           onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
@@ -399,6 +405,7 @@ const LaunchPadDeployPage = () => {
                           type="number"
                           value={publicMintPrice}
                           placeholder="0"
+                          disabled={step !== 0}
                           onKeyDown={(e: KeyboardEvent<HTMLInputElement>) =>
                             ['e', '+', '-'].includes(e.key) && e.preventDefault()
                           }
@@ -455,6 +462,7 @@ const LaunchPadDeployPage = () => {
                 </Flex>
                 <Box>
                   <Switch
+                    disabled={step !== 0}
                     checked={isReserveTokens}
                     onCheckedChange={(checked) => setIsReserveTokens(checked)}
                   />
@@ -467,7 +475,10 @@ const LaunchPadDeployPage = () => {
                   </Text>
                   <Input
                     type="number"
+                    min={0}
+                    max={+supply - +allowlistSupply}
                     value={reservedSupply}
+                    disabled={step !== 0}
                     onChange={(e) => setReservedSupply(e.target.value)}
                     placeholder="Set max reserved token"
                     css={{
@@ -638,7 +649,7 @@ const LaunchPadDeployPage = () => {
 
                 </Text>
                 {step === 5 && (
-                  <Link href={`/my-collections/${routePrefix}/${deployedAddress}`}>
+                  <Link href={`/my-project/${routePrefix}/${deployedAddress}`}>
                     <Button>Continue</Button>
                   </Link>
                 )}
@@ -651,4 +662,4 @@ const LaunchPadDeployPage = () => {
   )
 }
 
-export default LaunchPadDeployPage
+export default LaunchpadDeployPage

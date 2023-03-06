@@ -1,7 +1,8 @@
-import { Text, Box, Flex } from '../primitives'
+import {Text, Box, Flex} from '../primitives'
 import Link from 'next/link'
-import { FC } from 'react'
-import { TrendingCollections } from 'components/home/TrendingCollectionsList'
+import {FC} from 'react'
+import {TrendingCollections} from 'components/home/TrendingCollectionsList'
+import {CollectionDropdown} from "./CollectionDropdown";
 
 type Props = {
   collection: NonNullable<TrendingCollections>[0]
@@ -9,22 +10,23 @@ type Props = {
   heroImg: string
 }
 
-export const CollectionCard: FC<Props> = ({ collection, routePrefix, heroImg }) => {
+export const CollectionCard: FC<Props> = ({collection, routePrefix, heroImg}) => {
   return (
-    <Link href={`/my-collections/${routePrefix}/${collection.id}`} style={{ display: 'inline-block', minWidth: 0 }}>
-      <Flex
-        css={{
-          cursor: 'pointer',
-          background: '$gray11',
-          borderRadius: '20px',
-          padding: '10px',
-          width: '300px',
-          height: '200px',
-          alignItems: 'center',
-          backgroundImage: `url(/ClaimRewards.png)`,
-          backgroundSize: 'cover',
-        }}
-      >
+    <Flex
+      css={{
+        position: 'relative',
+        cursor: 'pointer',
+        background: '$gray11',
+        borderRadius: '20px',
+        padding: '10px',
+        width: '300px',
+        height: '200px',
+        alignItems: 'center',
+        backgroundImage: `url(/ClaimRewards.png)`,
+        backgroundSize: 'cover',
+      }}
+    >
+      <Link href={`/my-project/${routePrefix}/${collection.id}`} style={{display: 'flex', flex: 1, justifyItems: 'center' }}>
         <Flex
           css={{
             ml: 'auto',
@@ -48,7 +50,7 @@ export const CollectionCard: FC<Props> = ({ collection, routePrefix, heroImg }) 
             }}
           />
 
-          <Box css={{ textAlign: 'center', mt: '$4' }}>
+          <Box css={{textAlign: 'center', mt: '$4'}}>
             <Flex
               align="center"
               css={{
@@ -62,7 +64,10 @@ export const CollectionCard: FC<Props> = ({ collection, routePrefix, heroImg }) 
             </Flex>
           </Box>
         </Flex>
-      </Flex>
-    </Link>
+      </Link>
+      <Box css={{position: 'absolute', bottom: 20, right: 20}}>
+        <CollectionDropdown id={collection?.id} name={collection?.name} slug={collection?.slug}/>
+      </Box>
+    </Flex>
   )
 }

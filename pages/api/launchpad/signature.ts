@@ -4,7 +4,7 @@ import fetcher from "utils/fetcher";
 import supportedChains from "utils/chains";
 
 // use required instead import because of deprecation
-const Web3 = require('web3');
+// const Web3 = require('web3');
 
 const getAlchemyNetworkName = (chainId: number) => {
   let network;
@@ -39,10 +39,10 @@ const getAlchemyAPIKey = (chainId: number) => {
 
 export default async function signature(req: NextApiRequest, res: NextApiResponse) {
   const { id, chain = 10, address } = req.query;
-  const web3 = new Web3(`https://${getAlchemyNetworkName(+chain)}.alchemyapi.io/v2/${getAlchemyAPIKey(+chain)}`);
-  const signer = web3.eth.accounts.privateKeyToAccount(
-    process.env.SIGNER_PKEY as string
-  );
+  // const web3 = new Web3(`https://${getAlchemyNetworkName(+chain)}.alchemyapi.io/v2/${getAlchemyAPIKey(+chain)}`);
+  // const signer = web3.eth.accounts.privateKeyToAccount(
+  //   process.env.SIGNER_PKEY as string
+  // );
 
   if (!address) {
     return res.send({
@@ -69,10 +69,10 @@ export default async function signature(req: NextApiRequest, res: NextApiRespons
     if ((launchpads || []).length > 0 && (launchpads[0].allowlists || [])
       .find((a: string) => a.toLowerCase() === (address as string).toLowerCase())) {
       let message = `0x000000000000000000000000${(address as string).substring(2)}`;
-      let {signature} = signer.sign(message);
+      // let {signature} = signer.sign(message);
 
       return res.send({
-        result: signature
+        result: ''
       });
     }
 
