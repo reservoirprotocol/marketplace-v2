@@ -41,21 +41,20 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
       </Flex>
       {children}
       <Flex direction="column" css={{ padding: '0 12px' }}>
-        {isConnected ?
+        {isConnected ? (
           <Flex
             direction="column"
             css={{
               background: '$gray4',
               borderRadius: '$xl',
               padding: '20px 30px',
-
             }}
           >
-            <Button css={{display: 'flex', justifyContent: 'center'}}>
+            <Button css={{ display: 'flex', justifyContent: 'center' }}>
               Verify and Claim
             </Button>
           </Flex>
-          : (
+        ) : (
           <Flex
             direction="column"
             css={{
@@ -63,14 +62,17 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
               borderRadius: '$xl',
               padding: '20px 30px',
             }}
-            >
-              <Text style="h5" css={{
+          >
+            <Text
+              style="h5"
+              css={{
                 textAlign: 'center',
-                marginBottom: '$3'
-              }}>
-                Connect your Wallet First
-              </Text>
-              <ConnectWalletButton />
+                marginBottom: '$3',
+              }}
+            >
+              Connect your Wallet First
+            </Text>
+            <ConnectWalletButton />
           </Flex>
         )}
       </Flex>
@@ -166,8 +168,8 @@ export const QuestFollowTwitter = () => {
               Step 1: Link a Twitter account to your NFTEarth user profile
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Head to the profile page on NFTEarth and link your Twitter account to
-              your NFTEarth user profile.
+              Head to the profile page on NFTEarth and link your Twitter account
+              to your NFTEarth user profile.
             </Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
@@ -176,7 +178,10 @@ export const QuestFollowTwitter = () => {
               Step 2: Follow NFTEarth on Twitter
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Follow NFTEarth.
+              Follow NFTEarth at
+              <Link href="https://twitter.com/NFTEarth_L2">
+                &nbsp;<Text css={{ color: '$primary10' }}>@NFTEarth_L2</Text>.
+              </Link>
             </Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
@@ -320,8 +325,8 @@ export const QuestListNFT = () => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Click on the NFTs you want to trade and click List to sell it on
-              the NFT on the marketplace. You need to list Any NFT in any currency to be
-              eligible to claim the reward.
+              the NFT on the marketplace. You need to list Any NFT in any
+              currency to be eligible to claim the reward.
             </Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
