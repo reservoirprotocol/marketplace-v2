@@ -84,7 +84,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
         <Flex
           direction="column"
           css={{
-            height: data.isLoading ? '250px' : '500px',
+            height: data.isLoading ? '225px' : '450px',
             overflowY: 'scroll',
             width: '100%',
             pb: '$2',
@@ -104,7 +104,13 @@ export const ActivityTable: FC<Props> = ({ data }) => {
         </Flex>
       )}
       {data.isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$5' }}>
+        <Flex
+          align="center"
+          justify="center"
+          css={{
+            py: '$5',
+          }}
+        >
           <LoadingSpinner />
         </Flex>
       )}
