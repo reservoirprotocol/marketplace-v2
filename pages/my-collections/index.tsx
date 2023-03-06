@@ -16,9 +16,9 @@ import {useAccount} from "wagmi";
 import ChainToggle from "../../components/home/ChainToggle";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+// type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
+const MyCollectionsPage: NextPage = () => {
   const { address } = useAccount();
   const marketplaceChain = useMarketplaceChain()
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
@@ -131,45 +131,45 @@ const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
     </Layout>
   )
 }
-
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
-export const getStaticProps: GetStaticProps<{
-  ssr: {
-    exploreCollections: ChainCollections
-  }
-}> = async () => {
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
-
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-
-  const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
-    }
-  })
-
-  return {
-    props: { ssr: { exploreCollections: collections } },
-    revalidate: 5,
-  }
-}
+//
+// type CollectionSchema =
+//   paths['/collections/v5']['get']['responses']['200']['schema']
+// type ChainCollections = Record<string, CollectionSchema>
+//
+// export const getStaticProps: GetStaticProps<{
+//   ssr: {
+//     exploreCollections: ChainCollections
+//   }
+// }> = async () => {
+//   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+//     {
+//       sortBy: '1DayVolume',
+//       normalizeRoyalties: NORMALIZE_ROYALTIES,
+//     }
+//
+//   const promises: ReturnType<typeof fetcher>[] = []
+//   supportedChains.forEach((chain) => {
+//     promises.push(
+//       fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
+//         headers: {
+//           'x-api-key': chain.apiKey || '',
+//         },
+//       })
+//     )
+//   })
+//
+//   const responses = await Promise.allSettled(promises)
+//   const collections: ChainCollections = {}
+//   responses.forEach((response, i) => {
+//     if (response.status === 'fulfilled') {
+//       collections[supportedChains[i].id] = response.value.data
+//     }
+//   })
+//
+//   return {
+//     props: { ssr: { exploreCollections: collections } },
+//     revalidate: 5,
+//   }
+// }
 
 export default MyCollectionsPage

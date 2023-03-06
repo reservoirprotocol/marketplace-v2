@@ -20,7 +20,7 @@ export default function (
         return null
       }
 
-      const url = new URL(`${process.env.NEXT_PUBLIC_HOST_URL}${chain?.proxyApi}/launchpads/v1`)
+      const url = new URL(`${chain?.proxyApi}/launchpads/v1`)
       let query: LaunchpadQuery = { ...options }
 
       if (previousPageData && !previousPageData?.data?.owners?.length) {

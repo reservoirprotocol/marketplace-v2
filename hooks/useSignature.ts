@@ -12,7 +12,7 @@ function useSignature({ id, chain, address } : Props) {
 
   const mutate = () => {
     setError(undefined);
-    return fetch( `/api/launchpad?id=${id}&chain=${chain}&address=${address}`)
+    return fetch( `/api/launchpad/signature?id=${id}&chain=${chain}&address=${address}`)
       .then(res => res.json())
       .then(res => setData(res.result))
       .catch(e => {
