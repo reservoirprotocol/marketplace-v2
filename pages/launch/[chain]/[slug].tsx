@@ -1,8 +1,16 @@
 import { Box, Flex, Text, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import MintInfo from 'components/launch/MintInfo'
-import {useLaunchpads, useMarketplaceChain} from 'hooks';
+import {useLaunchpads, useMarketplaceChain, useSignature} from 'hooks';
 import {useRouter} from "next/router";
+import {useAccount, useContractReads, useContractWrite} from "wagmi";
+import {BigNumber} from "@ethersproject/bignumber";
+import {formatNumber} from "utils/numbers";
+import launchpadArtifact from "artifact/NFTELaunchpad.json";
+import Link from "next/link";
+import LaunchpadArtifact from "../../../artifact/NFTELaunchpad.json";
+import {SyntheticEvent, useContext, useState} from "react";
+import {ToastContext} from "../../../context/ToastContextProvider";
 
 interface mintType {
   price: string;
@@ -21,6 +29,9 @@ const mintInfo: mintType = {
 
 const LaunchPadMint = () => {
   const router = useRouter()
+  const { address } = useAccount()
+  const { addToast } = useContext(ToastContext)
+  const [ loading, setLoading ] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
     slug: router.query.slug as string,
@@ -43,6 +54,164 @@ const LaunchPadMint = () => {
   )
 
   const launchpad = launchpads[0] || [];
+
+  const launchpadContract = {
+    address: launchpad?.id as `0x${string}`,
+    abi: launchpadArtifact.abi,
+  }
+
+  const { data: contractData, isError, isLoading } = useContractReads({
+    contracts: [
+      {
+        ...launchpadContract,
+        functionName: 'activeSale',
+        args: [1]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'activeSale',
+        args: [2]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'presalePrice'
+      },
+      {
+        ...launchpadContract,
+        functionName: 'publicPrice'
+      },
+      {
+        ...launchpadContract,
+        functionName: 'maxSupply'
+      },
+      {
+        ...launchpadContract,
+        functionName: 'totalSupply'
+      },
+      {
+        ...launchpadContract,
+        functionName: 'supply',
+        args: [0]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'minted',
+        args: [0]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'supply',
+        args: [1]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'minted',
+        args: [1]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'supply',
+        args: [2]
+      },
+      {
+        ...launchpadContract,
+        functionName: 'minted',
+        args: [0]
+      },
+    ],
+    cacheTime: 5_000
+  })
+
+  const [
+    activePresale,
+    activePublic,
+    presalePrice,
+    publicPrice,
+    maxSupply,
+    totalSupply,
+    reservedSupply,
+    reservedMinted,
+    presaleSupply,
+    presaleMinted,
+    publicSupply,
+    publicMinted
+  ] = contractData || [];
+  const numMaxSupply = (maxSupply as BigNumber)?.toNumber() || 1
+  const numTotalSupply = (totalSupply as BigNumber)?.toNumber() || 0
+  const numReservedSupply = (reservedSupply as BigNumber)?.toNumber() || 0
+  const numReservedMinted = (reservedMinted as BigNumber)?.toNumber() || 0
+  const numPresaleSupply = (presaleSupply as BigNumber)?.toNumber() || 0
+  const numPresaleMinted = (presaleMinted as BigNumber)?.toNumber() || 0
+  const numPublicSupply = (publicSupply as BigNumber)?.toNumber() || 0
+  const numPublicMinted = (publicMinted as BigNumber)?.toNumber() || 0
+
+  const { data: signature } = useSignature({
+    id: launchpad.id as string,
+    chain: marketplaceChain.id,
+    address: address as string
+  })
+
+  const { writeAsync: publicMint } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address: launchpad.id as `0x${string}`,
+    functionName: 'publicMint',
+    args: [1],
+    overrides: {
+      from: address,
+      value: (publicPrice as BigNumber) || 0
+    },
+    chainId: marketplaceChain.id
+  })
+
+  const { writeAsync: presaleMint } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address: launchpad.id as `0x${string}`,
+    functionName: 'preSaleMint',
+    args: [signature, 1],
+    overrides: {
+      from: address,
+      value: (publicPrice as BigNumber) || 0
+    },
+    chainId: marketplaceChain.id
+  })
+
+  const handlePublicMint = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setLoading(true)
+    try {
+      await publicMint?.()
+      addToast?.({
+        title: 'success',
+        description: 'Successfully minted your NFT'
+      })
+    } catch (e: any) {
+      addToast?.({
+        title: 'error',
+        description: e.reason || e.message
+      })
+    }
+    setLoading(false)
+  }
+
+  const handleWhitelistMint = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setLoading(true)
+    try {
+      await presaleMint?.()
+      addToast?.({
+        title: 'success',
+        description: 'Successfully minted your NFT'
+      })
+    } catch (e: any) {
+      addToast?.({
+        title: 'error',
+        description: e.reason || e.message
+      })
+    }
+    setLoading(false)
+  }
 
   return (
     <Layout>
@@ -81,12 +250,12 @@ const LaunchPadMint = () => {
             },
           }}
         >
-          <Box css={{
+          <Flex css={{
             "@initial": {
-              width: '500px'
+              flex: '1'
             },
             "@lg": {
-              width: '100%'
+              flex: '0.5'
             },
           }}>
             <Flex direction="column" css={{ gap: 15, }}>
@@ -97,34 +266,57 @@ const LaunchPadMint = () => {
                   width: '100%',
                 }}
               >
-                <Text>Toal minted</Text>
-                <Text>150/491,215 (0%)</Text>
+                <Text>Total minted</Text>
+                <Text>{`${formatNumber(numTotalSupply)}/${formatNumber(numMaxSupply)} (${formatNumber((numTotalSupply / numMaxSupply * 100), 2)}%)`}</Text>
               </Flex>
-              <Button css={{
-                background: '$gray2',
-                '&:hover': {
-                  background: '$gray9',
-                }
-              }}>
-                <Flex justify="between" css={{ width: '100%' }}>
-                  <Text>Whitelist Mint</Text>
-                  <Text>Active &gt;</Text>
+              {numReservedSupply > 0 && (
+                <Flex direction="column" css={{
+                  background: '$gray2',
+                  p: '$4'
+                }}>
+                  <Flex justify="between" css={{ width: '100%' }}>
+                    <Text>Reserved</Text>
+                  </Flex>
+                  <Text>{`${formatNumber(numReservedMinted)}/${formatNumber(numReservedSupply)} (${formatNumber((numReservedMinted / numReservedSupply * 100), 2)}%)`}</Text>
                 </Flex>
-              </Button>
-              <Button css={{
+              )}
+              {numPresaleSupply > 0 && (
+                <Flex direction="column" css={{
+                  background: '$gray2',
+                  p: '$4'
+                }}>
+                  <Flex justify="between" css={{ width: '100%' }}>
+                    <Text>Whitelist Mint</Text>
+                    <Text css={{
+                      color: activePresale ? 'green' : 'red'
+                    }}>{activePresale ? 'Active': 'Inactive'}</Text>
+                  </Flex>
+                  <Text>{`${formatNumber(numPresaleMinted)}/${formatNumber(numPresaleSupply)} (${formatNumber((numPresaleMinted / numPresaleSupply * 100), 2)}%)`}</Text>
+                </Flex>
+              )}
+              <Flex direction="column" css={{
                 background: '$gray2',
-                '&:hover': {
-                  background: '$gray9',
-                }
+                p: '$4'
               }}>
                 <Flex justify="between" css={{ width: '100%' }}>
                   <Text>Public Mint</Text>
-                  <Text>Inactive &gt;</Text>
+                  <Text css={{
+                    color: activePublic ? 'green' : 'red'
+                  }}>{activePublic ? 'Active': 'Inactive'}</Text>
                 </Flex>
-              </Button>
+                <Text>{`${formatNumber(numPublicMinted)}/${formatNumber(numPublicSupply)} (${formatNumber((numPublicMinted / numPublicSupply * 100), 2)}%)`}</Text>
+              </Flex>
             </Flex>
-          </Box>
+          </Flex>
           <Flex
+            css={{
+              "@initial": {
+                flex: '1'
+              },
+              "@lg": {
+                flex: '0.5'
+              },
+            }}
             direction="column"
             justify="center"
           >
@@ -146,17 +338,15 @@ const LaunchPadMint = () => {
                   "@bp1300": 'h2',
                 }}
                 >
-                Layer2DAO Early Adopter - Level 1
+                {launchpad.name}
               </Text>
             </Box>
             <Box css={{
               marginBottom: '$5',
               "@xs": {
-                margin: '0 auto',
-                textAlign: 'center'
+                margin: '0 auto'
               },
               "@bp800": {
-                textAlign: 'left',
                 marginBottom: '$5',
               }
             }}>
@@ -164,40 +354,58 @@ const LaunchPadMint = () => {
                   "@initial": 'subtitle2',
                   "@lg": 'subtitle1',
                 }}>
-                The Layer2DAO NFTs are awarded to early adopters of the top 10 L2 networks. The NFT level corresponds to the number of L2s that the owner bridged assets into. We plan on building utility of the NFT with other L2 projects, so hold on to yours rightly. It pays to be an early adopter!
+                {launchpad.description}
               </Text>
             </Box>
             <MintInfo
-              price={mintInfo.price}
-              supply={mintInfo.supply}
-              socialLinks={ mintInfo.socialLinks }
+              launchpad={launchpad}
+              contractData={contractData}
             />
-            <Flex css={{
+            <Flex justify="center" css={{
+              flexWrap: 'wrap',
               gap: 24,
-              "@xs": {
-                margin: '0 auto',
-              },
-              "@bp800": {
-                margin: '0',
-                marginTop: '$6',
-              }
+              mt: '$6'
             }}>
-              <Button css={{
-                minWidth: '140px',
-                "@bp800": {
-                  minWidth: '180px',
-                },
-                display: 'flex',
-                justifyContent: 'center'
-              }}> Mint NFT </Button>
-              <Button css={{
-                minWidth: '140px',
-                "@bp800": {
-                  minWidth: '180px',
-                },
-                display: 'flex',
-                justifyContent: 'center'
-              }}> View Collection </Button>
+              <>
+                {activePresale && (
+                  <Box>
+                    <Button
+                      disabled={!(launchpad.allowlists || []).map(a => a.toLowerCase()).includes(address?.toLowerCase() || '') || loading}
+                      onClick={handleWhitelistMint}
+                      css={{
+                        minWidth: '140px',
+                        "@bp800": {
+                          minWidth: '180px',
+                        },
+                        justifyContent: 'center'
+                      }}
+                    > Presale Mint </Button>
+                  </Box>
+                )}
+                {activePublic && (
+                  <Box>
+                    <Button
+                      disabled={loading}
+                      onClick={handlePublicMint}
+                      css={{
+                      minWidth: '140px',
+                      "@bp800": {
+                        minWidth: '180px',
+                      },
+                      justifyContent: 'center'
+                    }}> Mint NFT </Button>
+                  </Box>
+                )}
+                <Link href={`/collection/${router.query.chain}/${launchpad.id}`}>
+                  <Button css={{
+                    minWidth: '140px',
+                    "@bp800": {
+                      minWidth: '180px',
+                    },
+                    justifyContent: 'center'
+                  }}> View Collection </Button>
+                </Link>
+              </>
             </Flex>
           </Flex>
         </Flex>
