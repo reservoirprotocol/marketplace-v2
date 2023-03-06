@@ -56,6 +56,34 @@ type Source = 'token' | 'user' | 'collection'
 type Props = {
   data: ActivityResponse
 }
+type TokenActivityTableProps = {
+  id: string
+  activityTypes: NonNullable<
+    Exclude<Parameters<typeof useTokenActivity>['1'], boolean>
+  >['types']
+}
+
+export const TokenActivityTable: FC<TokenActivityTableProps> = ({ id, activityTypes }) => {
+  const data = useTokenActivity(
+    id,
+    {
+      types: activityTypes,
+    },
+    {
+      revalidateOnMount: true,
+      fallbackData: [],
+    }
+  )
+
+  useEffect(() => {
+    data.mutate()
+    return () => {
+      data.setSize(1)
+    }
+  }, [])
+
+  return <ActivityTable data={data} />
+}
 
 export const ActivityTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
