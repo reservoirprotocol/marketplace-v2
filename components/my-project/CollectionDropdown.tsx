@@ -4,8 +4,11 @@ import {
   Button,
 } from 'components/primitives'
 import {
-  faEllipsisVertical
+  faEllipsisVertical,
+  faBolt,
+  faEye
 } from '@fortawesome/free-solid-svg-icons'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {useMarketplaceChain} from "hooks";
 
@@ -46,8 +49,12 @@ export const CollectionDropdown: FC<Props> = ({ id, name, slug }) => {
         }&hashtags=&via=&related=&original_referer=${
           encodeURIComponent('https://nftearth.exchange')
         }`}
-        css={{ display: 'block' }}>Share Project</DropdownMenuItem>
-      <DropdownMenuItem as="a" href={`/my-project/${marketplaceChain.routePrefix}${id}`} css={{ display: 'block' }}>View</DropdownMenuItem>
+        css={{ display: 'block' }}><FontAwesomeIcon icon={faTwitter} style={{ marginRight: 10 }}/>Tweet Project</DropdownMenuItem>
+      <DropdownMenuItem
+        as="a"
+        href={`/launch/${marketplaceChain.routePrefix}${slug}`}
+        css={{ display: 'block' }}><FontAwesomeIcon icon={faBolt} style={{ marginRight: 10 }}/>Launch Page</DropdownMenuItem>
+      <DropdownMenuItem as="a" href={`/my-project/${marketplaceChain.routePrefix}${id}`} css={{ display: 'block' }}><FontAwesomeIcon icon={faEye} style={{ marginRight: 10 }}/>View</DropdownMenuItem>
     </>
   )
 
