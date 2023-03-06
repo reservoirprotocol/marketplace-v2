@@ -17,7 +17,6 @@ import {
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { constants } from 'ethers'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
-import Image from 'next/image'
 import Link from 'next/link'
 import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -175,33 +174,30 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       }}
     >
       <TableCell css={{ color: '$gray11' }}>
-        <Flex direction="column">
-          <Flex align="center">
-            {activity.type && logos[activity.type]}
-            <Text
-              style="subtitle1"
-              css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
-            >
-              {activityDescription}
-            </Text>
-          </Flex>
-          {activity.price &&
-          activity.price !== 0 &&
-          activity.type &&
-          !['transfer', 'mint'].includes(activity.type) ? (
-            <Flex align="center">
-              <FormatCryptoCurrency
-                amount={activity.price}
-                logoHeight={16}
-                textStyle="subtitle1"
-                css={{ mr: '$2', fontSize: '14px' }}
-              />
-              <Text css={{ fontSize: '14px', color: '$gray11' }}></Text>
-            </Flex>
-          ) : (
-            <span>-</span>
-          )}
+        <Flex align="center">
+          {activity.type && logos[activity.type]}
+          <Text
+            style="subtitle1"
+            css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+          >
+            {activityDescription}
+          </Text>
         </Flex>
+        {activity.price &&
+        activity.price !== 0 &&
+        activity.type &&
+        !['transfer', 'mint'].includes(activity.type) ? (
+          <Flex align="center">
+            <FormatCryptoCurrency
+              amount={activity.price}
+              logoHeight={16}
+              textStyle="subtitle1"
+              css={{ mr: '$2', fontSize: '14px' }}
+            />
+          </Flex>
+        ) : (
+          <span>-</span>
+        )}
       </TableCell>
       <TableCell>
         <Flex
@@ -234,15 +230,19 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           )}
         </Flex>
         <Flex
-          align="baseline"
           justify="end"
           css={{
-            gap: '$2',
+            gap: '$3',
           }}
         >
           {activity.fromAddress &&
           activity.fromAddress !== constants.AddressZero ? (
-            <Link href={`/profile/${activity.fromAddress}`}>
+            <Link
+              style={{
+                display: 'flex',
+              }}
+              href={`/profile/${activity.fromAddress}`}
+            >
               <Text
                 style="subtitle3"
                 css={{
@@ -263,7 +263,12 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           </Text>
           {activity.toAddress &&
           activity.toAddress !== constants.AddressZero ? (
-            <Link href={`/profile/${activity.toAddress}`}>
+            <Link
+              style={{
+                display: 'flex',
+              }}
+              href={`/profile/${activity.toAddress}`}
+            >
               <Text
                 style="subtitle3"
                 css={{
