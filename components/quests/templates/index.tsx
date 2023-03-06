@@ -146,7 +146,7 @@ export const QuestFollowTwitter = () => {
               Step 1: Link a Twitter account to your NFTEarth user profile
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Head to the Profile Settings page and link your Twitter account to
+              Head to the profile page on NFTEarth and link your Twitter account to
               your NFTEarth user profile.
             </Text>
             <Text
