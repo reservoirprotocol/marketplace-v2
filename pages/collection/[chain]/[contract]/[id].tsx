@@ -117,10 +117,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const { data: tokenActivity } = useTokenActivity(
-    `${token?.token?.collection}:${token?.token?.tokenId}`
-  )
-
   const attributesData = useAttributes(id)
 
   let countOwned = 0
