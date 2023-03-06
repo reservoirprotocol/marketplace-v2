@@ -135,7 +135,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
             addToast?.({
               title: 'Refresh collection failed',
               description:
-                'We have queued this collection for an update, check back in a few.',
+                'Request to refresh collection was rejected. Please try again later, or contact our support team.',
             })
             setIsRefreshing(false)
             throw e
