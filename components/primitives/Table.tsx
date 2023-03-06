@@ -3,10 +3,10 @@ import { styled } from 'stitches.config'
 export const Row = styled('div', {
   display: 'grid',
   gridTemplateColumns: 'repeat(7, 1fr)',
-  'div:first-child': {
+  '> div:first-child': {
     paddingLeft: '0',
   },
-  'div:last-child': {
+  '> div:last-child': {
     paddingRight: '0',
   },
 })

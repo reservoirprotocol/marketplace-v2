@@ -128,7 +128,7 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href="/" legacyBehavior>
+            <Link href="/collection-rankings" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -138,7 +138,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Explore
+                Collections
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
