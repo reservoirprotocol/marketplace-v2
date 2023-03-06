@@ -306,13 +306,6 @@ const LaunchPadDeployPage = () => {
                     <Text style="h6" css={{ color: '$white' }}>
                       Free mint
                     </Text>
-                    <Text
-                      style="subtitle3"
-                      css={{ color: '$white', marginTop: 6 }}
-                    >
-                      NFTEarth Launchpad currently only supports free-to-mint
-                      projects
-                    </Text>
                   </Flex>
                   <Box>
                     <Switch
