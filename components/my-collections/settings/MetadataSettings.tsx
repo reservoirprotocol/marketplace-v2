@@ -1,26 +1,55 @@
-import { useState, useEffect, FC, SyntheticEvent } from 'react'
+import {useState, useEffect, FC, SyntheticEvent, useContext} from 'react'
 import { useTheme } from 'next-themes'
+import { useContractWrite } from 'wagmi'
 import { Text, Box, Input, Button, Tooltip, Flex } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons'
+import {ToastContext} from "context/ToastContextProvider";
+import LaunchpadArtifact from 'artifact/NFTELaunchpad.json'
+import {useMarketplaceChain} from "../../../hooks";
+
 
 type Props = {
   uri: string | undefined
+  address: `0x${string}`
 }
 
-const MintStateSettings:FC<Props> = ({ uri }) => {
+const MintStateSettings:FC<Props> = ({ address, uri }) => {
   const { theme } = useTheme();
+  const { addToast } = useContext(ToastContext)
+  const [ loading, setLoading ] = useState(false)
+  const marketplaceChain = useMarketplaceChain()
 
   const [metadataUrl, setMetadataUrl] = useState(uri)
+  const { writeAsync } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address,
+    functionName: 'setBaseURI',
+    args: [metadataUrl],
+    chainId: marketplaceChain.id
+  })
 
   useEffect(() => {
     setMetadataUrl(uri)
   }, [uri])
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-
-    // TODO: Fetch to API
+    setLoading(true)
+    try {
+      await writeAsync?.()
+      addToast?.({
+        title: 'success',
+        description: 'Metadata URI Updated'
+      })
+    } catch (e: any) {
+      addToast?.({
+        title: 'error',
+        description: e.reason || e.message
+      })
+    }
+    setLoading(false)
   }
 
   return (
@@ -48,6 +77,7 @@ const MintStateSettings:FC<Props> = ({ uri }) => {
         <Text style="h6" css={{ color: '$gray11' }}>Metadata URL</Text>
         <Input
           value={metadataUrl}
+          disabled={loading}
           onChange={(e) => setMetadataUrl(e.target.value)}
           placeholder='ipfs://bafybeih56xkvkgf...L'
           css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
@@ -59,7 +89,8 @@ const MintStateSettings:FC<Props> = ({ uri }) => {
           }}
         />
       </Box>
-      <Button 
+      <Button
+        disabled={loading}
         onClick={handleSubmit}
         css={{ 
           marginBottom: 12,

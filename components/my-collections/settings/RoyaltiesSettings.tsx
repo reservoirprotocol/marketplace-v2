@@ -1,13 +1,14 @@
-import { useState, useEffect, FC, SyntheticEvent } from 'react'
+import {useState, useEffect, FC, SyntheticEvent, useContext} from 'react'
 import { useTheme } from 'next-themes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Text, Flex, Box, Input, Button, Grid } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
+import {useLaunchpads, useMarketplaceChain} from "hooks";
+import {ToastContext} from "context/ToastContextProvider";
 
 type Props = {
-  royalties: any
-  allRoyalties: any
+  launchpad: ReturnType<typeof useLaunchpads>["data"][0]
 }
 
 type AddressType = {
@@ -15,39 +16,78 @@ type AddressType = {
   percentage: string
 }
 
-const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
+const RoyaltiesSettings:FC<Props> = ({ launchpad }) => {
   const { theme } = useTheme();
-  const [addresses, setAddresses] = useState<AddressType[]>([])
-  const [errorPercentage, setErrorPercentage] = useState(false)
-  const [sumPercentage, setSumPercentage] = useState(0)
-  
-  const handleSubmit = (e: SyntheticEvent) => {
-    e.preventDefault();
+  const { addToast } = useContext(ToastContext)
+  const [ royalties, setRoyalties ] = useState<AddressType[]>([])
+  const [ errorPercentage, setErrorPercentage ] = useState(false)
+  const [ sumPercentage, setSumPercentage ] = useState(0)
+  const [ loading, setLoading ] = useState(false)
+  const marketplaceChain = useMarketplaceChain()
 
-    // TODO: Fetch to API
+  const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    console.log('Submit')
+
+    try {
+      await fetch(`${marketplaceChain.proxyApi}/launchpad/update/v1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: launchpad.id,
+          name: launchpad.name,
+          slug: launchpad.slug,
+          allowlists: launchpad.allowlists || [],
+          verified: true,
+          metadata: {
+            imageUrl: launchpad.image,
+            bannerImageUrl: launchpad.banner,
+            discordUrl: launchpad.discordUrl,
+            description: launchpad.description,
+            externalUrl: launchpad.externalUrl,
+            twitterUsername: launchpad.twitterUsername,
+          },
+          royalties: royalties.map(r => ({ recipient: r.value, bps: +r.percentage * 100 }))
+        })
+      })
+      addToast?.({
+        title: 'success',
+        description: 'Royalties Updated'
+      })
+    } catch (err: any) {
+      addToast?.({
+        title: 'error',
+        description: err.message
+      })
+    }
+
+    setLoading(false)
   }
 
   useEffect(() => {
-    setAddresses(royalties.map((royalty: any) => ({
-      value: royalty.address,
-      percentage: royalty.bps * 0.001
+    setRoyalties((launchpad?.royalties?.breakdown || []).map(royalty => ({
+      value: royalty.recipient as string,
+      percentage: `${(royalty?.bps || 0) * 0.01}`
     })))
-  }, [royalties, allRoyalties])
+  }, [launchpad])
 
   const handleAddAddresses = () => {
-    const addressesStateCopy = addresses.slice()
+    const addressesStateCopy =  royalties.slice()
 
     addressesStateCopy.push({ value: '', percentage: '' })
 
-    setAddresses(addressesStateCopy)
+    setRoyalties(addressesStateCopy)
   }
 
   const handleRemoveAddress = (addressIdx: number) => {
-    const addressesStateCopy = addresses.slice()
+    const addressesStateCopy =  royalties.slice()
 
     addressesStateCopy.splice(addressIdx, 1)
 
-    setAddresses(addressesStateCopy)
+    setRoyalties(addressesStateCopy)
   }
 
   const handleAddressInputChange = (
@@ -64,18 +104,18 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
       inputValue !== ''
     ) return;
 
-    const addressesStateCopy = addresses.slice()
+    const addressesStateCopy =  royalties.slice()
 
     addressesStateCopy.splice(addressIdx, 1, {
       ...addressesStateCopy[addressIdx],
       [inputType]: inputValue
     })
 
-    setAddresses(addressesStateCopy)
+    setRoyalties(addressesStateCopy)
   }
 
   useEffect(() => {
-    const sumAllPercentageValue = addresses.reduce((a, b) => a + +b.percentage, 0)
+    const sumAllPercentageValue =  royalties.reduce((a, b) => a + +b.percentage, 0)
 
     if (sumAllPercentageValue > 10) {
       setErrorPercentage(true)
@@ -84,7 +124,7 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
     }
 
     setSumPercentage(sumAllPercentageValue)
-  },[addresses])
+  },[ royalties])
 
   return (
     <Box
@@ -116,7 +156,7 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
         </Flex>
       </Box>
       <Box css={{ marginBottom: 8 }}>
-        {addresses.length > 0 && addresses.map((address, index) => (
+        { royalties.length > 0 &&  royalties.map((address, index) => (
           <Grid
             key={index}
             css={{
@@ -129,6 +169,7 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
             <Box css={{ position: 'relative', width: '100%' }}>
               <StyledInput
                 value={address.value}
+                disabled={loading}
                 onChange={(e) => handleAddressInputChange(index, 'value', e.target.value)}
                 placeholder='Please enter an address'
                 css={{
@@ -144,6 +185,7 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
             <Box css={{ position: 'relative', width: '100%' }}>
               <StyledInput
                 type="number"
+                disabled={loading}
                 value={address.percentage}
                 placeholder="0"
                 onKeyDown={(e) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
@@ -171,9 +213,9 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
                 %
               </Text>
             </Box>
-            <Flex 
-              align='center' 
-              justify='end'
+            <Button
+              color="ghost"
+              disabled={loading}
               onClick={() => handleRemoveAddress(index)}
               css={{ color: '$red10', cursor: 'pointer' }}>
               <FontAwesomeIcon
@@ -181,7 +223,7 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
                 width={16}
                 height={16}
               />
-            </Flex>
+            </Button>
           </Grid>
         ))}
         {errorPercentage && (
@@ -194,15 +236,17 @@ const RoyaltiesSettings:FC<Props> = ({ royalties, allRoyalties }) => {
       </Box>
       <Flex justify='between' align='center' css={{ width: '100%' }}>
         <Button 
-          color='ghost' 
+          color='ghost'
+          disabled={loading}
           onClick={handleAddAddresses}>
           + Add Address
         </Button>
-        {addresses.length > 0 && (
+        { royalties.length > 0 && (
           <Text style='subtitle2' css={{ fontWeight: 'bold' }}>{`Total ${sumPercentage}%`}</Text>
         )}
       </Flex>
-      <Button 
+      <Button
+        disabled={loading}
         onClick={handleSubmit}
         css={{ 
           margin: '12px 0',

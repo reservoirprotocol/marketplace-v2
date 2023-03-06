@@ -1,5 +1,8 @@
-import { useState } from 'react'
+import {useLayoutEffect, useState} from 'react'
 import { useTheme } from 'next-themes'
+import {useContractReads, useSignMessage} from "wagmi"
+import {useRouter} from "next/router"
+import { ethers } from "ethers";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGear, faMapPin, faEdit, faList, faFileImage } from '@fortawesome/free-solid-svg-icons'
 import { Text, Flex, Box, Grid } from 'components/primitives'
@@ -10,18 +13,24 @@ import RoyaltiesSettings from 'components/my-collections/settings/RoyaltiesSetti
 import MintStateSettings from 'components/my-collections/settings/MintStateSettings'
 import WhitelistSettings from 'components/my-collections/settings/WhitelistSettings'
 import MetadataSettings from 'components/my-collections/settings/MetadataSettings'
-import {useContractReads} from "wagmi"
-import {useRouter} from "next/router"
-import launchpadArtifact from 'artifact/NFTELaunchpad.json'
-import { ethers } from "ethers";
+import LoadingSpinner from "components/common/LoadingSpinner";
 import {useLaunchpads, useMarketplaceChain} from "hooks";
-import LoadingSpinner from "../../components/common/LoadingSpinner";
+import launchpadArtifact from 'artifact/NFTELaunchpad.json'
 
 const MyCollectionDetailPage = () => {
   const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState<string | null>('details')
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
+  const { signMessageAsync } = useSignMessage();
+
+  useLayoutEffect(() => {
+    signMessageAsync({
+      message: "Confirm account ownership"
+    }).catch(() => {
+      location.href = '/my-collections'
+    })
+  }, [])
 
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
     id: router.query.id as string,
@@ -209,8 +218,7 @@ const MyCollectionDetailPage = () => {
               icon={faMapPin}
               setActiveTab={() => setActiveTab('royalities')}>
               <RoyaltiesSettings
-                royalties={launchpad.royalties || []}
-                allRoyalties={launchpad.allRoyalties || {}}
+                launchpad={launchpad}
               />
             </SettingsContentContainer>
             <SettingsContentContainer
@@ -220,10 +228,11 @@ const MyCollectionDetailPage = () => {
               icon={faEdit}
               setActiveTab={() => setActiveTab('mintState')}>
               <MintStateSettings
+                address={launchpad?.id as `0x${string}`}
                 activePresale={activePresale as boolean}
-                presalePrice={ethers.utils.formatEther(`${presalePrice || '0'}`).toString()}
+                presalePrice={presalePrice as string}
                 activePublic={activePublic as boolean}
-                publicPrice={ethers.utils.formatEther(`${publicPrice || '0'}`).toString()}
+                publicPrice={publicPrice as string}
               />
             </SettingsContentContainer>
             <SettingsContentContainer
@@ -233,7 +242,7 @@ const MyCollectionDetailPage = () => {
               icon={faList}
               setActiveTab={() => setActiveTab('whitelist')}>
               <WhitelistSettings
-                allowlist={launchpad.allowlists}
+                launchpad={launchpad}
               />
             </SettingsContentContainer>
             <SettingsContentContainer
@@ -243,6 +252,7 @@ const MyCollectionDetailPage = () => {
               icon={faFileImage}
               setActiveTab={() => setActiveTab('metadata')}>
               <MetadataSettings
+                address={launchpad?.id as `0x${string}`}
                 uri={`${URI}`}
               />
             </SettingsContentContainer>

@@ -44,7 +44,7 @@ const LaunchPadDeployPage = () => {
   const [open, setOpen] = useState(true);
   const [deployedAddress, setDeployedAddress] = useState<string>('')
   const { proxyApi } = supportedChains.find(c => c.id === activeChain?.id) || DefaultChain;
-  const { id: marketChainId } = useMarketplaceChain()
+  const { id: marketChainId, routePrefix } = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketChainId,
   })
@@ -128,7 +128,7 @@ const LaunchPadDeployPage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: futureAddress,
+          id: futureAddress.toLowerCase(),
           name,
           constructor_args: JSON.stringify(constructorArgs),
           bytecode: artifact.data.bytecode.object,
@@ -645,7 +645,7 @@ const LaunchPadDeployPage = () => {
 
                 </Text>
                 {step === 5 && (
-                  <Link href={`/my-collections/${deployedAddress}`}>
+                  <Link href={`/my-collections/${routePrefix}/${deployedAddress}`}>
                     <Button>Continue</Button>
                   </Link>
                 )}

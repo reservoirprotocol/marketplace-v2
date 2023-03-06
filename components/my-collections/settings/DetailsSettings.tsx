@@ -3,10 +3,11 @@ import { useTheme } from 'next-themes'
 import { useDropzone, FileError } from 'react-dropzone';
 import { Text, Flex, Box, Input, Button, TextArea, Select } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
-import { ToastContext } from '../../../context/ToastContextProvider'
+import { ToastContext } from 'context/ToastContextProvider'
+import {useDebounce, useLaunchpads, useMarketplaceChain} from "hooks";
 
 type Props = {
-  launchpad: any
+  launchpad: ReturnType<typeof useLaunchpads>["data"][0]
 }
 
 const Thumbs = ({ image } : { image: string }) => (
@@ -29,12 +30,32 @@ const Thumbs = ({ image } : { image: string }) => (
   </Box>
 );
 
+const fileUpload = async (file: File, newFileName: string) => {
+  const res = await fetch(`/api/image/upload?file=${encodeURIComponent(newFileName)}`);
+  const {url, fields} = await res.json();
+  const formData = new FormData();
+
+  const blob = file.slice(0, file.size, file.type);
+
+  Object.entries({...fields, file: new File([blob], newFileName, {type: file.type})}).forEach(([key, value]) => {
+    formData.append(key, value as string | Blob);
+  });
+
+  return await fetch(url, {
+    method: 'POST',
+    body: formData,
+    mode: 'no-cors'
+  });
+}
+
 const DetailsSettings:FC<Props> = ({ launchpad }) => {
   const { theme } = useTheme();
   const { addToast } = useContext(ToastContext)
+  const marketplaceChain = useMarketplaceChain()
+  const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState('')
-  const [url, setUrl] = useState('')
+  const [slug, setSlug] = useState('')
   const [description, setDescription] = useState('')
   const [collectionImage, setCollectionImage] = useState<string | undefined>(undefined)
   const [coverImage, setCoverImage] = useState<string | undefined>(undefined)
@@ -42,6 +63,19 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
   const [websiteLink, setWebsiteLink] = useState('')
   const [twitter, setTwitter] = useState('')
   const [discord, setDiscord] = useState('')
+
+  const debouncedSlug = useDebounce(slug, 3000);
+  const {data: existingLaunchpad} = useLaunchpads(
+    marketplaceChain,
+    {
+      slug: debouncedSlug,
+      limit: 1
+    },
+    {
+        keepPreviousData: false,
+      revalidateAll: false
+    }
+  )
 
   const categoryOptions = [
     { label: 'Art', value: 'art' },
@@ -58,14 +92,14 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
 
   useEffect(() => {
     if (launchpad) {
-      setName(launchpad.name)
-      setUrl(launchpad.slug)
-      setDescription(launchpad.description)
-      setCollectionImage(launchpad.image)
-      setCoverImage(launchpad.banner)
-      setWebsiteLink(launchpad.externalUrl)
-      setTwitter(launchpad.twitterUsername)
-      setDiscord(launchpad.discordUrl)
+      setName(launchpad.name as string)
+      setSlug((launchpad.slug as string || ''))
+      setDescription(launchpad.description || '')
+      setCollectionImage(launchpad.image || '')
+      setCoverImage(launchpad.banner || '')
+      setWebsiteLink(launchpad.externalUrl || '')
+      setTwitter(launchpad.twitterUsername || '')
+      setDiscord(launchpad.discordUrl || '')
     }
   }, [launchpad])
 
@@ -76,12 +110,18 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
       accept: {
         'image/*': []
       },
-      onDrop: (acceptedFiles, rejectedFiles) => {
+      onDrop: async (acceptedFiles, rejectedFiles) => {
         if (rejectedFiles.length > 0) {
           handleErrorDropImage(rejectedFiles)
         }
 
-        setCollectionImage(URL.createObjectURL(acceptedFiles[0]));
+        if (acceptedFiles.length > 0) {
+          const newFileName = `collection-image-${launchpad.id}.${acceptedFiles[0].name.split('.').pop()}`;
+
+          await fileUpload(acceptedFiles[0], newFileName);
+
+          setCollectionImage(`https://nftearth-images.storage.googleapis.com/${newFileName}`);
+        }
       }
     }
   );
@@ -93,12 +133,17 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
       accept: {
         'image/*': []
       },
-      onDrop: (acceptedFiles, rejectedFiles) => {
+      onDrop: async (acceptedFiles, rejectedFiles) => {
         if (rejectedFiles.length > 0) {
           handleErrorDropImage(rejectedFiles)
         }
 
-        setCoverImage(URL.createObjectURL(acceptedFiles[0]));
+        if (acceptedFiles.length > 0) {
+          const newFileName = `collection-cover-${launchpad.id}.${acceptedFiles[0].name.split('.').pop()}`;
+          await fileUpload(acceptedFiles[0], newFileName);
+
+          setCoverImage(`https://nftearth-images.storage.googleapis.com/${newFileName}`);
+        }
       },
       onError: err => console.log(err)
     }
@@ -115,22 +160,42 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
     });
   }
 
-  const resetState = () => {
-    setName('');
-    setUrl('');
-    setDescription('');
-    setCollectionImage(undefined);
-    setCoverImage(undefined);
-    setCategory(undefined);
-    setWebsiteLink('');
-    setTwitter('');
-    setDiscord('');
-  }
-
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setLoading(true);
+    console.log('Submit')
 
-    // TODO: Fetch to API
+    try {
+      await fetch(`${marketplaceChain.proxyApi}/launchpad/update/v1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: launchpad.id,
+          name,
+          slug,
+          allowlists: launchpad.allowlists || [],
+          verified: true,
+          metadata: {
+            imageUrl: collectionImage,
+            bannerImageUrl: coverImage,
+            discordUrl: discord,
+            description: description,
+            externalUrl: websiteLink,
+            twitterUsername: twitter,
+          },
+          royalties: launchpad.royalties?.breakdown || []
+        })
+      })
+    } catch (err: any) {
+      addToast?.({
+        title: 'ERROR',
+        description: err.message
+      })
+    }
+
+    setLoading(false)
   }
   
   return (
@@ -146,292 +211,299 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
           width: '50%'
         }
       }}>
-      <Box 
-        css={{ 
-          marginBottom: 18
-        }}>
-        <Text style='h4'>
-          Collection Settings
-        </Text>
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>Name</Text>
-        <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder='Enter a name for the collection'
-          css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
-          containerCss={{
-            marginTop: 6,
-            width: '100%',
-            border: '1px solid $gray8',
-            borderRadius: 6,
-          }}
-        />
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>URL</Text>
-        <Box css={{ position: 'relative', width: '100%' }}>
-          <Text 
-            css={{ 
-              position: 'absolute',
-              top: 18,
-              left: 16,
-              opacity: .8
-            }}>
-            https://nftearth.exchange/launch/
+      <form onSubmit={handleSubmit} >
+        <Box
+          css={{
+            marginBottom: 18
+          }}>
+          <Text style='h4'>
+            Collection Settings
           </Text>
-          <StyledInput
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder='treasures-of-the-sea'
-            css={{
-              backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+        </Box>
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>Name</Text>
+          <Input
+            value={name}
+            disabled={loading}
+            onChange={(e) => setName(e.target.value)}
+            placeholder='Enter a name for the collection'
+            css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
+            containerCss={{
               marginTop: 6,
               width: '100%',
               border: '1px solid $gray8',
               borderRadius: 6,
-              pl: 270,
-              boxSizing: 'border-box'
             }}
           />
         </Box>
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>Description</Text>
-        <TextArea
-          value={description}
-          rows={5}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder='Describe your collection'
-          css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
-          containerCss={{
-            marginTop: 6,
-            width: '100%',
-            border: '1px solid $gray8',
-            borderRadius: 6,
-          }}
-        />
-      </Box>
-      <Box css={{ marginBottom: 40 }}>
-        <Flex direction='column'>
-          <Text style="h6" css={{ color: '$gray11' }}>Collection Image</Text>
-          <Text style='subtitle3' css={{ color: '$gray11', marginBottom: 6 }}>
-            Uploading an image will overide the contract-level metadata (ContractURI) image, if set.
-          </Text>
-        </Flex>
-        <Box css={{ position: 'relative', width: 160 }}>
-          {!collectionImage ? (
-            <Box {...getCollectionImageRootProps()}>
-              <Input
-                {...getCollectionImageInputProps()}
-                css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
-                containerCss={{
-                  marginTop: 6,
-                  width: '100%',
-                  border: '1px solid $gray8',
-                  borderRadius: 6,
-                  borderStyle: 'dashed',
-                  height: 160,
-                  cursor: 'pointer'
-                }}
-              />
-              <Flex 
-                align='center'
-                css={{ 
-                  color: '$gray10',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translateX(-50%) translateY(-50%)',
-                  height: '100%'
-                }}>
-                <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
-                  Drag 'n' drop some files here, or click to select
-                </Text>
-              </Flex>
-            </Box>
-          ) : (
-            <Box
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>URL</Text>
+          <Box css={{ position: 'relative', width: '100%' }}>
+            <Text
               css={{
-                width: 160,
-                height: 160,
-                border: 'solid 1px $gray10',
-                borderStyle: 'dashed',
-                marginTop: 6,
-                borderRadius: 6
+                position: 'absolute',
+                top: 18,
+                left: 16,
+                opacity: .8
               }}>
-              <Thumbs image={collectionImage} />
-              <Button
-                color='ghost'
-                css={{ padding: 0, fontSize: 14 }}
-                onClick={() => setCollectionImage(undefined)}>
-                Reset
-              </Button>
-            </Box>
+              https://nftearth.exchange/launch/
+            </Text>
+            <StyledInput
+              disabled={loading}
+              value={slug}
+              pattern="^[a-z0-9](-?[a-z0-9])*$"
+              onChange={(e) => setSlug(e.target.value)}
+              placeholder='treasures-of-the-sea'
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pl: 270,
+                boxSizing: 'border-box'
+              }}
+            />
+          </Box>
+          {(existingLaunchpad && existingLaunchpad.length > 0 && existingLaunchpad[0].id?.toLowerCase() !== launchpad.id?.toLowerCase()) && (
+            <Text css={{ color: 'red' }}>Slug unavailable</Text>
           )}
         </Box>
-      </Box>
-      <Box css={{ marginBottom: 40 }}>
-        <Flex direction='column'>
-          <Text style="h6" css={{ color: '$gray11' }}>Cover Image</Text>
-        </Flex>
-        <Box css={{ position: 'relative', width: '100%' }}>
-          {!coverImage ? (
-            <Box {...getCoverImageRootProps()}>
-              <Input
-                {...getCoverImageInputProps()}
-                css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
-                containerCss={{
-                  marginTop: 6,
-                  width: '100%',
-                  border: '1px solid $gray8',
-                  borderRadius: 6,
-                  borderStyle: 'dashed',
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>Description</Text>
+          <TextArea
+            disabled={loading}
+            rows={5}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder='Describe your collection'
+            css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
+            containerCss={{
+              marginTop: 6,
+              width: '100%',
+              border: '1px solid $gray8',
+              borderRadius: 6,
+            }}
+          />
+        </Box>
+        <Box css={{ marginBottom: 40 }}>
+          <Flex direction='column'>
+            <Text style="h6" css={{ color: '$gray11' }}>Collection Image</Text>
+            <Text style='subtitle3' css={{ color: '$gray11', marginBottom: 6 }}>
+              Uploading an image will overide the contract-level metadata (ContractURI) image, if set.
+            </Text>
+          </Flex>
+          <Box css={{ position: 'relative', width: 160 }}>
+            {!collectionImage ? (
+              <Box {...getCollectionImageRootProps()}>
+                <Input
+                  disabled={loading}
+                  {...getCollectionImageInputProps()}
+                  css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
+                  containerCss={{
+                    marginTop: 6,
+                    width: '100%',
+                    border: '1px solid $gray8',
+                    borderRadius: 6,
+                    borderStyle: 'dashed',
+                    height: 160,
+                    cursor: 'pointer'
+                  }}
+                />
+                <Flex
+                  align='center'
+                  css={{
+                    color: '$gray10',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translateX(-50%) translateY(-50%)',
+                    height: '100%'
+                  }}>
+                  <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
+                    Drag 'n' drop some files here, or click to select
+                  </Text>
+                </Flex>
+              </Box>
+            ) : (
+              <Box
+                css={{
+                  width: 160,
                   height: 160,
-                  cursor: 'pointer'
-                }}
-              />
-              <Flex 
-                align='center'
-                css={{ 
-                  color: '$gray10',
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translateX(-50%) translateY(-50%)',
-                  height: '100%',
+                  border: 'solid 1px $gray10',
+                  borderStyle: 'dashed',
+                  marginTop: 6,
+                  borderRadius: 6
                 }}>
-                <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
-                  Drag 'n' drop some files here, or click to select
-                </Text>
-              </Flex>
-            </Box>
-          ) : (
-            <Box
+                <Thumbs image={collectionImage} />
+                <Button
+                  disabled={loading}
+                  color='ghost'
+                  css={{ padding: 0, fontSize: 14 }}
+                  onClick={() => setCollectionImage(undefined)}>
+                  Reset
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </Box>
+        <Box css={{ marginBottom: 40 }}>
+          <Flex direction='column'>
+            <Text style="h6" css={{ color: '$gray11' }}>Cover Image</Text>
+          </Flex>
+          <Box css={{ position: 'relative', width: '100%' }}>
+            {!coverImage ? (
+              <Box {...getCoverImageRootProps()}>
+                <Input
+                  {...getCoverImageInputProps()}
+                  disabled={loading}
+                  css={{ backgroundColor: theme === 'light' ? '$gray1' : 'initial' }}
+                  containerCss={{
+                    marginTop: 6,
+                    width: '100%',
+                    border: '1px solid $gray8',
+                    borderRadius: 6,
+                    borderStyle: 'dashed',
+                    height: 160,
+                    cursor: 'pointer'
+                  }}
+                />
+                <Flex
+                  align='center'
+                  css={{
+                    color: '$gray10',
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translateX(-50%) translateY(-50%)',
+                    height: '100%',
+                  }}>
+                  <Text css={{ cursor: 'pointer', fontSize: 10, textAlign: 'center', color: '$gray11' }}>
+                    Drag 'n' drop some files here, or click to select
+                  </Text>
+                </Flex>
+              </Box>
+            ) : (
+              <Box
+                css={{
+                  width: 320,
+                  height: 160,
+                  border: 'solid 1px $gray10',
+                  borderStyle: 'dashed',
+                  marginTop: 6,
+                  borderRadius: 6
+                }}>
+                <Thumbs image={coverImage} />
+                <Button
+                  disabled={loading}
+                  color='ghost'
+                  css={{ padding: 0, fontSize: 14 }}
+                  onClick={() => setCoverImage(undefined)}>
+                  Reset
+                </Button>
+              </Box>
+            )}
+          </Box>
+        </Box>
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>Category</Text>
+          <Select
+            options={categoryOptions}
+            value={category}
+            placeholder="Select a category"
+            onChange={(val: string) => setCategory(val)}
+            containerCss={{ marginTop: 6 }}/>
+        </Box>
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>Website Link</Text>
+          <Box css={{ position: 'relative', width: '100%' }}>
+            <StyledInput
+              value={websiteLink}
+              disabled={loading}
+              onChange={(e) => setWebsiteLink(e.target.value)}
+              placeholder='https://nftearth.exchange.com'
               css={{
-                width: 320,
-                height: 160,
-                border: 'solid 1px $gray10',
-                borderStyle: 'dashed',
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
                 marginTop: 6,
-                borderRadius: 6
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                boxSizing: 'border-box'
+              }}
+            />
+          </Box>
+        </Box>
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>Twitter</Text>
+          <Box css={{ position: 'relative', width: '100%' }}>
+            <Text
+              css={{
+                position: 'absolute',
+                top: 18,
+                left: 16,
+                opacity: .8
               }}>
-              <Thumbs image={coverImage} />
-              <Button
-                color='ghost'
-                css={{ padding: 0, fontSize: 14 }}
-                onClick={() => setCoverImage(undefined)}>
-                Reset
-              </Button>
-            </Box>
-          )}
+              https://twitter.com/
+            </Text>
+            <StyledInput
+              value={twitter}
+              disabled={loading}
+              onChange={(e) => setTwitter(e.target.value)}
+              placeholder='NFTEarth'
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pl: 160,
+                boxSizing: 'border-box'
+              }}
+            />
+          </Box>
         </Box>
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>Category</Text>
-        <Select 
-          options={categoryOptions} 
-          value={category}
-          placeholder="Select a category"
-          onChange={(val: string) => setCategory(val)} 
-          containerCss={{ marginTop: 6 }}/>
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>Website Link</Text>
-        <Box css={{ position: 'relative', width: '100%' }}>
-          <Text 
-            css={{ 
-              position: 'absolute',
-              top: 18,
-              left: 16,
-              opacity: .8
-            }}>
-            https://
-          </Text>
-          <StyledInput
-            value={websiteLink}
-            onChange={(e) => setWebsiteLink(e.target.value)}
-            placeholder='nftearth.exchange.com'
-            css={{
-              backgroundColor: theme === 'light' ? '$gray1' : 'initial',
-              marginTop: 6,
-              width: '100%',
-              border: '1px solid $gray8',
-              borderRadius: 6,
-              pl: 72,
-              boxSizing: 'border-box'
-            }}
-          />
+        <Box css={{ marginBottom: 32 }}>
+          <Text style="h6" css={{ color: '$gray11' }}>Discord</Text>
+          <Box css={{ position: 'relative', width: '100%' }}>
+            <Text
+              css={{
+                position: 'absolute',
+                top: 18,
+                left: 16,
+                opacity: .8
+              }}>
+              https://discord.gg/
+            </Text>
+            <StyledInput
+              disabled={loading}
+              value={discord}
+              onChange={(e) => setDiscord(e.target.value)}
+              placeholder='NFTEarth'
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pl: 155,
+                boxSizing: 'border-box'
+              }}
+            />
+          </Box>
         </Box>
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>Twitter</Text>
-        <Box css={{ position: 'relative', width: '100%' }}>
-          <Text 
-            css={{ 
-              position: 'absolute',
-              top: 18,
-              left: 16,
-              opacity: .8
-            }}>
-            https://twitter.com/
-          </Text>
-          <StyledInput
-            value={twitter}
-            onChange={(e) => setTwitter(e.target.value)}
-            placeholder='@NFTEarth'
-            css={{
-              backgroundColor: theme === 'light' ? '$gray1' : 'initial',
-              marginTop: 6,
-              width: '100%',
-              border: '1px solid $gray8',
-              borderRadius: 6,
-              pl: 160,
-              boxSizing: 'border-box'
-            }}
-          />
-        </Box>
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
-        <Text style="h6" css={{ color: '$gray11' }}>Discord</Text>
-        <Box css={{ position: 'relative', width: '100%' }}>
-          <Text 
-            css={{ 
-              position: 'absolute',
-              top: 18,
-              left: 16,
-              opacity: .8
-            }}>
-            https://discord.gg/
-          </Text>
-          <StyledInput
-            value={discord}
-            onChange={(e) => setDiscord(e.target.value)}
-            placeholder='NFTEarth'
-            css={{
-              backgroundColor: theme === 'light' ? '$gray1' : 'initial',
-              marginTop: 6,
-              width: '100%',
-              border: '1px solid $gray8',
-              borderRadius: 6,
-              pl: 155,
-              boxSizing: 'border-box'
-            }}
-          />
-        </Box>
-      </Box>
-      <Button 
-        onClick={handleSubmit}
-        css={{ 
-          marginBottom: 12,
-          width: '100%',
-          justifyContent: 'center',
-          alignItems: 'center',
-          justifyItems: 'center',
-        }}>
-        Save
-      </Button>
+        <Button
+          type="submit"
+          disabled={loading}
+          css={{
+            marginBottom: 12,
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            justifyItems: 'center',
+          }}>
+          Save
+        </Button>
+      </form>
     </Box>
   )
 }

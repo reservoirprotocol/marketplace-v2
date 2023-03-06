@@ -1,34 +1,83 @@
-import { useState, useEffect, FC, SyntheticEvent, KeyboardEvent, ChangeEvent } from 'react'
+import {useState, useEffect, FC, SyntheticEvent, KeyboardEvent, ChangeEvent, useContext} from 'react'
 import { useTheme } from 'next-themes'
-
 import { Text, Flex, Box, Switch, Button } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input"
+import {ToastContext} from "context/ToastContextProvider";
+import LaunchpadArtifact from 'artifact/NFTELaunchpad.json'
+import {ethers} from "ethers";
+import {useMarketplaceChain} from "../../../hooks";
+import { useContractWrite } from "wagmi";
 
 type Props = {
+  address: `0x${string}`
   activePresale: boolean
   presalePrice: string
   activePublic: boolean
   publicPrice: string
 }
 
-const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0', activePublic = false, publicPrice = '0' }) => {
+const MintStateSettings:FC<Props> = ({ address, activePresale = false, presalePrice = '0', activePublic = false, publicPrice = '0' }) => {
   const { theme } = useTheme();
+  const { addToast } = useContext(ToastContext)
+  const [ loading, setLoading ] = useState(false)
   const [isAllowlistMint, setIsAllowlistMint] = useState(activePresale);
-  const [allowlistMintPrice, setAllowlistMintPrice] = useState(presalePrice);
+  const [allowlistMintPrice, setAllowlistMintPrice] = useState(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
   const [isPublicMint, setIsPublicMint] = useState(activePublic);
-  const [publicMintPrice, setPublicMintPrice] = useState(publicPrice);
+  const [publicMintPrice, setPublicMintPrice] = useState(ethers.utils.formatEther(`${publicPrice || '0'}`).toString());
+  const marketplaceChain = useMarketplaceChain()
+
+  const { writeAsync: updateActiveSale } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address,
+    functionName: 'setActiveSale',
+    args: [isAllowlistMint, isPublicMint],
+    chainId: marketplaceChain.id
+  })
+
+  const { writeAsync: updateSalePrice } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address,
+    functionName: 'setPrice',
+    args: [
+      ethers.utils.parseEther(allowlistMintPrice).toString(),
+      ethers.utils.parseEther(publicMintPrice).toString()
+    ],
+    chainId: marketplaceChain.id
+  })
+
+  const config = {
+    abi: LaunchpadArtifact.abi,
+    address
+  }
 
   useEffect(() => {
     setIsAllowlistMint(activePresale);
-    setAllowlistMintPrice(presalePrice);
-    setIsPublicMint(false);
-    setPublicMintPrice('');
+    setAllowlistMintPrice(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
+    setIsPublicMint(activePublic);
+    setPublicMintPrice(ethers.utils.formatEther(`${publicPrice || '0'}`).toString());
   }, [activePresale, activePublic, presalePrice, publicPrice])
 
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    setLoading(true)
+    try {
+      await updateActiveSale?.();
+      await updateSalePrice?.();
 
-    // TODO: Fetch to API
+      addToast?.({
+        title: 'success',
+        description: 'Mint state updated'
+      })
+    } catch (e: any) {
+      console.log(e);
+      addToast?.({
+        title: 'error',
+        description: e.reason || e.message
+      })
+    }
+    setLoading(false)
   }
 
   return (
@@ -59,6 +108,7 @@ const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0'
           </Flex>
           <Box>
             <Switch
+              disabled={loading}
               checked={isPublicMint}
               onCheckedChange={checked => setIsPublicMint(checked)}
             />
@@ -77,6 +127,7 @@ const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0'
                 }}>
                 <StyledInput
                   type="number"
+                  disabled={loading}
                   value={publicMintPrice}
                   placeholder="0"
                   onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
@@ -124,6 +175,7 @@ const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0'
           <Box>
             <Switch
               checked={isAllowlistMint}
+              disabled={loading}
               onCheckedChange={checked => setIsAllowlistMint(checked)}
             />
           </Box>
@@ -141,6 +193,7 @@ const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0'
                 }}>
                 <StyledInput
                   type="number"
+                  disabled={loading}
                   value={allowlistMintPrice}
                   placeholder="0"
                   onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
@@ -180,7 +233,8 @@ const MintStateSettings:FC<Props> = ({ activePresale = false, presalePrice = '0'
           )
         }
       </Box>
-      <Button 
+      <Button
+        disabled={loading}
         onClick={handleSubmit}
         css={{ 
           margin: '12px 0',

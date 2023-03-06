@@ -116,7 +116,7 @@ const MyCollectionsPage: NextPage<Props> = ({ ssr }) => {
             </Box>
             <CollectionGrid>
               {launchpads?.map((collection, i) => (
-                <CollectionCard heroImg="" key={i} collection={collection} />
+                <CollectionCard heroImg="" key={i} collection={collection} routePrefix={marketplaceChain.routePrefix} />
               ))}
               <Box ref={loadMoreRef} css={{ height: 20 }}/>
               {isValidating && (

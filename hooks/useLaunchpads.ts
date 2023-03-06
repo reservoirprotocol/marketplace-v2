@@ -36,7 +36,7 @@ export default function (
     swrOptions
   );
 
-  const owners = response.data?.flatMap((page) => page?.data?.launchpads || []) ?? []
+  const launchpads: paths['/launchpads/v1']['get']['responses']["200"]["schema"]["launchpads"] = response.data?.flatMap((page) => page?.data?.launchpads || []) ?? []
   const { size, error, setSize, mutate } = response
   const data = response.data as any
   let hasNextPage: boolean
@@ -79,6 +79,6 @@ export default function (
     isFetchingInitialData,
     fetchNextPage,
     resetCache,
-    data: owners,
+    data: launchpads,
   }
 }

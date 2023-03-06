@@ -5,12 +5,13 @@ import { TrendingCollections } from 'components/home/TrendingCollectionsList'
 
 type Props = {
   collection: NonNullable<TrendingCollections>[0]
+  routePrefix: string
   heroImg: string
 }
 
-export const CollectionCard: FC<Props> = ({ collection, heroImg }) => {
+export const CollectionCard: FC<Props> = ({ collection, routePrefix, heroImg }) => {
   return (
-    <Link href={`/my-collections/${collection.id}`} style={{ display: 'inline-block', minWidth: 0 }}>
+    <Link href={`/my-collections/${routePrefix}/${collection.id}`} style={{ display: 'inline-block', minWidth: 0 }}>
       <Flex
         css={{
           cursor: 'pointer',

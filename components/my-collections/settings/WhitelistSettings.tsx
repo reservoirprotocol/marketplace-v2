@@ -1,26 +1,71 @@
-import { useState, useEffect, FC, SyntheticEvent } from 'react'
+import {useState, useEffect, FC, SyntheticEvent, useContext} from 'react'
 import { useTheme } from 'next-themes'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Text, Flex, Box, Input, Button, Grid } from 'components/primitives'
 import { StyledInput } from "components/primitives/Input";
+import {ToastContext} from "context/ToastContextProvider";
+import {useLaunchpads, useMarketplaceChain} from "hooks";
 
 type Props = {
-  allowlist: string[]
+  launchpad: ReturnType<typeof useLaunchpads>["data"][0]
 }
 
-const WhitelistSettings:FC<Props> = ({ allowlist }) => {
+const WhitelistSettings:FC<Props> = ({ launchpad }) => {
+  console.log(launchpad.allowlists);
   const { theme } = useTheme();
-  const [whitelist, setWhitelist] = useState<string[]>(allowlist || [])
+  const { addToast } = useContext(ToastContext)
+  const [whitelist, setWhitelist] = useState<string[]>(launchpad?.allowlists || [])
+  const [ loading, setLoading ] = useState(false)
+  const marketplaceChain = useMarketplaceChain()
 
   useEffect(() => {
-    setWhitelist(allowlist || []);
-  }, [allowlist])
+    setWhitelist(launchpad?.allowlists || []);
+  }, [launchpad])
   
-  const handleSubmit = (e: SyntheticEvent) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    // TODO: Fetch to API
+    e.preventDefault();
+    setLoading(true);
+    console.log('Submit')
+
+    try {
+      await fetch(`${marketplaceChain.proxyApi}/launchpad/update/v1`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: launchpad.id,
+          name: launchpad.name,
+          slug: launchpad.slug,
+          allowlists: whitelist,
+          verified: true,
+          metadata: {
+            imageUrl: launchpad.image,
+            bannerImageUrl: launchpad.banner,
+            discordUrl: launchpad.discordUrl,
+            description: launchpad.description,
+            externalUrl: launchpad.externalUrl,
+            twitterUsername: launchpad.twitterUsername,
+          },
+          royalties: launchpad.royalties?.breakdown
+        })
+      })
+
+      addToast?.({
+        title: 'success',
+        description: 'Allowlist Updated'
+      })
+    } catch (err: any) {
+      addToast?.({
+        title: 'error',
+        description: err.message
+      })
+    }
+
+    setLoading(false)
   }
 
   const handleAddWhitelist = () => {
@@ -87,6 +132,7 @@ const WhitelistSettings:FC<Props> = ({ allowlist }) => {
             <Box css={{ position: 'relative', width: '100%' }}>
               <StyledInput
                 value={address}
+                disabled={loading}
                 onChange={(e) => handleAddressInputChange(index, e.target.value)}
                 placeholder='0x7D3E5dD617EAF4A3d....'
                 css={{
@@ -115,13 +161,15 @@ const WhitelistSettings:FC<Props> = ({ allowlist }) => {
       </Box>
       <Flex justify='between' align='center' css={{ width: '100%' }}>
         <Button 
-          color='ghost' 
+          color='ghost'
+          disabled={loading}
           onClick={handleAddWhitelist}>
           + Add Whitelisted Address
         </Button>
       </Flex>
       <Button 
         onClick={handleSubmit}
+        disabled={loading}
         css={{ 
           margin: '12px 0',
           width: '100%',
