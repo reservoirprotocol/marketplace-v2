@@ -62,7 +62,7 @@ export const QuestRegisterUserName = () => {
   return (
     <BasicModal
       header="Register a Username 🎁"
-      instruction="Retweet this Tweet with the hashtage #NFTE and then post a screenshot into the NFTEarth community channel in Discord: Quest Proof"
+      instruction="Create an account with NFTEarth and register a username then post a screenshot into the NFTEarth community channel in Discord: Quest Proof"
     >
       <Box>
         <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
