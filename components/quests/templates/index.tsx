@@ -41,11 +41,21 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
       </Flex>
       {children}
       <Flex direction="column" css={{ padding: '0 12px' }}>
-        {isConnected ? <Flex>
-            <Button>
+        {isConnected ?
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px',
+
+            }}
+          >
+            <Button css={{display: 'flex', justifyContent: 'center'}}>
               Verify and Claim
             </Button>
-          </Flex> : (
+          </Flex>
+          : (
           <Flex
             direction="column"
             css={{
