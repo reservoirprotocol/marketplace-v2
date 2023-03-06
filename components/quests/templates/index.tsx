@@ -288,7 +288,7 @@ export const QuestListNFT = () => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Go to the
-              <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
+              <Link href="/portfolio">
                 <Text css={{ color: '$primary10' }}> My NFTs </Text>
               </Link>
               page, and then connect your wallet to view the NFTs you own.
@@ -301,7 +301,7 @@ export const QuestListNFT = () => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Click on the NFTs you want to trade and click List to sell it on
-              the NFT on the marketplace. You need to list at least 3 NFTs to be
+              the NFT on the marketplace. You need to list at least 3 NFTs in any currency to be
               eligible to claim the reward.
             </Text>
             <Text
