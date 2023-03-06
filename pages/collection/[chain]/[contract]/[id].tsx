@@ -306,7 +306,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${router.query.chain}/${collection?.id}`}
+                href={`/collection/${router.query.chain}/${token?.token?.collection?.id}`}
                 legacyBehavior={true}
               >
                 <Anchor
