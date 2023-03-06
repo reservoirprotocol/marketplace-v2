@@ -145,11 +145,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const trigger = (
     <Button
       color="gray3"
-      size="medium"
+      size="small"
       css={{
         justifyContent: 'space-between',
-        width: '336px', // (8 + 8) -> 16px -> 336px; || 350px
-        py: '$3',
+        width: '336px',
+        px: '$2',
+        py: '$2',
       }}
     >
       {isSmallDevice ? null : (
