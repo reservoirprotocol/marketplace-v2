@@ -445,16 +445,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Follow on Twitter
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Follow [NFTEarth](https://twitter.com/NFTEarth_L2).
-            </Text>
-            <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
-            >
-              Step 3: Earn your XP!
+              Step 2: Earn your XP!
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Verify and claim your XP by clicking the button below.
