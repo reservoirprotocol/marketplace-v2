@@ -3,7 +3,6 @@ import { ActivityTable } from './ActivityTable'
 import { FC, useEffect } from 'react'
 
 type Props = {
-  // id: string | undefined
   id: string
   activityTypes: NonNullable<
     Exclude<Parameters<typeof useTokenActivity>['1'], boolean>
