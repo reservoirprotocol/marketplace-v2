@@ -535,8 +535,8 @@ export const QuestBuyNFTInNFTEOnAnyChain = ({
               <Link href="/explore">
                 <Text css={{ color: '$primary10' }}>Explore </Text>
               </Link>
-              NFTs on Optimism, Arbitrum using NFTEarth and buy for total amount equal or over 0,1 $ETH
-              in total volume.
+              NFTs on Optimism, Arbitrum using NFTEarth and buy for total amount
+              equal or over 0,1 $ETH in total volume.
             </Text>
 
             <Text style="subtitle1" css={{ color: '$gray11' }}>
@@ -704,8 +704,8 @@ export const QuestLeaderboard = ({ disabled }: { disabled: boolean }) => {
     <BasicModal
       disabled={disabled}
       id={6}
-      header="Earn a place on the leaderboard🎁"
-      instruction="Make listings and offers to earn XP and appear on the leaderboard each day!"
+      header="Earn higher place on the leaderboard! 🎁"
+      instruction="Make listings and offers to earn XP and increase chance to get higher place on the leaderboard! "
     >
       <Box>
         <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
@@ -767,19 +767,13 @@ export const QuestLeaderboard = ({ disabled }: { disabled: boolean }) => {
               Step 3: List any NFT for sale
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Click on the NFTs you want to trade and click List to sell it on
-              the NFT on the marketplace. You need to list Any NFT in any
-              currency to be eligible to claim the reward.
+              Go to your Portfolio and list any NFT you would like to by
+              clicking List for Sale and adding sale parameters you are happy
+              with. List it! Listing any NFT in any currency on any available
+              chain counts!
             </Text>
-            <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
-            >
-              Step 4: Earn your XP!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Verify and claim your XP by clicking the button below, and check
-              if you appear on the leaderboard!
+            <Text style="subtitle2" css={{ color: '$gray11' }}>
+              Verify and claim your XP by clicking the button below.
             </Text>
           </Flex>
         </Flex>
