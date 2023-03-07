@@ -10,19 +10,27 @@ import { useContractWrite } from "wagmi";
 
 type Props = {
   address: `0x${string}`
-  activePresale: boolean
-  presalePrice: string
-  activePublic: boolean
-  publicPrice: string
+  contractData: any
 }
 
-const MintStateSettings:FC<Props> = ({ address, activePresale = false, presalePrice = '0', activePublic = false, publicPrice = '0' }) => {
+const MintStateSettings:FC<Props> = ({ address, contractData }) => {
+  const [
+    activePresale,
+    activePublic,
+    presalePrice,
+    publicPrice,
+    URI,
+    reservedSupply,
+    presaleSupply
+  ] = contractData || [];
   const { theme } = useTheme();
   const { addToast } = useContext(ToastContext)
   const [ loading, setLoading ] = useState(false)
-  const [isAllowlistMint, setIsAllowlistMint] = useState(activePresale);
-  const [allowlistMintPrice, setAllowlistMintPrice] = useState(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
-  const [isPublicMint, setIsPublicMint] = useState(activePublic);
+  const [totalReservedSupply, setTotalReservedSupply] = useState(reservedSupply);
+  const [totalPresaleSupply, setTotalPresaleSupply] = useState(presaleSupply);
+  const [isActivePresale, setIsActivePresale] = useState(activePresale);
+  const [presaleMintPrice, setPresaleMintPrice] = useState(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
+  const [isActivePublic, setIsActivePublic] = useState(activePublic);
   const [publicMintPrice, setPublicMintPrice] = useState(ethers.utils.formatEther(`${publicPrice || '0'}`).toString());
   const marketplaceChain = useMarketplaceChain()
 
@@ -31,7 +39,7 @@ const MintStateSettings:FC<Props> = ({ address, activePresale = false, presalePr
     abi: LaunchpadArtifact.abi,
     address,
     functionName: 'setActiveSale',
-    args: [isAllowlistMint, isPublicMint],
+    args: [isActivePresale, isActivePublic],
     chainId: marketplaceChain.id
   })
 
@@ -41,30 +49,67 @@ const MintStateSettings:FC<Props> = ({ address, activePresale = false, presalePr
     address,
     functionName: 'setPrice',
     args: [
-      ethers.utils.parseEther(allowlistMintPrice).toString(),
+      ethers.utils.parseEther(presaleMintPrice).toString(),
       ethers.utils.parseEther(publicMintPrice).toString()
     ],
     chainId: marketplaceChain.id
   })
 
-  const config = {
+  const { writeAsync: adjustPresaleSupply } = useContractWrite({
+    mode: 'recklesslyUnprepared',
     abi: LaunchpadArtifact.abi,
-    address
-  }
+    address,
+    functionName: 'adjustSupply',
+    args: [
+      1,
+      totalPresaleSupply
+    ],
+    chainId: marketplaceChain.id
+  })
+
+  const { writeAsync: adjustReservedSupply } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address,
+    functionName: 'adjustSupply',
+    args: [
+      0,
+      totalReservedSupply
+    ],
+    chainId: marketplaceChain.id
+  })
 
   useEffect(() => {
-    setIsAllowlistMint(activePresale);
-    setAllowlistMintPrice(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
-    setIsPublicMint(activePublic);
+    setIsActivePresale(activePresale);
+    setPresaleMintPrice(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
+    setIsActivePublic(activePublic);
     setPublicMintPrice(ethers.utils.formatEther(`${publicPrice || '0'}`).toString());
-  }, [activePresale, activePublic, presalePrice, publicPrice])
+    setTotalReservedSupply(reservedSupply)
+    setTotalPresaleSupply(presaleSupply)
+  }, [activePresale, activePublic, presalePrice, publicPrice, reservedSupply, presaleSupply])
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setLoading(true)
     try {
-      await updateActiveSale?.();
-      await updateSalePrice?.();
+      const newPresalePrice = ethers.utils.parseEther(presaleMintPrice)
+      const newPublicPrice = ethers.utils.parseEther(publicMintPrice)
+
+      if (+presaleSupply !== +totalPresaleSupply) {
+        await adjustPresaleSupply?.()
+      }
+
+      if (+reservedSupply !== +totalReservedSupply) {
+        await adjustReservedSupply?.()
+      }
+
+      if (isActivePresale !== activePresale || isActivePublic !== activePublic) {
+        await updateActiveSale?.();
+      }
+
+      if (!presalePrice.eq(newPresalePrice) || !publicPrice.eq(newPublicPrice)) {
+        await updateSalePrice?.();
+      }
 
       addToast?.({
         title: 'success',
@@ -101,7 +146,7 @@ const MintStateSettings:FC<Props> = ({ address, activePresale = false, presalePr
           Mint Settings
         </Text>
       </Box>
-      <Box css={{ marginBottom: 32 }}>
+      <Flex direction="column" css={{ marginBottom: 32, gap: 24 }}>
         <Flex justify="between">
           <Flex direction="column">
             <Text style="h6" css={{ color: '$gray11' }}>Public Mint</Text>
@@ -109,130 +154,194 @@ const MintStateSettings:FC<Props> = ({ address, activePresale = false, presalePr
           <Box>
             <Switch
               disabled={loading}
-              checked={isPublicMint}
-              onCheckedChange={checked => setIsPublicMint(checked)}
+              checked={isActivePublic}
+              onCheckedChange={checked => setIsActivePublic(checked)}
             />
           </Box>
         </Flex>
-          {isPublicMint && (
-            <Box css={{ width: '100%', marginTop: 12 }}>
-              <Text style='subtitle2' css={{ color: '$gray11', fontWeight: 'bold' }}>Public Mint Price</Text>
-              <Box 
-                css={{ 
-                  position: 'relative', 
-                  width: '100%',
-                  '@md': {
-                    width: '50%',
-                  }
+        <Flex justify="between" direction="row">
+          <Flex direction="column" justify="center">
+            <Text style="h6" css={{ color: '$gray11' }}>Public Mint Price</Text>
+          </Flex>
+          <Box
+            css={{
+              position: 'relative',
+              width: '100%',
+              '@md': {
+                width: '50%',
+              }
+            }}>
+            <StyledInput
+              type="number"
+              disabled={loading}
+              value={publicMintPrice}
+              min={0}
+              placeholder="0"
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setPublicMintPrice(e.target.value)}
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pr: 32,
+                boxSizing: 'border-box',
+              }}
+            />
+            <Flex
+              align='center'
+              css={{
+                position: 'absolute',
+                bottom: 2,
+                right: 2,
+                padding: '12px 12px',
+                boxSizing: 'border-box',
+                borderTopRightRadius: 6,
+                borderBottomRightRadius: 6,
+                borderLeft: '1px solid $gray10'
+              }}>
+              <Text
+                style='subtitle2'
+                css={{
+                  fontWeight: 'bold'
                 }}>
-                <StyledInput
-                  type="number"
-                  disabled={loading}
-                  value={publicMintPrice}
-                  placeholder="0"
-                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setPublicMintPrice(e.target.value)}
-                  css={{
-                    backgroundColor: theme === 'light' ? '$gray1' : 'initial',
-                    marginTop: 6,
-                    width: '100%',
-                    border: '1px solid $gray8',
-                    borderRadius: 6,
-                    pr: 32,
-                    boxSizing: 'border-box',
-                  }}
-                />
-                <Flex
-                  align='center' 
-                  css={{ 
-                    position: 'absolute',
-                    bottom: 2,
-                    right: 2,
-                    padding: '12px 12px',
-                    boxSizing: 'border-box',
-                    borderTopRightRadius: 6,
-                    borderBottomRightRadius: 6,
-                    borderLeft: '1px solid $gray10'
-                  }}>
-                  <Text
-                    style='subtitle2' 
-                    css={{ 
-                      fontWeight: 'bold'
-                    }}>
-                    ETH
-                  </Text>
-                </Flex>
-              </Box>
-            </Box>
-          )
-        }
-      </Box>
-      <Box css={{ marginBottom: 32 }}>
+                ETH
+              </Text>
+            </Flex>
+          </Box>
+        </Flex>
+      </Flex>
+      <Flex direction="column" css={{ marginBottom: 32, gap: 24 }}>
         <Flex justify="between">
           <Flex direction="column">
             <Text style="h6" css={{ color: '$gray11' }}>Allowlist Mint</Text>
           </Flex>
-          <Box>
+          <Flex>
             <Switch
-              checked={isAllowlistMint}
+              checked={isActivePresale}
               disabled={loading}
-              onCheckedChange={checked => setIsAllowlistMint(checked)}
+              onCheckedChange={checked => setIsActivePresale(checked)}
             />
-          </Box>
+          </Flex>
         </Flex>
-          {isAllowlistMint && (
-            <Box css={{ width: '100%', marginTop: 12 }}>
-              <Text style='subtitle2' css={{ color: '$gray11', fontWeight: 'bold' }}>Allowlist Mint Price</Text>
-              <Box 
-                css={{ 
-                  position: 'relative', 
-                  width: '100%',
-                  '@md': {
-                    width: '50%',
-                  }
+        <Flex justify="between" direction="row">
+          <Flex direction="column" justify="center">
+            <Text style="h6" css={{ color: '$gray11' }}>Allowlist Mint Price</Text>
+          </Flex>
+          <Flex
+            css={{
+              position: 'relative',
+              width: '100%',
+              '@md': {
+                width: '50%',
+              }
+            }}>
+            <StyledInput
+              type="number"
+              disabled={loading}
+              value={presaleMintPrice}
+              min={0}
+              placeholder="0"
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setPresaleMintPrice(e.target.value)}
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pr: 32,
+                boxSizing: 'border-box',
+              }}
+            />
+            <Flex
+              align='center'
+              css={{
+                position: 'absolute',
+                bottom: 2,
+                right: 2,
+                padding: '12px 12px',
+                boxSizing: 'border-box',
+                borderTopRightRadius: 6,
+                borderBottomRightRadius: 6,
+                borderLeft: '1px solid $gray10'
+              }}>
+              <Text
+                style='subtitle2'
+                css={{
+                  fontWeight: 'bold'
                 }}>
-                <StyledInput
-                  type="number"
-                  disabled={loading}
-                  value={allowlistMintPrice}
-                  placeholder="0"
-                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setAllowlistMintPrice(e.target.value)}
-                  css={{
-                    backgroundColor: theme === 'light' ? '$gray1' : 'initial',
-                    marginTop: 6,
-                    width: '100%',
-                    border: '1px solid $gray8',
-                    borderRadius: 6,
-                    pr: 32,
-                    boxSizing: 'border-box',
-                  }}
-                />
-                <Flex
-                  align='center' 
-                  css={{ 
-                    position: 'absolute',
-                    bottom: 2,
-                    right: 2,
-                    padding: '12px 12px',
-                    boxSizing: 'border-box',
-                    borderTopRightRadius: 6,
-                    borderBottomRightRadius: 6,
-                    borderLeft: '1px solid $gray10'
-                  }}>
-                  <Text
-                    style='subtitle2' 
-                    css={{ 
-                      fontWeight: 'bold'
-                    }}>
-                    ETH
-                  </Text>
-                </Flex>
-              </Box>
-            </Box>
-          )
-        }
-      </Box>
+                ETH
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
+        <Flex justify="between" direction="row">
+          <Flex direction="column" justify="center">
+            <Text style="h6" css={{ color: '$gray11' }}>Allowlist Supply</Text>
+          </Flex>
+          <Flex
+            css={{
+              position: 'relative',
+              width: '100%',
+              '@md': {
+                width: '50%',
+              }
+            }}>
+            <StyledInput
+              type="number"
+              disabled={loading}
+              value={totalPresaleSupply}
+              placeholder="0"
+              min={0}
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setTotalPresaleSupply(e.target.value)}
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pr: 32,
+                boxSizing: 'border-box',
+              }}
+            />
+          </Flex>
+        </Flex>
+        <Flex justify="between" direction="row">
+          <Flex direction="column" justify="center">
+            <Text style="h6" css={{ color: '$gray11' }}>Reserved Supply</Text>
+          </Flex>
+          <Flex
+            css={{
+              position: 'relative',
+              width: '100%',
+              '@md': {
+                width: '50%',
+              }
+            }}>
+            <StyledInput
+              type="number"
+              disabled={loading}
+              value={totalReservedSupply}
+              placeholder="0"
+              min={0}
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setTotalReservedSupply(e.target.value)}
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pr: 32,
+                boxSizing: 'border-box',
+              }}
+            />
+          </Flex>
+        </Flex>
+      </Flex>
       <Button
         disabled={loading}
         onClick={handleSubmit}

@@ -94,6 +94,10 @@ const MyProjectDetailPage = () => {
       },
       {
         ...launchpadContract,
+        functionName: 'totalSupply',
+      },
+      {
+        ...launchpadContract,
         functionName: 'supply',
         args: [1]
       },
@@ -213,6 +217,17 @@ const MyProjectDetailPage = () => {
                 </Box>
                 <Text css={getCssTab('metadata').text}>Metadata</Text>
               </Flex>
+              {numReservedSupply > 0 && (
+                <Flex
+                  align='center'
+                  onClick={() => setActiveTab('reserved')}
+                  css={getCssTab('reserved').tab}>
+                  <Box css={{ width: 16 }}>
+                    <FontAwesomeIcon icon={faList} />
+                  </Box>
+                  <Text css={getCssTab('reserved').text}>Reserved Mint</Text>
+                </Flex>
+              )}
             </Box>
           </Flex>
           <Box
@@ -247,10 +262,7 @@ const MyProjectDetailPage = () => {
               setActiveTab={() => setActiveTab('mintState')}>
               <MintStateSettings
                 address={launchpad?.id as `0x${string}`}
-                activePresale={activePresale as boolean}
-                presalePrice={presalePrice as string}
-                activePublic={activePublic as boolean}
-                publicPrice={publicPrice as string}
+                contractData={contractData}
               />
             </SettingsContentContainer>
             {numPresaleSupply > 0 && (
@@ -276,6 +288,18 @@ const MyProjectDetailPage = () => {
                 uri={`${URI}`}
               />
             </SettingsContentContainer>
+            {numReservedSupply > 0 && (
+              <SettingsContentContainer
+                tab='royalities'
+                tabLabel='royalities'
+                activeTab={activeTab}
+                icon={faMapPin}
+                setActiveTab={() => setActiveTab('royalities')}>
+                <RoyaltiesSettings
+                  launchpad={launchpad}
+                />
+              </SettingsContentContainer>
+            )}
           </Box>
         </Grid>
       </Box>

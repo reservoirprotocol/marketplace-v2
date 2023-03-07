@@ -54,7 +54,7 @@ export const CollectionDropdown: FC<Props> = ({ id, name, slug }) => {
         as="a"
         href={`/launch/${marketplaceChain.routePrefix}${slug}`}
         css={{ display: 'block' }}><FontAwesomeIcon icon={faBolt} style={{ marginRight: 10 }}/>Launch Page</DropdownMenuItem>
-      <DropdownMenuItem as="a" href={`/my-project/${marketplaceChain.routePrefix}${id}`} css={{ display: 'block' }}><FontAwesomeIcon icon={faEye} style={{ marginRight: 10 }}/>View</DropdownMenuItem>
+      <DropdownMenuItem as="a" href={`/my-project/${marketplaceChain.routePrefix}/${id}`} css={{ display: 'block' }}><FontAwesomeIcon icon={faEye} style={{ marginRight: 10 }}/>View</DropdownMenuItem>
     </>
   )
 
