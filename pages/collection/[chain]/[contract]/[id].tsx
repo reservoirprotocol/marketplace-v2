@@ -1,5 +1,6 @@
 import {
   faArrowLeft,
+  faChevronDown,
   faCircleExclamation,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
@@ -10,11 +11,14 @@ import {
   useAttributes,
   useCollections,
   useDynamicTokens,
+  useTokenActivity,
   useTokenOpenseaBanned,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
+import { ActivityFilters } from 'components/token/ActivityFilters'
 import { spin } from 'components/common/LoadingSpinner'
+import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Layout from 'components/Layout'
 import {
@@ -26,12 +30,14 @@ import {
   Text,
   Tooltip,
 } from 'components/primitives'
+import { Dropdown } from 'components/primitives/Dropdown'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
 import AttributeCard from 'components/token/AttributeCard'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
 import { TokenActions } from 'components/token/TokenActions'
+import { TokenActivityTable } from 'components/token/ActivityTable'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
@@ -51,9 +57,19 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
+import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+type ActivityTypes = Exclude<
+  NonNullable<
+    NonNullable<
+      Exclude<Parameters<typeof useTokenActivity>['1'], boolean>
+    >['types']
+  >,
+  string
+>
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const router = useRouter()
@@ -63,6 +79,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const [tabValue, setTabValue] = useState('info')
   const [isRefreshing, setIsRefreshing] = useState(false)
+
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
+
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   const { data: collections } = useCollections(
@@ -85,6 +105,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       fallbackData: [ssr.tokens],
     }
   )
+
   const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
   const is1155 = token?.token?.kind === 'erc1155'
@@ -116,6 +137,28 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const hasAttributes =
     token?.token?.attributes && token?.token?.attributes.length > 0
+
+  const trigger = (
+    <Button
+      color="gray3"
+      size="small"
+      css={{
+        justifyContent: 'space-between',
+        width: '336px',
+        px: '$2',
+        py: '$2',
+      }}
+    >
+      {isSmallDevice ? null : (
+        <Text style="body1">
+          {activityTypes.map(titleCase).join(', ') || 'All Events'}
+        </Text>
+      )}
+      <Text css={{ color: '$slate10' }}>
+        <FontAwesomeIcon icon={faChevronDown} width={16} height={16} />
+      </Text>
+    </Button>
+  )
 
   useEffect(() => {
     isMounted && isSmallDevice && hasAttributes
@@ -421,6 +464,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     <TabsTrigger value="attributes">Attributes</TabsTrigger>
                   )}
                   <TabsTrigger value="info">Info</TabsTrigger>
+                  <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
                 <TabsContent value="attributes">
                   {token?.token?.attributes && (
@@ -449,6 +493,32 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   {collection && (
                     <TokenInfo token={token} collection={collection} />
                   )}
+                </TabsContent>
+                <TabsContent value="activity">
+                  {isSmallDevice ? (
+                    <MobileActivityFilters
+                      activityTypes={activityTypes}
+                      setActivityTypes={setActivityTypes}
+                    />
+                  ) : (
+                    <Dropdown
+                      trigger={trigger}
+                      contentProps={{
+                        sideOffset: 8,
+                      }}
+                    >
+                      <ActivityFilters
+                        open={activityFiltersOpen}
+                        setOpen={setActivityFiltersOpen}
+                        activityTypes={activityTypes}
+                        setActivityTypes={setActivityTypes}
+                      />
+                    </Dropdown>
+                  )}
+                  <TokenActivityTable
+                    id={`${token.token?.collection?.id}:${token?.token?.tokenId}`}
+                    activityTypes={activityTypes}
+                  />
                 </TabsContent>
               </Tabs.Root>
             </>
