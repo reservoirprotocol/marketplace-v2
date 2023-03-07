@@ -140,7 +140,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Explore
+                Collections
               </Text>
             </Link>
             <Text
@@ -356,11 +356,15 @@ const HamburgerMenu = () => {
             width: '100%',
             borderTop: '1px solid $gray4',
           }}
+          align="center"
         >
           <a
             aria-label="Twitter"
             href="https://twitter.com/NFTEarth_L2"
             target="_blank"
+            style={{
+              marginLeft: 'auto',
+            }}
           >
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
@@ -376,6 +380,9 @@ const HamburgerMenu = () => {
             aria-label="Discord"
             href="https://discord.gg/nftearth"
             target="_blank"
+            style={{
+              marginRight: 'auto',
+            }}
           >
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
@@ -387,7 +394,6 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
             </Button>
           </a>
-          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>

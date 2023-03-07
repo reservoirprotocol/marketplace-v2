@@ -15,6 +15,7 @@ const TabsTrigger = styled(TabsPrimitive.Trigger, {
   '&[data-state="active"]': {
     boxShadow:
       'inset 0 -1px 0 0 var(--colors-violet9), 0 1px 0 0 var(--colors-violet9)',
+    borderBottom: '1px solid $primary9',
   },
 })
 
