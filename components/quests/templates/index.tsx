@@ -630,7 +630,7 @@ export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={6}
+      id={8}
       header="Make Offer for ANY NFT on NFTEarth🎁"
       instruction="Make offer on ANY NFT for ANY amount and currency on ANY chain on NFTEarth."
     >
@@ -698,7 +698,7 @@ export const QuestLeaderboard = ({ disabled }: { disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={6}
+      id={9}
       header="Earn higher place on the leaderboard! 🎁"
       instruction="Make listings and offers to earn XP and increase chance to get higher place on the leaderboard! "
     >

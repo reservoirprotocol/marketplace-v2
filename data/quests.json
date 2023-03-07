@@ -115,13 +115,8 @@
     "id": 9,
     "title": "Rank higher on the leaderboard!",
     "description": "Every listing and offer made on NFTEarth adds XP and thus help you to rank higher on leaderboard",
-    "type": "one-time",
-    "tasks": [
-      {
-        "type": "buy",
-        "amount": 0.1
-      }
-    ],
+    "type": "repeatable",
+    "tasks": [],
     "exp": 50
   }
 ]
