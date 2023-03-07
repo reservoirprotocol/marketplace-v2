@@ -495,18 +495,16 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         })
 
         const responses = await Promise.allSettled(promises)
-        let results: paths["/users/activity/v5"]["get"]["responses"]["200"]["schema"]["activities"] = [];
         let newContinuation: any = [];
         responses.forEach((response, i) => {
           newContinuation[i] = null;
           if (response.status === 'fulfilled' && response.value.data) {
-            results = results?.concat(response.value.data.activities);
             newContinuation[i] = response.value.data.continuation;
           }
         })
 
         return {
-          data: results,
+          data: responses,
           continuation: newContinuation
         };
       }
@@ -515,15 +513,17 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       let continuation = new Array(supportedChains.length).fill(undefined);
 
       while (hasNextPage && !r.passes) {
-        let resp: any = await getBuy(continuation)
-        if (resp && resp.data && resp.data.length > 0) {
-          r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange').length > 0;
-
-          if (!!resp.continuation.find((c: string) => c !== null)) {
-            continuation = resp.continuation
+        let responses: any = await getBuy(continuation)
+        responses.forEach((resp: any, i: number) => {
+          if (resp && resp.value.data && resp.value.data.activities.length > 0) {
+            r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange').length > 0;
           } else {
             hasNextPage = false
           }
+        })
+
+        if (!!responses.continuation.find((c: string) => c !== null)) {
+          continuation = responses.continuation
         } else {
           hasNextPage = false
         }
@@ -556,18 +556,16 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         })
 
         const responses = await Promise.allSettled(promises)
-        let results: paths["/users/activity/v5"]["get"]["responses"]["200"]["schema"]["activities"] = [];
         let newContinuation: any = [];
         responses.forEach((response, i) => {
           newContinuation[i] = null;
           if (response.status === 'fulfilled' && response.value.data) {
-            results = results?.concat(response.value.data.activities);
             newContinuation[i] = response.value.data.continuation;
           }
         })
 
         return {
-          data: results,
+          data: responses,
           continuation: newContinuation
         };
       }
@@ -576,15 +574,16 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       let continuation = new Array(supportedChains.length).fill(undefined);
 
       while (hasNextPage && !r.passes) {
-        let resp: any = await getBuy(continuation)
-        if (resp && resp.data && resp.data.length > 0) {
-          r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange' && r.toAddress.toLowerCase() === wallet.toLowerCase()).length > 0;
-
-          if (!!resp.continuation.find((c: string) => c !== null)) {
-            continuation = resp.continuation
+        let responses: any = await getBuy(continuation)
+        responses.data.forEach((resp: any, i: number) => {
+          if (resp && resp.value.data && resp.value.data.activities.length > 0) {
+            r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange' && r.toAddress.toLowerCase() === wallet.toLowerCase()).length > 0;
           } else {
             hasNextPage = false
           }
+        })
+        if (!!responses.continuation.find((c: string) => c !== null)) {
+          continuation = responses.continuation
         } else {
           hasNextPage = false
         }
