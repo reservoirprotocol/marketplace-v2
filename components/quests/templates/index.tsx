@@ -8,16 +8,18 @@ import { ToastContext } from '../../../context/ToastContextProvider'
 import LoadingSpinner from '../../common/LoadingSpinner'
 
 interface ModalProps {
-  disabled: boolean
   id: number
+  disabled: boolean
+  repeatable?: boolean
   header: string
   instruction: string
   children: React.ReactNode
 }
 
 const BasicModal = ({
-  disabled,
   id,
+  disabled,
+  repeatable,
   header,
   instruction,
   children,
@@ -93,7 +95,7 @@ const BasicModal = ({
               onClick={handleEntry}
               css={{ display: 'flex', justifyContent: 'center' }}
             >
-              {loading ? <LoadingSpinner /> : 'Verify and Claim'}
+              {loading ? <LoadingSpinner /> : ( repeatable ? 'Exp will be added automatically' : 'Verify and Claim')}
             </Button>
           </Flex>
         ) : (
@@ -122,11 +124,11 @@ const BasicModal = ({
   )
 }
 
-export const QuestRegisterUserName = ({ disabled }: { disabled: boolean }) => {
+export const QuestRegisterUserName = ({ id, disabled }: { id: number, disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={1}
+      id={id}
       header="Register a Username 🎁"
       instruction="Create an account with NFTEarth and register a username then post a screenshot into the NFTEarth community channel in Discord: Quest Proof"
     >
@@ -175,15 +177,17 @@ export const QuestRegisterUserName = ({ disabled }: { disabled: boolean }) => {
 }
 
 export const QuestFollowTwitter = ({
+  id,
   disabled,
   profile,
 }: {
+  id: number
   disabled: boolean
   profile: any
 }) => {
   return (
     <BasicModal
-      id={2}
+      id={id}
       disabled={disabled}
       header="Follow NFTEarth on Twitter 🎁"
       instruction="Connect your Twitter account with your NFTEarth user profile and follow NFTEarth on Twitter and earn XP."
@@ -256,16 +260,18 @@ export const QuestFollowTwitter = ({
 }
 
 export const QuestRetweet = ({
+  id,
   disabled,
   profile,
 }: {
+  id: number
   disabled: boolean
   profile: any
 }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={3}
+      id={id}
       header="Retweet a NFTEarth tweet 🎁"
       instruction="Retweet this tweet with the hashtag #NFTE to earn XP now!"
     >
@@ -327,11 +333,11 @@ export const QuestRetweet = ({
   )
 }
 
-export const QuestListNFT = ({ disabled }: { disabled: boolean }) => {
+export const QuestListNFT = ({ id, disabled }: { id: number, disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={5}
+      id={id}
       header="List NFT for sale on NFTEarth 🎁"
       instruction="List Any NFT of any supported blockchain (Optimism, Arbitrum) for sale on NFTEarth."
     >
@@ -396,16 +402,18 @@ export const QuestListNFT = ({ disabled }: { disabled: boolean }) => {
 }
 
 export const QuestJoinDiscord = ({
+  id,
   disabled,
   profile,
 }: {
+  id: number
   disabled: boolean
   profile: any
 }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={4}
+      id={id}
       header="Join NFTEarth's Discord Community Channel 🎁"
       instruction="Join NFTEarth's Discord Community Server and earn XP!"
     >
@@ -490,14 +498,16 @@ export const QuestJoinDiscord = ({
 }
 
 export const QuestBuyNFTInNFTEOnAnyChain = ({
+  id,
   disabled,
 }: {
+  id: number
   disabled: boolean
 }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={8}
+      id={id}
       header="NFT Trader 🎁"
       instruction="Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward."
     >
@@ -555,13 +565,15 @@ export const QuestBuyNFTInNFTEOnAnyChain = ({
 }
 
 export const QuestListNFTInNFTEOnAnyChain = ({
+  id,
   disabled,
 }: {
+  id: number
   disabled: boolean
 }) => {
   return (
     <BasicModal
-      id={7}
+      id={id}
       disabled={disabled}
       header="List NFT for sale on NFTEarth on NFTE currency🎁"
       instruction="List Any NFT of any supported blockchain (Optimism, Arbitrum) in $NFTE for sale on NFTEarth."
@@ -626,11 +638,11 @@ export const QuestListNFTInNFTEOnAnyChain = ({
   )
 }
 
-export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean }) => {
+export const QuestMakeOfferForNFT = ({ id, disabled }: { id: number, disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
-      id={8}
+      id={id}
       header="Make Offer for ANY NFT on NFTEarth🎁"
       instruction="Make offer on ANY NFT for ANY amount and currency on ANY chain on NFTEarth."
     >
@@ -694,11 +706,12 @@ export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean }) => {
   )
 }
 
-export const QuestLeaderboard = ({ disabled }: { disabled: boolean }) => {
+export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boolean }) => {
   return (
     <BasicModal
-      disabled={disabled}
-      id={9}
+      disabled
+      repeatable
+      id={id}
       header="Earn higher place on the leaderboard! 🎁"
       instruction="Make listings and offers to earn XP and increase chance to get higher place on the leaderboard! "
     >
@@ -768,7 +781,7 @@ export const QuestLeaderboard = ({ disabled }: { disabled: boolean }) => {
               chain counts!
             </Text>
             <Text style="subtitle2" css={{ color: '$gray11' }}>
-              Verify and claim your XP by clicking the button below.
+              Exp will be automatically updated.
             </Text>
           </Flex>
         </Flex>
