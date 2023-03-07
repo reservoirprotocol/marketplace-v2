@@ -75,19 +75,31 @@ export default ({
           justify="center"
           align="center"
           css={{
-            borderRadius: 8,
+            zIndex: 1,
+            position: 'absolute',
+            backdropFilter: 'blur(2px)',
+            background: 'rgba(226, 240, 253, 0.083)',
+            borderRadius: '4px',
+            left: '$2',
+            top: '$2',
             px: '$2',
             py: '$1',
             mr: '$2',
             backgroundColor: '$gray4',
-            position: 'absolute',
-            left: '$2',
-            top: '$2',
-            zIndex: 1,
             maxWidth: '50%',
           }}
         >
-          <Text ellipsify>x{tokenCount}</Text>
+          <Text
+            style="subtitle2"
+            ellipsify
+            css={{
+              fontWeight: '700',
+              pr: '$1',
+              flex: 1,
+            }}
+          >
+            x{tokenCount}
+          </Text>
         </Flex>
       )}
       <Flex
@@ -117,36 +129,6 @@ export default ({
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
-          <Flex
-            justify="center"
-            align="center"
-            css={{
-              zIndex: 1,
-              position: 'absolute',
-              backdropFilter: 'blur(2px)',
-              background: 'rgba(226, 240, 253, 0.083)',
-              borderRadius: '4px',
-              left: '$2',
-              top: '$2',
-              px: '$2',
-              py: '$1',
-              mr: '$2',
-              backgroundColor: '$gray4',
-              maxWidth: '50%',
-            }}
-          >
-            <Text
-              style="subtitle2"
-              ellipsify
-              css={{
-                fontWeight: '700',
-                pr: '$1',
-                flex: 1,
-              }}
-            >
-              x1962
-            </Text>
-          </Flex>
           <TokenMedia
             token={token?.token}
             style={{
