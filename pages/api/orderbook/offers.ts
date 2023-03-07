@@ -1,8 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import db from "lib/db";
 import {paths} from "@nftearth/reservoir-sdk";
-import fetcher from "../../../utils/fetcher";
-import supportedChains from "../../../utils/chains";
+import fetcher from "utils/fetcher";
+import supportedChains from "utils/chains";
 import {ethers} from "ethers";
 
 enum OrderType {
@@ -50,23 +50,36 @@ type OrderComponents = {
   counter: string;
   signature?: string;
 };
-type Order = {
+
+type CollectionCriteria = {
+  slug: string
+}
+type Criteria = {
+  collection: CollectionCriteria
+}
+type Orders = {
   parameters: OrderComponents
   chainId: number
   signature: string
+  criteria?: Criteria
 }
 
 const NFTItem = [ItemType.ERC721, ItemType.ERC1155];
 const medianExpReward = 50
 const account = db.collection('account')
 
-const handleOrderBook = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) => {
+  const apiKey = req.headers['x-api-key']
+  if (!apiKey || apiKey !== process.env.ORDERBOOK_API_KEY) {
+    res.status(405).send({message: 'Invalid api key'})
+    return
+  }
   if (req.method !== 'POST') {
     res.status(405).send({message: 'Only POST requests allowed'})
     return
   }
 
-  const { parameters, chainId, signature } : Order = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+  const { parameters, chainId, criteria, signature } : Orders = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
   const chain = supportedChains.find(c => c.id === chainId)
 
   const accountData = await account.findOne({
@@ -115,8 +128,8 @@ const handleOrderBook = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   return res.json({
-    message: 'Order Accepted'
+    message: 'Offer Accepted'
   })
 }
 
-export default handleOrderBook;
+export default handleOrderbookOffers;
