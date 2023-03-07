@@ -121,6 +121,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     data: tokens,
     mutate,
     fetchNextPage,
+    setSize,
+    resetCache,
     isFetchingInitialData,
     isFetchingPage,
     hasNextPage,
@@ -239,7 +241,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             <CollectionActions collection={collection} />
           </Flex>
           <StatHeader collection={collection} />
-          <Tabs.Root defaultValue="items">
+          <Tabs.Root
+            defaultValue="items"
+            onValueChange={(value) => {
+              if (value === 'items') {
+                setSize(1)
+                mutate()
+              }
+            }}
+          >
             <TabsList>
               <TabsTrigger value="items">Items</TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
