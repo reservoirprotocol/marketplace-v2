@@ -312,7 +312,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                           'Request to refresh this token was accepted.',
                       })
                     } else {
-                      throw 'Request Failed'
+                      throw response
                     }
                     setIsRefreshing(false)
                   })
