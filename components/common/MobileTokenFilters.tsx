@@ -24,7 +24,7 @@ export const MobileTokenFilters: FC<Props> = ({
   filterCollection,
   setFilterCollection,
 }) => {
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
 
   const trigger = (
     <Flex
@@ -38,7 +38,7 @@ export const MobileTokenFilters: FC<Props> = ({
       }}
     >
       <Button
-        ref={buttonRef}
+        ref={triggerRef}
         css={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -156,7 +156,7 @@ export const MobileTokenFilters: FC<Props> = ({
                   } else {
                     setFilterCollection(collection?.collection?.id)
                   }
-                  buttonRef?.current?.click()
+                  triggerRef?.current?.click()
                 }}
               >
                 {collection?.collection?.image && (
