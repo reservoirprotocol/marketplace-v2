@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useRef, useState } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { Button, Flex, Text } from 'components/primitives'
 import Image from 'next/image'
@@ -24,6 +24,8 @@ export const MobileTokenFilters: FC<Props> = ({
   filterCollection,
   setFilterCollection,
 }) => {
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
   const trigger = (
     <Flex
       justify="center"
@@ -36,6 +38,7 @@ export const MobileTokenFilters: FC<Props> = ({
       }}
     >
       <Button
+        ref={buttonRef}
         css={{
           justifyContent: 'center',
           alignItems: 'center',
@@ -153,6 +156,7 @@ export const MobileTokenFilters: FC<Props> = ({
                   } else {
                     setFilterCollection(collection?.collection?.id)
                   }
+                  buttonRef?.current?.click()
                 }}
               >
                 {collection?.collection?.image && (
