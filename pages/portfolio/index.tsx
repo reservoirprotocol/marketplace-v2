@@ -22,7 +22,7 @@ import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
-  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
@@ -109,14 +109,12 @@ const IndexPage: NextPage = () => {
                     }}
                   >
                     <Flex justify="between" css={{ marginBottom: '$4' }}>
-                      {collections &&
-                        collections.length > 0 &&
-                        !isSmallDevice && (
-                          <FilterButton
-                            open={tokenFiltersOpen}
-                            setOpen={setTokenFiltersOpen}
-                          />
-                        )}
+                      {!isSmallDevice && (
+                        <FilterButton
+                          open={tokenFiltersOpen}
+                          setOpen={setTokenFiltersOpen}
+                        />
+                      )}
                     </Flex>
                     <TokenTable
                       address={address}

@@ -6,6 +6,7 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import LoadingSpinner from './LoadingSpinner'
 
 type Collections =
   | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
@@ -28,9 +29,6 @@ export const TokenFilters: FC<Props> = ({
   setFilterCollection,
   scrollToTop,
 }) => {
-  if (collections?.length === 0 || collections == null) {
-    return null
-  }
   return (
     <Collapsible.Root
       open={open}
@@ -58,61 +56,74 @@ export const TokenFilters: FC<Props> = ({
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
             Collections
           </Text>
-          {collections?.map((collection) => {
-            let selected = collection?.collection?.id == filterCollection
-            return (
-              <Flex
-                key={collection?.collection?.id}
-                css={{
-                  py: '$2',
-                  px: '$3',
-                  gap: '$3',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: selected ? '$gray5' : '$gray4',
-                  },
-                  backgroundColor: selected ? '$gray5' : '',
-                }}
-                align="center"
-                onClick={() => {
-                  if (selected) {
-                    setFilterCollection(undefined)
-                  } else {
-                    setFilterCollection(collection?.collection?.id)
-                  }
-                  scrollToTop?.()
-                }}
-              >
-                {collection?.collection?.image && (
-                  <Image
-                    style={{
-                      borderRadius: '4px',
-                      objectFit: 'cover',
-                      aspectRatio: '1/1',
-                    }}
-                    loader={({ src }) => src}
-                    src={collection?.collection?.image as string}
-                    alt={collection?.collection?.name as string}
-                    width={24}
-                    height={24}
-                  />
-                )}
-                <Text
-                  style="body1"
+
+          {collections?.length ? (
+            collections?.map((collection) => {
+              let selected = collection?.collection?.id == filterCollection
+              return (
+                <Flex
+                  key={collection?.collection?.id}
                   css={{
-                    flex: 1,
+                    py: '$2',
+                    px: '$3',
+                    gap: '$3',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: selected ? '$gray5' : '$gray4',
+                    },
+                    backgroundColor: selected ? '$gray5' : '',
                   }}
-                  ellipsify
+                  align="center"
+                  onClick={() => {
+                    if (selected) {
+                      setFilterCollection(undefined)
+                    } else {
+                      setFilterCollection(collection?.collection?.id)
+                    }
+                    scrollToTop?.()
+                  }}
                 >
-                  {collection?.collection?.name}
-                </Text>
-                <Text style="subtitle2" css={{ color: '$gray10' }}>
-                  {collection?.ownership?.tokenCount}
-                </Text>
-              </Flex>
-            )
-          })}
+                  {collection?.collection?.image && (
+                    <Image
+                      style={{
+                        borderRadius: '4px',
+                        objectFit: 'cover',
+                        aspectRatio: '1/1',
+                      }}
+                      loader={({ src }) => src}
+                      src={collection?.collection?.image as string}
+                      alt={collection?.collection?.name as string}
+                      width={24}
+                      height={24}
+                    />
+                  )}
+                  <Text
+                    style="body1"
+                    css={{
+                      flex: 1,
+                    }}
+                    ellipsify
+                  >
+                    {collection?.collection?.name}
+                  </Text>
+                  <Text style="subtitle2" css={{ color: '$gray10' }}>
+                    {collection?.ownership?.tokenCount}
+                  </Text>
+                </Flex>
+              )
+            })
+          ) : (
+            <Flex
+              align="center"
+              justify="center"
+              css={{
+                py: '$5',
+              }}
+            >
+              <LoadingSpinner />
+            </Flex>
+          )}
         </Flex>
       </CollapsibleContent>
     </Collapsible.Root>
