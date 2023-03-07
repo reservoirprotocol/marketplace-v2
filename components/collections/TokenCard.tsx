@@ -118,6 +118,8 @@ export default ({
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <Flex
+            justify="center"
+            align="center"
             css={{
               zIndex: 1,
               position: 'absolute',
@@ -125,9 +127,12 @@ export default ({
               background: 'rgba(226, 240, 253, 0.083)',
               borderRadius: '4px',
               left: '$2',
-              top: '$1',
-              py: '$1',
+              top: '$2',
               px: '$2',
+              py: '$1',
+              mr: '$2',
+              backgroundColor: '$gray4',
+              maxWidth: '50%',
             }}
           >
             <Text
