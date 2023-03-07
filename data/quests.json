@@ -78,7 +78,7 @@
     "type": "one-time",
     "tasks": [
       {
-        "type": "buy"
+        "type": "bid"
       }
     ],
     "exp": 125
@@ -90,7 +90,8 @@
     "type": "one-time",
     "tasks": [
       {
-        "type": "buy"
+        "type": "list",
+        "currency": "NFTE"
       }
     ],
     "exp": 150
@@ -102,7 +103,8 @@
     "type": "one-time",
     "tasks": [
       {
-        "type": "buy"
+        "type": "buy",
+        "amount": "0.1"
       }
     ],
     "exp": 200

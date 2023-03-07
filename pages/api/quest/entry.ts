@@ -70,14 +70,22 @@ type QuestListMarket = {
   disconnected?: boolean
 }
 
-type QuestBuyMarket = {
-  type: 'buy'
+type QuestBidMarket = {
+  type: 'bid'
   currency?: string
   passes?: boolean
   disconnected?: boolean
 }
 
-export type QuestTask = QuestConnection | QuestDiscord | QuestTwitterFollow | QuestTwitterRetweet | QuestTwitterLike | QuestTwitterLikeRetweet | QuestListMarket | QuestBuyMarket
+type QuestBuyMarket = {
+  type: 'buy'
+  currency?: string
+  amount?: string
+  passes?: boolean
+  disconnected?: boolean
+}
+
+export type QuestTask = QuestConnection | QuestDiscord | QuestTwitterFollow | QuestTwitterRetweet | QuestTwitterLike | QuestTwitterLikeRetweet | QuestListMarket | QuestBidMarket | QuestBuyMarket
 export type Quest = {
   id: number
   tasks: QuestTask[]
@@ -461,10 +469,72 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     }
 
+    if (r.type === 'bid') {
+      const getBuy = async (continuation: any) => {
+        const buyQuery: paths["/users/activity/v5"]["get"]["parameters"]["query"] = {
+          users: wallet,
+          types: ["bid"],
+          limit: 1000
+        }
+
+        const promises: ReturnType<typeof fetcher>[] = []
+        supportedChains.forEach((chain, i) => {
+          if (continuation[i] !== null) {
+            if (continuation[i]) {
+              buyQuery.continuation = continuation[i]
+            }
+
+            promises.push(
+              fetcher(`${chain.reservoirBaseUrl}/users/activity/v5`, buyQuery, {
+                headers: {
+                  'x-api-key': chain.apiKey || '',
+                },
+              })
+            )
+          }
+        })
+
+        const responses = await Promise.allSettled(promises)
+        let results: paths["/users/activity/v5"]["get"]["responses"]["200"]["schema"]["activities"] = [];
+        let newContinuation: any = [];
+        responses.forEach((response, i) => {
+          newContinuation[i] = null;
+          if (response.status === 'fulfilled' && response.value.data) {
+            results = results?.concat(response.value.data.activities);
+            newContinuation[i] = response.value.data.continuation;
+          }
+        })
+
+        return {
+          data: results,
+          continuation: newContinuation
+        };
+      }
+
+      let hasNextPage = true
+      let continuation = new Array(supportedChains.length).fill(undefined);
+
+      while (hasNextPage && !r.passes) {
+        let resp: any = await getBuy(continuation)
+        if (resp && resp.data && resp.data.length > 0) {
+          r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange').length > 0;
+
+          if (!!resp.continuation.find((c: string) => c !== null)) {
+            continuation = resp.continuation
+          } else {
+            hasNextPage = false
+          }
+        } else {:
+          hasNextPage = false
+        }
+      }
+    }
+
     if (r.type === 'buy') {
       const getBuy = async (continuation: any) => {
         const buyQuery: paths["/users/activity/v5"]["get"]["parameters"]["query"] = {
           users: wallet,
+          types: ["sale"],
           limit: 1000
         }
 
