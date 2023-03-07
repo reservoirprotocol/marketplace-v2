@@ -117,27 +117,27 @@ export const TokenFilters: FC<Props> = ({
                 </Flex>
               )
             })
-          ) : isLoading ? (
-            <Flex
-              align="center"
-              justify="center"
-              css={{
-                py: '$5',
-              }}
-            >
-              <LoadingSpinner />
-            </Flex>
           ) : (
-            <Flex
-              direction="column"
-              align="center"
-              css={{ py: '$6', gap: '$4', width: '100%' }}
-            >
-              <Text css={{ color: '$gray11' }}>
-                <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-              </Text>
-              <Text css={{ color: '$gray11' }}>No collections available</Text>
-            </Flex>
+            <>
+              {isLoading ? (
+                <Flex align="center" justify="center" css={{ py: '$5' }}>
+                  <LoadingSpinner />
+                </Flex>
+              ) : (
+                <Flex
+                  direction="column"
+                  align="center"
+                  css={{ py: '$6', gap: '$4', width: '100%' }}
+                >
+                  <Text css={{ color: '$gray11' }}>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+                  </Text>
+                  <Text css={{ color: '$gray11' }}>
+                    No collections available
+                  </Text>
+                </Flex>
+              )}
+            </>
           )}
         </Flex>
       </CollapsibleContent>
