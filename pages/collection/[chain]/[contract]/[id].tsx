@@ -51,6 +51,7 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
+import { timeTill } from 'utils/till'
 import { useAccount } from 'wagmi'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -304,7 +305,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     body: JSON.stringify({ token: `${contract}:${id}` }),
                   }
                 )
-                  .then(({ response }) => {
+                  .then(({ data, response }) => {
                     if (response.status === 200) {
                       addToast?.({
                         title: 'Refresh token',
@@ -312,16 +313,26 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                           'Request to refresh this token was accepted.',
                       })
                     } else {
-                      throw response
+                      throw data
                     }
                     setIsRefreshing(false)
                   })
                   .catch((e) => {
-                    addToast?.({
-                      title: 'Refresh token failed',
-                      description:
-                        'We have queued this item for an update, check back in a few.',
-                    })
+                    const { message } = e
+                    const ratelimit = /\d{2}:\d{2}:\d{2}/.exec(message)?.[0]
+                    if (ratelimit) {
+                      addToast?.({
+                        title: 'Refresh token failed',
+                        description: `Collection was recently refreshed, next available refresh in ${timeTill(
+                          ratelimit
+                        )} hours`,
+                      })
+                    } else {
+                      addToast?.({
+                        title: 'Refresh token failed',
+                        description: `Collection was recently refreshed, please try again later.`,
+                      })
+                    }
                     setIsRefreshing(false)
                     throw e
                   })
