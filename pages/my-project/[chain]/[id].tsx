@@ -12,6 +12,7 @@ import RoyaltiesSettings from 'components/my-project/settings/RoyaltiesSettings'
 import MintStateSettings from 'components/my-project/settings/MintStateSettings'
 import WhitelistSettings from 'components/my-project/settings/WhitelistSettings'
 import MetadataSettings from 'components/my-project/settings/MetadataSettings'
+import ReservedMint from 'components/my-project/settings/ReservedMint'
 import LoadingSpinner from "components/common/LoadingSpinner";
 import {useLaunchpads, useMarketplaceChain} from "hooks";
 import launchpadArtifact from 'artifact/NFTELaunchpad.json'
@@ -37,6 +38,7 @@ const MyProjectDetailPage = () => {
 
   const launchpadsQuery: Parameters<typeof useLaunchpads>['1'] = {
     id: router.query.id as string,
+    includeAllowList: true,
     limit: 1,
   }
 
@@ -94,13 +96,14 @@ const MyProjectDetailPage = () => {
       },
       {
         ...launchpadContract,
-        functionName: 'totalSupply',
+        functionName: 'supply',
+        args: [1]
       },
       {
         ...launchpadContract,
         functionName: 'supply',
-        args: [1]
-      },
+        args: [2]
+      }
     ],
     cacheTime: 5_000
   })
@@ -290,12 +293,12 @@ const MyProjectDetailPage = () => {
             </SettingsContentContainer>
             {numReservedSupply > 0 && (
               <SettingsContentContainer
-                tab='royalities'
-                tabLabel='royalities'
+                tab='reserved'
+                tabLabel='reserved'
                 activeTab={activeTab}
                 icon={faMapPin}
-                setActiveTab={() => setActiveTab('royalities')}>
-                <RoyaltiesSettings
+                setActiveTab={() => setActiveTab('reserved')}>
+                <ReservedMint
                   launchpad={launchpad}
                 />
               </SettingsContentContainer>

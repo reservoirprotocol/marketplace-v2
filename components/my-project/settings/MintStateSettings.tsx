@@ -6,7 +6,7 @@ import {ToastContext} from "context/ToastContextProvider";
 import LaunchpadArtifact from 'artifact/NFTELaunchpad.json'
 import {ethers} from "ethers";
 import {useMarketplaceChain} from "../../../hooks";
-import { useContractWrite } from "wagmi";
+import {useContractWrite, useNetwork, useSwitchNetwork} from "wagmi";
 
 type Props = {
   address: `0x${string}`
@@ -21,18 +21,24 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
     publicPrice,
     URI,
     reservedSupply,
-    presaleSupply
+    presaleSupply,
+    publicSupply
   ] = contractData || [];
   const { theme } = useTheme();
   const { addToast } = useContext(ToastContext)
   const [ loading, setLoading ] = useState(false)
   const [totalReservedSupply, setTotalReservedSupply] = useState(reservedSupply);
   const [totalPresaleSupply, setTotalPresaleSupply] = useState(presaleSupply);
+  const [totalPublicSupply, setTotalPublicSupply] = useState(publicSupply);
   const [isActivePresale, setIsActivePresale] = useState(activePresale);
   const [presaleMintPrice, setPresaleMintPrice] = useState(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
   const [isActivePublic, setIsActivePublic] = useState(activePublic);
   const [publicMintPrice, setPublicMintPrice] = useState(ethers.utils.formatEther(`${publicPrice || '0'}`).toString());
   const marketplaceChain = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
+  const { chain: activeChain } = useNetwork()
 
   const { writeAsync: updateActiveSale } = useContractWrite({
     mode: 'recklesslyUnprepared',
@@ -55,18 +61,6 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
     chainId: marketplaceChain.id
   })
 
-  const { writeAsync: adjustPresaleSupply } = useContractWrite({
-    mode: 'recklesslyUnprepared',
-    abi: LaunchpadArtifact.abi,
-    address,
-    functionName: 'adjustSupply',
-    args: [
-      1,
-      totalPresaleSupply
-    ],
-    chainId: marketplaceChain.id
-  })
-
   const { writeAsync: adjustReservedSupply } = useContractWrite({
     mode: 'recklesslyUnprepared',
     abi: LaunchpadArtifact.abi,
@@ -79,6 +73,30 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
     chainId: marketplaceChain.id
   })
 
+  const { writeAsync: adjustPresaleSupply } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address,
+    functionName: 'adjustSupply',
+    args: [
+      1,
+      totalPresaleSupply
+    ],
+    chainId: marketplaceChain.id
+  })
+
+  const { writeAsync: adjustPublicSupply } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    abi: LaunchpadArtifact.abi,
+    address,
+    functionName: 'adjustSupply',
+    args: [
+      2,
+      totalPublicSupply
+    ],
+    chainId: marketplaceChain.id
+  })
+
   useEffect(() => {
     setIsActivePresale(activePresale);
     setPresaleMintPrice(ethers.utils.formatEther(`${presalePrice || '0'}`).toString());
@@ -86,12 +104,17 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
     setPublicMintPrice(ethers.utils.formatEther(`${publicPrice || '0'}`).toString());
     setTotalReservedSupply(reservedSupply)
     setTotalPresaleSupply(presaleSupply)
-  }, [activePresale, activePublic, presalePrice, publicPrice, reservedSupply, presaleSupply])
+    setTotalPublicSupply(publicSupply)
+  }, [activePresale, activePublic, presalePrice, publicPrice, reservedSupply, presaleSupply, publicSupply])
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setLoading(true)
     try {
+      if (marketplaceChain.id !== activeChain?.id) {
+        await switchNetworkAsync?.();
+      }
+
       const newPresalePrice = ethers.utils.parseEther(presaleMintPrice)
       const newPublicPrice = ethers.utils.parseEther(publicMintPrice)
 
@@ -101,6 +124,10 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
 
       if (+reservedSupply !== +totalReservedSupply) {
         await adjustReservedSupply?.()
+      }
+
+      if (+publicSupply !== +totalPublicSupply) {
+        await adjustPublicSupply?.()
       }
 
       if (isActivePresale !== activePresale || isActivePublic !== activePublic) {
@@ -143,7 +170,7 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
           marginBottom: 18
         }}>
         <Text style='h4'>
-          Mint Settings
+          Mint State
         </Text>
       </Box>
       <Flex direction="column" css={{ marginBottom: 32, gap: 24 }}>
@@ -159,6 +186,28 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
             />
           </Box>
         </Flex>
+        <Flex justify="between">
+          <Flex direction="column">
+            <Text style="h6" css={{ color: '$gray11' }}>Allowlist Mint</Text>
+          </Flex>
+          <Flex>
+            <Switch
+              checked={isActivePresale}
+              disabled={loading}
+              onCheckedChange={checked => setIsActivePresale(checked)}
+            />
+          </Flex>
+        </Flex>
+      </Flex>
+      <Box
+        css={{
+          marginBottom: 18
+        }}>
+        <Text style='h4'>
+          Mint Price
+        </Text>
+      </Box>
+      <Flex direction="column" css={{ marginBottom: 32, gap: 24 }}>
         <Flex justify="between" direction="row">
           <Flex direction="column" justify="center">
             <Text style="h6" css={{ color: '$gray11' }}>Public Mint Price</Text>
@@ -210,20 +259,6 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
               </Text>
             </Flex>
           </Box>
-        </Flex>
-      </Flex>
-      <Flex direction="column" css={{ marginBottom: 32, gap: 24 }}>
-        <Flex justify="between">
-          <Flex direction="column">
-            <Text style="h6" css={{ color: '$gray11' }}>Allowlist Mint</Text>
-          </Flex>
-          <Flex>
-            <Switch
-              checked={isActivePresale}
-              disabled={loading}
-              onCheckedChange={checked => setIsActivePresale(checked)}
-            />
-          </Flex>
         </Flex>
         <Flex justify="between" direction="row">
           <Flex direction="column" justify="center">
@@ -277,6 +312,48 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
             </Flex>
           </Flex>
         </Flex>
+      </Flex>
+      <Box
+        css={{
+          marginBottom: 18
+        }}>
+        <Text style='h4'>
+          Mint Supply
+        </Text>
+      </Box>
+      <Flex direction="column" css={{ marginBottom: 32, gap: 24 }}>
+        <Flex justify="between" direction="row">
+          <Flex direction="column" justify="center">
+            <Text style="h6" css={{ color: '$gray11' }}>Reserved Supply</Text>
+          </Flex>
+          <Flex
+            css={{
+              position: 'relative',
+              width: '100%',
+              '@md': {
+                width: '50%',
+              }
+            }}>
+            <StyledInput
+              type="number"
+              disabled={loading}
+              value={totalReservedSupply}
+              placeholder="0"
+              min={0}
+              onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setTotalReservedSupply(e.target.value)}
+              css={{
+                backgroundColor: theme === 'light' ? '$gray1' : 'initial',
+                marginTop: 6,
+                width: '100%',
+                border: '1px solid $gray8',
+                borderRadius: 6,
+                pr: 32,
+                boxSizing: 'border-box',
+              }}
+            />
+          </Flex>
+        </Flex>
         <Flex justify="between" direction="row">
           <Flex direction="column" justify="center">
             <Text style="h6" css={{ color: '$gray11' }}>Allowlist Supply</Text>
@@ -311,7 +388,7 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
         </Flex>
         <Flex justify="between" direction="row">
           <Flex direction="column" justify="center">
-            <Text style="h6" css={{ color: '$gray11' }}>Reserved Supply</Text>
+            <Text style="h6" css={{ color: '$gray11' }}>Public Supply</Text>
           </Flex>
           <Flex
             css={{
@@ -324,11 +401,11 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
             <StyledInput
               type="number"
               disabled={loading}
-              value={totalReservedSupply}
+              value={totalPublicSupply}
               placeholder="0"
               min={0}
               onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => ['e', '+', '-'].includes(e.key) && e.preventDefault()}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setTotalReservedSupply(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setTotalPublicSupply(e.target.value)}
               css={{
                 backgroundColor: theme === 'light' ? '$gray1' : 'initial',
                 marginTop: 6,

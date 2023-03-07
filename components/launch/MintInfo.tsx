@@ -43,7 +43,6 @@ export const MintInfo = ({ launchpad, contractData }: Props) => {
       {numPresaleSupply > 0 && (
         <MintInfoBtn>Presale: {ethers.utils.formatEther(`${presalePrice || '0'}`).toString()}Ξ</MintInfoBtn>
       )}
-      <MintInfoBtn>Presale: {ethers.utils.formatEther(`${presalePrice || '0'}`).toString()}Ξ</MintInfoBtn>
       <MintInfoBtn>Price: {ethers.utils.formatEther(`${publicPrice || '0'}`).toString()}Ξ</MintInfoBtn>
       <MintInfoBtn>Supply: {formatNumber(numMaxSupply)}</MintInfoBtn>
       {launchpad.discordUrl && (

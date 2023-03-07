@@ -45,14 +45,14 @@ export const CollectionDropdown: FC<Props> = ({ id, name, slug }) => {
         href={`https://twitter.com/intent/tweet?text=${
           encodeURIComponent(tweetText(name))
         }&url=${
-          encodeURIComponent(`https://nftearth.exchange/${marketplaceChain.routePrefix}/${slug}`)
+          encodeURIComponent(`https://nftearth.exchange/launch/${marketplaceChain.routePrefix}/${slug}`)
         }&hashtags=&via=&related=&original_referer=${
           encodeURIComponent('https://nftearth.exchange')
         }`}
         css={{ display: 'block' }}><FontAwesomeIcon icon={faTwitter} style={{ marginRight: 10 }}/>Tweet Project</DropdownMenuItem>
       <DropdownMenuItem
         as="a"
-        href={`/launch/${marketplaceChain.routePrefix}${slug}`}
+        href={`/launch/${marketplaceChain.routePrefix}/${slug}`}
         css={{ display: 'block' }}><FontAwesomeIcon icon={faBolt} style={{ marginRight: 10 }}/>Launch Page</DropdownMenuItem>
       <DropdownMenuItem as="a" href={`/my-project/${marketplaceChain.routePrefix}/${id}`} css={{ display: 'block' }}><FontAwesomeIcon icon={faEye} style={{ marginRight: 10 }}/>View</DropdownMenuItem>
     </>
