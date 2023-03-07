@@ -117,6 +117,31 @@ export default ({
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
+          <Flex
+            css={{
+              zIndex: 1,
+              position: 'absolute',
+              backdropFilter: 'blur(2px)',
+              background: 'rgba(226, 240, 253, 0.083)',
+              borderRadius: '4px',
+              left: '$2',
+              top: '$1',
+              py: '$1',
+              px: '$2',
+            }}
+          >
+            <Text
+              style="subtitle2"
+              ellipsify
+              css={{
+                fontWeight: '700',
+                pr: '$1',
+                flex: 1,
+              }}
+            >
+              x1962
+            </Text>
+          </Flex>
           <TokenMedia
             token={token?.token}
             style={{
