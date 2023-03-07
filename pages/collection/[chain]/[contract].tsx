@@ -122,6 +122,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     mutate,
     fetchNextPage,
     setSize,
+    resetCache,
     isFetchingInitialData,
     isFetchingPage,
     hasNextPage,
@@ -244,6 +245,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             defaultValue="items"
             onValueChange={(value) => {
               if (value === 'items') {
+                resetCache()
                 setSize(1)
                 mutate()
               }
