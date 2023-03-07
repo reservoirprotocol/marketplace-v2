@@ -50,6 +50,22 @@ export const MobileTokenFilters: FC<Props> = ({
         color="gray3"
       >
         <Text style="h6">Filter</Text>
+        {filterCollection && (
+          <Flex
+            justify="center"
+            align="center"
+            css={{
+              height: '24px',
+              width: '24px',
+              backgroundColor: '$gray4',
+              borderRadius: '100%',
+              fontSize: 'medium',
+              fontWeight: '500',
+            }}
+          >
+            1
+          </Flex>
+        )}
       </Button>
     </Flex>
   )
