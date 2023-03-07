@@ -118,9 +118,10 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     ? [ssr.collections[marketplaceChain.id]]
     : undefined
 
-  const { data: collections } = useUserCollections(address, collectionQuery, {
-    fallbackData: filterCollection ? undefined : ssrCollections,
-  })
+  const { data: collections, isLoading: collectionsLoading } =
+    useUserCollections(address, collectionQuery, {
+      fallbackData: filterCollection ? undefined : ssrCollections,
+    })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -194,6 +195,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 />
               ) : (
                 <TokenFilters
+                  isLoading={collectionsLoading}
                   open={tokenFiltersOpen}
                   setOpen={setTokenFiltersOpen}
                   collections={collections}
