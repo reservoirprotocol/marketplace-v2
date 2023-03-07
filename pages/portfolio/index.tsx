@@ -39,10 +39,8 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = COMMUNITY
   }
 
-  const { data: collections } = useUserCollections(
-    address as string,
-    collectionQuery
-  )
+  const { data: collections, isLoading: colletionsLoading } =
+    useUserCollections(address as string, collectionQuery)
 
   if (!isMounted) {
     return null
@@ -95,6 +93,7 @@ const IndexPage: NextPage = () => {
                     />
                   ) : (
                     <TokenFilters
+                      isLoading={colletionsLoading}
                       open={tokenFiltersOpen}
                       setOpen={setTokenFiltersOpen}
                       collections={collections}

@@ -1,11 +1,13 @@
-import { Flex, Text } from 'components/primitives'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Collapsible from '@radix-ui/react-collapsible'
-import { CollapsibleContent } from 'components/primitives/Collapsible'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import Image from 'next/image'
-import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import { NAVBAR_HEIGHT } from 'components/navbar'
+import { Flex, Text } from 'components/primitives'
+import { CollapsibleContent } from 'components/primitives/Collapsible'
+import Image from 'next/image'
+import { Dispatch, FC, SetStateAction } from 'react'
 import LoadingSpinner from './LoadingSpinner'
 
 type Collections =
@@ -19,6 +21,7 @@ type Props = {
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
   scrollToTop?: () => void
+  isLoading?: boolean
 }
 
 export const TokenFilters: FC<Props> = ({
@@ -26,6 +29,7 @@ export const TokenFilters: FC<Props> = ({
   setOpen,
   collections,
   filterCollection,
+  isLoading,
   setFilterCollection,
   scrollToTop,
 }) => {
@@ -113,7 +117,7 @@ export const TokenFilters: FC<Props> = ({
                 </Flex>
               )
             })
-          ) : (
+          ) : isLoading ? (
             <Flex
               align="center"
               justify="center"
@@ -122,6 +126,17 @@ export const TokenFilters: FC<Props> = ({
               }}
             >
               <LoadingSpinner />
+            </Flex>
+          ) : (
+            <Flex
+              direction="column"
+              align="center"
+              css={{ py: '$6', gap: '$4', width: '100%' }}
+            >
+              <Text css={{ color: '$gray11' }}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+              </Text>
+              <Text css={{ color: '$gray11' }}>No collections available</Text>
             </Flex>
           )}
         </Flex>
