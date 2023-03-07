@@ -491,11 +491,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 </TabsContent>
                 <TabsContent value="info">
                   {collection && (
-                    <TokenInfo
-                      token={token}
-                      collection={collection}
-                      chain={router.query.chain as string}
-                    />
+                    <TokenInfo token={token} collection={collection} />
                   )}
                 </TabsContent>
                 <TabsContent value="activity">
