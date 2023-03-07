@@ -121,14 +121,14 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
             body: JSON.stringify({ collection: collection.id }),
           }
         )
-          .then(({ response }) => {
+          .then(({ data, response }) => {
             if (response.status === 200) {
               addToast?.({
                 title: 'Refresh collection',
                 description: 'Request to refresh collection was accepted.',
               })
             } else {
-              throw 'Request Failed'
+              throw data
             }
             setIsRefreshing(false)
           })
