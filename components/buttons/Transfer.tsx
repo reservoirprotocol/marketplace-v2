@@ -6,10 +6,9 @@ import {
   Close
 } from '@radix-ui/react-dialog'
 import {
-  usePrepareContractWrite,
-  useSendTransaction,
   useWaitForTransaction,
-  useAccount
+  useAccount,
+  useContractWrite
 } from 'wagmi'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPaperPlane, faXmark, faWarning, faClose, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
@@ -94,13 +93,24 @@ const Transfer = ({ token, mutate } : TransferProps) => {
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
-  const { config, error: preparedError } = usePrepareContractWrite({
+  const { writeAsync, data, isLoading, error: error } = useContractWrite({
+    mode: 'recklesslyUnprepared',
     address: (token?.token?.contract || '0x0') as `0x${string}`,
     abi: token?.token?.kind === 'erc721' ? ERC721NFTAbi : ERC1155NFTAbi,
     functionName: 'safeTransferFrom',
-    args: token?.token?.kind === 'erc721' ? [address, transferAddress, token?.token?.tokenId] : [address, transferAddress, token?.token?.tokenId, quantity, ''],
+    args: token?.token?.kind === 'erc721' ? [
+      address as `0x${string}`,
+      transferAddress as `0x${string}`,
+      token?.token?.tokenId
+    ] : [
+      address as `0x${string}`,
+      transferAddress as `0x${string}`,
+      token?.token?.tokenId,
+      quantity,
+      ''
+    ],
   })
-  const { data, sendTransactionAsync, isLoading, error } = useSendTransaction(config)
+
   const { isLoading: isLoadingTransaction, isSuccess = true } = useWaitForTransaction({
     hash: data?.hash,
   })
@@ -112,7 +122,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
   }
 
   const handleTransfer = async () => {
-    sendTransactionAsync?.().then(() => {
+    writeAsync?.().then(() => {
       mutate?.();
     }).catch(() => {
       // Empty
@@ -264,7 +274,7 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                 {isLoadingTransaction ? (
                   <Text as="h4">Transferring...</Text>
                 ) : (
-                  <Button disabled={isLoading || isLoadingTransaction || !!preparedError} onClick={handleTransfer}>
+                  <Button disabled={isLoading || isLoadingTransaction || !!error} onClick={handleTransfer}>
                     {isLoading ? `Confirm` : 'Transfer'}
                   </Button>
                 )}

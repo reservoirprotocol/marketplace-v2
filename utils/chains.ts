@@ -1,11 +1,20 @@
 // import { constants } from 'ethers'
 import { optimism, arbitrum } from 'wagmi/chains'
+import {Chain} from "@wagmi/chains";
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
 
-export const DefaultChain = {
+export interface MarketChain extends Chain {
+  iconUrl: string;
+  reservoirBaseUrl?: string,
+  proxyApi: string;
+  routePrefix: string;
+  apiKey?: string;
+}
+
+export const DefaultChain: MarketChain = {
   ...optimism,
   // Any url to display the logo of the chain
   iconUrl: `/icons/currency/0x4200000000000000000000000000000000000042.png`,
@@ -36,4 +45,4 @@ export default [
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
   }
-]
+] as MarketChain[]

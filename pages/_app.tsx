@@ -7,7 +7,7 @@ import { ConnectKitProvider, getDefaultClient } from 'connectkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { publicProvider } from "wagmi/providers/public";
+import { publicProvider } from 'wagmi/providers/public'
 
 import {
   ReservoirKitProvider,
@@ -48,33 +48,30 @@ const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({
     apiKey: process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID as string,
-    stallTimeout: 1000,
-    priority: 0,
-    weight: 1
+    priority: 0
   }),
-  alchemyProvider({
-    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ARBITRUM_ID as string,
-    stallTimeout: 1000,
-    priority: 0,
-    weight: 1
+  publicProvider({
+    priority: 1
   }),
-  alchemyProvider({
-    apiKey: process.env.NEXT_PUBLIC_ALCHEMY_POLYGON_ID as string,
-    stallTimeout: 1000,
-    priority: 0,
-    weight: 1
-  }),
-  publicProvider({ priority: 1, weight: 2 }),
-])
+], {
+  stallTimeout: 10_000
+})
 
 const { connectors } = getDefaultClient({
   appName: 'NFTEarth Exchange',
+  appIcon: 'https://nftearth.exchange/nftearth-icon-new.png',
+  alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_OPTIMISM_ID,
+  walletConnectOptions: {
+    projectId: '5dd18f61f54044c53f0e1ea9d1829b08',
+    version: "2"
+  },
+  stallTimeout: 10_000,
   chains,
 })
 
 const wagmiClient = createClient({
   autoConnect: true,
-  connectors,
+  connectors: connectors,
   provider,
 })
 
@@ -171,7 +168,7 @@ function MyApp({
               <Tooltip.Provider>
                 <ConnectKitProvider
                   mode={theme == 'dark' ? 'dark' : 'light'}
-                  options={{ initialChainId: marketplaceChain.id }}
+                  options={{ initialChainId: 0 }}
                 >
                   <ToastContextProvider>
                     <FunctionalComponent {...pageProps} />
