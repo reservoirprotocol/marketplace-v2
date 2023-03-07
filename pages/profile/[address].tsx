@@ -208,7 +208,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 }}
               >
                 <Flex justify="between" css={{ marginBottom: '$4' }}>
-                  {collections && collections.length > 0 && !isSmallDevice && (
+                  {!isSmallDevice && (
                     <FilterButton
                       open={tokenFiltersOpen}
                       setOpen={setTokenFiltersOpen}
