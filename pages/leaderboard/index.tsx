@@ -1,11 +1,11 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
 import { useCollections } from '@nftearth/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
+import fetcher, { basicFetcher } from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -13,6 +13,7 @@ import { useTheme } from 'next-themes'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
 import { PointsTable } from 'components/leaderboard/PointsTable'
 import { data } from 'components/leaderboard/enums'
+import { setRevalidateHeaders } from 'next/dist/server/send-payload'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -25,6 +26,18 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
+  const [data, setData] = useState(null)
+  console.log(data)
+  useEffect(() => {
+    const getData = async () => {
+      const res = await fetcher(
+        `https://indexer.nftearth.exchange/orders/asks/v4`
+      )
+      setData(res?.data)
+    }
+    getData()
+    console.log(data)
+  }, [])
 
   // const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
   //   useCollections(
@@ -50,7 +63,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
       <Box
         css={{
           p: 24,
-          height: 'calc(100vh - 80px)',
           width: '100vw',
           '@bp800': {
             p: '$6',
@@ -58,28 +70,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
         }}
       >
         <Flex
-          align="center"
-          justify="center"
-          direction="column"
-          css={{
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          <Text
-            style={{
-              '@initial': 'h3',
-              '@lg': 'h2',
-            }}
-            css={{ lineHeight: 1.2, letterSpacing: 2, color: '$gray10' }}
-          >
-            COMING SOON
-          </Text>
-          <Text css={{ color: '$gray10' }}>
-            This page is under construction
-          </Text>
-        </Flex>
-        {/* <Flex
           align="center"
           direction="column"
           css={{
@@ -234,7 +224,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           >
             <LeaderboardTable data={data} />
           </Flex>
-        </Flex> */}
+        </Flex>
       </Box>
     </Layout>
   )

@@ -44,7 +44,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   //@ts-ignore
-  const users: User[] = data
+  const orders = data.orders
 
   return (
     <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
@@ -71,14 +71,14 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
             css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
-            {users.map((user: User, i: number) => {
+            {orders.map((order: any, i: number) => {
               return (
                 <LeaderboardTableRow
                   key={i}
-                  rank={user.rank}
-                  username={user.username}
-                  volume={user.volume}
-                  reward={user.reward}
+                  rank={i}
+                  username={order.maker}
+                  volume={50}
+                  reward={100}
                 />
               )
             })}
