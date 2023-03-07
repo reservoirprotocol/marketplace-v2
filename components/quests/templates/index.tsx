@@ -165,10 +165,7 @@ export const QuestRegisterUserName = ({ disabled }: { disabled: boolean }) => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Verify XP, rewards, and $NFTE!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Verify and claim your XP by clicking the button below.
+              Step 2: Verify and claim your XP by clicking the button below!
             </Text>
           </Flex>
         </Flex>
@@ -443,8 +440,9 @@ export const QuestJoinDiscord = ({
               Head to the profile page on NFTEarth and link your Discord account
               to your NFTEarth user profile.
             </Text>
-            <Text css={{ color: '$gray11' }}>Instructions</Text>
-            <Text style={{ '@initial': 'h6', '@lg': 'h4' }}>
+            <Text style={{ '@initial': 'h6', '@lg': 'h4' }} 
+              css={{ marginTop: '20px' }}
+            >
               Step 2: Join us on Discord
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
@@ -610,8 +608,8 @@ export const QuestListNFTInNFTEOnAnyChain = ({
               Step 2: List any NFT for sale in $NFTE currency
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Click on the NFTs you want to trade and click List to sell it on
-              the NFT on the marketplace. You need to list at least 3 NFTs to be
+              Click on the NFT you would like to trade and list it for sale on NFTEarth marketplace.
+              You need to list at least 3 NFTs to be
               eligible to claim the reward. Make sure it is listed in $NFTE
               currency. Double XP is listed more than 5.
             </Text>
@@ -619,10 +617,7 @@ export const QuestListNFTInNFTEOnAnyChain = ({
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 3: Earn your XP!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Verify and claim your XP by clicking the button below.
+              Step 3: Verify and claim your XP by clicking the button below!
             </Text>
           </Flex>
         </Flex>
