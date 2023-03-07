@@ -74,7 +74,7 @@
   {
     "id": 6,
     "title": "Make Offer for ANY NFT on NFTEarth",
-    "description": "Make offer on ANY NFT for ANY amount and currency on on all NFTEarth supported blockchains to earn XP",
+    "description": "Make offer on ANY NFT for ANY amount and currency on any NFTEarth supported blockchains to earn XP",
     "type": "one-time",
     "tasks": [
       {
@@ -101,7 +101,7 @@
   {
     "id": 8,
     "title": "Active NFT Trader",
-    "description": "Buy an NFT for over .1 $ETH in total volume on all NFTEarth supported blockchains to earn XP, NFTs, and potential $NFTE airdrops!",
+    "description": "Buy an NFT (or several) for total amount equal or over 0,1 $ETH on any NFTEarth supported blockchains in any supported currency.",
     "type": "one-time",
     "tasks": [
       {

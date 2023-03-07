@@ -165,10 +165,10 @@ export const QuestRegisterUserName = ({ disabled }: { disabled: boolean }) => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Start earning XP, rewards, and $NFTE!
+              Step 2: Verify XP, rewards, and $NFTE!
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Verify and claim your XP and rewards by clicking the button below.
+              Verify and claim your XP by clicking the button below.
             </Text>
           </Flex>
         </Flex>
@@ -236,13 +236,10 @@ export const QuestFollowTwitter = ({
               </Link>
             </Text>
             <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
+              style="subtitle2"
+              css={{ color: '$gray11', marginTop: '10px' }}
             >
-              Step 3: Earn your XP!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Verify and claim your XP and rewards by clicking the button below.
+              Verify and claim your XP by clicking the button below.
             </Text>
             <Text
               style="subtitle2"
@@ -311,12 +308,9 @@ export const QuestRetweet = ({
               .
             </Text>
             <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
+              style="subtitle2"
+              css={{ color: '$gray11', marginTop: '10px' }}
             >
-              Step 2: Earn you XP!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
               Verify and claim your XP by clicking the button below.
             </Text>
             <Text
@@ -386,17 +380,15 @@ export const QuestListNFT = ({ disabled }: { disabled: boolean }) => {
               Step 2: List any NFT for sale
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Click on the NFTs you want to trade and click List to sell it on
-              the NFT on the marketplace. You need to list Any NFT in any
-              currency to be eligible to claim the reward.
+              Click on the NFT you would like to trade and list it for sale on
+              NFTEarth marketplace. You need to list Any NFT in any currency to
+              be eligible to claim the reward.
             </Text>
+
             <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
+              style="subtitle2"
+              css={{ color: '$gray11', marginTop: '10px' }}
             >
-              Step 3: Earn your XP!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
               Verify and claim your XP by clicking the button below.
             </Text>
           </Flex>
@@ -473,14 +465,12 @@ export const QuestJoinDiscord = ({
               server
             </Text>
             <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
+              style="subtitle2"
+              css={{ color: '$gray11', marginTop: '10px' }}
             >
-              Step 3: Earn your XP!
+              Verify and claim your XP by clicking the button below.
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Verify claim your XP by clicking the button below.
-            </Text>
+
             <Text
               style="subtitle2"
               css={{ color: '$gray11', marginTop: '10px' }}
@@ -545,16 +535,18 @@ export const QuestBuyNFTInNFTEOnAnyChain = ({
               <Link href="/explore">
                 <Text css={{ color: '$primary10' }}>Explore </Text>
               </Link>
-              NFTs on Optimism, Arbitrum using NFTEarth and trade over .1 $ETH
+              NFTs on Optimism, Arbitrum using NFTEarth and buy for total amount equal or over 0,1 $ETH
               in total volume.
             </Text>
-            <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
-            >
-              Step 2: Earn your XP!
-            </Text>
+
             <Text style="subtitle1" css={{ color: '$gray11' }}>
+              NB! Volume criteria should be fulfilled while Quest is active! Our
+              intention is to leave it open/active for at least 24h from
+              opening/activation, however, we leave the right to close it also
+              later (or earlier)!
+            </Text>
+
+            <Text style="subtitle2" css={{ color: '$gray11' }}>
               Verify and claim your XP by clicking the button below.
             </Text>
           </Flex>
@@ -693,13 +685,11 @@ export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean }) => {
               Click on the NFTs you want to make an offer for and click "Make
               Offer" to make an offer for the the NFT on the marketplace
             </Text>
+
             <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
+              style="subtitle2"
+              css={{ color: '$gray11', marginTop: '10px' }}
             >
-              Step 3: Earn your XP!
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
               Verify and claim your XP by clicking the button below.
             </Text>
           </Flex>
