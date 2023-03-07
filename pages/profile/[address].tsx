@@ -135,7 +135,8 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           backgroundColor: 'rgb(243, 234, 0)',
           ...(banner ? {
             backgroundImage: `url(${banner}?size=1024)`,
-            backgroundSize: 'cover'
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           } : {}),
           height: '225px',
           '@sm': {
