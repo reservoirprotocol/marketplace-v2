@@ -91,7 +91,9 @@
     "tasks": [
       {
         "type": "list",
-        "currency": "NFTE"
+        "currency": "NFTE",
+        "count":  3,
+        "double_count": 5
       }
     ],
     "exp": 150

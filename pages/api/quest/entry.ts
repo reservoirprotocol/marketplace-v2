@@ -67,6 +67,9 @@ type QuestListMarket = {
   type: 'list'
   currency?: string
   passes?: boolean
+  count?: number
+  double_count?: number
+  double_exp?: boolean
   disconnected?: boolean
 }
 
@@ -454,7 +457,9 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
             r.passes = true;
 
             if (r.currency) {
-              r.passes = resp.value.data.orders.map((r: any) => r.price.currency.symbol).includes(r.currency)
+              const orders = resp.value.data.orders.filter((r: any) => r.price.currency.symbol === r.currency);
+              r.passes = orders.length >= (r.count || 1)
+              r.double_exp = orders.length >= (r.double_count || orders.length + 1)
             }
           } else {
             hasNextPage = false
@@ -624,7 +629,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       wallet
     }, {
       $inc: {
-        exp: questData.exp
+        exp: questData.exp * (!!tasks.find((f: any) => f.double_exp === true) ? 2 : 1)
       }
     })
   }
