@@ -26,7 +26,7 @@ const QuestsPage: NextPage = () => {
   const [open, setOpen] = useState(false)
   const [quest, setQuest] = useState<number>(0)
   const { data: entries } = useQuestEntries()
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfile("");
 
   const displayContent = (value: number) => {
     switch (value) {
