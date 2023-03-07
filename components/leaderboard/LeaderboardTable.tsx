@@ -26,6 +26,7 @@ import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { NAVBAR_HEIGHT } from '../navbar'
+import { ItemIndicator } from '@radix-ui/react-dropdown-menu'
 
 type Props = {
   data: User[]
@@ -44,7 +45,6 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
   //@ts-ignore
-  const orders = data.orders
 
   return (
     <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
@@ -71,14 +71,14 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
             css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
-            {orders.map((order: any, i: number) => {
+            {data?.map((item: any, i: number) => {
               return (
                 <LeaderboardTableRow
                   key={i}
-                  rank={i}
-                  username={order.maker}
-                  volume={50}
-                  reward={100}
+                  rank={item.rank}
+                  username={item.name}
+                  volume={item.points}
+                  reward={item.cumulative}
                 />
               )
             })}
