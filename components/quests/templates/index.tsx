@@ -3,15 +3,43 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import {useContext} from "react";
+import {ToastContext} from "../../../context/ToastContextProvider";
 
 interface ModalProps {
+  disabled: boolean
+  id: number
   header: string
   instruction: string
   children: React.ReactNode
 }
 
-const BasicModal = ({ header, instruction, children }: ModalProps) => {
-  const { isConnected } = useAccount()
+const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps) => {
+  const { isConnected, address } = useAccount()
+  const { addToast } = useContext(ToastContext)
+  const handleEntry = async () => {
+    const response: any = await fetch(`/api/quest/entry`, {
+      method: 'POST',
+      body: JSON.stringify({
+        questId: id,
+        wallet: address
+      })
+    }).then(res => res.json())
+
+    if (response?.code !== 200) {
+      addToast?.({
+        title: "ERROR",
+        description: response.message
+      })
+    }
+
+    if (response?.code === 200) {
+      addToast?.({
+        title: "SUCCESS",
+        description: "Exp Claimed"
+      })
+    }
+  }
 
   return (
     <Flex
@@ -50,7 +78,7 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
               padding: '20px 30px',
             }}
           >
-            <Button css={{ display: 'flex', justifyContent: 'center' }}>
+            <Button disabled={disabled} onClick={handleEntry} css={{ display: 'flex', justifyContent: 'center' }}>
               Verify and Claim
             </Button>
           </Flex>
@@ -80,9 +108,11 @@ const BasicModal = ({ header, instruction, children }: ModalProps) => {
   )
 }
 
-export const QuestRegisterUserName = () => {
+export const QuestRegisterUserName = ({ disabled } : { disabled: boolean }) => {
   return (
     <BasicModal
+      disabled={disabled}
+      id={1}
       header="Register a Username 🎁"
       instruction="Create an account with NFTEarth and register a username then post a screenshot into the NFTEarth community channel in Discord: Quest Proof"
     >
@@ -133,9 +163,11 @@ export const QuestRegisterUserName = () => {
   )
 }
 
-export const QuestFollowTwitter = () => {
+export const QuestFollowTwitter = ({ disabled } : { disabled: boolean }) => {
   return (
     <BasicModal
+      id={2}
+      disabled={disabled}
       header="Follow NFTEarth on Twitter 🎁"
       instruction="Connect your Twitter account with your NFTEarth user profile and follow NFTEarth on Twitter and earn XP."
     >
@@ -209,9 +241,11 @@ export const QuestFollowTwitter = () => {
   )
 }
 
-export const QuestRetweet = () => {
+export const QuestRetweet = ({ disabled } : { disabled: boolean }) => {
   return (
     <BasicModal
+      disabled={disabled}
+      id={3}
       header="Retweet a NFTEarth tweet 🎁"
       instruction="Retweet this tweet with the hashtag #NFTE to earn XP now!"
     >
@@ -276,9 +310,11 @@ export const QuestRetweet = () => {
   )
 }
 
-export const QuestListNFT = () => {
+export const QuestListNFT = ({ disabled } : { disabled: boolean }) => {
   return (
     <BasicModal
+      disabled={disabled}
+      id={5}
       header="List NFT for sale on NFTEarth 🎁"
       instruction="List Any NFT of any supported blockchain (Optimism, Arbitrum) for sale on NFTEarth."
     >
@@ -344,9 +380,11 @@ export const QuestListNFT = () => {
   )
 }
 
-export const QuestJoinDiscord = () => {
+export const QuestJoinDiscord = ({ disabled } : { disabled: boolean }) => {
   return (
     <BasicModal
+      disabled={disabled}
+      id={4}
       header="Join NFTEarth's Discord Community Channel 🎁"
       instruction="Join NFTEarth's Discord Community Server and earn XP!"
     >
@@ -424,9 +462,11 @@ export const QuestJoinDiscord = () => {
   )
 }
 
-export const QuestBuyNFTInNFTEOnAnyChain = () => {
+export const QuestBuyNFTInNFTEOnAnyChain = ({ disabled } : { disabled: boolean }) => {
   return (
     <BasicModal
+      disabled={disabled}
+      id={8}
       header="NFT Trader 🎁"
       instruction="Buy an NFT for a total volume of 0.1 ETH on NFTEarth on any supported blockchain to claim a reward."
     >
@@ -481,9 +521,11 @@ export const QuestBuyNFTInNFTEOnAnyChain = () => {
   )
 }
 
-export const QuestListNFTInNFTEOnAnyChain = () => {
+export const QuestListNFTInNFTEOnAnyChain = ({ disabled }: { disabled: boolean}) => {
   return (
     <BasicModal
+      id={7}
+      disabled={disabled}
       header="List NFT for sale on NFTEarth on NFTE currency🎁"
       instruction="List Any NFT of any supported blockchain (Optimism, Arbitrum) in $NFTE for sale on NFTEarth."
     >
@@ -550,9 +592,11 @@ export const QuestListNFTInNFTEOnAnyChain = () => {
   )
 }
 
-export const QuestMakeOfferForNFT = () => {
+export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean}) => {
   return (
     <BasicModal
+      disabled={disabled}
+      id={6}
       header="Make Offer for ANY NFT on NFTEarth🎁"
       instruction="Make offer on ANY NFT for ANY amount and currency on ANY chain on NFTEarth."
     >

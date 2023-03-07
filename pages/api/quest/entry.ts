@@ -125,16 +125,18 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   }
 
-  const accountData = await account.findOne({
+  let accountData = await account.findOne({
     wallet: wallet
   })
 
   if (!accountData) {
-    return res.json({
-      status: 'ERROR',
-      code: 403,
-      message: 'You have to validate your account before joining quest',
-      quest_id: questId
+    await account.insertOne({
+      wallet: wallet,
+      exp: 0
+    })
+
+    accountData = await account.findOne({
+      wallet: wallet
     })
   }
 
@@ -144,11 +146,11 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       {
         wallet: wallet
       },
-      accountData.discord_id && {
-        discord_id: accountData.discord_id,
+      accountData?.discord_id && {
+        discord_id: accountData?.discord_id,
       },
-      accountData.twitter_id && {
-        twitter_id: accountData.twitter_id
+      accountData?.twitter_id && {
+        twitter_id: accountData?.twitter_id
       }
     ].filter(Boolean)
   })
@@ -183,15 +185,15 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   let cachedEntry: QuestTask[] = await redis
-    .get(`entry:${questData.id}:${accountData.wallet}`)
+    .get(`entry:${questData.id}:${accountData?.wallet}`)
     .then((res: any) => JSON.parse(res))
     .catch(() => null) || []
 
   const tasks = await Promise.all((questData.tasks || []).map(async (r: QuestTask) => {
     if (r.type === 'connection') {
-      const isConnectedWallet = !!(r.name === 'wallet' && accountData.wallet)
-      const isConnectedDiscord = !!(r.name === 'discord' && accountData.discord_id)
-      const isConnectedTwitter = !!(r.name === 'twitter' && accountData.twitter_id)
+      const isConnectedWallet = !!(r.name === 'wallet' && accountData?.wallet)
+      const isConnectedDiscord = !!(r.name === 'discord' && accountData?.discord_id)
+      const isConnectedTwitter = !!(r.name === 'twitter' && accountData?.twitter_id)
 
       r.passes = isConnectedWallet || isConnectedDiscord || isConnectedTwitter
     }
@@ -203,7 +205,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         return r
       }
 
-      if (!accountData.discord_id) {
+      if (!accountData?.discord_id) {
         return r
       }
 
@@ -213,16 +215,16 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         return r
       }
 
-      if (!accountData.discord_access_token && accountData.discord_id) {
+      if (!accountData?.discord_access_token && accountData?.discord_id) {
         r.disconnected = true
         r.passes = false
 
         return r
       }
 
-      let member: any = await getMember(r.id, accountData.discord_access_token)
+      let member: any = await getMember(r.id, accountData?.discord_access_token)
       if (!member.user) {
-        const authData = await discordRefreshToken(accountData.discord_refresh_token)
+        const authData = await discordRefreshToken(accountData?.discord_refresh_token)
 
         if (authData.access_token) {
           await account.updateOne({
@@ -250,7 +252,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (r.type === 'twitter_follow') {
-      if (!accountData || !accountData.twitter_oauth_token) {
+      if (!accountData || !accountData?.twitter_oauth_token) {
         return r
       }
 
@@ -261,25 +263,25 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         return r
       }
 
-      if (r.user.replace('@', '').toLowerCase() === accountData.twitter_username.toLowerCase()) {
+      if (r.user.replace('@', '').toLowerCase() === accountData?.twitter_username.toLowerCase()) {
         r.passes = true
 
         return r
       }
 
-      if (!accountData.twitter_oauth_token && accountData.twitter_id) {
+      if (!accountData?.twitter_oauth_token && accountData?.twitter_id) {
         r.disconnected = true
         r.passes = false
         return r
       }
 
       const token = {
-        key: accountData.twitter_oauth_token,
-        secret: accountData.twitter_oauth_token_secret
+        key: accountData?.twitter_oauth_token,
+        secret: accountData?.twitter_oauth_token_secret
       }
 
       const getPage = async (nextToken: string) => {
-        const twitterFollowUrl = `${process.env.TWITTER_API_URL}/users/${accountData.twitter_id}/following?max_results=1000&user.fields=username${nextToken ? `&pagination_token=${nextToken}` : ''}`
+        const twitterFollowUrl = `${process.env.TWITTER_API_URL}/users/${accountData?.twitter_id}/following?max_results=1000&user.fields=username${nextToken ? `&pagination_token=${nextToken}` : ''}`
 
         const authHeader = oauth.toHeader(oauth.authorize({
           url: twitterFollowUrl,
@@ -344,7 +346,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     if (r.type === 'twitter_like_retweet' || r.type === 'twitter_like' || r.type === 'twitter_retweet') {
-      if (!accountData || !accountData.twitter_oauth_token) {
+      if (!accountData || !accountData?.twitter_oauth_token) {
         return r
       }
 
@@ -356,17 +358,17 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       }
 
       const token = {
-        key: accountData.twitter_oauth_token,
-        secret: accountData.twitter_oauth_token_secret
+        key: accountData?.twitter_oauth_token,
+        secret: accountData?.twitter_oauth_token_secret
       }
 
-      if (!accountData.twitter_oauth_token && accountData.twitter_id) {
+      if (!accountData?.twitter_oauth_token && accountData?.twitter_id) {
         r.disconnected = true
         r.passes = false
         return r
       }
 
-      const endpointURL = `${process.env.TWITTER_API_URL}/users/${accountData.twitter_id}/tweets?tweet.fields=referenced_tweets&max_results=100&exclude=replies&expansions=referenced_tweets.id`
+      const endpointURL = `${process.env.TWITTER_API_URL}/users/${accountData?.twitter_id}/tweets?tweet.fields=referenced_tweets&max_results=100&exclude=replies&expansions=referenced_tweets.id`
 
       const authHeader = oauth.toHeader(oauth.authorize({
         url: endpointURL,
@@ -522,19 +524,19 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
     return r
   }))
 
-  await redis.setex(`entry:${questData.id}:${accountData.wallet}`, 60, JSON.stringify(tasks.filter(f => f.passes)))
+  await redis.setex(`entry:${questData.id}:${accountData?.wallet}`, 60, JSON.stringify(tasks.filter(f => f.passes)))
 
   const status = (tasks.length === 0 || tasks.filter(f => !f.passes).length === 0) ? 'SUCCESS' : 'ERROR'
 
   if (status === 'SUCCESS') {
     await questEntry.insertOne({
-      account_id: accountData._id.toString(),
+      account_id: accountData?._id.toString(),
       quest_id: questData.id,
-      discord_id: accountData.discord_id,
-      discord_username: accountData.discord_username,
-      twitter_id: accountData.twitter_id,
-      twitter_username: accountData.twitter_username,
-      wallet: accountData.wallet,
+      discord_id: accountData?.discord_id,
+      discord_username: accountData?.discord_username,
+      twitter_id: accountData?.twitter_id,
+      twitter_username: accountData?.twitter_username,
+      wallet: accountData?.wallet,
       entry_role: (tasks.find(r => r.type === 'discord') as QuestDiscord)?.entryRole,
       status: 'complete'
     })

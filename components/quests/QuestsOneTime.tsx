@@ -3,7 +3,7 @@ import { Dispatch } from 'react'
 import { Quest } from './Quest'
 import quests from 'data/quests.json'
 import { useQuestEntries } from "hooks";
-import {QuestTask} from "../../pages/api/quest/entry";
+import {QuestTask} from "pages/api/quest/entry";
 
 type Props = {
   setOpen: Dispatch<React.SetStateAction<boolean>>
@@ -36,7 +36,7 @@ export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
             title={quest.title}
             description={quest.description}
             points={quest.exp}
-            locked={(entries || []).find((entry: any) => entry.quest_id === quest.id)}
+            locked={false}
             tasks={quest.tasks as QuestTask[]}
             setOpen={setOpen}
             setQuest={setQuest}

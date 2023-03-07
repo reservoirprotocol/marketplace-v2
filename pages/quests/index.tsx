@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useMounted } from 'hooks'
+import {useMounted, useQuestEntries} from 'hooks'
 import QuestsOneTime from 'components/quests/QuestsOneTime'
 import QuestSecion from 'components/quests/QuestsSection'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -24,25 +24,26 @@ const QuestsPage: NextPage = () => {
   const isMounted = useMounted()
   const [open, setOpen] = useState(false)
   const [quest, setQuest] = useState<number>(0)
+  const { data: entries } = useQuestEntries()
 
   const displayContent = (value: number) => {
     switch (value) {
       case 1:
-        return <QuestRegisterUserName />
+        return <QuestRegisterUserName disabled={(entries || []).find((q: any) => q.quest_id === 1)} />
       case 2:
-        return <QuestFollowTwitter />
+        return <QuestFollowTwitter disabled={(entries || []).find((q: any) => q.quest_id === 2)} />
       case 3:
-        return <QuestRetweet />
+        return <QuestRetweet disabled={(entries || []).find((q: any) => q.quest_id === 3)}/>
       case 4:
-        return <QuestJoinDiscord />
+        return <QuestJoinDiscord disabled={(entries || []).find((q: any) => q.quest_id === 4)}/>
       case 5:
-        return <QuestListNFT />
+        return <QuestListNFT disabled={(entries || []).find((q: any) => q.quest_id === 5)}/>
       case 6:
-        return <QuestMakeOfferForNFT />
+        return <QuestMakeOfferForNFT disabled={(entries || []).find((q: any) => q.quest_id === 6)}/>
       case 7:
-        return <QuestListNFTInNFTEOnAnyChain />
+        return <QuestListNFTInNFTEOnAnyChain disabled={(entries || []).find((q: any) => q.quest_id === 7)}/>
       case 8:
-        return <QuestBuyNFTInNFTEOnAnyChain />
+        return <QuestBuyNFTInNFTEOnAnyChain disabled={entries.find((q: any) => q.quest_id === 8)}/>
       default:
         return null
     }
