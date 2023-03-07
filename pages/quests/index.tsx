@@ -19,13 +19,15 @@ import {
   QuestListNFTInNFTEOnAnyChain,
   QuestMakeOfferForNFT,
 } from 'components/quests/templates'
+import {useAccount} from "wagmi";
 
 const QuestsPage: NextPage = () => {
   const isMounted = useMounted()
+  const { address } = useAccount()
   const [open, setOpen] = useState(false)
   const [quest, setQuest] = useState<number>(0)
   const { data: entries } = useQuestEntries()
-  const { data: profile } = useProfile();
+  const { data: profile } = useProfile(address);
 
   const displayContent = (value: number) => {
     switch (value) {
