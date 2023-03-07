@@ -122,7 +122,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     mutate,
     fetchNextPage,
     setSize,
-    resetCache,
     isFetchingInitialData,
     isFetchingPage,
     hasNextPage,
