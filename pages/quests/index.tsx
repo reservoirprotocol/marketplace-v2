@@ -18,6 +18,7 @@ import {
   QuestBuyNFTInNFTEOnAnyChain,
   QuestListNFTInNFTEOnAnyChain,
   QuestMakeOfferForNFT,
+  QuestLeaderboard,
 } from 'components/quests/templates'
 
 const QuestsPage: NextPage = () => {
@@ -45,6 +46,8 @@ const QuestsPage: NextPage = () => {
         return <QuestListNFTInNFTEOnAnyChain disabled={(entries || []).find((q: any) => q.quest_id === 7)}/>
       case 8:
         return <QuestBuyNFTInNFTEOnAnyChain disabled={entries.find((q: any) => q.quest_id === 8)}/>
+      case 9:
+        return <QuestLeaderboard disabled={entries.find((q: any) => q.quest_id === 9)}/>
       default:
         return null
     }

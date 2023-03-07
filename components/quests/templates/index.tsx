@@ -3,9 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import {useContext, useState} from "react";
-import {ToastContext} from "../../../context/ToastContextProvider";
-import LoadingSpinner from "../../common/LoadingSpinner";
+import { useContext, useState } from 'react'
+import { ToastContext } from '../../../context/ToastContextProvider'
+import LoadingSpinner from '../../common/LoadingSpinner'
 
 interface ModalProps {
   disabled: boolean
@@ -15,31 +15,37 @@ interface ModalProps {
   children: React.ReactNode
 }
 
-const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps) => {
+const BasicModal = ({
+  disabled,
+  id,
+  header,
+  instruction,
+  children,
+}: ModalProps) => {
   const { isConnected, address } = useAccount()
   const { addToast } = useContext(ToastContext)
-  const [ loading, setLoading ] = useState(false)
+  const [loading, setLoading] = useState(false)
   const handleEntry = async () => {
     setLoading(true)
     const response: any = await fetch(`/api/quest/entry`, {
       method: 'POST',
       body: JSON.stringify({
         questId: id,
-        wallet: address
-      })
-    }).then(res => res.json())
+        wallet: address,
+      }),
+    }).then((res) => res.json())
 
     if (response?.code !== 200) {
       addToast?.({
-        title: "ERROR",
-        description: response.message
+        title: 'ERROR',
+        description: response.message,
       })
     }
 
     if (response?.code === 200) {
       addToast?.({
-        title: "SUCCESS",
-        description: "Exp Claimed"
+        title: 'SUCCESS',
+        description: 'Exp Claimed',
       })
     }
     setLoading(false)
@@ -82,7 +88,11 @@ const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps)
               padding: '20px 30px',
             }}
           >
-            <Button disabled={disabled || loading} onClick={handleEntry} css={{ display: 'flex', justifyContent: 'center' }}>
+            <Button
+              disabled={disabled || loading}
+              onClick={handleEntry}
+              css={{ display: 'flex', justifyContent: 'center' }}
+            >
               {loading ? <LoadingSpinner /> : 'Verify and Claim'}
             </Button>
           </Flex>
@@ -112,7 +122,7 @@ const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps)
   )
 }
 
-export const QuestRegisterUserName = ({ disabled } : { disabled: boolean }) => {
+export const QuestRegisterUserName = ({ disabled }: { disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -167,7 +177,13 @@ export const QuestRegisterUserName = ({ disabled } : { disabled: boolean }) => {
   )
 }
 
-export const QuestFollowTwitter = ({ disabled, profile } : { disabled: boolean, profile: any }) => {
+export const QuestFollowTwitter = ({
+  disabled,
+  profile,
+}: {
+  disabled: boolean
+  profile: any
+}) => {
   return (
     <BasicModal
       id={2}
@@ -245,7 +261,13 @@ export const QuestFollowTwitter = ({ disabled, profile } : { disabled: boolean, 
   )
 }
 
-export const QuestRetweet = ({ disabled, profile } : { disabled: boolean, profile: any }) => {
+export const QuestRetweet = ({
+  disabled,
+  profile,
+}: {
+  disabled: boolean
+  profile: any
+}) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -314,7 +336,7 @@ export const QuestRetweet = ({ disabled, profile } : { disabled: boolean, profil
   )
 }
 
-export const QuestListNFT = ({ disabled } : { disabled: boolean }) => {
+export const QuestListNFT = ({ disabled }: { disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -384,7 +406,13 @@ export const QuestListNFT = ({ disabled } : { disabled: boolean }) => {
   )
 }
 
-export const QuestJoinDiscord = ({ disabled, profile } : { disabled: boolean, profile: any }) => {
+export const QuestJoinDiscord = ({
+  disabled,
+  profile,
+}: {
+  disabled: boolean
+  profile: any
+}) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -473,7 +501,11 @@ export const QuestJoinDiscord = ({ disabled, profile } : { disabled: boolean, pr
   )
 }
 
-export const QuestBuyNFTInNFTEOnAnyChain = ({ disabled } : { disabled: boolean }) => {
+export const QuestBuyNFTInNFTEOnAnyChain = ({
+  disabled,
+}: {
+  disabled: boolean
+}) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -532,7 +564,11 @@ export const QuestBuyNFTInNFTEOnAnyChain = ({ disabled } : { disabled: boolean }
   )
 }
 
-export const QuestListNFTInNFTEOnAnyChain = ({ disabled }: { disabled: boolean}) => {
+export const QuestListNFTInNFTEOnAnyChain = ({
+  disabled,
+}: {
+  disabled: boolean
+}) => {
   return (
     <BasicModal
       id={7}
@@ -603,7 +639,7 @@ export const QuestListNFTInNFTEOnAnyChain = ({ disabled }: { disabled: boolean})
   )
 }
 
-export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean}) => {
+export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean }) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -665,6 +701,95 @@ export const QuestMakeOfferForNFT = ({ disabled }: { disabled: boolean}) => {
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Verify and claim your XP by clicking the button below.
+            </Text>
+          </Flex>
+        </Flex>
+      </Box>
+    </BasicModal>
+  )
+}
+
+export const QuestLeaderboard = ({ disabled }: { disabled: boolean }) => {
+  return (
+    <BasicModal
+      disabled={disabled}
+      id={6}
+      header="Earn a place on the leaderboard🎁"
+      instruction="Make listings and offers to earn XP and appear on the leaderboard each day!"
+    >
+      <Box>
+        <Flex direction="column" css={{ padding: '$3', gap: '$4' }}>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px',
+            }}
+          >
+            <Text>Rewards</Text>
+            <Text style="h4" css={{ color: '$primary10' }}>
+              50 XP
+            </Text>
+          </Flex>
+          <Flex
+            direction="column"
+            css={{
+              background: '$gray4',
+              borderRadius: '$xl',
+              padding: '20px 30px',
+              gap: '$2',
+            }}
+          >
+            <Text css={{ color: '$gray11' }}>Instructions</Text>
+            <Text style={{ '@initial': 'h6', '@lg': 'h4' }}>
+              Step 1: Go to explore page and check out all NFT collections
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Go to the
+              <Link href="/explore">
+                <Text css={{ color: '$primary10' }}> Collections </Text>
+              </Link>
+              page, and view the different collections of NFTs on the
+              marketplace.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 2: Make a listing or offer for any NFT on sale
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Click on the NFTs you want to make an offer for and click "Make
+              Offer" to make an offer for the the NFT on the marketplace
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Go to the
+              <Link href="/portfolio">
+                <Text css={{ color: '$primary10' }}> My NFTs </Text>
+              </Link>
+              page, and then connect your wallet to view the NFTs you own.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 3: List any NFT for sale
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Click on the NFTs you want to trade and click List to sell it on
+              the NFT on the marketplace. You need to list Any NFT in any
+              currency to be eligible to claim the reward.
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 4: Earn your XP!
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Verify and claim your XP by clicking the button below, and check
+              if you appear on the leaderboard!
             </Text>
           </Flex>
         </Flex>
