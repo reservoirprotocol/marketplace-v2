@@ -7,7 +7,7 @@ import QuestSecion from 'components/quests/QuestsSection'
 import * as Dialog from '@radix-ui/react-dialog'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { AnimatedOverlay, AnimatedContent } from 'components/primitives/Dialog'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
 import {
   QuestRegisterUserName,
@@ -29,14 +29,6 @@ const QuestsPage: NextPage = () => {
   const [quest, setQuest] = useState<number>(0)
   const { data: entries } = useQuestEntries()
   const { data: profile } = useProfile(address);
-
-  useEffect(() => {
-    if (isMounted) {
-      setOpen(true)
-    } else {
-      setOpen(false)
-    }
-  }, [isMounted])
 
   const displayContent = (value: number) => {
     switch (value) {
@@ -133,39 +125,8 @@ const QuestsPage: NextPage = () => {
                         <FontAwesomeIcon icon={faClose} size="xl" />
                       </button>
                     </Dialog.Close>
-
-                    <Text
-                      style="h4"
-                      css={{
-                        lineHeight: 1.5,
-                        color: '$whiteA12',
-                        width: '100%',
-                        '@lg': { width: '50%' },
-                      }}
-                    >
-                      Thank you for participating in the first Quests on
-                      NFTEarth! 🙌
-                    </Text>
+                    <Box>{displayContent(quest)}</Box>
                   </Flex>
-                  <Box css={{ textAlign: 'center', marginTop: '50px' }}>
-                    <Text
-                      style="h5"
-                      css={{
-                        lineHeight: 2.5,
-                        color: '$whiteA12',
-                        width: '100%',
-                        textAlign: 'center',
-                        padding: '$3',
-                        marginBottom: 'auto',
-                      }}
-                    >
-                      We hope you enjoyed! More to come soon! P.S. Please be
-                      patient while Quest results are recorded and checked by
-                      the team: we are aiming for 24 hour distribution windows
-                      for all winners .. this takes a bit of time to verify
-                      everything... 🙏
-                    </Text>
-                  </Box>
                 </AnimatedContent>
               </Dialog.Portal>
             </Dialog.Root>

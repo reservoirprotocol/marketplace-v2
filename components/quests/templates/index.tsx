@@ -372,7 +372,7 @@ export const QuestListNFT = ({ id, disabled }: { id: number, disabled: boolean }
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Go to the
               <Link href="/portfolio">
-                <Text css={{ color: '$primary10' }}> My NFTs </Text>
+                <Text css={{ color: '$primary10' }}> Portfolio </Text>
               </Link>
               page, and then connect your wallet to view the NFTs you own.
             </Text>
@@ -609,7 +609,7 @@ export const QuestListNFTInNFTEOnAnyChain = ({
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Go to the
               <Link href="/portfolio">
-                <Text css={{ color: '$primary10' }}> My NFTs </Text>
+                <Text css={{ color: '$primary10' }}> Portfolio </Text>
               </Link>
               page, and then connect your wallet to view the NFTs you own.
             </Text>
@@ -764,7 +764,7 @@ export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boole
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Go to the
               <Link href="/portfolio">
-                <Text css={{ color: '$primary10' }}> My NFTs </Text>
+                <Text css={{ color: '$primary10' }}> Portfolio </Text>
               </Link>
               page, and then connect your wallet to view the NFTs you own.
             </Text>

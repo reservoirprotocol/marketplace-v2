@@ -37,8 +37,7 @@ export const Quest = ({
         height: '100%',
         padding: '20px 30px',
         border: '2px solid #6BE481',
-        background: '$gray6',
-        opacity: 0.4,
+        background: '$gray1',
       }}
     >
       {locked(number) ? (

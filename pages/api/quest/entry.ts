@@ -452,19 +452,27 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
 
       while (hasNextPage && !r.passes) {
         let result: any = await getListing(continuation)
+        let eligibleOrders: any = [];
         result.data.forEach((resp: any) => {
           if (resp && resp.value.data && resp.value.data.orders.length > 0) {
             r.passes = true;
 
             if (r.currency) {
-              const orders = resp.value.data.orders.filter((r: any) => r.price.currency.symbol === r.currency);
-              r.passes = orders.length >= (r.count || 1)
-              r.double_exp = orders.length >= (r.double_count || orders.length + 1)
+              const orders = resp.value.data.orders.filter((r: any) => {
+                return r.price.currency.symbol === r.currency
+              });
+              eligibleOrders = eligibleOrders.concat(orders)
             }
           } else {
             hasNextPage = false
           }
         })
+
+        if (r.currency) {
+          r.passes = eligibleOrders.length >= (r.count || 1)
+          r.double_exp = eligibleOrders.length >= (r.double_count || eligibleOrders.length + 1)
+        }
+
         if (!!result.continuation.find((c: string) => c !== null)) {
           continuation = result.continuation
         } else {
