@@ -60,7 +60,7 @@ const LaunchpadDeployPage = () => {
       name,
       symbol,
       "ipfs://",
-      "0xA0eF81115da438102B3c8afC3F66fcf9D757913E",
+      process.env.LAUNCHPAD_SIGNER_ADDRESS,
       +supply || 1,
       +maxPerWallet || +supply || 1,
       +reservedSupply || 0,
