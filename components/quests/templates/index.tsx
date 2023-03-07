@@ -755,7 +755,7 @@ export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boole
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Make a listing or offer for any NFT on sale
+              Step 2: Make offer for any NFT on sale
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Click on the NFTs you want to make an offer for and click "Make
