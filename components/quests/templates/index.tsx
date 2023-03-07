@@ -180,7 +180,7 @@ export const QuestFollowTwitter = ({
 }: {
   disabled: boolean
   profile: any
-}) => {
+}) => { 
   return (
     <BasicModal
       id={2}
