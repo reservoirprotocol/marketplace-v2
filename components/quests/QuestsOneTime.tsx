@@ -30,7 +30,7 @@ export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
       }}
     >
       {quests.map(quest => (
-        <Box>
+        <Box key={`quest-${quest.id}`}>
           <Quest
             key={`quest-${quest.id}`}
             title={quest.title}

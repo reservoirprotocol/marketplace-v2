@@ -430,18 +430,16 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         })
 
         const responses = await Promise.allSettled(promises)
-        let results: paths["/orders/asks/v4"]["get"]["responses"]["200"]["schema"]["orders"] = [];
         let newContinuation: any = [];
         responses.forEach((response, i) => {
           newContinuation[i] = null;
           if (response.status === 'fulfilled' && response.value.data) {
-            results = results?.concat(response.value.data.orders);
             newContinuation[i] = response.value.data.continuation;
           }
         })
 
         return {
-          data: results,
+          data: responses,
           continuation: newContinuation
         };
       }
@@ -450,19 +448,20 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       let continuation = new Array(supportedChains.length).fill(undefined);
 
       while (hasNextPage && !r.passes) {
-        let resp: any = await getListing(continuation)
-        if (resp && resp.data && resp.data.length > 0) {
-          r.passes = true;
+        let result: any = await getListing(continuation)
+        result.data.forEach((resp: any) => {
+          if (resp && resp.value.data && resp.value.data.orders.length > 0) {
+            r.passes = true;
 
-          if (r.currency) {
-            r.passes = !!resp.data.find((r: any) => r.price.currency.symbol === r.currency)
-          }
-
-          if (!!resp.continuation.find((c: string) => c !== null)) {
-            continuation = resp.continuation
+            if (r.currency) {
+              r.passes = resp.value.data.orders.map((r: any) => r.price.currency.symbol).includes(r.currency)
+            }
           } else {
             hasNextPage = false
           }
+        })
+        if (!!result.continuation.find((c: string) => c !== null)) {
+          continuation = result.continuation
         } else {
           hasNextPage = false
         }
@@ -474,7 +473,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         const buyQuery: paths["/users/activity/v5"]["get"]["parameters"]["query"] = {
           users: wallet,
           types: ["bid"],
-          limit: 1000
+          limit: 20
         }
 
         const promises: ReturnType<typeof fetcher>[] = []
@@ -513,17 +512,17 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       let continuation = new Array(supportedChains.length).fill(undefined);
 
       while (hasNextPage && !r.passes) {
-        let responses: any = await getBuy(continuation)
-        responses.forEach((resp: any, i: number) => {
+        let result: any = await getBuy(continuation)
+        result.data.forEach((resp: any) => {
           if (resp && resp.value.data && resp.value.data.activities.length > 0) {
-            r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange').length > 0;
+            r.passes = resp.value.data.activities.filter((r: any) => r.order.source.domain === 'nftearth.exchange').length > 0;
           } else {
             hasNextPage = false
           }
         })
 
-        if (!!responses.continuation.find((c: string) => c !== null)) {
-          continuation = responses.continuation
+        if (!!result.continuation.find((c: string) => c !== null)) {
+          continuation = result.continuation
         } else {
           hasNextPage = false
         }
@@ -535,7 +534,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
         const buyQuery: paths["/users/activity/v5"]["get"]["parameters"]["query"] = {
           users: wallet,
           types: ["sale"],
-          limit: 1000
+          limit: 20
         }
 
         const promises: ReturnType<typeof fetcher>[] = []
@@ -573,17 +572,28 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       let hasNextPage = true
       let continuation = new Array(supportedChains.length).fill(undefined);
 
+      let amount = 0;
+
       while (hasNextPage && !r.passes) {
-        let responses: any = await getBuy(continuation)
-        responses.data.forEach((resp: any, i: number) => {
+        let result: any = await getBuy(continuation)
+        result.data.forEach((resp: any, i: number) => {
           if (resp && resp.value.data && resp.value.data.activities.length > 0) {
-            r.passes = resp.data.filter((r: any) => r.order.source.domain === 'nftearth.exchange' && r.toAddress.toLowerCase() === wallet.toLowerCase()).length > 0;
+            const entryResult = resp.value.data.activities.filter((r: any) => r.order.source.domain === 'nftearth.exchange' && r.toAddress.toLowerCase() === wallet.toLowerCase());
+            r.passes = entryResult.length > 0
+
+            if (r.amount) {
+              amount += entryResult.reduce((a: number, b: any) => {
+                a += parseInt(b.price)
+                return a;
+              }, 0)
+              r.passes = amount >= parseInt(r.amount)
+            }
           } else {
             hasNextPage = false
           }
         })
-        if (!!responses.continuation.find((c: string) => c !== null)) {
-          continuation = responses.continuation
+        if (!!result.continuation.find((c: string) => c !== null)) {
+          continuation = result.continuation
         } else {
           hasNextPage = false
         }

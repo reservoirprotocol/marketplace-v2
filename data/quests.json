@@ -104,7 +104,7 @@
     "tasks": [
       {
         "type": "buy",
-        "amount": "0.1"
+        "amount": 0.1
       }
     ],
     "exp": 200
