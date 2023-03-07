@@ -28,12 +28,49 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   }
   const [data, setData] = useState(null)
   console.log(data)
+    //@ts-ignore
+  const countObjectsByKey = (objectsArray, key) => {
+    const countMap = {}
+  //@ts-ignore
+    objectsArray.forEach((obj) => {
+      const keyValue = obj[key]
+      if (keyValue in countMap) {
+          //@ts-ignore
+        countMap[keyValue]++
+      } else {
+          //@ts-ignore
+        countMap[keyValue] = 1
+      }
+    })
+
+    return countMap
+  }
+  //@ts-ignore
+  const sortObjectByKeyValuePairs = (object) => {
+    const entries = Object.entries(object)
+      //@ts-ignore
+    const sortedEntries = entries.sort((a, b) => b[1] - a[1])
+    const sortedObjectsArray = sortedEntries.map(([key, value], idx) => ({
+      rank: idx + 1,
+      name: key,
+        //@ts-ignore
+      points: value * 50,
+        //@ts-ignore
+      cumulative: value * 50,
+    }))
+    return sortedObjectsArray
+  }
+
+  console.log(data)
   useEffect(() => {
     const getData = async () => {
       const res = await fetcher(
         `https://indexer.nftearth.exchange/orders/asks/v4`
       )
-      setData(res?.data)
+      const result = countObjectsByKey(res.data.orders, 'maker')
+      const finalRes = sortObjectByKeyValuePairs(result)
+  //@ts-ignore
+      setData(finalRes)
     }
     getData()
     console.log(data)
