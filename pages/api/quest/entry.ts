@@ -524,7 +524,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
           } else {
             hasNextPage = false
           }
-        } else {:
+        } else {
           hasNextPage = false
         }
       }

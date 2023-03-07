@@ -13,16 +13,15 @@ import {
 import Link from 'next/link'
 import {  faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useENSResolver } from 'hooks'
+import { useENSResolver, useProfile } from 'hooks'
 import {formatBN, formatNumber} from "../../utils/numbers";
-import useQuestExp from "../../hooks/useExp";
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
   const { data: opBalance } = useBalance({ chainId: 10, address })
   const { data: arbBalance } = useBalance({ chainId: 42161, address })
   const { disconnect } = useDisconnect()
-  const { data: exp } = useQuestExp();
+  const { data } = useProfile(address);
   const {
     name: ensName,
     avatar: ensAvatar,
@@ -67,7 +66,7 @@ export const ProfileDropdown: FC = () => {
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
           <span>Experience</span>
-          <span>{formatNumber(exp)}</span>
+          <span>{formatNumber(data?.exp)}</span>
         </Flex>
       </DropdownMenuItem>
       <DropdownMenuItem css={{ cursor: 'text' }}>

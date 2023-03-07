@@ -84,6 +84,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
         discord_id: data.id,
         discord_username: `${data.username}#${data.discriminator}`,
         discord_avatar: `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.jpeg`,
+        discord_banner: `https://cdn.discordapp.com/banners/${data.id}/${data.banner}.jpeg`,
         discord_code: code,
         discord_access_token: authData.access_token,
         discord_refresh_token: authData.refresh_token
@@ -91,7 +92,7 @@ const handleDiscordVerify = async (req: NextApiRequest, res: NextApiResponse) =>
     });
   }
 
-  return res.redirect('/quests');
+  return res.redirect(`/profile/${wallet}`);
 }
 
 export default handleDiscordVerify;

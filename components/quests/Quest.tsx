@@ -7,7 +7,7 @@ type Props = {
   title: string
   description: string
   points: number
-  locked: boolean
+  locked: (idx: number) => boolean
   tasks: QuestTask[]
   setOpen: Dispatch<React.SetStateAction<boolean>>
   setQuest: Dispatch<React.SetStateAction<number>>
@@ -40,7 +40,7 @@ export const Quest = ({
         background: '$gray1',
       }}
     >
-      {locked ? (
+      {locked(number) ? (
         <Box css={{ position: 'relative' }}>
           <Box
             css={{
@@ -124,7 +124,7 @@ export const Quest = ({
             }}
           >
             <QuestXPButton>{points} XP</QuestXPButton>
-            <QuestJoinButton onClick={displayQuest} disabled={locked}>
+            <QuestJoinButton onClick={displayQuest} disabled={locked(number)}>
               <Text
                 css={{
                   color: 'black',

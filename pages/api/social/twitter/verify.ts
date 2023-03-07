@@ -7,9 +7,11 @@ const account = db.collection('account')
 export const accessTokenURL = 'https://api.twitter.com/oauth/access_token'
 
 const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { oauth_verifier, oauth_token, state: wallet } = req.query
+  const { oauth_verifier, oauth_token, state: stateWallet } = req.query
+  const { wallet: cookieWallet } = req.cookies
+  const wallet = cookieWallet || stateWallet;
 
-  if (wallet) {
+  if (!wallet) {
     return res.json({
       status: 'ERROR',
       code: 408,
@@ -69,13 +71,14 @@ const handleTwitterVerify = async (req: NextApiRequest, res: NextApiResponse) =>
         twitter_id: data.user_id,
         twitter_username: data.screen_name,
         twitter_avatar: data.profile_image_url_https,
+        // twitter_banner: data.profile_image_url_https,
         twitter_oauth_token: data.oauth_token,
         twitter_oauth_token_secret: data.oauth_token_secret,
       }
     })
   }
 
-  return res.redirect('/quests')
+  return res.redirect(`/profile/${wallet}`)
 }
 
 export default handleTwitterVerify

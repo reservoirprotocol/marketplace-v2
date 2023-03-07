@@ -29,7 +29,7 @@ const handleTwitter = async (req: NextApiRequest, res: NextApiResponse) => {
       headers: {
         Authorization: authHeader["Authorization"]
       },
-      body: `oauth_callback=${process.env.NEXT_PUBLIC_HOST_URL}/api/twitter/verify&state=${wallet}`
+      body: `oauth_callback=${encodeURIComponent(`${process.env.NEXT_PUBLIC_HOST_URL}/api/twitter/verify?state=${wallet}`)}&state=${wallet}`
     }).then(async res => {
       const text = await res.text()
       return qs.parse(text)
@@ -40,6 +40,7 @@ const handleTwitter = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const oAuthRequestToken = await requestToken().catch(e => console.error(e.message))
+  res.setHeader('set-cookie', [`wallet=${wallet}`])
   return res.redirect(`${authorizeURL}?oauth_token=${oAuthRequestToken?.oauth_token}`)
 }
 

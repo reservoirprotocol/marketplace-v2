@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
-import {useMounted, useQuestEntries} from 'hooks'
+import {useMounted, useProfile, useQuestEntries} from 'hooks'
 import QuestsOneTime from 'components/quests/QuestsOneTime'
 import QuestSecion from 'components/quests/QuestsSection'
 import * as Dialog from '@radix-ui/react-dialog'
@@ -25,17 +25,18 @@ const QuestsPage: NextPage = () => {
   const [open, setOpen] = useState(false)
   const [quest, setQuest] = useState<number>(0)
   const { data: entries } = useQuestEntries()
+  const { data: profile } = useProfile();
 
   const displayContent = (value: number) => {
     switch (value) {
       case 1:
         return <QuestRegisterUserName disabled={(entries || []).find((q: any) => q.quest_id === 1)} />
       case 2:
-        return <QuestFollowTwitter disabled={(entries || []).find((q: any) => q.quest_id === 2)} />
+        return <QuestFollowTwitter profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 2)} />
       case 3:
-        return <QuestRetweet disabled={(entries || []).find((q: any) => q.quest_id === 3)}/>
+        return <QuestRetweet profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 3)}/>
       case 4:
-        return <QuestJoinDiscord disabled={(entries || []).find((q: any) => q.quest_id === 4)}/>
+        return <QuestJoinDiscord profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 4)}/>
       case 5:
         return <QuestListNFT disabled={(entries || []).find((q: any) => q.quest_id === 5)}/>
       case 6:

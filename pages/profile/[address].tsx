@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box, Grid } from '../../components/primitives'
+import {Text, Flex, Box, Grid, Button} from 'components/primitives'
 import { paths } from '@nftearth/reservoir-sdk'
 import Layout from 'components/Layout'
 import fetcher, { basicFetcher } from 'utils/fetcher'
@@ -15,17 +15,17 @@ import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faTwitter, faDiscord } from "@fortawesome/free-brands-svg-icons";
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
-  useCollectionActivity,
   useDynamicTokens,
   useUserCollections,
   useUserTokens,
 } from '@nftearth/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
 import { TokenFilters } from 'components/common/TokenFilters'
-import { useMounted, useMarketplaceChain } from '../../hooks'
+import {useMounted, useMarketplaceChain, useProfile} from 'hooks'
 import { FilterButton } from 'components/common/FilterButton'
 import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
@@ -38,8 +38,10 @@ import { useENSResolver } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
-import { ActivityTypes } from '../../types/reservoir'
-import ChainToggle from '../../components/home/ChainToggle'
+import { ActivityTypes } from 'types/reservoir'
+import ChainToggle from 'components/home/ChainToggle'
+import {useAccount} from "wagmi";
+import Link from "next/link";
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -49,7 +51,11 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
     name: resolvedEnsName,
     shortAddress,
   } = useENSResolver(address)
+  const { data: profile } = useProfile(address)
+  const { address: myAddress } = useAccount()
   ensName = resolvedEnsName ? resolvedEnsName : ensName
+  const avatar = profile?.twitter_avatar || profile?.discord_avatar || ensAvatar
+  const banner = profile?.twitter_banner || profile?.discord_banner
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
@@ -127,17 +133,20 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
           pt: '$5',
           pb: 0,
           backgroundColor: 'rgb(243, 234, 0)',
+          ...(banner ? {
+            backgroundImage: `url(${banner}?size=1024)`,
+            backgroundSize: 'cover'
+          } : {}),
           height: '225px',
           '@sm': {
             px: '$5',
           },
         }}
       >
-        <Flex css={{}}> </Flex>
         <Flex justify="between">
           <Flex direction="column">
-            {ensAvatar ? (
-              <Avatar size="xxxl" corners="rounded" src={ensAvatar} />
+            {avatar ? (
+              <Avatar size="xxxl" corners="rounded" src={avatar} />
             ) : (
               <Jazzicon
                 diameter={240}
@@ -160,6 +169,28 @@ const ProfilePage: NextPage<Props> = ({ address, ssr, ensName }) => {
               <Flex align="center">
                 <ChainToggle compact />
               </Flex>
+            </Flex>
+          </Flex>
+          <Flex align="end" justify="end" direction="column" css={{ gap: 24 }}>
+            <Flex css={{ gap: 24 }}>
+              {profile?.twitter_id && (
+                <Link href={`https://twitter.com/${profile?.twitter_username}`}>
+                  <FontAwesomeIcon icon={faTwitter} size="2xl" />
+                </Link>
+              )}
+              {profile?.discord_id && (
+                <Link href={`https://discord.com/users/${profile?.discord_id}`}>
+                  <FontAwesomeIcon icon={faDiscord} size="2xl" />
+                </Link>
+              )}
+            </Flex>
+            <Flex css={{ gap: 24 }}>
+              {(address === myAddress) && (
+                <Button as="a" color="ghost" href={`/api/social/twitter?wallet=${myAddress}`} size="small">{!profile?.twitter_id ? 'Connect Twitter' : 'Re-Connect Twitter'}</Button>
+              )}
+              {(address === myAddress) && (
+                <Button as="a" color="ghost" href={`/api/social/discord?wallet=${myAddress}`} size="small">{!profile?.discord_id ? 'Connect Discord' : 'Re-Connect Discord'}</Button>
+              )}
             </Flex>
           </Flex>
         </Flex>

@@ -13,9 +13,10 @@ export default function useQuestEntries() {
       return fetch(url).then((response) => response.json())
     },
     {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      revalidateOnReconnect: false,
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
+      revalidateOnReconnect: true,
+      refreshInterval: 3_000
     }
   )
 

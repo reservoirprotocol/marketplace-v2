@@ -3,8 +3,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {ToastContext} from "../../../context/ToastContextProvider";
+import LoadingSpinner from "../../common/LoadingSpinner";
 
 interface ModalProps {
   disabled: boolean
@@ -17,7 +18,9 @@ interface ModalProps {
 const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps) => {
   const { isConnected, address } = useAccount()
   const { addToast } = useContext(ToastContext)
+  const [ loading, setLoading ] = useState(false)
   const handleEntry = async () => {
+    setLoading(true)
     const response: any = await fetch(`/api/quest/entry`, {
       method: 'POST',
       body: JSON.stringify({
@@ -39,6 +42,7 @@ const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps)
         description: "Exp Claimed"
       })
     }
+    setLoading(false)
   }
 
   return (
@@ -78,8 +82,8 @@ const BasicModal = ({ disabled, id, header, instruction, children }: ModalProps)
               padding: '20px 30px',
             }}
           >
-            <Button disabled={disabled} onClick={handleEntry} css={{ display: 'flex', justifyContent: 'center' }}>
-              Verify and Claim
+            <Button disabled={disabled || loading} onClick={handleEntry} css={{ display: 'flex', justifyContent: 'center' }}>
+              {loading ? <LoadingSpinner /> : 'Verify and Claim'}
             </Button>
           </Flex>
         ) : (
@@ -163,7 +167,7 @@ export const QuestRegisterUserName = ({ disabled } : { disabled: boolean }) => {
   )
 }
 
-export const QuestFollowTwitter = ({ disabled } : { disabled: boolean }) => {
+export const QuestFollowTwitter = ({ disabled, profile } : { disabled: boolean, profile: any }) => {
   return (
     <BasicModal
       id={2}
@@ -241,7 +245,7 @@ export const QuestFollowTwitter = ({ disabled } : { disabled: boolean }) => {
   )
 }
 
-export const QuestRetweet = ({ disabled } : { disabled: boolean }) => {
+export const QuestRetweet = ({ disabled, profile } : { disabled: boolean, profile: any }) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -380,7 +384,7 @@ export const QuestListNFT = ({ disabled } : { disabled: boolean }) => {
   )
 }
 
-export const QuestJoinDiscord = ({ disabled } : { disabled: boolean }) => {
+export const QuestJoinDiscord = ({ disabled, profile } : { disabled: boolean, profile: any }) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -412,9 +416,16 @@ export const QuestJoinDiscord = ({ disabled } : { disabled: boolean }) => {
               gap: '$2',
             }}
           >
+            <Text style={{ '@initial': 'h6', '@lg': 'h4' }}>
+              Step 1: Link a Discord account to your NFTEarth user profile
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              Head to the profile page on NFTEarth and link your Discord account
+              to your NFTEarth user profile.
+            </Text>
             <Text css={{ color: '$gray11' }}>Instructions</Text>
             <Text style={{ '@initial': 'h6', '@lg': 'h4' }}>
-              Step 1: Join us on Discord
+              Step 2: Join us on Discord
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Join.
@@ -427,7 +438,7 @@ export const QuestJoinDiscord = ({ disabled } : { disabled: boolean }) => {
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Verify your account
+              Step 3: Verify your account
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Verify your account on ✅╎join-our-guild channel on our Discord

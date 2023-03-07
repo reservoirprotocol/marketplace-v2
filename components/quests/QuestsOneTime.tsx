@@ -36,7 +36,7 @@ export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
             title={quest.title}
             description={quest.description}
             points={quest.exp}
-            locked={false}
+            locked={(idx) => idx - 1 > (entries || []).length}
             tasks={quest.tasks as QuestTask[]}
             setOpen={setOpen}
             setQuest={setQuest}
