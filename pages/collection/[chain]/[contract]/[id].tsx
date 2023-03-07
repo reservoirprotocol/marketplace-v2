@@ -323,14 +323,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     if (ratelimit) {
                       addToast?.({
                         title: 'Refresh token failed',
-                        description: `Collection was recently refreshed, next available refresh in ${timeTill(
+                        description: `This token was recently refreshed. The next available refresh is in ${timeTill(
                           ratelimit
-                        )} hours`,
+                        )} hours.`,
                       })
                     } else {
                       addToast?.({
                         title: 'Refresh token failed',
-                        description: `Collection was recently refreshed, please try again later.`,
+                        description: `This token was recently refreshed. Please try again later.`,
                       })
                     }
                     setIsRefreshing(false)
