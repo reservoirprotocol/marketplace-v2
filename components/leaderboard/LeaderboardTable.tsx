@@ -29,7 +29,7 @@ import { NAVBAR_HEIGHT } from '../navbar'
 import { ItemIndicator } from '@radix-ui/react-dropdown-menu'
 
 type Props = {
-  data: User[]
+  data: any
 }
 
 type User = {
