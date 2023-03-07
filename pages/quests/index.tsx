@@ -33,23 +33,23 @@ const QuestsPage: NextPage = () => {
   const displayContent = (value: number) => {
     switch (value) {
       case 1:
-        return <QuestRegisterUserName disabled={(entries || []).find((q: any) => q.quest_id === 1)} />
+        return <QuestRegisterUserName id={1} disabled={(entries || []).find((q: any) => q.quest_id === 1)} />
       case 2:
-        return <QuestFollowTwitter profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 2)} />
+        return <QuestFollowTwitter id={2} profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 2)} />
       case 3:
-        return <QuestRetweet profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 3)}/>
+        return <QuestRetweet id={3} profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 3)}/>
       case 4:
-        return <QuestJoinDiscord profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 4)}/>
+        return <QuestJoinDiscord id={4} profile={profile} disabled={(entries || []).find((q: any) => q.quest_id === 4)}/>
       case 5:
-        return <QuestListNFT disabled={(entries || []).find((q: any) => q.quest_id === 5)}/>
+        return <QuestListNFT id={5} disabled={(entries || []).find((q: any) => q.quest_id === 5)}/>
       case 6:
-        return <QuestMakeOfferForNFT disabled={(entries || []).find((q: any) => q.quest_id === 6)}/>
+        return <QuestMakeOfferForNFT id={6} disabled={(entries || []).find((q: any) => q.quest_id === 6)}/>
       case 7:
-        return <QuestListNFTInNFTEOnAnyChain disabled={(entries || []).find((q: any) => q.quest_id === 7)}/>
+        return <QuestListNFTInNFTEOnAnyChain id={7} disabled={(entries || []).find((q: any) => q.quest_id === 7)}/>
       case 8:
-        return <QuestBuyNFTInNFTEOnAnyChain disabled={(entries || []).find((q: any) => q.quest_id === 8)}/>
+        return <QuestBuyNFTInNFTEOnAnyChain id={8} disabled={(entries || []).find((q: any) => q.quest_id === 8)}/>
       case 9:
-        return <QuestLeaderboard disabled={(entries || []).find((q: any) => q.quest_id === 9)}/>
+        return <QuestLeaderboard id={9} disabled={(entries || []).find((q: any) => q.quest_id === 9)}/>
       default:
         return null
     }
