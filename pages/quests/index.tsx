@@ -47,11 +47,9 @@ const QuestsPage: NextPage = () => {
       case 7:
         return <QuestListNFTInNFTEOnAnyChain disabled={(entries || []).find((q: any) => q.quest_id === 7)}/>
       case 8:
-        // return <QuestBuyNFTInNFTEOnAnyChain disabled={entries.find((q: any) => q.quest_id === 8)}/>
-        return <QuestBuyNFTInNFTEOnAnyChain disabled={false}/>
+        return <QuestBuyNFTInNFTEOnAnyChain disabled={(entries || []).find((q: any) => q.quest_id === 8)}/>
       case 9:
-        // return <QuestLeaderboard disabled={entries.find((q: any) => q.quest_id === 9)}/>
-        return <QuestLeaderboard disabled={false}/>
+        return <QuestLeaderboard disabled={(entries || []).find((q: any) => q.quest_id === 9)}/>
       default:
         return null
     }
