@@ -110,6 +110,19 @@
       }
     ],
     "exp": 200
+  },
+  {
+    "id": 9,
+    "title": "Appear on the leaderboard!",
+    "description": "Earn a place on the leaderboard by earing XP through every listing and offer on NFTEarth",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "buy",
+        "amount": 0.1
+      }
+    ],
+    "exp": 50
   }
 ]
 
