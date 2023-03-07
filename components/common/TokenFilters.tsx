@@ -1,14 +1,14 @@
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import * as Collapsible from '@radix-ui/react-collapsible'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import { NAVBAR_HEIGHT } from 'components/navbar'
 import { Flex, Text } from 'components/primitives'
-import { CollapsibleContent } from 'components/primitives/Collapsible'
-import Image from 'next/image'
 import { Dispatch, FC, SetStateAction } from 'react'
+import * as Collapsible from '@radix-ui/react-collapsible'
+import { CollapsibleContent } from 'components/primitives/Collapsible'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import Image from 'next/image'
+import { NAVBAR_HEIGHT } from 'components/navbar'
+import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import LoadingSpinner from './LoadingSpinner'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 type Collections =
   | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
