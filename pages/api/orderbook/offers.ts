@@ -25,7 +25,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const chain = supportedChains.find(c => c.id === chainId)
 
   const accountData = await account.findOne({
-    wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
+    wallet: {'$regex' : `^${parameters.offerer}$`, '$options' : 'i'}
   }).catch(() => null)
 
   const isListing = parameters.kind === 'token-list'
@@ -63,7 +63,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
     await account.updateOne({
-      wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
+      wallet: {'$regex' : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
         exp: medianExpReward
