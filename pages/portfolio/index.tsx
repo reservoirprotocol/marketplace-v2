@@ -55,7 +55,7 @@ const IndexPage: NextPage = () => {
         direction="column"
         css={{
           px: '$4',
-          py: '$5',
+          py: 40,
           '@sm': {
             px: '$5',
           },

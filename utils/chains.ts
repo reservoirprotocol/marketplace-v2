@@ -1,4 +1,3 @@
-import { constants } from 'ethers'
 import { goerli, mainnet, polygon } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing

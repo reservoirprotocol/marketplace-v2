@@ -1,6 +1,6 @@
 import { FC } from 'react'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import { ToggleGroup, ToggleGroupItem, Tooltip, Text, Box } from '../primitives'
+import { ToggleGroup, ToggleGroupItem, Box, Text } from '../primitives'
 import supportedChains from 'utils/chains'
 import { useContext } from 'react'
 import { ChainContext } from 'context/ChainContextProvider'
@@ -55,7 +55,9 @@ const ChainToggle: FC<Props> = ({}) => {
                     p: '$2',
                   }}
                 >
-                  {chainOption?.name}
+                  <Text style="body2" as="p">
+                    {chainOption?.name}
+                  </Text>
                 </Box>
               </Box>
             </TooltipPrimitive.Content>
