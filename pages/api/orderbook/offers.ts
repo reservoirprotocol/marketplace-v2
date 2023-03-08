@@ -60,11 +60,13 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
     const doubleExp = '0xb261104a83887ae92392fb5ce5899fcfe5481456' === erc20[0]?.token?.toLowerCase()
-
+    const reward = medianExpReward * (doubleExp ? 2 : 1)
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
+        listingExp: isListing ? reward : 0,
+        offerExp: !isListing ? reward : 0,
         exp: medianExpReward * (doubleExp ? 2 : 1)
       }
     })
