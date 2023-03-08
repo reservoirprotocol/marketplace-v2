@@ -60,7 +60,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     //
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
-    const doubleExp = '0xb261104a83887ae92392fb5ce5899fcfe5481456' === payment[0]?.token?.toLowerCase()
+    const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
     const reward = medianExpReward * (doubleExp ? 2 : 1)
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
