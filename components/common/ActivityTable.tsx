@@ -154,6 +154,19 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   ) as string
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')
+  let attributeDescription = ''
+
+  if (activityDescription === 'Offer') {
+    /* @ts-ignore */
+    if (activity.order?.criteria?.kind === 'collection') {
+      activityDescription = 'Collection Offer'
+      /* @ts-ignore */
+    } else if (activity.order?.criteria?.kind === 'attribute') {
+      activityDescription = 'Attribute Offer'
+      /* @ts-ignore */
+      attributeDescription = `${activity.order?.criteria?.data?.attribute?.key}: ${activity.order?.criteria?.data.attribute.value}`
+    }
+  }
 
   const { displayName: toDisplayName } = useENSResolver(activity?.toAddress)
   const { displayName: fromDisplayName } = useENSResolver(activity?.fromAddress)
@@ -228,11 +241,19 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                       height={48}
                     />
                   )}
-                  <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
-                    {activity.token?.tokenName ||
-                      activity.token?.tokenId ||
-                      activity.collection?.collectionName}
-                  </Text>
+                  <Flex align="start" direction="column" css={{ ml: '$2' }}>
+                    <Text ellipsify css={{ fontSize: '14px' }}>
+                      {activity.token?.tokenName ||
+                        activity.token?.tokenId ||
+                        activity.collection?.collectionName}
+                    </Text>
+                    <Text
+                      ellipsify
+                      css={{ fontSize: '12px', color: '$gray11' }}
+                    >
+                      {attributeDescription}
+                    </Text>
+                  </Flex>
                 </Flex>
               </Link>
               {activity.price &&
@@ -342,11 +363,21 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 height={48}
               />
             )}
-            <Text ellipsify css={{ ml: '$2', fontSize: '14px' }}>
-              {activity.token?.tokenName ||
-                activity.token?.tokenId ||
-                activity.collection?.collectionName}
-            </Text>
+            <Flex
+              align="start"
+              direction="column"
+              css={{ ml: '$2' }}
+              style={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}
+            >
+              <Text ellipsify css={{ fontSize: '14px' }}>
+                {activity.token?.tokenName ||
+                  activity.token?.tokenId ||
+                  activity.collection?.collectionName}
+              </Text>
+              <Text ellipsify css={{ fontSize: '12px', color: '$gray11' }}>
+                {attributeDescription}
+              </Text>
+            </Flex>
           </Flex>
         </Link>
       </TableCell>
