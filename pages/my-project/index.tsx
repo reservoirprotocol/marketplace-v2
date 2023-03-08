@@ -26,7 +26,7 @@ const MyProjectPage: NextPage = () => {
   } = useLaunchpads(
     marketplaceChain,
     {
-      creator: address,
+      creator: address || '',
       limit: 20,
     },
   )
