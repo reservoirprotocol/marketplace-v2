@@ -1,9 +1,10 @@
 import {NextApiRequest, NextApiResponse} from "next";
+import {ethers} from "ethers";
 import db from "lib/db";
 import {paths} from "@nftearth/reservoir-sdk";
 import fetcher from "utils/fetcher";
 import supportedChains from "utils/chains";
-import {ethers} from "ethers";
+import {ItemType, Orders} from "types/nftearth";
 
 const NFTItem = [ItemType.ERC721, ItemType.ERC1155];
 const medianExpReward = 50

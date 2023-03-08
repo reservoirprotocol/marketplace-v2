@@ -1,10 +1,10 @@
-enum OrderType {
+export enum OrderType {
   FULL_OPEN,
   PARTIAL_OPEN,
   FULL_RESTRICTED,
   PARTIAL_RESTRICTED,
 }
-enum ItemType {
+export enum ItemType {
   NATIVE,
   ERC20,
   ERC721,
@@ -50,7 +50,7 @@ type CollectionCriteria = {
 type Criteria = {
   collection: CollectionCriteria
 }
-type Orders = {
+export type Orders = {
   parameters: OrderComponents
   chainId: number
   signature: string
