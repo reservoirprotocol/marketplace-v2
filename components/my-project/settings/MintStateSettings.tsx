@@ -113,6 +113,9 @@ const MintStateSettings:FC<Props> = ({ address, contractData }) => {
     try {
       if (marketplaceChain.id !== activeChain?.id) {
         await switchNetworkAsync?.();
+        if (activeChain?.id !== marketplaceChain.id) {
+          return
+        }
       }
 
       const newPresalePrice = ethers.utils.parseEther(presaleMintPrice)

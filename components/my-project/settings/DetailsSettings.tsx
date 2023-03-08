@@ -178,8 +178,8 @@ const DetailsSettings:FC<Props> = ({ launchpad }) => {
           allowlists: launchpad.allowlists || [],
           verified: true,
           metadata: {
-            imageUrl: collectionImage,
-            bannerImageUrl: coverImage,
+            imageUrl: collectionImage || null,
+            bannerImageUrl: coverImage || null,
             discordUrl: discord,
             description: description,
             externalUrl: websiteLink,

@@ -97,6 +97,10 @@ const LaunchpadDeployPage = () => {
       if (activeChain?.id !== marketChainId) {
         setStep(2);
         await switchNetworkAsync?.();
+        if (activeChain?.id !== marketChainId) {
+          setStep(0)
+          return
+        }
       }
 
       setStep(3);
