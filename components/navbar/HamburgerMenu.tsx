@@ -20,11 +20,13 @@ import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useENSResolver } from 'hooks'
+import { useENSResolver, useProfile } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
+import { formatNumber } from "../../utils/numbers";
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
+  const { data } = useProfile(address);
   const { data: balance } = useBalance({ address })
   const {
     avatar: ensAvatar,
@@ -211,6 +213,24 @@ const HamburgerMenu = () => {
                 Launch
               </Text>
             </Link>
+            <Flex
+              css={{
+                justifyContent: 'space-between',
+                borderBottom: '1px solid $gray4',
+                alignItems: 'center'
+              }}
+            >
+              <Text
+                style="subtitle1"
+                css={{
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Experience
+              </Text>
+              <Text>{formatNumber(data?.exp)}</Text>
+            </Flex>
             <Flex
               css={{
                 justifyContent: 'space-between',
