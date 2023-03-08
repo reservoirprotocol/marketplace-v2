@@ -16,6 +16,7 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
+import ChainToggle from 'components/common/ChainToggle'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -109,13 +110,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <Text style="h4" as="h4">
               Popular Collections
             </Text>
-            <TrendingCollectionsTimeToggle
-              compact={compactToggleNames && isMounted}
-              option={sortByTime}
-              onOptionSelected={(option) => {
-                setSortByTime(option)
-              }}
-            />
+            <Flex align="center" css={{ gap: '$4' }}>
+              <TrendingCollectionsTimeToggle
+                compact={compactToggleNames && isMounted}
+                option={sortByTime}
+                onOptionSelected={(option) => {
+                  setSortByTime(option)
+                }}
+              />
+              <ChainToggle />
+            </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
             <TrendingCollectionsList
