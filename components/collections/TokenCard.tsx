@@ -92,7 +92,7 @@ export default ({
           <Text ellipsify>x{tokenCount}</Text>
         </Flex>
       )}
-      {orderQuantity && (
+      {orderQuantity && orderQuantity > 1 && (
         <Flex
           justify="center"
           align="center"
