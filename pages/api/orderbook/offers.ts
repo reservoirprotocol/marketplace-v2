@@ -24,7 +24,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const chain = supportedChains.find(c => c.id === chainId)
 
   const accountData = await account.findOne({
-    wallet: parameters.offerer
+    wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
   }).catch(() => null);
 
   const isListing = parameters.kind === 'token-list'

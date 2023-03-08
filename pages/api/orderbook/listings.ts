@@ -60,7 +60,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
     await account.updateOne({
-      wallet: parameters.offerer
+      wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
     }, {
       $inc: {
         exp: medianExpReward
