@@ -39,8 +39,8 @@ export const PointsTable: FC = () => {
             <TableHeading />
 
             <PointsTableRow
-              bidPoints={1000}
-              listPoints={5000}
+              bidPoints={50}
+              listPoints={50}
               listingLoyalty={0}
             />
 
