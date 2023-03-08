@@ -160,7 +160,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                     : 'none',
                 }}
               >
-                Rolling 24Hr Leaderboard
+                Rolling Leaderboard
               </Text>
             </Flex>
             <Box css={{ textAlign: 'center' }}>
