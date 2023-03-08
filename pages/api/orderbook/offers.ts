@@ -47,7 +47,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
   const collection = collections?.[0]
 
-  console.info(`New offer processed for ${parameters.offerer}`, parameters)
+  console.info(`New offer processed for ${parameters.offerer}`, data, parameters)
 
   if (accountData && collection) {
     // TODO: Calculate reward by floor price & increase reward by listing period & double Reward for NFTE Token
