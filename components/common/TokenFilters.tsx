@@ -31,7 +31,7 @@ export const TokenFilters: FC<Props> = ({
   isLoading,
   scrollToTop,
 }) => {
-  if (!collections || (collections.length === 0 && !isLoading)) {
+  if ((collections?.length === 0 || collections == null) && isLoading) {
     return null
   }
   return (
