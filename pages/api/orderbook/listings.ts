@@ -25,7 +25,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   const chain = supportedChains.find(c => c.id === chainId)
 
   const accountData = await account.findOne({
-    wallet: {'$regex' : `^${parameters.offerer}$`, '$options' : 'i'}
+    wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
   }).catch(() => null)
 
   const isListing = parameters.kind === 'token-list'
@@ -50,7 +50,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
   const collection = collections?.[0]
 
-  console.info(`New listing processed for ${parameters.offerer}`, parameters)
+  console.info(`New listing processed for ${parameters.offerer}`, accountData, parameters)
 
   if (accountData && collection) {
     // TODO: Calculate reward by floor price & increase reward by listing period & double Reward for NFTE Token
@@ -63,7 +63,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
     await account.updateOne({
-      wallet: {'$regex' : `^${parameters.offerer}$`, '$options' : 'i'}
+      wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
         exp: medianExpReward
