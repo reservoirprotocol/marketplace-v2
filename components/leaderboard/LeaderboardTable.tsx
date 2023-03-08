@@ -54,7 +54,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
           marginRight: '5vw',
         },
       }}>
-        <Text>Searh Wallet</Text>
+        <Text>Search Wallet</Text>
         <Input
           onChange={(e) => { setSearchWallet(e.target.value); }}
           style={{
@@ -178,7 +178,10 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
           py: '$5',
         }}
       >
-        <Text style="subtitle1">{username}</Text>
+        {
+          username === "You" ? <Text style="subtitle1" css={{ color: '$crimson9'}}>{username}</Text>
+          : <Text style="subtitle1">{username}</Text>
+        }
       </TableCell>
 
       <TableCell

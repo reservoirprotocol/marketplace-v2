@@ -99,8 +99,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             css={{
               lineHeight: 1.2,
               letterSpacing: 2,
-              marginTop: '75px',
-              marginBottom: '35px',
+              marginTop: '40px',
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -121,7 +120,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           >
             9 Quests Leaderboard
           </Text>
-          <PointsTable />
 
           <Box css={{ width: '100%' }}>
             <Flex
