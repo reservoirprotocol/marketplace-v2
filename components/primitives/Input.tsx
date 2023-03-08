@@ -38,4 +38,6 @@ const Input = forwardRef<
   </Flex>
 ))
 
+export { StyledInput };
+
 export default Input

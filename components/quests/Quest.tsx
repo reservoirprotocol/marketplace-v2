@@ -1,13 +1,14 @@
 import { Box, Text, Flex } from 'components/primitives'
 import { Dispatch } from 'react'
 import { QuestContent, QuestXPButton, QuestJoinButton } from './styled'
+import {QuestTask} from "pages/api/quest/entry";
 
 type Props = {
   title: string
   description: string
   points: number
-  locked: boolean
-  link: string
+  locked: (idx: number) => boolean
+  tasks: QuestTask[]
   setOpen: Dispatch<React.SetStateAction<boolean>>
   setQuest: Dispatch<React.SetStateAction<number>>
   number: number
@@ -20,6 +21,7 @@ export const Quest = ({
   locked,
   setOpen,
   setQuest,
+  tasks,
   number,
 }: Props) => {
   const displayQuest = () => {
@@ -35,11 +37,10 @@ export const Quest = ({
         height: '100%',
         padding: '20px 30px',
         border: '2px solid #6BE481',
-        background: '$gray6',
-        opacity: 0.4,
+        background: '$gray1',
       }}
     >
-      {locked === true ? (
+      {locked(number) ? (
         <Box css={{ position: 'relative' }}>
           <Box
             css={{
@@ -123,7 +124,7 @@ export const Quest = ({
             }}
           >
             <QuestXPButton>{points} XP</QuestXPButton>
-            <QuestJoinButton onClick={displayQuest} disabled={true}>
+            <QuestJoinButton onClick={displayQuest} disabled={locked(number)}>
               <Text
                 css={{
                   color: 'black',

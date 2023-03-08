@@ -197,7 +197,7 @@ const PortfolioPage: NextPage = () => {
               style="body1"
               css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
             >
-              Connect wallet to instant sell your token on NFTEarth marketplace
+              Connect your wallet to trade on the L2 NFT marketplace!
             </Text>
             <ConnectWalletButton />
           </Flex>

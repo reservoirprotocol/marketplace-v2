@@ -1,5 +1,5 @@
 import {
-  useCollectionActivity,
+  useCollectionActivity, useTokenActivity,
 } from '@nftearth/reservoir-kit-ui'
 import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -30,20 +30,23 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
 
+type TokenActivityResponse = ReturnType<typeof useTokenActivity>
+type TokenActivity = TokenActivityResponse['data'][0]
+
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
 
 type UsersActivityResponse = ReturnType<typeof useCollectionActivity>
 type UsersActivity = UsersActivityResponse['data'][0]
-type ActivityResponse = CollectionActivityResponse | UsersActivityResponse
+type ActivityResponse = CollectionActivityResponse | UsersActivityResponse | TokenActivityResponse
 
-type Activity = CollectionActivity | UsersActivity
+type Activity = CollectionActivity | UsersActivity | TokenActivity
 type Props = {
   data: ActivityResponse
 }
 
 export const ActivityTable: FC<Props> = ({ data }) => {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const activities = data.data

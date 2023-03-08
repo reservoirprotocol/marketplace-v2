@@ -26,6 +26,15 @@ export const reset = {
     fontFamily: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"` /* 4 */,
   },
 
+  'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
+    '-webkit-appearance': 'none',
+    margin: 0
+  },
+
+  'input[type=number]': {
+    '-moz-appearance': 'textfield'
+  },
+
   /*
 1. Remove the margin in all browsers.
 2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
