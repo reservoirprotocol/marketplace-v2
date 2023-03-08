@@ -127,7 +127,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               direction="column"
               css={{ textAlign: 'center', gap: '$4' }}
             >
-              <Text
+              {/* <Text
                 style={{
                   '@initial': 'h3',
                   '@lg': 'h2',
@@ -159,7 +159,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                 }}
               >
                 Rolling Leaderboard
-              </Text>
+              </Text> */}
             </Flex>
             <Box css={{ textAlign: 'center' }}>
               <Text
