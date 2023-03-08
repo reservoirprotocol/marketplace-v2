@@ -410,7 +410,6 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       const getListing = async (continuation: any) => {
         const listingQuery: paths["/orders/asks/v4"]["get"]["parameters"]["query"] = {
           source: 'nftearth.exchange',
-          includePrivate: true,
           maker: wallet,
           limit: r.currency ? 1000 : 1
         }
@@ -453,13 +452,14 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       while (hasNextPage && !r.passes) {
         let result: any = await getListing(continuation)
         let eligibleOrders: any = [];
+        let currency = r.currency
         result.data.forEach((resp: any) => {
           if (resp && resp.value.data && resp.value.data.orders.length > 0) {
             r.passes = true;
 
             if (r.currency) {
               const orders = resp.value.data.orders.filter((r: any) => {
-                return r.price.currency.symbol === r.currency
+                return r.price.currency.symbol === currency
               });
               eligibleOrders = eligibleOrders.concat(orders)
             }
@@ -468,7 +468,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
           }
         })
 
-        if (r.currency) {
+        if (currency) {
           r.passes = eligibleOrders.length >= (r.count || 1)
           r.double_exp = eligibleOrders.length >= (r.double_count || eligibleOrders.length + 1)
         }
