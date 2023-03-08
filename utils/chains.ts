@@ -1,4 +1,3 @@
-import { constants } from 'ethers'
 import { arbitrum, goerli, mainnet, polygon } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
@@ -8,7 +7,7 @@ import { arbitrum, goerli, mainnet, polygon } from 'wagmi/chains'
 export const DefaultChain = {
   ...mainnet,
   // Any url to display the logo of the chain
-  iconUrl: `https://api.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
+  iconUrl: `/icons/eth-icon.svg`,
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
@@ -27,21 +26,18 @@ export const DefaultChain = {
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'ethereum',
-  // Any url to display the logo of the chain in the search results
-  searchIcon: '/icons/eth-search-icon.svg',
 }
 
 export default [
   DefaultChain,
   {
     ...polygon,
-    iconUrl: `https://api-polygon.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
+    iconUrl: `/icons/polygon-icon.svg`,
     reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
     proxyApi: '/api/reservoir/polygon',
     routePrefix: 'polygon',
     apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
     coingeckoId: 'matic-network',
-    searchIcon: '/icons/matic-search-icon.svg',
   },
   {
     ...arbitrum,
@@ -56,12 +52,11 @@ export default [
   },
   {
     ...goerli,
-    iconUrl: `https://api-goerli.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
+    iconUrl: `/icons/goerli-icon.svg`,
     reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
     proxyApi: '/api/reservoir/goerli',
     routePrefix: 'goerli',
     apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
     coingeckoId: 'goerli-eth',
-    searchIcon: '/icons/goerli-eth-search-icon.svg',
   },
 ]

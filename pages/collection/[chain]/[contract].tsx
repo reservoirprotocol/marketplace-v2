@@ -31,7 +31,7 @@ import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { CollectionAcivityTable } from 'components/collections/CollectionActivityTable'
+import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
@@ -45,6 +45,7 @@ import Head from 'next/head'
 import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
+import titleCase from 'utils/titleCase'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -121,6 +122,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     data: tokens,
     mutate,
     fetchNextPage,
+    setSize,
+    resetCache,
     isFetchingInitialData,
     isFetchingPage,
     hasNextPage,
@@ -138,6 +141,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   if (attributeFiltersOpen && attributesData.response && !attributes.length) {
     setAttributeFiltersOpen(false)
   }
+
+  let creatorRoyalties = collection?.royalties?.bps
+    ? collection?.royalties?.bps * 0.01
+    : 0
+  let chain = titleCase(router.query.chain as string)
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
@@ -220,26 +228,82 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     />
                   </Flex>
 
-                  <CopyText
-                    text={collection.id as string}
-                    css={{ width: 'max-content' }}
-                  >
-                    <Flex css={{ gap: '$2', mt: '$2', width: 'max-content' }}>
-                      <Text style="body1" css={{ color: '$gray11' }} as="p">
-                        {truncateAddress(collection.id as string)}
-                      </Text>
-                      <Box css={{ color: '$gray10' }}>
-                        <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                      </Box>
-                    </Flex>
-                  </CopyText>
+                  <Flex align="end" css={{ gap: 24 }}>
+                    {!isSmallDevice && (
+                      <>
+                        <Box>
+                          <Text style="body1" color="subtle">
+                            Creator Earnings
+                          </Text>
+                          <Text style="body1"> {creatorRoyalties}%</Text>
+                        </Box>
+                        <Box>
+                          <Text style="body1" color="subtle">
+                            Chain{' '}
+                          </Text>
+                          <Text style="body1">{chain}</Text>
+                        </Box>
+                      </>
+                    )}
+                    <CopyText
+                      text={collection.id as string}
+                      css={{ width: 'max-content' }}
+                    >
+                      <Flex css={{ gap: '$2', width: 'max-content' }}>
+                        {!isSmallDevice && (
+                          <Text style="body1" color="subtle">
+                            Collection
+                          </Text>
+                        )}
+                        <Text
+                          style="body1"
+                          color={isSmallDevice ? 'subtle' : undefined}
+                          as="p"
+                        >
+                          {truncateAddress(collection.id as string)}
+                        </Text>
+                        <Box css={{ color: '$gray10' }}>
+                          <FontAwesomeIcon
+                            icon={faCopy}
+                            width={16}
+                            height={16}
+                          />
+                        </Box>
+                      </Flex>
+                    </CopyText>
+                  </Flex>
                 </Box>
               </Flex>
             </Flex>
             <CollectionActions collection={collection} />
           </Flex>
+          {isSmallDevice && (
+            <Flex css={{ gap: 24, mb: 24 }}>
+              <Box>
+                <Text style="body1" color="subtle">
+                  Creator Earnings
+                </Text>
+                <Text style="body1"> {creatorRoyalties}%</Text>
+              </Box>
+              <Box>
+                <Text style="body1" color="subtle">
+                  Chain{' '}
+                </Text>
+                <Text style="body1">{chain}</Text>
+              </Box>
+            </Flex>
+          )}
           <StatHeader collection={collection} />
-          <Tabs.Root defaultValue="items">
+          <Tabs.Root
+            defaultValue="items"
+            onValueChange={(value) => {
+              if (value === 'items') {
+                resetCache()
+                setSize(1)
+                mutate()
+              }
+            }}
+          >
             <TabsList>
               <TabsTrigger value="items">Items</TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
@@ -415,7 +479,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       setOpen={setActivityFiltersOpen}
                     />
                   )}
-                  <CollectionAcivityTable
+                  <CollectionActivityTable
                     id={id}
                     activityTypes={activityTypes}
                   />

@@ -22,13 +22,15 @@ import { SearchCollection } from 'pages/api/globalSearch'
 
 type Props = {
   collection: SearchCollection
+  handleSelectResult: (result: SearchCollection) => void
 }
 
-const CollectionItem: FC<Props> = ({ collection }) => {
+const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
   return (
     <Link
       href={`/collection/${collection.chainName}/${collection.collectionId}`}
       style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}
+      onClick={() => handleSelectResult(collection)}
     >
       <Flex
         css={{
@@ -57,7 +59,7 @@ const CollectionItem: FC<Props> = ({ collection }) => {
           />
         </Flex>
         <Box css={{ height: 12, minWidth: 'max-content' }}>
-          <img src={collection.searchIcon} />
+          <img src={collection.chainIcon} style={{ height: 12 }} />
         </Box>
       </Flex>
     </Link>
@@ -109,11 +111,20 @@ type SearchResultProps = {
     type: 'collection' | 'wallet'
     data: any
   }
+  handleSelectResult: (result: SearchCollection) => void
 }
 
-const SearchResult: FC<SearchResultProps> = ({ result }) => {
+const SearchResult: FC<SearchResultProps> = ({
+  result,
+  handleSelectResult,
+}) => {
   if (result.type == 'collection') {
-    return <CollectionItem collection={result.data} />
+    return (
+      <CollectionItem
+        collection={result.data}
+        handleSelectResult={handleSelectResult}
+      />
+    )
   } else {
     return <WalletItem wallet={result.data} />
   }
@@ -126,7 +137,11 @@ const GlobalSearch = forwardRef<
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
   const [results, setResults] = useState([])
+  const [recentResults, setRecentResults] = useState<SearchCollection[]>([])
   const [showSearchBox, setShowSearchBox] = useState(false)
+
+  const hasResults = results.length > 0
+  const hasRecentResults = recentResults.length > 0
 
   const debouncedSearch = useDebounce(search, 500)
 
@@ -154,6 +169,30 @@ const GlobalSearch = forwardRef<
 
     window.addEventListener('click', hideBox)
   }, [])
+
+  // Get recent search results from local storage
+  useEffect(() => {
+    const storedRecentResults = localStorage.getItem('recentResults')
+    if (storedRecentResults) {
+      setRecentResults(JSON.parse(storedRecentResults))
+    }
+  }, [])
+
+  // Add selected collection to recent results
+  const handleSelectResult = (selectedResult: SearchCollection) => {
+    if (
+      !recentResults.find(
+        (result) => result.collectionId === selectedResult.collectionId
+      )
+    ) {
+      setRecentResults([selectedResult, ...recentResults.slice(0, 4)])
+    }
+  }
+
+  // Store recently selected results in local storage
+  useEffect(() => {
+    localStorage.setItem('recentResults', JSON.stringify(recentResults))
+  }, [recentResults])
 
   return (
     <Box
@@ -239,8 +278,7 @@ const GlobalSearch = forwardRef<
       />
 
       {(showSearchBox || isMobile) &&
-        search.length > 3 &&
-        (results || searching) && (
+        (hasResults || hasRecentResults || searching) && (
           <Box
             css={{
               position: 'absolute',
@@ -256,10 +294,30 @@ const GlobalSearch = forwardRef<
               width: '100%',
             }}
           >
+            {hasRecentResults && !hasResults && search.length <= 3 && (
+              <Flex direction="column" css={{ pt: '$2' }}>
+                <Text css={{ ml: '$2' }} style="subtitle2" color="subtle">
+                  Recent
+                </Text>
+                {recentResults &&
+                  recentResults.map((result) => (
+                    <SearchResult
+                      key={result?.collectionId}
+                      result={{ type: 'collection', data: result }}
+                      handleSelectResult={handleSelectResult}
+                    />
+                  ))}
+              </Flex>
+            )}
             {results &&
               results
                 .slice(0, 8)
-                .map((result) => <SearchResult result={result} />)}
+                .map((result) => (
+                  <SearchResult
+                    result={result}
+                    handleSelectResult={handleSelectResult}
+                  />
+                ))}
 
             {searching && (
               <Flex align="center" justify="center" css={{ py: '$4' }}>
@@ -268,7 +326,7 @@ const GlobalSearch = forwardRef<
                 />
               </Flex>
             )}
-            {!searching && results.length === 0 && (
+            {!searching && results.length === 0 && search.length > 3 && (
               <Box css={{ p: '$4' }}>No Results</Box>
             )}
           </Box>

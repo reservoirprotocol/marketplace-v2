@@ -66,6 +66,27 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
                 key={value.value}
                 css={{ mb: '$3', gap: '$3' }}
                 align="center"
+                onClick={() => {
+                  if (
+                    hasParam(
+                      router,
+                      `attributes[${attribute.key}]`,
+                      value.value
+                    )
+                  ) {
+                    removeParam(
+                      router,
+                      `attributes[${attribute.key}]`,
+                      value.value
+                    )
+                  } else {
+                    addParam(
+                      router,
+                      `attributes[${attribute.key}]`,
+                      value.value
+                    )
+                  }
+                }}
               >
                 <Text
                   style="body1"
