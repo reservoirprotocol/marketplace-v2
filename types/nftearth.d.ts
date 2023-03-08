@@ -1,10 +1,10 @@
-enum OrderType {
+export enum OrderType {
   FULL_OPEN,
   PARTIAL_OPEN,
   FULL_RESTRICTED,
   PARTIAL_RESTRICTED,
 }
-enum ItemType {
+export enum ItemType {
   NATIVE,
   ERC20,
   ERC721,
@@ -13,7 +13,7 @@ enum ItemType {
   ERC1155_WITH_CRITERIA,
 }
 type OrderKind = "contract-wide" | "single-token" | "token-list" | "bundle-ask";
-type ConsiderationItem = {
+export type ConsiderationItem = {
   itemType: ItemType;
   token: string;
   identifierOrCriteria: string;
@@ -21,7 +21,7 @@ type ConsiderationItem = {
   endAmount: string;
   recipient: string;
 };
-type OfferItem = {
+export type OfferItem = {
   itemType: ItemType;
   token: string;
   identifierOrCriteria: string;
@@ -50,7 +50,7 @@ type CollectionCriteria = {
 type Criteria = {
   collection: CollectionCriteria
 }
-type Orders = {
+export type Orders = {
   parameters: OrderComponents
   chainId: number
   signature: string

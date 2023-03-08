@@ -1,11 +1,12 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import db from "lib/db";
-import {paths} from "@nftearth/reservoir-sdk";
-import fetcher from "utils/fetcher";
-import supportedChains from "utils/chains";
-import {ethers} from "ethers";
+import {NextApiRequest, NextApiResponse} from "next"
+import {ethers} from "ethers"
+import db from "lib/db"
+import {paths} from "@nftearth/reservoir-sdk"
+import fetcher from "utils/fetcher"
+import supportedChains from "utils/chains"
+import {ConsiderationItem, ItemType, OfferItem, Orders} from "types/nftearth.d"
 
-const NFTItem = [ItemType.ERC721, ItemType.ERC1155];
+const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const medianExpReward = 50
 const account = db.collection('account')
 
@@ -20,23 +21,20 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     return
   }
 
-  const { parameters, chainId, signature } : Orders = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
+  const { parameters, chainId, criteria, signature } : Orders = typeof req.body === 'string' ? JSON.parse(req.body) : req.body
   const chain = supportedChains.find(c => c.id === chainId)
 
   const accountData = await account.findOne({
-    wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
-  }).catch(() => null);
+    wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
+  }).catch(() => null)
 
   const isListing = parameters.kind === 'token-list'
-  const nft = isListing ?
-    parameters.offer.find(o => NFTItem.includes(o.itemType)) :
-    parameters.consideration.find(o => NFTItem.includes(o.itemType))
-  const erc20 = isListing ? parameters.consideration.find(o => o.itemType === ItemType.ERC20) :
-    parameters.offer.find(o => o.itemType === ItemType.ERC20)
+  const nft: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'offer': 'consideration'].filter(o => NFTItem.includes(o.itemType))
+  const erc20: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'consideration': 'offer'].filter(o => o.itemType === ItemType.ERC20)
   const period = parameters.endTime - parameters.startTime
 
   const collectionQuery: paths["/collections/v5"]["get"]["parameters"]["query"] = {
-    id: nft?.token,
+    id: nft[0]?.token,
     includeTopBid: true
   }
 
@@ -44,10 +42,12 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     headers: {
       'x-api-key': chain?.apiKey || '',
     }
-  });
+  })
 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
-  const collection = collections?.[0];
+  const collection = collections?.[0]
+
+  console.info(`New listing processed for ${parameters.offerer}`, accountData, data, parameters)
 
   if (accountData && collection) {
     // TODO: Calculate reward by floor price & increase reward by listing period & double Reward for NFTE Token
@@ -59,11 +59,16 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     //
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
+    const doubleExp = '0xb261104a83887ae92392fb5ce5899fcfe5481456' === erc20[0]?.token?.toLowerCase()
+    const reward = medianExpReward * (doubleExp ? 2 : 1)
+
     await account.updateOne({
-      wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
+      wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
-        exp: medianExpReward
+        listingExp: isListing ? reward : 0,
+        offerExp: !isListing ? reward : 0,
+        exp: medianExpReward * (doubleExp ? 2 : 1)
       }
     })
   }
@@ -73,4 +78,4 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   })
 }
 
-export default handleOrderbookListings;
+export default handleOrderbookListings
