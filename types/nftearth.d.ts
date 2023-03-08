@@ -13,7 +13,7 @@ export enum ItemType {
   ERC1155_WITH_CRITERIA,
 }
 type OrderKind = "contract-wide" | "single-token" | "token-list" | "bundle-ask";
-type ConsiderationItem = {
+export type ConsiderationItem = {
   itemType: ItemType;
   token: string;
   identifierOrCriteria: string;
@@ -21,7 +21,7 @@ type ConsiderationItem = {
   endAmount: string;
   recipient: string;
 };
-type OfferItem = {
+export type OfferItem = {
   itemType: ItemType;
   token: string;
   identifierOrCriteria: string;
