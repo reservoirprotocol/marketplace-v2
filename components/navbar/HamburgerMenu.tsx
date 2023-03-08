@@ -347,20 +347,6 @@ const HamburgerMenu = () => {
               >
                 Leaderboard
               </Text>
-              <Link href="/launch/deploy" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    width: '100%',
-                  }}
-                >
-                  Launch
-                </Text>
-            </Link>
             </Flex>
             <Box>
               <ConnectWalletButton />
