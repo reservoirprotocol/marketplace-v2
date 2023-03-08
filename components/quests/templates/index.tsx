@@ -2,6 +2,8 @@ import { Flex, Box, Button, Text } from 'components/primitives'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { useContext, useState } from 'react'
 import { ToastContext } from '../../../context/ToastContextProvider'
@@ -642,13 +644,19 @@ export const QuestListNFTInNFTEOnAnyChain = ({
               Click on the NFT you would like to trade and list it for sale on NFTEarth marketplace.
               You need to list at least 3 NFTs to be
               eligible to claim the reward. Make sure it is listed in $NFTE
-              currency. Double XP is listed more than 5.
+              currency. Double XP if listed more than 5.
             </Text>
             <Text
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
               Step 3: Verify and claim your XP by clicking the button below!
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11', backgroundColor: '$primary3', p: '$4' }}>
+              <FontAwesomeIcon icon={faExclamationCircle} color="red" style={{ marginRight: 10, background: '#fff', borderRadius: '60%' }}/>
+              Please take a note that for this quest, button "Verify and Claim" can be successfully pressed only ONCE!
+              (e.g. if you list 3, verify/claim successfully and only after that decide to list more to get double points - it will not be possible).
+              Please consider already from the beginning - are you going for 150 or 300 points and act accordingly
             </Text>
           </Flex>
         </Flex>
@@ -798,6 +806,15 @@ export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boole
               clicking List for Sale and adding sale parameters you are happy
               with. List it! Listing any NFT in any currency on any available
               chain counts!
+            </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 4: Repeat
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              This quest is repeatable, list or bid as many as you want to get more exp.
             </Text>
             <Text style="subtitle2" css={{ color: '$gray11' }}>
               Exp will be automatically updated.
