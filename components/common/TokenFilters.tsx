@@ -54,7 +54,7 @@ export const TokenFilters: FC<Props> = ({
         <Flex
           direction="column"
           css={{
-            overflowY: 'auto',
+            overflow: 'auto',
           }}
         >
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
