@@ -187,7 +187,7 @@ const Navbar = () => {
                   },
                 }}
               >
-                leaderboard
+                Leaderboard
               </NavItem>
             </Link>
           </Flex>
