@@ -60,14 +60,33 @@ const BasicModal = ({
         gap: '$4',
         minHeight: '53.1vh',
         padding: '$3',
+        '@xs': {
+          padding: '$1',
+        },
+        '@lg': {
+          padding: '$3',
+        }
       }}
     >
-      <Flex css={{ gap: '$5', alignItems: 'center' }}>
+      <Flex
+        css={{
+          gap: '$5',
+          alignItems: 'center',
+          '@xs': {
+            display: 'block',
+            textAlign: 'center',
+          },
+          '@lg': {
+            display: 'flex',
+            textAlign: 'left',
+          }
+      }}>
         <Image
           src="/images/NFTQuest.png"
           width={130}
           height={100}
           alt="NFTEarth Logo"
+          style={{margin: 'auto'}}
         />
         <Flex direction="column">
           <Text style={{ '@initial': 'h5', '@lg': 'h4' }}>{header}</Text>
@@ -184,7 +203,7 @@ export const QuestFollowTwitter = ({
   id: number
   disabled: boolean
   profile: any
-}) => {
+}) => { 
   return (
     <BasicModal
       id={id}
@@ -755,7 +774,7 @@ export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boole
               style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
-              Step 2: Make a listing or offer for any NFT on sale
+              Step 2: Make offer for any NFT on sale
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
               Click on the NFTs you want to make an offer for and click "Make
