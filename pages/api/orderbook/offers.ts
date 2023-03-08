@@ -50,6 +50,8 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
   const collection = collections?.[0]
 
+  process.stdout.write(`New offer processed for ${parameters.offerer} data: ${JSON.stringify(parameters)}`)
+
   if (accountData && collection) {
     // TODO: Calculate reward by floor price & increase reward by listing period & double Reward for NFTE Token
     // const value = ethers.utils.parseUnits(erc20?.startAmount || '0', 'wei')
