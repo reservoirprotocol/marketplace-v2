@@ -32,6 +32,7 @@ type TokenCardProps = {
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
   tokenCount?: string
+  orderQuantity?: number
 }
 
 export default ({
@@ -41,6 +42,7 @@ export default ({
   addToCartEnabled = true,
   mutate,
   onMediaPlayed,
+  orderQuantity,
   tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
@@ -88,6 +90,38 @@ export default ({
           }}
         >
           <Text ellipsify>x{tokenCount}</Text>
+        </Flex>
+      )}
+      {orderQuantity && (
+        <Flex
+          justify="center"
+          align="center"
+          css={{
+            zIndex: 1,
+            position: 'absolute',
+            backdropFilter: 'blur(2px)',
+            background: 'rgba(226, 240, 253, 0.083)',
+            borderRadius: '4px',
+            left: '$2',
+            top: '$2',
+            px: '$2',
+            py: '$1',
+            mr: '$2',
+            backgroundColor: '$gray4',
+            maxWidth: '50%',
+          }}
+        >
+          <Text
+            style="subtitle2"
+            ellipsify
+            css={{
+              fontWeight: '700',
+              pr: '$1',
+              flex: 1,
+            }}
+          >
+            x{orderQuantity}
+          </Text>
         </Flex>
       )}
       <Flex
