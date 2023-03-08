@@ -60,14 +60,33 @@ const BasicModal = ({
         gap: '$4',
         minHeight: '53.1vh',
         padding: '$3',
+        '@xs': {
+          padding: '$1',
+        },
+        '@lg': {
+          padding: '$3',
+        }
       }}
     >
-      <Flex css={{ gap: '$5', alignItems: 'center' }}>
+      <Flex
+        css={{
+          gap: '$5',
+          alignItems: 'center',
+          '@xs': {
+            display: 'block',
+            textAlign: 'center',
+          },
+          '@lg': {
+            display: 'flex',
+            textAlign: 'left',
+          }
+      }}>
         <Image
           src="/images/NFTQuest.png"
           width={130}
           height={100}
           alt="NFTEarth Logo"
+          style={{margin: 'auto'}}
         />
         <Flex direction="column">
           <Text style={{ '@initial': 'h5', '@lg': 'h4' }}>{header}</Text>
