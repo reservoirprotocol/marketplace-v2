@@ -272,7 +272,7 @@ export default ({
               )}
             </>
           </Flex>
-          {token?.token?.lastBuy?.value ? (
+          {token?.token?.lastBuy?.value && (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
                 Last Sale
@@ -284,7 +284,7 @@ export default ({
                 maximumFractionDigits={4}
               />
             </Flex>
-          ) : null}
+          )}
         </Flex>
       </Link>
       {isOwner ? (
