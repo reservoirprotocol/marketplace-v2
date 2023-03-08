@@ -105,7 +105,7 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   username,
   listingExp,
   offerExp,
-  totalExp
+  totalExp,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { theme } = useTheme()
@@ -123,40 +123,58 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         <Text>{rank}</Text>
       </TableCell>
 
-      <TableCell css={{ maxWidth: '260px', overflow: 'scroll', textAlign: 'center', pl: '$2 !important'}}>
+      <TableCell
+        css={{
+          maxWidth: '260px',
+          overflow: 'scroll',
+          textAlign: 'center',
+          pl: '$2 !important',
+        }}
+      >
         <Text style="subtitle2">{username}</Text>
       </TableCell>
 
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{listingExp} </Text>
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {listingExp}{' '}
+        </Text>
       </TableCell>
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-          <Text
-            style="subtitle3"
-            css={{
-              color: '$primary13',
-              marginTop: '$1',
-              '&:hover': {
-                color: '$primary14',
-              },
-            }}
-          >
-            {offerExp}
-          </Text>
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {offerExp}
+        </Text>
       </TableCell>
       <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-          <Text
-            style="subtitle3"
-            css={{
-              color: '$primary13',
-              marginTop: '$1',
-              '&:hover': {
-                color: '$primary14',
-              },
-            }}
-          >
-            {totalExp}
-          </Text>
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {totalExp}
+        </Text>
       </TableCell>
     </TableRow>
   )
