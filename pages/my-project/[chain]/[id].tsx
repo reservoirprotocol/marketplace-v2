@@ -65,6 +65,12 @@ const MyProjectDetailPage = () => {
     abi: launchpadArtifact.abi,
   }
 
+  useEffect(() => {
+    if (launchpad?.deployer?.toLowerCase() !== address?.toLowerCase()) {
+      location.href = '/my-project'
+    }
+  }, [launchpad])
+
   const { data: contractData, isError, isLoading } = useContractReads({
     contracts: [
       {
