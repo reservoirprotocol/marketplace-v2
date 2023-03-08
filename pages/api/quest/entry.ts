@@ -457,7 +457,7 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
           if (resp && resp.value.data && resp.value.data.orders.length > 0) {
             r.passes = true;
 
-            if (r.currency) {
+            if (currency) {
               const orders = resp.value.data.orders.filter((r: any) => {
                 return r.price.currency.symbol === currency
               });
