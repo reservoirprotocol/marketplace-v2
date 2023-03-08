@@ -65,12 +65,10 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   useEffect(() => {
     const getData = async () => {
       const res = await fetcher(
-        `https://indexer.nftearth.exchange/orders/asks/v4`
+        `https://nftearth.exchange/api/quest/top`
       )
-      const result = countObjectsByKey(res.data.orders, 'maker')
-      const finalRes = sortObjectByKeyValuePairs(result)
   //@ts-ignore
-      setData(finalRes)
+      setData(res.data)
     }
     getData()
     console.log(data)

@@ -75,10 +75,10 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
               return (
                 <LeaderboardTableRow
                   key={i}
-                  rank={item.rank}
-                  username={item.name}
-                  volume={item.points}
-                  reward={item.cumulative}
+                  rank={i + 1}
+                  username={item.wallet}
+                  volume={item.exp}
+                  reward={item.exp}
                 />
               )
             })}
