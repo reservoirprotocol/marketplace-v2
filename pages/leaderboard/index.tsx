@@ -1,11 +1,11 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { Text, Flex, Box } from 'components/primitives'
+import { Text, Flex, Box, Input } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@nftearth/reservoir-sdk'
 import { useCollections } from '@nftearth/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
+import fetcher, { basicFetcher } from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -13,6 +13,7 @@ import { useTheme } from 'next-themes'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
 import { PointsTable } from 'components/leaderboard/PointsTable'
 import { data } from 'components/leaderboard/enums'
+import { setRevalidateHeaders } from 'next/dist/server/send-payload'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -25,32 +26,57 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     sortBy: 'allTimeVolume',
   }
+  const [data, setData] = useState(null)
+  console.log(data)
+  //@ts-ignore
+  const countObjectsByKey = (objectsArray, key) => {
+    const countMap = {}
+    //@ts-ignore
+    objectsArray.forEach((obj) => {
+      const keyValue = obj[key]
+      if (keyValue in countMap) {
+        //@ts-ignore
+        countMap[keyValue]++
+      } else {
+        //@ts-ignore
+        countMap[keyValue] = 1
+      }
+    })
 
-  // const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-  //   useCollections(
-  //     collectionQuery,
-  //     {
-  //       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-  //     },
-  //     marketplaceChain.id
-  //   )
+    return countMap
+  }
+  //@ts-ignore
+  const sortObjectByKeyValuePairs = (object) => {
+    const entries = Object.entries(object)
+    //@ts-ignore
+    const sortedEntries = entries.sort((a, b) => b[1] - a[1])
+    const sortedObjectsArray = sortedEntries.map(([key, value], idx) => ({
+      rank: idx + 1,
+      name: key,
+      //@ts-ignore
+      points: value * 50,
+      //@ts-ignore
+      cumulative: value * 50,
+    }))
+    return sortedObjectsArray
+  }
 
-  // const loadMoreRef = useRef<HTMLDivElement>(null)
-  // const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  // useEffect(() => {
-  //   let isVisible = !!loadMoreObserver?.isIntersecting
-  //   if (isVisible) {
-  //     fetchNextPage()
-  //   }
-  // }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+  console.log(data)
+  useEffect(() => {
+    const getData = async () => {
+      const res = await fetcher(`https://nftearth.exchange/api/quest/top`)
+      //@ts-ignore
+      setData(res.data)
+    }
+    getData()
+    console.log(data)
+  }, [])
 
   return (
     <Layout>
       <Box
         css={{
           p: 24,
-          height: 'calc(100vh - 80px)',
           width: '100vw',
           '@bp800': {
             p: '$6',
@@ -58,28 +84,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
         }}
       >
         <Flex
-          align="center"
-          justify="center"
-          direction="column"
-          css={{
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          <Text
-            style={{
-              '@initial': 'h3',
-              '@lg': 'h2',
-            }}
-            css={{ lineHeight: 1.2, letterSpacing: 2, color: '$gray10' }}
-          >
-            COMING SOON
-          </Text>
-          <Text css={{ color: '$gray10' }}>
-            This page is under construction
-          </Text>
-        </Flex>
-        {/* <Flex
           align="center"
           direction="column"
           css={{
@@ -95,7 +99,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             css={{
               lineHeight: 1.2,
               letterSpacing: 2,
-              marginTop: '75px',
+              marginTop: '40px',
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -114,56 +118,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                 : 'none',
             }}
           >
-            NFTEARTH AIDRDROP SEASON 2
-          </Text>
-          <Text
-            style={{
-              '@initial': 'h4',
-              '@lg': 'h5',
-            }}
-            css={{
-              lineHeight: 1.2,
-              letterSpacing: 2,
-              marginTop: '35px',
-              marginBottom: '35px',
-              color: theme
-                ? theme === 'dark'
-                  ? '#39FF14'
-                  : '$black'
-                : '#39FF14',
-              textAlign: 'center',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            Season 1 was just the beginning. There's a lot more coming. Season 2
-            rewards have not been revealed yet, but for the next 30 days, all
-            bidding and listing points have been doubled.
-          </Text>
-          <PointsTable />
-          <Text
-            as="a"
-            href="/collections"
-            style={{
-              '@initial': 'h4',
-              '@lg': 'h5',
-            }}
-            css={{
-              lineHeight: 1.2,
-              letterSpacing: 2,
-              marginTop: '75px',
-              color: theme
-                ? theme === 'dark'
-                  ? '#39FF14'
-                  : '$black'
-                : '#39FF14',
-              textAlign: 'center',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              cursor: 'pointer',
-            }}
-          >
-            View Collections
+            9 Quests Leaderboard
           </Text>
 
           <Box css={{ width: '100%' }}>
@@ -172,7 +127,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               direction="column"
               css={{ textAlign: 'center', gap: '$4' }}
             >
-              <Text
+              {/* <Text
                 style={{
                   '@initial': 'h3',
                   '@lg': 'h2',
@@ -203,8 +158,8 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                     : 'none',
                 }}
               >
-                ROLLING 24HR LEADERBOARD
-              </Text>
+                Rolling Leaderboard
+              </Text> */}
             </Flex>
             <Box css={{ textAlign: 'center' }}>
               <Text
@@ -234,7 +189,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           >
             <LeaderboardTable data={data} />
           </Flex>
-        </Flex> */}
+        </Flex>
       </Box>
     </Layout>
   )

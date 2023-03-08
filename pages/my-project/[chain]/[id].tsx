@@ -66,7 +66,7 @@ const MyProjectDetailPage = () => {
   }
 
   useEffect(() => {
-    if (launchpad?.deployer?.toLowerCase() !== address?.toLowerCase()) {
+    if (launchpad && launchpad.deployer?.toLowerCase() !== address?.toLowerCase()) {
       location.href = '/my-project'
     }
   }, [launchpad])
