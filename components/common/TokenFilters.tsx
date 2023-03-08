@@ -54,7 +54,7 @@ export const TokenFilters: FC<Props> = ({
         <Flex
           direction="column"
           css={{
-            overflowY: 'scroll',
+            overflowY: 'auto',
           }}
         >
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
@@ -127,14 +127,10 @@ export const TokenFilters: FC<Props> = ({
                 <Flex
                   direction="column"
                   align="center"
-                  css={{ py: '$6', gap: '$4', width: '100%' }}
+                  css={{ py: '$6', gap: '$4' }}
                 >
-                  <Text css={{ color: '$gray11' }}>
-                    <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-                  </Text>
-                  <Text css={{ color: '$gray11' }}>
-                    No collections available
-                  </Text>
+                  <img src="/icons/activity-icon.svg" width={40} height={40} />
+                  <Text>No Collections found</Text>
                 </Flex>
               )}
             </>
