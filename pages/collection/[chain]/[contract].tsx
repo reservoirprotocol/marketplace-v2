@@ -97,6 +97,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     collection: id,
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
+    includeQuantity: true,
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
