@@ -38,7 +38,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     includeTopBid: true
   }
 
-  const { data } = await fetcher(`${chain?.reservoirBaseUrl}/orders/asks/v4`, collectionQuery, {
+  const { data } = await fetcher(`${chain?.reservoirBaseUrl}/collections/v5`, collectionQuery, {
     headers: {
       'x-api-key': chain?.apiKey || '',
     }
