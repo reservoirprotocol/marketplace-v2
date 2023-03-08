@@ -7,6 +7,7 @@ import supportedChains from "utils/chains"
 import {ConsiderationItem, ItemType, OfferItem, Orders} from "types/nftearth.d"
 
 const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
+const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const medianExpReward = 50
 const account = db.collection('account')
 
@@ -30,7 +31,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
 
   const isListing = parameters.kind === 'token-list'
   const nft: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'offer': 'consideration'].filter(o => NFTItem.includes(o.itemType))
-  const erc20: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'consideration': 'offer'].filter(o => o.itemType === ItemType.ERC20)
+  const payment: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'consideration': 'offer'].filter(o => PaymentItem.includes(o.itemType))
   const period = parameters.endTime - parameters.startTime
 
   const collectionQuery: paths["/collections/v5"]["get"]["parameters"]["query"] = {
@@ -59,7 +60,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     //
     // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
 
-    const doubleExp = '0xb261104a83887ae92392fb5ce5899fcfe5481456' === erc20[0]?.token?.toLowerCase()
+    const doubleExp = '0xb261104a83887ae92392fb5ce5899fcfe5481456' === payment[0]?.token?.toLowerCase()
     const reward = medianExpReward * (doubleExp ? 2 : 1)
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
@@ -67,7 +68,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
       $inc: {
         listingExp: isListing ? reward : 0,
         offerExp: !isListing ? reward : 0,
-        exp: medianExpReward * (doubleExp ? 2 : 1)
+        exp: reward
       }
     })
   }
