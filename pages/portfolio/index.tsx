@@ -22,7 +22,7 @@ import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
-  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
