@@ -54,12 +54,10 @@ export const TokenFilters: FC<Props> = ({
         <Flex
           direction="column"
           css={{
-            overflowY: 'scroll',
+            overflowY: 'auto'
           }}
         >
-          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
-            Collections
-          </Text>
+          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
             return (
