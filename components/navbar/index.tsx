@@ -174,9 +174,9 @@ const Navbar = () => {
                 Launchpad
               </NavItem>
             </Link>
-            {/* <Link href="/airdrop">
+            <Link href="/leaderboard">
               <NavItem
-                active={router.pathname == '/airdrop'}
+                active={router.pathname == '/leaderboard'}
                 css={{
                   transition: '0.3s',
                   display: 'block',
@@ -187,9 +187,9 @@ const Navbar = () => {
                   },
                 }}
               >
-                Claim
+                leaderboard
               </NavItem>
-            </Link> */}
+            </Link>
           </Flex>
         </Flex>
       </Box>
