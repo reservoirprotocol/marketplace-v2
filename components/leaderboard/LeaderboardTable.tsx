@@ -113,20 +113,27 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   return (
     <TableRow
       css={{
-        border: '1px solid $primary9',
+        border: '1px solid $primary13',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
           : desktopTemplateColumns,
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
         <Text>{rank}</Text>
       </TableCell>
 
       <TableCell
         css={{
-          maxWidth: '260px',
+          maxWidth: '230px',
           overflow: 'scroll',
           textAlign: 'center',
           pl: '$2 !important',
@@ -135,7 +142,14 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         <Text style="subtitle2">{username}</Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
         <Text
           style="subtitle3"
           css={{
@@ -146,10 +160,17 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
             },
           }}
         >
-          {listingExp}{' '}
+          {listingExp ?? 0}
         </Text>
       </TableCell>
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
         <Text
           style="subtitle3"
           css={{
@@ -160,10 +181,17 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
             },
           }}
         >
-          {offerExp}
+          {offerExp ?? 0}
         </Text>
       </TableCell>
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
         <Text
           style="subtitle3"
           css={{
@@ -188,7 +216,7 @@ const TableHeading = () => {
   return (
     <HeaderRow
       css={{
-        border: '1px solid $primary9',
+        border: '1px solid $primary13',
         display: 'grid',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
