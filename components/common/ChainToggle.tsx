@@ -6,9 +6,7 @@ import { useContext } from 'react'
 import { ChainContext } from 'context/ChainContextProvider'
 import { TooltipArrow } from 'components/primitives/Tooltip'
 
-type Props = {}
-
-const ChainToggle: FC<Props> = ({}) => {
+const ChainToggle: FC = () => {
   const { chain, switchCurrentChain } = useContext(ChainContext)
 
   if (supportedChains.length === 1) {
