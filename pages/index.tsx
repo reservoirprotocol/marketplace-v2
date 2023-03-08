@@ -3,9 +3,6 @@ import { Text, Flex, Box, Button } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useState } from 'react'
-import TrendingCollectionsTimeToggle, {
-  CollectionsSortingOption,
-} from 'components/home/TrendingCollectionsTimeToggle'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
@@ -17,6 +14,9 @@ import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
 import ChainToggle from 'components/common/ChainToggle'
+import CollectionsTimeDropdown, {
+  CollectionsSortingOption,
+} from 'components/common/CollectionsTimeDropdown'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -111,7 +111,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               Popular Collections
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
-              <TrendingCollectionsTimeToggle
+              <CollectionsTimeDropdown
                 compact={compactToggleNames && isMounted}
                 option={sortByTime}
                 onOptionSelected={(option) => {
