@@ -28,17 +28,17 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   }
   const [data, setData] = useState(null)
   console.log(data)
-    //@ts-ignore
+  //@ts-ignore
   const countObjectsByKey = (objectsArray, key) => {
     const countMap = {}
-  //@ts-ignore
+    //@ts-ignore
     objectsArray.forEach((obj) => {
       const keyValue = obj[key]
       if (keyValue in countMap) {
-          //@ts-ignore
+        //@ts-ignore
         countMap[keyValue]++
       } else {
-          //@ts-ignore
+        //@ts-ignore
         countMap[keyValue] = 1
       }
     })
@@ -48,14 +48,14 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   //@ts-ignore
   const sortObjectByKeyValuePairs = (object) => {
     const entries = Object.entries(object)
-      //@ts-ignore
+    //@ts-ignore
     const sortedEntries = entries.sort((a, b) => b[1] - a[1])
     const sortedObjectsArray = sortedEntries.map(([key, value], idx) => ({
       rank: idx + 1,
       name: key,
-        //@ts-ignore
+      //@ts-ignore
       points: value * 50,
-        //@ts-ignore
+      //@ts-ignore
       cumulative: value * 50,
     }))
     return sortedObjectsArray
@@ -64,13 +64,9 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
   console.log(data)
   useEffect(() => {
     const getData = async () => {
-      const res = await fetcher(
-        `https://indexer.nftearth.exchange/orders/asks/v4`
-      )
-      const result = countObjectsByKey(res.data.orders, 'maker')
-      const finalRes = sortObjectByKeyValuePairs(result)
-  //@ts-ignore
-      setData(finalRes)
+      const res = await fetcher(`https://nftearth.exchange/api/quest/top`)
+      //@ts-ignore
+      setData(res.data)
     }
     getData()
     console.log(data)
@@ -123,6 +119,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               lineHeight: 1.2,
               letterSpacing: 2,
               marginTop: '75px',
+              marginBottom: '35px',
               textAlign: 'center',
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -141,31 +138,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                 : 'none',
             }}
           >
-            NFTEARTH AIDRDROP SEASON 2
-          </Text>
-          <Text
-            style={{
-              '@initial': 'h4',
-              '@lg': 'h5',
-            }}
-            css={{
-              lineHeight: 1.2,
-              letterSpacing: 2,
-              marginTop: '35px',
-              marginBottom: '35px',
-              color: theme
-                ? theme === 'dark'
-                  ? '#39FF14'
-                  : '$black'
-                : '#39FF14',
-              textAlign: 'center',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-            }}
-          >
-            Season 1 was just the beginning. There's a lot more coming. Season 2
-            rewards have not been revealed yet, but for the next 30 days, all
-            bidding and listing points have been doubled.
+            9 Quests Leaderboard
           </Text>
           <PointsTable />
           <Text
@@ -230,7 +203,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                     : 'none',
                 }}
               >
-                ROLLING 24HR LEADERBOARD
+                Rolling 24Hr Leaderboard
               </Text>
             </Flex>
             <Box css={{ textAlign: 'center' }}>

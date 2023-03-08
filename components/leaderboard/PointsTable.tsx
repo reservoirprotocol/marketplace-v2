@@ -39,8 +39,8 @@ export const PointsTable: FC = () => {
             <TableHeading />
 
             <PointsTableRow
-              bidPoints={1000}
-              listPoints={5000}
+              bidPoints={50}
+              listPoints={50}
               listingLoyalty={0}
             />
 
@@ -157,7 +157,7 @@ const PointsTableRow: FC<PointsTableRowProps> = ({
 
 const TableHeading = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = ['OFFER POINTS', 'SELLING POINTS', 'LISTING LOYALTY']
+  const headings = ['OFFER XP', 'LISTING XP', 'TOTAL XP']
   const { theme } = useTheme()
   return (
     <HeaderRow

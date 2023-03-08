@@ -75,10 +75,10 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
               return (
                 <LeaderboardTableRow
                   key={i}
-                  rank={item.rank}
-                  username={item.name}
-                  volume={item.points}
-                  reward={item.cumulative}
+                  rank={i + 1}
+                  username={item.wallet}
+                  volume={item.exp}
+                  reward={item.exp}
                 />
               )
             })}
@@ -151,7 +151,7 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
 
 const TableHeading = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = ['Rank', 'User', 'Total XP', 'Potential Reward']
+  const headings = ['Rank', 'User', 'Real Time XP', 'Total XP']
   const { theme } = useTheme()
   return (
     <HeaderRow
