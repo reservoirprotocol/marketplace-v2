@@ -151,7 +151,7 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
 
 const TableHeading = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = ['Rank', 'User', 'Total XP', 'Potential Reward']
+  const headings = ['Rank', 'User', 'Real Time XP', 'Total XP']
   const { theme } = useTheme()
   return (
     <HeaderRow
