@@ -31,6 +31,9 @@ export const TokenFilters: FC<Props> = ({
   isLoading,
   scrollToTop,
 }) => {
+  if (!collections || (collections.length === 0 && !isLoading)) {
+    return null
+  }
   return (
     <Collapsible.Root
       open={open}
@@ -58,7 +61,7 @@ export const TokenFilters: FC<Props> = ({
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
             Collections
           </Text>
-          {collections && collections?.length > 0 ? (
+          {collections && collections.length > 0 ? (
             collections?.map((collection) => {
               let selected = collection?.collection?.id == filterCollection
               return (
