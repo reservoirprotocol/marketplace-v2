@@ -492,6 +492,7 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     includeDynamicPricing: true,
     includeAttributes: true,
+    includeQuantity: true,
   }
 
   const tokensPromise = fetcher(
