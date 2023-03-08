@@ -799,6 +799,15 @@ export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boole
               with. List it! Listing any NFT in any currency on any available
               chain counts!
             </Text>
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
+              css={{ marginTop: '20px' }}
+            >
+              Step 4: Repeat
+            </Text>
+            <Text style="subtitle1" css={{ color: '$gray11' }}>
+              This quest is repeatable, list or bid as many as you want to get more exp.
+            </Text>
             <Text style="subtitle2" css={{ color: '$gray11' }}>
               Exp will be automatically updated.
             </Text>
