@@ -139,7 +139,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                 : 'none',
             }}
           >
-            NFTEARTH AIDRDROP SEASON 2
+         NFTEarth Airdrop Season 2
           </Text>
           <Text
             style={{
@@ -161,9 +161,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
               marginRight: 'auto',
             }}
           >
-            Season 1 was just the beginning. There's a lot more coming. Season 2
-            rewards have not been revealed yet, but for the next 30 days, all
-            bidding and listing points have been doubled.
+Airdrop 1 was just the beginning. Season 2 rewards details from XP have not been revealed yet, for the time being, all bidding and listing actions taken on NFTEarth are accumulating real XP.
           </Text>
           <PointsTable />
           <Text
@@ -228,7 +226,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
                     : 'none',
                 }}
               >
-                ROLLING 24HR LEADERBOARD
+                Rolling 24Hr Leaderboard
               </Text>
             </Flex>
             <Box css={{ textAlign: 'center' }}>

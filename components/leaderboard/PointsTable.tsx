@@ -157,7 +157,7 @@ const PointsTableRow: FC<PointsTableRowProps> = ({
 
 const TableHeading = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = ['OFFER POINTS', 'SELLING POINTS', 'LISTING LOYALTY']
+  const headings = ['OFFER XP', 'LISTING XP', 'TOTAL XP']
   const { theme } = useTheme()
   return (
     <HeaderRow
