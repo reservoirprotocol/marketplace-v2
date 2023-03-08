@@ -113,6 +113,7 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   return (
     <TableRow
       css={{
+        border: '1px solid $primary9',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
           : desktopTemplateColumns,
@@ -187,6 +188,7 @@ const TableHeading = () => {
   return (
     <HeaderRow
       css={{
+        border: '1px solid $primary9',
         display: 'grid',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
