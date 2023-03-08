@@ -122,30 +122,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             9 Quests Leaderboard
           </Text>
           <PointsTable />
-          <Text
-            as="a"
-            href="/collections"
-            style={{
-              '@initial': 'h4',
-              '@lg': 'h5',
-            }}
-            css={{
-              lineHeight: 1.2,
-              letterSpacing: 2,
-              marginTop: '75px',
-              color: theme
-                ? theme === 'dark'
-                  ? '#39FF14'
-                  : '$black'
-                : '#39FF14',
-              textAlign: 'center',
-              marginLeft: 'auto',
-              marginRight: 'auto',
-              cursor: 'pointer',
-            }}
-          >
-            View Collections
-          </Text>
 
           <Box css={{ width: '100%' }}>
             <Flex
