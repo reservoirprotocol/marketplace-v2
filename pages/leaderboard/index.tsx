@@ -1,5 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { Text, Flex, Box } from 'components/primitives'
+import { Text, Flex, Box, Input } from 'components/primitives'
 import Layout from 'components/Layout'
 import { useEffect, useRef, useState } from 'react'
 import { useMarketplaceChain, useMounted } from 'hooks'
@@ -71,25 +71,6 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
     getData()
     console.log(data)
   }, [])
-
-  // const { data, hasNextPage, fetchNextPage, isFetchingPage, isValidating } =
-  //   useCollections(
-  //     collectionQuery,
-  //     {
-  //       fallbackData: [ssr.exploreCollections[marketplaceChain.id]],
-  //     },
-  //     marketplaceChain.id
-  //   )
-
-  // const loadMoreRef = useRef<HTMLDivElement>(null)
-  // const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  // useEffect(() => {
-  //   let isVisible = !!loadMoreObserver?.isIntersecting
-  //   if (isVisible) {
-  //     fetchNextPage()
-  //   }
-  // }, [loadMoreObserver?.isIntersecting, isFetchingPage])
 
   return (
     <Layout>

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -6,48 +6,71 @@ import {
   TableCell,
   TableRow,
   HeaderRow,
-  Button,
   Box,
-  FormatCryptoCurrency,
+  Input,
   CollapsibleContent,
 } from '../primitives'
-import { faListDots } from '@fortawesome/free-solid-svg-icons'
-import { useIntersectionObserver } from 'usehooks-ts'
-import LoadingSpinner from '../common/LoadingSpinner'
-import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
-import Link from 'next/link'
-import { MutatorCallback } from 'swr'
-import { useENSResolver, useTimeSince } from 'hooks'
-import CancelBid from 'components/buttons/CancelBid'
-import { AcceptBid, BuyNow } from '../buttons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBolt } from '@fortawesome/free-solid-svg-icons'
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
 import * as Collapsible from '@radix-ui/react-collapsible'
-import { NAVBAR_HEIGHT } from '../navbar'
-import { ItemIndicator } from '@radix-ui/react-dropdown-menu'
 
 type Props = {
   data: any
 }
 
-type User = {
-  rank: number
-  username: string
-  volume: number
-  reward: number
-}
-
 const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
 const mobileTemplateColumns = 'repeat(4, 1fr) 55px'
-export const LeaderboardTable: FC<Props> = ({ data }) => {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
 
-  //@ts-ignore
+export const LeaderboardTable: FC<Props> = ({ data }) => {
+
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const [searchWallet, setSearchWallet] = useState<string | null>("");
+  const { address } = useAccount();
+  const tableRef = useRef<HTMLTableElement>(null);
+
+  // find by wallet in the table
+  const filteredData = data?.filter((item: any) => item.wallet.toLowerCase().includes(searchWallet?.toLowerCase()));
+  const matchingItem = data?.find((item: any) => item.wallet.toLowerCase() === address?.toLowerCase());
+
+  useEffect(() => {
+    if (tableRef.current) {
+      tableRef.current.scrollTop = 0;
+    }
+  }, [searchWallet]);
 
   return (
     <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
+      <Flex
+      justify="end"
+      css={{
+        alignItems: 'center',
+        gap: '20px',
+        marginBottom: '20px',
+        backgroud: 'white',
+        "@xs": {
+          marginRight: '0',
+        },
+        "@lg": {
+          marginRight: '5vw',
+        },
+      }}>
+        <Text>Searh Wallet</Text>
+        <Input
+          onChange={(e) => { setSearchWallet(e.target.value); }}
+          style={{
+            borderRadius: '10px',
+            background: '#3C3C3C',
+          }}
+          css={{
+            "@xs": {
+              width: '100px',
+            },
+            "@md": {
+              width: '250px',
+            }
+          }}
+        />
+      </Flex>
       <CollapsibleContent
         css={{
           position: 'sticky',
@@ -59,6 +82,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
           borderRadius: '$base',
           p: '$2',
         }}
+        ref={tableRef}
       >
         <Box
           css={{
@@ -72,18 +96,29 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
             css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
-            {data?.map((item: any, i: number) => {
-              return (
+            {
+              matchingItem && (
+              <LeaderboardTableRow
+                key={matchingItem.id}
+                rank={1}
+                username="You"
+                listingExp={matchingItem.listingExp}
+                offerExp={matchingItem.offerExp}
+                totalExp={matchingItem.exp}
+              />
+            )}
+            {
+              filteredData?.filter((item: any) => item.wallet.toLowerCase() !== address?.toLowerCase())
+              .map((item: any, i: number) => (
                 <LeaderboardTableRow
-                  key={i}
-                  rank={i + 1}
+                  key={item.id}
+                  rank={matchingItem ? i + 2 : i + 1}
                   username={item.wallet}
                   listingExp={item.listingExp}
                   offerExp={item.offerExp}
                   totalExp={item.exp}
                 />
-              )
-            })}
+            ))}
             <Box ref={loadMoreRef} css={{ height: 20 }} />
           </Flex>
         </Box>
@@ -113,7 +148,6 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   return (
     <TableRow
       css={{
-        border: '1px solid $primary13',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
           : desktopTemplateColumns,
@@ -122,7 +156,8 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
     >
       <TableCell
         css={{
-          border: '1px solid $primary13',
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
           textAlign: 'center',
           pl: '$2 !important',
           py: '$5',
@@ -133,25 +168,30 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
 
       <TableCell
         css={{
-          maxWidth: '230px',
-          overflow: 'scroll',
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
+          maxWidth: '',
           textAlign: 'center',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
           pl: '$2 !important',
+          py: '$5',
         }}
       >
-        <Text style="subtitle2">{username}</Text>
+        <Text style="subtitle1">{username}</Text>
       </TableCell>
 
       <TableCell
         css={{
-          border: '1px solid $primary13',
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
           textAlign: 'center',
           pl: '$2 !important',
           py: '$5',
         }}
       >
         <Text
-          style="subtitle3"
+          style="subtitle1"
           css={{
             color: '$primary13',
             marginTop: '$1',
@@ -165,14 +205,15 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
       </TableCell>
       <TableCell
         css={{
-          border: '1px solid $primary13',
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
           textAlign: 'center',
           pl: '$2 !important',
           py: '$5',
         }}
       >
         <Text
-          style="subtitle3"
+          style="subtitle1"
           css={{
             color: '$primary13',
             marginTop: '$1',
@@ -186,14 +227,15 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
       </TableCell>
       <TableCell
         css={{
-          border: '1px solid $primary13',
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
           textAlign: 'center',
           pl: '$2 !important',
           py: '$5',
         }}
       >
         <Text
-          style="subtitle3"
+          style="subtitle1"
           css={{
             color: '$primary13',
             marginTop: '$1',
