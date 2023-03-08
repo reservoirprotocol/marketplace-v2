@@ -1,12 +1,12 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {ethers} from "ethers";
-import db from "lib/db";
-import {paths} from "@nftearth/reservoir-sdk";
-import fetcher from "utils/fetcher";
-import supportedChains from "utils/chains";
-import {ItemType, Orders} from "types/nftearth";
+import {NextApiRequest, NextApiResponse} from "next"
+import {ethers} from "ethers"
+import db from "lib/db"
+import {paths} from "@nftearth/reservoir-sdk"
+import fetcher from "utils/fetcher"
+import supportedChains from "utils/chains"
+import {ItemType, Orders} from "types/nftearth.d"
 
-const NFTItem = [ItemType.ERC721, ItemType.ERC1155];
+const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const medianExpReward = 50
 const account = db.collection('account')
 
@@ -26,7 +26,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
 
   const accountData = await account.findOne({
     wallet: new RegExp(`/^${parameters.offerer}$/`, 'i')
-  }).catch(() => null);
+  }).catch(() => null)
 
   const isListing = parameters.kind === 'token-list'
   const nft = isListing ?
@@ -45,10 +45,10 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     headers: {
       'x-api-key': chain?.apiKey || '',
     }
-  });
+  })
 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
-  const collection = collections?.[0];
+  const collection = collections?.[0]
 
   if (accountData && collection) {
     // TODO: Calculate reward by floor price & increase reward by listing period & double Reward for NFTE Token
@@ -74,4 +74,4 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   })
 }
 
-export default handleOrderbookListings;
+export default handleOrderbookListings
