@@ -39,8 +39,8 @@ type User = {
   reward: number
 }
 
-const desktopTemplateColumns = '.75fr repeat(3, 1fr)'
-const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
+const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
+const mobileTemplateColumns = 'repeat(4, 1fr) 55px'
 export const LeaderboardTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
@@ -53,6 +53,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
           position: 'sticky',
           top: 16 + 80,
           height: '55vh',
+          width: '90vw',
           overflow: 'auto',
           marginBottom: 16,
           borderRadius: '$base',
@@ -77,8 +78,9 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
                   key={i}
                   rank={i + 1}
                   username={item.wallet}
-                  volume={item.exp}
-                  reward={item.exp}
+                  listingExp={item.listingExp}
+                  offerExp={item.offerExp}
+                  totalExp={item.exp}
                 />
               )
             })}
@@ -93,15 +95,17 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
 type LeaderboardTableRowProps = {
   rank: number
   username: string
-  volume: number
-  reward: number
+  listingExp: number
+  offerExp: number
+  totalExp: number
 }
 
 const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   rank,
   username,
-  volume,
-  reward,
+  listingExp,
+  offerExp,
+  totalExp,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { theme } = useTheme()
@@ -109,41 +113,97 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   return (
     <TableRow
       css={{
+        border: '1px solid $primary13',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
           : desktopTemplateColumns,
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
       }}
     >
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
         <Text>{rank}</Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
+      <TableCell
+        css={{
+          maxWidth: '230px',
+          overflow: 'scroll',
+          textAlign: 'center',
+          pl: '$2 !important',
+        }}
+      >
         <Text style="subtitle2">{username}</Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{volume} </Text>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {listingExp ?? 0}
+        </Text>
       </TableCell>
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Flex css={{ gap: '$3', marginLeft: '100px' }}>
-          <Text
-            style="subtitle3"
-            css={{
-              color: '$primary13',
-              marginTop: '$1',
-              '&:hover': {
-                color: '$primary14',
-              },
-            }}
-          >
-            {reward}
-          </Text>
-          <Box>
-            <img src="/nftearth-icon.png" width={25} height={25} />
-          </Box>
-        </Flex>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {offerExp ?? 0}
+        </Text>
+      </TableCell>
+      <TableCell
+        css={{
+          border: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style="subtitle3"
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {totalExp}
+        </Text>
       </TableCell>
     </TableRow>
   )
@@ -151,11 +211,12 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
 
 const TableHeading = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = ['Rank', 'User', 'Real Time XP', 'Total XP']
+  const headings = ['Rank', 'User', 'Offers XP', 'Listings XP', 'Total XP']
   const { theme } = useTheme()
   return (
     <HeaderRow
       css={{
+        border: '1px solid $primary13',
         display: 'grid',
         gridTemplateColumns: isSmallDevice
           ? mobileTemplateColumns
