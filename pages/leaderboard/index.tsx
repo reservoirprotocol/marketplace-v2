@@ -94,7 +94,7 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
           <Text
             style={{
               '@initial': 'h3',
-              '@lg': 'h2',
+              '@lg': 'h1',
             }}
             css={{
               lineHeight: 1.2,
