@@ -19,7 +19,7 @@ type Props = {
 }
 
 const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
-const mobileTemplateColumns = 'repeat(4, 1fr) 55px'
+const mobileTemplateColumns = 'repeat(5, 1fr)'
 
 export const LeaderboardTable: FC<Props> = ({ data }) => {
 
@@ -148,10 +148,13 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   return (
     <TableRow
       css={{
-        gridTemplateColumns: isSmallDevice
-          ? mobileTemplateColumns
-          : desktopTemplateColumns,
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
+        "@xs": {
+          gridTemplateColumns: 'repeat(5, 1fr)'
+        },
+        "@lg": {
+          gridTemplateColumns: '.75fr repeat(4, 1fr)'
+        }
       }}
     >
       <TableCell
@@ -163,7 +166,14 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
           py: '$5',
         }}
       >
-        <Text>{rank}</Text>
+        <Text
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
+        >
+          {rank}
+        </Text>
       </TableCell>
 
       <TableCell
@@ -179,8 +189,21 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         }}
       >
         {
-          username === "You" ? <Text style="subtitle1" css={{ color: '$crimson9'}}>{username}</Text>
-          : <Text style="subtitle1">{username}</Text>
+          username === "You" ? <Text
+            style={{
+              '@initial': 'subtitle3',
+              '@lg': 'subtitle1'
+            }}
+            css={{ color: '$crimson9' }}>
+            {username}
+          </Text>
+          : <Text
+              style={{
+              '@initial': 'subtitle3',
+              '@lg': 'subtitle1'
+            }}>
+            {username}
+          </Text>
         }
       </TableCell>
 
@@ -194,7 +217,10 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         }}
       >
         <Text
-          style="subtitle1"
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
           css={{
             color: '$primary13',
             marginTop: '$1',
@@ -216,7 +242,10 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         }}
       >
         <Text
-          style="subtitle1"
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
           css={{
             color: '$primary13',
             marginTop: '$1',
@@ -232,13 +261,18 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
         css={{
           borderBottom: '1px solid $primary13',
           borderLeft: '1px solid $primary13',
+          borderRight: '1px solid $primary13',
           textAlign: 'center',
           pl: '$2 !important',
+          pr: '$2 !important',
           py: '$5',
         }}
       >
         <Text
-          style="subtitle1"
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
           css={{
             color: '$primary13',
             marginTop: '$1',
@@ -261,27 +295,42 @@ const TableHeading = () => {
   return (
     <HeaderRow
       css={{
-        border: '1px solid $primary13',
+        borderTop: '1px solid $primary13',
         display: 'grid',
-        gridTemplateColumns: isSmallDevice
-          ? mobileTemplateColumns
-          : desktopTemplateColumns,
         position: 'sticky',
         top: 0,
         backgroundColor: theme === 'light' ? '$primary10' : '$primary5',
+        "@xs": {
+          gridTemplateColumns: 'repeat(5, 1fr)'
+        },
+        "@lg": {
+          gridTemplateColumns: '.75fr repeat(4, 1fr)'
+        }
       }}
     >
-      {headings.map((heading) => (
+      {headings.map((heading, index, array) => (
         <TableCell
-          key={heading}
+          key={index}
           css={{
             textAlign: 'center',
             pl: '$2 !important',
-            py: '$1',
-            border: '1px solid $primary2',
+            py: '$2',
+            borderBottom: '1px solid $primary13',
+            borderLeft: '1px solid $primary13',
+            ...(index === array.length - 1 && { borderRight: '1px solid $primary13' }),
           }}
         >
-          <Text css={{ color: '$gray11' }} as={'div'} style="subtitle1">
+          <Text
+            css={{
+              color: '$gray11',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            as={'div'}
+            style={{
+              '@initial': 'subtitle3',
+              '@lg': 'subtitle2'
+            }}>
             {heading}
           </Text>
         </TableCell>
