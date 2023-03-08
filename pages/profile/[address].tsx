@@ -60,7 +60,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   ensName = resolvedEnsName ? resolvedEnsName : ensName
   const account = useAccount()
 
-  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
@@ -233,7 +233,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     },
                   }}
                 >
-                  {isFetchingInitialData
+                  {isFetchingInitialData || collectionsLoading
                     ? Array(10)
                         .fill(null)
                         .map((_, index) => (
