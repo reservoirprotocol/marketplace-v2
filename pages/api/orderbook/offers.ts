@@ -66,8 +66,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
-        listingExp: isListing ? reward : 0,
-        offerExp: !isListing ? reward : 0,
+        offerExp: reward,
         exp: reward
       }
     })
