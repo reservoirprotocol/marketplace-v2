@@ -19,6 +19,7 @@ import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import { Head } from 'components/Head'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -47,119 +48,124 @@ const IndexPage: NextPage = () => {
   }
 
   return (
-    <Layout>
-      <Flex
-        direction="column"
-        css={{
-          px: '$4',
-          py: '$5',
-          '@sm': {
-            px: '$5',
-          },
-        }}
-      >
-        {isConnected ? (
-          <>
-            <Text style="h4" css={{}}>
-              Portfolio
-            </Text>
-            <Tabs.Root defaultValue="items">
-              <Flex css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}>
-                <TabsList
-                  style={{
-                    whiteSpace: 'nowrap',
-                    width: '100%',
-                  }}
-                >
-                  <TabsTrigger value="items">Items</TabsTrigger>
-                  <TabsTrigger value="collections">Collections</TabsTrigger>
-                  <TabsTrigger value="listings">Listings</TabsTrigger>
-                  <TabsTrigger value="offers">Offers Made</TabsTrigger>
-                </TabsList>
-              </Flex>
-
-              <TabsContent value="items">
+    <>
+      <Head />
+      <Layout>
+        <Flex
+          direction="column"
+          css={{
+            px: '$4',
+            py: '$5',
+            '@sm': {
+              px: '$5',
+            },
+          }}
+        >
+          {isConnected ? (
+            <>
+              <Text style="h4" css={{}}>
+                Portfolio
+              </Text>
+              <Tabs.Root defaultValue="items">
                 <Flex
-                  css={{
-                    gap: tokenFiltersOpen ? '$5' : '0',
-                    position: 'relative',
-                  }}
+                  css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}
                 >
-                  {isSmallDevice ? (
-                    <MobileTokenFilters
-                      collections={collections}
-                      filterCollection={filterCollection}
-                      setFilterCollection={setFilterCollection}
-                    />
-                  ) : (
-                    <TokenFilters
-                      isLoading={collectionsLoading}
-                      open={tokenFiltersOpen}
-                      setOpen={setTokenFiltersOpen}
-                      collections={collections}
-                      filterCollection={filterCollection}
-                      setFilterCollection={setFilterCollection}
-                    />
-                  )}
-                  <Box
-                    css={{
-                      flex: 1,
-                      maxWidth: '100%',
+                  <TabsList
+                    style={{
+                      whiteSpace: 'nowrap',
+                      width: '100%',
                     }}
                   >
-                    <Flex justify="between" css={{ marginBottom: '$4' }}>
-                      {!isSmallDevice &&
-                        !collectionsLoading &&
-                        collections.length > 0 && (
-                          <FilterButton
-                            open={tokenFiltersOpen}
-                            setOpen={setTokenFiltersOpen}
-                          />
-                        )}
-                    </Flex>
-                    <TokenTable
-                      isLoading={collectionsLoading}
-                      address={address}
-                      filterCollection={filterCollection}
-                    />
-                  </Box>
+                    <TabsTrigger value="items">Items</TabsTrigger>
+                    <TabsTrigger value="collections">Collections</TabsTrigger>
+                    <TabsTrigger value="listings">Listings</TabsTrigger>
+                    <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                  </TabsList>
                 </Flex>
-              </TabsContent>
-              <TabsContent value="collections">
-                <CollectionsTable address={address} />
-              </TabsContent>
-              <TabsContent value="listings">
-                <ListingsTable address={address} />
-              </TabsContent>
-              <TabsContent value="offers">
-                <OffersTable address={address} />
-              </TabsContent>
-            </Tabs.Root>
-          </>
-        ) : (
-          <Flex
-            direction="column"
-            align="center"
-            css={{ mx: 'auto', py: '120px', maxWidth: '350px', gap: '$4' }}
-          >
-            <Text style="h4" css={{ mb: '$3' }}>
-              Sell your NFT instantly
-            </Text>
-            <Text css={{ color: '$gray11' }}>
-              <FontAwesomeIcon icon={faWallet} size="2xl" />
-            </Text>
-            <Text
-              style="body1"
-              css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
+
+                <TabsContent value="items">
+                  <Flex
+                    css={{
+                      gap: tokenFiltersOpen ? '$5' : '0',
+                      position: 'relative',
+                    }}
+                  >
+                    {isSmallDevice ? (
+                      <MobileTokenFilters
+                        collections={collections}
+                        filterCollection={filterCollection}
+                        setFilterCollection={setFilterCollection}
+                      />
+                    ) : (
+                      <TokenFilters
+                        isLoading={collectionsLoading}
+                        open={tokenFiltersOpen}
+                        setOpen={setTokenFiltersOpen}
+                        collections={collections}
+                        filterCollection={filterCollection}
+                        setFilterCollection={setFilterCollection}
+                      />
+                    )}
+                    <Box
+                      css={{
+                        flex: 1,
+                        maxWidth: '100%',
+                      }}
+                    >
+                      <Flex justify="between" css={{ marginBottom: '$4' }}>
+                        {!isSmallDevice &&
+                          !collectionsLoading &&
+                          collections.length > 0 && (
+                            <FilterButton
+                              open={tokenFiltersOpen}
+                              setOpen={setTokenFiltersOpen}
+                            />
+                          )}
+                      </Flex>
+                      <TokenTable
+                        isLoading={collectionsLoading}
+                        address={address}
+                        filterCollection={filterCollection}
+                      />
+                    </Box>
+                  </Flex>
+                </TabsContent>
+                <TabsContent value="collections">
+                  <CollectionsTable address={address} />
+                </TabsContent>
+                <TabsContent value="listings">
+                  <ListingsTable address={address} />
+                </TabsContent>
+                <TabsContent value="offers">
+                  <OffersTable address={address} />
+                </TabsContent>
+              </Tabs.Root>
+            </>
+          ) : (
+            <Flex
+              direction="column"
+              align="center"
+              css={{ mx: 'auto', py: '120px', maxWidth: '350px', gap: '$4' }}
             >
-              Connect wallet to instant sell your token across all major
-              marketplaces.
-            </Text>
-            <ConnectWalletButton />
-          </Flex>
-        )}
-      </Flex>
-    </Layout>
+              <Text style="h4" css={{ mb: '$3' }}>
+                Sell your NFT instantly
+              </Text>
+              <Text css={{ color: '$gray11' }}>
+                <FontAwesomeIcon icon={faWallet} size="2xl" />
+              </Text>
+              <Text
+                style="body1"
+                css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
+              >
+                Connect wallet to instant sell your token across all major
+                marketplaces.
+              </Text>
+              <ConnectWalletButton />
+            </Flex>
+          )}
+        </Flex>
+      </Layout>
+    </>
   )
 }
 
