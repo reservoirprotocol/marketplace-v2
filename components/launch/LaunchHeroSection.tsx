@@ -60,7 +60,23 @@ const LearnHeroSection: FC = () => {
             color: '$whiteA12',
           }}
         >
-          Deploy your own NFT collection with NFTEarth’s launchpad and managed
+          Deploy your own NFT collection with NFTEarth’s launchpad. 
+          </Text>
+          <Text
+          style={{
+            '@initial': 'subtitle2',
+            '@lg': 'subtitle1',
+          }}
+          css={{
+            lineHeight: 1.5,
+            width: '100%',
+            '@lg': {
+              width: '100%',
+            },
+            color: '$whiteA12',
+          }}
+        >
+          Manage
           the collection settings, minting details, metadata, artwork
           generation, and allowlist, all from the NFTEarth Hub. ❤️
         </Text>
