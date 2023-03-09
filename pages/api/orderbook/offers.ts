@@ -9,6 +9,7 @@ import {ConsiderationItem, ItemType, OfferItem, Orders} from "types/nftearth.d"
 const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
+const entry = db.collection('quest_entry')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
 
 const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -28,6 +29,10 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const accountData = await account.findOne({
     wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
   }).catch(() => null)
+
+  const questEntry = await entry.findOne({
+    wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
+  }).catch(() => null) || []
 
   const nft: ConsiderationItem[] = parameters.consideration.filter(o => NFTItem.includes(o.itemType))
   const payment: OfferItem[] = parameters.offer.filter(o => PaymentItem.includes(o.itemType))
@@ -67,7 +72,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     reward += reward * (period * EXTRA_REWARD_PER_HOUR_PERIOD)
     reward -= reward * percentDiff
 
-    if (reward < 0 || value <= 0) {
+    if (reward < 0 || value <= 0 || questEntry.length < 8) {
       reward = 0
     }
 
