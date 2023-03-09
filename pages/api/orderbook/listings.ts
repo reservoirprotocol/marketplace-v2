@@ -9,7 +9,7 @@ import {ConsiderationItem, ItemType, OfferItem, Orders} from "types/nftearth.d"
 const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
-const EXTRA_REWARD_PER_HOUR_PERIOD=0.006
+const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
 
 const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']

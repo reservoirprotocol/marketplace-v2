@@ -11,7 +11,7 @@ const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
 
-const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']
   if (!apiKey || apiKey !== process.env.ORDERBOOK_API_KEY) {
     res.status(405).send({message: 'Invalid api key'})
@@ -48,7 +48,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
   const collection = collections?.[0]
 
-  console.info(`New offer`, accountData, (accountData && collection), parameters)
+  console.info(`Cancel order`, accountData, (accountData && collection), parameters)
 
   if (accountData && collection) {
     const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
@@ -59,7 +59,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
 
     let reward = collectionVolume * floorValue + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
 
-    if (value > floorValue) {
+    if (value < floorValue) {
       reward += (floorValue * percentDiff)
     } else {
       reward -= (floorValue * percentDiff)
@@ -70,20 +70,20 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     }
 
     const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
-    const finalReward = reward * (doubleExp ? 2 : 1)
+    const finalReward = Math.abs(reward * (doubleExp ? 2 : 1))
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
-        offerExp: finalReward,
-        exp: finalReward
+        listingExp: -finalReward,
+        exp: -finalReward
       }
     })
   }
 
   return res.json({
-    message: 'Offer Accepted'
+    message: 'Cancel Accepted'
   })
 }
 
-export default handleOrderbookOffers
+export default handleOrderbookListings
