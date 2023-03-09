@@ -75,7 +75,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     reward += reward * (period * EXTRA_REWARD_PER_HOUR_PERIOD)
     reward += reward * percentDiff
 
-    if (reward < 0 || value <= 0 || questEntry.length < 8) {
+    if (reward < 0 || value <= 0 || questEntry.length < 7) {
       reward = 0
     }
 

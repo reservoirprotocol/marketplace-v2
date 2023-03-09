@@ -56,7 +56,7 @@ export const Quest = ({
           >
             <img src="/images/Lock.png" style={{ margin: 'auto' }} />
             <Text css={{ fontWeight: '700', fontSize: '$5' }}>
-              Earn {points} XP to unlock{' '}
+              Complete previous quest to unlock{' '}
             </Text>
           </Box>
           <Box
