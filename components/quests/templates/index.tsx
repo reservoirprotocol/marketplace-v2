@@ -2,8 +2,8 @@ import { Flex, Box, Button, Text } from 'components/primitives'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useAccount } from 'wagmi'
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faExclamationCircle} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { useContext, useState } from 'react'
 import { ToastContext } from '../../../context/ToastContextProvider'
@@ -67,7 +67,7 @@ const BasicModal = ({
         },
         '@lg': {
           padding: '$3',
-        }
+        },
       }}
     >
       <Flex
@@ -81,14 +81,15 @@ const BasicModal = ({
           '@lg': {
             display: 'flex',
             textAlign: 'left',
-          }
-      }}>
+          },
+        }}
+      >
         <Image
           src="/images/NFTQuest.png"
           width={130}
           height={100}
           alt="NFTEarth Logo"
-          style={{margin: 'auto'}}
+          style={{ margin: 'auto' }}
         />
         <Flex direction="column">
           <Text style={{ '@initial': 'h5', '@lg': 'h4' }}>{header}</Text>
@@ -116,7 +117,13 @@ const BasicModal = ({
               onClick={handleEntry}
               css={{ display: 'flex', justifyContent: 'center' }}
             >
-              {loading ? <LoadingSpinner /> : ( repeatable ? 'Exp will be added automatically' : 'Verify and Claim')}
+              {loading ? (
+                <LoadingSpinner />
+              ) : repeatable ? (
+                'Exp will be added automatically'
+              ) : (
+                'Verify and Claim'
+              )}
             </Button>
           </Flex>
         ) : (
@@ -145,7 +152,13 @@ const BasicModal = ({
   )
 }
 
-export const QuestRegisterUserName = ({ id, disabled }: { id: number, disabled: boolean }) => {
+export const QuestRegisterUserName = ({
+  id,
+  disabled,
+}: {
+  id: number
+  disabled: boolean
+}) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -205,7 +218,7 @@ export const QuestFollowTwitter = ({
   id: number
   disabled: boolean
   profile: any
-}) => { 
+}) => {
   return (
     <BasicModal
       id={id}
@@ -354,7 +367,13 @@ export const QuestRetweet = ({
   )
 }
 
-export const QuestListNFT = ({ id, disabled }: { id: number, disabled: boolean }) => {
+export const QuestListNFT = ({
+  id,
+  disabled,
+}: {
+  id: number
+  disabled: boolean
+}) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -469,7 +488,8 @@ export const QuestJoinDiscord = ({
               Head to the profile page on NFTEarth and link your Discord account
               to your NFTEarth user profile.
             </Text>
-            <Text style={{ '@initial': 'h6', '@lg': 'h4' }} 
+            <Text
+              style={{ '@initial': 'h6', '@lg': 'h4' }}
               css={{ marginTop: '20px' }}
             >
               Step 2: Join us on Discord
@@ -641,8 +661,8 @@ export const QuestListNFTInNFTEOnAnyChain = ({
               Step 2: List any NFT for sale in $NFTE currency
             </Text>
             <Text style="subtitle1" css={{ color: '$gray11' }}>
-              Click on the NFT you would like to trade and list it for sale on NFTEarth marketplace.
-              You need to list at least 3 NFTs to be
+              Click on the NFT you would like to trade and list it for sale on
+              NFTEarth marketplace. You need to list at least 3 NFTs to be
               eligible to claim the reward. Make sure it is listed in $NFTE
               currency. Double XP if listed more than 5.
             </Text>
@@ -652,11 +672,25 @@ export const QuestListNFTInNFTEOnAnyChain = ({
             >
               Step 3: Verify and claim your XP by clicking the button below!
             </Text>
-            <Text style="subtitle1" css={{ color: '$gray11', backgroundColor: '$primary3', p: '$4' }}>
-              <FontAwesomeIcon icon={faExclamationCircle} color="red" style={{ marginRight: 10, background: '#fff', borderRadius: '60%' }}/>
-              Please take a note that for this quest, button "Verify and Claim" can be successfully pressed only ONCE!
-              (e.g. if you list 3, verify/claim successfully and only after that decide to list more to get double points - it will not be possible).
-              Please consider already from the beginning - are you going for 150 or 300 points and act accordingly
+            <Text
+              style="subtitle1"
+              css={{ color: '$gray11', backgroundColor: '$primary3', p: '$4' }}
+            >
+              <FontAwesomeIcon
+                icon={faExclamationCircle}
+                color="red"
+                style={{
+                  marginRight: 10,
+                  background: '#fff',
+                  borderRadius: '60%',
+                }}
+              />
+              Please take a note that for this quest, button "Verify and Claim"
+              can be successfully pressed only ONCE! (e.g. if you list 3,
+              verify/claim successfully and only after that decide to list more
+              to get double points - it will not be possible). Please consider
+              already from the beginning - are you going for 150 or 300 points
+              and act accordingly
             </Text>
           </Flex>
         </Flex>
@@ -665,7 +699,13 @@ export const QuestListNFTInNFTEOnAnyChain = ({
   )
 }
 
-export const QuestMakeOfferForNFT = ({ id, disabled }: { id: number, disabled: boolean }) => {
+export const QuestMakeOfferForNFT = ({
+  id,
+  disabled,
+}: {
+  id: number
+  disabled: boolean
+}) => {
   return (
     <BasicModal
       disabled={disabled}
@@ -733,7 +773,13 @@ export const QuestMakeOfferForNFT = ({ id, disabled }: { id: number, disabled: b
   )
 }
 
-export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boolean }) => {
+export const QuestLeaderboard = ({
+  id,
+  disabled,
+}: {
+  id: number
+  disabled: boolean
+}) => {
   return (
     <BasicModal
       disabled
@@ -805,17 +851,10 @@ export const QuestLeaderboard = ({ id, disabled }: { id: number, disabled: boole
               Go to your Portfolio and list any NFT you would like to by
               clicking List for Sale and adding sale parameters you are happy
               with. List it! Listing any NFT in any currency on any available
-              chain counts!
+              chain counts! This quest is repeatable, list or bid as many as you
+              want to get more exp.
             </Text>
-            <Text
-              style={{ '@initial': 'h6', '@lg': 'h4' }}
-              css={{ marginTop: '20px' }}
-            >
-              Step 4: Repeat
-            </Text>
-            <Text style="subtitle1" css={{ color: '$gray11' }}>
-              This quest is repeatable, list or bid as many as you want to get more exp.
-            </Text>
+
             <Text style="subtitle2" css={{ color: '$gray11' }}>
               Exp will be automatically updated.
             </Text>
