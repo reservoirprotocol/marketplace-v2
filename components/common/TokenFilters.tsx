@@ -18,6 +18,7 @@ type Props = {
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
   scrollToTop?: () => void
+  isLoading?: boolean
 }
 
 export const TokenFilters: FC<Props> = ({
@@ -26,9 +27,10 @@ export const TokenFilters: FC<Props> = ({
   collections,
   filterCollection,
   setFilterCollection,
+  isLoading,
   scrollToTop,
 }) => {
-  if (collections?.length === 0 || collections == null) {
+  if (collections?.length === 0 || collections == null || isLoading) {
     return null
   }
   return (
@@ -49,15 +51,8 @@ export const TokenFilters: FC<Props> = ({
           overflow: 'auto',
         }}
       >
-        <Flex
-          direction="column"
-          css={{
-            overflowY: 'scroll',
-          }}
-        >
-          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}>
-            Collections
-          </Text>
+        <Flex direction="column">
+          <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
             return (

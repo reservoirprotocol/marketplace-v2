@@ -118,9 +118,10 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     ? [ssr.collections[marketplaceChain.id]]
     : undefined
 
-  const { data: collections } = useUserCollections(address, collectionQuery, {
-    fallbackData: filterCollection ? undefined : ssrCollections,
-  })
+  const { data: collections, isLoading: collectionsLoading } =
+    useUserCollections(address, collectionQuery, {
+      fallbackData: filterCollection ? undefined : ssrCollections,
+    })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -194,6 +195,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 />
               ) : (
                 <TokenFilters
+                  isLoading={collectionsLoading}
                   open={tokenFiltersOpen}
                   setOpen={setTokenFiltersOpen}
                   collections={collections}
@@ -208,12 +210,15 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 }}
               >
                 <Flex justify="between" css={{ marginBottom: '$4' }}>
-                  {collections && collections.length > 0 && !isSmallDevice && (
-                    <FilterButton
-                      open={tokenFiltersOpen}
-                      setOpen={setTokenFiltersOpen}
-                    />
-                  )}
+                  {!collectionsLoading &&
+                    collections &&
+                    collections.length > 0 &&
+                    !isSmallDevice && (
+                      <FilterButton
+                        open={tokenFiltersOpen}
+                        setOpen={setTokenFiltersOpen}
+                      />
+                    )}
                 </Flex>
                 <Grid
                   css={{
@@ -228,7 +233,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     },
                   }}
                 >
-                  {isFetchingInitialData
+                  {isFetchingInitialData || collectionsLoading
                     ? Array(10)
                         .fill(null)
                         .map((_, index) => (

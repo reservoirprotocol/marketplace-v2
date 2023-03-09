@@ -14,6 +14,8 @@ import { useMarketplaceChain, useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import titleCase from 'utils/titleCase'
+import { useRouter } from 'next/router'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0] | null
@@ -26,6 +28,9 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const [isExpanded, setIsExpanded] = useState(false)
   const descriptionRef = useRef<HTMLParagraphElement | null>(null)
   const isMounted = useMounted()
+  const router = useRouter()
+
+  let chain = titleCase(router.query.chain as string)
 
   const CollectionAction = styled(Flex, {
     px: '$4',
@@ -196,6 +201,15 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
               </Flex>
             </Anchor>
+          </Flex>
+          <Flex justify="between" css={{ width: '100%' }}>
+            <Text
+              style="subtitle1"
+              css={{ color: '$gray11', fontWeight: 'normal' }}
+            >
+              Chain
+            </Text>
+            <Text style="subtitle1">{chain}</Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
             <Text
