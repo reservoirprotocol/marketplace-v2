@@ -16,10 +16,9 @@ const ChainToggle: FC = () => {
   return (
     <ToggleGroup type="single" value={chain.name}>
       {supportedChains.map((chainOption) => (
-        <TooltipPrimitive.Root delayDuration={0}>
+        <TooltipPrimitive.Root delayDuration={0} key={chainOption.name}>
           <TooltipPrimitive.Trigger>
             <ToggleGroupItem
-              key={chainOption.name}
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
               onClick={() => switchCurrentChain(chainOption.id)}

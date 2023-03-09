@@ -153,7 +153,7 @@ export default async function handler(req: Request) {
             allTimeUsdVolume:
               (collection.allTimeVolume &&
                 collection.allTimeVolume *
-                  usdCoinPrices.prices[index].current_price) ||
+                  usdCoinPrices?.prices?.[index]?.current_price) ||
               0,
           },
         })
