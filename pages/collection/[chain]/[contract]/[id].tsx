@@ -361,22 +361,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     setIsRefreshing(false)
                   })
                   .catch((e) => {
-                    const { message } = e
-                    const ratelimit = DATE_REGEX.exec(message)?.[0]
+                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
 
-                    if (ratelimit) {
-                      addToast?.({
-                        title: 'Refresh token failed',
-                        description: `This token was recently refreshed. The next available refresh is in ${timeTill(
-                          ratelimit
-                        )}`,
-                      })
-                    } else {
-                      addToast?.({
-                        title: 'Refresh token failed',
-                        description: `This token was recently refreshed. Please try again later.`,
-                      })
-                    }
+                    addToast?.({
+                      title: 'Refresh token failed',
+                      description: ratelimit
+                        ? `This token was recently refreshed. The next available refresh is in ${timeTill(
+                            ratelimit
+                          )}`
+                        : `This token was recently refreshed. Please try again later.`,
+                    })
+
                     setIsRefreshing(false)
                     throw e
                   })
