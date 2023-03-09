@@ -320,7 +320,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 >
                   <FontAwesomeIcon icon={faArrowLeft} height={16} />
                   <Text css={{ color: 'inherit' }} style="subtitle1" ellipsify>
-                    {collection?.name}
+                    {token?.token?.collection?.name}
                   </Text>
                 </Anchor>
               </Link>
