@@ -6,7 +6,6 @@ import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
 import useLeaderboard from "../../hooks/useLeaderboard";
 import {useEffect, useRef} from "react";
 import {useIntersectionObserver} from "usehooks-ts";
-import LoadingSpinner from "../../components/common/LoadingSpinner";
 import {useMounted} from "../../hooks";
 
 const LeaderboardPage: NextPage = () => {
