@@ -22,20 +22,12 @@ export const Head: FC<Props> = ({
     <NextHead>
       {/* CONFIGURABLE: You'll probably want to configure this all to have custom meta tags and title to fit your application */}
 
-      {/* Meta tags */}
-      <meta name="keywords" content="nft, ethereum, protocol" />
-      <meta name="description" content={description} />
-      <meta name="keywords" content="NFT, API, Protocol" />
-
-      {/* Favicon */}
-      <link
-        rel="shortcut icon"
-        type="image/svg"
-        href="https://marketplace.reservoir.tools/reservoir.svg"
-      />
 
       {/* Title */}
       <title>{title}</title>
+
+      {/* Meta tags */}
+      <meta name="description" content={description} />
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -56,24 +48,6 @@ export const Head: FC<Props> = ({
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="Reservoir Market Banner" />
 
-      {/* Reservoir meta tags */}
-      <meta property="reservoir:title" content="Reservoir Market" />
-      <meta
-        property="reservoir:icon"
-        content="public/reservoir-source-icon.png"
-      />
-      <meta
-        property="reservoir:token-url-mainnet"
-        content="/collection/ethereum/${contract}/${tokenId}"
-      />
-      <meta
-        property="reservoir:token-url-goerli"
-        content="/collection/goerli/${contract}/${tokenId}"
-      />
-      <meta
-        property="reservoir:token-url-polygon"
-        content="/collection/polygon/${contract}/${tokenId}"
-      />
     </NextHead>
   )
 }
