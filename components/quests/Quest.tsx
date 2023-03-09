@@ -56,7 +56,7 @@ export const Quest = ({
           >
             <img src="/images/Lock.png" style={{ margin: 'auto' }} />
             <Text css={{ fontWeight: '700', fontSize: '$5' }}>
-              Complete previous quest to unlock{' '}
+              Complete first 7 quest to unlock{' '}
             </Text>
           </Box>
           <Box
