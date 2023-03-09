@@ -14,8 +14,6 @@ class MyDocument extends Document {
   }
 
   render() {
-    const description = ''
-
     return (
       <Html>
         <Head>
@@ -37,7 +35,7 @@ class MyDocument extends Document {
           type="image/svg"
           href="https://marketplace.reservoir.tools/reservoir.svg"
         />
-        
+
         {/* Reservoir meta tags */}
         <meta property="reservoir:title" content="Reservoir Market" />
         <meta
