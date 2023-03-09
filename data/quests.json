@@ -117,7 +117,7 @@
     "description": "Every listing and offer made on NFTEarth adds XP and thus help you to rank higher on leaderboard",
     "type": "repeatable",
     "tasks": [],
-    "exp": 50
+    "exp": 0
   }
 ]
 

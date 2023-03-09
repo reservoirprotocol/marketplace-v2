@@ -800,7 +800,7 @@ export const QuestLeaderboard = ({
           >
             <Text>Rewards</Text>
             <Text style="h4" css={{ color: '$primary10' }}>
-              50 XP
+              Unlimited XP
             </Text>
           </Flex>
           <Flex
