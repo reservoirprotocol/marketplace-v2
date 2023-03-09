@@ -54,10 +54,7 @@ export const Head: FC<Props> = ({
       <meta property="og:type" content="website" />
       <meta property="og:determiner" content="the" />
       <meta property="og:locale" content="en" />
-      <meta
-        property="og:title"
-        content={title || 'Reservoir Market | Open Source NFT Marketplace'}
-      />
+      <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:image:type" content="image/png" />
