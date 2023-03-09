@@ -12,6 +12,11 @@ const account = db.collection('account')
 const entry = db.collection('quest_entry')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
 
+const chainToNFTE: Record<number, string> = {
+  10: '0xc96f4f893286137ac17e07ae7f217ffca5db3ab6',
+  42161: '0xb261104a83887ae92392fb5ce5899fcfe5481456'
+}
+
 const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']
   if (!apiKey || apiKey !== process.env.ORDERBOOK_API_KEY) {
@@ -54,7 +59,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
 
   // Finish all the quest
   if (accountData && collection && accountData.exp >= 900) {
-    const isNFTE = payment[0].token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456';
+    const isNFTE = payment[0].token.toLowerCase() === chainToNFTE[chainId];
     let value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
 
     // Temp Fix

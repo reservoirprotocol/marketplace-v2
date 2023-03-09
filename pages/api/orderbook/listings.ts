@@ -11,7 +11,10 @@ const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
 const entry = db.collection('quest_entry')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
-1678360374
+const chainToNFTE: Record<number, string> = {
+  10: '0xc96f4f893286137ac17e07ae7f217ffca5db3ab6',
+  42161: '0xb261104a83887ae92392fb5ce5899fcfe5481456'
+}
 
 const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']
@@ -54,7 +57,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   const collection = collections?.[0]
 
   if (accountData && collection) {
-    const isNFTE = payment[0].token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456';
+    const isNFTE = payment[0].token.toLowerCase() === chainToNFTE[chainId];
     let value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
 
     // Temp Fix
