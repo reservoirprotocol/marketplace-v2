@@ -11,7 +11,7 @@ const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
 
-const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse) => {
+const handleOrderbookCancel = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']
   if (!apiKey || apiKey !== process.env.ORDERBOOK_API_KEY) {
     res.status(405).send({message: 'Invalid api key'})
@@ -86,4 +86,4 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   })
 }
 
-export default handleOrderbookListings
+export default handleOrderbookCancel
