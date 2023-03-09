@@ -13,8 +13,6 @@ type Props = {
 export const QuestsOneTime = ({setOpen, setQuest}: Props) => {
   const {data: entries} = useQuestEntries()
 
-  console.log(entries)
-
   return (
     <Flex
       css={{
