@@ -16,7 +16,7 @@ import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
 import { ToastContext } from 'context/ToastContextProvider'
 import { spin } from 'components/common/LoadingSpinner'
-import { timeTill } from 'utils/till'
+import { DATE_REGEX, timeTill } from 'utils/till'
 
 type CollectionActionsProps = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
@@ -134,13 +134,15 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
           })
           .catch((e) => {
             const { message } = e
-            const ratelimit = /\d{2}:\d{2}:\d{2}/.exec(message)?.[0]
+
+            const ratelimit = DATE_REGEX.exec(message)?.[0]
+
             if (ratelimit) {
               addToast?.({
                 title: 'Refresh token failed',
                 description: `This token was recently refreshed. The next available refresh is in ${timeTill(
                   ratelimit
-                )} hours.`,
+                )}`,
               })
             } else {
               addToast?.({

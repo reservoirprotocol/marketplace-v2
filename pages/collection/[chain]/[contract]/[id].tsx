@@ -57,7 +57,7 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
-import { timeTill } from 'utils/till'
+import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 
@@ -362,13 +362,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   })
                   .catch((e) => {
                     const { message } = e
-                    const ratelimit = /\d{2}:\d{2}:\d{2}/.exec(message)?.[0]
+                    const ratelimit = DATE_REGEX.exec(message)?.[0]
+
                     if (ratelimit) {
                       addToast?.({
                         title: 'Refresh token failed',
                         description: `This token was recently refreshed. The next available refresh is in ${timeTill(
                           ratelimit
-                        )} hours.`,
+                        )}`,
                       })
                     } else {
                       addToast?.({

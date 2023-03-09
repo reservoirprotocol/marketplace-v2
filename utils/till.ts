@@ -3,24 +3,29 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.extend(relativeTime)
 
-type TimeTill = {
-  time: number
-  format: 'hour' | 'minute'
-}
+/**
+ * REGEX to parse out YYYY-MM-DD HH:MM:SS from a raw string
+ * @returns YYYY-MM-DD HH:MM:SS
+ */
+export const DATE_REGEX = /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/
 
 /**
- * Calculate the time remaining until a specified time
- * @param {string} timeString - The time to calculate the remaining time until, in the format 'HH:mm:ss'
- * @returns {{time: number, format: Format}} The remaining time until the specified time, in the format {time, format}
+ * Returns a human-readable string indicating the time remaining until the provided time string.
+ * @param timeString The target time string in the format "YYYY-MM-DD HH:MM:SS".
+ * @returns A human-readable string indicating the time remaining until the target time.
  */
-export function timeTill(timeString: string): TimeTill {
-  const date = dayjs(timeString, 'HH:mm:ss').diff(dayjs(), 'minute')
+export const timeTill = (timeString: string | undefined): string => {
+  const duration = dayjs(timeString).diff(dayjs(), 'second')
+  const durationInMinutes = Math.floor(duration / 60)
 
-  const format = date >= 60 ? 'hour' : 'minute'
-  const time = format === 'hour' ? Math.floor(date / 60) : date
+  const remainingHours = Math.floor(durationInMinutes / 60)
+  const remainingMinutes = durationInMinutes % 60
 
-  return {
-    time,
-    format,
+  if (remainingHours > 0) {
+    return `${remainingHours} hour${
+      remainingHours > 1 ? 's' : ''
+    } and ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}.`
+  } else {
+    return `${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}.`
   }
 }
