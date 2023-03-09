@@ -13,6 +13,8 @@ type Props = {
 export const QuestsOneTime = ({setOpen, setQuest}: Props) => {
   const {data: entries} = useQuestEntries()
 
+  console.log(entries)
+
   return (
     <Flex
       css={{
@@ -37,7 +39,7 @@ export const QuestsOneTime = ({setOpen, setQuest}: Props) => {
             description={quest.description}
             points={quest.exp}
             locked={(idx) => idx === 9 ? (entries || []).length < 7 : idx > 9}
-            completed={(idx) => entries.find((entry: any) => entry.id === idx)}
+            completed={(idx) => !!(entries || []).find((entry: any) => entry.quest_id === idx)}
             tasks={quest.tasks as QuestTask[]}
             setOpen={setOpen}
             setQuest={setQuest}
