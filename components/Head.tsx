@@ -58,7 +58,10 @@ export const Head: FC<Props> = ({
 
       {/* Reservoir meta tags */}
       <meta property="reservoir:title" content="Reservoir Market" />
-      <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+      <meta
+        property="reservoir:icon"
+        content="public/reservoir-source-icon.png"
+      />
       <meta
         property="reservoir:token-url-mainnet"
         content="/collection/ethereum/${contract}/${tokenId}"
