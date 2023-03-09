@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import React, { FC, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -6,58 +6,83 @@ import {
   TableCell,
   TableRow,
   HeaderRow,
-  Button,
   Box,
-  FormatCryptoCurrency,
+  Input,
   CollapsibleContent,
 } from '../primitives'
-import { faListDots } from '@fortawesome/free-solid-svg-icons'
-import { useIntersectionObserver } from 'usehooks-ts'
-import LoadingSpinner from '../common/LoadingSpinner'
-import { useBids, useTokens } from '@nftearth/reservoir-kit-ui'
-import Link from 'next/link'
-import { MutatorCallback } from 'swr'
-import { useENSResolver, useTimeSince } from 'hooks'
-import CancelBid from 'components/buttons/CancelBid'
-import { AcceptBid, BuyNow } from '../buttons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBolt } from '@fortawesome/free-solid-svg-icons'
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
 import * as Collapsible from '@radix-ui/react-collapsible'
-import { NAVBAR_HEIGHT } from '../navbar'
 
 type Props = {
-  data: User[]
+  data: any
 }
 
-type User = {
-  rank: number
-  username: string
-  volume: number
-  reward: number
-}
+const desktopTemplateColumns = '.75fr repeat(4, 1fr)'
+const mobileTemplateColumns = 'repeat(5, 1fr)'
 
-const desktopTemplateColumns = '.75fr repeat(3, 1fr)'
-const mobileTemplateColumns = 'repeat(3, 1fr) 55px'
 export const LeaderboardTable: FC<Props> = ({ data }) => {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
 
-  //@ts-ignore
-  const users: User[] = data
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const [searchWallet, setSearchWallet] = useState<string | null>("");
+  const { address } = useAccount();
+  const tableRef = useRef<HTMLTableElement>(null);
+
+  // find by wallet in the table
+  const filteredData = data?.filter((item: any) => item.wallet.toLowerCase().includes(searchWallet?.toLowerCase()));
+  const matchingItem = data?.find((item: any) => item.wallet.toLowerCase() === address?.toLowerCase());
+
+  useEffect(() => {
+    if (tableRef.current) {
+      tableRef.current.scrollTop = 0;
+    }
+  }, [searchWallet]);
 
   return (
     <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
+      <Flex
+      justify="end"
+      css={{
+        alignItems: 'center',
+        gap: '20px',
+        marginBottom: '20px',
+        backgroud: 'white',
+        "@xs": {
+          marginRight: '0',
+        },
+        "@lg": {
+          marginRight: '5vw',
+        },
+      }}>
+        <Text>Search Wallet</Text>
+        <Input
+          onChange={(e) => { setSearchWallet(e.target.value); }}
+          style={{
+            borderRadius: '10px',
+            background: '#3C3C3C',
+          }}
+          css={{
+            "@xs": {
+              width: '100px',
+            },
+            "@md": {
+              width: '250px',
+            }
+          }}
+        />
+      </Flex>
       <CollapsibleContent
         css={{
           position: 'sticky',
           top: 16 + 80,
           height: '55vh',
+          width: '90vw',
           overflow: 'auto',
           marginBottom: 16,
           borderRadius: '$base',
           p: '$2',
         }}
+        ref={tableRef}
       >
         <Box
           css={{
@@ -71,17 +96,29 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
             css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
-            {users.map((user: User, i: number) => {
-              return (
+            {
+              matchingItem && (
+              <LeaderboardTableRow
+                key={matchingItem.id}
+                rank={1}
+                username="You"
+                listingExp={matchingItem.listingExp}
+                offerExp={matchingItem.offerExp}
+                totalExp={matchingItem.exp}
+              />
+            )}
+            {
+              filteredData?.filter((item: any) => item.wallet.toLowerCase() !== address?.toLowerCase())
+              .map((item: any, i: number) => (
                 <LeaderboardTableRow
-                  key={i}
-                  rank={user.rank}
-                  username={user.username}
-                  volume={user.volume}
-                  reward={user.reward}
+                  key={item.id}
+                  rank={matchingItem ? i + 2 : i + 1}
+                  username={item.wallet}
+                  listingExp={item.listingExp}
+                  offerExp={item.offerExp}
+                  totalExp={item.exp}
                 />
-              )
-            })}
+            ))}
             <Box ref={loadMoreRef} css={{ height: 20 }} />
           </Flex>
         </Box>
@@ -93,15 +130,17 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
 type LeaderboardTableRowProps = {
   rank: number
   username: string
-  volume: number
-  reward: number
+  listingExp: number
+  offerExp: number
+  totalExp: number
 }
 
 const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   rank,
   username,
-  volume,
-  reward,
+  listingExp,
+  offerExp,
+  totalExp,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { theme } = useTheme()
@@ -109,41 +148,141 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
   return (
     <TableRow
       css={{
-        gridTemplateColumns: isSmallDevice
-          ? mobileTemplateColumns
-          : desktopTemplateColumns,
         borderBottomColor: theme === 'light' ? '$primary11' : '$primary6',
+        "@xs": {
+          gridTemplateColumns: 'repeat(5, 1fr)'
+        },
+        "@lg": {
+          gridTemplateColumns: '.75fr repeat(4, 1fr)'
+        }
       }}
     >
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text>{rank}</Text>
+      <TableCell
+        css={{
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
+        >
+          {rank}
+        </Text>
       </TableCell>
 
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{username}</Text>
-      </TableCell>
-
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Text style="subtitle2">{volume} </Text>
-      </TableCell>
-      <TableCell css={{ textAlign: 'center', pl: '$2 !important', py: '$5' }}>
-        <Flex css={{ gap: '$3', marginLeft: '100px' }}>
-          <Text
-            style="subtitle3"
-            css={{
-              color: '$primary13',
-              marginTop: '$1',
-              '&:hover': {
-                color: '$primary14',
-              },
+      <TableCell
+        css={{
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
+          maxWidth: '',
+          textAlign: 'center',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        {
+          username === "You" ? <Text
+            style={{
+              '@initial': 'subtitle3',
+              '@lg': 'subtitle1'
             }}
-          >
-            {reward}
+            css={{ color: '$crimson9' }}>
+            {username}
           </Text>
-          <Box>
-            <img src="/nftearth-icon.png" width={25} height={25} />
-          </Box>
-        </Flex>
+          : <Text
+              style={{
+              '@initial': 'subtitle3',
+              '@lg': 'subtitle1'
+            }}>
+            {username}
+          </Text>
+        }
+      </TableCell>
+
+      <TableCell
+        css={{
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {listingExp ?? 0}
+        </Text>
+      </TableCell>
+      <TableCell
+        css={{
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {offerExp ?? 0}
+        </Text>
+      </TableCell>
+      <TableCell
+        css={{
+          borderBottom: '1px solid $primary13',
+          borderLeft: '1px solid $primary13',
+          borderRight: '1px solid $primary13',
+          textAlign: 'center',
+          pl: '$2 !important',
+          pr: '$2 !important',
+          py: '$5',
+        }}
+      >
+        <Text
+          style={{
+            '@initial': 'subtitle3',
+            '@lg': 'subtitle1'
+          }}
+          css={{
+            color: '$primary13',
+            marginTop: '$1',
+            '&:hover': {
+              color: '$primary14',
+            },
+          }}
+        >
+          {totalExp}
+        </Text>
       </TableCell>
     </TableRow>
   )
@@ -151,31 +290,47 @@ const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
 
 const TableHeading = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const headings = ['Rank', 'User', 'Total XP', 'Potential Reward']
+  const headings = ['Rank', 'User', 'Offers XP', 'Listings XP', 'Total XP']
   const { theme } = useTheme()
   return (
     <HeaderRow
       css={{
+        borderTop: '1px solid $primary13',
         display: 'grid',
-        gridTemplateColumns: isSmallDevice
-          ? mobileTemplateColumns
-          : desktopTemplateColumns,
         position: 'sticky',
         top: 0,
         backgroundColor: theme === 'light' ? '$primary10' : '$primary5',
+        "@xs": {
+          gridTemplateColumns: 'repeat(5, 1fr)'
+        },
+        "@lg": {
+          gridTemplateColumns: '.75fr repeat(4, 1fr)'
+        }
       }}
     >
-      {headings.map((heading) => (
+      {headings.map((heading, index, array) => (
         <TableCell
-          key={heading}
+          key={index}
           css={{
             textAlign: 'center',
             pl: '$2 !important',
-            py: '$1',
-            border: '1px solid $primary2',
+            py: '$2',
+            borderBottom: '1px solid $primary13',
+            borderLeft: '1px solid $primary13',
+            ...(index === array.length - 1 && { borderRight: '1px solid $primary13' }),
           }}
         >
-          <Text css={{ color: '$gray11' }} as={'div'} style="subtitle1">
+          <Text
+            css={{
+              color: '$gray11',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+            as={'div'}
+            style={{
+              '@initial': 'subtitle3',
+              '@lg': 'subtitle2'
+            }}>
             {heading}
           </Text>
         </TableCell>

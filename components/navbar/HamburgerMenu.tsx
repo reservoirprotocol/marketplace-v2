@@ -173,20 +173,20 @@ const HamburgerMenu = () => {
             >
               Launchpad
             </Text>
-            {/* <Text
-              as="a"
-              href="/airdrop"
-              style="subtitle1"
-              css={{
-                borderBottom: '1px solid $gray4',
-                cursor: 'pointer',
-                pb: '$4',
-                pt: '24px',
-                width: '100%',
-              }}
-            >
-              Claim
-            </Text> */}
+            <Text
+                as="a"
+                href="/leaderboard"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Leaderboard
+            </Text>
             <Text
               as="a"
               href="/portfolio"
@@ -335,7 +335,7 @@ const HamburgerMenu = () => {
               </Text>
               <Text
                 as="a"
-                href="/airdrop"
+                href="/leaderboard"
                 style="subtitle1"
                 css={{
                   borderBottom: '1px solid $gray4',
@@ -345,22 +345,8 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                Claim
+                Leaderboard
               </Text>
-              <Link href="/launch/deploy" legacyBehavior>
-                <Text
-                  style="subtitle1"
-                  css={{
-                    borderBottom: '1px solid $gray4',
-                    cursor: 'pointer',
-                    pb: '$4',
-                    pt: '24px',
-                    width: '100%',
-                  }}
-                >
-                  Launch
-                </Text>
-            </Link>
             </Flex>
             <Box>
               <ConnectWalletButton />
