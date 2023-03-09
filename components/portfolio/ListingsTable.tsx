@@ -195,17 +195,27 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             listingId={listing?.id as string}
             mutate={mutate}
             trigger={
-              <Button css={{ color: '$red11' }} color="gray3">
-                {!isOracleOrder && (
-                  <FontAwesomeIcon
-                    color="#697177"
-                    icon={faGasPump}
-                    width="16"
-                    height="16"
-                  />
-                )}
-                Cancel
-              </Button>
+              <Flex>
+                <Tooltip
+                  content={
+                    <Text style="body2" as="p">
+                      Cancelling this order requires gas.
+                    </Text>
+                  }
+                >
+                  <Button css={{ color: '$red11' }} color="gray3">
+                    {!isOracleOrder && (
+                      <FontAwesomeIcon
+                        color="#697177"
+                        icon={faGasPump}
+                        width="16"
+                        height="16"
+                      />
+                    )}
+                    Cancel
+                  </Button>
+                </Tooltip>
+              </Flex>
             }
           />
         </Flex>
