@@ -56,7 +56,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         primary10: 'hsl(141, 100%, 52%)',
         primary11: 'hsl(141,100%,74%)',
         primary12: 'hsl(141,100%,88%)',
-        primary13: 'hsl(141, 72%, 67%)',
+        primary13: 'hsl(145, 25%, 39%)',
         primary14: 'hsl(142,34%,51%)',
 
         //Secondary
@@ -328,7 +328,7 @@ export const darkTheme = createTheme({
     primary10: '$lime10',
     primary11: '$lime11',
     primary12: '$lime12',
-    primary13: 'hsl(141, 72%, 67%)',
+    primary13: 'hsl(145, 25%, 39%)',
     primary14: 'hsl(142, 34%, 51%)',
 
     //Secondary
