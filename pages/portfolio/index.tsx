@@ -23,7 +23,7 @@ import ChainToggle from 'components/common/ChainToggle'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
-  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
@@ -40,10 +40,8 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = COMMUNITY
   }
 
-  const { data: collections } = useUserCollections(
-    address as string,
-    collectionQuery
-  )
+  const { data: collections, isLoading: collectionsLoading } =
+    useUserCollections(address as string, collectionQuery)
 
   if (!isMounted) {
     return null
@@ -100,6 +98,7 @@ const IndexPage: NextPage = () => {
                     />
                   ) : (
                     <TokenFilters
+                      isLoading={collectionsLoading}
                       open={tokenFiltersOpen}
                       setOpen={setTokenFiltersOpen}
                       collections={collections}
@@ -114,9 +113,9 @@ const IndexPage: NextPage = () => {
                     }}
                   >
                     <Flex justify="between" css={{ marginBottom: '$4' }}>
-                      {collections &&
-                        collections.length > 0 &&
-                        !isSmallDevice && (
+                      {!isSmallDevice &&
+                        !collectionsLoading &&
+                        collections.length > 0 && (
                           <FilterButton
                             open={tokenFiltersOpen}
                             setOpen={setTokenFiltersOpen}
@@ -124,6 +123,7 @@ const IndexPage: NextPage = () => {
                         )}
                     </Flex>
                     <TokenTable
+                      isLoading={collectionsLoading}
                       address={address}
                       filterCollection={filterCollection}
                     />
