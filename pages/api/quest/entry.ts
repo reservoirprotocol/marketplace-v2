@@ -633,11 +633,14 @@ const handleQuestEntry = async (req: NextApiRequest, res: NextApiResponse) => {
       status: 'complete'
     })
 
+    const finalQuestReward = questData.exp * (!!tasks.find((f: any) => f.double_exp === true) ? 2 : 1)
+
     await account.updateOne({
       wallet
     }, {
       $inc: {
-        exp: questData.exp * (!!tasks.find((f: any) => f.double_exp === true) ? 2 : 1)
+        questExp: finalQuestReward,
+        exp: finalQuestReward
       }
     })
   }
