@@ -16,51 +16,54 @@ const ChainToggle: FC = () => {
   return (
     <ToggleGroup type="single" value={chain.name}>
       {supportedChains.map((chainOption) => (
-        <ToggleGroupItem
-          key={chainOption.name}
-          value={chainOption.name}
-          disabled={chainOption.name === chain.name}
-          onClick={() => switchCurrentChain(chainOption.id)}
-          css={{
-            width: 56,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <TooltipPrimitive.Root delayDuration={1000}>
-            <TooltipPrimitive.Trigger asChild>
-              <img src={chainOption.iconUrl} style={{ height: 20 }} />
-            </TooltipPrimitive.Trigger>
-            <TooltipPrimitive.Content
-              sideOffset={5}
-              side="top"
-              align="center"
-              style={{ zIndex: 100 }}
+        <TooltipPrimitive.Root delayDuration={0}>
+          <TooltipPrimitive.Trigger>
+            <ToggleGroupItem
+              key={chainOption.name}
+              value={chainOption.name}
+              disabled={chainOption.name === chain.name}
+              onClick={() => switchCurrentChain(chainOption.id)}
+              css={{
+                width: 56,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
             >
-              <TooltipArrow />
+              <img src={chainOption.iconUrl} style={{ height: 20 }} />
+            </ToggleGroupItem>
+          </TooltipPrimitive.Trigger>
+          <TooltipPrimitive.Content
+            sideOffset={-4}
+            side="top"
+            align="center"
+            style={{
+              zIndex: 100,
+              filter: 'drop-shadow(0px 3px 8px rgba(0, 0, 0, 0.3))',
+            }}
+          >
+            <TooltipArrow />
+            <Box
+              css={{
+                zIndex: 9999,
+                $$shadowColor: '$colors$panelShadow',
+                boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
+                borderRadius: 8,
+                overflow: 'hidden',
+              }}
+            >
               <Box
                 css={{
-                  zIndex: 9999,
-                  $$shadowColor: '$colors$panelShadow',
-                  boxShadow: '0px 1px 5px rgba(0,0,0,0.2)',
-                  borderRadius: 8,
-                  overflow: 'hidden',
+                  background: '$neutralBgSubtle',
+                  p: '$2',
                 }}
               >
-                <Box
-                  css={{
-                    background: '$neutralBgSubtle',
-                    p: '$2',
-                  }}
-                >
-                  <Text style="body2" as="p">
-                    {chainOption?.name}
-                  </Text>
-                </Box>
+                <Text style="body2" as="p">
+                  {chainOption?.name}
+                </Text>
               </Box>
-            </TooltipPrimitive.Content>
-          </TooltipPrimitive.Root>
-        </ToggleGroupItem>
+            </Box>
+          </TooltipPrimitive.Content>
+        </TooltipPrimitive.Root>
       ))}
     </ToggleGroup>
   )
