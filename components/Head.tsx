@@ -21,7 +21,7 @@ export const Head: FC<Props> = ({
   return (
     <NextHead>
       {/* CONFIGURABLE: You'll probably want to configure this all to have custom meta tags and title to fit your application */}
-
+      {/* CONFIGURABLE: There are also keywords in pages/_document.ts that you can also configure to fit your application */}
 
       {/* Title */}
       <title>{title}</title>
@@ -47,7 +47,6 @@ export const Head: FC<Props> = ({
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="Reservoir Market Banner" />
-
     </NextHead>
   )
 }
