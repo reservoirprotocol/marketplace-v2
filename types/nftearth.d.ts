@@ -29,9 +29,11 @@ export type OfferItem = {
   endAmount: string;
 };
 type OrderComponents = {
+  type?: 'listing' | 'offer'
   kind?: OrderKind;
   offerer: string;
   zone: string;
+  nativeValue: string;
   offer: OfferItem[];
   consideration: ConsiderationItem[];
   orderType: OrderType;

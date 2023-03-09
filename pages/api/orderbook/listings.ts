@@ -49,7 +49,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   const collection = collections?.[0]
 
   if (accountData && collection) {
-    const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
+    const value = +parameters?.nativeValue
     const collectionVolume = +`${collection.volume?.allTime}`
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`

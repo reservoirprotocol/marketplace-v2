@@ -49,7 +49,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
 
   // Finish all the quest
   if (accountData && collection && accountData.exp >= 900) {
-    const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
+    const value = +parameters?.nativeValue
     const collectionVolume = +`${collection.volume?.allTime}`
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
