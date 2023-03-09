@@ -10,7 +10,7 @@ const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
 const entry = db.collection('quest_entry')
-const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
+const EXTRA_REWARD_PER_HOUR_PERIOD=0.000001
 
 const chainToNFTE: Record<number, string> = {
   10: '0xc96f4f893286137ac17e07ae7f217ffca5db3ab6',
