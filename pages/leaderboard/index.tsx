@@ -1,76 +1,40 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
-import { Text, Flex, Box, Input } from 'components/primitives'
+import { NextPage } from 'next'
+import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import { useEffect, useRef, useState } from 'react'
-import { useMarketplaceChain, useMounted } from 'hooks'
-import { paths } from '@nftearth/reservoir-sdk'
-import { useCollections } from '@nftearth/reservoir-kit-ui'
-import fetcher, { basicFetcher } from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../_app'
-import supportedChains from 'utils/chains'
-import { useIntersectionObserver } from 'usehooks-ts'
 import { useTheme } from 'next-themes'
 import { LeaderboardTable } from 'components/leaderboard/LeaderboardTable'
-import { PointsTable } from 'components/leaderboard/PointsTable'
-import { data } from 'components/leaderboard/enums'
-import { setRevalidateHeaders } from 'next/dist/server/send-payload'
+import useLeaderboard from "../../hooks/useLeaderboard";
+import {useEffect, useRef} from "react";
+import {useIntersectionObserver} from "usehooks-ts";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import {useMounted} from "../../hooks";
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
-
-const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
-  const isMounted = useMounted()
-  const marketplaceChain = useMarketplaceChain()
+const LeaderboardPage: NextPage = () => {
   const { theme } = useTheme()
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 12,
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-    sortBy: 'allTimeVolume',
-  }
-  const [data, setData] = useState(null)
-  console.log(data)
-  //@ts-ignore
-  const countObjectsByKey = (objectsArray, key) => {
-    const countMap = {}
-    //@ts-ignore
-    objectsArray.forEach((obj) => {
-      const keyValue = obj[key]
-      if (keyValue in countMap) {
-        //@ts-ignore
-        countMap[keyValue]++
-      } else {
-        //@ts-ignore
-        countMap[keyValue] = 1
-      }
-    })
+  const isMounted = useMounted()
+  const loadMoreRef = useRef<HTMLDivElement | null>(null)
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+  const {
+    data,
+    isValidating,
+    isFetchingPage,
+    fetchNextPage
+  } = useLeaderboard({
+    limit: 50
+  }, {
+    revalidateAll: true
+  })
 
-    return countMap
-  }
-  //@ts-ignore
-  const sortObjectByKeyValuePairs = (object) => {
-    const entries = Object.entries(object)
-    //@ts-ignore
-    const sortedEntries = entries.sort((a, b) => b[1] - a[1])
-    const sortedObjectsArray = sortedEntries.map(([key, value], idx) => ({
-      rank: idx + 1,
-      name: key,
-      //@ts-ignore
-      points: value * 50,
-      //@ts-ignore
-      cumulative: value * 50,
-    }))
-    return sortedObjectsArray
-  }
-
-  console.log(data)
   useEffect(() => {
-    const getData = async () => {
-      const res = await fetcher(`https://nftearth.exchange/api/quest/top`)
-      //@ts-ignore
-      setData(res.data)
+    const isVisible = !!loadMoreObserver?.isIntersecting
+    if (isVisible) {
+      fetchNextPage()
     }
-    getData()
-    console.log(data)
-  }, [])
+  }, [loadMoreObserver?.isIntersecting, isFetchingPage])
+
+  if (!isMounted) {
+    return null
+  }
 
   return (
     <Layout>
@@ -188,52 +152,17 @@ const LeaderboardPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <LeaderboardTable data={data} />
+            <Box ref={loadMoreRef} css={{ height: 20 }}/>
+            {(isValidating) && (
+              <Flex align="center" justify="center" css={{ py: '$5' }}>
+                <LoadingSpinner />
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </Box>
     </Layout>
   )
-}
-
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
-export const getStaticProps: GetStaticProps<{
-  ssr: {
-    exploreCollections: ChainCollections
-  }
-}> = async () => {
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 12,
-    }
-
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-
-  const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
-    }
-  })
-
-  return {
-    props: { ssr: { exploreCollections: collections } },
-    revalidate: 5,
-  }
 }
 
 export default LeaderboardPage

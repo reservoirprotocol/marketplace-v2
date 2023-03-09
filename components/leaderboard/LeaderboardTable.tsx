@@ -13,6 +13,8 @@ import {
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
 import * as Collapsible from '@radix-ui/react-collapsible'
+import {formatNumber} from "../../utils/numbers";
+import {useProfile} from "../../hooks";
 
 type Props = {
   data: any
@@ -25,14 +27,12 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const [searchWallet, setSearchWallet] = useState<string | null>('')
   const { address } = useAccount()
+  const { data: profile } = useProfile(address)
   const tableRef = useRef<HTMLTableElement>(null)
 
   // find by wallet in the table
   const filteredData = data?.filter((item: any) =>
-    item.wallet.toLowerCase().includes(searchWallet?.toLowerCase())
-  )
-  const matchingItem = data?.find(
-    (item: any) => item.wallet.toLowerCase() === address?.toLowerCase()
+    new RegExp(`${searchWallet}`, 'ig').test(item.wallet)
   )
 
   useEffect(() => {
@@ -102,14 +102,14 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
             css={{ width: '100%', height: '87vh', pb: '$2' }}
           >
             <TableHeading />
-            {matchingItem && (
+            {profile && (
               <LeaderboardTableRow
-                key={matchingItem.id}
-                rank={1}
+                key={profile.id}
+                rank={data.map((e: any) => e.wallet.toLowerCase()).indexOf(address?.toLowerCase()) + 1}
                 username="You"
-                listingExp={matchingItem.listingExp}
-                offerExp={matchingItem.offerExp}
-                totalExp={matchingItem.exp}
+                listingExp={formatNumber(profile.listingExp, 2)}
+                offerExp={formatNumber(profile.offerExp, 2)}
+                totalExp={formatNumber(profile.exp, 2)}
               />
             )}
             {filteredData
@@ -119,12 +119,12 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
               )
               .map((item: any, i: number) => (
                 <LeaderboardTableRow
-                  key={item.id}
-                  rank={matchingItem ? i + 2 : i + 1}
+                  key={`leaderboard-${i}`}
+                  rank={i + 1}
                   username={item.wallet}
-                  listingExp={item.listingExp}
-                  offerExp={item.offerExp}
-                  totalExp={item.exp}
+                  listingExp={formatNumber(item.listingExp, 2)}
+                  offerExp={formatNumber(item.offerExp, 2)}
+                  totalExp={formatNumber(item.exp, 2)}
                 />
               ))}
             <Box ref={loadMoreRef} css={{ height: 20 }} />
@@ -138,9 +138,9 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
 type LeaderboardTableRowProps = {
   rank: number
   username: string
-  listingExp: number
-  offerExp: number
-  totalExp: number
+  listingExp: string
+  offerExp: string
+  totalExp: string
 }
 
 const LeaderboardTableRow: FC<LeaderboardTableRowProps> = ({
