@@ -55,11 +55,9 @@ const handleOrderbookCancel = async (req: NextApiRequest, res: NextApiResponse) 
     const collectionVolume = +`${collection.volume?.allTime}`
     //const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
-    const percentDiff = 100 * (value - floorValue) / ((value + floorValue) / 2)
+    const percentDiff = (value - floorValue) / ((value + floorValue) / 2)
 
-    let reward = collectionVolume * floorValue + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
-
-    reward += (value * (percentDiff / 100))
+    let reward = (collectionVolume * floorValue) * percentDiff + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
 
     if (reward < 0 || value <= 0) {
       reward = 0
