@@ -60,7 +60,7 @@ const handleOrderbookCancel = async (req: NextApiRequest, res: NextApiResponse) 
 
     // Temp Fix
     if (isNFTE) {
-      value * 0.000032126308
+      value = value * 0.000032126308
     }
 
     const collectionVolume = +`${collection.volume?.allTime}`
