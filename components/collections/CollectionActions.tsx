@@ -138,7 +138,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
             addToast?.({
               title: 'Refresh collection failed',
               description: ratelimit
-                ? `This collection was recently refreshed. The next available refresh is in ${timeTill(
+                ? `This collection was recently refreshed. The next available refresh is ${timeTill(
                     ratelimit
                   )}.`
                 : `This collection was recently refreshed. Please try again later.`,
