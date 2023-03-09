@@ -20,9 +20,11 @@ const LeaderboardPage: NextPage = () => {
     isFetchingPage,
     fetchNextPage
   } = useLeaderboard({
-    limit: 50
+    limit: 1000
   }, {
-    revalidateAll: true
+    revalidateFirstPage: true,
+    revalidateOnFocus: true,
+    refreshInterval: 10_000
   })
 
   useEffect(() => {
@@ -153,11 +155,6 @@ const LeaderboardPage: NextPage = () => {
           >
             <LeaderboardTable data={data} />
             <Box ref={loadMoreRef} css={{ height: 20 }}/>
-            {(isValidating) && (
-              <Flex align="center" justify="center" css={{ py: '$5' }}>
-                <LoadingSpinner />
-              </Flex>
-            )}
           </Flex>
         </Flex>
       </Box>
