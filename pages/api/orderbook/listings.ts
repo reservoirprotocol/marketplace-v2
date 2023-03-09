@@ -70,7 +70,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
     const finalReward = reward * (doubleExp ? 2 : 1)
 
-    console.info(`New listing Reward`, parameters.offerer, collectionVolume, floorValue, percentDiff, finalReward)
+    console.info(`New listing Reward`, parameters.offerer, collectionVolume, floorValue, value, percentDiff, finalReward)
 
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
