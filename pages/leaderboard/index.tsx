@@ -41,6 +41,43 @@ const LeaderboardPage: NextPage = () => {
     <Layout>
       <Box
         css={{
+          height: 'calc(100vh - 80px)',
+          width: '100vw',
+          '@bp800': {
+            p: '$6',
+          },
+        }}
+      >
+        <Flex
+          align="center"
+          justify="center"
+          direction="column"
+          css={{
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Text
+            style={{
+              '@initial': 'h3',
+              '@lg': 'h2',
+            }}
+            css={{ lineHeight: 1.2, letterSpacing: 2, color: '$gray10' }}
+          >
+            MAINTENANCE
+          </Text>
+          <Text css={{ color: '$gray10' }}>
+            This page is under maintenance
+          </Text>
+        </Flex>
+      </Box>
+    </Layout>
+  )
+
+  return (
+    <Layout>
+      <Box
+        css={{
           p: 24,
           width: '100vw',
           '@bp800': {
