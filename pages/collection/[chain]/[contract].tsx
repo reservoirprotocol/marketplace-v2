@@ -98,6 +98,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     collection: id,
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
+    includeQuantity: true,
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
@@ -392,6 +393,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <TokenCard
                             key={i}
                             token={token}
+                            orderQuantity={
+                              token?.market?.floorAsk?.quantityRemaining
+                            }
                             address={address as Address}
                             mutate={mutate}
                             rarityEnabled={rarityEnabledCollection}
@@ -541,6 +545,7 @@ export const getStaticProps: GetStaticProps<{
     normalizeRoyalties: NORMALIZE_ROYALTIES,
     includeDynamicPricing: true,
     includeAttributes: true,
+    includeQuantity: true,
   }
 
   const tokensPromise = fetcher(
