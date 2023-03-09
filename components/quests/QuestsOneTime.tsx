@@ -1,8 +1,8 @@
-import { Box, Flex } from 'components/primitives'
-import { Dispatch } from 'react'
-import { Quest } from './Quest'
+import {Box, Flex} from 'components/primitives'
+import {Dispatch} from 'react'
+import {Quest} from './Quest'
 import quests from 'data/quests.json'
-import { useQuestEntries } from "hooks";
+import {useQuestEntries} from "hooks";
 import {QuestTask} from "pages/api/quest/entry";
 
 type Props = {
@@ -10,8 +10,8 @@ type Props = {
   setQuest: Dispatch<React.SetStateAction<number>>
 }
 
-export const QuestsOneTime = ({ setOpen, setQuest }: Props) => {
-  const { data: entries } = useQuestEntries()
+export const QuestsOneTime = ({setOpen, setQuest}: Props) => {
+  const {data: entries} = useQuestEntries()
 
   return (
     <Flex
