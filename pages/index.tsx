@@ -16,6 +16,7 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
+import { Head } from 'components/Head'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -63,6 +64,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   return (
     <Layout>
+      <Head />
       <Box
         css={{
           p: 24,
