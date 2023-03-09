@@ -368,7 +368,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       description: ratelimit
                         ? `This token was recently refreshed. The next available refresh is in ${timeTill(
                             ratelimit
-                          )}`
+                          )}.`
                         : `This token was recently refreshed. Please try again later.`,
                     })
 

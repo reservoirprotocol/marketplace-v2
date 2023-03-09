@@ -140,7 +140,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
               description: ratelimit
                 ? `This collection was recently refreshed. The next available refresh is in ${timeTill(
                     ratelimit
-                  )}`
+                  )}.`
                 : `This collection was recently refreshed. Please try again later.`,
             })
             setIsRefreshing(false)
