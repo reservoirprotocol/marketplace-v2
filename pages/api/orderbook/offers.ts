@@ -8,8 +8,8 @@ import {ConsiderationItem, ItemType, OfferItem, Orders} from "types/nftearth.d"
 
 const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
-const medianExpReward = 50
 const account = db.collection('account')
+const EXTRA_REWARD_PER_HOUR_PERIOD=0.006
 
 const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']
@@ -51,23 +51,32 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   console.info(`New offer`, accountData, (accountData && collection), parameters)
 
   if (accountData && collection) {
-    // TODO: Calculate reward by floor price & increase reward by listing period & double Reward for NFTE Token
-    // const value = ethers.utils.parseUnits(erc20?.startAmount || '0', 'wei')
-    // const floorValue = ethers.utils.parseEther(`${collection.floorAsk?.price?.amount?.native}`)
-    // const diff = value.sub(floorValue)
-    // const mid = value.add(floorValue).div(2)
-    // const percentDiff = diff.mul(100).div(mid)
-    //
-    // accountData.exp += (isListing ? percentDiff.mul(medianExpReward).toNumber().toFixed(2) : percentDiff.mul(-medianExpReward).toNumber().toFixed(2))
+    const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
+    const collectionVolume = +`${collection.volume?.allTime}`
+    //const topBidValue = +`${collection.topBid?.price?.amount?.native}`
+    const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
+    const percentDiff = 100 * Math.abs((value - floorValue) / ((value + floorValue) / 2))
+
+    let reward = collectionVolume * floorValue + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
+
+    if (value > floorValue) {
+      reward += (floorValue * percentDiff)
+    } else {
+      reward -= (floorValue * percentDiff)
+    }
+
+    if (reward < 0) {
+      reward = 0
+    }
 
     const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
-    const reward = medianExpReward * (doubleExp ? 2 : 1)
+    const finalReward = reward * (doubleExp ? 2 : 1)
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
-        offerExp: reward,
-        exp: reward
+        offerExp: finalReward,
+        exp: finalReward
       }
     })
   }
