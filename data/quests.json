@@ -101,7 +101,7 @@
   {
     "id": 8,
     "title": "Active NFT Trader",
-    "description": "Buy an NFT (or several) for total amount equal or over 0,1 $ETH on any NFTEarth supported blockchains in any supported currency.",
+    "description": "Buy an NFT (or several) for total amount equal or over 0.1 $ETH on any NFTEarth supported blockchains in any supported currency.",
     "type": "one-time",
     "tasks": [
       {

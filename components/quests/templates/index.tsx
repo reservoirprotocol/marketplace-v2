@@ -585,7 +585,7 @@ export const QuestBuyNFTInNFTEOnAnyChain = ({
                 <Text css={{ color: '$primary10' }}>Explore </Text>
               </Link>
               NFTs on Optimism, Arbitrum using NFTEarth and buy for total amount
-              equal or over 0,1 $ETH in total volume.
+              equal or over 0.1 $ETH in total volume.
             </Text>
 
             <Text style="subtitle1" css={{ color: '$gray11' }}>
