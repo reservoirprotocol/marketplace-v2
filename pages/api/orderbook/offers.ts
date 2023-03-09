@@ -52,11 +52,11 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   if (accountData && collection && accountData.exp >= 900) {
     const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
     const collectionVolume = +`${collection.volume?.allTime}`
-    //const topBidValue = +`${collection.topBid?.price?.amount?.native}`
+    const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
-    const percentDiff = (value - floorValue) / ((value + floorValue) / 2)
-
-    let reward = (collectionVolume * floorValue) * percentDiff + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
+    const tokenValue = floorValue || topBidValue
+    const percentDiff = (value - tokenValue) / ((value + tokenValue) / 2)
+    let reward = (collectionVolume * tokenValue) * (tokenValue * percentDiff) + (tokenValue * (period * EXTRA_REWARD_PER_HOUR_PERIOD))
 
     // HAHA
     if (reward < 0 || value <= 0) {
@@ -69,7 +69,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     console.info(`New Offer Reward`, {
       offerer: parameters.offerer,
       collectionVolume,
-      floorValue,
+      tokenValue,
       value,
       percentDiff,
       finalReward
