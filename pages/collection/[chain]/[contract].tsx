@@ -41,7 +41,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import Head from 'next/head'
+import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
@@ -169,29 +169,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{ssr?.collection?.collections?.[0]?.name}</title>
-        <meta
-          name="description"
-          content={ssr?.collection?.collections?.[0]?.description as string}
-        />
-        <meta
-          property="twitter:title"
-          content={ssr?.collection?.collections?.[0]?.name}
-        />
-        <meta
-          name="twitter:image"
-          content={ssr?.collection?.collections?.[0]?.banner}
-        />
-        <meta
-          property="og:title"
-          content={ssr?.collection?.collections?.[0]?.name}
-        />
-        <meta
-          property="og:image"
-          content={ssr?.collection?.collections?.[0]?.banner}
-        />
-      </Head>
+      <Head
+        ogImage={ssr?.collection?.collections?.[0]?.banner}
+        title={ssr?.collection?.collections?.[0]?.name}
+        description={ssr?.collection?.collections?.[0]?.description as string}
+      />
+
       {collection ? (
         <Flex
           direction="column"
