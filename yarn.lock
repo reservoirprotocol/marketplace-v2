@@ -294,11 +294,6 @@
     stream-browserify "^3.0.0"
     util "^0.12.4"
 
-"@corex/deepmerge@^4.0.37":
-  version "4.0.37"
-  resolved "https://registry.yarnpkg.com/@corex/deepmerge/-/deepmerge-4.0.37.tgz#873dcf71aee46596d7e385437b0d94770ef4c85f"
-  integrity sha512-PX90bEnrLdxd5e6rSFWsghExMuSw0Uov3fWJuuaoFuUQIS/446diu/4seExK5b+43L+SOBbd2uBGwYUkG1JfCw==
-
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"
@@ -5068,11 +5063,6 @@ minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@^1.2.8:
-  version "1.2.8"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.8.tgz#c1a464e7693302e082a075cee0c057741ac4772c"
-  integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
-
 mocha@^10.2.0:
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/mocha/-/mocha-10.2.0.tgz#1fd4a7c32ba5ac372e03a17eef435bd00e5c68b8"
@@ -5141,14 +5131,6 @@ nanoid@^3.3.4:
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
   integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
-
-next-sitemap@^4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/next-sitemap/-/next-sitemap-4.0.5.tgz#389980d79ada1580b793bad913ec8e993d3a6881"
-  integrity sha512-kIABX4n8wJqY2sttRjivBF2r1MgQ1pg12y87qGT+5meippq0ivxaNSRldMDOj8pIGhXW6uFAsCxyH/JftqkwWQ==
-  dependencies:
-    "@corex/deepmerge" "^4.0.37"
-    minimist "^1.2.8"
 
 next-themes@^0.2.0:
   version "0.2.0"
