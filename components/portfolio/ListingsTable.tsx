@@ -10,6 +10,7 @@ import {
   Anchor,
   Button,
   Box,
+  Tooltip,
 } from '../primitives'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -21,7 +22,11 @@ import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCircleExclamation,
+  faGasPump,
+  faTag,
+} from '@fortawesome/free-solid-svg-icons'
 import { COMMUNITY } from 'pages/_app'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 
@@ -192,7 +197,12 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             trigger={
               <Button css={{ color: '$red11' }} color="gray3">
                 {!isOracleOrder && (
-                  <FontAwesomeIcon icon={faGasPump} width="16" height="16" />
+                  <FontAwesomeIcon
+                    color="#697177"
+                    icon={faGasPump}
+                    width="16"
+                    height="16"
+                  />
                 )}
                 Cancel
               </Button>
@@ -279,9 +289,27 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             listingId={listing?.id as string}
             mutate={mutate}
             trigger={
-              <Button css={{ color: '$red11' }} color="gray3">
-                Cancel
-              </Button>
+              <Flex>
+                <Tooltip
+                  content={
+                    <Text style="body2" as="p">
+                      Cancelling this order requires gas.
+                    </Text>
+                  }
+                >
+                  <Button css={{ color: '$red11' }} color="gray3">
+                    {!isOracleOrder && (
+                      <FontAwesomeIcon
+                        color="#697177"
+                        icon={faGasPump}
+                        width="16"
+                        height="16"
+                      />
+                    )}
+                    Cancel
+                  </Button>
+                </Tooltip>
+              </Flex>
             }
           />
         </Flex>
