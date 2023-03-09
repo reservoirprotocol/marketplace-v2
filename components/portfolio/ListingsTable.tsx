@@ -21,7 +21,7 @@ import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTag } from '@fortawesome/free-solid-svg-icons'
+import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { COMMUNITY } from 'pages/_app'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 
@@ -38,6 +38,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
   let listingsQuery: Parameters<typeof useListings>['0'] = {
     maker: address,
     includeCriteriaMetadata: true,
+    includeRawData: true,
   }
 
   if (COMMUNITY) listingsQuery.community = COMMUNITY
@@ -103,6 +104,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
+  const isOracleOrder =
+    listing.kind === 'seaport-v1.4' &&
+    listing.rawData?.zone === '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192'
 
   let criteriaData = listing?.criteria?.data
 
@@ -187,6 +191,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             mutate={mutate}
             trigger={
               <Button css={{ color: '$red11' }} color="gray3">
+                {isOracleOrder && (
+                  <FontAwesomeIcon icon={faGasPump} width="16" height="16" />
+                )}
                 Cancel
               </Button>
             }
