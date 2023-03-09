@@ -48,20 +48,17 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
   const collection = collections?.[0]
 
-  if (accountData && collection) {
+  // Finish all the quest
+  if (accountData && collection && accountData.exp >= 900) {
     const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
     const collectionVolume = +`${collection.volume?.allTime}`
     //const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
-    const percentDiff = 100 * Math.abs((value - floorValue) / ((value + floorValue) / 2))
+    const percentDiff = 100 * (value - floorValue) / ((value + floorValue) / 2)
 
     let reward = collectionVolume * floorValue + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
 
-    if (value > floorValue) {
-      reward += (value * percentDiff)
-    } else {
-      reward -= (value * percentDiff)
-    }
+    reward += (value * (-percentDiff / 100))
 
     // HAHA
     if (reward < 0 || value <= 0) {
