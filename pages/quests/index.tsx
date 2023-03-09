@@ -89,8 +89,9 @@ const QuestsPage: NextPage = () => {
                     outline: 'unset',
                     position: 'fixed',
                     zIndex: 1000,
-                    transform: 'translate(-50%, 20%)',
-                    height: '60vh',
+                    transform: 'translate(-50%, 10%)',
+                    height: '70vh',
+                    width: '70vw'
                   }}
                 >
                   <Flex
