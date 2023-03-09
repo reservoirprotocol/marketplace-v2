@@ -48,8 +48,6 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
   const collections: paths["/collections/v5"]["get"]["responses"]["200"]["schema"]["collections"] = data?.collections || []
   const collection = collections?.[0]
 
-  console.info(`New offer`, accountData, (accountData && collection), parameters)
-
   if (accountData && collection) {
     const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
     const collectionVolume = +`${collection.volume?.allTime}`
@@ -72,7 +70,7 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
     const finalReward = reward * (doubleExp ? 2 : 1)
 
-    console.info(`New Offer Reward`, parameters.offerer, finalReward)
+    console.info(`New Offer Reward`, parameters.offerer, collectionVolume, floorValue, percentDiff, finalReward)
 
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
