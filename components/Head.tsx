@@ -24,13 +24,7 @@ export const Head: FC<Props> = ({
 
       {/* Meta tags */}
       <meta name="keywords" content="nft, ethereum, protocol" />
-      <meta
-        name="description"
-        content={
-          description ||
-          'Reservoir Market is an open source NFT marketplace built with Reservoir.'
-        }
-      />
+      <meta name="description" content={description} />
       <meta name="keywords" content="NFT, API, Protocol" />
 
       {/* Favicon */}
