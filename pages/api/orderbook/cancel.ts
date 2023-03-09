@@ -65,7 +65,7 @@ const handleOrderbookCancel = async (req: NextApiRequest, res: NextApiResponse) 
       reward -= (value * percentDiff)
     }
 
-    if (reward < 0) {
+    if (reward < 0 || value <= 0) {
       reward = 0
     }
 

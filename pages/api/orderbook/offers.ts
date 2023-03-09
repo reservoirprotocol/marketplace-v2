@@ -63,7 +63,8 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
       reward -= (value * percentDiff)
     }
 
-    if (reward < 0) {
+    // HAHA
+    if (reward < 0 || value <= 0) {
       reward = 0
     }
 
