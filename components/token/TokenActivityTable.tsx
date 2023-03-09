@@ -15,7 +15,7 @@ type Props = {
 
 export const TokenActivityTable: FC<Props> = ({ token }) => {
   const { theme } = useTheme()
-  const data = useTokenActivity(
+  const tokenActivity = useTokenActivity(
     token,
     {},
     {
@@ -26,9 +26,9 @@ export const TokenActivityTable: FC<Props> = ({ token }) => {
   )
 
   useEffect(() => {
-    data.mutate()
+    tokenActivity.mutate()
     return () => {
-      data.setSize(1)
+      tokenActivity.setSize(1)
     }
   }, [])
 
@@ -74,7 +74,7 @@ export const TokenActivityTable: FC<Props> = ({ token }) => {
             },
           }}
         >
-          <ActivityTable data={data} />
+          <ActivityTable data={tokenActivity} />
         </Box>
       </CollapsibleContent>
     </Collapsible.Root>

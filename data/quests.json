@@ -1,0 +1,123 @@
+[
+  {
+    "id": 1,
+    "title": "Create NFTEarth user profile",
+    "description": "Connect your web3 wallet to create your NFTEarth profile",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "connection",
+        "name": "wallet"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 2,
+    "title": "Follow NFTEarth on Twitter",
+    "description": "Link your Twitter handle to your NFTEarth user profile and follow us on Twitter!",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "connection",
+        "name": "twitter"
+      },
+      {
+        "type": "twitter_follow",
+        "user": "NFTEarth_L2"
+      }
+    ],
+    "exp": 25
+  },
+  {
+    "id": 3,
+    "title": "Retweet NFTEarth's tweet",
+    "description": "Retweet a specific tweet posted by NFTEarth to earn XP now.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "twitter_retweet",
+        "id": "1631555869778276354"
+      }
+    ],
+    "exp": 125
+  },
+  {
+    "id": 4,
+    "title": "Join Discord",
+    "description": "Join the NFTEarth comunity in Discord and earn XP.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "connection",
+        "name": "discord"
+      },
+      {
+        "type": "discord",
+        "id": "1062256160264171520"
+      }
+    ],
+    "exp": 125
+  },
+  {
+    "id": 5,
+    "title": "List an NFT for sale on NFTEarth",
+    "description": "List Any NFT of any supported L2 network (Optimism, Arbitrum) for sale on NFTEarth.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "list"
+      }
+    ],
+    "exp": 125
+  },
+  {
+    "id": 6,
+    "title": "Make Offer for ANY NFT on NFTEarth",
+    "description": "Make offer on ANY NFT for ANY amount and currency on any NFTEarth supported blockchains to earn XP",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "bid"
+      }
+    ],
+    "exp": 125
+  },
+  {
+    "id": 7,
+    "title": "List an NFT for sale in $NFTE on NFTEarth",
+    "description": "List Any NFT of any supported L2 network (Optimism, Arbitrum) for sale in $NFTE on NFTEarth.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "list",
+        "currency": "NFTE",
+        "count":  3,
+        "double_count": 5
+      }
+    ],
+    "exp": 150
+  },
+  {
+    "id": 8,
+    "title": "Active NFT Trader",
+    "description": "Buy an NFT (or several) for total amount equal or over 0,1 $ETH on any NFTEarth supported blockchains in any supported currency.",
+    "type": "one-time",
+    "tasks": [
+      {
+        "type": "buy",
+        "amount": 0.1
+      }
+    ],
+    "exp": 200
+  },
+  {
+    "id": 9,
+    "title": "Rank higher on the leaderboard!",
+    "description": "Every listing and offer made on NFTEarth adds XP and thus help you to rank higher on leaderboard",
+    "type": "repeatable",
+    "tasks": [],
+    "exp": 50
+  }
+]
+

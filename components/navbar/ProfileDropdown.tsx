@@ -7,20 +7,20 @@ import {
   Box,
   Button,
   Flex,
-  FormatCryptoCurrency,
   Text,
 } from 'components/primitives'
 import Link from 'next/link'
 import {  faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useENSResolver } from 'hooks'
-import {formatBN} from "../../utils/numbers";
+import { useENSResolver, useProfile } from 'hooks'
+import {formatBN, formatNumber} from "utils/numbers";
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
   const { data: opBalance } = useBalance({ chainId: 10, address })
   const { data: arbBalance } = useBalance({ chainId: 42161, address })
   const { disconnect } = useDisconnect()
+  const { data } = useProfile(address);
   const {
     name: ensName,
     avatar: ensAvatar,
@@ -62,6 +62,13 @@ export const ProfileDropdown: FC = () => {
         </Link>
       </DropdownMenuItem>
       <DropdownMenuItem as="a" href="/portfolio" css={{ display: 'block' }}>Portfolio</DropdownMenuItem>
+      <DropdownMenuItem as="a" href="/my-project" css={{ display: 'block' }}>My Project</DropdownMenuItem>
+      <DropdownMenuItem css={{ cursor: 'text' }}>
+        <Flex justify="between">
+          <span>Experience</span>
+          <span>{formatNumber(data?.exp)}</span>
+        </Flex>
+      </DropdownMenuItem>
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
           Balance

@@ -11,17 +11,17 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 // https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes
 const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query, body, method, headers: reqHeaders } = req
-  const { slug } = query
+  const { paths } = query
   // Isolate the query object
-  delete query.slug
+  delete query.paths
 
   let endpoint: string = ''
 
   // convert the slug array into a path string: [a, b] -> 'a/b'
-  if (typeof slug === 'string') {
-    endpoint = slug
+  if (typeof paths === 'string') {
+    endpoint = paths
   } else {
-    endpoint = (slug || ['']).join('/')
+    endpoint = (paths || ['']).join('/')
   }
 
   const chainPrefix = endpoint.split('/')[0]

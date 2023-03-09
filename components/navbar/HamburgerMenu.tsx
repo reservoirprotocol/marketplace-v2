@@ -20,11 +20,13 @@ import { useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useENSResolver } from 'hooks'
+import { useENSResolver, useProfile } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
+import { formatNumber } from "../../utils/numbers";
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
+  const { data } = useProfile(address);
   const { data: balance } = useBalance({ address })
   const {
     avatar: ensAvatar,
@@ -140,7 +142,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Explore
+                Collections
               </Text>
             </Link>
             <Text
@@ -171,20 +173,20 @@ const HamburgerMenu = () => {
             >
               Launchpad
             </Text>
-            {/* <Text
-              as="a"
-              href="/airdrop"
-              style="subtitle1"
-              css={{
-                borderBottom: '1px solid $gray4',
-                cursor: 'pointer',
-                pb: '$4',
-                pt: '24px',
-                width: '100%',
-              }}
-            >
-              Claim
-            </Text> */}
+            <Text
+                as="a"
+                href="/leaderboard"
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                  width: '100%',
+                }}
+              >
+                Leaderboard
+            </Text>
             <Text
               as="a"
               href="/portfolio"
@@ -198,6 +200,37 @@ const HamburgerMenu = () => {
             >
               Portfolio
             </Text>
+            <Link href="/launch/deploy" legacyBehavior>
+              <Text
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Launch
+              </Text>
+            </Link>
+            <Flex
+              css={{
+                justifyContent: 'space-between',
+                borderBottom: '1px solid $gray4',
+                alignItems: 'center'
+              }}
+            >
+              <Text
+                style="subtitle1"
+                css={{
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Experience
+              </Text>
+              <Text>{formatNumber(data?.exp)}</Text>
+            </Flex>
             <Flex
               css={{
                 justifyContent: 'space-between',
@@ -302,7 +335,7 @@ const HamburgerMenu = () => {
               </Text>
               <Text
                 as="a"
-                href="/airdrop"
+                href="/leaderboard"
                 style="subtitle1"
                 css={{
                   borderBottom: '1px solid $gray4',
@@ -312,7 +345,7 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                Claim
+                Leaderboard
               </Text>
             </Flex>
             <Box>
@@ -329,11 +362,15 @@ const HamburgerMenu = () => {
             width: '100%',
             borderTop: '1px solid $gray4',
           }}
+          align="center"
         >
           <a
             aria-label="Twitter"
             href="https://twitter.com/NFTEarth_L2"
             target="_blank"
+            style={{
+              marginLeft: 'auto',
+            }}
           >
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
@@ -349,6 +386,9 @@ const HamburgerMenu = () => {
             aria-label="Discord"
             href="https://discord.gg/nftearth"
             target="_blank"
+            style={{
+              marginRight: 'auto',
+            }}
           >
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
@@ -360,7 +400,6 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faDiscord} width={20} height={20} />
             </Button>
           </a>
-          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>
