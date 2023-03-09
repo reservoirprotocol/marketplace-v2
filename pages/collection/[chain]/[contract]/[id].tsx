@@ -47,7 +47,6 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -59,6 +58,7 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
+import { Head } from 'components/Head'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -172,20 +172,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={collection?.description as string} />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta
-          name="twitter:image"
-          content={token?.token?.image || collection?.banner}
-        />
-        <meta name="og:title" content={pageTitle} />
-        <meta
-          property="og:image"
-          content={token?.token?.image || collection?.banner}
-        />
-      </Head>
+      <Head
+        ogImage={token?.token?.image || collection?.banner}
+        title={pageTitle}
+        description={collection?.description as string}
+      />
       <Flex
         justify="center"
         css={{
