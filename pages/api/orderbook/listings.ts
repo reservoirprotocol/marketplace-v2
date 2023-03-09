@@ -58,9 +58,9 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     let reward = collectionVolume * floorValue + (period * EXTRA_REWARD_PER_HOUR_PERIOD)
 
     if (value < floorValue) {
-      reward += (floorValue * percentDiff)
+      reward += (value * percentDiff)
     } else {
-      reward -= (floorValue * percentDiff)
+      reward -= (value * percentDiff)
     }
 
     if (reward < 0) {
