@@ -196,25 +196,29 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             mutate={mutate}
             trigger={
               <Flex>
-                <Tooltip
-                  content={
-                    <Text style="body2" as="p">
-                      Cancelling this order requires gas.
-                    </Text>
-                  }
-                >
-                  <Button css={{ color: '$red11' }} color="gray3">
-                    {!isOracleOrder && (
+                {!isOracleOrder ? (
+                  <Tooltip
+                    content={
+                      <Text style="body2" as="p">
+                        Cancelling this order requires gas.
+                      </Text>
+                    }
+                  >
+                    <Button css={{ color: '$red11' }} color="gray3">
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
                         width="16"
                         height="16"
                       />
-                    )}
+                      Cancel
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Button css={{ color: '$red11' }} color="gray3">
                     Cancel
                   </Button>
-                </Tooltip>
+                )}
               </Flex>
             }
           />
@@ -300,25 +304,29 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             mutate={mutate}
             trigger={
               <Flex>
-                <Tooltip
-                  content={
-                    <Text style="body2" as="p">
-                      Cancelling this order requires gas.
-                    </Text>
-                  }
-                >
-                  <Button css={{ color: '$red11' }} color="gray3">
-                    {!isOracleOrder && (
+                {!isOracleOrder ? (
+                  <Tooltip
+                    content={
+                      <Text style="body2" as="p">
+                        Cancelling this order requires gas.
+                      </Text>
+                    }
+                  >
+                    <Button css={{ color: '$red11' }} color="gray3">
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
                         width="16"
                         height="16"
                       />
-                    )}
+                      Cancel
+                    </Button>
+                  </Tooltip>
+                ) : (
+                  <Button css={{ color: '$red11' }} color="gray3">
                     Cancel
                   </Button>
-                </Tooltip>
+                )}
               </Flex>
             }
           />
