@@ -191,7 +191,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             mutate={mutate}
             trigger={
               <Button css={{ color: '$red11' }} color="gray3">
-                {isOracleOrder && (
+                {!isOracleOrder && (
                   <FontAwesomeIcon icon={faGasPump} width="16" height="16" />
                 )}
                 Cancel
