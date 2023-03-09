@@ -36,7 +36,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
-import Head from 'next/head'
+import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { Address, useAccount } from 'wagmi'
 
@@ -135,9 +135,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{`Profile - ${address}`}</title>
-      </Head>
+      <Head title={`Profile - ${address}`} />
       <Flex
         direction="column"
         css={{
