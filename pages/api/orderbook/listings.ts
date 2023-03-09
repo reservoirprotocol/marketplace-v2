@@ -49,7 +49,14 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
   const collection = collections?.[0]
 
   if (accountData && collection) {
-    const value = +parameters?.nativeValue
+    const isNFTE = payment[0].token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456';
+    let value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
+
+    // Temp Fix
+    if (isNFTE) {
+      value * 0.000032126308
+    }
+
     const collectionVolume = +`${collection.volume?.allTime}`
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
@@ -64,8 +71,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
       reward = 0
     }
 
-    const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
-    const finalReward = reward * (doubleExp ? 2 : 1)
+    const finalReward = reward * (isNFTE ? 2 : 1)
 
     console.info(`New Listing Reward`, {
       offerer: parameters.offerer,
@@ -73,7 +79,8 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
       tokenValue,
       value,
       percentDiff,
-      finalReward
+      finalReward,
+      isNFTE
     })
 
     await account.updateOne({

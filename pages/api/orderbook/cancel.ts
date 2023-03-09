@@ -50,7 +50,14 @@ const handleOrderbookCancel = async (req: NextApiRequest, res: NextApiResponse) 
   console.info(`Cancel order`, accountData, (accountData && collection), parameters)
 
   if (accountData && collection) {
-    const value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
+    const isNFTE = payment[0].token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456';
+    let value = +ethers.utils.formatEther(payment[0]?.startAmount || '0').toString()
+
+    // Temp Fix
+    if (isNFTE) {
+      value * 0.000032126308
+    }
+
     const collectionVolume = +`${collection.volume?.allTime}`
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
@@ -65,8 +72,7 @@ const handleOrderbookCancel = async (req: NextApiRequest, res: NextApiResponse) 
       reward = 0
     }
 
-    const doubleExp = !!payment.find(a => a.token.toLowerCase() === '0xb261104a83887ae92392fb5ce5899fcfe5481456')
-    const finalReward = Math.abs(reward * (doubleExp ? 2 : 1))
+    const finalReward = Math.abs(reward * (isNFTE ? 2 : 1))
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
