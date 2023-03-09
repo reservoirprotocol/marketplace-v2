@@ -167,6 +167,14 @@ export const Footer = () => {
             />
           </a>
         </Box>
+        <a href="#">
+          <img
+            id="badge-button"
+            style={{ width: 240, height: 53, marginTop: '30px' }}
+            src="https://static.alchemyapi.io/images/marketing/badge.png"
+            alt="Alchemy Supercharged"
+          />
+        </a>
       </Flex>
     </Flex>
   )
