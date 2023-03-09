@@ -12,6 +12,7 @@ const topExpHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         _id: 0,
         wallet: 1,
         exp: 1,
+        questExp: 1,
         listingExp: 1,
         offerExp: 1
       }

@@ -29,9 +29,8 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
   }).catch(() => null)
 
-  const isListing = parameters.kind === 'token-list'
-  const nft: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'offer': 'consideration'].filter(o => NFTItem.includes(o.itemType))
-  const payment: ConsiderationItem[] | OfferItem[] = parameters[isListing ? 'consideration': 'offer'].filter(o => PaymentItem.includes(o.itemType))
+  const nft: ConsiderationItem[] = parameters.consideration.filter(o => NFTItem.includes(o.itemType))
+  const payment: OfferItem[] = parameters.offer.filter(o => PaymentItem.includes(o.itemType))
   const period = parameters.endTime - parameters.startTime
 
   const collectionQuery: paths["/collections/v5"]["get"]["parameters"]["query"] = {
