@@ -55,10 +55,12 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
     const tokenValue = floorValue || topBidValue
-    const percentDiff = (value - tokenValue) / ((value + tokenValue) / 2)
-    let reward = (collectionVolume * tokenValue) * (tokenValue * percentDiff) + (tokenValue * (period * EXTRA_REWARD_PER_HOUR_PERIOD))
+    const percentDiff = (tokenValue - value) / ((tokenValue + value) / 2)
+    let reward = collectionVolume * tokenValue
 
-    // HAHA
+    reward += reward * (period * EXTRA_REWARD_PER_HOUR_PERIOD)
+    reward -= reward * percentDiff
+
     if (reward < 0 || value <= 0) {
       reward = 0
     }

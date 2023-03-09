@@ -10,6 +10,7 @@ const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
 const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000006
+1678360374
 
 const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse) => {
   const apiKey = req.headers['x-api-key']
@@ -54,8 +55,11 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
     const tokenValue = floorValue || topBidValue
-    const percentDiff = (value - tokenValue) / ((value + tokenValue) / 2)
-    let reward = (collectionVolume * tokenValue) * -(tokenValue * percentDiff) + (tokenValue * (period * EXTRA_REWARD_PER_HOUR_PERIOD))
+    const percentDiff = (tokenValue - value) / ((tokenValue + value) / 2)
+    let reward = collectionVolume * tokenValue
+
+    reward += reward * (period * EXTRA_REWARD_PER_HOUR_PERIOD)
+    reward += reward * percentDiff
 
     if (reward < 0 || value <= 0) {
       reward = 0
