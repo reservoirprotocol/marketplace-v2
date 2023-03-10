@@ -15,7 +15,8 @@ const StyledToggleGroupItem = styled(ToggleGroupItem, {
   background: '$primary14',
   color: '#000',
   p: '$3',
-  width: '180px',
+  justifyContent: 'center',
+  alignItems: 'center',
   '&[data-state=on]': { backgroundColor: '$primary13' },
 })
 

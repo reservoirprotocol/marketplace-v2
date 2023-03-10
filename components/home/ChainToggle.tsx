@@ -1,7 +1,7 @@
-import { ToggleGroup, ToggleGroupItem, Text, Button, Flex } from '../primitives'
+import { ToggleGroup, ToggleGroupItem, Text, Flex } from '../primitives'
 import { FC, useContext } from 'react'
-import supportedChains from '../../utils/chains'
-import { ChainContext } from '../../context/ChainContextProvider'
+import supportedChains from 'utils/chains'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   compact?: boolean
@@ -28,10 +28,15 @@ const ChainToggle: FC<Props> = ({ compact }) => {
           key={`chain-${optionItem.id}`}
           value={`${optionItem.id}`}
           disabled={optionItem.id === chain.id}
-          css={{ p: '$space$2' }}
+          css={{
+            p: '$space$2',
+            ...(!compact ? {
+              width: 180
+            } : {})
+          }}
           aria-label={optionItem.name}
         >
-          <Flex align="center" css={{ marginLeft: '12px' }}>
+          <Flex align="center">
             <img
               alt={optionItem.name}
               style={{ height: 30, width: 30 }}

@@ -195,7 +195,7 @@ const LaunchpadDeployPage = () => {
           >
             <LaunchHeroSection />
             <Box css={{ marginTop: 32 }}>
-              <Flex justify="center">
+              <Flex justify="center" css={{ mb: '$5'}}>
                 <ChainToggle />
               </Flex>
               <Box css={{ marginBottom: 32 }}>
