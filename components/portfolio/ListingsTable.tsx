@@ -35,8 +35,11 @@ type Props = {
 }
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
-const oracleZoneAddress = '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192'
 
+const zoneAddresses = [
+  '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192', // Ethereum Address
+  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address
+]
 export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -110,9 +113,12 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
+
+  const orderZone = listing?.rawData?.zone
+  const orderKind = listing?.kind
+
   const isOracleOrder =
-    listing.kind === 'seaport-v1.4' &&
-    listing.rawData?.zone === oracleZoneAddress
+    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
 
   let criteriaData = listing?.criteria?.data
 
