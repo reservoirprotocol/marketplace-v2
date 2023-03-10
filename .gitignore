@@ -19,6 +19,7 @@
 # misc
 .DS_Store
 *.pem
+public/sitemap.xml
 
 # debug
 npm-debug.log*
