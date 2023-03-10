@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "next",
     "build": "next build",
+    "postbuild": "node generate-sitemap.mjs",
     "start": "next start",
     "tsc": "tsc"
   },
@@ -54,8 +55,9 @@
     "@types/node": "^12.12.21",
     "@types/react": "^18.0",
     "@types/react-dom": "^18.0",
-    "next-themes": "^0.2.0",
     "globby": "^13.1.3",
+    "next-themes": "^0.2.0",
+    "prettier": "^2.8.4",
     "typescript": "^4.7.2"
   }
 }
