@@ -2,36 +2,43 @@ import { writeFileSync } from 'fs'
 import { globby } from 'globby'
 import { format } from 'prettier'
 
-const chains = ['ethereum', 'polygon', 'goerli']
+const CHAINS = ['ethereum', 'polygon', 'goerli']
+const HOST_URL = 'http://localhost:3000'
 
-const generate = async () => {
+const generateSitemap = async () => {
   const pages = await globby([
     './pages/**/*.tsx', // Include all static & dynamic pages
     '!pages/api/**/*.ts', // Exclude API routes
     '!pages/_*.tsx', // Exclude _document.tsx & _app.tsx
-    '!pages/404.tsx', // Excluse 404.tsx
+    '!pages/404.tsx', // Exclude 404.tsx
   ])
 
   const sitemap = `
-        <?xml version="1.0" encoding="UTF-8"?>
-        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-            ${pages
-              .map((page) => {
-                const route = page
-                  .replace('./pages', '')
-                  .replace('.tsx', '')
-                  .replace('index', '')
-                return `
-                  <url>
-                      <loc>${`http://localhost:3000${route}`}</loc>
-                  </url>
-                `
-              })
-              .join('')}
-        </urlset>
-        `
+    <?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    ${pages
+      .map((page) => {
+        const route = page
+          .replace('./pages', '')
+          .replace('.tsx', '')
+          .replace('index', '')
+        if (route.includes('chain')) {
+          return CHAINS.map(
+            (chain) => `<url>
+              <loc>${HOST_URL}${route.replace('[chain]', chain)}</loc>
+            </url>`
+          ).join('\n')
+        } else {
+          return `<url>
+              <loc>${HOST_URL}${route}</loc>
+            </url>`
+        }
+      })
+      .join('\n')}
+    </urlset>
+  `
 
-  const formatted = format(sitemap, {
+  const formattedSitemap = format(sitemap, {
     semi: true,
     trailingComma: 'all',
     singleQuote: true,
@@ -43,7 +50,7 @@ const generate = async () => {
     parser: 'html',
   })
 
-  writeFileSync('public/sitemap.xml', formatted)
+  writeFileSync('public/sitemap.xml', formattedSitemap)
 }
 
-generate()
+generateSitemap()
