@@ -3,7 +3,7 @@ import { globby } from 'globby'
 import { format } from 'prettier'
 
 const CHAINS = ['ethereum', 'polygon', 'goerli']
-const HOST_URL = 'http://localhost:3000'
+const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
 
 const generateSitemap = async () => {
   const pages = await globby([
