@@ -31,11 +31,16 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 type Props = {
   address: Address | undefined
   filterCollection: string | undefined
+  isLoading?: boolean
 }
 
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 
-export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
+export const TokenTable: FC<Props> = ({
+  address,
+  isLoading,
+  filterCollection,
+}) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
@@ -79,6 +84,10 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
           </Text>
           <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
+      ) : isLoading || isValidating ? (
+        <Flex align="center" justify="center" css={{ py: '$6' }}>
+          <LoadingSpinner />
+        </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
           <TableHeading />
@@ -94,11 +103,6 @@ export const TokenTable: FC<Props> = ({ address, filterCollection }) => {
             )
           })}
           <div ref={loadMoreRef}></div>
-        </Flex>
-      )}
-      {isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
-          <LoadingSpinner />
         </Flex>
       )}
     </>

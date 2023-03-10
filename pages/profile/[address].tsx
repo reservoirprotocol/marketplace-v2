@@ -36,7 +36,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
-import Head from 'next/head'
+import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { Address, useAccount } from 'wagmi'
 import ChainToggle from 'components/common/ChainToggle'
@@ -119,9 +119,10 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
     ? [ssr.collections[marketplaceChain.id]]
     : undefined
 
-  const { data: collections } = useUserCollections(address, collectionQuery, {
-    fallbackData: filterCollection ? undefined : ssrCollections,
-  })
+  const { data: collections, isLoading: collectionsLoading } =
+    useUserCollections(address, collectionQuery, {
+      fallbackData: filterCollection ? undefined : ssrCollections,
+    })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -136,9 +137,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{`Profile - ${address}`}</title>
-      </Head>
+      <Head title={`Profile - ${address}`} />
       <Flex
         direction="column"
         css={{
@@ -206,6 +205,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 />
               ) : (
                 <TokenFilters
+                  isLoading={collectionsLoading}
                   open={tokenFiltersOpen}
                   setOpen={setTokenFiltersOpen}
                   collections={collections}
@@ -220,12 +220,15 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 }}
               >
                 <Flex justify="between" css={{ marginBottom: '$4' }}>
-                  {collections && collections.length > 0 && !isSmallDevice && (
-                    <FilterButton
-                      open={tokenFiltersOpen}
-                      setOpen={setTokenFiltersOpen}
-                    />
-                  )}
+                  {!collectionsLoading &&
+                    collections &&
+                    collections.length > 0 &&
+                    !isSmallDevice && (
+                      <FilterButton
+                        open={tokenFiltersOpen}
+                        setOpen={setTokenFiltersOpen}
+                      />
+                    )}
                 </Flex>
                 <Grid
                   css={{
@@ -240,7 +243,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     },
                   }}
                 >
-                  {isFetchingInitialData
+                  {isFetchingInitialData || collectionsLoading
                     ? Array(10)
                         .fill(null)
                         .map((_, index) => (

@@ -47,7 +47,6 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import Head from 'next/head'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -57,8 +56,10 @@ import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
+import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
+import { Head } from 'components/Head'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -172,20 +173,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{pageTitle}</title>
-        <meta name="description" content={collection?.description as string} />
-        <meta name="twitter:title" content={pageTitle} />
-        <meta
-          name="twitter:image"
-          content={token?.token?.image || collection?.banner}
-        />
-        <meta name="og:title" content={pageTitle} />
-        <meta
-          property="og:image"
-          content={token?.token?.image || collection?.banner}
-        />
-      </Head>
+      <Head
+        ogImage={token?.token?.image || collection?.banner}
+        title={pageTitle}
+        description={collection?.description as string}
+      />
       <Flex
         justify="center"
         css={{
@@ -347,7 +339,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     body: JSON.stringify({ token: `${contract}:${id}` }),
                   }
                 )
-                  .then(({ response }) => {
+                  .then(({ data, response }) => {
                     if (response.status === 200) {
                       addToast?.({
                         title: 'Refresh token',
@@ -355,16 +347,22 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                           'Request to refresh this token was accepted.',
                       })
                     } else {
-                      throw 'Request Failed'
+                      throw data
                     }
                     setIsRefreshing(false)
                   })
                   .catch((e) => {
+                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
+
                     addToast?.({
                       title: 'Refresh token failed',
-                      description:
-                        'We have queued this item for an update, check back in a few.',
+                      description: ratelimit
+                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
+                            ratelimit
+                          )}.`
+                        : `This token was recently refreshed. Please try again later.`,
                     })
+
                     setIsRefreshing(false)
                     throw e
                   })
