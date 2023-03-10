@@ -25,7 +25,7 @@ const generateSitemap = async () => {
         if (route.includes('chain')) {
           return CHAINS.map(
             (chain) => `<url>
-              <loc>${HOST_URL}${route.replace('[chain]', chain)}</loc>
+              <loc>https://${HOST_URL}${route.replace('[chain]', chain)}</loc>
             </url>`
           ).join('\n')
         } else {
