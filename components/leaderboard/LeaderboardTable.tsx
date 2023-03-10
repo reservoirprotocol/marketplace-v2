@@ -42,7 +42,7 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
   }, [searchWallet])
 
   return (
-    <Collapsible.Root defaultOpen={true} style={{ width: '100%' }}>
+    <>
       <Flex
         justify="end"
         css={{
@@ -77,61 +77,52 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
           }}
         />
       </Flex>
-      <CollapsibleContent
+      <Flex
         css={{
-          position: 'sticky',
-          top: 16 + 80,
-          height: '55vh',
-          width: '90vw',
-          overflow: 'auto',
-          marginBottom: 16,
-          borderRadius: '$base',
-          p: '$2',
+          '& > div:first-of-type': {
+            pt: 0,
+          },
+          overflowY: 'auto',
+          flexGrow: 1,
+          flexShrink: 1,
+          flexShrink: 1,
+          alignItems: 'stretch'
         }}
-        ref={tableRef}
       >
-        <Box
-          css={{
-            '& > div:first-of-type': {
-              pt: 0,
-            },
-          }}
+        <Flex
+          direction="column"
+          css={{ position: 'relative' }}
         >
-          <Flex
-            direction="column"
-            css={{ width: '100%', height: '87vh', pb: '$2' }}
-          >
-            <TableHeading />
-            {profile && (
+          <TableHeading />
+          {profile && (
+            <LeaderboardTableRow
+              key={profile.id}
+              rank={data.map((e: any) => e.wallet.toLowerCase()).indexOf(address?.toLowerCase()) + 1}
+              username="You"
+              listingExp={formatNumber(profile.listingExp, 2)}
+              offerExp={formatNumber(profile.offerExp, 2)}
+              totalExp={formatNumber(profile.exp, 2)}
+            />
+          )}
+          {filteredData
+            ?.filter(
+              (item: any) =>
+                item.wallet.toLowerCase() !== address?.toLowerCase()
+            )
+            .map((item: any, i: number) => (
               <LeaderboardTableRow
-                key={profile.id}
-                rank={data.map((e: any) => e.wallet.toLowerCase()).indexOf(address?.toLowerCase()) + 1}
-                username="You"
-                listingExp={formatNumber(profile.listingExp, 2)}
-                offerExp={formatNumber(profile.offerExp, 2)}
-                totalExp={formatNumber(profile.exp, 2)}
+                key={`leaderboard-${i}`}
+                rank={i + 1}
+                username={item.wallet}
+                listingExp={formatNumber(item.listingExp, 2)}
+                offerExp={formatNumber(item.offerExp, 2)}
+                totalExp={formatNumber(item.exp, 2)}
               />
-            )}
-            {filteredData
-              ?.filter(
-                (item: any) =>
-                  item.wallet.toLowerCase() !== address?.toLowerCase()
-              )
-              .map((item: any, i: number) => (
-                <LeaderboardTableRow
-                  key={`leaderboard-${i}`}
-                  rank={i + 1}
-                  username={item.wallet}
-                  listingExp={formatNumber(item.listingExp, 2)}
-                  offerExp={formatNumber(item.offerExp, 2)}
-                  totalExp={formatNumber(item.exp, 2)}
-                />
-              ))}
-            <Box ref={loadMoreRef} css={{ height: 20 }} />
-          </Flex>
-        </Box>
-      </CollapsibleContent>
-    </Collapsible.Root>
+            ))}
+          <Box ref={loadMoreRef} css={{ height: 20 }} />
+        </Flex>
+      </Flex>
+    </>
   )
 }
 
