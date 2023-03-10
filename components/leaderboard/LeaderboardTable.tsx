@@ -8,11 +8,9 @@ import {
   HeaderRow,
   Box,
   Input,
-  CollapsibleContent,
 } from '../primitives'
 import { useAccount } from 'wagmi'
 import { useTheme } from 'next-themes'
-import * as Collapsible from '@radix-ui/react-collapsible'
 import {formatNumber} from "../../utils/numbers";
 import {useProfile} from "../../hooks";
 
@@ -84,7 +82,6 @@ export const LeaderboardTable: FC<Props> = ({ data }) => {
           },
           overflowY: 'auto',
           flexGrow: 1,
-          flexShrink: 1,
           flexShrink: 1,
           alignItems: 'stretch'
         }}

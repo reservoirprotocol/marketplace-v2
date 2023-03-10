@@ -14,6 +14,7 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 
 const desktopTemplateColumns = '.75fr repeat(2, 1fr)'
 const mobileTemplateColumns = 'repeat(2, 1fr) 55px'
+
 export const PointsTable: FC = () => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
 
