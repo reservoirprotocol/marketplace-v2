@@ -59,7 +59,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           />
         </Flex>
         <Box css={{ height: 12, minWidth: 'max-content' }}>
-          <img src={collection.searchIcon} />
+          <img src={collection.chainIcon} style={{ height: 12 }} />
         </Box>
       </Flex>
     </Link>

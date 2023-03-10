@@ -15,7 +15,7 @@ const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
 
 export type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
->[0] & { chainName: string; chainId: number; searchIcon: string }
+>[0] & { chainName: string; chainId: number; chainIcon: string }
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -82,7 +82,7 @@ export default async function handler(req: Request) {
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
           chainId: chain.id,
-          searchIcon: chain.searchIcon,
+          chainIcon: chain.iconUrl,
         }
         return {
           type: 'collection',
@@ -149,11 +149,11 @@ export default async function handler(req: Request) {
             ...collection,
             chainName: supportedChains[index].name.toLowerCase(),
             chainId: supportedChains[index].id,
-            searchIcon: supportedChains[index].searchIcon,
+            chainIcon: supportedChains[index].iconUrl,
             allTimeUsdVolume:
               (collection.allTimeVolume &&
                 collection.allTimeVolume *
-                  usdCoinPrices.prices[index].current_price) ||
+                  usdCoinPrices?.prices?.[index]?.current_price) ||
               0,
           },
         })

@@ -3,9 +3,6 @@ import { Text, Flex, Box } from 'components/primitives'
 import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
-import TrendingCollectionsTimeToggle, {
-  CollectionsSortingOption,
-} from 'components/home/TrendingCollectionsTimeToggle'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -16,6 +13,10 @@ import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import CollectionsTimeDropdown, {
+  CollectionsSortingOption,
+} from 'components/common/CollectionsTimeDropdown'
+import ChainToggle from 'components/common/ChainToggle'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -101,13 +102,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <Text style="h4" as="h4">
               Collection Rankings
             </Text>
-            <TrendingCollectionsTimeToggle
-              compact={compactToggleNames && isMounted}
-              option={sortByTime}
-              onOptionSelected={(option) => {
-                setSortByTime(option)
-              }}
-            />
+            <Flex align="center" css={{ gap: '$4' }}>
+              <CollectionsTimeDropdown
+                compact={compactToggleNames && isMounted}
+                option={sortByTime}
+                onOptionSelected={(option) => {
+                  setSortByTime(option)
+                }}
+              />
+              <ChainToggle />
+            </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
             <CollectionRankingsTable

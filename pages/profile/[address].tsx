@@ -39,6 +39,7 @@ import { COLLECTION_SET_ID, COMMUNITY, NORMALIZE_ROYALTIES } from 'pages/_app'
 import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { Address, useAccount } from 'wagmi'
+import ChainToggle from 'components/common/ChainToggle'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -148,28 +149,39 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
           },
         }}
       >
-        <Flex align="center">
-          {ensAvatar ? (
-            <Avatar size="xxl" src={ensAvatar} />
-          ) : (
-            <Jazzicon
-              diameter={64}
-              seed={jsNumberForAddress(address as string)}
-            />
-          )}
-          <Flex direction="column" css={{ ml: '$4' }}>
-            <Text style="h5">{ensName ? ensName : shortAddress}</Text>
-            <CopyText text={address as string}>
-              <Flex align="center" css={{ cursor: 'pointer' }}>
-                <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
-                  {shortAddress}
-                </Text>
-                <Box css={{ color: '$gray10' }}>
-                  <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                </Box>
-              </Flex>
-            </CopyText>
+        <Flex
+          justify="between"
+          css={{
+            gap: '$4',
+            flexDirection: 'column',
+            alignItems: 'start',
+            '@sm': { flexDirection: 'row', alignItems: 'center' },
+          }}
+        >
+          <Flex align="center">
+            {ensAvatar ? (
+              <Avatar size="xxl" src={ensAvatar} />
+            ) : (
+              <Jazzicon
+                diameter={64}
+                seed={jsNumberForAddress(address as string)}
+              />
+            )}
+            <Flex direction="column" css={{ ml: '$4' }}>
+              <Text style="h5">{ensName ? ensName : shortAddress}</Text>
+              <CopyText text={address as string}>
+                <Flex align="center" css={{ cursor: 'pointer' }}>
+                  <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
+                    {shortAddress}
+                  </Text>
+                  <Box css={{ color: '$gray10' }}>
+                    <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                  </Box>
+                </Flex>
+              </CopyText>
+            </Flex>
           </Flex>
+          <ChainToggle />
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
