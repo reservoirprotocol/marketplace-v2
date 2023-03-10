@@ -339,7 +339,7 @@ export const QuestRetweet = ({
             </Text>
             <Text style="subtitle1" css={{color: '$gray11'}}>
               Retweet this
-              <Link href="https://twitter.com/NFTEarth_L2/status/1631555869778276354">
+              <Link href="https://twitter.com/NFTEarth_L2/status/1634099617821257728">
                 <Text css={{color: '$primary10'}}> tweet</Text>
               </Link>
               .
