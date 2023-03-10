@@ -68,7 +68,7 @@ const handleOrderbookListings = async (req: NextApiRequest, res: NextApiResponse
     const collectionVolume = +`${collection.volume?.allTime}`
     const topBidValue = +`${collection.topBid?.price?.amount?.native}`
     const floorValue = +`${collection.floorAsk?.price?.amount?.native}`
-    const tokenValue = floorValue || topBidValue
+    const tokenValue = floorValue || topBidValue || 0
     const percentDiff = (tokenValue - value) / ((tokenValue + value) / 2)
     let reward = collectionVolume * tokenValue
 
