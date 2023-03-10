@@ -92,11 +92,11 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
-            src={collection?.image}
+            src={token?.token?.collection?.image || collection?.image}
             style={{ width: 36, height: 36, borderRadius: 4 }}
           />
           <Text style="h6" ellipsify>
-            {collection?.name}
+            {token?.token?.collection?.name || collection?.name}
           </Text>
           <OpenSeaVerified
             openseaVerificationStatus={collection?.openseaVerificationStatus}
