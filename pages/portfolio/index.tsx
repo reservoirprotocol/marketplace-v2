@@ -19,6 +19,7 @@ import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 
 const IndexPage: NextPage = () => {
@@ -55,7 +56,7 @@ const IndexPage: NextPage = () => {
           direction="column"
           css={{
             px: '$4',
-            py: '$5',
+            py: 40,
             '@sm': {
               px: '$5',
             },
@@ -63,9 +64,12 @@ const IndexPage: NextPage = () => {
         >
           {isConnected ? (
             <>
-              <Text style="h4" css={{}}>
-                Portfolio
-              </Text>
+              <Flex align="center" justify="between" css={{ gap: '$4' }}>
+                <Text style="h4" css={{}}>
+                  Portfolio
+                </Text>
+                <ChainToggle />
+              </Flex>
               <Tabs.Root defaultValue="items">
                 <Flex
                   css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}

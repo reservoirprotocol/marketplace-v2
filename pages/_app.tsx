@@ -122,8 +122,6 @@ function MyApp({
     } catch (e) {}
   }
 
-  console.log(source)
-
   return (
     <HotkeysProvider>
       <ThemeProvider
