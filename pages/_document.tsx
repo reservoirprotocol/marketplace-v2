@@ -22,7 +22,7 @@ class MyDocument extends Document {
             dangerouslySetInnerHTML={{ __html: getCssText() }}
           />
         </Head>
-        
+
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -40,10 +40,7 @@ class MyDocument extends Document {
 
         {/* Reservoir meta tags */}
         <meta property="reservoir:title" content="Reservoir Market" />
-        <meta
-          property="reservoir:icon"
-          content="public/reservoir-source-icon.png"
-        />
+        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
           content="/collection/ethereum/${contract}/${tokenId}"
