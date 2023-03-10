@@ -35,6 +35,7 @@ type Props = {
 }
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
+const oracleZoneAddress = '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192'
 
 export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -111,7 +112,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const expiration = useTimeSince(listing?.expiration)
   const isOracleOrder =
     listing.kind === 'seaport-v1.4' &&
-    listing.rawData?.zone === '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192'
+    listing.rawData?.zone === oracleZoneAddress
 
   let criteriaData = listing?.criteria?.data
 
