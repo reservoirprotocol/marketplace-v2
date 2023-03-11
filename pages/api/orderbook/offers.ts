@@ -1,4 +1,5 @@
 import {NextApiRequest, NextApiResponse} from "next"
+import { Redis } from '@upstash/redis'
 import {ethers} from "ethers"
 import db from "lib/db"
 import {paths} from "@nftearth/reservoir-sdk"
@@ -6,12 +7,12 @@ import fetcher from "utils/fetcher"
 import supportedChains from "utils/chains"
 import {ConsiderationItem, ItemType, OfferItem, Orders} from "types/nftearth.d"
 
-const NFTItem = [ItemType.ERC721, ItemType.ERC1155]
+const redis = Redis.fromEnv()
+const NFTItem = [ItemType.ERC721, ItemType.ERC1155, ItemType.ERC721_WITH_CRITERIA, ItemType.ERC1155_WITH_CRITERIA]
 const PaymentItem = [ItemType.ERC20, ItemType.NATIVE]
 const account = db.collection('account')
 const entry = db.collection('quest_entry')
 const EXTRA_REWARD_PER_HOUR_PERIOD=0.000001
-
 const chainToNFTE: Record<number, string> = {
   10: '0xc96f4f893286137ac17e07ae7f217ffca5db3ab6',
   42161: '0xb261104a83887ae92392fb5ce5899fcfe5481456'
@@ -93,12 +94,20 @@ const handleOrderbookOffers = async (req: NextApiRequest, res: NextApiResponse) 
       isNFTE
     })
 
+    const existingReward = await redis
+      .get(`list:${chainId}:${parameters.offerer}:${nft[0]?.token}:${nft[0]?.identifierOrCriteria}`)
+      .then((res) => res as number)
+      .catch(() => 0)
+    const cleanedReward = finalReward - existingReward
+
+    await redis.setex(`list:${chainId}:${parameters.offerer}:${nft[0]?.token}:${nft[0]?.identifierOrCriteria}`, period, cleanedReward)
+
     await account.updateOne({
       wallet: { $regex : `^${parameters.offerer}$`, '$options' : 'i'}
     }, {
       $inc: {
-        offerExp: finalReward,
-        exp: finalReward
+        offerExp: cleanedReward,
+        exp: cleanedReward
       }
     })
   }
