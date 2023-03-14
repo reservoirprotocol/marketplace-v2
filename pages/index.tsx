@@ -18,6 +18,7 @@ import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
 import { Head } from 'components/Head'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -124,7 +125,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
+            <CollectionRankingsTable
               collections={collections}
               loading={isValidating}
               volumeKey={volumeKey}
