@@ -282,36 +282,38 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 text={collection.id as string}
                 css={{ width: 'max-content' }}
               >
-                <Flex css={{ gap: '$2', width: 'max-content' }}>
+                <Flex css={{ width: 'max-content' }} direction="column">
                   <Text style="body1" color="subtle">
                     Collection
                   </Text>
-                  <Text style="body1" as="p">
-                    {truncateAddress(collection.id as string)}
-                  </Text>
-                  <Box css={{ color: '$gray10' }}>
-                    <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                  </Box>
+                  <Flex css={{ gap: '$2' }}>
+                    <Text style="body1" as="p">
+                      {truncateAddress(collection.id as string)}
+                    </Text>
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                    </Box>
+                  </Flex>
                 </Flex>
               </CopyText>
-              <Box>
+              <Flex direction="column">
                 <Text style="body1" color="subtle">
                   Token Standard{' '}
                 </Text>
                 <Text style="body1">{contractKind}</Text>
-              </Box>
-              <Box>
+              </Flex>
+              <Flex direction="column">
                 <Text style="body1" color="subtle">
                   Chain{' '}
                 </Text>
                 <Text style="body1">{chain}</Text>
-              </Box>
-              <Box>
+              </Flex>
+              <Flex direction="column">
                 <Text style="body1" color="subtle">
                   Creator Earnings
                 </Text>
                 <Text style="body1"> {creatorRoyalties}%</Text>
-              </Box>
+              </Flex>
             </Grid>
           )}
           <StatHeader collection={collection} />
