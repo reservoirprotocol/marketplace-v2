@@ -69,6 +69,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
+  const smallSubtitle = useMediaQuery({ maxWidth: 1150 }) && isMounted
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -155,6 +156,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
+  //@ts-ignore: Ignore until we regenerate the types
+  const contractKind = collection?.contractKind?.toUpperCase()
+
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
@@ -212,62 +216,89 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     />
                   </Flex>
 
-                  <Flex align="end" css={{ gap: 24 }}>
-                    {!isSmallDevice && (
-                      <>
-                        <Box>
-                          <Text style="body1" color="subtle">
-                            Creator Earnings
+                  {!smallSubtitle && (
+                    <Flex align="end" css={{ gap: 24 }}>
+                      <CopyText
+                        text={collection.id as string}
+                        css={{ width: 'max-content' }}
+                      >
+                        <Flex css={{ gap: '$2', width: 'max-content' }}>
+                          {!isSmallDevice && (
+                            <Text style="body1" color="subtle">
+                              Collection
+                            </Text>
+                          )}
+                          <Text
+                            style="body1"
+                            color={isSmallDevice ? 'subtle' : undefined}
+                            as="p"
+                          >
+                            {truncateAddress(collection.id as string)}
                           </Text>
-                          <Text style="body1"> {creatorRoyalties}%</Text>
-                        </Box>
-                        <Box>
-                          <Text style="body1" color="subtle">
-                            Chain{' '}
-                          </Text>
-                          <Text style="body1">{chain}</Text>
-                        </Box>
-                      </>
-                    )}
-                    <CopyText
-                      text={collection.id as string}
-                      css={{ width: 'max-content' }}
-                    >
-                      <Flex css={{ gap: '$2', width: 'max-content' }}>
-                        {!isSmallDevice && (
-                          <Text style="body1" color="subtle">
-                            Collection
-                          </Text>
-                        )}
-                        <Text
-                          style="body1"
-                          color={isSmallDevice ? 'subtle' : undefined}
-                          as="p"
-                        >
-                          {truncateAddress(collection.id as string)}
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon
+                              icon={faCopy}
+                              width={16}
+                              height={16}
+                            />
+                          </Box>
+                        </Flex>
+                      </CopyText>
+                      <Box>
+                        <Text style="body1" color="subtle">
+                          Token Standard{' '}
                         </Text>
-                        <Box css={{ color: '$gray10' }}>
-                          <FontAwesomeIcon
-                            icon={faCopy}
-                            width={16}
-                            height={16}
-                          />
-                        </Box>
-                      </Flex>
-                    </CopyText>
-                  </Flex>
+                        <Text style="body1">{contractKind}</Text>
+                      </Box>
+                      <Box>
+                        <Text style="body1" color="subtle">
+                          Chain{' '}
+                        </Text>
+                        <Text style="body1">{chain}</Text>
+                      </Box>
+                      <Box>
+                        <Text style="body1" color="subtle">
+                          Creator Earnings
+                        </Text>
+                        <Text style="body1"> {creatorRoyalties}%</Text>
+                      </Box>
+                    </Flex>
+                  )}
                 </Box>
               </Flex>
             </Flex>
             <CollectionActions collection={collection} />
           </Flex>
-          {isSmallDevice && (
-            <Flex css={{ gap: 24, mb: 24 }}>
+          {smallSubtitle && (
+            <Grid
+              css={{
+                gap: 12,
+                mb: 24,
+                gridTemplateColumns: '1fr 1fr',
+                maxWidth: 550,
+              }}
+            >
+              <CopyText
+                text={collection.id as string}
+                css={{ width: 'max-content' }}
+              >
+                <Flex css={{ gap: '$2', width: 'max-content' }}>
+                  <Text style="body1" color="subtle">
+                    Collection
+                  </Text>
+                  <Text style="body1" as="p">
+                    {truncateAddress(collection.id as string)}
+                  </Text>
+                  <Box css={{ color: '$gray10' }}>
+                    <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                  </Box>
+                </Flex>
+              </CopyText>
               <Box>
                 <Text style="body1" color="subtle">
-                  Creator Earnings
+                  Token Standard{' '}
                 </Text>
-                <Text style="body1"> {creatorRoyalties}%</Text>
+                <Text style="body1">{contractKind}</Text>
               </Box>
               <Box>
                 <Text style="body1" color="subtle">
@@ -275,7 +306,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Text>
                 <Text style="body1">{chain}</Text>
               </Box>
-            </Flex>
+              <Box>
+                <Text style="body1" color="subtle">
+                  Creator Earnings
+                </Text>
+                <Text style="body1"> {creatorRoyalties}%</Text>
+              </Box>
+            </Grid>
           )}
           <StatHeader collection={collection} />
           <Tabs.Root
