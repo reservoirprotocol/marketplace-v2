@@ -108,15 +108,20 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           <Text css={{ mr: '$4' }} style="subtitle3">
             {rank}
           </Text>
-          <img
-            src={collection?.image}
-            style={{
-              borderRadius: 8,
-              width: 48,
-              height: 48,
-              objectFit: 'cover',
-            }}
-          />
+          {collection?.image ? (
+            <img
+              src={collection?.image}
+              style={{
+                borderRadius: 8,
+                width: 48,
+                height: 48,
+                objectFit: 'cover',
+              }}
+              onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                e.currentTarget.style.visibility = 'hidden'
+              }}
+            />
+          ) : null}
           <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
             <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
               <Text
@@ -200,7 +205,11 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   height: 56,
                   objectFit: 'cover',
                 }}
+                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                  e.currentTarget.style.visibility = 'hidden'
+                }}
               />
+
               <Text
                 css={{
                   display: 'inline-block',
@@ -226,25 +235,24 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               minWidth: 0,
             }}
           >
-            {collection?.sampleImages?.map(
-              (image, i) =>
-                image && (
-                  <img
-                    key={image + i}
-                    src={image || ''}
-                    style={{
-                      borderRadius: 8,
-                      width: 56,
-                      height: 56,
-                      objectFit: 'cover',
-                    }}
-                    onError={(
-                      e: React.SyntheticEvent<HTMLImageElement, Event>
-                    ) => {
-                      e.currentTarget.style.display = 'none'
-                    }}
-                  />
-                )
+            {collection?.sampleImages?.map((image, i) =>
+              image ? (
+                <img
+                  key={image + i}
+                  src={image}
+                  style={{
+                    borderRadius: 8,
+                    width: 56,
+                    height: 56,
+                    objectFit: 'cover',
+                  }}
+                  onError={(
+                    e: React.SyntheticEvent<HTMLImageElement, Event>
+                  ) => {
+                    e.currentTarget.style.visibility = 'hidden'
+                  }}
+                />
+              ) : null
             )}
           </Flex>
         </TableCell>
