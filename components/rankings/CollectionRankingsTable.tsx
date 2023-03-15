@@ -1,4 +1,3 @@
-import { display } from '@datadog/browser-core'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
