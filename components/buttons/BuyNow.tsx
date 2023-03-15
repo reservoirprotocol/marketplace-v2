@@ -1,6 +1,6 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { ComponentProps, FC, useEffect, useState } from 'react'
 import { SWRResponse } from 'swr'
-import { useNetwork, useSigner } from 'wagmi'
+import { useAccount, useNetwork, useSigner } from 'wagmi'
 import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
@@ -17,7 +17,10 @@ type Props = {
 
 const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   const { data: signer } = useSigner()
-  const { setOpen } = useModal()
+  const { isConnected } = useAccount()
+  const { open: connectModalOpen, setOpen: setConnectModalOpen } = useModal()
+  const [hasBeenClicked, setHasBeenClicked] = useState(false)
+  const [open, setOpen] = useState(false)
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
@@ -45,6 +48,15 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     token?.token?.collection?.id &&
     !isInTheWrongNetwork
 
+  useEffect(() => {
+    if (!connectModalOpen && isConnected && hasBeenClicked) {
+      setOpen(true)
+    }
+    if (!connectModalOpen) {
+      setHasBeenClicked(false)
+    }
+  }, [connectModalOpen])
+
   return !canBuy ? (
     <Button
       css={buttonCss}
@@ -59,7 +71,8 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
         }
 
         if (!signer) {
-          setOpen(true)
+          setHasBeenClicked(true)
+          setConnectModalOpen(true)
         }
       }}
       {...buttonProps}
@@ -68,6 +81,7 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     </Button>
   ) : (
     <BuyModal
+      openState={[open, setOpen]}
       trigger={trigger}
       tokenId={token?.token?.tokenId}
       collectionId={token?.token?.collection?.id}
