@@ -162,10 +162,42 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
 
   useEffect(() => {
-    isMounted && isSmallDevice && hasAttributes
-      ? setTabValue('attributes')
-      : setTabValue('info')
+    let tab = tabValue
+    const hasAttributesTab = isMounted && isSmallDevice && hasAttributes
+    if (hasAttributesTab) {
+      tab = 'attributes'
+    } else {
+      tab = 'info'
+    }
+
+    let deeplinkTab: string | null = null
+    if (typeof window !== 'undefined') {
+      const params = new URL(window.location.href).searchParams
+      deeplinkTab = params.get('tab')
+    }
+
+    if (deeplinkTab) {
+      switch (deeplinkTab) {
+        case 'attributes':
+          if (hasAttributesTab) {
+            tab = 'attributes'
+          }
+          break
+        case 'info':
+          tab = 'info'
+          break
+        case 'activity':
+          tab = 'activity'
+          break
+      }
+    }
+    setTabValue(tab)
   }, [isSmallDevice])
+
+  useEffect(() => {
+    router.query.tab = tabValue
+    router.push(router, undefined, { shallow: true })
+  }, [tabValue])
 
   const pageTitle = token?.token?.name
     ? token.token.name
@@ -454,6 +486,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
               )}
               <Tabs.Root
+                defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
               >
