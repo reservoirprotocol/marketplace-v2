@@ -537,7 +537,7 @@ export const getStaticProps: GetStaticProps<{
   id: string | undefined
 }> = async ({ params }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl, apiKey, routePrefix } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
@@ -593,6 +593,20 @@ export const getStaticProps: GetStaticProps<{
     tokens?.tokens?.some(
       (token) => (token?.token?.attributes?.length || 0) > 0
     ) || false
+
+  if (
+    collection &&
+    collection.collections?.[0].contractKind === 'erc1155' &&
+    Number(collection?.collections?.[0].tokenCount) === 1 &&
+    tokens?.tokens?.[0].token?.tokenId !== undefined
+  ) {
+    return {
+      redirect: {
+        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: { ssr: { collection, tokens, hasAttributes }, id },
