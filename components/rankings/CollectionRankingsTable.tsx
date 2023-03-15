@@ -1,3 +1,4 @@
+import { display } from '@datadog/browser-core'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
@@ -226,18 +227,26 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               minWidth: 0,
             }}
           >
-            {collection?.sampleImages?.map((image, i) => (
-              <img
-                key={image + i}
-                src={image}
-                style={{
-                  borderRadius: 8,
-                  width: 56,
-                  height: 56,
-                  objectFit: 'cover',
-                }}
-              />
-            ))}
+            {collection?.sampleImages?.map(
+              (image, i) =>
+                image && (
+                  <img
+                    key={image + i}
+                    src={image || ''}
+                    style={{
+                      borderRadius: 8,
+                      width: 56,
+                      height: 56,
+                      objectFit: 'cover',
+                    }}
+                    onError={(
+                      e: React.SyntheticEvent<HTMLImageElement, Event>
+                    ) => {
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                )
+            )}
           </Flex>
         </TableCell>
         <TableCell>
