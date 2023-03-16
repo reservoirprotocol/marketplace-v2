@@ -16,6 +16,7 @@ import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
 import ChainToggle from 'components/common/ChainToggle'
+import { Head } from 'components/Head'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -76,6 +77,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   return (
     <Layout>
+      <Head />
       <Box
         css={{
           p: 24,
