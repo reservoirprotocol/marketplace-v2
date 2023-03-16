@@ -19,15 +19,19 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   const { data: signer } = useSigner()
   const { isConnected } = useAccount()
   const { open: connectModalOpen, setOpen: setConnectModalOpen } = useModal()
-  const [hasBeenClicked, setHasBeenClicked] = useState(false)
+  const [clickPendingResponse, setClickPendingResponse] = useState(false)
   const [open, setOpen] = useState(false)
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
+  // const isInTheWrongNetwork = Boolean(
+  //   signer && activeChain?.id !== marketplaceChain.id
+  // )
+
   const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
+    isConnected && activeChain?.id !== marketplaceChain.id
   )
 
   if (
@@ -48,13 +52,30 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     token?.token?.collection?.id &&
     !isInTheWrongNetwork
 
-  useEffect(() => {
-    if (!connectModalOpen && isConnected && hasBeenClicked) {
+  const handleSwitchNetwork = async () => {
+    if (isInTheWrongNetwork && switchNetworkAsync) {
+      const chain = await switchNetworkAsync(marketplaceChain.id)
+      if (chain.id !== marketplaceChain.id) {
+        return false
+      } else {
+        setOpen(true)
+      }
+    } else {
       setOpen(true)
     }
-    if (!connectModalOpen) {
-      setHasBeenClicked(false)
+  }
+
+  useEffect(() => {
+    const handleOpenModal = async () => {
+      if (!connectModalOpen && isConnected && clickPendingResponse) {
+        await handleSwitchNetwork()
+      }
+      if (!connectModalOpen) {
+        setClickPendingResponse(false)
+      }
     }
+
+    handleOpenModal().catch((e) => console.log(e))
   }, [connectModalOpen])
 
   return !canBuy ? (
@@ -63,15 +84,10 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
       aria-haspopup="dialog"
       color="primary"
       onClick={async () => {
-        if (isInTheWrongNetwork && switchNetworkAsync) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
+        handleSwitchNetwork()
 
         if (!signer) {
-          setHasBeenClicked(true)
+          setClickPendingResponse(true)
           setConnectModalOpen(true)
         }
       }}
