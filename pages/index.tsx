@@ -33,6 +33,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 10,
     sortBy: sortByTime,
+    includeTopBid: true,
   }
 
   if (COLLECTION_SET_ID) {
@@ -163,6 +164,7 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
+      includeTopBid: true,
       limit: 10,
     }
 
