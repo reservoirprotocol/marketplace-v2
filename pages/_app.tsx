@@ -13,6 +13,7 @@ import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
+import { LoreCheckout } from 'plugins/lore/LoreCheckout'
 
 import {
   ReservoirKitProvider,
@@ -156,6 +157,7 @@ function MyApp({
               >
                 <ToastContextProvider>
                   <FunctionalComponent {...pageProps} />
+                  <LoreCheckout />
                 </ToastContextProvider>
               </ConnectKitProvider>
             </Tooltip.Provider>
