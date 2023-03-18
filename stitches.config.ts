@@ -2,17 +2,17 @@ import {
   crimson,
   slate,
   crimsonDark,
-  violetDark,
+  blueDark,
   slateDark,
   greenDark,
   green,
-  violetDarkA,
+  blueDarkA,
   whiteA,
   redDark,
   red,
   blackA,
-  violet,
-  violetA,
+  blue,
+  blueA,
 } from '@radix-ui/colors'
 import { createStitches } from '@stitches/react'
 import type * as Stitches from '@stitches/react'
@@ -22,8 +22,6 @@ import { Inter } from '@next/font/google'
 const inter = Inter({
   subsets: ['latin'],
 })
-
-const seaportblue = '#1d4ed8'
 
 // CONFIGURABLE: Here you can update all your theming (outside of ReservoirKit which can be configured in the app.tsx)
 // The theme colors are all already hooked up to stitches scales, so you just need to swap them.
@@ -36,8 +34,8 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
     theme: {
       colors: {
         ...crimson,
-        ...violet,
-        ...violetA,
+        ...blue,
+        ...blueA,
         ...slate,
         ...red,
         ...whiteA,
@@ -47,32 +45,32 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         //Aliases
 
         //Primary
-        primary1: seaportblue,
-        primary2: seaportblue,
-        primary3: seaportblue,
-        primary4: seaportblue,
-        primary5: seaportblue,
-        primary6: seaportblue,
-        primary7: seaportblue,
-        primary8: seaportblue,
-        primary9: seaportblue,
-        primary10: seaportblue,
-        primary11: seaportblue,
-        primary12: seaportblue,
+        primary1: '$blue1',
+        primary2: '$blue2',
+        primary3: '$blue3',
+        primary4: '$blue4',
+        primary5: '$blue5',
+        primary6: '$blue6',
+        primary7: '$blue7',
+        primary8: '$blue8',
+        primary9: '$blue9',
+        primary10: '$blue10',
+        primary11: '$blue11',
+        primary12: '$blue12',
 
         //Secondary
-        secondary1: '$violetA1',
-        secondary2: '$violetA2',
-        secondary3: '$violetA3',
-        secondary4: '$violetA4',
-        secondary5: '$violetA5',
-        secondary6: '$violetA6',
-        secondary7: '$violetA7',
-        secondary8: '$violetA8',
-        secondary9: '$violetA9',
-        secondary10: '$violetA10',
-        secondary11: '$violetA11',
-        secondary12: '$violetA12',
+        secondary1: '$blueA1',
+        secondary2: '$blueA2',
+        secondary3: '$blueA3',
+        secondary4: '$blueA4',
+        secondary5: '$blueA5',
+        secondary6: '$blueA6',
+        secondary7: '$blueA7',
+        secondary8: '$blueA8',
+        secondary9: '$blueA9',
+        secondary10: '$blueA10',
+        secondary11: '$blueA11',
+        secondary12: '$blueA12',
 
         //Gray
         gray1: '$slate1',
@@ -234,8 +232,8 @@ export const globalReset = globalCss(reset)
 export const darkTheme = createTheme({
   colors: {
     ...crimsonDark,
-    ...violetDark,
-    ...violetDarkA,
+    ...blueDark,
+    ...blueDarkA,
     ...slateDark,
     ...greenDark,
     ...whiteA,
@@ -245,32 +243,32 @@ export const darkTheme = createTheme({
     //Aliases
 
     //Primary
-    primary1: seaportblue,
-    primary2: seaportblue,
-    primary3: seaportblue,
-    primary4: seaportblue,
-    primary5: seaportblue,
-    primary6: seaportblue,
-    primary7: seaportblue,
-    primary8: seaportblue,
-    primary9: seaportblue,
-    primary10: seaportblue,
-    primary11: seaportblue,
-    primary12: seaportblue,
+    primary1: '$blue1',
+    primary2: '$blue2',
+    primary3: '$blue3',
+    primary4: '$blue4',
+    primary5: '$blue5',
+    primary6: '$blue6',
+    primary7: '$blue7',
+    primary8: '$blue8',
+    primary9: '$blue9',
+    primary10: '$blue10',
+    primary11: '$blue11',
+    primary12: '$blue12',
 
     //Secondary
-    secondary1: '$violetA1',
-    secondary2: '$violetA2',
-    secondary3: '$violetA3',
-    secondary4: '$violetA4',
-    secondary5: '$violetA5',
-    secondary6: '$violetA6',
-    secondary7: '$violetA7',
-    secondary8: '$violetA8',
-    secondary9: '$violetA9',
-    secondary10: '$violetA10',
-    secondary11: '$violetA11',
-    secondary12: '$violetA12',
+    secondary1: '$blueA1',
+    secondary2: '$blueA2',
+    secondary3: '$blueA3',
+    secondary4: '$blueA4',
+    secondary5: '$blueA5',
+    secondary6: '$blueA6',
+    secondary7: '$blueA7',
+    secondary8: '$blueA8',
+    secondary9: '$blueA9',
+    secondary10: '$blueA10',
+    secondary11: '$blueA11',
+    secondary12: '$blueA12',
 
     //Gray
     gray1: '$slate1',
