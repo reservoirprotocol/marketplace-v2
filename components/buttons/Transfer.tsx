@@ -12,7 +12,7 @@ import {
 } from 'wagmi'
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPaperPlane, faXmark, faWarning, faClose, faCheckCircle} from "@fortawesome/free-solid-svg-icons";
-import {extractMediaType, TokenMedia, useTokens} from "@nftearth/reservoir-kit-ui";
+import {extractMediaType, TokenMedia, useTokens} from "@reservoir0x/reservoir-kit-ui";
 import {MutatorCallback} from "swr";
 
 import {Content} from "../primitives/Dialog";
