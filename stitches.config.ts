@@ -23,6 +23,8 @@ const inter = Inter({
   subsets: ['latin'],
 })
 
+const seaportblue = '#1d4ed8'
+
 // CONFIGURABLE: Here you can update all your theming (outside of ReservoirKit which can be configured in the app.tsx)
 // The theme colors are all already hooked up to stitches scales, so you just need to swap them.
 // Don't forget to check the dark mode themes below.
@@ -45,18 +47,18 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         //Aliases
 
         //Primary
-        primary1: '$violet1',
-        primary2: '$violet2',
-        primary3: '$violet3',
-        primary4: '$violet4',
-        primary5: '$violet5',
-        primary6: '$violet6',
-        primary7: '$violet7',
-        primary8: '$violet8',
-        primary9: '$violet9',
-        primary10: '$violet10',
-        primary11: '$violet11',
-        primary12: '$violet12',
+        primary1: seaportblue,
+        primary2: seaportblue,
+        primary3: seaportblue,
+        primary4: seaportblue,
+        primary5: seaportblue,
+        primary6: seaportblue,
+        primary7: seaportblue,
+        primary8: seaportblue,
+        primary9: seaportblue,
+        primary10: seaportblue,
+        primary11: seaportblue,
+        primary12: seaportblue,
 
         //Secondary
         secondary1: '$violetA1',
@@ -243,18 +245,18 @@ export const darkTheme = createTheme({
     //Aliases
 
     //Primary
-    primary1: '$violet1',
-    primary2: '$violet2',
-    primary3: '$violet3',
-    primary4: '$violet4',
-    primary5: '$violet5',
-    primary6: '$violet6',
-    primary7: '$violet7',
-    primary8: '$violet8',
-    primary9: '$violet9',
-    primary10: '$violet10',
-    primary11: '$violet11',
-    primary12: '$violet12',
+    primary1: seaportblue,
+    primary2: seaportblue,
+    primary3: seaportblue,
+    primary4: seaportblue,
+    primary5: seaportblue,
+    primary6: seaportblue,
+    primary7: seaportblue,
+    primary8: seaportblue,
+    primary9: seaportblue,
+    primary10: seaportblue,
+    primary11: seaportblue,
+    primary12: seaportblue,
 
     //Secondary
     secondary1: '$violetA1',
