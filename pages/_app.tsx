@@ -45,13 +45,16 @@ export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
   ? process.env.NEXT_PUBLIC_COMMUNITY
   : undefined
 
+const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
+const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
+
 const { chains, provider } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
 
 const { connectors } = getDefaultClient({
-  appName: 'Reservoir Marketplace',
+  appName: 'SeaPort Marketplace',
   chains,
 })
 
@@ -65,8 +68,8 @@ const wagmiClient = createClient({
 const reservoirKitThemeOverrides = {
   headlineFont: inter.style.fontFamily,
   font: inter.style.fontFamily,
-  primaryColor: '#6E56CB',
-  primaryHoverColor: '#644fc1',
+  primaryColor: '#1d4ed8',
+  primaryHoverColor: '#1e3a8a',
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
@@ -143,6 +146,9 @@ function MyApp({
                 default: marketplaceChain.id === id,
               }
             }),
+            disablePoweredByReservoir: true,
+            marketplaceFee: +`${FEE_BPS || 0}`,
+            marketplaceFeeRecipient: FEE_RECIPIENT,
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
           }}
