@@ -35,12 +35,12 @@ class MyDocument extends Document {
         <link
           rel="shortcut icon"
           type="image/svg"
-          href="https://marketplace.reservoir.tools/reservoir.svg"
+          href="https://seaport.marketplace/seaport.svg"
         />
 
         {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir Market" />
-        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+        <meta property="reservoir:title" content="SeaPort" />
+        <meta property="reservoir:icon" content="/seaport-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
           content="/collection/ethereum/${contract}/${tokenId}"
