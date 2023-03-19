@@ -1,4 +1,4 @@
-import { goerli, mainnet, polygon } from 'wagmi/chains'
+import { mainnet, polygon, optimism } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -40,12 +40,12 @@ export default [
     coingeckoId: 'matic-network',
   },
   {
-    ...goerli,
-    iconUrl: `/icons/goerli-icon.svg`,
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
+    ...optimism,
+    iconUrl: `https://api-optimism.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
+    reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
+    proxyApi: '/api/reservoir/optimism',
+    routePrefix: 'optimism',
+    apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
+    coingeckoId: 'optimism',
   },
 ]
