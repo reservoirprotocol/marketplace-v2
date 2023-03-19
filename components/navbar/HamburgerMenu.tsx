@@ -68,7 +68,7 @@ const HamburgerMenu = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/seaportLogo.svg"
                 width={34}
                 height={39}
                 alt="Reservoir"
