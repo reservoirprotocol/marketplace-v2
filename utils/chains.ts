@@ -41,7 +41,7 @@ export default [
   },
   {
     ...optimism,
-    iconUrl: `https://api-optimism.reservoir.tools/redirect/currency/${constants.AddressZero}/icon/v1`,
+    iconUrl: `/icons/optimism-icon.svg`,
     reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
     proxyApi: '/api/reservoir/optimism',
     routePrefix: 'optimism',
