@@ -280,6 +280,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           >
             <FormatCryptoCurrency
               amount={collection?.floorAsk?.price?.amount?.decimal}
+              address={collection?.floorAsk?.price?.currency?.contract}
+              decimals={collection?.floorAsk?.price?.currency?.decimals}
               textStyle="subtitle2"
               logoHeight={14}
             />
