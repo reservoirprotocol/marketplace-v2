@@ -105,7 +105,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
         key={collection.id}
       >
         <Flex align="center" css={{ cursor: 'pointer' }}>
-          <Text css={{ mr: '$4' }} style="subtitle3">
+          <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
             {rank}
           </Text>
           <img
@@ -192,7 +192,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 width: '100$',
               }}
             >
-              <Text css={{ mr: '$2' }} style="subtitle3">
+              <Text css={{ mr: '$2', width: 15 }} style="subtitle3">
                 {rank}
               </Text>
               <img
