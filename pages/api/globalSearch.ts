@@ -100,13 +100,13 @@ export default async function handler(req: Request) {
       })
     })
 
-    let results = await Promise.allSettled(promises).then((results) =>
-      results
+    let results = await Promise.allSettled(promises).then((results) => {
+      return results
         .filter(
           (result) => result.status === 'fulfilled' && result.value.length > 0
         )
         .flatMap((result) => (result as PromiseFulfilledResult<any>).value)
-    )
+    })
 
     if (results.length > 0) {
       searchResults = results
