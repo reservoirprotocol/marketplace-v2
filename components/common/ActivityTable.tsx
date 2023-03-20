@@ -343,7 +343,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       css={{ gridTemplateColumns: '.75fr 1.25fr .9fr 1fr 1fr 1fr 1.1fr' }}
     >
       <TableCell css={{ color: '$gray11', minWidth: 0 }}>
-        <Flex align="center">
+        <Flex align="center" title={activityDescription}>
           {activity.type && logos[activity.type]}
           <Text
             style="subtitle1"
@@ -352,6 +352,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               ml: '$2',
               color: '$gray11',
               fontSize: '14px',
+              cursor: 'default',
             }}
           >
             {activityDescription}
