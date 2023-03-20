@@ -26,6 +26,8 @@ export const DefaultChain = {
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'ethereum',
+  collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
+  community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
 }
 
 export default [
@@ -38,6 +40,8 @@ export default [
     routePrefix: 'polygon',
     apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
     coingeckoId: 'matic-network',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
   {
     ...goerli,
@@ -47,5 +51,7 @@ export default [
     routePrefix: 'goerli',
     apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
     coingeckoId: 'goerli-eth',
+    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
   },
 ]

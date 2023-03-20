@@ -2,7 +2,7 @@ import { NextPage } from 'next'
 import { Text, Flex, Box } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -18,9 +18,9 @@ import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
+import { ChainContext } from 'context/ChainContextProvider'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -35,10 +35,12 @@ const IndexPage: NextPage = () => {
     limit: 100,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
   }
 
   const { data: collections, isLoading: collectionsLoading } =
