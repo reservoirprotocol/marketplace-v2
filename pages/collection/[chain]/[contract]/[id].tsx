@@ -489,6 +489,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
+                style={{
+                  paddingRight: 15,
+                }}
               >
                 <TabsList>
                   {isMounted && isSmallDevice && hasAttributes && (
@@ -525,7 +528,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     <TokenInfo token={token} collection={collection} />
                   )}
                 </TabsContent>
-                <TabsContent value="activity">
+                <TabsContent value="activity" css={{ mr: -15 }}>
                   {isSmallDevice ? (
                     <MobileActivityFilters
                       activityTypes={activityTypes}

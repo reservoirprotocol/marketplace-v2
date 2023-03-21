@@ -63,7 +63,10 @@ type TokenActivityTableProps = {
   >['types']
 }
 
-export const TokenActivityTable: FC<TokenActivityTableProps> = ({ id, activityTypes }) => {
+export const TokenActivityTable: FC<TokenActivityTableProps> = ({
+  id,
+  activityTypes,
+}) => {
   const data = useTokenActivity(
     id,
     {
@@ -113,9 +116,10 @@ export const ActivityTable: FC<Props> = ({ data }) => {
           direction="column"
           css={{
             height: data.isLoading ? '225px' : '450px',
-            overflowY: 'scroll',
+            overflowY: 'auto',
             width: '100%',
             pb: '$2',
+            pr: 15,
           }}
         >
           {activities.map((activity, i) => {
