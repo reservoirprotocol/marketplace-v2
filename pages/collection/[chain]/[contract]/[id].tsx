@@ -118,7 +118,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const attributesData = useAttributes(id)
+  const attributesData = useAttributes(collectionId)
 
   let countOwned = 0
   if (is1155) {
