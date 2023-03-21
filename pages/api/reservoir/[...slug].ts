@@ -40,7 +40,7 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     // versions without any padding
     endpoint = endpoint.toLowerCase()
     if (
-      [mainnet.id, goerli.id].includes(chain.id) &&
+      [mainnet.id as number, goerli.id].includes(chain.id) &&
       endpoint.includes('currency')
     ) {
       if (endpoint.includes(constants.AddressZero)) {
