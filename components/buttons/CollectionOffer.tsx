@@ -6,7 +6,7 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
-import { useModal } from 'connectkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -29,7 +29,7 @@ const CollectionOffer: FC<Props> = ({
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
@@ -82,7 +82,7 @@ const CollectionOffer: FC<Props> = ({
           }
 
           if (!signer) {
-            setOpen(true)
+            openConnectModal?.()
           }
         }}
         {...buttonProps}

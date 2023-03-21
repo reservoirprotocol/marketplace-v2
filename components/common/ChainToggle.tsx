@@ -5,11 +5,13 @@ import supportedChains from 'utils/chains'
 import { useContext } from 'react'
 import { ChainContext } from 'context/ChainContextProvider'
 import { TooltipArrow } from 'components/primitives/Tooltip'
+import { useMounted } from 'hooks'
 
 const ChainToggle: FC = () => {
   const { chain, switchCurrentChain } = useContext(ChainContext)
+  const isMounted = useMounted()
 
-  if (supportedChains.length === 1) {
+  if (!isMounted || supportedChains.length === 1) {
     return null
   }
 
@@ -19,16 +21,20 @@ const ChainToggle: FC = () => {
         <TooltipPrimitive.Root delayDuration={0} key={chainOption.name}>
           <TooltipPrimitive.Trigger>
             <ToggleGroupItem
+              asChild
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
               onClick={() => switchCurrentChain(chainOption.id)}
-              css={{
-                width: 56,
-                display: 'flex',
-                justifyContent: 'center',
-              }}
             >
-              <img src={chainOption.iconUrl} style={{ height: 20 }} />
+              <Box
+                css={{
+                  width: 56,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <img src={chainOption.iconUrl} style={{ height: 20 }} />
+              </Box>
             </ToggleGroupItem>
           </TooltipPrimitive.Trigger>
           <TooltipPrimitive.Content

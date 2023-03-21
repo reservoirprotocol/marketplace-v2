@@ -41,7 +41,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import Head from 'next/head'
+import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
@@ -69,6 +69,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
+  const smallSubtitle = useMediaQuery({ maxWidth: 1150 }) && isMounted
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -155,6 +156,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
+  //@ts-ignore: Ignore until we regenerate the types
+  const contractKind = collection?.contractKind?.toUpperCase()
+
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
@@ -170,29 +174,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   return (
     <Layout>
-      <Head>
-        <title>{ssr?.collection?.collections?.[0]?.name}</title>
-        <meta
-          name="description"
-          content={ssr?.collection?.collections?.[0]?.description as string}
-        />
-        <meta
-          property="twitter:title"
-          content={ssr?.collection?.collections?.[0]?.name}
-        />
-        <meta
-          name="twitter:image"
-          content={ssr?.collection?.collections?.[0]?.banner}
-        />
-        <meta
-          property="og:title"
-          content={ssr?.collection?.collections?.[0]?.name}
-        />
-        <meta
-          property="og:image"
-          content={ssr?.collection?.collections?.[0]?.banner}
-        />
-      </Head>
+      <Head
+        ogImage={ssr?.collection?.collections?.[0]?.banner}
+        title={ssr?.collection?.collections?.[0]?.name}
+        description={ssr?.collection?.collections?.[0]?.description as string}
+      />
+
       {collection ? (
         <Flex
           direction="column"
@@ -229,70 +216,105 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     />
                   </Flex>
 
-                  <Flex align="end" css={{ gap: 24 }}>
-                    {!isSmallDevice && (
-                      <>
-                        <Box>
-                          <Text style="body1" color="subtle">
-                            Creator Earnings
+                  {!smallSubtitle && (
+                    <Flex align="end" css={{ gap: 24 }}>
+                      <CopyText
+                        text={collection.id as string}
+                        css={{ width: 'max-content' }}
+                      >
+                        <Flex css={{ gap: '$2', width: 'max-content' }}>
+                          {!isSmallDevice && (
+                            <Text style="body1" color="subtle">
+                              Collection
+                            </Text>
+                          )}
+                          <Text
+                            style="body1"
+                            color={isSmallDevice ? 'subtle' : undefined}
+                            as="p"
+                          >
+                            {truncateAddress(collection.id as string)}
                           </Text>
-                          <Text style="body1"> {creatorRoyalties}%</Text>
-                        </Box>
-                        <Box>
-                          <Text style="body1" color="subtle">
-                            Chain{' '}
-                          </Text>
-                          <Text style="body1">{chain}</Text>
-                        </Box>
-                      </>
-                    )}
-                    <CopyText
-                      text={collection.id as string}
-                      css={{ width: 'max-content' }}
-                    >
-                      <Flex css={{ gap: '$2', width: 'max-content' }}>
-                        {!isSmallDevice && (
-                          <Text style="body1" color="subtle">
-                            Collection
-                          </Text>
-                        )}
-                        <Text
-                          style="body1"
-                          color={isSmallDevice ? 'subtle' : undefined}
-                          as="p"
-                        >
-                          {truncateAddress(collection.id as string)}
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon
+                              icon={faCopy}
+                              width={16}
+                              height={16}
+                            />
+                          </Box>
+                        </Flex>
+                      </CopyText>
+                      <Box>
+                        <Text style="body1" color="subtle">
+                          Token Standard{' '}
                         </Text>
-                        <Box css={{ color: '$gray10' }}>
-                          <FontAwesomeIcon
-                            icon={faCopy}
-                            width={16}
-                            height={16}
-                          />
-                        </Box>
-                      </Flex>
-                    </CopyText>
-                  </Flex>
+                        <Text style="body1">{contractKind}</Text>
+                      </Box>
+                      <Box>
+                        <Text style="body1" color="subtle">
+                          Chain{' '}
+                        </Text>
+                        <Text style="body1">{chain}</Text>
+                      </Box>
+                      <Box>
+                        <Text style="body1" color="subtle">
+                          Creator Earnings
+                        </Text>
+                        <Text style="body1"> {creatorRoyalties}%</Text>
+                      </Box>
+                    </Flex>
+                  )}
                 </Box>
               </Flex>
             </Flex>
             <CollectionActions collection={collection} />
           </Flex>
-          {isSmallDevice && (
-            <Flex css={{ gap: 24, mb: 24 }}>
-              <Box>
+          {smallSubtitle && (
+            <Grid
+              css={{
+                gap: 12,
+                mb: 24,
+                gridTemplateColumns: '1fr 1fr',
+                maxWidth: 550,
+              }}
+            >
+              <CopyText
+                text={collection.id as string}
+                css={{ width: 'max-content' }}
+              >
+                <Flex css={{ width: 'max-content' }} direction="column">
+                  <Text style="body1" color="subtle">
+                    Collection
+                  </Text>
+                  <Flex css={{ gap: '$2' }}>
+                    <Text style="body1" as="p">
+                      {truncateAddress(collection.id as string)}
+                    </Text>
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                    </Box>
+                  </Flex>
+                </Flex>
+              </CopyText>
+              <Flex direction="column">
                 <Text style="body1" color="subtle">
-                  Creator Earnings
+                  Token Standard{' '}
                 </Text>
-                <Text style="body1"> {creatorRoyalties}%</Text>
-              </Box>
-              <Box>
+                <Text style="body1">{contractKind}</Text>
+              </Flex>
+              <Flex direction="column">
                 <Text style="body1" color="subtle">
                   Chain{' '}
                 </Text>
                 <Text style="body1">{chain}</Text>
-              </Box>
-            </Flex>
+              </Flex>
+              <Flex direction="column">
+                <Text style="body1" color="subtle">
+                  Creator Earnings
+                </Text>
+                <Text style="body1"> {creatorRoyalties}%</Text>
+              </Flex>
+            </Grid>
           )}
           <StatHeader collection={collection} />
           <Tabs.Root
@@ -515,7 +537,7 @@ export const getStaticProps: GetStaticProps<{
   id: string | undefined
 }> = async ({ params }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl, apiKey, routePrefix } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
@@ -571,6 +593,20 @@ export const getStaticProps: GetStaticProps<{
     tokens?.tokens?.some(
       (token) => (token?.token?.attributes?.length || 0) > 0
     ) || false
+
+  if (
+    collection &&
+    collection.collections?.[0].contractKind === 'erc1155' &&
+    Number(collection?.collections?.[0].tokenCount) === 1 &&
+    tokens?.tokens?.[0].token?.tokenId !== undefined
+  ) {
+    return {
+      redirect: {
+        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
+        permanent: false,
+      },
+    }
+  }
 
   return {
     props: { ssr: { collection, tokens, hasAttributes }, id },

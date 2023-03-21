@@ -15,7 +15,13 @@ const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
 
 export type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
->[0] & { chainName: string; chainId: number; chainIcon: string }
+>[0] & {
+  chainName: string
+  chainId: number
+  chainIcon: string
+  volumeCurrencySymbol: string
+  tokenCount: string
+}
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -83,6 +89,9 @@ export default async function handler(req: Request) {
           chainName: chain.name.toLowerCase(),
           chainId: chain.id,
           chainIcon: chain.iconUrl,
+          volumeCurrencySymbol: chain.nativeCurrency.symbol,
+          //@ts-ignore: ignoring until the api types get upgraded, remove in the next upgrade
+          itemCount: collection.itemCount,
         }
         return {
           type: 'collection',
@@ -91,13 +100,13 @@ export default async function handler(req: Request) {
       })
     })
 
-    let results = await Promise.allSettled(promises).then((results) =>
-      results
+    let results = await Promise.allSettled(promises).then((results) => {
+      return results
         .filter(
           (result) => result.status === 'fulfilled' && result.value.length > 0
         )
         .flatMap((result) => (result as PromiseFulfilledResult<any>).value)
-    )
+    })
 
     if (results.length > 0) {
       searchResults = results
@@ -150,6 +159,7 @@ export default async function handler(req: Request) {
             chainName: supportedChains[index].name.toLowerCase(),
             chainId: supportedChains[index].id,
             chainIcon: supportedChains[index].iconUrl,
+            volumeCurrencySymbol: supportedChains[index].nativeCurrency.symbol,
             allTimeUsdVolume:
               (collection.allTimeVolume &&
                 collection.allTimeVolume *

@@ -1,4 +1,4 @@
-import { useModal } from 'connectkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import {
   CancelListingModal,
   CancelListingStep,
@@ -23,7 +23,7 @@ const CancelListing: FC<Props> = ({
   mutate,
 }) => {
   const { addToast } = useContext(ToastContext)
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
@@ -47,7 +47,7 @@ const CancelListing: FC<Props> = ({
         }
 
         if (!signer) {
-          setOpen(true)
+          openConnectModal?.()
         }
       },
     })

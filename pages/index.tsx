@@ -1,6 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
-import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useState } from 'react'
 import { Footer } from 'components/home/Footer'
@@ -17,6 +16,8 @@ import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
+import { Head } from 'components/Head'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -32,6 +33,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 10,
     sortBy: sortByTime,
+    includeTopBid: true,
   }
 
   if (COLLECTION_SET_ID) {
@@ -47,7 +49,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collections = data || []
 
   let volumeKey: ComponentPropsWithoutRef<
-    typeof TrendingCollectionsList
+    typeof CollectionRankingsTable
   >['volumeKey'] = 'allTime'
 
   switch (sortByTime) {
@@ -64,6 +66,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   return (
     <Layout>
+      <Head />
       <Box
         css={{
           p: 24,
@@ -122,7 +125,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
+            <CollectionRankingsTable
               collections={collections}
               loading={isValidating}
               volumeKey={volumeKey}
@@ -161,6 +164,7 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
+      includeTopBid: true,
       limit: 10,
     }
 
