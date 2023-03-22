@@ -12,10 +12,11 @@ import {
   TableRow,
   Text,
 } from 'components/primitives'
+import Img from 'components/primitives/Img'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
-import { ComponentPropsWithoutRef, FC } from 'react'
+import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 type Props = {
@@ -108,17 +109,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
             {rank}
           </Text>
-          <img
-            src={collection?.image}
-            style={{
-              borderRadius: 8,
-              width: 48,
-              height: 48,
-              objectFit: 'cover',
-            }}
-            onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-              e.currentTarget.style.visibility = 'hidden'
-            }}
+          <Img
+            src={collection.image}
+            css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
           />
           <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
             <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
@@ -195,17 +188,18 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               <Text css={{ mr: '$2', width: 15 }} style="subtitle3">
                 {rank}
               </Text>
-              <img
-                src={collection?.image}
-                style={{
+              <Img
+                src={collection.image as string}
+                css={{
                   borderRadius: 8,
                   width: 56,
                   height: 56,
                   objectFit: 'cover',
                 }}
-                onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                  e.currentTarget.style.visibility = 'hidden'
-                }}
+                alt="Collection Image"
+                width={56}
+                height={56}
+                unoptimized
               />
 
               <Text
