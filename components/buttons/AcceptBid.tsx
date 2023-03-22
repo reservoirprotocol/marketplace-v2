@@ -8,7 +8,7 @@ import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
-import { useModal } from 'connectkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -36,7 +36,7 @@ const AcceptBid: FC<Props> = ({
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
 
   const marketplaceChain = useMarketplaceChain()
@@ -68,7 +68,7 @@ const AcceptBid: FC<Props> = ({
         }
 
         if (!signer) {
-          setOpen(true)
+          openConnectModal?.()
         }
       },
     })

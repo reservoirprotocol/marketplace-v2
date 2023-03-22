@@ -4,7 +4,7 @@ import { useNetwork, useSigner } from 'wagmi'
 import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
-import { useModal } from 'connectkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 
@@ -17,7 +17,7 @@ type Props = {
 
 const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   const { data: signer } = useSigner()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
@@ -59,7 +59,7 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
         }
 
         if (!signer) {
-          setOpen(true)
+          openConnectModal?.()
         }
       }}
       {...buttonProps}
