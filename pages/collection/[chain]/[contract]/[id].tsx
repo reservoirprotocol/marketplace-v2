@@ -121,6 +121,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const { data: offers } = useBids({
     token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+    includeRawData: true,
   })
 
   const offer = offers && offers[0] ? offers[0] : undefined
