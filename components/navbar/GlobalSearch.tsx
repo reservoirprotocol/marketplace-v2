@@ -320,7 +320,7 @@ const GlobalSearch = forwardRef<
               top: '100%',
               left: 0,
               right: 0,
-              background: isMobile ? 'transparent' : '$gray3',
+              background: isMobile ? 'transparent' : '$dropdownBg',
               borderRadius: isMobile ? 0 : 8,
               zIndex: 4,
               mt: '$2',
