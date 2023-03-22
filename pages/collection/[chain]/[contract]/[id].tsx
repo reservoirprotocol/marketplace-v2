@@ -101,6 +101,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
       includeAttributes: true,
       includeTopBid: true,
+      includeQuantity: true,
     },
     {
       fallbackData: [ssr.tokens],
