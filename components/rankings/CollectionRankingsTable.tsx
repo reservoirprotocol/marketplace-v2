@@ -110,8 +110,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             {rank}
           </Text>
           <Img
-            src={collection.image}
+            src={collection.image as string}
             css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
+            alt="Collection Image"
+            width={48}
+            height={48}
+            unoptimized
           />
           <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
             <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
