@@ -9,6 +9,7 @@ import * as Tabs from '@radix-ui/react-tabs'
 import {
   TokenMedia,
   useAttributes,
+  useBids,
   useCollections,
   useDynamicTokens,
   useTokenActivity,
@@ -118,6 +119,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
+  const { data: offers } = useBids({
+    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+  })
+
+  const offer = offers && offers[0] ? offers[0] : undefined
   const attributesData = useAttributes(collectionId)
 
   let countOwned = 0
@@ -480,6 +486,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               {isMounted && (
                 <TokenActions
                   token={token}
+                  offer={offer}
                   isOwner={isOwner}
                   mutate={mutate}
                   account={account}

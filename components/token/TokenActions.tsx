@@ -1,9 +1,11 @@
-import { useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { faGasPump } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useBids, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
-import { Button, Flex, Grid } from 'components/primitives'
+import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -11,13 +13,20 @@ import { useAccount } from 'wagmi'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
+  offer?: ReturnType<typeof useBids>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
 }
 
+const zoneAddresses = [
+  '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192', // Ethereum - 0xe1...92
+  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
+]
+
 export const TokenActions: FC<Props> = ({
   token,
+  offer,
   isOwner,
   mutate,
   account,
@@ -43,6 +52,12 @@ export const TokenActions: FC<Props> = ({
     token?.market?.topBid?.maker?.toLowerCase() ===
       account?.address?.toLowerCase()
   const isListed = token ? token?.market?.floorAsk?.id !== null : false
+
+  const orderZone = offer?.rawData?.zone
+  const orderKind = offer?.kind
+
+  const isOracleOrder =
+    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
@@ -130,12 +145,55 @@ export const TokenActions: FC<Props> = ({
           bidId={token?.market?.topBid?.id as string}
           mutate={mutate}
           trigger={
-            <Button
-              css={{ color: '$red11', justifyContent: 'center' }}
-              color="gray3"
-            >
-              Cancel Offer
-            </Button>
+            <Flex>
+              {!isOracleOrder ? (
+                <Tooltip
+                  content={
+                    <Text style="body2" as="p">
+                      Cancelling this order requires gas.
+                    </Text>
+                  }
+                >
+                  <Button
+                    css={{
+                      color: '$red11',
+                      width: '100%',
+                      height: 52,
+                      justifyContent: 'center',
+                      minWidth: 'max-content',
+                      '@sm': {
+                        maxWidth: 250,
+                      },
+                    }}
+                    color="gray3"
+                  >
+                    <FontAwesomeIcon
+                      color="#697177"
+                      icon={faGasPump}
+                      width="16"
+                      height="16"
+                    />
+                    Cancel Offer
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button
+                  css={{
+                    color: '$red11',
+                    width: '100%',
+                    height: 52,
+                    justifyContent: 'center',
+                    minWidth: 'max-content',
+                    '@sm': {
+                      maxWidth: 250,
+                    },
+                  }}
+                  color="gray3"
+                >
+                  Cancel Offer
+                </Button>
+              )}
+            </Flex>
           }
         />
       )}
