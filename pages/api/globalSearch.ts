@@ -20,6 +20,7 @@ export type SearchCollection = NonNullable<
   chainId: number
   chainIcon: string
   volumeCurrencySymbol: string
+  volumeCurrencyDecimals: number
   tokenCount: string
 }
 
@@ -90,8 +91,8 @@ export default async function handler(req: Request) {
           chainId: chain.id,
           chainIcon: chain.iconUrl,
           volumeCurrencySymbol: chain.nativeCurrency.symbol,
-          //@ts-ignore: ignoring until the api types get upgraded, remove in the next upgrade
-          itemCount: collection.itemCount,
+          volumeCurrencyDecimals: chain.nativeCurrency.decimals,
+          tokenCount: collection.tokenCount || '0',
         }
         return {
           type: 'collection',
@@ -160,6 +161,9 @@ export default async function handler(req: Request) {
             chainId: supportedChains[index].id,
             chainIcon: supportedChains[index].iconUrl,
             volumeCurrencySymbol: supportedChains[index].nativeCurrency.symbol,
+            volumeCurrencyDecimals:
+              supportedChains[index].nativeCurrency.decimals,
+            tokenCount: collection.tokenCount,
             allTimeUsdVolume:
               (collection.allTimeVolume &&
                 collection.allTimeVolume *
