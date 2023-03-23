@@ -208,20 +208,14 @@ export const TokenActions: FC<Props> = ({
                 <Tooltip
                   content={
                     <Text style="body2" as="p">
-                      Cancelling this listing requires gas.
+                      Cancelling this order requires gas.
                     </Text>
                   }
                 >
                   <Button
                     css={{
                       color: '$red11',
-                      width: '100%',
-                      height: 52,
-                      justifyContent: 'center',
-                      minWidth: 'max-content',
-                      '@sm': {
-                        maxWidth: 250,
-                      },
+                      minWidth: '150px',
                     }}
                     color="gray3"
                   >
@@ -231,24 +225,19 @@ export const TokenActions: FC<Props> = ({
                       width="16"
                       height="16"
                     />
-                    Cancel Listing
+                    Cancel
                   </Button>
                 </Tooltip>
               ) : (
                 <Button
                   css={{
                     color: '$red11',
-                    width: '100%',
-                    height: 52,
+                    minWidth: '150px',
                     justifyContent: 'center',
-                    minWidth: 'max-content',
-                    '@sm': {
-                      maxWidth: 250,
-                    },
                   }}
                   color="gray3"
                 >
-                  Cancel Listing
+                  Cancel
                 </Button>
               )}
             </Flex>

@@ -211,7 +211,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       </Text>
                     }
                   >
-                    <Button css={{ color: '$red11' }} color="gray3">
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
@@ -222,7 +229,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                      justifyContent: 'center',
+                    }}
+                    color="gray3"
+                  >
                     Cancel
                   </Button>
                 )}
@@ -319,7 +333,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       </Text>
                     }
                   >
-                    <Button css={{ color: '$red11' }} color="gray3">
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
@@ -330,7 +351,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                      justifyContent: 'center',
+                    }}
+                    color="gray3"
+                  >
                     Cancel
                   </Button>
                 )}
