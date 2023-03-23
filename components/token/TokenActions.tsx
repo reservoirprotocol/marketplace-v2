@@ -203,12 +203,55 @@ export const TokenActions: FC<Props> = ({
           listingId={token?.market?.floorAsk?.id as string}
           mutate={mutate}
           trigger={
-            <Button
-              css={{ color: '$red11', justifyContent: 'center' }}
-              color="gray3"
-            >
-              Cancel Listing
-            </Button>
+            <Flex>
+              {!isOracleOrder ? (
+                <Tooltip
+                  content={
+                    <Text style="body2" as="p">
+                      Cancelling this listing requires gas.
+                    </Text>
+                  }
+                >
+                  <Button
+                    css={{
+                      color: '$red11',
+                      width: '100%',
+                      height: 52,
+                      justifyContent: 'center',
+                      minWidth: 'max-content',
+                      '@sm': {
+                        maxWidth: 250,
+                      },
+                    }}
+                    color="gray3"
+                  >
+                    <FontAwesomeIcon
+                      color="#697177"
+                      icon={faGasPump}
+                      width="16"
+                      height="16"
+                    />
+                    Cancel Listing
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button
+                  css={{
+                    color: '$red11',
+                    width: '100%',
+                    height: 52,
+                    justifyContent: 'center',
+                    minWidth: 'max-content',
+                    '@sm': {
+                      maxWidth: 250,
+                    },
+                  }}
+                  color="gray3"
+                >
+                  Cancel Listing
+                </Button>
+              )}
+            </Flex>
           }
         />
       )}

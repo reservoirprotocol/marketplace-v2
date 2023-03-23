@@ -119,7 +119,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const { data: offers } = useBids({
+  const { data: offers, isLoading: offersLoading } = useBids({
     token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
     includeRawData: true,
   })
@@ -484,7 +484,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 collectionAttributes={attributesData?.data}
               />
               <PriceData token={token} />
-              {isMounted && (
+              {isMounted && !offersLoading && (
                 <TokenActions
                   token={token}
                   offer={offer}
