@@ -18,7 +18,8 @@ export type SearchCollection = NonNullable<
 >[0] & {
   chainName: string
   chainId: number
-  chainIcon: string
+  lightChainIcon: string
+  darkChainIcon: string
   volumeCurrencySymbol: string
   tokenCount: string
 }
@@ -88,7 +89,8 @@ export default async function handler(req: Request) {
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
           chainId: chain.id,
-          chainIcon: chain.iconUrl,
+          lightChainIcon: chain.lightIconUrl,
+          darkChainIcon: chain.darkIconUrl,
           volumeCurrencySymbol: chain.nativeCurrency.symbol,
           //@ts-ignore: ignoring until the api types get upgraded, remove in the next upgrade
           itemCount: collection.itemCount,
@@ -158,7 +160,8 @@ export default async function handler(req: Request) {
             ...collection,
             chainName: supportedChains[index].name.toLowerCase(),
             chainId: supportedChains[index].id,
-            chainIcon: supportedChains[index].iconUrl,
+            lightChainIcon: supportedChains[index].lightIconUrl,
+            darkChainIcon: supportedChains[index].darkIconUrl,
             volumeCurrencySymbol: supportedChains[index].nativeCurrency.symbol,
             allTimeUsdVolume:
               (collection.allTimeVolume &&

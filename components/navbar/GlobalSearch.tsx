@@ -21,6 +21,7 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { SearchCollection } from 'pages/api/globalSearch'
 import { formatNumber } from 'utils/numbers'
+import { useTheme } from 'next-themes'
 
 type Props = {
   collection: SearchCollection
@@ -28,6 +29,7 @@ type Props = {
 }
 
 const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
+  const { theme } = useTheme()
   const volume = useMemo(
     () =>
       collection.allTimeVolume ? formatNumber(collection.allTimeVolume) : 0,
@@ -68,7 +70,14 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           </Flex>
           <Flex align="center" css={{ gap: '$1' }}>
             <Box css={{ height: 12, minWidth: 'max-content' }}>
-              <img src={collection.chainIcon} style={{ height: 12 }} />
+              <img
+                src={
+                  theme === 'dark'
+                    ? collection.darkChainIcon
+                    : collection.lightChainIcon
+                }
+                style={{ height: 12 }}
+              />
             </Box>
             {collection.tokenCount !== undefined && (
               <Text style="subtitle3" color="subtle">
