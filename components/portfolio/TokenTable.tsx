@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -27,11 +27,14 @@ import { useMarketplaceChain } from 'hooks'
 import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import Checkbox from 'components/primitives/Checkbox'
 
 type Props = {
   address: Address | undefined
   filterCollection: string | undefined
   isLoading?: boolean
+  selectedItems: string[]
+  setSelectedItems: Dispatch<SetStateAction<string[]>>
 }
 
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
@@ -40,6 +43,8 @@ export const TokenTable: FC<Props> = ({
   address,
   isLoading,
   filterCollection,
+  selectedItems,
+  setSelectedItems,
 }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -99,6 +104,8 @@ export const TokenTable: FC<Props> = ({
                 key={`${token.token?.tokenId}-${i}`}
                 token={token}
                 mutate={mutate}
+                selectedItems={selectedItems}
+                setSelectedItems={setSelectedItems}
               />
             )
           })}
@@ -112,12 +119,35 @@ export const TokenTable: FC<Props> = ({
 type TokenTableRowProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
   mutate?: MutatorCallback
+  selectedItems: string[]
+  setSelectedItems: Dispatch<SetStateAction<string[]>>
 }
 
-const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
+const TokenTableRow: FC<TokenTableRowProps> = ({
+  token,
+  mutate,
+  selectedItems,
+  setSelectedItems,
+}) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const marketplaceChain = useMarketplaceChain()
+
+  const addToSelectedItems = (item: string) => {
+    setSelectedItems([...selectedItems, item])
+  }
+
+  const removeFromSelectedItems = (item: string) => {
+    setSelectedItems(
+      selectedItems.filter((selectedItem) => selectedItem !== item)
+    )
+  }
+
+  const isSelectedItem = (item: string) => {
+    return selectedItems.includes(item)
+  }
+
+  const itemId = `${token?.token?.contract}/${token?.token?.tokenId}`
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -249,62 +279,74 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link
-          href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
-        >
-          <Flex align="center">
-            {imageSrc && (
-              <Image
-                style={{
-                  borderRadius: '4px',
-                  objectFit: 'cover',
-                  aspectRatio: '1/1',
+        <Flex align="center" css={{ gap: '$3' }}>
+          <Checkbox
+            checked={isSelectedItem(itemId)}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                addToSelectedItems(itemId)
+              } else {
+                removeFromSelectedItems(itemId)
+              }
+            }}
+          />
+          <Link
+            href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+          >
+            <Flex align="center">
+              {imageSrc && (
+                <Image
+                  style={{
+                    borderRadius: '4px',
+                    objectFit: 'cover',
+                    aspectRatio: '1/1',
+                  }}
+                  loader={({ src }) => src}
+                  src={imageSrc}
+                  alt={`${token?.token?.name}`}
+                  width={48}
+                  height={48}
+                />
+              )}
+              <Flex
+                direction="column"
+                css={{
+                  ml: '$2',
+                  overflow: 'hidden',
                 }}
-                loader={({ src }) => src}
-                src={imageSrc}
-                alt={`${token?.token?.name}`}
-                width={48}
-                height={48}
-              />
-            )}
-            <Flex
-              direction="column"
-              css={{
-                ml: '$2',
-                overflow: 'hidden',
-              }}
-            >
-              <Flex justify="between" css={{ gap: '$2' }}>
-                <Text style="subtitle3" ellipsify color="subtle">
-                  {token?.token?.collection?.name}
-                </Text>
-                {token?.token?.kind === 'erc1155' &&
-                  token?.ownership?.tokenCount && (
-                    <Flex
-                      justify="center"
-                      align="center"
-                      css={{
-                        borderRadius: 9999,
-                        backgroundColor: '$gray4',
-                        maxWidth: '50%',
-                      }}
-                    >
-                      <Text
-                        ellipsify
-                        style="subtitle3"
-                        css={{ px: '$2', fontSize: 10 }}
+              >
+                <Flex justify="between" css={{ gap: '$2' }}>
+                  <Text style="subtitle3" ellipsify color="subtle">
+                    {token?.token?.collection?.name}
+                  </Text>
+                  {token?.token?.kind === 'erc1155' &&
+                    token?.ownership?.tokenCount && (
+                      <Flex
+                        justify="center"
+                        align="center"
+                        css={{
+                          borderRadius: 9999,
+                          backgroundColor: '$gray4',
+                          maxWidth: '50%',
+                        }}
                       >
-                        x{token?.ownership?.tokenCount}
-                      </Text>
-                    </Flex>
-                  )}
+                        <Text
+                          ellipsify
+                          style="subtitle3"
+                          css={{ px: '$2', fontSize: 10 }}
+                        >
+                          x{token?.ownership?.tokenCount}
+                        </Text>
+                      </Flex>
+                    )}
+                </Flex>
+                <Text style="subtitle2" ellipsify>
+                  #{token?.token?.tokenId}
+                </Text>
               </Flex>
-              <Text style="subtitle2" ellipsify>
-                #{token?.token?.tokenId}
-              </Text>
             </Flex>
-          </Flex>
-        </Link>
+          </Link>
+        </Flex>
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency

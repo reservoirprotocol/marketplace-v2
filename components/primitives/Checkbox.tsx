@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { CSS, styled } from '@stitches/react'
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
