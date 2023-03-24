@@ -1,9 +1,10 @@
 import { Flex, Text, Button } from 'components/primitives'
 import { Dispatch, FC, SetStateAction } from 'react'
+import { UserToken } from 'pages/portfolio'
 
 type Props = {
-  selectedItems: string[]
-  setSelectedItems: Dispatch<SetStateAction<string[]>>
+  selectedItems: UserToken[]
+  setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   setShowListingPage: Dispatch<SetStateAction<boolean>>
 }
 
@@ -25,12 +26,12 @@ const BatchActionsFooter: FC<Props> = ({
       align="center"
       justify="between"
       css={{
-        height: 104,
         position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
         px: '$5',
+        py: '$4',
         borderTop: '1px solid $gray7',
         backgroundColor: '$neutralBg',
       }}

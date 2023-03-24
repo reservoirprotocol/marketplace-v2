@@ -28,13 +28,14 @@ import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import Checkbox from 'components/primitives/Checkbox'
+import { UserToken } from 'pages/portfolio'
 
 type Props = {
   address: Address | undefined
   filterCollection: string | undefined
   isLoading?: boolean
-  selectedItems: string[]
-  setSelectedItems: Dispatch<SetStateAction<string[]>>
+  selectedItems: UserToken[]
+  setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
 }
 
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
@@ -119,8 +120,8 @@ export const TokenTable: FC<Props> = ({
 type TokenTableRowProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
   mutate?: MutatorCallback
-  selectedItems: string[]
-  setSelectedItems: Dispatch<SetStateAction<string[]>>
+  selectedItems: UserToken[]
+  setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({
@@ -133,18 +134,26 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const marketplaceChain = useMarketplaceChain()
 
-  const addToSelectedItems = (item: string) => {
+  const addSelectedItem = (item: UserToken) => {
     setSelectedItems([...selectedItems, item])
   }
 
-  const removeFromSelectedItems = (item: string) => {
+  const removeSelectedItem = (item: UserToken) => {
     setSelectedItems(
-      selectedItems.filter((selectedItem) => selectedItem !== item)
+      selectedItems.filter(
+        (selectedItem) =>
+          selectedItem?.token?.tokenId !== item?.token?.tokenId ||
+          selectedItem?.token?.contract !== item?.token?.contract
+      )
     )
   }
 
-  const isSelectedItem = (item: string) => {
-    return selectedItems.includes(item)
+  const isSelectedItem = (item: UserToken) => {
+    return selectedItems.some(
+      (selectedItem) =>
+        selectedItem?.token?.tokenId === item?.token?.tokenId &&
+        selectedItem?.token?.contract === item?.token?.contract
+    )
   }
 
   const itemId = `${token?.token?.contract}/${token?.token?.tokenId}`
@@ -281,12 +290,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       <TableCell css={{ minWidth: 0 }}>
         <Flex align="center" css={{ gap: '$3' }}>
           <Checkbox
-            checked={isSelectedItem(itemId)}
+            checked={isSelectedItem(token)}
             onCheckedChange={(checked) => {
               if (checked) {
-                addToSelectedItems(itemId)
+                addSelectedItem(token)
               } else {
-                removeFromSelectedItems(itemId)
+                removeSelectedItem(token)
               }
             }}
           />

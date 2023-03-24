@@ -6,7 +6,10 @@ import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useUserCollections,
+  useUserTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { useMounted } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
@@ -23,6 +26,8 @@ import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import BatchActionsFooter from 'components/portfolio/BatchActionsFooter'
 import BatchListings from 'components/portfolio/BatchListings'
+
+export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -48,7 +53,9 @@ const IndexPage: NextPage = () => {
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
-  const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
+
+  console.log(selectedItems)
 
   if (!isMounted) {
     return null
@@ -111,7 +118,7 @@ const IndexPage: NextPage = () => {
                         css={{
                           gap: tokenFiltersOpen ? '$5' : '0',
                           position: 'relative',
-                          pb: 64,
+                          pb: 37,
                         }}
                       >
                         {isSmallDevice ? (
