@@ -162,9 +162,9 @@ const BatchListings: FC<Props> = ({
                         >
                           {currency.symbol}
                         </Text>
-                        {/* {currencies && currencies?.length > 1 ? (
+                        {currencies && currencies?.length > 1 ? (
                           <Select.DownIcon style={{ marginLeft: 6 }} />
-                        ) : null} */}
+                        ) : null}
                       </Flex>
                     </Select.Value>
                   </Select.Trigger>
