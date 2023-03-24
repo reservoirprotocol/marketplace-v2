@@ -55,8 +55,6 @@ const IndexPage: NextPage = () => {
   const [showListingPage, setShowListingPage] = useState(false)
   const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
 
-  console.log(selectedItems)
-
   if (!isMounted) {
     return null
   }

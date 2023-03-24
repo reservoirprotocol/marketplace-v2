@@ -146,7 +146,7 @@ const BatchListings: FC<Props> = ({
                 trigger={
                   <Select.Trigger
                     css={{
-                      width: 100,
+                      width: 115,
                     }}
                   >
                     <Select.Value asChild>
