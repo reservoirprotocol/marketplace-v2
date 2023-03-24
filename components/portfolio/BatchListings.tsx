@@ -23,7 +23,7 @@ import { UserToken } from 'pages/portfolio'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
-import { ListingCurrencies } from 'components/buttons/List'
+import { currencies } from 'utils/currencies'
 
 type Listing = Listings[0] & { item: UserToken['token'] }
 
@@ -46,16 +46,6 @@ const BatchListings: FC<Props> = ({
   const [globalPrice, setGlobalPrice] = useState(0)
   const [globalExpirationOption, setGlobalExpirationOption] =
     useState<ExpirationOption>(expirationOptions[5])
-
-  let currencies: ListingCurrencies = undefined
-  // [
-  //   {
-  //     contract: string;
-  //     symbol: string;
-  //     decimals?: number | undefined;
-  //     coinGeckoId?: string | undefined;
-  //   }
-  // ]
 
   const chainCurrency = useChainCurrency()
   const defaultCurrency = {
@@ -156,7 +146,7 @@ const BatchListings: FC<Props> = ({
                 trigger={
                   <Select.Trigger
                     css={{
-                      width: 'auto',
+                      width: 100,
                     }}
                   >
                     <Select.Value asChild>
@@ -189,7 +179,7 @@ const BatchListings: FC<Props> = ({
                   }
                 }}
               >
-                {/* {currencies?.map((option) => (
+                {currencies?.map((option) => (
                   <Select.Item key={option.contract} value={option.contract}>
                     <Select.ItemText>
                       <Flex align="center" css={{ gap: '$1' }}>
@@ -201,7 +191,7 @@ const BatchListings: FC<Props> = ({
                       </Flex>
                     </Select.ItemText>
                   </Select.Item>
-                ))} */}
+                ))}
               </Select>
             </Flex>
             <Flex align="center" css={{ gap: '$3' }}>
