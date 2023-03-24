@@ -5,7 +5,8 @@ import { arbitrum, goerli, mainnet, polygon, Chain } from 'wagmi/chains'
 // They are an extension of the wagmi chain objects
 
 type ReservoirChain = Chain & {
-  iconUrl: string
+  lightIconUrl: string
+  darkIconUrl: string
   reservoirBaseUrl: string
   proxyApi: string
   routePrefix: string
@@ -15,8 +16,10 @@ type ReservoirChain = Chain & {
 
 export const DefaultChain: ReservoirChain = {
   ...mainnet,
-  // Any url to display the logo of the chain
-  iconUrl: `/icons/eth-icon.svg`,
+  // Any url to display the logo of the chain in light mode
+  lightIconUrl: '/icons/eth-icon-dark.svg',
+  // Any url to display the logo of the chain in dark mode
+  darkIconUrl: '/icons/eth-icon-light.svg',
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
@@ -41,7 +44,8 @@ export default [
   DefaultChain,
   {
     ...polygon,
-    iconUrl: `/icons/polygon-icon.svg`,
+    lightIconUrl: '/icons/polygon-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg',
     reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
     proxyApi: '/api/reservoir/polygon',
     routePrefix: 'polygon',
@@ -51,7 +55,8 @@ export default [
   {
     ...arbitrum,
     name: 'Arbitrum',
-    iconUrl: '/icons/arbitrum-icon.svg',
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
     reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
     proxyApi: '/api/reservoir/arbitrum',
     routePrefix: 'arbitrum',
@@ -60,7 +65,8 @@ export default [
   },
   {
     ...goerli,
-    iconUrl: `/icons/goerli-icon.svg`,
+    lightIconUrl: '/icons/goerli-icon-dark.svg',
+    darkIconUrl: '/icons/goerli-icon-light.svg',
     reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
     proxyApi: '/api/reservoir/goerli',
     routePrefix: 'goerli',
