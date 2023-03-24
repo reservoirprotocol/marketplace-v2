@@ -172,7 +172,9 @@ const BatchListings: FC<Props> = ({
                         >
                           {currency.symbol}
                         </Text>
-                        <Select.DownIcon style={{ marginLeft: 6 }} />
+                        {/* {currencies && currencies?.length > 1 ? (
+                          <Select.DownIcon style={{ marginLeft: 6 }} />
+                        ) : null} */}
                       </Flex>
                     </Select.Value>
                   </Select.Trigger>
@@ -187,7 +189,7 @@ const BatchListings: FC<Props> = ({
                   }
                 }}
               >
-                {currencies?.map((option) => (
+                {/* {currencies?.map((option) => (
                   <Select.Item key={option.contract} value={option.contract}>
                     <Select.ItemText>
                       <Flex align="center" css={{ gap: '$1' }}>
@@ -199,7 +201,7 @@ const BatchListings: FC<Props> = ({
                       </Flex>
                     </Select.ItemText>
                   </Select.Item>
-                ))}
+                ))} */}
               </Select>
             </Flex>
             <Flex align="center" css={{ gap: '$3' }}>
