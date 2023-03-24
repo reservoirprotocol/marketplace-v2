@@ -15,12 +15,15 @@ import {
   FormatCryptoCurrency,
 } from 'components/primitives'
 import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
-import { Listings } from '@reservoir0x/reservoir-kit-ui'
+import { Currency, Listings } from '@reservoir0x/reservoir-kit-ui'
 import useMarketplaces from 'hooks/useMarketplaces'
 import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { UserToken } from 'pages/portfolio'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
+import { useChainCurrency } from 'hooks'
+import { ListingCurrencies } from 'components/buttons/List'
 
 type Listing = Listings[0] & { item: UserToken['token'] }
 
@@ -43,6 +46,25 @@ const BatchListings: FC<Props> = ({
   const [globalPrice, setGlobalPrice] = useState(0)
   const [globalExpirationOption, setGlobalExpirationOption] =
     useState<ExpirationOption>(expirationOptions[5])
+
+  let currencies: ListingCurrencies = undefined
+  // [
+  //   {
+  //     contract: string;
+  //     symbol: string;
+  //     decimals?: number | undefined;
+  //     coinGeckoId?: string | undefined;
+  //   }
+  // ]
+
+  const chainCurrency = useChainCurrency()
+  const defaultCurrency = {
+    contract: chainCurrency.address,
+    symbol: chainCurrency.symbol,
+  }
+  const [currency, setCurrency] = useState<Currency>(
+    currencies && currencies[0] ? currencies[0] : defaultCurrency
+  )
 
   const [marketplaces] = useMarketplaces()
 
@@ -70,14 +92,11 @@ const BatchListings: FC<Props> = ({
 
   // add specific marketplace
 
-  // update listing
-
   // sync listing prices with global price
   useEffect(() => {}, [globalPrice])
 
-  // Turn selected items into listings
+  // Transform selected items into listings
   useEffect(() => {
-    console.log('useEffect')
     const listings = selectedItems.map((item) => {
       const listing: Listing = {
         token: `${item?.token?.contract}:${item?.token?.tokenId}`,
@@ -113,44 +132,99 @@ const BatchListings: FC<Props> = ({
         </Flex>
         <Flex direction="column" css={{ gap: '$3' }}>
           <Text style="h6">Apply to All</Text>
-          <Flex align="center" css={{ gap: '$3' }}>
-            <Button
-              color="gray3"
-              corners="pill"
-              size="large"
-              css={{ minWidth: 'max-content' }}
-            >
-              Floor
-            </Button>
-            <Button
-              color="gray3"
-              corners="pill"
-              size="large"
-              css={{ minWidth: 'max-content' }}
-            >
-              Top Trait
-            </Button>
-            <Select
-              css={{
-                flex: 1,
-                width: 200,
-              }}
-              value={globalExpirationOption?.text || ''}
-              onValueChange={(value: string) => {
-                const option = expirationOptions.find(
-                  (option) => option.value == value
-                )
-                if (option) {
-                  setGlobalExpirationOption(option)
+          <Flex align="center" css={{ gap: '$5' }}>
+            <Flex align="center" css={{ gap: '$3' }}>
+              <Button
+                color="gray3"
+                corners="pill"
+                size="large"
+                css={{ minWidth: 'max-content' }}
+              >
+                Floor
+              </Button>
+              <Button
+                color="gray3"
+                corners="pill"
+                size="large"
+                css={{ minWidth: 'max-content' }}
+              >
+                Top Trait
+              </Button>
+            </Flex>
+            <Flex align="center" css={{ gap: '$3' }}>
+              <Select
+                trigger={
+                  <Select.Trigger
+                    css={{
+                      width: 'auto',
+                    }}
+                  >
+                    <Select.Value asChild>
+                      <Flex align="center">
+                        <CryptoCurrencyIcon
+                          address={currency.contract}
+                          css={{ height: 18 }}
+                        />
+                        <Text
+                          style="subtitle1"
+                          color="subtle"
+                          css={{ ml: '$1' }}
+                        >
+                          {currency.symbol}
+                        </Text>
+                        <Select.DownIcon style={{ marginLeft: 6 }} />
+                      </Flex>
+                    </Select.Value>
+                  </Select.Trigger>
                 }
-              }}
-            >
-              {expirationOptions.map((option) => (
-                <Select.Item key={option.text} value={option.value}>
-                  <Select.ItemText>{option.text}</Select.ItemText>
-                </Select.Item>
-              ))}
-            </Select>
+                value={currency.contract}
+                onValueChange={(value: string) => {
+                  const option = currencies?.find(
+                    (option) => option.contract == value
+                  )
+                  if (option) {
+                    setCurrency(option)
+                  }
+                }}
+              >
+                {currencies?.map((option) => (
+                  <Select.Item key={option.contract} value={option.contract}>
+                    <Select.ItemText>
+                      <Flex align="center" css={{ gap: '$1' }}>
+                        <CryptoCurrencyIcon
+                          address={option.contract}
+                          css={{ height: 18 }}
+                        />
+                        {option.symbol}
+                      </Flex>
+                    </Select.ItemText>
+                  </Select.Item>
+                ))}
+              </Select>
+            </Flex>
+            <Flex align="center" css={{ gap: '$3' }}>
+              <Select
+                css={{
+                  flex: 1,
+                  width: 200,
+                }}
+                value={globalExpirationOption?.text || ''}
+                onValueChange={(value: string) => {
+                  const option = expirationOptions.find(
+                    (option) => option.value == value
+                  )
+                  if (option) {
+                    setGlobalExpirationOption(option)
+                  }
+                }}
+              >
+                {expirationOptions.map((option) => (
+                  <Select.Item key={option.text} value={option.value}>
+                    <Select.ItemText>{option.text}</Select.ItemText>
+                  </Select.Item>
+                ))}
+              </Select>
+            </Flex>
           </Flex>
         </Flex>
       </Flex>
@@ -164,6 +238,7 @@ const BatchListings: FC<Props> = ({
               setListings={setListings}
               updateListing={updateListing}
               globalExpirationOption={globalExpirationOption}
+              currency={currency}
               key={listing.token + i}
             />
           ))}
@@ -221,6 +296,7 @@ type ListingsTableRowProps = {
   setListings: Dispatch<SetStateAction<Listing[]>>
   updateListing: (updatedListing: Listing) => void
   globalExpirationOption: ExpirationOption
+  currency: Currency
 }
 
 const ListingsTableRow: FC<ListingsTableRowProps> = ({
@@ -229,6 +305,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   setListings,
   updateListing,
   globalExpirationOption,
+  currency,
 }) => {
   const [expirationOption, setExpirationOption] = useState<ExpirationOption>(
     globalExpirationOption
@@ -260,6 +337,9 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
         gridTemplateColumns: desktopTemplateColumns,
         alignItems: 'stretch',
         py: '$2',
+        '&:last-child': {
+          borderBottom: 'none',
+        },
       }}
     >
       <TableCell>
@@ -282,7 +362,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
         </Flex>
       </TableCell>
       <TableCell>
-        <Flex align="center" css={{ gap: 24 }}>
+        <Flex align="start" css={{ gap: 24 }}>
           <Flex direction="column" align="center" css={{ gap: '$2' }}>
             <Button
               color="gray3"
@@ -307,6 +387,15 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
             </Button>
             <Text style="subtitle3" color="subtle">
               0.002 ETH
+            </Text>
+          </Flex>
+          <Flex align="center" css={{ mt: 14 }}>
+            <CryptoCurrencyIcon
+              address={currency.contract}
+              css={{ height: 18 }}
+            />
+            <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
+              {currency.symbol}
             </Text>
           </Flex>
         </Flex>

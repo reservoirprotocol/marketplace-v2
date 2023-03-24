@@ -15,7 +15,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
-type ListingCurrencies = ComponentPropsWithoutRef<
+export type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
 >['currencies']
 
