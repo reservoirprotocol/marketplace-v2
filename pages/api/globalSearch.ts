@@ -5,10 +5,6 @@ import supportedChains from 'utils/chains'
 
 const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
 
-const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
-  ? process.env.NEXT_PUBLIC_COMMUNITY
-  : undefined
-
 export type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
 >[0] & {
@@ -56,7 +52,7 @@ export default async function handler(req: Request) {
     }
 
     promises.push(
-      fetcher(`${reservoirBaseUrl}/search/collections/v1`, queryParams, headers)
+      fetcher(`${reservoirBaseUrl}/search/collections/v1`, query, headers)
     )
   })
 
