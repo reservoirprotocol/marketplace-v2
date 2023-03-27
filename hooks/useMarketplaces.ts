@@ -1,9 +1,8 @@
-import { paths } from '@reservoir0x/reservoir-sdk'
 import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import { useEffect, useState } from 'react'
+
 import useSWRImmutable from 'swr/immutable'
-import useMarketplaceChain from './useMarketplaceChain'
-import useSWR from 'swr'
 
 export type Marketplace = NonNullable<
   paths['/admin/get-marketplaces']['get']['responses']['200']['schema']['marketplaces']
@@ -14,43 +13,50 @@ export type Marketplace = NonNullable<
 }
 
 export default function (
-  royaltyBps?: number
+  royaltyBps?: number,
+  chainId?: number
 ): [Marketplace[], React.Dispatch<React.SetStateAction<Marketplace[]>>] {
   const [marketplaces, setMarketplaces] = useState<Marketplace[]>([])
   const client = useReservoirClient()
-  const marketplaceChain = useMarketplaceChain()
+  const chain =
+    chainId !== undefined
+      ? client?.chains.find((chain) => chain.id === chainId)
+      : client?.currentChain()
+  const path = new URL(`${chain?.baseApiUrl}/admin/get-marketplaces`)
 
-  const path = new URL(
-    `${marketplaceChain?.reservoirBaseUrl}/admin/get-marketplaces`
-  )
-
-  const { data } = useSWR<
+  const { data } = useSWRImmutable<
     paths['/admin/get-marketplaces']['get']['responses']['200']['schema']
-  >([path.href, marketplaceChain?.apiKey, client?.version], null, {
-    revalidateOnMount: true,
-  })
+  >([path.href, chain?.apiKey, client?.version], null)
 
   useEffect(() => {
     if (data && data.marketplaces) {
-      let updatedMarketplaces: Marketplace[] =
-        data.marketplaces as Marketplace[]
-
-      updatedMarketplaces.forEach((marketplace) => {
-        if (marketplace.orderbook === 'opensea') {
-          const osFee =
-            royaltyBps && royaltyBps >= 50 ? 0 : 50 - (royaltyBps || 0)
-          marketplace.fee = {
-            bps: osFee,
-            percent: osFee / 100,
+      const updatedMarketplaces: Marketplace[] = data.marketplaces.map(
+        (marketplace) => {
+          let fee = marketplace.fee
+          let feeBps = marketplace.feeBps
+          if (marketplace.orderbook === 'opensea') {
+            const osFee =
+              royaltyBps && royaltyBps >= 50 ? 0 : 50 - (royaltyBps || 0)
+            fee = {
+              bps: osFee,
+              percent: osFee / 100,
+            }
+            feeBps = osFee
           }
-          marketplace.feeBps = osFee
+
+          return {
+            ...marketplace,
+            fee,
+            feeBps,
+            price: 0,
+            truePrice: 0,
+            isSelected: marketplace.orderbook === 'reservoir',
+          }
         }
-        marketplace.price = 0
-        marketplace.truePrice = 0
-      })
+      )
       setMarketplaces(updatedMarketplaces)
     }
-  }, [data, royaltyBps])
+  }, [data, royaltyBps, client, chain])
 
   return [marketplaces, setMarketplaces]
 }

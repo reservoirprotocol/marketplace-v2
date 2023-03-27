@@ -13,10 +13,18 @@ import {
   TableCell,
   TableRow,
   FormatCryptoCurrency,
+  Input,
 } from 'components/primitives'
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react'
 import { Currency, Listings } from '@reservoir0x/reservoir-kit-ui'
-import useMarketplaces from 'hooks/useMarketplaces'
+import useMarketplaces, { Marketplace } from 'hooks/useMarketplaces'
 import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { UserToken } from 'pages/portfolio'
@@ -33,7 +41,7 @@ type Props = {
   setShowListingPage: Dispatch<SetStateAction<boolean>>
 }
 
-const desktopTemplateColumns = '1.15fr 1.8fr 1.15fr repeat(2, .7fr) .5fr'
+const desktopTemplateColumns = '1.2fr 2.3fr 1.2fr repeat(3, .7fr) .2fr'
 
 const BatchListings: FC<Props> = ({
   selectedItems,
@@ -41,11 +49,20 @@ const BatchListings: FC<Props> = ({
   setShowListingPage,
 }) => {
   const [listings, setListings] = useState<Listing[]>([])
-  // const [marketplaces, setMarketplaces] = useState([])
+  const [allMarketplaces] = useMarketplaces()
+  const [marketplaces, setMarketplaces] = useState<Marketplace[]>([])
+  const [selectedMarketplaces, setSelectedMarketplaces] = useState<
+    Marketplace[]
+  >([])
 
-  const [globalPrice, setGlobalPrice] = useState(0)
+  const [globalPrice, setGlobalPrice] = useState<string>('')
   const [globalExpirationOption, setGlobalExpirationOption] =
     useState<ExpirationOption>(expirationOptions[5])
+
+  const [totalProfit, setTotalProfit] = useState<number>(0)
+
+  const [isListButtonDisabled, setIsListButtonDisabled] =
+    useState<boolean>(true)
 
   const chainCurrency = useChainCurrency()
   const defaultCurrency = {
@@ -56,17 +73,132 @@ const BatchListings: FC<Props> = ({
     currencies && currencies[0] ? currencies[0] : defaultCurrency
   )
 
-  const [marketplaces] = useMarketplaces()
+  // Convert selected items into listings
+  useEffect(() => {
+    const listings = selectedItems.flatMap((item) => {
+      const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
+      return selectedMarketplaces.map((marketplace) => {
+        const listing: Listing = {
+          token: tokenString,
+          weiPrice: globalPrice || '0',
+          //@ts-ignore
+          orderbook: marketplace.orderbook,
+          item: item.token,
+        }
+        return listing
+      })
+    })
 
-  // remove from specific marketplace
-  const removeMarketplaceListings = (orderbook: string) => {
-    let updatedListings = listings.filter(
-      (listing) => listing.orderbook === orderbook
+    setListings(listings)
+  }, [selectedItems, selectedMarketplaces])
+
+  useEffect(() => {
+    let filteredMarketplaces = allMarketplaces.filter(
+      (marketplace) =>
+        marketplace.orderbook === 'reservoir' ||
+        marketplace.orderbook === 'opensea'
     )
-    setListings(updatedListings)
-  }
+    setMarketplaces(filteredMarketplaces)
 
-  const updateListing = (updatedListing: Listing) => {
+    // Initialize selectedMarketplaces
+    const reservoirMarketplace = allMarketplaces.find(
+      (marketplace) => marketplace.orderbook === 'reservoir'
+    )
+    if (reservoirMarketplace) {
+      setSelectedMarketplaces([reservoirMarketplace])
+    }
+  }, [allMarketplaces])
+
+  useEffect(() => {
+    const totalProfit = listings.reduce((total, listing) => {
+      const marketplace = selectedMarketplaces.find(
+        (m) => m.orderbook === listing.orderbook
+      )
+
+      const marketplaceFee = marketplace?.feeBps
+        ? (marketplace?.feeBps / 10000) * Number(listing.weiPrice)
+        : 0
+
+      const profit = Number(listing.weiPrice) - marketplaceFee || 0
+      return total + profit
+    }, 0)
+
+    setTotalProfit(totalProfit)
+  }, [listings, selectedMarketplaces])
+
+  useEffect(() => {
+    const hasInvalidPrice = listings.some(
+      (listing) =>
+        listing.weiPrice === undefined || Number(listing.weiPrice) <= 0
+    )
+    setIsListButtonDisabled(hasInvalidPrice)
+  }, [listings])
+
+  const removeMarketplaceListings = useCallback(
+    (orderbook: string) => {
+      let updatedListings = listings.filter(
+        (listing) => listing.orderbook === orderbook
+      )
+      setListings(updatedListings)
+    },
+    [listings]
+  )
+
+  const addMarketplaceListings = useCallback(
+    (orderbook: string) => {
+      setListings((prevListings) => {
+        const updatedListings = [...prevListings]
+
+        selectedItems.forEach((item) => {
+          const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
+          const existingListingIndex = updatedListings.findIndex(
+            (listing) =>
+              listing.token === tokenString && listing.orderbook === orderbook
+          )
+
+          if (existingListingIndex === -1) {
+            const newListing: Listing = {
+              token: tokenString,
+              weiPrice: globalPrice || '0',
+              //@ts-ignore
+              orderbook: orderbook,
+              item: item.token,
+            }
+            updatedListings.push(newListing)
+          }
+        })
+
+        return updatedListings
+      })
+    },
+    [selectedItems]
+  )
+
+  const handleMarketplaceSelection = useCallback(
+    (marketplace: Marketplace) => {
+      const isSelected = selectedMarketplaces.some(
+        (selected) => selected.orderbook === marketplace.orderbook
+      )
+
+      if (isSelected) {
+        setSelectedMarketplaces((prevSelected) =>
+          prevSelected.filter(
+            (selected) => selected.orderbook !== marketplace.orderbook
+          )
+        )
+        removeMarketplaceListings(marketplace.orderbook as string)
+      } else {
+        setSelectedMarketplaces((prevSelected) => [
+          ...prevSelected,
+          marketplace,
+        ])
+        addMarketplaceListings(marketplace.orderbook as string)
+      }
+    },
+    [selectedMarketplaces, addMarketplaceListings, removeMarketplaceListings]
+  )
+
+  const updateListing = useCallback((updatedListing: Listing) => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
         if (
@@ -78,27 +210,7 @@ const BatchListings: FC<Props> = ({
         return listing
       })
     })
-  }
-
-  // add specific marketplace
-
-  // sync listing prices with global price
-  useEffect(() => {}, [globalPrice])
-
-  // Transform selected items into listings
-  useEffect(() => {
-    const listings = selectedItems.map((item) => {
-      const listing: Listing = {
-        token: `${item?.token?.contract}:${item?.token?.tokenId}`,
-        weiPrice: '0',
-        orderbook: 'reservoir',
-        item: item.token,
-      }
-      return listing
-    })
-
-    setListings(listings)
-  }, [selectedItems])
+  }, [])
 
   return (
     <Flex direction="column" css={{ gap: '$5', width: '100%' }}>
@@ -119,6 +231,37 @@ const BatchListings: FC<Props> = ({
       >
         <Flex direction="column" css={{ gap: '$3' }}>
           <Text style="h6">Select Marketplaces</Text>
+          <Flex align="center" css={{ gap: '$3' }}>
+            {marketplaces.map((marketplace) => {
+              const isSelected = selectedMarketplaces.some(
+                (selected) => selected.orderbook === marketplace.orderbook
+              )
+
+              return (
+                <Flex
+                  key={marketplace.name}
+                  align="center"
+                  css={{
+                    border: isSelected
+                      ? '1px solid $primary7'
+                      : '1px solid $gray6',
+                    borderRadius: 8,
+                    gap: '$3',
+                    p: '$3',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => handleMarketplaceSelection(marketplace)}
+                >
+                  <img
+                    src={marketplace.imageUrl}
+                    alt={marketplace.name}
+                    style={{ width: 32, height: 32 }}
+                  />
+                  <Text style="subtitle2">{marketplace.name}</Text>
+                </Flex>
+              )
+            })}
+          </Flex>
         </Flex>
         <Flex direction="column" css={{ gap: '$3' }}>
           <Text style="h6">Apply to All</Text>
@@ -193,6 +336,14 @@ const BatchListings: FC<Props> = ({
                   </Select.Item>
                 ))}
               </Select>
+              <Input
+                placeholder="Enter a custom price"
+                type="number"
+                value={globalPrice}
+                onChange={(e) => {
+                  setGlobalPrice(e.target.value)
+                }}
+              />
             </Flex>
             <Flex align="center" css={{ gap: '$3' }}>
               <Select
@@ -230,7 +381,9 @@ const BatchListings: FC<Props> = ({
               setListings={setListings}
               updateListing={updateListing}
               globalExpirationOption={globalExpirationOption}
+              globalPrice={globalPrice}
               currency={currency}
+              selectedMarketplaces={selectedMarketplaces}
               key={listing.token + i}
             />
           ))}
@@ -251,10 +404,14 @@ const BatchListings: FC<Props> = ({
             <Flex align="center" css={{ gap: 24, marginLeft: 'auto' }}>
               <Text style="body1">Total Profit</Text>
               <FormatCryptoCurrency
-                amount={2}
-                css={{ minWidth: 'max-content' }}
+                amount={totalProfit}
+                logoHeight={18}
+                textStyle={'h6'}
+                css={{ width: 'max-content' }}
+                maximumFractionDigits={2}
               />
               <Button
+                disabled={isListButtonDisabled}
                 onClick={() => {
                   console.log(listings)
                 }}
@@ -288,7 +445,9 @@ type ListingsTableRowProps = {
   setListings: Dispatch<SetStateAction<Listing[]>>
   updateListing: (updatedListing: Listing) => void
   globalExpirationOption: ExpirationOption
+  globalPrice: string
   currency: Currency
+  selectedMarketplaces: Marketplace[]
 }
 
 const ListingsTableRow: FC<ListingsTableRowProps> = ({
@@ -297,31 +456,64 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   setListings,
   updateListing,
   globalExpirationOption,
+  globalPrice,
   currency,
+  selectedMarketplaces,
 }) => {
   const [expirationOption, setExpirationOption] = useState<ExpirationOption>(
     globalExpirationOption
   )
+  const [price, setPrice] = useState<string>('')
+
+  const marketplace = selectedMarketplaces.find(
+    (m) => m.orderbook === listing.orderbook
+  )
+
+  const marketplaceFee = marketplace?.feeBps
+    ? (marketplace?.feeBps / 10000) * Number(price)
+    : 0
+
+  const profit = Number(price) - marketplaceFee
+
+  useEffect(() => {
+    handlePriceChange(globalPrice)
+  }, [globalPrice])
 
   useEffect(() => {
     handleExpirationChange(globalExpirationOption.value)
   }, [globalExpirationOption])
 
-  const removeListing = (token: string, orderbook: string) => {
-    let updatedListings = listings.filter(
-      (listing) => listing.token != token && listing.orderbook == orderbook
-    )
-    setListings(updatedListings)
-  }
+  const removeListing = useCallback(
+    (token: string, orderbook: string) => {
+      let updatedListings = listings.filter(
+        (listing) =>
+          !(listing.token === token && listing.orderbook === orderbook)
+      )
+      setListings(updatedListings)
+    },
+    [listings]
+  )
 
-  const handleExpirationChange = (value: string) => {
-    const option = expirationOptions.find((option) => option.value == value)
-    if (option) {
-      setExpirationOption(option)
-      const updatedListing = { ...listing, expirationOption: option }
+  const handleExpirationChange = useCallback(
+    (value: string) => {
+      const option = expirationOptions.find((option) => option.value === value)
+      if (option) {
+        setExpirationOption(option)
+        const updatedListing = { ...listing, expirationOption: option }
+        updateListing(updatedListing)
+      }
+    },
+    [listing, updateListing]
+  )
+
+  const handlePriceChange = useCallback(
+    (value: string) => {
+      setPrice(value)
+      const updatedListing = { ...listing, weiPrice: value }
       updateListing(updatedListing)
-    }
-  }
+    },
+    [listing, updateListing]
+  )
 
   return (
     <TableRow
@@ -335,7 +527,18 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
       }}
     >
       <TableCell>
-        <Flex css={{ gap: '$3' }}>
+        <Flex align="center" css={{ gap: '$3' }}>
+          <img
+            src={marketplace?.imageUrl}
+            alt={marketplace?.name}
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 4,
+              aspectRatio: '1/1',
+              visibility: marketplace?.imageUrl ? 'visible' : 'hidden',
+            }}
+          />
           <img
             src={listing.item?.image}
             style={{
@@ -361,11 +564,19 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               corners="pill"
               size="large"
               css={{ minWidth: 'max-content' }}
+              disabled={!listing.item?.collection?.floorAskPrice}
+              onClick={() => {
+                if (listing.item?.collection?.floorAskPrice) {
+                  handlePriceChange(
+                    listing.item?.collection?.floorAskPrice?.toString()
+                  )
+                }
+              }}
             >
               Floor
             </Button>
             <Text style="subtitle3" color="subtle">
-              0.002 ETH
+              {listing.item?.collection?.floorAskPrice}
             </Text>
           </Flex>
           <Flex direction="column" align="center" css={{ gap: '$2' }}>
@@ -381,7 +592,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               0.002 ETH
             </Text>
           </Flex>
-          <Flex align="center" css={{ mt: 14 }}>
+          <Flex align="center" css={{ mt: 13 }}>
             <CryptoCurrencyIcon
               address={currency.contract}
               css={{ height: 18 }}
@@ -390,6 +601,14 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               {currency.symbol}
             </Text>
           </Flex>
+          <Input
+            placeholder="Price"
+            type="number"
+            value={price}
+            onChange={(e) => {
+              handlePriceChange(e.target.value)
+            }}
+          />
         </Flex>
       </TableCell>
       <TableCell>
@@ -409,7 +628,27 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
         </Select>
       </TableCell>
       <TableCell></TableCell>
-      <TableCell></TableCell>
+      <TableCell>
+        <Flex align="center" css={{ gap: '$2' }}>
+          <FormatCryptoCurrency
+            amount={marketplaceFee}
+            logoHeight={14}
+            textStyle="body1"
+            // TODO: add correct address
+          />
+          <Text style="body1" color="subtle">
+            ({marketplace?.fee?.percent || 0})%
+          </Text>
+        </Flex>
+      </TableCell>
+      <TableCell>
+        <FormatCryptoCurrency
+          amount={profit}
+          logoHeight={14}
+          textStyle="body1"
+          // TODO: add correct address
+        />
+      </TableCell>
       <TableCell css={{ marginLeft: 'auto' }}>
         <Button
           color="gray3"
