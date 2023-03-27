@@ -46,10 +46,6 @@ export const OffersTable: FC<Props> = ({ address }) => {
     includeRawData: true,
   }
 
-  const { chain } = useContext(ChainContext)
-
-  if (chain.community) bidsQuery.community = chain.community
-
   const {
     data: offers,
     fetchNextPage,
