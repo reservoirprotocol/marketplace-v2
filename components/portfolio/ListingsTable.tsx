@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -22,13 +22,9 @@ import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCircleExclamation,
-  faGasPump,
-  faTag,
-} from '@fortawesome/free-solid-svg-icons'
-import { COMMUNITY } from 'pages/_app'
+import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   address: Address | undefined
@@ -49,8 +45,9 @@ export const ListingsTable: FC<Props> = ({ address }) => {
     includeCriteriaMetadata: true,
     includeRawData: true,
   }
+  const { chain } = useContext(ChainContext)
 
-  if (COMMUNITY) listingsQuery.community = COMMUNITY
+  if (chain.community) listingsQuery.community = chain.community
 
   const {
     data: listings,

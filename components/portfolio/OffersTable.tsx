@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -23,8 +23,8 @@ import CancelBid from 'components/buttons/CancelBid'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
-import { COMMUNITY } from 'pages/_app'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   address: Address | undefined
@@ -46,7 +46,9 @@ export const OffersTable: FC<Props> = ({ address }) => {
     includeRawData: true,
   }
 
-  if (COMMUNITY) bidsQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.community) bidsQuery.community = chain.community
 
   const {
     data: offers,

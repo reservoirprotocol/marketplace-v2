@@ -13,7 +13,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
@@ -135,10 +135,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   const attributesData = useAttributes(id)
 
-  const attributes =
-    attributesData.data?.filter(
-      (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-    ) || []
+  const attributes = useMemo(() => {
+    if (!attributesData.data) {
+      return []
+    }
+    return attributesData.data
+      ?.filter(
+        (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+      )
+      .sort((a, b) => a.key.localeCompare(b.key))
+  }, [attributesData.data])
 
   if (attributeFiltersOpen && attributesData.response && !attributes.length) {
     setAttributeFiltersOpen(false)
