@@ -225,7 +225,7 @@ export const TokenActions: FC<Props> = ({
                       width="16"
                       height="16"
                     />
-                    Cancel
+                    Cancel Listing
                   </Button>
                 </Tooltip>
               ) : (
@@ -237,7 +237,7 @@ export const TokenActions: FC<Props> = ({
                   }}
                   color="gray3"
                 >
-                  Cancel
+                  Cancel Listing
                 </Button>
               )}
             </Flex>
