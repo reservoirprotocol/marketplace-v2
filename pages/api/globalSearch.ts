@@ -172,10 +172,12 @@ export default async function handler(req: Request) {
       searchResults = [...searchResults, ...chainSearchResults]
     })
 
-    // Sort results by all time usd volume
-    searchResults = searchResults.sort(
-      (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
-    )
+    // Sort results by all time usd volume only if usdCoinPrices is not null
+    if (usdCoinPrices) {
+      searchResults = searchResults.sort(
+        (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
+      )
+    }
   }
 
   return new Response(
