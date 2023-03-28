@@ -46,6 +46,7 @@ import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
+import Img from 'components/primitives/Img'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -201,14 +202,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <img
-                  src={collection.image}
+                <Img
+                  src={collection.image!}
+                  width={64}
+                  height={64}
                   style={{
                     width: 64,
                     height: 64,
                     borderRadius: 8,
                     objectFit: 'cover',
                   }}
+                  alt="Collection Page Image"
                 />
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>

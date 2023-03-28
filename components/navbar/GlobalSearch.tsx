@@ -30,6 +30,7 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { SearchCollection } from 'pages/api/globalSearch'
 import { formatNumber } from 'utils/numbers'
 import { useTheme } from 'next-themes'
+import Img from 'components/primitives/Img'
 
 type Props = {
   collection: SearchCollection
@@ -63,9 +64,12 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
         }}
         align="center"
       >
-        <img
-          src={collection.image}
+        <Img
+          src={collection.image!}
           style={{ width: 36, height: 36, borderRadius: 4 }}
+          width={36}
+          height={36}
+          alt="Searchbar Collection Image"
         />
         <Flex direction="column" css={{ minWidth: 0 }}>
           <Flex align="center" css={{ gap: '$1' }}>
