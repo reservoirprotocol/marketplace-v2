@@ -22,7 +22,7 @@ export default async function handler() {
   } catch (error) {
     console.error('Error fetching Coingecko data:', error)
     prices = null
-    cacheSettings = 'maxage=0, s-maxage=300' // Reduce cache time if Coingecko API fails
+    cacheSettings = 'maxage=0, s-maxage=300 stale-while-revalidate' // Reduce cache time if Coingecko API fails
   }
 
   return new NextResponse(
