@@ -16,6 +16,7 @@ import {
   Input,
 } from 'components/primitives'
 import {
+  ComponentPropsWithoutRef,
   Dispatch,
   FC,
   SetStateAction,
@@ -23,7 +24,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { Currency, Listings } from '@reservoir0x/reservoir-kit-ui'
+import { Currency, Listings, ListModal } from '@reservoir0x/reservoir-kit-ui'
 import useMarketplaces, { Marketplace } from 'hooks/useMarketplaces'
 import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
@@ -31,12 +32,15 @@ import { UserToken } from 'pages/portfolio'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
-import { currencies } from 'utils/currencies'
 import BatchList from 'components/buttons/BatchList'
 
 type Listing = Listings[0] & { item: UserToken['token'] } & {
   expirationOption: ExpirationOption
 }
+
+type ListingCurrencies = ComponentPropsWithoutRef<
+  typeof ListModal
+>['currencies']
 
 type Props = {
   selectedItems: UserToken[]
@@ -72,6 +76,17 @@ const BatchListings: FC<Props> = ({
     contract: chainCurrency.address,
     symbol: chainCurrency.symbol,
   }
+  // CONFIGURABLE: Here you can list which currencies you would like to support for batch listing
+  const currencies: ListingCurrencies = [
+    { ...defaultCurrency },
+    {
+      contract: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
+      decimals: 18,
+      coinGeckoId: 'weth',
+      symbol: 'WETH',
+    },
+  ]
+
   const [currency, setCurrency] = useState<Currency>(
     currencies && currencies[0] ? currencies[0] : defaultCurrency
   )

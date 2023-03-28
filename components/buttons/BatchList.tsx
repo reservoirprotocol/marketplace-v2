@@ -6,6 +6,7 @@ import {
   useReservoirClient,
 } from '@reservoir0x/reservoir-kit-ui'
 import { Execute } from '@reservoir0x/reservoir-sdk'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 import { Modal } from 'components/common/Modal'
 import TransactionProgress from 'components/common/TransactionProgress'
 import ProgressBar from 'components/portfolio/ProgressBar'
@@ -76,6 +77,7 @@ const BatchList: FC<Props> = ({
       let expirationTime: string | null = null
 
       if (
+        listing.expirationOption &&
         listing.expirationOption.relativeTime &&
         listing.expirationOption.relativeTimeUnit
       ) {
@@ -223,6 +225,16 @@ const BatchList: FC<Props> = ({
           css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
         >
           <ProgressBar value={1} max={2} />
+          {!stepData && (
+            <Flex
+              css={{ height: '100%', py: '$6' }}
+              justify="center"
+              align="center"
+            >
+              <LoadingSpinner />
+            </Flex>
+          )}
+
           {stepData && (
             <>
               <Text
@@ -251,6 +263,7 @@ const BatchList: FC<Props> = ({
               </Text>
             </>
           )}
+
           {!transactionError ? (
             <Button
               css={{ width: '100%', justifyContent: 'center' }}
@@ -283,7 +296,10 @@ const BatchList: FC<Props> = ({
           </Flex>
           <Button
             css={{ width: '100%', justifyContent: 'center' }}
-            onClick={() => setOpen(false)}
+            onClick={() => {
+              setOpen(false)
+              onCloseComplete?.()
+            }}
           >
             Close
           </Button>

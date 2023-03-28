@@ -2,7 +2,7 @@ import { NextPage } from 'next'
 import { Text, Flex, Box } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -26,6 +26,7 @@ import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import BatchActionsFooter from 'components/portfolio/BatchActionsFooter'
 import BatchListings from 'components/portfolio/BatchListings'
+import { ChainContext } from 'context/ChainContextProvider'
 
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
@@ -54,6 +55,12 @@ const IndexPage: NextPage = () => {
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
   const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
+
+  const { chain } = useContext(ChainContext)
+
+  useEffect(() => {
+    setSelectedItems([])
+  }, [chain])
 
   if (!isMounted) {
     return null
