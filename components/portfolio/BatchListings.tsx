@@ -76,35 +76,41 @@ const BatchListings: FC<Props> = ({
     currencies && currencies[0] ? currencies[0] : defaultCurrency
   )
 
-  // Convert selected items into listings
-  // useEffect(() => {
-  //   const listings = selectedItems.flatMap((item) => {
-  //     const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
-  //     return selectedMarketplaces.map((marketplace) => {
-  //       const listing: Listing = {
-  //         token: tokenString,
-  //         weiPrice: globalPrice || '0',
-  //         //@ts-ignore
-  //         orderbook: marketplace.orderbook,
-  //         item: item.token,
-  //       }
-  //       return listing
-  //     })
-  //   })
-
-  //   setListings(listings)
-  // }, [selectedItems, selectedMarketplaces])
-
   const updateSelectedItems = useCallback(
-    (updatedListings: Listing[]) => {
+    (updatedListings: Listing[], removingListing: boolean = false) => {
       const updatedSelectedItems = selectedItems.filter((item) => {
         const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
         return updatedListings.some((listing) => listing.token === tokenString)
       })
 
       setSelectedItems(updatedSelectedItems)
+
+      if (!removingListing) {
+        const updatedSelectedTokens = updatedSelectedItems.map(
+          (item) => `${item?.token?.contract}:${item?.token?.tokenId}`
+        )
+
+        const listings = updatedSelectedTokens.flatMap((tokenString) => {
+          const item = selectedItems.find(
+            (item) =>
+              `${item?.token?.contract}:${item?.token?.tokenId}` === tokenString
+          )
+          return selectedMarketplaces.map((marketplace) => {
+            const listing: Listing = {
+              token: tokenString,
+              weiPrice: globalPrice || '0',
+              //@ts-ignore
+              orderbook: marketplace.orderbook,
+              item: item?.token,
+            }
+            return listing
+          })
+        })
+
+        setListings(listings)
+      }
     },
-    [selectedItems]
+    [selectedItems, selectedMarketplaces]
   )
 
   const generateListings = useCallback(() => {
@@ -422,6 +428,7 @@ const BatchListings: FC<Props> = ({
               updateListing={updateListing}
               updateSelectedItems={updateSelectedItems}
               setSelectedItems={setSelectedItems}
+              selectedItems={selectedItems}
               globalExpirationOption={globalExpirationOption}
               globalPrice={globalPrice}
               currency={currency}
@@ -491,9 +498,14 @@ type ListingsTableRowProps = {
   globalExpirationOption: ExpirationOption
   globalPrice: string
   currency: Currency
+  selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   selectedMarketplaces: Marketplace[]
-  updateSelectedItems: (updatedListings: Listing[]) => void
+  // updateSelectedItems: (updatedListings: Listing[]) => void
+  updateSelectedItems: (
+    updatedListings: Listing[],
+    removingListing?: boolean
+  ) => void
 }
 
 const ListingsTableRow: FC<ListingsTableRowProps> = ({
@@ -501,6 +513,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   listings,
   setListings,
   updateListing,
+  selectedItems,
   setSelectedItems,
   updateSelectedItems,
   globalExpirationOption,
@@ -533,14 +546,27 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
   const removeListing = useCallback(
     (token: string, orderbook: string) => {
-      setListings((prevListings) =>
-        prevListings.filter(
-          (listing) =>
-            listing.token !== token || listing.orderbook !== orderbook
-        )
+      const updatedListings = listings.filter(
+        (listing) => listing.token !== token || listing.orderbook !== orderbook
       )
+
+      // Update selectedItems
+      const selectedItemIndex = selectedItems.findIndex(
+        (item) => `${item?.token?.contract}:${item?.token?.tokenId}` === token
+      )
+
+      if (
+        selectedItemIndex !== -1 &&
+        !updatedListings.some((listing) => listing.token === token)
+      ) {
+        const updatedSelectedItems = [...selectedItems]
+        updatedSelectedItems.splice(selectedItemIndex, 1)
+        setSelectedItems(updatedSelectedItems)
+      }
+
+      setListings(updatedListings)
     },
-    [listings]
+    [listings, selectedItems]
   )
 
   const handleExpirationChange = useCallback(
