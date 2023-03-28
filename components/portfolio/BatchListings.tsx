@@ -32,8 +32,11 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
 import { currencies } from 'utils/currencies'
+import BatchList from 'components/buttons/BatchList'
 
-type Listing = Listings[0] & { item: UserToken['token'] }
+type Listing = Listings[0] & { item: UserToken['token'] } & {
+  expirationOption: ExpirationOption
+}
 
 type Props = {
   selectedItems: UserToken[]
@@ -74,7 +77,37 @@ const BatchListings: FC<Props> = ({
   )
 
   // Convert selected items into listings
-  useEffect(() => {
+  // useEffect(() => {
+  //   const listings = selectedItems.flatMap((item) => {
+  //     const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
+  //     return selectedMarketplaces.map((marketplace) => {
+  //       const listing: Listing = {
+  //         token: tokenString,
+  //         weiPrice: globalPrice || '0',
+  //         //@ts-ignore
+  //         orderbook: marketplace.orderbook,
+  //         item: item.token,
+  //       }
+  //       return listing
+  //     })
+  //   })
+
+  //   setListings(listings)
+  // }, [selectedItems, selectedMarketplaces])
+
+  const updateSelectedItems = useCallback(
+    (updatedListings: Listing[]) => {
+      const updatedSelectedItems = selectedItems.filter((item) => {
+        const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
+        return updatedListings.some((listing) => listing.token === tokenString)
+      })
+
+      setSelectedItems(updatedSelectedItems)
+    },
+    [selectedItems]
+  )
+
+  const generateListings = useCallback(() => {
     const listings = selectedItems.flatMap((item) => {
       const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
       return selectedMarketplaces.map((marketplace) => {
@@ -83,14 +116,20 @@ const BatchListings: FC<Props> = ({
           weiPrice: globalPrice || '0',
           //@ts-ignore
           orderbook: marketplace.orderbook,
+          //@ts-ignore
+          orderKind: marketplace.orderKind,
           item: item.token,
         }
         return listing
       })
     })
 
-    setListings(listings)
+    return listings
   }, [selectedItems, selectedMarketplaces])
+
+  useEffect(() => {
+    setListings(generateListings())
+  }, [selectedItems, selectedMarketplaces, generateListings])
 
   useEffect(() => {
     let filteredMarketplaces = allMarketplaces.filter(
@@ -162,6 +201,7 @@ const BatchListings: FC<Props> = ({
               weiPrice: globalPrice || '0',
               //@ts-ignore
               orderbook: orderbook,
+              // TODO: add orderkind
               item: item.token,
             }
             updatedListings.push(newListing)
@@ -380,6 +420,8 @@ const BatchListings: FC<Props> = ({
               listings={listings}
               setListings={setListings}
               updateListing={updateListing}
+              updateSelectedItems={updateSelectedItems}
+              setSelectedItems={setSelectedItems}
               globalExpirationOption={globalExpirationOption}
               globalPrice={globalPrice}
               currency={currency}
@@ -410,14 +452,16 @@ const BatchListings: FC<Props> = ({
                 css={{ width: 'max-content' }}
                 maximumFractionDigits={2}
               />
-              <Button
+              <BatchList
+                listings={listings}
                 disabled={isListButtonDisabled}
-                onClick={() => {
-                  console.log(listings)
+                currency={currency}
+                onCloseComplete={() => {
+                  setShowListingPage(false)
+                  setSelectedItems([])
+                  setListings([])
                 }}
-              >
-                List
-              </Button>
+              />
             </Flex>
           </Flex>
         </Flex>
@@ -447,7 +491,9 @@ type ListingsTableRowProps = {
   globalExpirationOption: ExpirationOption
   globalPrice: string
   currency: Currency
+  setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   selectedMarketplaces: Marketplace[]
+  updateSelectedItems: (updatedListings: Listing[]) => void
 }
 
 const ListingsTableRow: FC<ListingsTableRowProps> = ({
@@ -455,6 +501,8 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   listings,
   setListings,
   updateListing,
+  setSelectedItems,
+  updateSelectedItems,
   globalExpirationOption,
   globalPrice,
   currency,
@@ -485,11 +533,12 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
   const removeListing = useCallback(
     (token: string, orderbook: string) => {
-      let updatedListings = listings.filter(
-        (listing) =>
-          !(listing.token === token && listing.orderbook === orderbook)
+      setListings((prevListings) =>
+        prevListings.filter(
+          (listing) =>
+            listing.token !== token || listing.orderbook !== orderbook
+        )
       )
-      setListings(updatedListings)
     },
     [listings]
   )
