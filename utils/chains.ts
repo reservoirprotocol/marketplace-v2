@@ -12,6 +12,8 @@ type ReservoirChain = Chain & {
   routePrefix: string
   apiKey?: string
   coingeckoId?: string
+  collectionSetId?: string
+  community?: string
 }
 
 export const DefaultChain: ReservoirChain = {
