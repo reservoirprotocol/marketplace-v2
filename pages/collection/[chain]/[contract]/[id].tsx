@@ -485,7 +485,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 collectionAttributes={attributesData?.data}
               />
               <PriceData token={token} />
-              {isMounted && !offersLoading && (
+              {isMounted && (
                 <TokenActions
                   token={token}
                   offer={offer}
