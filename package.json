@@ -27,7 +27,7 @@
     "@radix-ui/react-toggle-group": "^1.0.1",
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "0.12.2",
-    "@reservoir0x/reservoir-kit-ui": "0.12.3",
+    "@reservoir0x/reservoir-kit-ui": "0.13.3",
     "dayjs": "^1.11.6",
     "ethers": "^5.6.9",
     "framer-motion": "^6.3.6",

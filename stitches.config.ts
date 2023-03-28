@@ -105,6 +105,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         panelShadow: 'rgba(0,0,0,0.1)',
         panelBg: '$gray2',
         panelBorder: 'transparent',
+        dropdownBg: 'white',
       },
       space: {
         1: '4px',
@@ -292,5 +293,6 @@ export const darkTheme = createTheme({
     panelBg: '$gray3',
     panelBorder: '$slate7',
     panelShadow: 'transparent',
+    dropdownBg: '$gray3',
   },
 })

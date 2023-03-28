@@ -1,7 +1,7 @@
-import { FC, useEffect } from 'react'
+import { FC, useContext, useEffect } from 'react'
 import { ActivityTable } from 'components/common/ActivityTable'
 import { useUsersActivity } from '@reservoir0x/reservoir-kit-ui'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type ActivityQuery = NonNullable<
   Exclude<Parameters<typeof useUsersActivity>['1'], boolean>
@@ -19,10 +19,12 @@ export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
     types: activityTypes,
   }
 
-  if (COLLECTION_SET_ID) {
-    activityQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    activityQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    activityQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    activityQuery.community = chain.community
   }
 
   const data = useUsersActivity(user ? [user] : undefined, activityQuery, {

@@ -6,10 +6,12 @@ import { useContext } from 'react'
 import { ChainContext } from 'context/ChainContextProvider'
 import { TooltipArrow } from 'components/primitives/Tooltip'
 import { useMounted } from 'hooks'
+import { useTheme } from 'next-themes'
 
 const ChainToggle: FC = () => {
   const { chain, switchCurrentChain } = useContext(ChainContext)
   const isMounted = useMounted()
+  const { theme } = useTheme()
 
   if (!isMounted || supportedChains.length === 1) {
     return null
@@ -33,7 +35,14 @@ const ChainToggle: FC = () => {
                   justifyContent: 'center',
                 }}
               >
-                <img src={chainOption.iconUrl} style={{ height: 20 }} />
+                <img
+                  src={
+                    theme === 'dark'
+                      ? chainOption.darkIconUrl
+                      : chainOption.lightIconUrl
+                  }
+                  style={{ height: 20 }}
+                />
               </Box>
             </ToggleGroupItem>
           </TooltipPrimitive.Trigger>
