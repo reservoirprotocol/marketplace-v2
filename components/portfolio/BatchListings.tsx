@@ -33,6 +33,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
 import BatchList from 'components/buttons/BatchList'
+import { useMediaQuery } from 'react-responsive'
 
 export type BatchListing = {
   token: UserToken
@@ -76,6 +77,8 @@ const BatchListings: FC<Props> = ({
   const [isListButtonDisabled, setIsListButtonDisabled] =
     useState<boolean>(true)
 
+  const isLargeDevice = useMediaQuery({ minWidth: 1400 })
+
   const chainCurrency = useChainCurrency()
   const defaultCurrency = {
     contract: chainCurrency.address,
@@ -99,6 +102,14 @@ const BatchListings: FC<Props> = ({
   const displayQuantity = useCallback(() => {
     return listings.some((listing) => listing?.token?.token?.kind === 'erc1155')
   }, [listings])
+
+  let gridTemplateColumns = displayQuantity()
+    ? isLargeDevice
+      ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
+      : '1.3fr .6fr 1.6fr 1fr repeat(2, .9fr) .6fr .3fr'
+    : isLargeDevice
+    ? '1.1fr 2.5fr 1.2fr repeat(2, .7fr) .5fr .3fr'
+    : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
 
   const generateListings = useCallback(() => {
     const listings = selectedItems.flatMap((item) => {
@@ -349,24 +360,26 @@ const BatchListings: FC<Props> = ({
         <Flex direction="column" css={{ gap: '$3' }}>
           <Text style="h6">Apply to All</Text>
           <Flex align="center" css={{ gap: '$5' }}>
-            <Flex align="center" css={{ gap: '$3' }}>
-              <Button
-                color="gray3"
-                corners="pill"
-                size="large"
-                css={{ minWidth: 'max-content' }}
-              >
-                Floor
-              </Button>
-              <Button
-                color="gray3"
-                corners="pill"
-                size="large"
-                css={{ minWidth: 'max-content' }}
-              >
-                Top Trait
-              </Button>
-            </Flex>
+            {isLargeDevice ? (
+              <Flex align="center" css={{ gap: '$3' }}>
+                <Button
+                  color="gray3"
+                  corners="pill"
+                  size="large"
+                  css={{ minWidth: 'max-content' }}
+                >
+                  Floor
+                </Button>
+                <Button
+                  color="gray3"
+                  corners="pill"
+                  size="large"
+                  css={{ minWidth: 'max-content' }}
+                >
+                  Top Trait
+                </Button>
+              </Flex>
+            ) : null}
             <Flex align="center" css={{ gap: '$3' }}>
               <Select
                 trigger={
@@ -456,7 +469,10 @@ const BatchListings: FC<Props> = ({
       </Flex>
       {listings.length > 0 ? (
         <Flex direction="column" css={{ width: '100%', pb: 37 }}>
-          <TableHeading displayQuantity={displayQuantity()} />
+          <TableHeading
+            displayQuantity={displayQuantity()}
+            gridTemplateColumns={gridTemplateColumns}
+          />
           {listings.map((listing, i) => (
             <ListingsTableRow
               listing={listing}
@@ -467,6 +483,8 @@ const BatchListings: FC<Props> = ({
               setSelectedItems={setSelectedItems}
               selectedItems={selectedItems}
               displayQuantity={displayQuantity()}
+              gridTemplateColumns={gridTemplateColumns}
+              isLargeDevice={isLargeDevice}
               globalExpirationOption={globalExpirationOption}
               globalPrice={globalPrice}
               currency={currency}
@@ -536,11 +554,13 @@ type ListingsTableRowProps = {
   listing: BatchListing
   listings: BatchListing[]
   displayQuantity: boolean
+  gridTemplateColumns: string
   setListings: Dispatch<SetStateAction<BatchListing[]>>
   updateListing: (updatedListing: BatchListing) => void
   globalExpirationOption: ExpirationOption
   globalPrice: string
   currency: Currency
+  isLargeDevice: boolean
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   selectedMarketplaces: Marketplace[]
@@ -557,6 +577,8 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   updateListing,
   selectedItems,
   displayQuantity,
+  gridTemplateColumns,
+  isLargeDevice,
   setSelectedItems,
   globalExpirationOption,
   globalPrice,
@@ -652,9 +674,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   return (
     <TableRow
       css={{
-        gridTemplateColumns: displayQuantity
-          ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
-          : '1.1fr 2.5fr 1.2fr repeat(2, .7fr) .5fr .3fr',
+        gridTemplateColumns: gridTemplateColumns,
         alignItems: 'stretch',
         py: '$2',
         '&:last-child': {
@@ -730,66 +750,74 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
       ) : null}
       <TableCell>
         <Flex align="start" css={{ gap: '$3' }}>
-          <Flex direction="column" align="center" css={{ gap: '$2' }}>
-            <Button
-              color="gray3"
-              corners="pill"
-              size="large"
-              css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
-              disabled={!listing.token?.token?.collection?.floorAskPrice}
-              onClick={() => {
-                if (listing.token?.token?.collection?.floorAskPrice) {
-                  handlePriceChange(
-                    listing.token?.token?.collection?.floorAskPrice?.toString()
-                  )
-                }
-              }}
-            >
-              Floor
-            </Button>
-            <Text style="subtitle3" color="subtle">
-              {listing.token?.token?.collection?.floorAskPrice}
-            </Text>
-          </Flex>
-          <Flex direction="column" align="center" css={{ gap: '$2' }}>
-            <Button
-              color="gray3"
-              corners="pill"
-              size="large"
-              css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
-            >
-              Top Trait
-            </Button>
-            <Text style="subtitle3" color="subtle">
-              0.002 ETH
-            </Text>
-          </Flex>
-          <Flex align="center" css={{ mt: 12 }}>
-            <CryptoCurrencyIcon
-              address={currency.contract}
-              css={{ height: 18 }}
-            />
-            <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
-              {currency.symbol}
-            </Text>
-          </Flex>
-          <Flex direction="column" align="center" css={{ gap: '$2' }}>
-            <Input
-              placeholder="Price"
-              type="number"
-              value={price}
-              onChange={(e) => {
-                handlePriceChange(e.target.value)
-              }}
-            />
-            {price !== undefined &&
-              price !== '' &&
-              Number(price) !== 0 &&
-              Number(price) < MINIMUM_AMOUNT && (
-                <Text style="subtitle3" color="error">
-                  Must exceed {MINIMUM_AMOUNT}
+          {isLargeDevice ? (
+            <>
+              <Flex direction="column" align="center" css={{ gap: '$2' }}>
+                <Button
+                  color="gray3"
+                  corners="pill"
+                  size="large"
+                  css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
+                  disabled={!listing.token?.token?.collection?.floorAskPrice}
+                  onClick={() => {
+                    if (listing.token?.token?.collection?.floorAskPrice) {
+                      handlePriceChange(
+                        listing.token?.token?.collection?.floorAskPrice?.toString()
+                      )
+                    }
+                  }}
+                >
+                  Floor
+                </Button>
+                <Text style="subtitle3" color="subtle">
+                  {listing.token?.token?.collection?.floorAskPrice}
                 </Text>
-              )}
+              </Flex>
+              <Flex direction="column" align="center" css={{ gap: '$2' }}>
+                <Button
+                  color="gray3"
+                  corners="pill"
+                  size="large"
+                  css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
+                >
+                  Top Trait
+                </Button>
+                <Text style="subtitle3" color="subtle">
+                  0.002 ETH
+                </Text>
+              </Flex>
+            </>
+          ) : null}
+
+          <Flex align="start">
+            <Flex align="center" css={{ mt: 12, mr: 12 }}>
+              <CryptoCurrencyIcon
+                address={currency.contract}
+                css={{ height: 18 }}
+              />
+              <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
+                {currency.symbol}
+              </Text>
+            </Flex>
+            <Flex direction="column" align="center" css={{ gap: '$2' }}>
+              <Input
+                placeholder="Price"
+                type="number"
+                value={price}
+                onChange={(e) => {
+                  handlePriceChange(e.target.value)
+                }}
+                css={{ width: '100%' }}
+              />
+              {price !== undefined &&
+                price !== '' &&
+                Number(price) !== 0 &&
+                Number(price) < MINIMUM_AMOUNT && (
+                  <Text style="subtitle3" color="error">
+                    Must exceed {MINIMUM_AMOUNT}
+                  </Text>
+                )}
+            </Flex>
           </Flex>
         </Flex>
       </TableCell>
@@ -852,58 +880,62 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
 type TableHeadingProps = {
   displayQuantity: boolean
+  gridTemplateColumns: string
 }
 
-const TableHeading: FC<TableHeadingProps> = ({ displayQuantity }) => (
-  <HeaderRow
-    css={{
-      display: 'none',
-      '@md': { display: 'grid' },
-      gridTemplateColumns: displayQuantity
-        ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
-        : '1.1fr 2.5fr 1.2fr repeat(2, .7fr) .5fr .3fr',
-      position: 'sticky',
-      top: NAVBAR_HEIGHT,
-      backgroundColor: '$neutralBg',
-    }}
-  >
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Items
-      </Text>
-    </TableCell>
-    {displayQuantity ? (
+const TableHeading: FC<TableHeadingProps> = ({
+  displayQuantity,
+  gridTemplateColumns,
+}) => {
+  return (
+    <HeaderRow
+      css={{
+        display: 'none',
+        '@md': { display: 'grid' },
+        gridTemplateColumns: gridTemplateColumns,
+        position: 'sticky',
+        top: NAVBAR_HEIGHT,
+        backgroundColor: '$neutralBg',
+      }}
+    >
       <TableCell>
         <Text style="subtitle3" color="subtle">
-          Quantity
+          Items
         </Text>
       </TableCell>
-    ) : null}
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Price
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Expiration
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Creator Royalties
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Marketplace Fee
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Profit
-      </Text>
-    </TableCell>
-    <TableCell css={{ marginLeft: 'auto' }}></TableCell>
-  </HeaderRow>
-)
+      {displayQuantity ? (
+        <TableCell>
+          <Text style="subtitle3" color="subtle">
+            Quantity
+          </Text>
+        </TableCell>
+      ) : null}
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          Price
+        </Text>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          Expiration
+        </Text>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          Creator Royalties
+        </Text>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          Marketplace Fee
+        </Text>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          Profit
+        </Text>
+      </TableCell>
+      <TableCell css={{ marginLeft: 'auto' }}></TableCell>
+    </HeaderRow>
+  )
+}
