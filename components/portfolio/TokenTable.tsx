@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -24,10 +24,10 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import Transfer from '../buttons/Transfer'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   address: Address | undefined
@@ -51,10 +51,12 @@ export const TokenTable: FC<Props> = ({
     includeTopBid: true,
   }
 
-  if (COLLECTION_SET_ID) {
-    tokenQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    tokenQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    tokenQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    tokenQuery.community = chain.community
   }
 
   const {
@@ -76,7 +78,7 @@ export const TokenTable: FC<Props> = ({
     <>
       {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
         <Flex
-        direction="column"
+          direction="column"
         align="center"
         css={{ py: '$space$6', gap: '$space$4', width: '100%' }}
       >
@@ -91,7 +93,7 @@ export const TokenTable: FC<Props> = ({
         {tokens.map((token, i) => {
           if (!token) return null
 
-          return (
+            return (
             <TokenTableRow
               key={`${token.token?.tokenId}-${i}`}
               token={token}
@@ -112,8 +114,8 @@ export const TokenTable: FC<Props> = ({
 }
 
 type TokenTableRowProps = {
-token: ReturnType<typeof useUserTokens>['data'][0]
-mutate?: MutatorCallback
+  token: ReturnType<typeof useUserTokens>['data'][0]
+  mutate?: MutatorCallback
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
@@ -144,51 +146,51 @@ if (isSmallDevice) {
     >
       <Link
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
-      >
-        <Flex align="center">
-          {imageSrc && (
-            <Image
-              style={{
-                borderRadius: '$sm',
-                objectFit: 'cover',
-                aspectRatio: '1/1',
+        >
+          <Flex align="center">
+            {imageSrc && (
+              <Image
+                style={{
+                  borderRadius: '$sm',
+                  objectFit: 'cover',
+                  aspectRatio: '1/1',
+                }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${token?.token?.name}`}
+                width={36}
+                height={36}
+              />
+            )}
+            <Flex
+              direction="column"
+              css={{
+                ml: '$2',
+                overflow: 'hidden',
+                minWidth: 0,
               }}
-              loader={({ src }) => src}
-              src={imageSrc}
-              alt={`${token?.token?.name}`}
-              width={36}
-              height={36}
-            />
-          )}
-          <Flex
-            direction="column"
-            css={{
-              ml: '$2',
-              overflow: 'hidden',
-              minWidth: 0,
-            }}
-          >
-            <Text style="subtitle3" ellipsify color="subtle">
-              {token?.token?.collection?.name}
-            </Text>
-            <Text style="subtitle2" ellipsify>
-              #{token?.token?.tokenId}
-            </Text>
+            >
+              <Text style="subtitle3" ellipsify color="subtle">
+                {token?.token?.collection?.name}
+              </Text>
+              <Text style="subtitle2" ellipsify>
+                #{token?.token?.tokenId}
+              </Text>
+            </Flex>
           </Flex>
-        </Flex>
-      </Link>
-      <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
-        <Flex direction="column" align="start" css={{ width: '100%' }}>
-          <Text style="subtitle3" color="subtle">
-            Net Floor
-          </Text>
-          <FormatCryptoCurrency
-            amount={token?.token?.collection?.floorAskPrice}
-            textStyle="subtitle2"
-            logoHeight={14}
-            css={{ mb: '$3' }}
-          />
-          <Flex>
+        </Link>
+        <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
+          <Flex direction="column" align="start" css={{ width: '100%' }}>
+            <Text style="subtitle3" color="subtle">
+              Net Floor
+            </Text>
+            <FormatCryptoCurrency
+              amount={token?.token?.collection?.floorAskPrice}
+              textStyle="subtitle2"
+              logoHeight={14}
+              css={{ mb: '$3' }}
+            />
+            <Flex>
             <Transfer
               token={token as ReturnType<typeof useTokens>['data'][0]}
               mutate={mutate}
@@ -202,7 +204,7 @@ if (isSmallDevice) {
                 justifyContent: 'center',
                 px: '42px',
                 backgroundColor: '$gray3',
-                color: '$gray12',
+                color: '$gray12',\
                 '&:hover': {
                   backgroundColor: '$gray4',
                 },
@@ -211,129 +213,127 @@ if (isSmallDevice) {
               buttonChildren="List"
             />
           </Flex>
-        </Flex>
-        <Flex direction="column" align="start" css={{ width: '100%' }}>
-          <Text style="subtitle3" color="subtle">
-            You Get
-          </Text>
-          <FormatCryptoCurrency
-            amount={token?.token?.topBid?.price?.netAmount?.native}
-            textStyle="subtitle2"
-            logoHeight={14}
-            css={{ mb: '$3' }}
-          />
-          {token?.token?.topBid?.price?.amount?.decimal && (
-            <AcceptBid
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              collectionId={token?.token?.contract}
-              mutate={mutate}
-              buttonCss={{ justifyContent: 'center' }}
-              buttonProps={{
-                size: isSmallDevice ? 'xs' : 'medium',
-              }}
-              buttonChildren={
-                <Flex align="center" css={{ gap: '$2' }}>
-                  <FontAwesomeIcon icon={faBolt} />
-                  Sell
-                </Flex>
-              }
-            />
-          )}
-        </Flex>
-      </Flex>
-    </Flex>
-  )
-}
-
-return (
-  <TableRow
-    key={token?.token?.tokenId}
-    css={{ gridTemplateColumns: desktopTemplateColumns }}
-  >
-    <TableCell css={{ minWidth: 0 }}>
-      <Link
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
-      >
-        <Flex align="center">
-          {imageSrc && (
-            <Image
-              style={{
-                borderRadius: '$sm',
-                objectFit: 'cover',
-                aspectRatio: '1/1',
-              }}
-              loader={({ src }) => src}
-              src={imageSrc}
-              alt={`${token?.token?.name}`}
-              width={48}
-              height={48}
-            />
-          )}
-          <Flex
-            direction="column"
-            css={{
-              ml: '$2',
-              overflow: 'hidden',
-            }}
-          >
-            <Flex justify="between" css={{ gap: '$2' }}>
-              <Text style="subtitle3" ellipsify color="subtle">
-                {token?.token?.collection?.name}
-              </Text>
-              {token?.token?.kind === 'erc1155' &&
-                token?.ownership?.tokenCount && (
-                  <Flex
-                    justify="center"
-                    align="center"
-                    css={{
-                      borderRadius: 9999,
-                      backgroundColor: '$gray4',
-                      maxWidth: '50%',
-                    }}
-                  >
-                    <Text
-                      ellipsify
-                      style="subtitle3"
-                      css={{ px: '$2', fontSize: 10 }}
-                    >
-                      x{token?.ownership?.tokenCount}
-                    </Text>
-                  </Flex>
-                )}
-            </Flex>
-            <Text style="subtitle2" ellipsify>
-              #{token?.token?.tokenId}
+          <Flex direction="column" align="start" css={{ width: '100%' }}>
+            <Text style="subtitle3" color="subtle">
+              You Get
             </Text>
+            <FormatCryptoCurrency
+              amount={token?.token?.topBid?.price?.netAmount?.native}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+            {token?.token?.topBid?.price?.amount?.decimal && (
+              <AcceptBid
+                token={token as ReturnType<typeof useTokens>['data'][0]}
+                collectionId={token?.token?.contract}
+                mutate={mutate}
+                buttonCss={{ justifyContent: 'center' }}
+                buttonProps={{
+                size: isSmallDevice ? 'xs' : 'medium',
+                }}
+                buttonChildren={
+                  <Flex align="center" css={{ gap: '$2' }}>
+                    <FontAwesomeIcon icon={faBolt} />
+                    Sell
+                  </Flex>
+                }
+              />
+            )}
           </Flex>
         </Flex>
-      </Link>
-    </TableCell>
-    <TableCell>
-      <FormatCryptoCurrency
-        amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
-        address={token?.ownership?.floorAsk?.price?.currency?.contract}
-        decimals={token?.ownership?.floorAsk?.price?.currency?.decimals}
-        textStyle="subtitle1"
-        logoHeight={14}
-      />
-    </TableCell>
-    <TableCell>
-      <FormatCryptoCurrency
-        amount={token?.token?.collection?.floorAskPrice}
-        textStyle="subtitle1"
-        logoHeight={14}
-      />
-    </TableCell>
-    <TableCell>
-      <FormatCryptoCurrency
-        amount={token?.token?.topBid?.price?.netAmount?.native}
-        textStyle="subtitle1"
-        logoHeight={14}
-        address={wrappedContracts[marketplaceChain.id]}
-      />
-    </TableCell>
-    <TableCell>
-      <Flex justify="end" css={{ gap: '$3' }}>
+      </Flex>
+    )
+  }
+
+  return (
+    <TableRow
+      key={token?.token?.tokenId}
+      css={{ gridTemplateColumns: desktopTemplateColumns }}
+    >
+      <TableCell css={{ minWidth: 0 }}>
+        <Link
+          href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        >
+          <Flex align="center">
+            {imageSrc && (
+              <Image
+                style={{
+                  borderRadius: '$sm',
+                  objectFit: 'cover',
+                  aspectRatio: '1/1',
+                }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${token?.token?.name}`}
+                width={48}
+                height={48}
+              />
+            )}
+            <Flex
+              direction="column"
+              css={{
+                ml: '$2',
+                overflow: 'hidden',
+              }}
+            >
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="subtitle3" ellipsify color="subtle">
+                  {token?.token?.collection?.name}
+                </Text>
+                {token?.token?.kind === 'erc1155' &&
+                  token?.ownership?.tokenCount && (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      css={{
+                        borderRadius: 9999,
+                        backgroundColor: '$gray4',
+                        maxWidth: '50%',
+                      }}
+                    >
+                      <Text
+                        ellipsify
+                        style="subtitle3"
+                        css={{ px: '$2', fontSize: 10 }}
+                      >
+                        x{token?.ownership?.tokenCount}
+                      </Text>
+                    </Flex>
+                  )}
+              </Flex>
+              <Text style="subtitle2" ellipsify>
+                #{token?.token?.tokenId}
+              </Text>
+            </Flex>
+          </Flex>
+        </Link>
+      </TableCell>
+      <TableCell>
+        <FormatCryptoCurrency
+          amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
+          address={token?.ownership?.floorAsk?.price?.currency?.contract}
+          decimals={token?.ownership?.floorAsk?.price?.currency?.decimals}
+          textStyle="subtitle1"
+          logoHeight={14}
+        />
+      </TableCell>
+      <TableCell>
+        <FormatCryptoCurrency
+          amount={token?.token?.collection?.floorAskPrice}
+          textStyle="subtitle1"
+          logoHeight={14}
+        />
+      </TableCell>
+      <TableCell>
+        <FormatCryptoCurrency
+          amount={token?.token?.topBid?.price?.netAmount?.native}
+          textStyle="subtitle1"
+          logoHeight={14}
+          address={wrappedContracts[marketplaceChain.id]}
+        />
+      </TableCell>
+      <TableCell>
+        <Flex justify="end" css={{ gap: '$3' }}>
         <Transfer
           token={token as ReturnType<typeof useTokens>['data'][0]}
           mutate={mutate}
@@ -368,74 +368,74 @@ return (
           buttonChildren="List"
           mutate={mutate}
         />
-      </Flex>
-    </TableCell>
-  </TableRow>
-)
+        </Flex>
+      </TableCell>
+    </TableRow>
+  )
 }
 
 const TableHeading = () => (
-<HeaderRow
-  css={{
-    display: 'none',
-    '@md': { display: 'grid' },
-    gridTemplateColumns: desktopTemplateColumns,
-    position: 'sticky',
-    top: NAVBAR_HEIGHT,
-    backgroundColor: '$neutralBg',
-  }}
->
-  <TableCell>
-    <Text css={{ marginLeft: '10px' }} style="subtitle3" color="subtle">
-      Items
-    </Text>
-  </TableCell>
-  <TableCell>
-    <Text style="subtitle3" color="subtle">
-      Listed Price
-    </Text>
-  </TableCell>
-  <TableCell>
-    <Flex align="center" css={{ gap: '$2' }}>
-      <Text style="subtitle3" color="subtle">
-        Net Floor
+  <HeaderRow
+    css={{
+      display: 'none',
+      '@md': { display: 'grid' },
+      gridTemplateColumns: desktopTemplateColumns,
+      position: 'sticky',
+      top: NAVBAR_HEIGHT,
+      backgroundColor: '$neutralBg',
+    }}
+  >
+    <TableCell>
+      <Text css={{ marginLeft: '10px' }} style="subtitle3" color="subtle">
+        Items
       </Text>
-      <Tooltip
-        content={
-          <Flex>
-            <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
-              The floor price with royalties and fees removed. This is the eth
-              you would receive if you listed at the floor.
-            </Text>
-          </Flex>
-        }
-      >
-        <Text css={{ color: '$gray9' }}>
-          <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
-        </Text>
-      </Tooltip>
-    </Flex>
-  </TableCell>
-  <TableCell>
-    <Flex align="center" css={{ gap: '$2' }}>
+    </TableCell>
+    <TableCell>
       <Text style="subtitle3" color="subtle">
-        You Get
+        Listed Price
       </Text>
-      <Tooltip
-        content={
-          <Flex>
-            <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
-              The eth you would receive if you sold instantly.
-            </Text>
-          </Flex>
-        }
-      >
-        <Text css={{ color: '$gray9' }}>
-          <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
+    </TableCell>
+    <TableCell>
+      <Flex align="center" css={{ gap: '$2' }}>
+        <Text style="subtitle3" color="subtle">
+          Net Floor
         </Text>
-      </Tooltip>
-    </Flex>
-  </TableCell>
-  <TableCell></TableCell>
-</HeaderRow>
+        <Tooltip
+          content={
+            <Flex>
+              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+                The floor price with royalties and fees removed. This is the eth
+                you would receive if you listed at the floor.
+              </Text>
+            </Flex>
+          }
+        >
+          <Text css={{ color: '$gray9' }}>
+            <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
+          </Text>
+        </Tooltip>
+      </Flex>
+    </TableCell>
+    <TableCell>
+      <Flex align="center" css={{ gap: '$2' }}>
+        <Text style="subtitle3" color="subtle">
+          You Get
+        </Text>
+        <Tooltip
+          content={
+            <Flex>
+              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+                The eth you would receive if you sold instantly.
+              </Text>
+            </Flex>
+          }
+        >
+          <Text css={{ color: '$gray9' }}>
+            <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
+          </Text>
+        </Tooltip>
+      </Flex>
+    </TableCell>
+    <TableCell></TableCell>
+  </HeaderRow>
 )
