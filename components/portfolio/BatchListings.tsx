@@ -34,9 +34,10 @@ import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
 import BatchList from 'components/buttons/BatchList'
 
-type BatchListing = {
+export type BatchListing = {
   token: UserToken
   price: string
+  quantity: number
   expirationOption: ExpirationOption
   orderbook: Listings[0]['orderbook']
   orderKind: Listings[0]['orderKind']
@@ -51,8 +52,6 @@ type Props = {
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   setShowListingPage: Dispatch<SetStateAction<boolean>>
 }
-
-const desktopTemplateColumns = '1.2fr 2.3fr 1.2fr repeat(3, .7fr) .2fr'
 
 const BatchListings: FC<Props> = ({
   selectedItems,
@@ -95,11 +94,16 @@ const BatchListings: FC<Props> = ({
     currencies && currencies[0] ? currencies[0] : defaultCurrency
   )
 
+  const displayQuantity = useCallback(() => {
+    return listings.some((listing) => listing?.token?.token?.kind === 'erc1155')
+  }, [listings])
+
   const generateListings = useCallback(() => {
     const listings = selectedItems.flatMap((item) => {
       return selectedMarketplaces.map((marketplace) => {
         const listing: BatchListing = {
           token: item,
+          quantity: 1,
           price: globalPrice || '0',
           expirationOption: globalExpirationOption,
           //@ts-ignore
@@ -143,6 +147,7 @@ const BatchListings: FC<Props> = ({
           return selectedMarketplaces.map((marketplace) => {
             const listing: BatchListing = {
               token: { ...item },
+              quantity: 1,
               price: globalPrice || '0',
               expirationOption: globalExpirationOption,
               //@ts-ignore
@@ -187,7 +192,8 @@ const BatchListings: FC<Props> = ({
         ? (marketplace?.feeBps / 10000) * Number(listing.price)
         : 0
 
-      const profit = Number(listing.price) - marketplaceFee || 0
+      const profit =
+        Number(listing.price) * listing.quantity - (marketplaceFee || 0)
       return total + profit
     }, 0)
 
@@ -212,7 +218,7 @@ const BatchListings: FC<Props> = ({
   )
 
   const addMarketplaceListings = useCallback(
-    (orderbook: string) => {
+    (orderbook: string, orderKind: string) => {
       setListings((prevListings) => {
         const updatedListings = [...prevListings]
 
@@ -225,12 +231,13 @@ const BatchListings: FC<Props> = ({
           if (existingListingIndex === -1) {
             const newListing: BatchListing = {
               token: item,
+              quantity: 1,
               price: globalPrice || '0',
               expirationOption: globalExpirationOption,
               //@ts-ignore
               orderbook: orderbook,
-              //@ts-ignore TODO: add orderkind
-              // orderKind: marketplace.orderKind,
+              //@ts-ignore
+              orderKind: orderKind,
             }
             updatedListings.push(newListing)
           }
@@ -260,7 +267,10 @@ const BatchListings: FC<Props> = ({
           ...prevSelected,
           marketplace,
         ])
-        addMarketplaceListings(marketplace.orderbook as string)
+        addMarketplaceListings(
+          marketplace.orderbook as string,
+          marketplace.orderKind as string
+        )
       }
     },
     [selectedMarketplaces, addMarketplaceListings, removeMarketplaceListings]
@@ -441,7 +451,7 @@ const BatchListings: FC<Props> = ({
       </Flex>
       {listings.length > 0 ? (
         <Flex direction="column" css={{ width: '100%', pb: 37 }}>
-          <TableHeading />
+          <TableHeading displayQuantity={displayQuantity()} />
           {listings.map((listing, i) => (
             <ListingsTableRow
               listing={listing}
@@ -451,6 +461,7 @@ const BatchListings: FC<Props> = ({
               updateSelectedItems={updateSelectedItems}
               setSelectedItems={setSelectedItems}
               selectedItems={selectedItems}
+              displayQuantity={displayQuantity()}
               globalExpirationOption={globalExpirationOption}
               globalPrice={globalPrice}
               currency={currency}
@@ -484,16 +495,17 @@ const BatchListings: FC<Props> = ({
                 css={{ width: 'max-content' }}
                 maximumFractionDigits={2}
               />
-              {/* <BatchList
+              <BatchList
                 listings={listings}
                 disabled={isListButtonDisabled}
                 currency={currency}
+                selectedMarketplaces={selectedMarketplaces}
                 onCloseComplete={() => {
                   setShowListingPage(false)
                   setSelectedItems([])
                   setListings([])
                 }}
-              /> */}
+              />
             </Flex>
           </Flex>
         </Flex>
@@ -518,6 +530,7 @@ export default BatchListings
 type ListingsTableRowProps = {
   listing: BatchListing
   listings: BatchListing[]
+  displayQuantity: boolean
   setListings: Dispatch<SetStateAction<BatchListing[]>>
   updateListing: (updatedListing: BatchListing) => void
   globalExpirationOption: ExpirationOption
@@ -538,6 +551,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   setListings,
   updateListing,
   selectedItems,
+  displayQuantity,
   setSelectedItems,
   globalExpirationOption,
   globalPrice,
@@ -550,6 +564,8 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
   const [price, setPrice] = useState<string>(listing.price)
 
+  const [quantity, setQuantity] = useState<number | undefined>(1)
+
   const marketplace = selectedMarketplaces.find(
     (m) => m.orderbook === listing.orderbook
   )
@@ -558,7 +574,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
     ? (marketplace?.feeBps / 10000) * Number(price)
     : 0
 
-  const profit = Number(price) - marketplaceFee
+  const profit = Number(price) * listing.quantity - marketplaceFee
 
   useEffect(() => {
     handlePriceChange(globalPrice)
@@ -570,20 +586,12 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
   const removeListing = useCallback(
     (token: string, orderbook: string) => {
-      console.log(token, orderbook)
       const updatedListings = listings.filter(
         (listing) =>
           `${listing.token.token?.contract}:${listing.token.token?.tokenId}` !==
             token || listing.orderbook !== orderbook
       )
 
-      console.log(updatedListings)
-
-      // setSelectedItems((currentSelectedItems) =>
-      //   currentSelectedItems.filter(
-      //     (item) => `${item?.token?.contract}:${item?.token?.tokenId}` !== token
-      //   )
-      // )
       // Update selectedItems
       const selectedItemIndex = selectedItems.findIndex(
         (item) => `${item?.token?.contract}:${item?.token?.tokenId}` === token
@@ -627,10 +635,21 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
     },
     [listing, updateListing]
   )
+
+  const handleQuantityChange = useCallback(
+    (quantity: number) => {
+      setQuantity(quantity)
+      const updatedListing = { ...listing, quantity: quantity }
+      updateListing(updatedListing)
+    },
+    [listing, updateListing]
+  )
   return (
     <TableRow
       css={{
-        gridTemplateColumns: desktopTemplateColumns,
+        gridTemplateColumns: displayQuantity
+          ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
+          : '1.1fr 2.5fr 1.2fr repeat(2, .7fr) .5fr .3fr',
         alignItems: 'stretch',
         py: '$2',
         '&:last-child': {
@@ -668,8 +687,40 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
           </Flex>
         </Flex>
       </TableCell>
+      {displayQuantity ? (
+        <TableCell>
+          <Flex direction="column" align="center" css={{ gap: '$2' }}>
+            <Input
+              type="number"
+              value={quantity}
+              onChange={(e) => {
+                const inputValue = Number(e.target.value)
+                const max = Number(listing.token.ownership?.tokenCount)
+
+                if (e.target.value === '') {
+                  setQuantity(undefined)
+                } else if (inputValue > max) {
+                  handleQuantityChange(max)
+                } else {
+                  handleQuantityChange(inputValue)
+                }
+              }}
+              onBlur={() => {
+                if (quantity === undefined || quantity <= 0) {
+                  handleQuantityChange(1)
+                }
+              }}
+              css={{ maxWidth: 45 }}
+              disabled={listing.token.token?.kind !== 'erc1155'}
+            />
+            <Text style="subtitle3" color="subtle">
+              {listing.token.ownership?.tokenCount} available
+            </Text>
+          </Flex>
+        </TableCell>
+      ) : null}
       <TableCell>
-        <Flex align="start" css={{ gap: 24 }}>
+        <Flex align="start" css={{ gap: '$3' }}>
           <Flex direction="column" align="center" css={{ gap: '$2' }}>
             <Button
               color="gray3"
@@ -704,23 +755,25 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               0.002 ETH
             </Text>
           </Flex>
-          <Flex align="center" css={{ mt: 13 }}>
-            <CryptoCurrencyIcon
-              address={currency.contract}
-              css={{ height: 18 }}
+          <Flex css={{ gap: '$3' }}>
+            <Flex align="center">
+              <CryptoCurrencyIcon
+                address={currency.contract}
+                css={{ height: 18 }}
+              />
+              <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
+                {currency.symbol}
+              </Text>
+            </Flex>
+            <Input
+              placeholder="Price"
+              type="number"
+              value={price}
+              onChange={(e) => {
+                handlePriceChange(e.target.value)
+              }}
             />
-            <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
-              {currency.symbol}
-            </Text>
           </Flex>
-          <Input
-            placeholder="Price"
-            type="number"
-            value={price}
-            onChange={(e) => {
-              handlePriceChange(e.target.value)
-            }}
-          />
         </Flex>
       </TableCell>
       <TableCell>
@@ -780,12 +833,18 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   )
 }
 
-const TableHeading = () => (
+type TableHeadingProps = {
+  displayQuantity: boolean
+}
+
+const TableHeading: FC<TableHeadingProps> = ({ displayQuantity }) => (
   <HeaderRow
     css={{
       display: 'none',
       '@md': { display: 'grid' },
-      gridTemplateColumns: desktopTemplateColumns,
+      gridTemplateColumns: displayQuantity
+        ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
+        : '1.1fr 2.5fr 1.2fr repeat(2, .7fr) .5fr .3fr',
       position: 'sticky',
       top: NAVBAR_HEIGHT,
       backgroundColor: '$neutralBg',
@@ -796,6 +855,13 @@ const TableHeading = () => (
         Items
       </Text>
     </TableCell>
+    {displayQuantity ? (
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          Quantity
+        </Text>
+      </TableCell>
+    ) : null}
     <TableCell>
       <Text style="subtitle3" color="subtle">
         Price

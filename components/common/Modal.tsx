@@ -64,7 +64,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
         <Flex
           css={{
             p: 16,
-            backgroundColor: '$gray4',
+            backgroundColor: '$gray3',
             alignItems: 'center',
             justifyContent: 'space-between',
             borderTopRightRadius: '$borderRadius',
@@ -95,7 +95,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
           css={{
             maxHeight: '85vh',
             overflowY: 'auto',
-            backgroundColor: '$gray3',
+            backgroundColor: '$neutralBg',
           }}
         >
           {children}
@@ -105,7 +105,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
             mx: 'auto',
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: '$gray4',
+            backgroundColor: '$gray3',
             py: 10.5,
             borderBottomRightRadius: '$borderRadius',
             borderBottomLeftRadius: '$borderRadius',

@@ -3,7 +3,7 @@ import React, { FC, ComponentPropsWithoutRef } from 'react'
 import { styled, keyframes } from '../../stitches.config'
 
 type Props = {
-  fromImg: string
+  fromImgs: string[]
   toImgs: string[]
 } & ComponentPropsWithoutRef<typeof Flex>
 
@@ -24,29 +24,41 @@ const ProgressDot = styled(Box, {
 })
 
 const loadingStart = keyframes({
-  '0%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
-  '20%': { transform: 'scale(1)', backgroundColor: '$accentText' },
-  '100%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
+  '0%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
+  '20%': { transform: 'scale(1)', backgroundColor: '$primary11' },
+  '100%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
 })
 
 const loadingMiddle = keyframes({
-  '0%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
-  '20%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
-  '40%': { transform: 'scale(1)', backgroundColor: '$accentText' },
-  '100%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
+  '0%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
+  '20%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
+  '40%': { transform: 'scale(1)', backgroundColor: '$primary11' },
+  '100%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
 })
 
 const loadingEnd = keyframes({
-  '0%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
-  '40%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
-  '60%': { transform: 'scale(1)', backgroundColor: '$accentText' },
-  '100%': { transform: 'scale(0.8)', backgroundColor: '$neutralSolid' },
+  '0%': { transform: 'scale(0.8)', backgroundColor: '$grayy9' },
+  '40%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
+  '60%': { transform: 'scale(1)', backgroundColor: '$primary11' },
+  '100%': { transform: 'scale(0.8)', backgroundColor: '$gray9' },
 })
 
-const TransactionProgress: FC<Props> = ({ fromImg, toImgs, ...props }) => {
+const TransactionProgress: FC<Props> = ({ fromImgs, toImgs, ...props }) => {
+  const hasManyFromImgs = fromImgs.length > 5
+  console.log('from images, ', fromImgs)
   return (
     <Flex {...props} align="center">
-      <Img src={fromImg} />
+      {fromImgs.map((src, i) => (
+        <Img
+          key={i}
+          src={src}
+          css={{
+            '& + img': {
+              ml: hasManyFromImgs ? -40 : -30,
+            },
+          }}
+        />
+      ))}
       <Flex css={{ gap: '$1', mx: 23 }}>
         <ProgressDot
           css={{ animation: `${loadingStart} 1s ease-in-out infinite` }}

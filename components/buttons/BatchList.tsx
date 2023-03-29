@@ -3,20 +3,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   Currency,
   Listings,
+  Marketplace,
   useReservoirClient,
 } from '@reservoir0x/reservoir-kit-ui'
 import { Execute } from '@reservoir0x/reservoir-sdk'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { Modal } from 'components/common/Modal'
 import TransactionProgress from 'components/common/TransactionProgress'
+import { BatchListing } from 'components/portfolio/BatchListings'
 import ProgressBar from 'components/portfolio/ProgressBar'
 import { Box, Button, Flex, Text } from 'components/primitives'
+import ErrorWell from 'components/primitives/ErrorWell'
 import dayjs from 'dayjs'
 import { constants } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils.js'
 import { UserToken } from 'pages/portfolio'
-import { FC, useCallback, useState } from 'react'
-import { ExpirationOption } from 'types/ExpirationOption'
+import { FC, useCallback, useEffect, useState } from 'react'
 import { useSigner } from 'wagmi'
 
 enum BatchListStep {
@@ -24,19 +26,23 @@ enum BatchListStep {
   Complete,
 }
 
+type BatchListingData = {
+  listing: Listings[0]
+  token: UserToken
+}
+
 type BatchListModalStepData = {
   totalSteps: number
   stepProgress: number
   currentStep: Execute['steps'][0]
-  listings: Listings[0][]
+  listings: BatchListingData[]
 }
 
 type Props = {
-  listings: (Listings[0] & { item: UserToken['token'] } & {
-    expirationOption: ExpirationOption
-  })[]
+  listings: BatchListing[]
   disabled: boolean
   currency: Currency
+  selectedMarketplaces: Marketplace[]
   onCloseComplete?: () => void
 }
 
@@ -44,6 +50,7 @@ const BatchList: FC<Props> = ({
   listings,
   disabled,
   currency,
+  selectedMarketplaces,
   onCloseComplete,
 }) => {
   const [open, setOpen] = useState(false)
@@ -54,9 +61,58 @@ const BatchList: FC<Props> = ({
   )
   const [stepData, setStepData] = useState<BatchListModalStepData | null>(null)
   const [transactionError, setTransactionError] = useState<Error | null>()
+  const [stepTitle, setStepTitle] = useState('')
+  const [uniqueMarketplaces, setUniqueMarketplaces] = useState<Marketplace[]>(
+    []
+  )
+
+  const getUniqueMarketplaces = useCallback(
+    (listings: BatchListModalStepData['listings']): Marketplace[] => {
+      const marketplaces: Marketplace[] = []
+      listings.forEach((listing) => {
+        const marketplace = selectedMarketplaces.find(
+          (m) => m.orderbook === listing.listing.orderbook
+        )
+        if (marketplace && !marketplaces.includes(marketplace)) {
+          marketplaces.push(marketplace)
+        }
+      })
+      return marketplaces
+    },
+    []
+  )
+
+  console.log(stepData)
+
+  useEffect(() => {
+    if (stepData) {
+      const orderKind = stepData.listings[0].listing.orderKind || 'exchange'
+      const marketplaces = getUniqueMarketplaces(stepData.listings)
+      const marketplaceNames = marketplaces
+        .map((marketplace) => marketplace.name)
+        .join(' and ')
+      setUniqueMarketplaces(marketplaces)
+
+      switch (stepData.currentStep.kind) {
+        case 'transaction': {
+          setStepTitle(
+            `Approve ${
+              orderKind?.[0].toUpperCase() + orderKind?.slice(1)
+            } to access item\nin your wallet`
+          )
+          break
+        }
+        case 'signature': {
+          setStepTitle(
+            `Confirm listings on ${marketplaceNames}\nin your wallet`
+          )
+          break
+        }
+      }
+    }
+  }, [stepData])
 
   const listTokens = useCallback(() => {
-    console.log('listing tokens', listings)
     if (!signer) {
       const error = new Error('Missing a signer')
       setTransactionError(error)
@@ -71,7 +127,7 @@ const BatchList: FC<Props> = ({
 
     setTransactionError(null)
 
-    const convertedListings: Listings[0][] = []
+    const batchListingData: BatchListingData[] = []
 
     listings.forEach((listing) => {
       let expirationTime: string | null = null
@@ -90,39 +146,38 @@ const BatchList: FC<Props> = ({
           .toString()
       }
 
+      const token = `${listing.token.token?.contract}:${listing.token.token?.tokenId}`
+
       const convertedListing: Listings[0] = {
-        token: listing.token,
-        weiPrice: parseUnits(`${+listing.weiPrice}`, currency.decimals)
-          .mul(1)
+        token: token,
+        weiPrice: parseUnits(`${+listing.price}`, currency.decimals)
+          .mul(listing.quantity)
           .toString(),
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
+        quantity: listing.quantity,
+        // automatedRoyalties: true // TODO: how do we want to handle royalties?
       }
 
       if (expirationTime) {
-        listing.expirationTime = expirationTime
+        convertedListing.expirationTime = expirationTime
       }
 
       if (currency && currency.contract != constants.AddressZero) {
-        listing.currency = currency.contract
+        convertedListing.currency = currency.contract
       }
 
-      listing.options = {
-        'seaport-v1.4': {
-          useOffChainCancellation: true,
-        },
-      }
-
-      convertedListings.push(convertedListing)
+      batchListingData.push({
+        listing: convertedListing,
+        token: listing.token,
+      })
     })
-
-    console.log(convertedListings)
 
     setBatchListStep(BatchListStep.Approving)
 
     client.actions
       .listToken({
-        listings: convertedListings,
+        listings: batchListingData.map((data) => data.listing),
         signer,
         onProgress: (steps: Execute['steps']) => {
           const executableSteps = steps.filter(
@@ -158,10 +213,10 @@ const BatchList: FC<Props> = ({
             setBatchListStep(BatchListStep.Complete)
             const listings =
               currentStepItem && currentStepItem.orderIndexes !== undefined
-                ? convertedListings.filter((_, i) =>
+                ? batchListingData.filter((_, i) =>
                     currentStepItem.orderIndexes?.includes(i)
                   )
-                : [convertedListings[convertedListings.length - 1]]
+                : [batchListingData[batchListingData.length - 1]]
             setStepData({
               totalSteps: stepCount,
               stepProgress: stepCount,
@@ -175,10 +230,10 @@ const BatchList: FC<Props> = ({
               : null
             const listings =
               currentStepItem && currentStepItem.orderIndexes !== undefined
-                ? convertedListings.filter((_, i) =>
+                ? batchListingData.filter((_, i) =>
                     currentStepItem.orderIndexes?.includes(i)
                   )
-                : [convertedListings[convertedListings.length - 1]]
+                : [batchListingData[batchListingData.length - 1]]
 
             setStepData({
               totalSteps: stepCount,
@@ -234,19 +289,20 @@ const BatchList: FC<Props> = ({
               <LoadingSpinner />
             </Flex>
           )}
-
+          {transactionError && <ErrorWell message={transactionError.message} />}
           {stepData && (
             <>
-              <Text
-                css={{ textAlign: 'center', mt: 48, mb: 28 }}
-                style="subtitle1"
-              >
-                {/* {stepTitle} */}
+              <Text css={{ textAlign: 'center', my: 28 }} style="subtitle1">
+                {stepTitle}
               </Text>
               <TransactionProgress
                 justify="center"
-                fromImg={'['}
-                toImgs={['']}
+                fromImgs={stepData.listings.map(
+                  (listing) => listing.token.token?.image as string
+                )}
+                toImgs={uniqueMarketplaces.map((marketplace) => {
+                  return marketplace?.imageUrl || ''
+                })}
               />
               <Text
                 css={{
