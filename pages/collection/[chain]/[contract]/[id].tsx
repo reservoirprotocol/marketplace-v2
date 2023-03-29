@@ -9,6 +9,7 @@ import * as Tabs from '@radix-ui/react-tabs'
 import {
   TokenMedia,
   useAttributes,
+  useBids,
   useCollections,
   useDynamicTokens,
   useTokenActivity,
@@ -101,6 +102,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
       tokens: [`${contract}:${id}`],
       includeAttributes: true,
       includeTopBid: true,
+      includeQuantity: true,
     },
     {
       fallbackData: [ssr.tokens],
@@ -118,7 +120,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const attributesData = useAttributes(id)
+  const { data: offers, isLoading: offersLoading } = useBids({
+    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+    includeRawData: true,
+  })
+
+  const offer = offers && offers[0] ? offers[0] : undefined
+  const attributesData = useAttributes(collectionId)
 
   let countOwned = 0
   if (is1155) {
@@ -480,6 +488,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               {isMounted && (
                 <TokenActions
                   token={token}
+                  offer={offer}
                   isOwner={isOwner}
                   mutate={mutate}
                   account={account}
@@ -489,6 +498,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
+                style={{
+                  paddingRight: 15,
+                }}
               >
                 <TabsList>
                   {isMounted && isSmallDevice && hasAttributes && (
@@ -525,7 +537,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     <TokenInfo token={token} collection={collection} />
                   )}
                 </TabsContent>
-                <TabsContent value="activity">
+                <TabsContent value="activity" css={{ mr: -15 }}>
                   {isSmallDevice ? (
                     <MobileActivityFilters
                       activityTypes={activityTypes}

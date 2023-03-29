@@ -1,13 +1,27 @@
-import { mainnet, polygon, optimism } from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, Chain } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
 
-export const DefaultChain = {
+type ReservoirChain = Chain & {
+  lightIconUrl: string
+  darkIconUrl: string
+  reservoirBaseUrl: string
+  proxyApi: string
+  routePrefix: string
+  apiKey?: string
+  coingeckoId?: string
+  collectionSetId?: string
+  community?: string
+}
+
+export const DefaultChain: ReservoirChain = {
   ...mainnet,
-  // Any url to display the logo of the chain
-  iconUrl: `/icons/eth-icon.svg`,
+  // Any url to display the logo of the chain in light mode
+  lightIconUrl: '/icons/eth-icon-dark.svg',
+  // Any url to display the logo of the chain in dark mode
+  darkIconUrl: '/icons/eth-icon-light.svg',
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
@@ -26,26 +40,33 @@ export const DefaultChain = {
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'ethereum',
+  collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
+  community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
 }
 
 export default [
   DefaultChain,
   {
     ...polygon,
-    iconUrl: `/icons/polygon-icon.svg`,
+    lightIconUrl: '/icons/polygon-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-icon-light.svg',
     reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
     proxyApi: '/api/reservoir/polygon',
     routePrefix: 'polygon',
     apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
     coingeckoId: 'matic-network',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
   },
   {
-    ...optimism,
-    iconUrl: `/icons/optimism-icon.svg`,
-    reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
-    proxyApi: '/api/reservoir/optimism',
-    routePrefix: 'optimism',
-    apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
-    coingeckoId: 'optimism',
+    ...arbitrum,
+    name: 'Arbitrum',
+    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-icon-light.svg',
+    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum',
+    routePrefix: 'arbitrum',
+    apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
+    coingeckoId: 'arbitrum-iou',
   },
-]
+] as ReservoirChain[]

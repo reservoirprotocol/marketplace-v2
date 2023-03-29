@@ -64,7 +64,7 @@ const Navbar = () => {
                 src="/seaportLogo.svg"
                 width={34}
                 height={39}
-                alt="Reservoir"
+                alt="SeaPort"
               />
             </Box>
           </Link>
@@ -104,14 +104,14 @@ const Navbar = () => {
                   src="/seaportMarketLogo.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="SeaPort"
                 />
               ) : (
                 <Image
                   src="/seaportMarketLogoLight.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="SeaPort"
                 />
               )}
             </Box>
@@ -127,14 +127,11 @@ const Navbar = () => {
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/collection-rankings">
               <NavItem active={router.pathname == '/collection-rankings'}>
-                Collections
+                Rankings
               </NavItem>
             </Link>
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
-            </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
             </Link>
           </Flex>
         </Flex>

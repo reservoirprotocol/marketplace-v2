@@ -8,7 +8,13 @@ import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
-import { ConnectKitProvider, getDefaultClient } from 'connectkit'
+import '@rainbow-me/rainbowkit/styles.css'
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+  darkTheme as rainbowDarkTheme,
+  lightTheme as rainbowLightTheme,
+} from '@rainbow-me/rainbowkit'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
@@ -37,14 +43,6 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-export const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  : undefined
-
-export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
-  ? process.env.NEXT_PUBLIC_COMMUNITY
-  : undefined
-
 const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 
@@ -53,7 +51,7 @@ const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ])
 
-const { connectors } = getDefaultClient({
+const { connectors } = getDefaultWallets({
   appName: 'SeaPort Marketplace',
   chains,
 })
@@ -106,11 +104,27 @@ function MyApp({
     ReservoirKitTheme | undefined
   >()
 
+  const [rainbowKitTheme, setRainbowKitTheme] = useState<
+    | ReturnType<typeof rainbowDarkTheme>
+    | ReturnType<typeof rainbowLightTheme>
+    | undefined
+  >()
+
   useEffect(() => {
     if (theme == 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
+      setRainbowKitTheme(
+        rainbowDarkTheme({
+          borderRadius: 'small',
+        })
+      )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
+      setRainbowKitTheme(
+        rainbowLightTheme({
+          borderRadius: 'small',
+        })
+      )
     }
   }, [theme])
 
@@ -156,14 +170,15 @@ function MyApp({
         >
           <CartProvider>
             <Tooltip.Provider>
-              <ConnectKitProvider
-                mode={theme == 'dark' ? 'dark' : 'light'}
-                options={{ initialChainId: 0 }}
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
               >
                 <ToastContextProvider>
                   <FunctionalComponent {...pageProps} />
                 </ToastContextProvider>
-              </ConnectKitProvider>
+              </RainbowKitProvider>
             </Tooltip.Provider>
           </CartProvider>
         </ReservoirKitProvider>

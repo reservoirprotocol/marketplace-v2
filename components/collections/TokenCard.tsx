@@ -258,19 +258,21 @@ export default ({
                 textOverflow: 'ellipsis',
               }}
             >
-              <FormatCryptoCurrency
-                logoHeight={18}
-                amount={token?.market?.floorAsk?.price?.amount?.decimal}
-                address={token?.market?.floorAsk?.price?.currency?.contract}
-                textStyle="h6"
-                css={{
-                  textOverflow: 'ellipsis',
-                  minWidth: 0,
-                  with: '100%',
-                  overflow: 'hidden',
-                }}
-                maximumFractionDigits={4}
-              />
+              {token?.market?.floorAsk?.price && (
+                <FormatCryptoCurrency
+                  logoHeight={18}
+                  amount={token?.market?.floorAsk?.price?.amount?.decimal}
+                  address={token?.market?.floorAsk?.price?.currency?.contract}
+                  textStyle="h6"
+                  css={{
+                    textOverflow: 'ellipsis',
+                    minWidth: 0,
+                    with: '100%',
+                    overflow: 'hidden',
+                  }}
+                  maximumFractionDigits={4}
+                />
+              )}
             </Box>
 
             <>
