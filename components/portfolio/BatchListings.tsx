@@ -832,6 +832,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                 onChange={(e) => {
                   handlePriceChange(e.target.value)
                 }}
+                css={{ width: 100, '@bp1500': { width: 150 } }}
               />
               {price !== undefined &&
                 price !== '' &&
