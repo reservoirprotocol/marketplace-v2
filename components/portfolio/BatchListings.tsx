@@ -53,6 +53,8 @@ type Props = {
   setShowListingPage: Dispatch<SetStateAction<boolean>>
 }
 
+const MINIMUM_AMOUNT = 0.000001
+
 const BatchListings: FC<Props> = ({
   selectedItems,
   setSelectedItems,
@@ -202,7 +204,10 @@ const BatchListings: FC<Props> = ({
 
   useEffect(() => {
     const hasInvalidPrice = listings.some(
-      (listing) => listing.price === undefined || Number(listing.price) <= 0
+      (listing) =>
+        listing.price === undefined ||
+        listing.price === '' ||
+        Number(listing.price) < MINIMUM_AMOUNT
     )
     setIsListButtonDisabled(hasInvalidPrice)
   }, [listings])
@@ -679,17 +684,21 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               aspectRatio: '1/1',
             }}
           />
-          <Flex direction="column" css={{}}>
-            <Text style="subtitle3" color="subtle">
+          <Flex direction="column" css={{ minWidth: 0 }}>
+            <Text style="subtitle3" color="subtle" ellipsify>
               {listing?.token?.token?.collection?.name}
             </Text>
-            <Text>#{listing?.token?.token?.tokenId}</Text>
+            <Text ellipsify>#{listing?.token?.token?.tokenId}</Text>
           </Flex>
         </Flex>
       </TableCell>
       {displayQuantity ? (
         <TableCell>
-          <Flex direction="column" align="center" css={{ gap: '$2' }}>
+          <Flex
+            direction="column"
+            align="center"
+            css={{ gap: '$2', minWidth: 0 }}
+          >
             <Input
               type="number"
               value={quantity}
@@ -713,7 +722,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               css={{ maxWidth: 45 }}
               disabled={listing.token.token?.kind !== 'erc1155'}
             />
-            <Text style="subtitle3" color="subtle">
+            <Text style="subtitle3" color="subtle" ellipsify>
               {listing.token.ownership?.tokenCount} available
             </Text>
           </Flex>
@@ -726,7 +735,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               color="gray3"
               corners="pill"
               size="large"
-              css={{ minWidth: 'max-content' }}
+              css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
               disabled={!listing.token?.token?.collection?.floorAskPrice}
               onClick={() => {
                 if (listing.token?.token?.collection?.floorAskPrice) {
@@ -747,7 +756,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               color="gray3"
               corners="pill"
               size="large"
-              css={{ minWidth: 'max-content' }}
+              css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
             >
               Top Trait
             </Button>
@@ -755,16 +764,16 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               0.002 ETH
             </Text>
           </Flex>
-          <Flex css={{ gap: '$3' }}>
-            <Flex align="center">
-              <CryptoCurrencyIcon
-                address={currency.contract}
-                css={{ height: 18 }}
-              />
-              <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
-                {currency.symbol}
-              </Text>
-            </Flex>
+          <Flex align="center" css={{ mt: 12 }}>
+            <CryptoCurrencyIcon
+              address={currency.contract}
+              css={{ height: 18 }}
+            />
+            <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
+              {currency.symbol}
+            </Text>
+          </Flex>
+          <Flex direction="column" align="center" css={{ gap: '$2' }}>
             <Input
               placeholder="Price"
               type="number"
@@ -773,6 +782,14 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                 handlePriceChange(e.target.value)
               }}
             />
+            {price !== undefined &&
+              price !== '' &&
+              Number(price) !== 0 &&
+              Number(price) < MINIMUM_AMOUNT && (
+                <Text style="subtitle3" color="error">
+                  Must exceed {MINIMUM_AMOUNT}
+                </Text>
+              )}
           </Flex>
         </Flex>
       </TableCell>
