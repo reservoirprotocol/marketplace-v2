@@ -34,8 +34,12 @@ import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
 import BatchList from 'components/buttons/BatchList'
 
-type Listing = Listings[0] & { item: UserToken['token'] } & {
+type BatchListing = {
+  token: UserToken
+  price: string
   expirationOption: ExpirationOption
+  orderbook: Listings[0]['orderbook']
+  orderKind: Listings[0]['orderKind']
 }
 
 type ListingCurrencies = ComponentPropsWithoutRef<
@@ -55,7 +59,7 @@ const BatchListings: FC<Props> = ({
   setSelectedItems,
   setShowListingPage,
 }) => {
-  const [listings, setListings] = useState<Listing[]>([])
+  const [listings, setListings] = useState<BatchListing[]>([])
   const [allMarketplaces] = useMarketplaces()
   const [marketplaces, setMarketplaces] = useState<Marketplace[]>([])
   const [selectedMarketplaces, setSelectedMarketplaces] = useState<
@@ -93,16 +97,15 @@ const BatchListings: FC<Props> = ({
 
   const generateListings = useCallback(() => {
     const listings = selectedItems.flatMap((item) => {
-      const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
       return selectedMarketplaces.map((marketplace) => {
-        const listing: Listing = {
-          token: tokenString,
-          weiPrice: globalPrice || '0',
+        const listing: BatchListing = {
+          token: item,
+          price: globalPrice || '0',
+          expirationOption: globalExpirationOption,
           //@ts-ignore
           orderbook: marketplace.orderbook,
           //@ts-ignore
           orderKind: marketplace.orderKind,
-          item: item.token,
         }
         return listing
       })
@@ -116,10 +119,13 @@ const BatchListings: FC<Props> = ({
   }, [selectedItems, selectedMarketplaces, generateListings])
 
   const updateSelectedItems = useCallback(
-    (updatedListings: Listing[], removingListing: boolean = false) => {
+    (updatedListings: BatchListing[], removingListing: boolean = false) => {
       const updatedSelectedItems = selectedItems.filter((item) => {
         const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
-        return updatedListings.some((listing) => listing.token === tokenString)
+        return updatedListings.some((listing) => {
+          let listingTokenString = `${listing.token.token?.contract}:${listing.token.token?.tokenId}`
+          return listingTokenString === tokenString
+        })
       })
 
       setSelectedItems(updatedSelectedItems)
@@ -135,12 +141,14 @@ const BatchListings: FC<Props> = ({
               `${item?.token?.contract}:${item?.token?.tokenId}` === tokenString
           )
           return selectedMarketplaces.map((marketplace) => {
-            const listing: Listing = {
-              token: tokenString,
-              weiPrice: globalPrice || '0',
+            const listing: BatchListing = {
+              token: { ...item },
+              price: globalPrice || '0',
+              expirationOption: globalExpirationOption,
               //@ts-ignore
               orderbook: marketplace.orderbook,
-              item: item?.token,
+              //@ts-ignore
+              orderKind: marketplace.orderKind,
             }
             return listing
           })
@@ -149,7 +157,7 @@ const BatchListings: FC<Props> = ({
         setListings(listings)
       }
     },
-    [selectedItems, selectedMarketplaces]
+    [selectedItems, selectedMarketplaces, globalPrice, globalExpirationOption]
   )
 
   useEffect(() => {
@@ -176,10 +184,10 @@ const BatchListings: FC<Props> = ({
       )
 
       const marketplaceFee = marketplace?.feeBps
-        ? (marketplace?.feeBps / 10000) * Number(listing.weiPrice)
+        ? (marketplace?.feeBps / 10000) * Number(listing.price)
         : 0
 
-      const profit = Number(listing.weiPrice) - marketplaceFee || 0
+      const profit = Number(listing.price) - marketplaceFee || 0
       return total + profit
     }, 0)
 
@@ -188,8 +196,7 @@ const BatchListings: FC<Props> = ({
 
   useEffect(() => {
     const hasInvalidPrice = listings.some(
-      (listing) =>
-        listing.weiPrice === undefined || Number(listing.weiPrice) <= 0
+      (listing) => listing.price === undefined || Number(listing.price) <= 0
     )
     setIsListButtonDisabled(hasInvalidPrice)
   }, [listings])
@@ -210,20 +217,20 @@ const BatchListings: FC<Props> = ({
         const updatedListings = [...prevListings]
 
         selectedItems.forEach((item) => {
-          const tokenString = `${item?.token?.contract}:${item?.token?.tokenId}`
           const existingListingIndex = updatedListings.findIndex(
             (listing) =>
-              listing.token === tokenString && listing.orderbook === orderbook
+              listing.token === item && listing.orderbook === orderbook
           )
 
           if (existingListingIndex === -1) {
-            const newListing: Listing = {
-              token: tokenString,
-              weiPrice: globalPrice || '0',
+            const newListing: BatchListing = {
+              token: item,
+              price: globalPrice || '0',
+              expirationOption: globalExpirationOption,
               //@ts-ignore
               orderbook: orderbook,
-              // TODO: add orderkind
-              item: item.token,
+              //@ts-ignore TODO: add orderkind
+              // orderKind: marketplace.orderKind,
             }
             updatedListings.push(newListing)
           }
@@ -232,7 +239,7 @@ const BatchListings: FC<Props> = ({
         return updatedListings
       })
     },
-    [selectedItems]
+    [selectedItems, globalPrice, globalExpirationOption]
   )
 
   const handleMarketplaceSelection = useCallback(
@@ -259,7 +266,7 @@ const BatchListings: FC<Props> = ({
     [selectedMarketplaces, addMarketplaceListings, removeMarketplaceListings]
   )
 
-  const updateListing = useCallback((updatedListing: Listing) => {
+  const updateListing = useCallback((updatedListing: BatchListing) => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
         if (
@@ -448,7 +455,10 @@ const BatchListings: FC<Props> = ({
               globalPrice={globalPrice}
               currency={currency}
               selectedMarketplaces={selectedMarketplaces}
-              key={listing.token + i}
+              key={
+                `${listing.token.token?.collection?.id}:${listing.token.token?.tokenId}` +
+                i
+              }
             />
           ))}
           <Flex
@@ -474,7 +484,7 @@ const BatchListings: FC<Props> = ({
                 css={{ width: 'max-content' }}
                 maximumFractionDigits={2}
               />
-              <BatchList
+              {/* <BatchList
                 listings={listings}
                 disabled={isListButtonDisabled}
                 currency={currency}
@@ -483,7 +493,7 @@ const BatchListings: FC<Props> = ({
                   setSelectedItems([])
                   setListings([])
                 }}
-              />
+              /> */}
             </Flex>
           </Flex>
         </Flex>
@@ -506,10 +516,10 @@ const BatchListings: FC<Props> = ({
 export default BatchListings
 
 type ListingsTableRowProps = {
-  listing: Listing
-  listings: Listing[]
-  setListings: Dispatch<SetStateAction<Listing[]>>
-  updateListing: (updatedListing: Listing) => void
+  listing: BatchListing
+  listings: BatchListing[]
+  setListings: Dispatch<SetStateAction<BatchListing[]>>
+  updateListing: (updatedListing: BatchListing) => void
   globalExpirationOption: ExpirationOption
   globalPrice: string
   currency: Currency
@@ -517,7 +527,7 @@ type ListingsTableRowProps = {
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   selectedMarketplaces: Marketplace[]
   updateSelectedItems: (
-    updatedListings: Listing[],
+    updatedListings: BatchListing[],
     removingListing?: boolean
   ) => void
 }
@@ -537,7 +547,8 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   const [expirationOption, setExpirationOption] = useState<ExpirationOption>(
     globalExpirationOption
   )
-  const [price, setPrice] = useState<string>('')
+
+  const [price, setPrice] = useState<string>(listing.price)
 
   const marketplace = selectedMarketplaces.find(
     (m) => m.orderbook === listing.orderbook
@@ -559,10 +570,20 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
   const removeListing = useCallback(
     (token: string, orderbook: string) => {
+      console.log(token, orderbook)
       const updatedListings = listings.filter(
-        (listing) => listing.token !== token || listing.orderbook !== orderbook
+        (listing) =>
+          `${listing.token.token?.contract}:${listing.token.token?.tokenId}` !==
+            token || listing.orderbook !== orderbook
       )
 
+      console.log(updatedListings)
+
+      // setSelectedItems((currentSelectedItems) =>
+      //   currentSelectedItems.filter(
+      //     (item) => `${item?.token?.contract}:${item?.token?.tokenId}` !== token
+      //   )
+      // )
       // Update selectedItems
       const selectedItemIndex = selectedItems.findIndex(
         (item) => `${item?.token?.contract}:${item?.token?.tokenId}` === token
@@ -570,7 +591,11 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
       if (
         selectedItemIndex !== -1 &&
-        !updatedListings.some((listing) => listing.token === token)
+        !updatedListings.some(
+          (listing) =>
+            `${listing.token.token?.contract}:${listing.token.token?.tokenId}` ===
+            token
+        )
       ) {
         const updatedSelectedItems = [...selectedItems]
         updatedSelectedItems.splice(selectedItemIndex, 1)
@@ -579,7 +604,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
 
       setListings(updatedListings)
     },
-    [listings, selectedItems]
+    [listings]
   )
 
   const handleExpirationChange = useCallback(
@@ -597,12 +622,11 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   const handlePriceChange = useCallback(
     (value: string) => {
       setPrice(value)
-      const updatedListing = { ...listing, weiPrice: value }
+      const updatedListing = { ...listing, price: value }
       updateListing(updatedListing)
     },
     [listing, updateListing]
   )
-
   return (
     <TableRow
       css={{
@@ -628,7 +652,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
             }}
           />
           <img
-            src={listing.item?.image}
+            src={listing.token.token?.image}
             style={{
               width: 48,
               height: 48,
@@ -638,9 +662,9 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
           />
           <Flex direction="column" css={{}}>
             <Text style="subtitle3" color="subtle">
-              {listing.item?.collection?.name}
+              {listing?.token?.token?.collection?.name}
             </Text>
-            <Text>#{listing?.item?.tokenId}</Text>
+            <Text>#{listing?.token?.token?.tokenId}</Text>
           </Flex>
         </Flex>
       </TableCell>
@@ -652,11 +676,11 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               corners="pill"
               size="large"
               css={{ minWidth: 'max-content' }}
-              disabled={!listing.item?.collection?.floorAskPrice}
+              disabled={!listing.token?.token?.collection?.floorAskPrice}
               onClick={() => {
-                if (listing.item?.collection?.floorAskPrice) {
+                if (listing.token?.token?.collection?.floorAskPrice) {
                   handlePriceChange(
-                    listing.item?.collection?.floorAskPrice?.toString()
+                    listing.token?.token?.collection?.floorAskPrice?.toString()
                   )
                 }
               }}
@@ -664,7 +688,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
               Floor
             </Button>
             <Text style="subtitle3" color="subtle">
-              {listing.item?.collection?.floorAskPrice}
+              {listing.token?.token?.collection?.floorAskPrice}
             </Text>
           </Flex>
           <Flex direction="column" align="center" css={{ gap: '$2' }}>
@@ -743,7 +767,10 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
           size="small"
           css={{ justifyContent: 'center', width: '44px', height: '44px' }}
           onClick={() =>
-            removeListing(listing.token, listing.orderbook as string)
+            removeListing(
+              `${listing.token.token?.contract}:${listing.token.token?.tokenId}`,
+              listing.orderbook as string
+            )
           }
         >
           <FontAwesomeIcon icon={faTrash} />
