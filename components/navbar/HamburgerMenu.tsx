@@ -94,6 +94,9 @@ const HamburgerMenu = () => {
             </Flex>
           </RadixDialog.Close>
         </Flex>
+        <div className="my-2 px-4">
+          <ThemeSwitcher />
+        </div>
         {isConnected ? (
           <Flex
             css={{
@@ -281,7 +284,6 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>
