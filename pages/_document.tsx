@@ -35,7 +35,7 @@ class MyDocument extends Document {
         <link
           rel="shortcut icon"
           type="image/svg"
-          href="https://seaport.svg"
+          href="https://seaport.market/seaport.svg"
         />
 
         {/* Reservoir meta tags */}
