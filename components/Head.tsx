@@ -14,9 +14,9 @@ type Props = {
  * @param description - The description of the page.
  */
 export const Head: FC<Props> = ({
-  ogImage = 'https://marketplace.reservoir.tools/og-image.png',
-  title = 'Reservoir Market | Open Source NFT Marketplace',
-  description = 'Reservoir Market is an open source NFT marketplace built with Reservoir.',
+  ogImage = 'https://seaport.market/og-image.png',
+  title = 'SeaPort, the ultimate NFT marketplace',
+  description = 'SeaPort is the ultimate web3 marketplace for NFTs and crypto collectibles. Browse, buy, sell, sweep, bulk buy and auction NFTs on more than 15 markeplaces today.',
 }) => {
   return (
     <NextHead>
@@ -46,7 +46,7 @@ export const Head: FC<Props> = ({
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="Reservoir Market Banner" />
+      <meta property="og:image:alt" content="SeaPort Banner" />
     </NextHead>
   )
 }
