@@ -1,4 +1,12 @@
-import { Box, Text, Flex, Input, Button } from '../primitives'
+import {
+  Box,
+  Text,
+  Flex,
+  Input,
+  Button,
+  FormatCurrency,
+  FormatCrypto,
+} from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -21,6 +29,7 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { SearchCollection } from 'pages/api/globalSearch'
 import { formatNumber } from 'utils/numbers'
+import { useTheme } from 'next-themes'
 
 type Props = {
   collection: SearchCollection
@@ -28,10 +37,11 @@ type Props = {
 }
 
 const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
-  const volume = useMemo(
-    () =>
-      collection.allTimeVolume ? formatNumber(collection.allTimeVolume) : 0,
-    [collection.allTimeVolume]
+  const { theme } = useTheme()
+
+  const tokenCount = useMemo(
+    () => formatNumber(collection.tokenCount),
+    [collection.tokenCount]
   )
 
   return (
@@ -68,23 +78,32 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           </Flex>
           <Flex align="center" css={{ gap: '$1' }}>
             <Box css={{ height: 12, minWidth: 'max-content' }}>
-              <img src={collection.chainIcon} style={{ height: 12 }} />
+              <img
+                src={
+                  theme === 'dark'
+                    ? collection.darkChainIcon
+                    : collection.lightChainIcon
+                }
+                style={{ height: 12 }}
+              />
             </Box>
-            {collection.tokenCount !== undefined && (
+            {tokenCount && (
               <Text style="subtitle3" color="subtle">
-                {collection.tokenCount} items
+                {tokenCount} items
               </Text>
             )}
           </Flex>
         </Flex>
         {collection.volumeCurrencySymbol && (
-          <Text
-            style="subtitle2"
-            color="subtle"
-            css={{ marginLeft: 'auto', flexShrink: 0 }}
-          >
-            {volume} {collection.volumeCurrencySymbol}
-          </Text>
+          <Flex css={{ ml: 'auto', flexShrink: 0, gap: '$1' }}>
+            <FormatCrypto
+              textStyle="subtitle2"
+              amount={collection.allTimeVolume}
+              decimals={collection.volumeCurrencyDecimals}
+              maximumFractionDigits={2}
+            />
+            {collection.volumeCurrencySymbol}
+          </Flex>
         )}
       </Flex>
     </Link>
@@ -320,7 +339,7 @@ const GlobalSearch = forwardRef<
               top: '100%',
               left: 0,
               right: 0,
-              background: isMobile ? 'transparent' : '$gray3',
+              background: isMobile ? 'transparent' : '$dropdownBg',
               borderRadius: isMobile ? 0 : 8,
               zIndex: 4,
               mt: '$2',

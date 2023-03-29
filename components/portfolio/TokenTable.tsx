@@ -1,4 +1,11 @@
-import { Dispatch, FC, SetStateAction, useEffect, useRef } from 'react'
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useContext,
+} from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -24,11 +31,11 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   address: Address | undefined
@@ -56,10 +63,12 @@ export const TokenTable: FC<Props> = ({
     includeTopBid: true,
   }
 
-  if (COLLECTION_SET_ID) {
-    tokenQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    tokenQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    tokenQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    tokenQuery.community = chain.community
   }
 
   const {

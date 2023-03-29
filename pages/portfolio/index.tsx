@@ -21,7 +21,6 @@ import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import BatchActionsFooter from 'components/portfolio/BatchActionsFooter'
@@ -43,10 +42,12 @@ const IndexPage: NextPage = () => {
     limit: 100,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
   }
 
   const { data: collections, isLoading: collectionsLoading } =
@@ -55,8 +56,6 @@ const IndexPage: NextPage = () => {
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
   const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
-
-  const { chain } = useContext(ChainContext)
 
   useEffect(() => {
     setSelectedItems([])
