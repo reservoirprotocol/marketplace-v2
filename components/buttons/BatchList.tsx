@@ -1,5 +1,6 @@
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import {
   Currency,
   Listings,
@@ -17,9 +18,10 @@ import ErrorWell from 'components/primitives/ErrorWell'
 import dayjs from 'dayjs'
 import { constants } from 'ethers'
 import { parseUnits } from 'ethers/lib/utils.js'
+import { useMarketplaceChain } from 'hooks'
 import { UserToken } from 'pages/portfolio'
 import { FC, useCallback, useEffect, useState } from 'react'
-import { useSigner } from 'wagmi'
+import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 
 enum BatchListStep {
   Approving,
@@ -55,6 +57,15 @@ const BatchList: FC<Props> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const { data: signer } = useSigner()
+  const { openConnectModal } = useConnectModal()
+  const { chain: activeChain } = useNetwork()
+  const marketplaceChain = useMarketplaceChain()
+  const { switchNetworkAsync } = useSwitchNetwork({
+    chainId: marketplaceChain.id,
+  })
+  const isInTheWrongNetwork = Boolean(
+    signer && activeChain?.id !== marketplaceChain.id
+  )
   const client = useReservoirClient()
   const [batchListStep, setBatchListStep] = useState<BatchListStep>(
     BatchListStep.Approving
@@ -258,6 +269,27 @@ const BatchList: FC<Props> = ({
       List
     </Button>
   )
+  if (isInTheWrongNetwork) {
+    return (
+      <Button
+        disabled={disabled}
+        onClick={async () => {
+          if (isInTheWrongNetwork && switchNetworkAsync) {
+            const chain = await switchNetworkAsync(marketplaceChain.id)
+            if (chain.id !== marketplaceChain.id) {
+              return false
+            }
+          }
+
+          if (!signer) {
+            openConnectModal?.()
+          }
+        }}
+      >
+        List
+      </Button>
+    )
+  }
   return (
     <Modal
       title="Complete Listings"
@@ -280,7 +312,8 @@ const BatchList: FC<Props> = ({
           css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
         >
           <ProgressBar value={1} max={2} />
-          {!stepData && (
+          {transactionError && <ErrorWell message={transactionError.message} />}
+          {!stepData && !transactionError && (
             <Flex
               css={{ height: '100%', py: '$6' }}
               justify="center"
@@ -289,7 +322,6 @@ const BatchList: FC<Props> = ({
               <LoadingSpinner />
             </Flex>
           )}
-          {transactionError && <ErrorWell message={transactionError.message} />}
           {stepData && (
             <Flex direction="column" align="center">
               <Text

@@ -45,7 +45,6 @@ const loadingEnd = keyframes({
 
 const TransactionProgress: FC<Props> = ({ fromImgs, toImgs, ...props }) => {
   const hasManyFromImgs = fromImgs.length > 5
-  console.log('from images, ', fromImgs)
   return (
     <Flex {...props} align="center">
       {fromImgs.map((src, i) => (
