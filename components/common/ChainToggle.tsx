@@ -7,8 +7,10 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { TooltipArrow } from 'components/primitives/Tooltip'
 import { useMounted } from 'hooks'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/router'
 
 const ChainToggle: FC = () => {
+  const router = useRouter()
   const { chain, switchCurrentChain } = useContext(ChainContext)
   const isMounted = useMounted()
   const { theme } = useTheme()
@@ -26,7 +28,22 @@ const ChainToggle: FC = () => {
               asChild
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
-              onClick={() => switchCurrentChain(chainOption.id)}
+              onClick={() => {
+                if (router.query.chain) {
+                  Object.keys(router.query).forEach(
+                    (param) => delete router.query[param]
+                  )
+                  router.replace(
+                    {
+                      pathname: router.pathname,
+                      query: router.query,
+                    },
+                    undefined,
+                    { shallow: true }
+                  )
+                }
+                switchCurrentChain(chainOption.id)
+              }}
             >
               <Box
                 css={{
