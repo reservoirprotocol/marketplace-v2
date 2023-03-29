@@ -1,4 +1,4 @@
-import { arbitrum, goerli, mainnet, polygon, Chain } from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, Chain } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -68,17 +68,5 @@ export default [
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
     coingeckoId: 'arbitrum-iou',
-  },
-  {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
   },
 ] as ReservoirChain[]
