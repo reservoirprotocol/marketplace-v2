@@ -68,7 +68,7 @@ const HamburgerMenu = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/seaportLogo.svg"
                 width={34}
                 height={39}
                 alt="Reservoir"
@@ -94,6 +94,9 @@ const HamburgerMenu = () => {
             </Flex>
           </RadixDialog.Close>
         </Flex>
+        <div className="my-2 px-4">
+          <ThemeSwitcher />
+        </div>
         {isConnected ? (
           <Flex
             css={{
@@ -281,7 +284,6 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
-          <ThemeSwitcher />
         </Flex>
       </Flex>
     </FullscreenModal>
