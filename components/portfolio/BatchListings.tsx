@@ -292,6 +292,20 @@ const BatchListings: FC<Props> = ({
     [selectedMarketplaces, addMarketplaceListings, removeMarketplaceListings]
   )
 
+  const applyFloorPrice = useCallback(() => {
+    setListings((prevListings) => {
+      return prevListings.map((listing) => {
+        if (listing.token.token?.collection?.floorAskPrice) {
+          return {
+            ...listing,
+            price: listing.token.token?.collection?.floorAskPrice.toString(),
+          }
+        }
+        return listing
+      })
+    })
+  }, [listings])
+
   const updateListing = useCallback((updatedListing: BatchListing) => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
@@ -367,6 +381,7 @@ const BatchListings: FC<Props> = ({
                   corners="pill"
                   size="large"
                   css={{ minWidth: 'max-content' }}
+                  onClick={() => applyFloorPrice()}
                 >
                   Floor
                 </Button>
@@ -488,6 +503,7 @@ const BatchListings: FC<Props> = ({
               globalExpirationOption={globalExpirationOption}
               globalPrice={globalPrice}
               currency={currency}
+              defaultCurrency={defaultCurrency}
               selectedMarketplaces={selectedMarketplaces}
               key={
                 `${listing.token.token?.collection?.id}:${listing.token.token?.tokenId}` +
@@ -560,6 +576,7 @@ type ListingsTableRowProps = {
   globalExpirationOption: ExpirationOption
   globalPrice: string
   currency: Currency
+  defaultCurrency: Currency
   isLargeDevice: boolean
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
@@ -583,6 +600,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   globalExpirationOption,
   globalPrice,
   currency,
+  defaultCurrency,
   selectedMarketplaces,
 }) => {
   const [expirationOption, setExpirationOption] = useState<ExpirationOption>(
@@ -606,6 +624,12 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   useEffect(() => {
     handlePriceChange(globalPrice)
   }, [globalPrice])
+
+  useEffect(() => {
+    if (listing.price != price && Number(listing.price) != 0) {
+      handlePriceChange(listing.price)
+    }
+  }, [listing.price])
 
   useEffect(() => {
     handleExpirationChange(globalExpirationOption.value)
@@ -770,7 +794,8 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                   Floor
                 </Button>
                 <Text style="subtitle3" color="subtle">
-                  {listing.token?.token?.collection?.floorAskPrice}
+                  {listing.token?.token?.collection?.floorAskPrice}{' '}
+                  {defaultCurrency.symbol}
                 </Text>
               </Flex>
               <Flex direction="column" align="center" css={{ gap: '$2' }}>
@@ -789,8 +814,8 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
             </>
           ) : null}
 
-          <Flex align="start">
-            <Flex align="center" css={{ mt: 12, mr: 12 }}>
+          <Flex align="start" css={{ gap: '$3' }}>
+            <Flex align="center" css={{ mt: 12 }}>
               <CryptoCurrencyIcon
                 address={currency.contract}
                 css={{ height: 18 }}
@@ -807,7 +832,6 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                 onChange={(e) => {
                   handlePriceChange(e.target.value)
                 }}
-                css={{ width: '100%' }}
               />
               {price !== undefined &&
                 price !== '' &&
