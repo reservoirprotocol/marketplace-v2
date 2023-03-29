@@ -324,7 +324,7 @@ const BatchListings: FC<Props> = ({
                       ? '1px solid $primary7'
                       : '1px solid $gray6',
                     borderRadius: 8,
-                    gap: '$3',
+                    gap: '$2',
                     p: '$3',
                     cursor: 'pointer',
                   }}

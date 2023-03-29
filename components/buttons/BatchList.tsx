@@ -79,7 +79,7 @@ const BatchList: FC<Props> = ({
       })
       return marketplaces
     },
-    []
+    [listings]
   )
 
   console.log(stepData)
@@ -291,8 +291,15 @@ const BatchList: FC<Props> = ({
           )}
           {transactionError && <ErrorWell message={transactionError.message} />}
           {stepData && (
-            <>
-              <Text css={{ textAlign: 'center', my: 28 }} style="subtitle1">
+            <Flex direction="column" align="center">
+              <Text
+                css={{
+                  textAlign: 'center',
+                  my: 28,
+                  maxWidth: 400,
+                }}
+                style="subtitle1"
+              >
                 {stepTitle}
               </Text>
               <TransactionProgress
@@ -317,7 +324,7 @@ const BatchList: FC<Props> = ({
               >
                 {stepData?.currentStep.description}
               </Text>
-            </>
+            </Flex>
           )}
 
           {!transactionError ? (
