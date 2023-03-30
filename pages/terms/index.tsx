@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
+import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFolderOpen } from '@fortawesome/free-solid-svg-icons'
 import type { NextPage } from 'next'
 import ReactMarkdown from 'react-markdown';
 
@@ -17,15 +20,24 @@ const Terms: NextPage = () => {
   }, []);
 
   return (
-    <Layout navbar={{}}>
-      <header className="col-span-full mb-12 mt-[66px] px-4 md:mt-40 lg:px-0">
-        <h1 className="reservoir-h1 text-center dark:text-white">Terms</h1>
-      </header>
-      <main className='col-span-full mx-auto flex flex-col max-w-4xl w-full px-6 '>
+    <Layout>
+      <Flex
+        direction="column"
+        align="center"
+        css={{ py: '200px', px: '$3', textAlign: 'center' }}
+      >
+        <Box css={{ color: '$gray11', mb: '30px' }}>
+          <FontAwesomeIcon icon={faFolderOpen} size="2xl" />
+        </Box>
+        <Text style="body1" color="subtle" css={{ mb: '$1' }}>
+        Terms
+        </Text>
+        <Text style="body1" color="subtle">
         <ReactMarkdown className="markdown-support" linkTarget="_blank">
           {content}
         </ReactMarkdown>
-      </main>
+        </Text>
+      </Flex>
     </Layout>
   )
 }
