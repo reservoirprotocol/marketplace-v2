@@ -13,7 +13,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
@@ -46,6 +46,7 @@ import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
+import Link from 'next/link'
 import Img from 'components/primitives/Img'
 
 type ActivityTypes = Exclude<
@@ -62,9 +63,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
-    ssr.hasAttributes ? true : false
-  )
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
@@ -264,7 +263,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         <Text style="body1" color="subtle">
                           Chain{' '}
                         </Text>
-                        <Text style="body1">{chain}</Text>
+                        <Link
+                          href={`/collection-rankings?chain=${router.query.chain}`}
+                        >
+                          <Text style="body1">{chain}</Text>
+                        </Link>
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
