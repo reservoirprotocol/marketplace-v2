@@ -28,10 +28,12 @@ import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import Transfer from '../buttons/Transfer'
 import { ChainContext } from 'context/ChainContextProvider'
+import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 
 type Props = {
   address: Address | undefined
   filterCollection: string | undefined
+  sortBy: PortfolioSortingOption
   isLoading?: boolean
 }
 
@@ -40,6 +42,7 @@ const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 export const TokenTable: FC<Props> = ({
   address,
   isLoading,
+  sortBy,
   filterCollection,
 }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -47,6 +50,7 @@ export const TokenTable: FC<Props> = ({
 
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
+    sortBy: sortBy,
     collection: filterCollection,
     includeTopBid: true,
   }
