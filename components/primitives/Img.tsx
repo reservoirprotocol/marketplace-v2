@@ -19,13 +19,58 @@ const Img = (props: ComponentPropsWithoutRef<typeof StyledImg>) => {
   }, [props.src])
 
   return collectionImageBroken || !props.src ? (
-    <Flex
-      css={{ ...props.css, background: '$gray3' }}
-      justify="center"
-      align="center"
-    >
-      <FontAwesomeIcon icon={faImage} width="24" height="24" />
-    </Flex>
+    props.alt === 'Collection Page Image' ? (
+      <Flex
+        css={{ ...props.css, background: '$gray1' }}
+        justify="center"
+        align="center"
+      >
+        <FontAwesomeIcon
+          icon={faImage}
+          size="4x"
+          width={props.width}
+          height={props.height}
+        />
+      </Flex>
+    ) : props.alt === 'Activity Token Image' ? (
+      <Flex
+        css={{ ...props.css, background: '$gray1' }}
+        justify="center"
+        align="center"
+      >
+        <FontAwesomeIcon
+          icon={faImage}
+          size="2x"
+          width={props.width}
+          height={props.height}
+        />
+      </Flex>
+    ) : props.alt === 'Searchbar Collection Image' ? (
+      <Flex
+        css={{ ...props.css, background: '$gray3' }}
+        justify="center"
+        align="center"
+      >
+        <FontAwesomeIcon
+          icon={faImage}
+          size="2x"
+          width={props.width}
+          height={props.height}
+        />
+      </Flex>
+    ) : (
+      <Flex
+        css={{ ...props.css, background: '$gray3' }}
+        justify="center"
+        align="center"
+      >
+        <FontAwesomeIcon
+          icon={faImage}
+          width={props.width}
+          height={props.height}
+        />
+      </Flex>
+    )
   ) : (
     <StyledImg
       {...props}
