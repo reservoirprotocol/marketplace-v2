@@ -292,5 +292,6 @@ export const darkTheme = createTheme({
     panelBg: '$gray3',
     panelBorder: '$slate7',
     panelShadow: 'transparent',
+    dropdownBg: '$gray3',
   },
 })
