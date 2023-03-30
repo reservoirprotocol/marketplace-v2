@@ -8,16 +8,22 @@ import {
   HeaderRow,
   Tooltip,
   FormatCryptoCurrency,
+  Button,
 } from '../primitives'
 import { List, AcceptBid } from 'components/buttons'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  EditListingModal,
+  useTokens,
+  useUserTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBolt,
   faCircleInfo,
+  faEllipsis,
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
@@ -27,6 +33,7 @@ import { useMarketplaceChain } from 'hooks'
 import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 
 type Props = {
   address: Address | undefined
@@ -367,6 +374,30 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             buttonChildren="List"
             mutate={mutate}
           />
+          <Dropdown
+            trigger={
+              <Button
+                color="gray3"
+                size="xs"
+                css={{ width: 44, justifyContent: 'center' }}
+              >
+                <FontAwesomeIcon icon={faEllipsis} />
+              </Button>
+            }
+          >
+            <DropdownMenuItem>
+              {token?.ownership?.floorAsk?.id &&
+              token?.token?.tokenId &&
+              token?.token?.collection?.id ? (
+                <EditListingModal
+                  trigger={<Button>Edit</Button>}
+                  listingId={token?.ownership?.floorAsk?.id}
+                  tokenId={token?.token?.tokenId}
+                  collectionId={token?.token?.collection?.id}
+                />
+              ) : null}
+            </DropdownMenuItem>
+          </Dropdown>
         </Flex>
       </TableCell>
     </TableRow>
