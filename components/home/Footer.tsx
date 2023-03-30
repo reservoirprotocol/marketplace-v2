@@ -32,31 +32,23 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
 
 const developerSectionLinks = [
   {
-    name: 'Docs',
-    href: 'https://docs.reservoir.tools/docs',
+    name: 'Rankings',
+    href: '/collection-rankings',
   },
   {
-    name: 'API Reference',
-    href: 'https://docs.reservoir.tools/reference/overview',
-  },
-  {
-    name: 'Github',
-    href: 'https://github.com/reservoirprotocol',
+    name: 'Sell',
+    href: '/portfolio',
   },
 ]
 
 const companySectionLinks = [
   {
-    name: 'Jobs',
-    href: 'https://jobs.ashbyhq.com/reservoir',
-  },
-  {
     name: 'Terms of Use',
-    href: 'https://reservoir.tools/terms',
+    href: '/terms',
   },
   {
     name: 'Privacy Policy',
-    href: 'https://reservoir.tools/privacy',
+    href: '/privacy',
   },
 ]
 
