@@ -62,9 +62,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
-    ssr.hasAttributes ? true : false
-  )
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
