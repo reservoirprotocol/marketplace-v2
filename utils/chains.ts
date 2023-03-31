@@ -43,10 +43,10 @@ export const DefaultChain: ReservoirChain = {
   collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
 }
-
+//don't forget to add comma after DefaultChain to revert
 export default [
-  DefaultChain,
-  {
+  DefaultChain
+  /*{
     ...polygon,
     lightIconUrl: '/icons/polygon-icon-dark.svg',
     darkIconUrl: '/icons/polygon-icon-light.svg',
@@ -80,5 +80,5 @@ export default [
     coingeckoId: 'goerli-eth',
     collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
     community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-  },
+  },*/
 ] as ReservoirChain[]
