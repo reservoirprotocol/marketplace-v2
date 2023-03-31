@@ -93,10 +93,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               powered by the powerful Reservoir API.
             </Text>
             <a
-              href="https://github.com/reservoirprotocol/marketplace-v2"
+              href="https:/kb.historics.xyz"
               target="_blank"
             >
-              <Button color="gray3">View Source Code</Button>
+              <Button color="gray3">Learn More</Button>
             </a>
           </Flex>
         )}
