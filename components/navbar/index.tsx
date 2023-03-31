@@ -61,10 +61,10 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="https://historics.xyz/media/2023/02/Historics.png"
                 width={34}
                 height={39}
-                alt="Reservoir"
+                alt="Historics.xyz"
               />
             </Box>
           </Link>
@@ -101,17 +101,17 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
+                  src="https://historics.xyz/media/2023/02/HistoricsXYZlogo-e1677186206492.png"
                   width={112}
                   height={36}
                   alt="Reservoir"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
+                  src="https://historics.xyz/media/2023/02/HistoricsXYZlogo-e1677186206492.png"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="Historics.xyz"
                 />
               )}
             </Box>
@@ -133,8 +133,8 @@ const Navbar = () => {
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
+            <Link href="https://historics.xyz">
+              <NavItem active={false}>Homepage</NavItem>
             </Link>
           </Flex>
         </Flex>
