@@ -59,7 +59,7 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 34, cursor: 'pointer' }}>
+            <Box css={{ width: 48, cursor: 'pointer' }}>
               <Image
                 src="/HistoricsTrans.png"
                 width={50}
@@ -98,11 +98,11 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 112, cursor: 'pointer' }}>
+            <Box css={{ width: 128, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/HistoricsLogo.png"
-                  width={112}
+                  width={128}
                   height={48}
                   alt="Historics.xyz"
                 />
