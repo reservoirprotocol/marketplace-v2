@@ -131,7 +131,7 @@ const Navbar = () => {
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Portfolio</NavItem>
             </Link>
             <Link href="https://historics.xyz">
               <NavItem active={false}>Homepage</NavItem>
