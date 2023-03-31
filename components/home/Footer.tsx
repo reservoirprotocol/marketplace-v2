@@ -1,4 +1,4 @@
-import { FC } from 'react'
+/*import { FC } from 'react'
 import { Text, Box, Flex, Anchor, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -111,3 +111,4 @@ export const Footer = () => {
     </Flex>
   )
 }
+*/
