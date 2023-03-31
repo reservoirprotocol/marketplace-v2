@@ -62,8 +62,8 @@ const Navbar = () => {
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
                 src="/HistoricsTrans.png"
-                width={34}
-                height={39}
+                width={50}
+                height={50}
                 alt="Historics.xyz"
               />
             </Box>
@@ -103,14 +103,14 @@ const Navbar = () => {
                 <Image
                   src="/HistoricsLogo.png"
                   width={112}
-                  height={36}
+                  height={48}
                   alt="Historics.xyz"
                 />
               ) : (
                 <Image
                   src="/HistoricsLogo.png"
                   width={112}
-                  height={36}
+                  height={48}
                   alt="Historics.xyz"
                 />
               )}
