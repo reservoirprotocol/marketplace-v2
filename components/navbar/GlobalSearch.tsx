@@ -59,20 +59,18 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           '&:hover': {
             background: '$gray4',
           },
-          minWidth: 0,
-          width: '100%',
         }}
         align="center"
       >
         <Img
-          src={collection.image!}
-          style={{ width: 36, height: 36, borderRadius: 4 }}
-          width={36}
-          height={36}
+          src={collection.image || 'https://via.placeholder.com/32?text='}
+          style={{ width: 40, height: 40, borderRadius: 4 }}
+          width={40}
+          height={40}
           alt="Searchbar Collection Image"
         />
-        <Flex direction="column" css={{ minWidth: 0 }}>
-          <Flex align="center" css={{ gap: '$1' }}>
+        <Flex direction="column" css={{ gap: '$1' }}>
+          <Flex css={{ gap: '$2' }}>
             <Text style="subtitle1" ellipsify>
               {collection.name}
             </Text>
@@ -88,7 +86,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
                     ? collection.darkChainIcon
                     : collection.lightChainIcon
                 }
-                style={{ height: 12 }}
+                style={{ height: 15 }}
               />
             </Box>
             {tokenCount && (
