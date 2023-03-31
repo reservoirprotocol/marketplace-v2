@@ -89,10 +89,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             α Historics Marketplace
             </Text>
             <Text style="body1" css={{ mb: 48 }}>
-              Historics marketplace is a place where you can trade, sell and explore curated historics powered by the powerful open source Reservoir API.
+              Historics marketplace is where you can trade, sell and explore curated historics powered by Reservoir API.
             </Text>
             <a 
-              href="https:/kb.historics.xyz"
+              href="#"
               target="_blank"
             >
               <Button color="gray3">Learn More</Button>
