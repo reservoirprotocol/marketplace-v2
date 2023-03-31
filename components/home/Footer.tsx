@@ -85,7 +85,7 @@ export const Footer = () => {
           ))}
         </Flex>
         <Flex direction="column">
-          <SectionTitle title="About" />
+          <SectionTitle title="Links" />
           {companySectionLinks.map((props) => (
             <SectionLink key={props.name} {...props} />
           ))}
