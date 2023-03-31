@@ -30,6 +30,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
+import Img from 'components/primitives/Img'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -364,11 +365,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         <Link href={href} passHref>
           <Flex align="center">
             {imageSrc && (
-              <Image
+              <Img
                 style={{ borderRadius: '4px', objectFit: 'cover' }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${activity.token?.tokenName} Token Image`}
+                alt="Activity Token Image"
                 width={48}
                 height={48}
               />
