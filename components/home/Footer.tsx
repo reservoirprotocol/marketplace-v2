@@ -1,4 +1,4 @@
-/*import { FC } from 'react'
+import { FC } from 'react'
 import { Text, Box, Flex, Anchor, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -32,31 +32,31 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
 
 const developerSectionLinks = [
   {
-    name: 'Docs',
-    href: 'https://docs.reservoir.tools/docs',
+    name: 'Homepage',
+    href: 'https://historics.xyz',
   },
   {
-    name: 'API Reference',
-    href: 'https://docs.reservoir.tools/reference/overview',
+    name: 'Knowledge Base',
+    href: 'https://kb.historics.xyz',
   },
   {
-    name: 'Github',
-    href: 'https://github.com/reservoirprotocol',
+    name: 'Twitter',
+    href: 'https://twitter.com/historics_xyz',
   },
 ]
 
 const companySectionLinks = [
   {
-    name: 'Jobs',
-    href: 'https://jobs.ashbyhq.com/reservoir',
+    name: 'Disclaimer',
+    href: '#',
   },
   {
     name: 'Terms of Use',
-    href: 'https://reservoir.tools/terms',
+    href: '#',
   },
   {
     name: 'Privacy Policy',
-    href: 'https://reservoir.tools/privacy',
+    href: '#',
   },
 ]
 
@@ -79,13 +79,13 @@ export const Footer = () => {
     >
       <Flex css={{ gap: 80, '@bp600': { gap: 136 } }}>
         <Flex direction="column">
-          <SectionTitle title="Developers" />
+          <SectionTitle title="Historics.xyz" />
           {developerSectionLinks.map((props) => (
             <SectionLink key={props.name} {...props} />
           ))}
         </Flex>
         <Flex direction="column">
-          <SectionTitle title="Company" />
+          <SectionTitle title="About" />
           {companySectionLinks.map((props) => (
             <SectionLink key={props.name} {...props} />
           ))}
@@ -95,12 +95,12 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join Reservoir Community" />
+        <SectionTitle title="Follow Historics.xyz" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://twitter.com/reservoir0x"
+            href="https://twitter.com/historics_xyz"
           >
             <Button size="xs" color="gray3">
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
@@ -111,4 +111,4 @@ export const Footer = () => {
     </Flex>
   )
 }
-*/
+
