@@ -61,7 +61,7 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="https://historics.xyz/media/2023/02/Historics.png"
+                src="/HistoricsTrans.png"
                 width={34}
                 height={39}
                 alt="Historics.xyz"
@@ -101,14 +101,14 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="https://historics.xyz/media/2023/02/HistoricsXYZlogo-e1677186206492.png"
+                  src="/HistoricsLogo.png"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="Historics.xyz"
                 />
               ) : (
                 <Image
-                  src="https://historics.xyz/media/2023/02/HistoricsXYZlogo-e1677186206492.png"
+                  src="/HistoricsLogo.png"
                   width={112}
                   height={36}
                   alt="Historics.xyz"
