@@ -86,11 +86,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
           >
             <Text style="h3" css={{ mb: 24 }}>
-            α Historics.xyz Marketplace
+            α Historics Marketplace
             </Text>
             <Text style="body1" css={{ mb: 48 }}>
-              Historics.xyz marketplace is a place where you can trade, sell and explore curated historics 
-              powered by the powerful Reservoir API.
+              Historics marketplace is a place where you can trade, sell and explore curated historics 
+              powered by the powerful open source Reservoir API.
             </Text>
             <a
               href="https:/kb.historics.xyz"
