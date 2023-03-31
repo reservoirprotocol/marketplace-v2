@@ -86,11 +86,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
           >
             <Text style="h3" css={{ mb: 24 }}>
-              Open Source Marketplace
+            α Historics.xyz Marketplace
             </Text>
             <Text style="body1" css={{ mb: 48 }}>
-              Reservoir Marketplace is an open-source project that showcases the
-              latest and greatest features of the Reservoir Platform.
+              Historics.xyz marketplace is a place where you can trade, sell and explore curated historics 
+              powered by the powerful Reservoir API.
             </Text>
             <a
               href="https://github.com/reservoirprotocol/marketplace-v2"
