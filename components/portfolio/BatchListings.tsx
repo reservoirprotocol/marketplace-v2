@@ -25,7 +25,6 @@ import {
   useState,
 } from 'react'
 import { Currency, Listings, ListModal } from '@reservoir0x/reservoir-kit-ui'
-import useMarketplaces, { Marketplace } from 'hooks/useMarketplaces'
 import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { UserToken } from 'pages/portfolio'
@@ -48,6 +47,13 @@ type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
 >['currencies']
 
+export type Marketplace = {
+  name: string
+  imageUrl: string
+  orderbook: string
+  orderKind: string
+}
+
 type Props = {
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
@@ -56,17 +62,31 @@ type Props = {
 
 const MINIMUM_AMOUNT = 0.000001
 
+const marketplaces = [
+  {
+    name: 'Reservoir',
+    imageUrl: 'https://api.reservoir.tools/redirect/sources/reservoir/logo/v2',
+    orderbook: 'reservoir',
+    orderKind: 'seaport-v1.4',
+  },
+  {
+    name: 'OpenSea',
+    imageUrl: 'https://api.reservoir.tools/redirect/sources/opensea/logo/v2',
+    orderbook: 'opensea',
+    orderKind: 'seaport-v1.4',
+  },
+]
+
 const BatchListings: FC<Props> = ({
   selectedItems,
   setSelectedItems,
   setShowListingPage,
 }) => {
   const [listings, setListings] = useState<BatchListing[]>([])
-  const [allMarketplaces] = useMarketplaces()
-  const [marketplaces, setMarketplaces] = useState<Marketplace[]>([])
+
   const [selectedMarketplaces, setSelectedMarketplaces] = useState<
     Marketplace[]
-  >([])
+  >([marketplaces[0]])
 
   const [globalPrice, setGlobalPrice] = useState<string>('')
   const [globalExpirationOption, setGlobalExpirationOption] =
@@ -135,34 +155,18 @@ const BatchListings: FC<Props> = ({
   }, [selectedItems, selectedMarketplaces, generateListings])
 
   useEffect(() => {
-    let filteredMarketplaces = allMarketplaces.filter(
-      (marketplace) =>
-        marketplace.orderbook === 'reservoir' ||
-        marketplace.orderbook === 'opensea'
-    )
-    setMarketplaces(filteredMarketplaces)
-
-    // Initialize selectedMarketplaces
-    const reservoirMarketplace = allMarketplaces.find(
-      (marketplace) => marketplace.orderbook === 'reservoir'
-    )
-    if (reservoirMarketplace) {
-      setSelectedMarketplaces([reservoirMarketplace])
-    }
-  }, [allMarketplaces])
-
-  useEffect(() => {
     const totalProfit = listings.reduce((total, listing) => {
       const marketplace = selectedMarketplaces.find(
         (m) => m.orderbook === listing.orderbook
       )
 
-      const marketplaceFee = marketplace?.feeBps
-        ? (marketplace?.feeBps / 10000) * Number(listing.price)
-        : 0
+      // const marketplaceFee = marketplace?.feeBps
+      //   ? (marketplace?.feeBps / 10000) * Number(listing.price)
+      //   : 0
 
-      const profit =
-        Number(listing.price) * listing.quantity - (marketplaceFee || 0)
+      // const profit =
+      //   Number(listing.price) * listing.quantity - (marketplaceFee || 0)
+      const profit = Number(listing.price) * listing.quantity
       return total + profit
     }, 0)
 
@@ -567,11 +571,12 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
     (m) => m.orderbook === listing.orderbook
   )
 
-  const marketplaceFee = marketplace?.feeBps
-    ? (marketplace?.feeBps / 10000) * Number(price)
-    : 0
+  // const marketplaceFee = marketplace?.feeBps
+  //   ? (marketplace?.feeBps / 10000) * Number(price)
+  //   : 0
 
-  const profit = Number(price) * listing.quantity - marketplaceFee
+  // const profit = Number(price) * listing.quantity - marketplaceFee
+  const profit = Number(price) * listing.quantity
 
   useEffect(() => {
     handlePriceChange(globalPrice)
@@ -817,14 +822,14 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
       <TableCell></TableCell>
       <TableCell>
         <Flex align="center" css={{ gap: '$2' }}>
-          <FormatCryptoCurrency
-            amount={marketplaceFee}
+          {/* <FormatCryptoCurrency 
+            amount={marketplaceFee} 
             logoHeight={14}
             textStyle="body1"
             // TODO: add correct address
-          />
+          /> */}
           <Text style="body1" color="subtle">
-            ({marketplace?.fee?.percent || 0})%
+            {/* ({marketplace?.fee?.percent || 0})% */}
           </Text>
         </Flex>
       </TableCell>

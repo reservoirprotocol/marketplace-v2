@@ -4,14 +4,13 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import {
   Currency,
   Listings,
-  Marketplace,
   useReservoirClient,
 } from '@reservoir0x/reservoir-kit-ui'
 import { Execute } from '@reservoir0x/reservoir-sdk'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { Modal } from 'components/common/Modal'
 import TransactionProgress from 'components/common/TransactionProgress'
-import { BatchListing } from 'components/portfolio/BatchListings'
+import { BatchListing, Marketplace } from 'components/portfolio/BatchListings'
 import ProgressBar from 'components/portfolio/ProgressBar'
 import { Box, Button, Flex, Text } from 'components/primitives'
 import ErrorWell from 'components/primitives/ErrorWell'
