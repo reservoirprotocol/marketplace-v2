@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { Text, Flex, Box } from '../../components/primitives'
+import { Text, Flex, Box, Button } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useState } from 'react'
@@ -19,13 +19,16 @@ import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
-import { faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import BatchActionsFooter from 'components/portfolio/BatchActionsFooter'
 import BatchListings from 'components/portfolio/BatchListings'
 import { ChainContext } from 'context/ChainContextProvider'
+import PortfolioSortDropdown, {
+  PortfolioSortingOption,
+} from 'components/common/PortfolioSortDropdown'
 
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
@@ -35,6 +38,8 @@ const IndexPage: NextPage = () => {
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
+  const [sortByType, setSortByType] =
+    useState<PortfolioSortingOption>('acquiredAt')
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
 
@@ -147,6 +152,16 @@ const IndexPage: NextPage = () => {
                             maxWidth: '100%',
                           }}
                         >
+                          {isSmallDevice && (
+                            <Flex justify="center">
+                              <PortfolioSortDropdown
+                                option={sortByType}
+                                onOptionSelected={(option) => {
+                                  setSortByType(option)
+                                }}
+                              />
+                            </Flex>
+                          )}
                           <Flex justify="between" css={{ marginBottom: '$4' }}>
                             {!isSmallDevice &&
                               !collectionsLoading &&
@@ -156,11 +171,20 @@ const IndexPage: NextPage = () => {
                                   setOpen={setTokenFiltersOpen}
                                 />
                               )}
+                            {!isSmallDevice && !collectionsLoading && (
+                              <PortfolioSortDropdown
+                                option={sortByType}
+                                onOptionSelected={(option) => {
+                                  setSortByType(option)
+                                }}
+                              />
+                            )}
                           </Flex>
                           <TokenTable
                             isLoading={collectionsLoading}
                             address={address}
                             filterCollection={filterCollection}
+                            sortBy={sortByType}
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
                           />

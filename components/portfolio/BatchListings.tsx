@@ -751,8 +751,10 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                   Floor
                 </Button>
                 <Text style="subtitle3" color="subtle">
-                  {listing.token?.token?.collection?.floorAskPrice}{' '}
-                  {defaultCurrency.symbol}
+                  <>
+                    {listing.token?.token?.collection?.floorAskPrice}{' '}
+                    {defaultCurrency.symbol}
+                  </>
                 </Text>
               </Flex>
               <Flex direction="column" align="center" css={{ gap: '$2' }}>

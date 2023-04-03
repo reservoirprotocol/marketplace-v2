@@ -46,6 +46,8 @@ import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
+import Link from 'next/link'
+import Img from 'components/primitives/Img'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -61,9 +63,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
-    ssr.hasAttributes ? true : false
-  )
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
@@ -100,6 +100,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
     includeQuantity: true,
+    includeLastSale: true,
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
@@ -201,14 +202,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <img
-                  src={collection.image}
+                <Img
+                  src={collection.image!}
+                  width={64}
+                  height={64}
                   style={{
                     width: 64,
                     height: 64,
                     borderRadius: 8,
                     objectFit: 'cover',
                   }}
+                  alt="Collection Page Image"
                 />
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
@@ -260,7 +264,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         <Text style="body1" color="subtle">
                           Chain{' '}
                         </Text>
-                        <Text style="body1">{chain}</Text>
+                        <Link
+                          href={`/collection-rankings?chain=${router.query.chain}`}
+                        >
+                          <Text style="body1">{chain}</Text>
+                        </Link>
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
@@ -537,7 +545,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<{
   ssr: {
     collection?: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
+    tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
   id: string | undefined
@@ -565,7 +573,7 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
 
-  let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
+  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
     collection: id,
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
@@ -574,10 +582,11 @@ export const getStaticProps: GetStaticProps<{
     includeDynamicPricing: true,
     includeAttributes: true,
     includeQuantity: true,
+    includeLastSale: true,
   }
 
   const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v5`,
+    `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
     headers
   )
