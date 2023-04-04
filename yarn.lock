@@ -1989,10 +1989,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@0.14.1":
-  version "0.14.1"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.14.1.tgz#7c9279cba0aa393b2efdde6cf40e82c138f5b8ed"
-  integrity sha512-9yJ/7Z2uXTdWpLu+gNG9keCJ4sfsLr6UpDngZkGbIIzrrzsLUG27tyvlncmy+OwX4/NEJbc2N3ssDsnqh8F60w==
+"@reservoir0x/reservoir-kit-ui@0.14.2":
+  version "0.14.2"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.14.2.tgz#b1b2d93696c4796cb7c3c74cbb2357a648ff93ac"
+  integrity sha512-XD0OjI+zrCCuDNjVyp8OVZYJQq85397JZkDE7K0A2ro5rGxi69nHIGnCX3IMy8YyepXkuC+v6PD5Koa0LbisPg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
