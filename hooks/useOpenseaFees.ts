@@ -15,14 +15,12 @@ export default (collectionId?: string) => {
     : null
 
   const { data } = useSWR<
-    paths['/collections/{collection}/supported-marketplaces/v1']['get']['responses']['default']['schema']
+    paths['/collections/{collection}/supported-marketplaces/v1']['get']['responses']['200']['schema']
   >(path ? [path.href, chain?.apiKey, client?.version] : null, null, {})
 
   let openseaFees
 
-  // @ts-ignore
   if (data?.marketplaces) {
-    // @ts-ignore
     openseaFees = data?.marketplaces.filter(
       (marketplace: any) => marketplace.name === 'OpenSea'
     )[0]

@@ -162,13 +162,21 @@ const BatchListings: FC<Props> = ({
 
   useEffect(() => {
     const totalProfit = listings.reduce((total, listing) => {
+      const listingCreatorRoyalties =
+        (Number(listing.price) *
+          listing.quantity *
+          (listing?.token?.token?.collection?.royaltiesBps || 0)) /
+        10000
+
       const profit =
-        Number(listing.price) * listing.quantity - (listing.marketplaceFee || 0)
+        Number(listing.price) * listing.quantity -
+        (listing.marketplaceFee || 0) -
+        listingCreatorRoyalties
       return total + profit
     }, 0)
 
     setTotalProfit(totalProfit)
-  }, [listings, selectedMarketplaces])
+  }, [listings, selectedMarketplaces, globalPrice])
 
   useEffect(() => {
     const hasInvalidPrice = listings.some(
@@ -634,14 +642,20 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
         )
       }
 
-      setMarketplaceFeePercent((openseaFees.fee.bps / 10000) * 100 || 0)
+      setMarketplaceFeePercent(openseaFees.fee.bps / 100 || 0)
       handleMarketplaceFeeChange(
         (openseaFees.fee.bps / 10000) * Number(price) * listing.quantity || 0
       )
     }
   }, [openseaFees, price, quantity])
 
-  const profit = Number(price) * listing.quantity - marketplaceFee
+  const creatorRoyalties =
+    (listing?.token?.token?.collection?.royaltiesBps || 0) / 10000
+
+  const profit =
+    Number(price) * listing.quantity -
+    marketplaceFee -
+    creatorRoyalties * Number(price) * listing.quantity
 
   useEffect(() => {
     handlePriceChange(globalPrice)
@@ -861,7 +875,18 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
           ))}
         </Select>
       </TableCell>
-      <TableCell></TableCell>
+      <TableCell>
+        <Flex align="center" css={{ gap: '$2' }}>
+          <FormatCryptoCurrency
+            amount={creatorRoyalties * Number(price)}
+            logoHeight={14}
+            textStyle="body1"
+          />
+          <Text style="body1" color="subtle">
+            ({creatorRoyalties * 100})%
+          </Text>
+        </Flex>
+      </TableCell>
       <TableCell>
         <Flex align="center" css={{ gap: '$2' }}>
           <FormatCryptoCurrency
