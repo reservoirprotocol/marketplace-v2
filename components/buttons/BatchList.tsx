@@ -92,8 +92,6 @@ const BatchList: FC<Props> = ({
     [listings]
   )
 
-  console.log(stepData)
-
   useEffect(() => {
     if (stepData) {
       const orderKind = stepData.listings[0].listing.orderKind || 'exchange'

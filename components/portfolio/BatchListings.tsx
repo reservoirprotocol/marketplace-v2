@@ -21,6 +21,7 @@ import {
   FC,
   SetStateAction,
   useCallback,
+  useContext,
   useEffect,
   useState,
 } from 'react'
@@ -33,6 +34,9 @@ import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency } from 'hooks'
 import BatchList from 'components/buttons/BatchList'
 import { useMediaQuery } from 'react-responsive'
+import useMarketplaceFees from 'hooks/useOpenseaFees'
+import { Federant } from '@next/font/google'
+import { ToastContext } from 'context/ToastContextProvider'
 
 export type BatchListing = {
   token: UserToken
@@ -41,6 +45,7 @@ export type BatchListing = {
   expirationOption: ExpirationOption
   orderbook: Listings[0]['orderbook']
   orderKind: Listings[0]['orderKind']
+  marketplaceFee?: number
 }
 
 type ListingCurrencies = ComponentPropsWithoutRef<
@@ -143,6 +148,7 @@ const BatchListings: FC<Props> = ({
           //@ts-ignore
           orderKind: marketplace.orderKind,
         }
+
         return listing
       })
     })
@@ -156,17 +162,8 @@ const BatchListings: FC<Props> = ({
 
   useEffect(() => {
     const totalProfit = listings.reduce((total, listing) => {
-      const marketplace = selectedMarketplaces.find(
-        (m) => m.orderbook === listing.orderbook
-      )
-
-      // const marketplaceFee = marketplace?.feeBps
-      //   ? (marketplace?.feeBps / 10000) * Number(listing.price)
-      //   : 0
-
-      // const profit =
-      //   Number(listing.price) * listing.quantity - (marketplaceFee || 0)
-      const profit = Number(listing.price) * listing.quantity
+      const profit =
+        Number(listing.price) * listing.quantity - (listing.marketplaceFee || 0)
       return total + profit
     }, 0)
 
@@ -255,10 +252,11 @@ const BatchListings: FC<Props> = ({
   const applyFloorPrice = useCallback(() => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
-        if (listing.token.token?.collection?.floorAskPrice) {
+        if (listing.token.token?.collection?.floorAskPrice?.amount?.native) {
           return {
             ...listing,
-            price: listing.token.token?.collection?.floorAskPrice.toString(),
+            price:
+              listing.token.token?.collection?.floorAskPrice?.amount?.native.toString(),
           }
         }
         return listing
@@ -465,10 +463,7 @@ const BatchListings: FC<Props> = ({
               currency={currency}
               defaultCurrency={defaultCurrency}
               selectedMarketplaces={selectedMarketplaces}
-              key={
-                `${listing.token.token?.collection?.id}:${listing.token.token?.tokenId}` +
-                i
-              }
+              key={`${listing.token.token?.collection?.id}:${listing.token.token?.tokenId}:${listing.orderbook}`}
             />
           ))}
           <Flex
@@ -492,7 +487,6 @@ const BatchListings: FC<Props> = ({
                 logoHeight={18}
                 textStyle={'h6'}
                 css={{ width: 'max-content' }}
-                maximumFractionDigits={2}
               />
               <BatchList
                 listings={listings}
@@ -566,31 +560,23 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
   const [price, setPrice] = useState<string>(listing.price)
 
   const [quantity, setQuantity] = useState<number | undefined>(1)
+  const [marketplaceFee, setMarketplaceFee] = useState<number>(0)
+  const [marketplaceFeePercent, setMarketplaceFeePercent] = useState<number>(0)
+
+  const { addToast } = useContext(ToastContext)
 
   const marketplace = selectedMarketplaces.find(
     (m) => m.orderbook === listing.orderbook
   )
 
-  // const marketplaceFee = marketplace?.feeBps
-  //   ? (marketplace?.feeBps / 10000) * Number(price)
-  //   : 0
-
-  // const profit = Number(price) * listing.quantity - marketplaceFee
-  const profit = Number(price) * listing.quantity
-
-  useEffect(() => {
-    handlePriceChange(globalPrice)
-  }, [globalPrice])
-
-  useEffect(() => {
-    if (listing.price != price && Number(listing.price) != 0) {
-      handlePriceChange(listing.price)
-    }
-  }, [listing.price])
-
-  useEffect(() => {
-    handleExpirationChange(globalExpirationOption.value)
-  }, [globalExpirationOption])
+  const handleMarketplaceFeeChange = useCallback(
+    (marketplaceFee: number) => {
+      setMarketplaceFee(marketplaceFee)
+      const updatedListing = { ...listing, marketplaceFee: marketplaceFee }
+      updateListing(updatedListing)
+    },
+    [listing, updateListing]
+  )
 
   const removeListing = useCallback(
     (token: string, orderbook: string) => {
@@ -622,6 +608,54 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
     },
     [listings]
   )
+
+  let openseaFees = useMarketplaceFees(
+    listing.orderbook == 'opensea'
+      ? (listing.token.token?.collection?.id as string)
+      : undefined
+  )
+
+  useEffect(() => {
+    if (
+      openseaFees &&
+      openseaFees.fee &&
+      openseaFees.fee.bps &&
+      listing.orderbook == 'opensea'
+    ) {
+      // Remove listing and emit toast if listing not enabled
+      if (!openseaFees.listingEnabled) {
+        addToast?.({
+          title: 'Listing not enabled',
+          description: `Cannnot list ${listing.token.token?.name} on OpenSea`,
+        })
+        removeListing(
+          `${listing.token.token?.contract}:${listing.token.token?.tokenId}`,
+          listing.orderbook as string
+        )
+      }
+
+      setMarketplaceFeePercent((openseaFees.fee.bps / 10000) * 100 || 0)
+      handleMarketplaceFeeChange(
+        (openseaFees.fee.bps / 10000) * Number(price) * listing.quantity || 0
+      )
+    }
+  }, [openseaFees, price, quantity])
+
+  const profit = Number(price) * listing.quantity - marketplaceFee
+
+  useEffect(() => {
+    handlePriceChange(globalPrice)
+  }, [globalPrice])
+
+  useEffect(() => {
+    if (listing.price != price && Number(listing.price) != 0) {
+      handlePriceChange(listing.price)
+    }
+  }, [listing.price])
+
+  useEffect(() => {
+    handleExpirationChange(globalExpirationOption.value)
+  }, [globalExpirationOption])
 
   const handleExpirationChange = useCallback(
     (value: string) => {
@@ -721,7 +755,10 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                 }
               }}
               css={{ maxWidth: 45 }}
-              disabled={listing.token.token?.kind !== 'erc1155'}
+              disabled={
+                listing.token.token?.kind !== 'erc1155' ||
+                Number(listing?.token?.ownership?.tokenCount) <= 1
+              }
             />
             <Text style="subtitle3" color="subtle" ellipsify>
               {listing.token.ownership?.tokenCount} available
@@ -739,11 +776,17 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                   corners="pill"
                   size="large"
                   css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
-                  disabled={!listing.token?.token?.collection?.floorAskPrice}
+                  disabled={
+                    !listing.token?.token?.collection?.floorAskPrice?.amount
+                      ?.native
+                  }
                   onClick={() => {
-                    if (listing.token?.token?.collection?.floorAskPrice) {
+                    if (
+                      listing.token?.token?.collection?.floorAskPrice?.amount
+                        ?.native
+                    ) {
                       handlePriceChange(
-                        listing.token?.token?.collection?.floorAskPrice?.toString()
+                        listing.token?.token?.collection?.floorAskPrice?.amount?.native?.toString()
                       )
                     }
                   }}
@@ -751,10 +794,7 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                   Floor
                 </Button>
                 <Text style="subtitle3" color="subtle">
-                  <>
-                    {listing.token?.token?.collection?.floorAskPrice}{' '}
-                    {defaultCurrency.symbol}
-                  </>
+                  {`${listing.token?.token?.collection?.floorAskPrice?.amount?.native} ${defaultCurrency.symbol}`}
                 </Text>
               </Flex>
               <Flex direction="column" align="center" css={{ gap: '$2' }}>
@@ -824,14 +864,13 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
       <TableCell></TableCell>
       <TableCell>
         <Flex align="center" css={{ gap: '$2' }}>
-          {/* <FormatCryptoCurrency 
-            amount={marketplaceFee} 
+          <FormatCryptoCurrency
+            amount={marketplaceFee}
             logoHeight={14}
             textStyle="body1"
-            // TODO: add correct address
-          /> */}
+          />
           <Text style="body1" color="subtle">
-            {/* ({marketplace?.fee?.percent || 0})% */}
+            ({marketplaceFeePercent || 0})%
           </Text>
         </Flex>
       </TableCell>
@@ -840,7 +879,6 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
           amount={profit}
           logoHeight={14}
           textStyle="body1"
-          // TODO: add correct address
         />
       </TableCell>
       <TableCell css={{ marginLeft: 'auto' }}>
