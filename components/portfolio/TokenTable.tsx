@@ -64,6 +64,7 @@ export const TokenTable: FC<Props> = ({
     sortBy: sortBy,
     collection: filterCollection,
     includeTopBid: true,
+    includeAttributes: true,
   }
 
   const { chain } = useContext(ChainContext)

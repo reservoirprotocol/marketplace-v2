@@ -23,6 +23,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { Currency, Listings, ListModal } from '@reservoir0x/reservoir-kit-ui'
@@ -35,7 +36,6 @@ import { useChainCurrency } from 'hooks'
 import BatchList from 'components/buttons/BatchList'
 import { useMediaQuery } from 'react-responsive'
 import useMarketplaceFees from 'hooks/useOpenseaFees'
-import { Federant } from '@next/font/google'
 import { ToastContext } from 'context/ToastContextProvider'
 
 export type BatchListing = {
@@ -257,6 +257,20 @@ const BatchListings: FC<Props> = ({
     [selectedMarketplaces, addMarketplaceListings, removeMarketplaceListings]
   )
 
+  const updateListing = useCallback((updatedListing: BatchListing) => {
+    setListings((prevListings) => {
+      return prevListings.map((listing) => {
+        if (
+          listing.token === updatedListing.token &&
+          listing.orderbook === updatedListing.orderbook
+        ) {
+          return updatedListing
+        }
+        return listing
+      })
+    })
+  }, [])
+
   const applyFloorPrice = useCallback(() => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
@@ -273,19 +287,29 @@ const BatchListings: FC<Props> = ({
     setCurrency(defaultCurrency)
   }, [listings])
 
-  const updateListing = useCallback((updatedListing: BatchListing) => {
+  const applyTopTraitPrice = useCallback(() => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
-        if (
-          listing.token === updatedListing.token &&
-          listing.orderbook === updatedListing.orderbook
-        ) {
-          return updatedListing
+        if (listing.token.token?.attributes) {
+          // Find the highest floor price
+          let topTraitPrice = Math.max(
+            ...listing.token.token.attributes.map(
+              (attribute) => attribute.floorAskPrice ?? 0
+            )
+          )
+          if (topTraitPrice && topTraitPrice > 0) {
+            return {
+              ...listing,
+              price: topTraitPrice.toString(),
+            }
+          }
         }
+
         return listing
       })
     })
-  }, [])
+    setCurrency(defaultCurrency)
+  }, [listings])
 
   return (
     <Flex direction="column" css={{ gap: '$5', width: '100%' }}>
@@ -357,6 +381,7 @@ const BatchListings: FC<Props> = ({
                   corners="pill"
                   size="large"
                   css={{ minWidth: 'max-content' }}
+                  onClick={() => applyTopTraitPrice()}
                 >
                   Top Trait
                 </Button>
@@ -657,6 +682,17 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
     marketplaceFee -
     creatorRoyalties * Number(price) * listing.quantity
 
+  const topTraitPrice = useMemo(() => {
+    if (!listing.token.token?.attributes) return undefined
+
+    // Find the highest floor price
+    return Math.max(
+      ...listing.token.token.attributes.map(
+        (attribute) => attribute.floorAskPrice ?? 0
+      )
+    )
+  }, [])
+
   useEffect(() => {
     handlePriceChange(globalPrice)
   }, [globalPrice])
@@ -807,9 +843,12 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                 >
                   Floor
                 </Button>
-                <Text style="subtitle3" color="subtle">
-                  {`${listing.token?.token?.collection?.floorAskPrice?.amount?.native} ${defaultCurrency.symbol}`}
-                </Text>
+                {listing.token?.token?.collection?.floorAskPrice?.amount
+                  ?.native ? (
+                  <Text style="subtitle3" color="subtle">
+                    {`${listing.token?.token?.collection?.floorAskPrice?.amount?.native} ${defaultCurrency.symbol}`}
+                  </Text>
+                ) : null}
               </Flex>
               <Flex direction="column" align="center" css={{ gap: '$2' }}>
                 <Button
@@ -817,12 +856,18 @@ const ListingsTableRow: FC<ListingsTableRowProps> = ({
                   corners="pill"
                   size="large"
                   css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
+                  onClick={() =>
+                    handlePriceChange((topTraitPrice as number).toString())
+                  }
+                  disabled={!topTraitPrice || topTraitPrice <= 0}
                 >
                   Top Trait
                 </Button>
-                <Text style="subtitle3" color="subtle">
-                  0.002 ETH
-                </Text>
+                {topTraitPrice && topTraitPrice > 0 ? (
+                  <Text style="subtitle3" color="subtle">
+                    {topTraitPrice} {defaultCurrency.symbol}
+                  </Text>
+                ) : null}
               </Flex>
             </>
           ) : null}
