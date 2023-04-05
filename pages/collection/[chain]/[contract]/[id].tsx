@@ -559,7 +559,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     </Dropdown>
                   )}
                   <TokenActivityTable
-                    id={`${token.token?.collection?.id}:${token?.token?.tokenId}`}
+                    id={`${contract}:${token?.token?.tokenId}`}
                     activityTypes={activityTypes}
                   />
                 </TabsContent>
