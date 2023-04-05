@@ -118,7 +118,7 @@ const Dialog = forwardRef<
         <AnimatePresence>
           {open && (
             <DialogPrimitive.DialogPortal forceMount {...portalProps}>
-              <AnimatedOverlay style={{ opacity: 0.6 }} {...overlayProps} />
+              <AnimatedOverlay style={{ opacity: 1 }} {...overlayProps} />
               <AnimatedContent ref={forwardedRef} {...props} forceMount>
                 {children}
               </AnimatedContent>

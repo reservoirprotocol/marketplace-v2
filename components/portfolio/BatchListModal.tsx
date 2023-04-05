@@ -47,7 +47,7 @@ type Props = {
   onCloseComplete?: () => void
 }
 
-const BatchList: FC<Props> = ({
+const BatchListModal: FC<Props> = ({
   listings,
   disabled,
   currency,
@@ -401,4 +401,4 @@ const BatchList: FC<Props> = ({
   )
 }
 
-export default BatchList
+export default BatchListModal
