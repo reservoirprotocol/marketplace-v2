@@ -24,7 +24,6 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
-import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import Transfer from '../buttons/Transfer'
 import { ChainContext } from 'context/ChainContextProvider'
@@ -124,7 +123,6 @@ type TokenTableRowProps = {
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const marketplaceChain = useMarketplaceChain()
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -188,7 +186,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               Net Floor
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.collection?.floorAskPrice}
+              amount={
+                token?.token?.collection?.floorAskPrice?.netAmount?.decimal
+              }
+              address={
+                token?.token?.collection?.floorAskPrice?.currency?.contract
+              }
+              decimals={
+                token?.token?.collection?.floorAskPrice?.currency?.decimals
+              }
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -328,7 +334,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.collection?.floorAskPrice}
+          amount={token?.token?.collection?.floorAskPrice?.netAmount?.decimal}
+          address={token?.token?.collection?.floorAskPrice?.currency?.contract}
+          decimals={token?.token?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
         />
@@ -336,9 +344,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       <TableCell>
         <FormatCryptoCurrency
           amount={token?.token?.topBid?.price?.netAmount?.native}
+          address={token?.token?.topBid?.price?.currency?.contract}
+          decimals={token?.token?.topBid?.price?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
-          address={wrappedContracts[marketplaceChain.id]}
         />
       </TableCell>
       <TableCell>

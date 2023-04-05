@@ -88,6 +88,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   const tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
     collection: filterCollection,
+    includeLastSale: true,
   }
 
   const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
@@ -383,7 +384,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 type UserTokensSchema =
-  paths['/users/{user}/tokens/v6']['get']['responses']['200']['schema']
+  paths['/users/{user}/tokens/v7']['get']['responses']['200']['schema']
 type UserCollectionsSchema =
   paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
 
@@ -414,10 +415,11 @@ export const getStaticProps: GetStaticProps<{
     }
   }
 
-  const tokensQuery: paths['/users/{user}/tokens/v6']['get']['parameters']['query'] =
+  const tokensQuery: paths['/users/{user}/tokens/v7']['get']['parameters']['query'] =
     {
       limit: 20,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
+      includeLastSale: true,
     }
 
   const collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
@@ -441,7 +443,7 @@ export const getStaticProps: GetStaticProps<{
     },
   }
   const tokensPromise = fetcher(
-    `${DefaultChain.reservoirBaseUrl}/users/${address}/tokens/v6`,
+    `${DefaultChain.reservoirBaseUrl}/users/${address}/tokens/v7`,
     tokensQuery,
     headers
   )
