@@ -33,7 +33,7 @@ type Props = {
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
 const zoneAddresses = [
-  '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192', // Ethereum - 0xe1...92
+  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
   '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
 ]
 export const ListingsTable: FC<Props> = ({ address }) => {
@@ -208,7 +208,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       </Text>
                     }
                   >
-                    <Button css={{ color: '$red11' }} color="gray3">
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
@@ -219,7 +226,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                      justifyContent: 'center',
+                    }}
+                    color="gray3"
+                  >
                     Cancel
                   </Button>
                 )}
@@ -316,7 +330,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       </Text>
                     }
                   >
-                    <Button css={{ color: '$red11' }} color="gray3">
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
@@ -327,7 +348,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                      justifyContent: 'center',
+                    }}
+                    color="gray3"
+                  >
                     Cancel
                   </Button>
                 )}
