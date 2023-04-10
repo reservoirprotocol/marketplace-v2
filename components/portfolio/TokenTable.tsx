@@ -30,14 +30,15 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
-import wrappedContracts from 'utils/wrappedContracts'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
+import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 
 type Props = {
   address: Address | undefined
   filterCollection: string | undefined
+  sortBy: PortfolioSortingOption
   isLoading?: boolean
 }
 
@@ -46,6 +47,7 @@ const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 export const TokenTable: FC<Props> = ({
   address,
   isLoading,
+  sortBy,
   filterCollection,
 }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -53,6 +55,7 @@ export const TokenTable: FC<Props> = ({
 
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
+    sortBy: sortBy,
     collection: filterCollection,
     includeTopBid: true,
   }
@@ -126,7 +129,6 @@ type TokenTableRowProps = {
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const marketplaceChain = useMarketplaceChain()
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -190,7 +192,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               Net Floor
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.collection?.floorAskPrice}
+              amount={
+                token?.token?.collection?.floorAskPrice?.netAmount?.decimal
+              }
+              address={
+                token?.token?.collection?.floorAskPrice?.currency?.contract
+              }
+              decimals={
+                token?.token?.collection?.floorAskPrice?.currency?.decimals
+              }
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -324,7 +334,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.collection?.floorAskPrice}
+          amount={token?.token?.collection?.floorAskPrice?.netAmount?.decimal}
+          address={token?.token?.collection?.floorAskPrice?.currency?.contract}
+          decimals={token?.token?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
         />
@@ -332,9 +344,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       <TableCell>
         <FormatCryptoCurrency
           amount={token?.token?.topBid?.price?.netAmount?.native}
+          address={token?.token?.topBid?.price?.currency?.contract}
+          decimals={token?.token?.topBid?.price?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
-          address={wrappedContracts[marketplaceChain.id]}
         />
       </TableCell>
       <TableCell>
