@@ -9,6 +9,7 @@ import {
   Tooltip,
   FormatCryptoCurrency,
   Button,
+  Box,
 } from '../primitives'
 import { List, AcceptBid } from 'components/buttons'
 import Image from 'next/image'
@@ -23,7 +24,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBolt,
   faCircleInfo,
+  faEdit,
   faEllipsis,
+  faGasPump,
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
@@ -35,6 +38,7 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { zoneAddresses } from 'utils/zoneAddresses'
+import CancelListing from 'components/buttons/CancelListing'
 
 type Props = {
   address: Address | undefined
@@ -98,25 +102,30 @@ export const TokenTable: FC<Props> = ({
           </Text>
           <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
-      ) : isLoading || isValidating ? (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
-          <LoadingSpinner />
-        </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
-          <TableHeading />
-          {tokens.map((token, i) => {
-            if (!token) return null
+          {isLoading ? null : (
+            <>
+              <TableHeading />
+              {tokens.map((token, i) => {
+                if (!token) return null
 
-            return (
-              <TokenTableRow
-                key={`${token.token?.tokenId}-${i}`}
-                token={token}
-                mutate={mutate}
-              />
-            )
-          })}
+                return (
+                  <TokenTableRow
+                    key={`${token.token?.tokenId}-${i}`}
+                    token={token}
+                    mutate={mutate}
+                  />
+                )
+              })}
+            </>
+          )}
           <div ref={loadMoreRef}></div>
+        </Flex>
+      )}
+      {isValidating && (
+        <Flex align="center" justify="center" css={{ py: '$6' }}>
+          <LoadingSpinner />
         </Flex>
       )}
     </>
@@ -406,10 +415,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               </Button>
             }
           >
-            <DropdownMenuItem>
+            {/* Make the trigger a dropdown menu item */}
+            {/* <DropdownMenuItem>
               {token?.ownership?.floorAsk?.id &&
               token?.token?.tokenId &&
-              token?.token?.collection?.id ? (
+              token?.token?.collection?.id &&
+              isOracleOrder ? (
                 <EditListingModal
                   trigger={<Button>Edit</Button>}
                   listingId={token?.ownership?.floorAsk?.id}
@@ -417,7 +428,53 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   collectionId={token?.token?.collection?.id}
                 />
               ) : null}
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
+
+            <EditListingModal
+              trigger={
+                <DropdownMenuItem css={{ py: '$3' }}>
+                  <Flex align="center" css={{ gap: '$2' }}>
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Box>
+                    <Text>Edit Listing</Text>
+                  </Flex>
+                </DropdownMenuItem>
+              }
+              listingId={token?.ownership?.floorAsk?.id}
+              tokenId={token?.token?.tokenId}
+              collectionId={token?.token?.collection?.id}
+            />
+            <CancelListing
+              listingId={token?.ownership?.floorAsk?.id as string}
+              mutate={mutate}
+              trigger={
+                <Flex>
+                  {!isOracleOrder ? (
+                    <Tooltip
+                      content={
+                        <Text style="body2" as="p">
+                          Cancelling this order requires gas.
+                        </Text>
+                      }
+                    >
+                      <DropdownMenuItem css={{ py: '$3', width: '100%' }}>
+                        <Flex align="center" css={{ gap: '$2' }}>
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon icon={faGasPump} />
+                          </Box>
+                          <Text color="error">Cancel</Text>
+                        </Flex>
+                      </DropdownMenuItem>
+                    </Tooltip>
+                  ) : (
+                    <DropdownMenuItem css={{ py: '$3' }}>
+                      <Text>Cancel</Text>
+                    </DropdownMenuItem>
+                  )}
+                </Flex>
+              }
+            />
           </Dropdown>
         </Flex>
       </TableCell>
