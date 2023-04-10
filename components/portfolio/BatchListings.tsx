@@ -125,7 +125,7 @@ const BatchListings: FC<Props> = ({
       ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
       : '1.3fr .6fr 1.6fr 1fr repeat(2, .9fr) .6fr .3fr'
     : isLargeDevice
-    ? '1.1fr 2.5fr 1.2fr repeat(2, .7fr) .5fr .3fr'
+    ? '1.1fr 2.7fr 1fr repeat(2, .7fr) .5fr .3fr'
     : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
 
   const generateListings = useCallback(() => {
@@ -433,7 +433,7 @@ const BatchListings: FC<Props> = ({
                 ))}
               </Select>
               <Input
-                placeholder="Enter a custom price"
+                placeholder="Set Price for All"
                 type="number"
                 value={globalPrice}
                 onChange={(e) => {
@@ -512,7 +512,9 @@ const BatchListings: FC<Props> = ({
                 amount={totalProfit}
                 logoHeight={18}
                 textStyle={'h6'}
-                css={{ width: 'max-content' }}
+                css={{
+                  width: 'max-content',
+                }}
               />
               <BatchListModal
                 listings={listings}

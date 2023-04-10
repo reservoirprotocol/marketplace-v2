@@ -256,11 +256,11 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
         </Flex>
       </TableCell>
       {displayQuantity ? (
-        <TableCell>
+        <TableCell css={{ minWith: 0, overflow: 'hidden' }}>
           <Flex
             direction="column"
-            align="center"
-            css={{ gap: '$2', minWidth: 0 }}
+            align="start"
+            css={{ gap: '$2', minWidth: 0, overflow: 'hidden' }}
           >
             <Input
               type="number"
@@ -288,7 +288,12 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                 Number(listing?.token?.ownership?.tokenCount) <= 1
               }
             />
-            <Text style="subtitle3" color="subtle" ellipsify>
+            <Text
+              style="subtitle3"
+              color="subtle"
+              ellipsify
+              css={{ width: '100%' }}
+            >
               {listing.token.ownership?.tokenCount} available
             </Text>
           </Flex>
@@ -387,42 +392,56 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
           css={{
             flex: 1,
             width: '100%',
+            whiteSpace: 'nowrap',
           }}
           value={expirationOption?.text || ''}
           onValueChange={handleExpirationChange}
         >
           {expirationOptions.map((option) => (
             <Select.Item key={option.text} value={option.value}>
-              <Select.ItemText>{option.text}</Select.ItemText>
+              <Select.ItemText css={{ whiteSpace: 'nowrap' }}>
+                {option.text}
+              </Select.ItemText>
             </Select.Item>
           ))}
         </Select>
       </TableCell>
-      <TableCell>
-        <Flex align="center" css={{ gap: '$2' }}>
+      <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
+        <Flex
+          align="center"
+          css={{
+            gap: '$2',
+            minWidth: 0,
+            width: '100%',
+            boxSizing: 'border-box',
+          }}
+        >
           <FormatCryptoCurrency
             amount={creatorRoyalties * Number(price)}
             logoHeight={14}
             textStyle="body1"
+            css={{
+              width: '100%',
+            }}
           />
-          <Text style="body1" color="subtle">
+          <Text style="body1" color="subtle" ellipsify>
             ({creatorRoyalties * 100})%
           </Text>
         </Flex>
       </TableCell>
-      <TableCell>
+      <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
         <Flex align="center" css={{ gap: '$2' }}>
           <FormatCryptoCurrency
             amount={marketplaceFee}
             logoHeight={14}
             textStyle="body1"
           />
-          <Text style="body1" color="subtle">
+          <Text style="body1" color="subtle" ellipsify>
             ({marketplaceFeePercent || 0})%
           </Text>
         </Flex>
       </TableCell>
-      <TableCell>
+      <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
         <FormatCryptoCurrency
           amount={profit}
           logoHeight={14}
