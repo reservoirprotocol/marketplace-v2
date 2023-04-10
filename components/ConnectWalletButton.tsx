@@ -1,4 +1,4 @@
-import { ConnectKitButton } from 'connectkit'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 import Box from 'components/primitives/Box'
 import Button from 'components/primitives/Button'
 import { FC } from 'react'
@@ -7,8 +7,8 @@ type Props = {}
 
 export const ConnectWalletButton: FC<Props> = () => {
   return (
-    <ConnectKitButton.Custom>
-      {({ isConnected, chain, show }) => {
+    <ConnectButton.Custom>
+      {({ account, chain, openConnectModal, mounted }) => {
         return (
           <Box
             style={{
@@ -18,12 +18,12 @@ export const ConnectWalletButton: FC<Props> = () => {
             }}
           >
             {(() => {
-              if (!isConnected || !chain) {
+              if (!mounted || !account || !chain) {
                 return (
                   <Button
                     css={{ flex: 1, justifyContent: 'center' }}
                     corners="rounded"
-                    onClick={show}
+                    onClick={openConnectModal}
                     type="button"
                   >
                     Connect Wallet
@@ -34,6 +34,6 @@ export const ConnectWalletButton: FC<Props> = () => {
           </Box>
         )
       }}
-    </ConnectKitButton.Custom>
+    </ConnectButton.Custom>
   )
 }

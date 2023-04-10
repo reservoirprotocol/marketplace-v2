@@ -1,14 +1,19 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
-import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useEffect, useRef, useState } from 'react'
+import {
+  ComponentPropsWithoutRef,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from '../_app'
+import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -17,10 +22,14 @@ import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
 import ChainToggle from 'components/common/ChainToggle'
+import { Head } from 'components/Head'
+import { ChainContext } from 'context/ChainContextProvider'
+import { useRouter } from 'next/router'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
+  const router = useRouter()
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
@@ -34,10 +43,26 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     includeTopBid: true,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
+  const { chain, switchCurrentChain } = useContext(ChainContext)
+
+  useEffect(() => {
+    if (router.query.chain) {
+      let chainIndex: number | undefined
+      for (let i = 0; i < supportedChains.length; i++) {
+        if (supportedChains[i].routePrefix == router.query.chain) {
+          chainIndex = supportedChains[i].id
+        }
+      }
+      if (chainIndex !== -1 && chainIndex) {
+        switchCurrentChain(chainIndex)
+      }
+    }
+  }, [router.query])
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
   }
 
   const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
@@ -60,7 +85,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   }, [loadMoreObserver?.isIntersecting])
 
   let volumeKey: ComponentPropsWithoutRef<
-    typeof TrendingCollectionsList
+    typeof CollectionRankingsTable
   >['volumeKey'] = 'allTime'
 
   switch (sortByTime) {
@@ -77,6 +102,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   return (
     <Layout>
+      <Head />
       <Box
         css={{
           p: 24,
@@ -146,7 +172,7 @@ export const getStaticProps: GetStaticProps<{
     collections: ChainCollections
   }
 }> = async () => {
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
@@ -154,16 +180,16 @@ export const getStaticProps: GetStaticProps<{
       includeTopBid: true,
     }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
-  }
-
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
+    const query = { ...collectionQuery }
+    if (chain.collectionSetId) {
+      query.collectionsSetId = chain.collectionSetId
+    } else if (chain.community) {
+      query.community = chain.community
+    }
     promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
+      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, query, {
         headers: {
           'x-api-key': chain.apiKey || '',
         },

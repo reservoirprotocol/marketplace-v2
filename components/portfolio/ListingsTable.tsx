@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -22,13 +22,9 @@ import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCircleExclamation,
-  faGasPump,
-  faTag,
-} from '@fortawesome/free-solid-svg-icons'
-import { COMMUNITY } from 'pages/_app'
+import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   address: Address | undefined
@@ -37,7 +33,7 @@ type Props = {
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
 const zoneAddresses = [
-  '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192', // Ethereum - 0xe1...92
+  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
   '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
 ]
 export const ListingsTable: FC<Props> = ({ address }) => {
@@ -49,8 +45,9 @@ export const ListingsTable: FC<Props> = ({ address }) => {
     includeCriteriaMetadata: true,
     includeRawData: true,
   }
+  const { chain } = useContext(ChainContext)
 
-  if (COMMUNITY) listingsQuery.community = COMMUNITY
+  if (chain.community) listingsQuery.community = chain.community
 
   const {
     data: listings,
@@ -211,7 +208,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       </Text>
                     }
                   >
-                    <Button css={{ color: '$red11' }} color="gray3">
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
@@ -222,7 +226,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                      justifyContent: 'center',
+                    }}
+                    color="gray3"
+                  >
                     Cancel
                   </Button>
                 )}
@@ -319,7 +330,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       </Text>
                     }
                   >
-                    <Button css={{ color: '$red11' }} color="gray3">
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       <FontAwesomeIcon
                         color="#697177"
                         icon={faGasPump}
@@ -330,7 +348,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                     </Button>
                   </Tooltip>
                 ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                      justifyContent: 'center',
+                    }}
+                    color="gray3"
+                  >
                     Cancel
                   </Button>
                 )}

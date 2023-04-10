@@ -1,8 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
-import TrendingCollectionsList from 'components/home/TrendingCollectionsList'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useContext, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
@@ -10,7 +9,7 @@ import { useAccount } from 'wagmi'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES, COLLECTION_SET_ID, COMMUNITY } from './_app'
+import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
 import ChainToggle from 'components/common/ChainToggle'
@@ -18,6 +17,8 @@ import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
 import { Head } from 'components/Head'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -33,12 +34,15 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 10,
     sortBy: sortByTime,
+    includeTopBid: true,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
   }
 
   const { data, isValidating } = useCollections(collectionQuery, {
@@ -48,7 +52,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collections = data || []
 
   let volumeKey: ComponentPropsWithoutRef<
-    typeof TrendingCollectionsList
+    typeof CollectionRankingsTable
   >['volumeKey'] = 'allTime'
 
   switch (sortByTime) {
@@ -124,7 +128,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
-            <TrendingCollectionsList
+            <CollectionRankingsTable
               collections={collections}
               loading={isValidating}
               volumeKey={volumeKey}
@@ -163,19 +167,20 @@ export const getStaticProps: GetStaticProps<{
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
+      includeTopBid: true,
       limit: 10,
     }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
-  }
-
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
+    const query = { ...collectionQuery }
+    if (chain.collectionSetId) {
+      query.collectionsSetId = chain.collectionSetId
+    } else if (chain.community) {
+      query.community = chain.community
+    }
     promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, collectionQuery, {
+      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, query, {
         headers: {
           'x-api-key': chain.apiKey || '',
         },

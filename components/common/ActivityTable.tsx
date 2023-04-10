@@ -30,6 +30,7 @@ import {
   faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
+import Img from 'components/primitives/Img'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -342,12 +343,18 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       key={activity.txHash}
       css={{ gridTemplateColumns: '.75fr 1.25fr .9fr 1fr 1fr 1fr 1.1fr' }}
     >
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex align="center">
+      <TableCell css={{ color: '$gray11', minWidth: 0 }}>
+        <Flex align="center" title={activityDescription}>
           {activity.type && logos[activity.type]}
           <Text
             style="subtitle1"
-            css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+            ellipsify
+            css={{
+              ml: '$2',
+              color: '$gray11',
+              fontSize: '14px',
+              cursor: 'default',
+            }}
           >
             {activityDescription}
           </Text>
@@ -358,11 +365,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         <Link href={href} passHref>
           <Flex align="center">
             {imageSrc && (
-              <Image
+              <Img
                 style={{ borderRadius: '4px', objectFit: 'cover' }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${activity.token?.tokenName} Token Image`}
+                alt="Activity Token Image"
                 width={48}
                 height={48}
               />
@@ -414,14 +421,23 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <span>-</span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell css={{ minWidth: 0 }}>
         {activity.fromAddress &&
         activity.fromAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               From
             </Text>
-            <Link href={`/profile/${activity.fromAddress}`}>
+            <Link
+              href={`/profile/${activity.fromAddress}`}
+              style={{
+                maxWidth: '100%',
+                minWidth: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               <Text
                 style="subtitle3"
                 css={{
@@ -430,6 +446,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                     color: '$primary10',
                   },
                 }}
+                ellipsify
               >
                 {fromDisplayName}
               </Text>
@@ -439,13 +456,22 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <span>-</span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell css={{ minWidth: 0 }}>
         {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               To
             </Text>
-            <Link href={`/profile/${activity.toAddress}`}>
+            <Link
+              href={`/profile/${activity.toAddress}`}
+              style={{
+                maxWidth: '100%',
+                minWidth: 0,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
               <Text
                 style="subtitle3"
                 css={{
@@ -454,6 +480,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                     color: '$primary10',
                   },
                 }}
+                ellipsify
               >
                 {toDisplayName}
               </Text>
@@ -463,7 +490,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <span>-</span>
         )}
       </TableCell>
-      <TableCell>
+      <TableCell css={{ minWidth: 0 }}>
         <Flex align="center" justify="end" css={{ gap: '$3' }}>
           {!!activity.order?.source?.icon && (
             <img
@@ -473,7 +500,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               alt={`${activity.order?.source?.name} Source`}
             />
           )}
-          <Text style="subtitle3" color="subtle">
+          <Text style="subtitle3" color="subtle" ellipsify>
             {useTimeSince(activity?.timestamp)}
           </Text>
 

@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -21,9 +21,9 @@ import CollectionsTableTimeToggle, {
 } from './CollectionsTableTimeToggle'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
-import { COLLECTION_SET_ID, COMMUNITY } from 'pages/_app'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   address: Address | undefined
@@ -44,10 +44,12 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     includeTopBid: true,
   }
 
-  if (COLLECTION_SET_ID) {
-    collectionQuery.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    collectionQuery.community = COMMUNITY
+  const { chain } = useContext(ChainContext)
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
   }
 
   const {

@@ -5,17 +5,17 @@ import supportedChains from 'utils/chains'
 
 const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
 
-const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  : undefined
-
-const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
-  ? process.env.NEXT_PUBLIC_COMMUNITY
-  : undefined
-
 export type SearchCollection = NonNullable<
   paths['/search/collections/v1']['get']['responses']['200']['schema']['collections']
->[0] & { chainName: string; chainId: number; chainIcon: string }
+>[0] & {
+  chainName: string
+  chainId: number
+  lightChainIcon: string
+  darkChainIcon: string
+  volumeCurrencySymbol: string
+  volumeCurrencyDecimals: number
+  tokenCount: string
+}
 
 type Collection = NonNullable<
   paths['/collections/v5']['get']['responses']['200']['schema']['collections']
@@ -38,21 +38,23 @@ export default async function handler(req: Request) {
       limit: 6,
     }
 
-  if (COLLECTION_SET_ID) {
-    queryParams.collectionsSetId = COLLECTION_SET_ID
-  } else if (COMMUNITY) {
-    queryParams.community = COMMUNITY
-  }
-
   supportedChains.forEach(async (chain) => {
-    const { reservoirBaseUrl, apiKey } = chain
+    const { reservoirBaseUrl, apiKey, collectionSetId, community } = chain
     const headers = {
       headers: {
         'x-api-key': apiKey || '',
       },
     }
+
+    const query = { ...queryParams }
+    if (collectionSetId) {
+      query.collectionsSetId = collectionSetId
+    } else if (community) {
+      query.community = community
+    }
+
     promises.push(
-      fetcher(`${reservoirBaseUrl}/search/collections/v1`, queryParams, headers)
+      fetcher(`${reservoirBaseUrl}/search/collections/v1`, query, headers)
     )
   })
 
@@ -82,7 +84,11 @@ export default async function handler(req: Request) {
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
           chainId: chain.id,
-          chainIcon: chain.iconUrl,
+          lightChainIcon: chain.lightIconUrl,
+          darkChainIcon: chain.darkIconUrl,
+          volumeCurrencySymbol: chain.nativeCurrency.symbol,
+          volumeCurrencyDecimals: chain.nativeCurrency.decimals,
+          tokenCount: collection.tokenCount || '0',
         }
         return {
           type: 'collection',
@@ -91,13 +97,13 @@ export default async function handler(req: Request) {
       })
     })
 
-    let results = await Promise.allSettled(promises).then((results) =>
-      results
+    let results = await Promise.allSettled(promises).then((results) => {
+      return results
         .filter(
           (result) => result.status === 'fulfilled' && result.value.length > 0
         )
         .flatMap((result) => (result as PromiseFulfilledResult<any>).value)
-    )
+    })
 
     if (results.length > 0) {
       searchResults = results
@@ -149,7 +155,12 @@ export default async function handler(req: Request) {
             ...collection,
             chainName: supportedChains[index].name.toLowerCase(),
             chainId: supportedChains[index].id,
-            chainIcon: supportedChains[index].iconUrl,
+            lightChainIcon: supportedChains[index].lightIconUrl,
+            darkChainIcon: supportedChains[index].darkIconUrl,
+            volumeCurrencySymbol: supportedChains[index].nativeCurrency.symbol,
+            volumeCurrencyDecimals:
+              supportedChains[index].nativeCurrency.decimals,
+            tokenCount: collection.tokenCount,
             allTimeUsdVolume:
               (collection.allTimeVolume &&
                 collection.allTimeVolume *
@@ -161,10 +172,12 @@ export default async function handler(req: Request) {
       searchResults = [...searchResults, ...chainSearchResults]
     })
 
-    // Sort results by all time usd volume
-    searchResults = searchResults.sort(
-      (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
-    )
+    // Sort results by all time usd volume only if usdCoinPrices is not null
+    if (usdCoinPrices) {
+      searchResults = searchResults.sort(
+        (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
+      )
+    }
   }
 
   return new Response(
