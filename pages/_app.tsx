@@ -33,6 +33,7 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import { LogLevel } from '@reservoir0x/reservoir-sdk'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -159,6 +160,7 @@ function MyApp({
             }),
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
+            logLevel: LogLevel.Verbose,
           }}
           theme={reservoirKitTheme}
         >
