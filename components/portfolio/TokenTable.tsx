@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -28,6 +28,7 @@ import {
   faEllipsis,
   faGasPump,
   faMagnifyingGlass,
+  faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
@@ -39,6 +40,10 @@ import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { zoneAddresses } from 'utils/zoneAddresses'
 import CancelListing from 'components/buttons/CancelListing'
+import { ToastContext } from 'context/ToastContextProvider'
+import fetcher from 'utils/fetcher'
+import { DATE_REGEX, timeTill } from 'utils/till'
+import { spin } from 'components/common/LoadingSpinner'
 
 type Props = {
   address: Address | undefined
@@ -138,8 +143,11 @@ type TokenTableRowProps = {
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
-  const { routePrefix } = useMarketplaceChain()
+  const { routePrefix, proxyApi } = useMarketplaceChain()
+  const { addToast } = useContext(ToastContext)
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -152,6 +160,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
 
   const isOracleOrder =
     orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+
+  const contract = token.token?.collection?.id
+    ? token.token?.collection.id?.split(':')[0]
+    : undefined
 
   if (isSmallDevice) {
     return (
@@ -404,73 +416,135 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             buttonChildren="List"
             mutate={mutate}
           />
-          {token?.ownership?.floorAsk?.id ? (
-            <Dropdown
-              trigger={
-                <Button
-                  color="gray3"
-                  size="xs"
-                  css={{ width: 44, justifyContent: 'center' }}
-                >
-                  <FontAwesomeIcon icon={faEllipsis} />
-                </Button>
-              }
-            >
-              {isOracleOrder &&
-              token?.ownership?.floorAsk?.id &&
-              token?.token?.tokenId &&
-              token?.token?.collection?.id ? (
-                <EditListingModal
-                  trigger={
-                    <DropdownMenuItem css={{ py: '$3' }}>
-                      <Flex align="center" css={{ gap: '$2' }}>
-                        <Box css={{ color: '$gray10' }}>
-                          <FontAwesomeIcon icon={faEdit} />
-                        </Box>
-                        <Text>Edit Listing</Text>
-                      </Flex>
-                    </DropdownMenuItem>
+          <Dropdown
+            trigger={
+              <Button
+                color="gray3"
+                size="xs"
+                css={{ width: 44, justifyContent: 'center' }}
+              >
+                <FontAwesomeIcon icon={faEllipsis} />
+              </Button>
+            }
+          >
+            <DropdownMenuItem
+              css={{ py: '$3', width: '100%' }}
+              onClick={(e) => {
+                if (isRefreshing) {
+                  e.preventDefault()
+                  return
+                }
+                setIsRefreshing(true)
+                fetcher(
+                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  undefined,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      token: `${contract}:${token.token?.tokenId}`,
+                    }),
                   }
-                  listingId={token?.ownership?.floorAsk?.id}
-                  tokenId={token?.token?.tokenId}
-                  collectionId={token?.token?.collection?.id}
-                />
-              ) : null}
+                )
+                  .then(({ data, response }) => {
+                    if (response.status === 200) {
+                      addToast?.({
+                        title: 'Refresh token',
+                        description:
+                          'Request to refresh this token was accepted.',
+                      })
+                    } else {
+                      throw data
+                    }
+                    setIsRefreshing(false)
+                  })
+                  .catch((e) => {
+                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
 
-              {token?.ownership?.floorAsk?.id ? (
-                <CancelListing
-                  listingId={token?.ownership?.floorAsk?.id as string}
-                  mutate={mutate}
-                  trigger={
-                    <Flex>
-                      {!isOracleOrder ? (
-                        <Tooltip
-                          content={
-                            <Text style="body2" as="p">
-                              Cancelling this order requires gas.
-                            </Text>
-                          }
-                        >
-                          <DropdownMenuItem css={{ py: '$3', width: '100%' }}>
-                            <Flex align="center" css={{ gap: '$2' }}>
-                              <Box css={{ color: '$gray10' }}>
-                                <FontAwesomeIcon icon={faGasPump} />
-                              </Box>
-                              <Text color="error">Cancel</Text>
-                            </Flex>
-                          </DropdownMenuItem>
-                        </Tooltip>
-                      ) : (
-                        <DropdownMenuItem css={{ py: '$3' }}>
-                          <Text>Cancel</Text>
-                        </DropdownMenuItem>
-                      )}
+                    addToast?.({
+                      title: 'Refresh token failed',
+                      description: ratelimit
+                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
+                            ratelimit
+                          )}.`
+                        : `This token was recently refreshed. Please try again later.`,
+                    })
+
+                    setIsRefreshing(false)
+                    throw e
+                  })
+              }}
+            >
+              <Flex align="center" css={{ gap: '$2' }}>
+                <Box
+                  css={{
+                    color: '$gray10',
+                    animation: isRefreshing
+                      ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+                      : 'none',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                </Box>
+                <Text>Refresh</Text>
+              </Flex>
+            </DropdownMenuItem>
+            {isOracleOrder &&
+            token?.ownership?.floorAsk?.id &&
+            token?.token?.tokenId &&
+            token?.token?.collection?.id ? (
+              <EditListingModal
+                trigger={
+                  <DropdownMenuItem css={{ py: '$3' }}>
+                    <Flex align="center" css={{ gap: '$2' }}>
+                      <Box css={{ color: '$gray10' }}>
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Box>
+                      <Text>Edit Listing</Text>
                     </Flex>
-                  }
-                />
-              ) : null}
-            </Dropdown>
-          ) : null}
+                  </DropdownMenuItem>
+                }
+                listingId={token?.ownership?.floorAsk?.id}
+                tokenId={token?.token?.tokenId}
+                collectionId={token?.token?.collection?.id}
+              />
+            ) : null}
+
+            {token?.ownership?.floorAsk?.id ? (
+              <CancelListing
+                listingId={token?.ownership?.floorAsk?.id as string}
+                mutate={mutate}
+                trigger={
+                  <Flex>
+                    {!isOracleOrder ? (
+                      <Tooltip
+                        content={
+                          <Text style="body2" as="p">
+                            Cancelling this order requires gas.
+                          </Text>
+                        }
+                      >
+                        <DropdownMenuItem css={{ py: '$3', width: '100%' }}>
+                          <Flex align="center" css={{ gap: '$2' }}>
+                            <Box css={{ color: '$gray10' }}>
+                              <FontAwesomeIcon icon={faGasPump} />
+                            </Box>
+                            <Text color="error">Cancel</Text>
+                          </Flex>
+                        </DropdownMenuItem>
+                      </Tooltip>
+                    ) : (
+                      <DropdownMenuItem css={{ py: '$3' }}>
+                        <Text>Cancel</Text>
+                      </DropdownMenuItem>
+                    )}
+                  </Flex>
+                }
+              />
+            ) : null}
+          </Dropdown>
         </Flex>
       </TableCell>
     </TableRow>
