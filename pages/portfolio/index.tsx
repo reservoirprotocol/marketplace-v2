@@ -1,32 +1,50 @@
-import { NextPage } from 'next'
-import { Text, Flex, Box, Button } from '../../components/primitives'
-import Layout from 'components/Layout'
-import { useMediaQuery } from 'react-responsive'
-import { useContext, useState } from 'react'
-import { useAccount } from 'wagmi'
-import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
-import * as Tabs from '@radix-ui/react-tabs'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
-import { useMounted } from '../../hooks'
-import { TokenTable } from 'components/portfolio/TokenTable'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
-import { TokenFilters } from 'components/common/TokenFilters'
-import { FilterButton } from 'components/common/FilterButton'
-import { ListingsTable } from 'components/portfolio/ListingsTable'
-import { OffersTable } from 'components/portfolio/OffersTable'
-import { CollectionsTable } from 'components/portfolio/CollectionsTable'
-import { faChevronDown, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import * as Tabs from '@radix-ui/react-tabs'
+import {
+  useCollectionActivity,
+  useUserCollections,
+} from '@reservoir0x/reservoir-kit-ui'
+import { ActivityFilters } from 'components/common/ActivityFilters'
 import ChainToggle from 'components/common/ChainToggle'
-import { Head } from 'components/Head'
-import { ChainContext } from 'context/ChainContextProvider'
+import { FilterButton } from 'components/common/FilterButton'
+import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
+import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import PortfolioSortDropdown, {
   PortfolioSortingOption,
 } from 'components/common/PortfolioSortDropdown'
+import { TokenFilters } from 'components/common/TokenFilters'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { Head } from 'components/Head'
+import Layout from 'components/Layout'
+import { CollectionsTable } from 'components/portfolio/CollectionsTable'
+import { ListingsTable } from 'components/portfolio/ListingsTable'
+import { OffersTable } from 'components/portfolio/OffersTable'
+import { TokenTable } from 'components/portfolio/TokenTable'
+import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
+import { UserActivityTable } from 'components/profile/UserActivityTable'
+import { ChainContext } from 'context/ChainContextProvider'
+import { NextPage } from 'next'
+import { useContext, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
+import { useAccount } from 'wagmi'
+import { Box, Flex, Text } from '../../components/primitives'
+import { useMounted } from '../../hooks'
+
+type ActivityTypes = Exclude<
+  NonNullable<
+    NonNullable<
+      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
+    >['types']
+  >,
+  string
+>
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
+
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
@@ -91,6 +109,7 @@ const IndexPage: NextPage = () => {
                     <TabsTrigger value="collections">Collections</TabsTrigger>
                     <TabsTrigger value="listings">Listings</TabsTrigger>
                     <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                    <TabsTrigger value="activity">Activity</TabsTrigger>
                   </TabsList>
                 </Flex>
                 <TabsContent value="items">
@@ -167,6 +186,46 @@ const IndexPage: NextPage = () => {
                 </TabsContent>
                 <TabsContent value="offers">
                   <OffersTable address={address} />
+                </TabsContent>
+                <TabsContent value="activity">
+                  <Flex
+                    css={{
+                      gap: activityFiltersOpen ? '$5' : '',
+                      position: 'relative',
+                    }}
+                  >
+                    {!isSmallDevice && (
+                      <ActivityFilters
+                        open={activityFiltersOpen}
+                        setOpen={setActivityFiltersOpen}
+                        activityTypes={activityTypes}
+                        setActivityTypes={setActivityTypes}
+                      />
+                    )}
+                    <Box
+                      css={{
+                        flex: 1,
+                        gap: '$4',
+                        pb: '$5',
+                      }}
+                    >
+                      {isSmallDevice ? (
+                        <MobileActivityFilters
+                          activityTypes={activityTypes}
+                          setActivityTypes={setActivityTypes}
+                        />
+                      ) : (
+                        <FilterButton
+                          open={activityFiltersOpen}
+                          setOpen={setActivityFiltersOpen}
+                        />
+                      )}
+                      <UserActivityTable
+                        user={address}
+                        activityTypes={activityTypes}
+                      />
+                    </Box>
+                  </Flex>
                 </TabsContent>
               </Tabs.Root>
             </>
