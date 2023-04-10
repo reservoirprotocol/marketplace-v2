@@ -221,6 +221,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       bp1200: '(min-width: 1200px)',
       bp1300: '(min-width: 1300px)',
       bp1400: '(min-width: 1400px)',
+      bp1500: '(min-width: 1500px)',
       motion: '(prefers-reduced-motion)',
       hover: '(any-hover: hover)',
       dark: '(prefers-color-scheme: dark)',
