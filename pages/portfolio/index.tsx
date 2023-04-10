@@ -66,6 +66,11 @@ const IndexPage: NextPage = () => {
     setSelectedItems([])
   }, [chain])
 
+  useEffect(() => {
+    setSelectedItems([])
+    setShowListingPage(false)
+  }, [address])
+
   if (!isMounted) {
     return null
   }
