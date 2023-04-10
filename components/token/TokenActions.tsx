@@ -9,6 +9,7 @@ import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
+import { zoneAddresses } from 'utils/zoneAddresses'
 import { useAccount } from 'wagmi'
 
 type Props = {
@@ -18,11 +19,6 @@ type Props = {
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
 }
-
-const zoneAddresses = [
-  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
-  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
-]
 
 export const TokenActions: FC<Props> = ({
   token,

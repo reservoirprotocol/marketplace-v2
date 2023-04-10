@@ -34,6 +34,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
+import { zoneAddresses } from 'utils/zoneAddresses'
 
 type Props = {
   address: Address | undefined
@@ -58,6 +59,7 @@ export const TokenTable: FC<Props> = ({
     sortBy: sortBy,
     collection: filterCollection,
     includeTopBid: true,
+    includeRawData: true,
   }
 
   const { chain } = useContext(ChainContext)
@@ -135,6 +137,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       ? token?.token?.image || token?.token?.collection?.imageUrl
       : token?.token?.collection?.imageUrl
   ) as string
+
+  const orderZone = token?.ownership?.floorAsk?.rawData?.zone
+  const orderKind = token?.ownership?.floorAsk?.rawData?.kind
+
+  const isOracleOrder =
+    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
 
   if (isSmallDevice) {
     return (
