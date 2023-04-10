@@ -404,78 +404,73 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             buttonChildren="List"
             mutate={mutate}
           />
-          <Dropdown
-            trigger={
-              <Button
-                color="gray3"
-                size="xs"
-                css={{ width: 44, justifyContent: 'center' }}
-              >
-                <FontAwesomeIcon icon={faEllipsis} />
-              </Button>
-            }
-          >
-            {/* Make the trigger a dropdown menu item */}
-            {/* <DropdownMenuItem>
-              {token?.ownership?.floorAsk?.id &&
+          {token?.ownership?.floorAsk?.id ? (
+            <Dropdown
+              trigger={
+                <Button
+                  color="gray3"
+                  size="xs"
+                  css={{ width: 44, justifyContent: 'center' }}
+                >
+                  <FontAwesomeIcon icon={faEllipsis} />
+                </Button>
+              }
+            >
+              {isOracleOrder &&
+              token?.ownership?.floorAsk?.id &&
               token?.token?.tokenId &&
-              token?.token?.collection?.id &&
-              isOracleOrder ? (
+              token?.token?.collection?.id ? (
                 <EditListingModal
-                  trigger={<Button>Edit</Button>}
+                  trigger={
+                    <DropdownMenuItem css={{ py: '$3' }}>
+                      <Flex align="center" css={{ gap: '$2' }}>
+                        <Box css={{ color: '$gray10' }}>
+                          <FontAwesomeIcon icon={faEdit} />
+                        </Box>
+                        <Text>Edit Listing</Text>
+                      </Flex>
+                    </DropdownMenuItem>
+                  }
                   listingId={token?.ownership?.floorAsk?.id}
                   tokenId={token?.token?.tokenId}
                   collectionId={token?.token?.collection?.id}
                 />
               ) : null}
-            </DropdownMenuItem> */}
 
-            <EditListingModal
-              trigger={
-                <DropdownMenuItem css={{ py: '$3' }}>
-                  <Flex align="center" css={{ gap: '$2' }}>
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Box>
-                    <Text>Edit Listing</Text>
-                  </Flex>
-                </DropdownMenuItem>
-              }
-              listingId={token?.ownership?.floorAsk?.id}
-              tokenId={token?.token?.tokenId}
-              collectionId={token?.token?.collection?.id}
-            />
-            <CancelListing
-              listingId={token?.ownership?.floorAsk?.id as string}
-              mutate={mutate}
-              trigger={
-                <Flex>
-                  {!isOracleOrder ? (
-                    <Tooltip
-                      content={
-                        <Text style="body2" as="p">
-                          Cancelling this order requires gas.
-                        </Text>
-                      }
-                    >
-                      <DropdownMenuItem css={{ py: '$3', width: '100%' }}>
-                        <Flex align="center" css={{ gap: '$2' }}>
-                          <Box css={{ color: '$gray10' }}>
-                            <FontAwesomeIcon icon={faGasPump} />
-                          </Box>
-                          <Text color="error">Cancel</Text>
-                        </Flex>
-                      </DropdownMenuItem>
-                    </Tooltip>
-                  ) : (
-                    <DropdownMenuItem css={{ py: '$3' }}>
-                      <Text>Cancel</Text>
-                    </DropdownMenuItem>
-                  )}
-                </Flex>
-              }
-            />
-          </Dropdown>
+              {token?.ownership?.floorAsk?.id ? (
+                <CancelListing
+                  listingId={token?.ownership?.floorAsk?.id as string}
+                  mutate={mutate}
+                  trigger={
+                    <Flex>
+                      {!isOracleOrder ? (
+                        <Tooltip
+                          content={
+                            <Text style="body2" as="p">
+                              Cancelling this order requires gas.
+                            </Text>
+                          }
+                        >
+                          <DropdownMenuItem css={{ py: '$3', width: '100%' }}>
+                            <Flex align="center" css={{ gap: '$2' }}>
+                              <Box css={{ color: '$gray10' }}>
+                                <FontAwesomeIcon icon={faGasPump} />
+                              </Box>
+                              <Text color="error">Cancel</Text>
+                            </Flex>
+                          </DropdownMenuItem>
+                        </Tooltip>
+                      ) : (
+                        <DropdownMenuItem css={{ py: '$3' }}>
+                          <Text>Cancel</Text>
+                        </DropdownMenuItem>
+                      )}
+                    </Flex>
+                  }
+                />
+              ) : null}
+            </Dropdown>
+          ) : null}
         </Flex>
       </TableCell>
     </TableRow>
