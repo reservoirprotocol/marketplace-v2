@@ -2012,10 +2012,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@0.14.3":
-  version "0.14.3"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.14.3.tgz#988eaa6cd4257b128987c049cb8fa131355ad939"
-  integrity sha512-B0K7RH+OvQPb9tf8ABpdICDSPC//nBl9ApnKcRcWx9Ie4Oqg3QIKw21zQt1V5tDNI2M5991/BfxdkgV1evFpiQ==
+"@reservoir0x/reservoir-kit-ui@0.14.5":
+  version "0.14.5"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.14.5.tgz#9fbf1703b57d4655b60b6ed034858155d90235cb"
+  integrity sha512-q+Vl4gvsIYWJpeKg77LWOsdIqoh79yBvDgTjDFcMNALYFfvgVMnOoTktr4Zbp9Mg/csvfhgbGUAu7morfbte+A==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"

@@ -307,7 +307,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       key={token?.token?.tokenId}
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
-      <TableCell css={{ minWidth: 0 }}>
+      <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
         <Flex align="center" css={{ gap: '$3' }}>
           <Checkbox
             checked={isSelectedItem(token)}

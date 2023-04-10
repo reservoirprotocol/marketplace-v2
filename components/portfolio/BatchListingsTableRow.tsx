@@ -225,7 +225,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
         },
       }}
     >
-      <TableCell>
+      <TableCell css={{ overflow: 'hidden', minWidth: 0 }}>
         <Flex align="center" css={{ gap: '$3' }}>
           <img
             src={marketplace?.imageUrl}

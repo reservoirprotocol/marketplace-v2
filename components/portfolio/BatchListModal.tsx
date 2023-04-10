@@ -21,13 +21,14 @@ import { useMarketplaceChain } from 'hooks'
 import { UserToken } from 'pages/portfolio'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import { ApprovalCollapsible } from './ApprovalCollapsible'
 
 enum BatchListStep {
   Approving,
   Complete,
 }
 
-type BatchListingData = {
+export type BatchListingData = {
   listing: Listings[0]
   token: UserToken
 }
@@ -164,7 +165,6 @@ const BatchListModal: FC<Props> = ({
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
         quantity: listing.quantity,
-        // automatedRoyalties: true // TODO: how do we want to handle royalties?
       }
 
       if (expirationTime) {
@@ -215,39 +215,19 @@ const BatchListModal: FC<Props> = ({
             incompleteStepItemIndex === null
           ) {
             const currentStep = executableSteps[executableSteps.length - 1]
-            const currentStepItem = currentStep.items
-              ? currentStep.items[currentStep.items.length]
-              : null
             setBatchListStep(BatchListStep.Complete)
-            const listings =
-              currentStepItem && currentStepItem.orderIndexes !== undefined
-                ? batchListingData.filter((_, i) =>
-                    currentStepItem.orderIndexes?.includes(i)
-                  )
-                : [batchListingData[batchListingData.length - 1]]
             setStepData({
               totalSteps: stepCount,
               stepProgress: stepCount,
               currentStep,
-              listings: listings,
+              listings: batchListingData,
             })
           } else {
-            const currentStep = executableSteps[incompleteStepIndex]
-            const currentStepItem = currentStep.items
-              ? currentStep.items[incompleteStepItemIndex]
-              : null
-            const listings =
-              currentStepItem && currentStepItem.orderIndexes !== undefined
-                ? batchListingData.filter((_, i) =>
-                    currentStepItem.orderIndexes?.includes(i)
-                  )
-                : [batchListingData[batchListingData.length - 1]]
-
             setStepData({
               totalSteps: stepCount,
               stepProgress: incompleteStepIndex,
               currentStep: executableSteps[incompleteStepIndex],
-              listings: listings,
+              listings: batchListingData,
             })
           }
         },
@@ -306,55 +286,81 @@ const BatchListModal: FC<Props> = ({
       {batchListStep === BatchListStep.Approving && (
         <Flex
           direction="column"
+          justify="start"
+          align="center"
           css={{ flex: 1, textAlign: 'center', p: '$4', gap: '$4' }}
         >
-          <ProgressBar value={1} max={2} />
-          {transactionError && <ErrorWell message={transactionError.message} />}
+          {transactionError && (
+            <ErrorWell
+              message={transactionError.message}
+              css={{ width: '100%' }}
+            />
+          )}
           {!stepData && !transactionError && (
-            <Flex
-              css={{ height: '100%', py: '$6' }}
-              justify="center"
-              align="center"
-            >
+            <Flex css={{ height: '100%', py: '$6' }} align="center">
               <LoadingSpinner />
             </Flex>
           )}
           {stepData && (
-            <Flex direction="column" align="center">
-              <Text
-                css={{
-                  textAlign: 'center',
-                  my: 28,
-                  maxWidth: 400,
-                }}
-                style="subtitle1"
-              >
-                {stepTitle}
-              </Text>
-              <TransactionProgress
-                justify="center"
-                fromImgs={stepData.listings.map(
-                  (listing) => listing.token.token?.image as string
-                )}
-                toImgs={uniqueMarketplaces.map((marketplace) => {
-                  return marketplace?.imageUrl || ''
-                })}
-              />
-              <Text
-                css={{
-                  textAlign: 'center',
-                  mt: 24,
-                  maxWidth: 395,
-                  mx: 'auto',
-                  mb: '$4',
-                }}
-                style="body2"
-                color="subtle"
-              >
-                {stepData?.currentStep.description}
-              </Text>
+            <Flex
+              direction="column"
+              align="center"
+              css={{ maxHeight: '40vh', overflowY: 'auto', width: '100%' }}
+            >
+              {stepData.currentStep.kind === 'signature' ? (
+                <Text
+                  css={{
+                    textAlign: 'center',
+                    my: 28,
+                    maxWidth: 400,
+                  }}
+                  style="subtitle1"
+                >
+                  {stepTitle}
+                </Text>
+              ) : null}
+              <Flex direction="column" css={{ gap: '$3', width: '100%' }}>
+                {stepData.currentStep.kind === 'transaction'
+                  ? stepData.currentStep.items?.map((item, i) => {
+                      if (item.data)
+                        return (
+                          <ApprovalCollapsible
+                            key={i}
+                            item={item}
+                            batchListingData={stepData.listings}
+                            selectedMarketplaces={selectedMarketplaces}
+                            open={item.status == 'incomplete'}
+                          />
+                        )
+                    })
+                  : null}
+              </Flex>
+              {stepData.currentStep.kind === 'signature' ? (
+                <TransactionProgress
+                  justify="center"
+                  css={{ mb: '$3' }}
+                  fromImgs={stepData.listings.map(
+                    (listing) => listing.token.token?.image as string
+                  )}
+                  toImgs={uniqueMarketplaces.map((marketplace) => {
+                    return marketplace?.imageUrl || ''
+                  })}
+                />
+              ) : null}
             </Flex>
           )}
+
+          <Text
+            css={{
+              textAlign: 'center',
+              maxWidth: 395,
+              mx: 'auto',
+            }}
+            style="body2"
+            color="subtle"
+          >
+            {stepData?.currentStep.description}
+          </Text>
 
           {!transactionError ? (
             <Button
