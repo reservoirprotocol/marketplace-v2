@@ -1,4 +1,11 @@
-import { arbitrum, goerli, mainnet, polygon, Chain } from 'wagmi/chains'
+import {
+  arbitrum,
+  goerli,
+  mainnet,
+  polygon,
+  optimism,
+  Chain,
+} from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -68,6 +75,17 @@ export default [
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
     coingeckoId: 'arbitrum-iou',
+  },
+  {
+    ...optimism,
+    name: 'Optimism',
+    lightIconUrl: '/icons/optimism-icon.svg',
+    darkIconUrl: '/icons/optimism-icon.svg',
+    reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
+    proxyApi: '/api/reservoir/optimism',
+    routePrefix: 'optimism',
+    apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
+    coingeckoId: 'optimism',
   },
   {
     ...goerli,
