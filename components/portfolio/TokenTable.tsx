@@ -103,27 +103,32 @@ export const TokenTable: FC<Props> = ({
           </Text>
           <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
-      ) : isLoading || isValidating ? (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
-          <LoadingSpinner />
-        </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
-          <TableHeading />
-          {tokens.map((token, i) => {
-            if (!token) return null
+          {isLoading ? null : (
+            <>
+              <TableHeading />
+              {tokens.map((token, i) => {
+                if (!token) return null
 
-            return (
-              <TokenTableRow
-                key={`${token.token?.tokenId}-${i}`}
-                token={token}
-                mutate={mutate}
-                selectedItems={selectedItems}
-                setSelectedItems={setSelectedItems}
-              />
-            )
-          })}
+                return (
+                  <TokenTableRow
+                    key={`${token.token?.tokenId}-${i}`}
+                    token={token}
+                    mutate={mutate}
+                    selectedItems={selectedItems}
+                    setSelectedItems={setSelectedItems}
+                  />
+                )
+              })}
+            </>
+          )}
           <div ref={loadMoreRef}></div>
+        </Flex>
+      )}
+      {isValidating && (
+        <Flex align="center" justify="center" css={{ py: '$6' }}>
+          <LoadingSpinner />
         </Flex>
       )}
     </>
