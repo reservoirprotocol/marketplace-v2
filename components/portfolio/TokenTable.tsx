@@ -156,7 +156,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   ) as string
 
   const orderZone = token?.ownership?.floorAsk?.rawData?.zone
-  const orderKind = token?.ownership?.floorAsk?.rawData?.kind
+  // @ts-ignore
+  const orderKind = token?.ownership?.floorAsk?.kind
 
   const isOracleOrder =
     orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
@@ -497,14 +498,28 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             token?.token?.collection?.id ? (
               <EditListingModal
                 trigger={
-                  <DropdownMenuItem css={{ py: '$3' }}>
-                    <Flex align="center" css={{ gap: '$2' }}>
-                      <Box css={{ color: '$gray10' }}>
-                        <FontAwesomeIcon icon={faEdit} />
-                      </Box>
-                      <Text>Edit Listing</Text>
-                    </Flex>
-                  </DropdownMenuItem>
+                  <Flex
+                    align="center"
+                    css={{
+                      gap: '$2',
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Box>
+                    <Text>Edit Listing</Text>
+                  </Flex>
                 }
                 listingId={token?.ownership?.floorAsk?.id}
                 tokenId={token?.token?.tokenId}
@@ -514,10 +529,24 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
 
             {token?.ownership?.floorAsk?.id ? (
               <CancelListing
-                listingId={token?.ownership?.floorAsk?.id as string}
+                listingId={token.ownership.floorAsk.id as string}
                 mutate={mutate}
                 trigger={
-                  <Flex>
+                  <Flex
+                    css={{
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
                     {!isOracleOrder ? (
                       <Tooltip
                         content={
@@ -526,19 +555,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                           </Text>
                         }
                       >
-                        <DropdownMenuItem css={{ py: '$3', width: '100%' }}>
-                          <Flex align="center" css={{ gap: '$2' }}>
-                            <Box css={{ color: '$gray10' }}>
-                              <FontAwesomeIcon icon={faGasPump} />
-                            </Box>
-                            <Text color="error">Cancel</Text>
-                          </Flex>
-                        </DropdownMenuItem>
+                        <Flex align="center" css={{ gap: '$2' }}>
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon icon={faGasPump} />
+                          </Box>
+                          <Text color="error">Cancel</Text>
+                        </Flex>
                       </Tooltip>
                     ) : (
-                      <DropdownMenuItem css={{ py: '$3' }}>
-                        <Text>Cancel</Text>
-                      </DropdownMenuItem>
+                      <Text color="error">Cancel</Text>
                     )}
                   </Flex>
                 }
