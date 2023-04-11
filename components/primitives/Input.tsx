@@ -20,7 +20,7 @@ const StyledInput = styled('input', {
   backgroundColor: '$gray3',
   $$focusColor: '$colors$primary8',
   '&::placeholder': { color: '$gray10' },
-  '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },
+  '&:focus': { boxShadow: 'inset 0 0 0 2px $$focusColor' },
   '&:disabled': {
     backgroundColor: '$gray2',
     color: '$gray9',

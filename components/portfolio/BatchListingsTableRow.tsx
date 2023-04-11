@@ -414,6 +414,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
             minWidth: 0,
             width: '100%',
             boxSizing: 'border-box',
+            mt: '$3',
           }}
         >
           <FormatCryptoCurrency
@@ -430,7 +431,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
         </Flex>
       </TableCell>
       <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
-        <Flex align="center" css={{ gap: '$2' }}>
+        <Flex align="center" css={{ gap: '$2', mt: '$3' }}>
           <FormatCryptoCurrency
             amount={marketplaceFee}
             logoHeight={14}
@@ -442,11 +443,13 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
         </Flex>
       </TableCell>
       <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
-        <FormatCryptoCurrency
-          amount={profit}
-          logoHeight={14}
-          textStyle="body1"
-        />
+        <Flex css={{ mt: '$3' }}>
+          <FormatCryptoCurrency
+            amount={profit}
+            logoHeight={14}
+            textStyle="body1"
+          />
+        </Flex>
       </TableCell>
       <TableCell css={{ marginLeft: 'auto' }}>
         <Button

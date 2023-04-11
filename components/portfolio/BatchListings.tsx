@@ -25,11 +25,12 @@ import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { UserToken } from 'pages/portfolio'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
-import { useChainCurrency } from 'hooks'
+import { useChainCurrency, useMarketplaceChain } from 'hooks'
 import BatchListModal from 'components/portfolio/BatchListModal'
 import { useMediaQuery } from 'react-responsive'
 import { BatchListingsTableHeading } from './BatchListingsTableHeading'
 import { BatchListingsTableRow } from './BatchListingsTableRow'
+import wrappedContracts from 'utils/wrappedContracts'
 
 export type BatchListing = {
   token: UserToken
@@ -96,6 +97,8 @@ const BatchListings: FC<Props> = ({
 
   const isLargeDevice = useMediaQuery({ minWidth: 1400 })
 
+  const chain = useMarketplaceChain()
+
   const chainCurrency = useChainCurrency()
   const defaultCurrency = {
     contract: chainCurrency.address,
@@ -105,10 +108,9 @@ const BatchListings: FC<Props> = ({
   const currencies: ListingCurrencies = [
     { ...defaultCurrency },
     {
-      contract: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
+      contract: wrappedContracts[chain.id],
       decimals: 18,
-      coinGeckoId: 'weth',
-      symbol: 'WETH',
+      symbol: `W${defaultCurrency.symbol}`,
     },
   ]
 
@@ -154,21 +156,35 @@ const BatchListings: FC<Props> = ({
   }, [selectedItems, selectedMarketplaces, generateListings])
 
   useEffect(() => {
-    const totalProfit = listings.reduce((total, listing) => {
-      const listingCreatorRoyalties =
-        (Number(listing.price) *
-          listing.quantity *
-          (listing?.token?.token?.collection?.royaltiesBps || 0)) /
-        10000
+    const maxProfit = selectedItems.reduce((total, item) => {
+      const itemId = `${item.token?.contract}:${item.token?.tokenId}`
+      const itemListings = listings.filter(
+        (listing) =>
+          `${listing.token.token?.contract}:${listing.token.token?.tokenId}` ===
+          itemId
+      )
 
-      const profit =
-        Number(listing.price) * listing.quantity -
-        (listing.marketplaceFee || 0) -
-        listingCreatorRoyalties
-      return total + profit
+      const profits = itemListings.map((listing) => {
+        const listingCreatorRoyalties =
+          (Number(listing.price) *
+            listing.quantity *
+            (listing?.token?.token?.collection?.royaltiesBps || 0)) /
+          10000
+
+        const profit =
+          Number(listing.price) * listing.quantity -
+          (listing.marketplaceFee || 0) -
+          listingCreatorRoyalties
+
+        return profit
+      })
+
+      const highestProfit = Math.max(...profits)
+
+      return total + highestProfit
     }, 0)
 
-    setTotalProfit(totalProfit)
+    setTotalProfit(maxProfit)
   }, [listings, selectedMarketplaces, globalPrice])
 
   useEffect(() => {
@@ -385,11 +401,11 @@ const BatchListings: FC<Props> = ({
                 trigger={
                   <Select.Trigger
                     css={{
-                      width: 115,
+                      width: 130,
                     }}
                   >
                     <Select.Value asChild>
-                      <Flex align="center">
+                      <Flex align="center" justify="center">
                         <CryptoCurrencyIcon
                           address={currency.contract}
                           css={{ height: 18 }}
@@ -507,7 +523,7 @@ const BatchListings: FC<Props> = ({
             }}
           >
             <Flex align="center" css={{ gap: 24, marginLeft: 'auto' }}>
-              <Text style="body1">Total Profit</Text>
+              <Text style="body1">Max Profit</Text>
               <FormatCryptoCurrency
                 amount={totalProfit}
                 logoHeight={18}
