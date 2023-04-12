@@ -71,9 +71,11 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
       trigger={trigger}
       tokenId={token?.token?.tokenId}
       collectionId={token?.token?.collection?.id}
+      referrer={"0x4c31e558393312a1d3bE14C45A3656A2e915F53D"}
+      referrerFeeBps={250}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
-      // referrer={"0xabc"}
+      // referrer={"0x4c31e558393312a1d3bE14C45A3656A2e915F53D"}
       // referrerFeeBps={250}
       onClose={(data, stepData, currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
