@@ -1,4 +1,4 @@
-import { styled } from '@stitches/react'
+import { keyframes, styled } from '@stitches/react'
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'
 import {
   ComponentPropsWithoutRef,
@@ -9,10 +9,25 @@ import {
 } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
+export const slideDown = keyframes({
+  from: { height: 0 },
+  to: { height: 'var(--radix-collapsible-content-height)' },
+})
+
+export const slideUp = keyframes({
+  from: { height: 'var(--radix-collapsible-content-height)' },
+  to: { height: 0 },
+})
+
 const CollapsibleContent = styled(CollapsiblePrimitive.CollapsibleContent, {
   background: 'transparent',
   border: 'none',
   borderRadius: 0,
+})
+
+const CollapsibleRoot = styled(CollapsiblePrimitive.Root, {
+  borderRadius: 8,
+  overflow: 'hidden',
 })
 
 const AnimatedCollapsibleContent = forwardRef<
@@ -64,4 +79,9 @@ const Collapsible = forwardRef<
   )
 })
 
-export { Collapsible, CollapsibleContent, AnimatedCollapsibleContent }
+export {
+  Collapsible,
+  CollapsibleContent,
+  AnimatedCollapsibleContent,
+  CollapsibleRoot,
+}

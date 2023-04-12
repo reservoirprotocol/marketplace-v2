@@ -1,12 +1,15 @@
 import { NextPage } from 'next'
-import { Text, Flex, Box, Button } from '../../components/primitives'
+import { Text, Flex, Box } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useUserCollections,
+  useUserTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { useMounted } from '../../hooks'
 import { TokenTable } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
@@ -16,10 +19,12 @@ import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
-import { faChevronDown, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
+import BatchActionsFooter from 'components/portfolio/BatchActionsFooter'
+import BatchListings from 'components/portfolio/BatchListings'
 import { ChainContext } from 'context/ChainContextProvider'
 import PortfolioSortDropdown, {
   PortfolioSortingOption,
@@ -37,6 +42,8 @@ type ActivityTypes = Exclude<
   >,
   string
 >
+
+export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -67,6 +74,19 @@ const IndexPage: NextPage = () => {
   const { data: collections, isLoading: collectionsLoading } =
     useUserCollections(address as string, collectionQuery)
 
+  // Batch listing logic
+  const [showListingPage, setShowListingPage] = useState(false)
+  const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
+
+  useEffect(() => {
+    setSelectedItems([])
+  }, [chain])
+
+  useEffect(() => {
+    setSelectedItems([])
+    setShowListingPage(false)
+  }, [address])
+
   if (!isMounted) {
     return null
   }
@@ -87,145 +107,171 @@ const IndexPage: NextPage = () => {
         >
           {isConnected ? (
             <>
-              <Flex align="center" justify="between" css={{ gap: '$4' }}>
-                <Text style="h4" css={{}}>
-                  Portfolio
-                </Text>
-                <ChainToggle />
-              </Flex>
-              <Tabs.Root defaultValue="items">
-                <Flex
-                  css={{ overflowX: 'scroll', '@sm': { overflowX: 'auto' } }}
-                >
-                  <TabsList
-                    style={{
-                      whiteSpace: 'nowrap',
-                      width: '100%',
-                    }}
-                  >
-                    <TabsTrigger value="items">Items</TabsTrigger>
-                    <TabsTrigger value="collections">Collections</TabsTrigger>
-                    <TabsTrigger value="listings">Listings</TabsTrigger>
-                    <TabsTrigger value="offers">Offers Made</TabsTrigger>
-                    <TabsTrigger value="activity">Activity</TabsTrigger>
-                  </TabsList>
-                </Flex>
-                <TabsContent value="items">
-                  <Flex
-                    css={{
-                      gap: tokenFiltersOpen ? '$5' : '0',
-                      position: 'relative',
-                    }}
-                  >
-                    {isSmallDevice ? (
-                      <MobileTokenFilters
-                        collections={collections}
-                        filterCollection={filterCollection}
-                        setFilterCollection={setFilterCollection}
-                      />
-                    ) : (
-                      <TokenFilters
-                        isLoading={collectionsLoading}
-                        open={tokenFiltersOpen}
-                        setOpen={setTokenFiltersOpen}
-                        collections={collections}
-                        filterCollection={filterCollection}
-                        setFilterCollection={setFilterCollection}
-                      />
-                    )}
-                    <Box
+              {showListingPage && !isSmallDevice ? (
+                <BatchListings
+                  selectedItems={selectedItems}
+                  setSelectedItems={setSelectedItems}
+                  setShowListingPage={setShowListingPage}
+                />
+              ) : (
+                <>
+                  <Flex align="center" justify="between" css={{ gap: '$4' }}>
+                    <Text style="h4" css={{}}>
+                      Portfolio
+                    </Text>
+                    <ChainToggle />
+                  </Flex>
+                  <Tabs.Root defaultValue="items">
+                    <Flex
                       css={{
-                        flex: 1,
-                        maxWidth: '100%',
+                        overflowX: 'scroll',
+                        '@sm': { overflowX: 'auto' },
                       }}
                     >
-                      {isSmallDevice && (
-                        <Flex justify="center">
-                          <PortfolioSortDropdown
-                            option={sortByType}
-                            onOptionSelected={(option) => {
-                              setSortByType(option)
-                            }}
+                      <TabsList
+                        style={{
+                          whiteSpace: 'nowrap',
+                          width: '100%',
+                        }}
+                      >
+                        <TabsTrigger value="items">Items</TabsTrigger>
+                        <TabsTrigger value="collections">
+                          Collections
+                        </TabsTrigger>
+                        <TabsTrigger value="listings">Listings</TabsTrigger>
+                        <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        <TabsTrigger value="activity">Activity</TabsTrigger>
+                      </TabsList>
+                    </Flex>
+
+                    <TabsContent value="items">
+                      <Flex
+                        css={{
+                          gap: tokenFiltersOpen ? '$5' : '0',
+                          position: 'relative',
+                          pb: 37,
+                        }}
+                      >
+                        {isSmallDevice ? (
+                          <MobileTokenFilters
+                            collections={collections}
+                            filterCollection={filterCollection}
+                            setFilterCollection={setFilterCollection}
                           />
-                        </Flex>
-                      )}
-                      <Flex justify="between" css={{ marginBottom: '$4' }}>
-                        {!isSmallDevice &&
-                          !collectionsLoading &&
-                          collections.length > 0 && (
-                            <FilterButton
-                              open={tokenFiltersOpen}
-                              setOpen={setTokenFiltersOpen}
-                            />
+                        ) : (
+                          <TokenFilters
+                            isLoading={collectionsLoading}
+                            open={tokenFiltersOpen}
+                            setOpen={setTokenFiltersOpen}
+                            collections={collections}
+                            filterCollection={filterCollection}
+                            setFilterCollection={setFilterCollection}
+                          />
+                        )}
+                        <Box
+                          css={{
+                            flex: 1,
+                            maxWidth: '100%',
+                          }}
+                        >
+                          {isSmallDevice && (
+                            <Flex justify="center">
+                              <PortfolioSortDropdown
+                                option={sortByType}
+                                onOptionSelected={(option) => {
+                                  setSortByType(option)
+                                }}
+                              />
+                            </Flex>
                           )}
-                        {!isSmallDevice && !collectionsLoading && (
-                          <PortfolioSortDropdown
-                            option={sortByType}
-                            onOptionSelected={(option) => {
-                              setSortByType(option)
-                            }}
+                          <Flex justify="between" css={{ marginBottom: '$4' }}>
+                            {!isSmallDevice &&
+                              !collectionsLoading &&
+                              collections.length > 0 && (
+                                <FilterButton
+                                  open={tokenFiltersOpen}
+                                  setOpen={setTokenFiltersOpen}
+                                />
+                              )}
+                            {!isSmallDevice && !collectionsLoading && (
+                              <PortfolioSortDropdown
+                                option={sortByType}
+                                onOptionSelected={(option) => {
+                                  setSortByType(option)
+                                }}
+                              />
+                            )}
+                          </Flex>
+                          <TokenTable
+                            isLoading={collectionsLoading}
+                            address={address}
+                            filterCollection={filterCollection}
+                            sortBy={sortByType}
+                            selectedItems={selectedItems}
+                            setSelectedItems={setSelectedItems}
+                          />
+                        </Box>
+                        {!isSmallDevice && (
+                          <BatchActionsFooter
+                            selectedItems={selectedItems}
+                            setSelectedItems={setSelectedItems}
+                            setShowListingPage={setShowListingPage}
                           />
                         )}
                       </Flex>
-                      <TokenTable
-                        isLoading={collectionsLoading}
-                        address={address}
-                        sortBy={sortByType}
-                        filterCollection={filterCollection}
-                      />
-                    </Box>
-                  </Flex>
-                </TabsContent>
-                <TabsContent value="collections">
-                  <CollectionsTable address={address} />
-                </TabsContent>
-                <TabsContent value="listings">
-                  <ListingsTable address={address} />
-                </TabsContent>
-                <TabsContent value="offers">
-                  <OffersTable address={address} />
-                </TabsContent>
-                <TabsContent value="activity">
-                  <Flex
-                    css={{
-                      gap: activityFiltersOpen ? '$5' : '',
-                      position: 'relative',
-                    }}
-                  >
-                    {!isSmallDevice && (
-                      <ActivityFilters
-                        open={activityFiltersOpen}
-                        setOpen={setActivityFiltersOpen}
-                        activityTypes={activityTypes}
-                        setActivityTypes={setActivityTypes}
-                      />
-                    )}
-                    <Box
-                      css={{
-                        flex: 1,
-                        gap: '$4',
-                        pb: '$5',
-                      }}
-                    >
-                      {isSmallDevice ? (
-                        <MobileActivityFilters
-                          activityTypes={activityTypes}
-                          setActivityTypes={setActivityTypes}
-                        />
-                      ) : (
-                        <FilterButton
-                          open={activityFiltersOpen}
-                          setOpen={setActivityFiltersOpen}
-                        />
-                      )}
-                      <UserActivityTable
-                        user={address}
-                        activityTypes={activityTypes}
-                      />
-                    </Box>
-                  </Flex>
-                </TabsContent>
-              </Tabs.Root>
+                    </TabsContent>
+                    <TabsContent value="collections">
+                      <CollectionsTable address={address} />
+                    </TabsContent>
+                    <TabsContent value="listings">
+                      <ListingsTable address={address} />
+                    </TabsContent>
+                    <TabsContent value="offers">
+                      <OffersTable address={address} />
+                    </TabsContent>
+                    <TabsContent value="activity">
+                      <Flex
+                        css={{
+                          gap: activityFiltersOpen ? '$5' : '',
+                          position: 'relative',
+                        }}
+                      >
+                        {!isSmallDevice && (
+                          <ActivityFilters
+                            open={activityFiltersOpen}
+                            setOpen={setActivityFiltersOpen}
+                            activityTypes={activityTypes}
+                            setActivityTypes={setActivityTypes}
+                          />
+                        )}
+                        <Box
+                          css={{
+                            flex: 1,
+                            gap: '$4',
+                            pb: '$5',
+                          }}
+                        >
+                          {isSmallDevice ? (
+                            <MobileActivityFilters
+                              activityTypes={activityTypes}
+                              setActivityTypes={setActivityTypes}
+                            />
+                          ) : (
+                            <FilterButton
+                              open={activityFiltersOpen}
+                              setOpen={setActivityFiltersOpen}
+                            />
+                          )}
+                          <UserActivityTable
+                            user={address}
+                            activityTypes={activityTypes}
+                          />
+                        </Box>
+                      </Flex>
+                    </TabsContent>
+                  </Tabs.Root>
+                </>
+              )}
             </>
           ) : (
             <Flex
