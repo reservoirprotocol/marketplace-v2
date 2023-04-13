@@ -143,7 +143,7 @@ const Navbar = () => {
         {isConnected ? (
           <ProfileDropdown />
         ) : (
-          <Box css={{ maxWidth: '185px' }}>
+          <Box css={{ maxWidth: '285px' }}>
             <ConnectWalletButton />
           </Box>
         )}

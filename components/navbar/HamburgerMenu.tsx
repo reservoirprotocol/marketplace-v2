@@ -141,7 +141,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Collections
+                Rankings
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
@@ -217,7 +217,7 @@ const HamburgerMenu = () => {
             }}
           >
             <Flex direction="column">
-              <Link href="/" legacyBehavior>
+              <Link href="/collection-rankings" legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
@@ -228,7 +228,7 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Explore
+                  Rankings
                 </Text>
               </Link>
               <Link href="/portfolio" legacyBehavior>
@@ -245,19 +245,6 @@ const HamburgerMenu = () => {
                   Portfolio
                 </Text>
               </Link>
-              <Anchor
-                href="https://docs.reservoir.tools/docs"
-                target="_blank"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                  width: '100%',
-                }}
-              >
-                <Text style="subtitle1">Docs</Text>
-              </Anchor>
             </Flex>
             <Box>
               <ConnectWalletButton />
