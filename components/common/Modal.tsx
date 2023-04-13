@@ -11,7 +11,7 @@ import { Anchor, Button, Flex, Text, Box } from '../primitives'
 import { styled } from '../../stitches.config'
 import { Dialog } from '../primitives/Dialog'
 import LoadingSpinner from './LoadingSpinner'
-import ReservoirLogoWhiteText from 'public/ReservoirLogoWhiteText'
+import SeaPortLogoWhiteText from 'public/SeaPortLogoWhiteText'
 
 const Title = styled(DialogPrimitive.Title, {
   margin: 0,
@@ -31,7 +31,7 @@ type Props = {
   | 'onFocusCapture'
 >
 
-const Logo = styled(ReservoirLogoWhiteText, {
+const Logo = styled(SeaPortLogoWhiteText, {
   '& .letter': {
     fill: '$gray12',
   },
