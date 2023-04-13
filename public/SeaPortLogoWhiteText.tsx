@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ReservoirLogoWhiteText = (props: any) => {
+const SeaPortLogoWhiteText = (props: any) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -32,4 +32,4 @@ const ReservoirLogoWhiteText = (props: any) => {
   )
 }
 
-export default ReservoirLogoWhiteText
+export default SeaPortLogoWhiteText
