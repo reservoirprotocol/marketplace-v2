@@ -71,7 +71,7 @@ const HamburgerMenu = () => {
                 src="/seaportLogo.svg"
                 width={34}
                 height={39}
-                alt="Reservoir"
+                alt="SeaPort"
               />
             </Box>
           </Link>
