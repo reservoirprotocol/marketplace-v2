@@ -14,7 +14,10 @@ export type SearchCollection = NonNullable<
   darkChainIcon: string
   volumeCurrencySymbol: string
   volumeCurrencyDecimals: number
+  floorAskCurrencySymbol?: string
+  floorAskCurrencyDecimals?: number
   tokenCount: string
+  allTimeUsdVolume?: number
 }
 
 type Collection = NonNullable<
@@ -80,7 +83,9 @@ export default async function handler(req: Request) {
           image: collection.image,
           name: collection.name,
           allTimeVolume: collection.volume?.allTime,
-          floorAskPrice: collection.floorAsk?.price?.amount?.decimal,
+          floorAskPrice: collection.floorAsk?.price?.amount?.native,
+          floorAskCurrencySymbol: chain.nativeCurrency.symbol,
+          floorAskCurrencyDecimals: chain.nativeCurrency.decimals,
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
           chainId: chain.id,
@@ -166,6 +171,10 @@ export default async function handler(req: Request) {
                 collection.allTimeVolume *
                   usdCoinPrices?.prices?.[index]?.current_price) ||
               0,
+            floorAskCurrencySymbol:
+              supportedChains[index].nativeCurrency.symbol,
+            floorAskCurrencyDecimals:
+              supportedChains[index].nativeCurrency.decimals,
           },
         })
       )
