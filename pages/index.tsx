@@ -12,6 +12,10 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from './_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faBolt,
+} from '@fortawesome/free-solid-svg-icons'
 import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
@@ -94,7 +98,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <a
               href="/portfolio"
             >
-              <Button color="gray3">View Source Code</Button>
+              <Button color="gray3">
+              <FontAwesomeIcon icon={faBolt} />
+                  Sell</Button>
             </a>
           </Flex>
         )}
