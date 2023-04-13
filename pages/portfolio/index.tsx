@@ -24,6 +24,9 @@ import { ChainContext } from 'context/ChainContextProvider'
 import PortfolioSortDropdown, {
   PortfolioSortingOption,
 } from 'components/common/PortfolioSortDropdown'
+import { gql } from '__generated__'
+import { useQuery } from '@apollo/client'
+import { Collection_OrderBy } from '__generated__/graphql'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -35,21 +38,25 @@ const IndexPage: NextPage = () => {
     useState<PortfolioSortingOption>('acquiredAt')
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
-
-  let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
-    limit: 100,
+  
+  const GET_USER_COLLECTIONS = gql(/* GraphQL */`
+  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {
+    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {
+      id
+      name
+      totalTokens
+    }
   }
-
-  const { chain } = useContext(ChainContext)
-
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
-
-  const { data: collections, isLoading: collectionsLoading } =
-    useUserCollections(address as string, collectionQuery)
+`);
+  
+  const { data, loading } = useQuery(GET_USER_COLLECTIONS, {
+    variables: {
+      first: 100,
+      collection_orderBy: Collection_OrderBy.TotalTokens,
+      where: { owner: address?.toLocaleLowerCase() }
+    }
+  })
+  const collections = data?.collections || []
 
   if (!isMounted) {
     return null
@@ -108,7 +115,7 @@ const IndexPage: NextPage = () => {
                       />
                     ) : (
                       <TokenFilters
-                        isLoading={collectionsLoading}
+                        isLoading={loading}
                         open={tokenFiltersOpen}
                         setOpen={setTokenFiltersOpen}
                         collections={collections}
@@ -134,14 +141,14 @@ const IndexPage: NextPage = () => {
                       )}
                       <Flex justify="between" css={{ marginBottom: '$4' }}>
                         {!isSmallDevice &&
-                          !collectionsLoading &&
+                          !loading &&
                           collections.length > 0 && (
                             <FilterButton
                               open={tokenFiltersOpen}
                               setOpen={setTokenFiltersOpen}
                             />
                           )}
-                        {!isSmallDevice && !collectionsLoading && (
+                        {!isSmallDevice && !loading && (
                           <PortfolioSortDropdown
                             option={sortByType}
                             onOptionSelected={(option) => {
@@ -151,7 +158,7 @@ const IndexPage: NextPage = () => {
                         )}
                       </Flex>
                       <TokenTable
-                        isLoading={collectionsLoading}
+                        isLoading={loading}
                         address={address}
                         sortBy={sortByType}
                         filterCollection={filterCollection}

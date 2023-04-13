@@ -27,6 +27,25 @@ import { useMarketplaceChain } from 'hooks'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
+import { gql } from '__generated__'
+import { useQuery } from '@apollo/client'
+import { Token_OrderBy } from '__generated__/graphql'
+
+type Token = {
+  id: string
+  tokenID: any
+  tokenURI?: string | null
+  collection: {
+    id: string
+    name: string
+    totalTokens: number
+    // TO-DO: update later
+    floorAskPrice?: any
+  }
+  ownership?: any
+  topBid?: any
+  kind?: any
+}
 
 type Props = {
   address: Address | undefined
@@ -46,39 +65,40 @@ export const TokenTable: FC<Props> = ({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
-    limit: 20,
-    sortBy: sortBy,
-    collection: filterCollection,
-    includeTopBid: true,
+  const GET_USER_TOKENS = gql(/* GraphQL */`
+  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {
+    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {
+      id
+      tokenID
+      tokenURI
+      collection {
+        id
+        name
+        totalTokens
+      }
+    }
   }
+`);
+  const { data, loading, fetchMore } = useQuery(GET_USER_TOKENS, {
+    variables: {
+      first: 10,
+      token_OrderBy: Token_OrderBy.TotalTransactions,
+      where: { owner: address?.toLocaleLowerCase(), collection: filterCollection }
+    }
+  })
+  const tokens = data?.tokens || []
 
-  const { chain } = useContext(ChainContext)
-
-  if (chain.collectionSetId) {
-    tokenQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    tokenQuery.community = chain.community
-  }
-
-  const {
-    data: tokens,
-    fetchNextPage,
-    mutate,
-    isFetchingPage,
-    isValidating,
-  } = useUserTokens(address, tokenQuery, {})
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ variables: { skip: data?.tokens.length || 0 }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
-      {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
+      {!loading && tokens && tokens.length === 0 ? (
         <Flex
           direction="column"
           align="center"
@@ -89,7 +109,7 @@ export const TokenTable: FC<Props> = ({
           </Text>
           <Text css={{ color: '$gray11' }}>No items found</Text>
         </Flex>
-      ) : isLoading || isValidating ? (
+      ) : isLoading || loading ? (
         <Flex align="center" justify="center" css={{ py: '$6' }}>
           <LoadingSpinner />
         </Flex>
@@ -101,9 +121,10 @@ export const TokenTable: FC<Props> = ({
 
             return (
               <TokenTableRow
-                key={`${token.token?.tokenId}-${i}`}
+                key={`${token.id}-${i}`}
                 token={token}
-                mutate={mutate}
+                // TO-DO: listing actions
+                // mutate={mutate}
               />
             )
           })}
@@ -115,7 +136,7 @@ export const TokenTable: FC<Props> = ({
 }
 
 type TokenTableRowProps = {
-  token: ReturnType<typeof useUserTokens>['data'][0]
+  token: Token
   mutate?: MutatorCallback
 }
 
@@ -123,16 +144,18 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  let imageSrc: string = (
-    token?.token?.tokenId
-      ? token?.token?.image || token?.token?.collection?.imageUrl
-      : token?.token?.collection?.imageUrl
-  ) as string
+  // let imageSrc: string = (
+  //   token?.tokenID
+  //     ? token?.token?.image || token?.token?.collection?.imageUrl
+  //     : token?.token?.collection?.imageUrl
+  // ) as string
+  // TO-DO: token image URI
+  let imageSrc = ""
 
   if (isSmallDevice) {
     return (
       <Flex
-        key={token?.token?.tokenId}
+        key={token?.tokenID}
         direction="column"
         align="start"
         css={{
@@ -145,7 +168,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         }}
       >
         <Link
-          href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+          href={`/collection/${routePrefix}/${token?.collection?.id}/${token?.tokenID}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -157,7 +180,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${token?.token?.name}`}
+                // TO-DO: token name
+                // alt={`${token?.token?.name}`}
+                alt={`${token.collection.name}-${token?.tokenID}`}
                 width={36}
                 height={36}
               />
@@ -171,10 +196,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify color="subtle">
-                {token?.token?.collection?.name}
+                {token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{token?.token?.tokenId}
+                #{token?.tokenID}
               </Text>
             </Flex>
           </Flex>
@@ -186,13 +211,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             </Text>
             <FormatCryptoCurrency
               amount={
-                token?.token?.collection?.floorAskPrice?.netAmount?.decimal
+                token?.collection?.floorAskPrice?.netAmount?.decimal
               }
               address={
-                token?.token?.collection?.floorAskPrice?.currency?.contract
+                token?.collection?.floorAskPrice?.currency?.contract
               }
               decimals={
-                token?.token?.collection?.floorAskPrice?.currency?.decimals
+                token?.collection?.floorAskPrice?.currency?.decimals
               }
               textStyle="subtitle2"
               logoHeight={14}
@@ -220,14 +245,14 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               You Get
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.topBid?.price?.netAmount?.native}
+              amount={token?.topBid?.price?.netAmount?.native}
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {token?.token?.topBid?.price?.amount?.decimal && (
+            {token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
                 token={token as ReturnType<typeof useTokens>['data'][0]}
-                collectionId={token?.token?.contract}
+                collectionId={token?.collection?.id}
                 mutate={mutate}
                 buttonCss={{
                   width: '100%',
@@ -257,12 +282,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
 
   return (
     <TableRow
-      key={token?.token?.tokenId}
+      key={token?.tokenID}
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+          href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -274,7 +299,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${token?.token?.name}`}
+                // TO-DO: token name
+                // alt={`${token?.token?.name}`}
+                alt={`${token.collection.name}-${token?.tokenID}`}
                 width={48}
                 height={48}
               />
@@ -288,9 +315,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             >
               <Flex justify="between" css={{ gap: '$2' }}>
                 <Text style="subtitle3" ellipsify color="subtle">
-                  {token?.token?.collection?.name}
+                  {token?.collection?.name}
                 </Text>
-                {token?.token?.kind === 'erc1155' &&
+                {token?.kind === 'erc1155' &&
                   token?.ownership?.tokenCount && (
                     <Flex
                       justify="center"
@@ -305,14 +332,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                         ellipsify
                         style="subtitle3"
                         css={{ px: '$2', fontSize: 10 }}
-                      >
-                        x{token?.ownership?.tokenCount}
+                    >
+                      {/* // TO-DO: must total token of user not collection total token */}
+                        x{token?.collection?.totalTokens} 
                       </Text>
                     </Flex>
                   )}
               </Flex>
               <Text style="subtitle2" ellipsify>
-                #{token?.token?.tokenId}
+                #{token?.tokenID}
               </Text>
             </Flex>
           </Flex>
@@ -327,28 +355,28 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.collection?.floorAskPrice?.netAmount?.decimal}
-          address={token?.token?.collection?.floorAskPrice?.currency?.contract}
-          decimals={token?.token?.collection?.floorAskPrice?.currency?.decimals}
+          amount={token?.collection?.floorAskPrice?.netAmount?.decimal}
+          address={token?.collection?.floorAskPrice?.currency?.contract}
+          decimals={token?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
         />
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.topBid?.price?.netAmount?.native}
-          address={token?.token?.topBid?.price?.currency?.contract}
-          decimals={token?.token?.topBid?.price?.currency?.decimals}
+          amount={token?.topBid?.price?.netAmount?.native}
+          address={token?.topBid?.price?.currency?.contract}
+          decimals={token?.topBid?.price?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
         />
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
-          {token?.token?.topBid?.price?.amount?.decimal && (
+          {token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
               token={token as ReturnType<typeof useTokens>['data'][0]}
-              collectionId={token?.token?.contract}
+              collectionId={token?.collection?.id}
               buttonCss={{
                 px: '32px',
                 backgroundColor: '$primary9',
@@ -367,7 +395,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             />
           )}
 
-          <List
+          {/* TO-DO: later */}
+          {/* <List
             token={token as ReturnType<typeof useTokens>['data'][0]}
             buttonCss={{
               px: '42px',
@@ -379,7 +408,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             }}
             buttonChildren="List"
             mutate={mutate}
-          />
+          /> */}
         </Flex>
       </TableCell>
     </TableRow>

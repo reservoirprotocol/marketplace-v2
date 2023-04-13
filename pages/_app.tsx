@@ -34,7 +34,7 @@ import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import { ApolloProvider } from "@apollo/client";
-import client from 'graphql/apollo-client'
+import { useApollo } from 'graphql/apollo-client'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -70,6 +70,7 @@ const reservoirKitThemeOverrides = {
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
+  const client = useApollo(props)
   return (
     <ThemeProvider
       attribute="class"

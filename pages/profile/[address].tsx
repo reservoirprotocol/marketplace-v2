@@ -203,7 +203,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
             >
               {isSmallDevice ? (
                 <MobileTokenFilters
-                  collections={collections}
+                  collections={collections as any}
                   filterCollection={filterCollection}
                   setFilterCollection={setFilterCollection}
                 />
@@ -212,7 +212,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                   isLoading={collectionsLoading}
                   open={tokenFiltersOpen}
                   setOpen={setTokenFiltersOpen}
-                  collections={collections}
+                  collections={collections  as any}
                   filterCollection={filterCollection}
                   setFilterCollection={setFilterCollection}
                   scrollToTop={scrollToTop}
@@ -268,7 +268,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                           return (
                             <TokenCard
                               key={i}
-                              token={dynamicToken}
+                              token={dynamicToken  as any}
                               address={account.address as Address}
                               tokenCount={
                                 token?.token?.kind === 'erc1155'

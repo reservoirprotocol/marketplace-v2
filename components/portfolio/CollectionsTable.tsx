@@ -24,6 +24,21 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
+import { gql } from '__generated__'
+import { useQuery } from '@apollo/client'
+import { Collection_OrderBy } from '__generated__/graphql'
+
+type Collection = {
+  id: string,
+  name: string,
+  totalTokens: number,
+  // TO-DO: update later
+  image?: string,
+  volume?: any
+  volumeChange?: any
+  topBidValue?: any
+  floorAskPrice?: any
+}
 
 type Props = {
   address: Address | undefined
@@ -40,36 +55,35 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
-    includeTopBid: true,
+  const GET_USER_COLLECTIONS = gql(/* GraphQL */`
+  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {
+    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {
+      id
+      name
+      totalTokens
+    }
   }
-
-  const { chain } = useContext(ChainContext)
-
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
-
-  const {
-    data: collections,
-    fetchNextPage,
-    isFetchingPage,
-    isValidating,
-  } = useUserCollections(address as string, collectionQuery)
+`);
+  const { data, loading, fetchMore } = useQuery(GET_USER_COLLECTIONS, {
+    variables: {
+      first: 10,
+      skip: 0,
+      collection_orderBy: Collection_OrderBy.TotalTokens,
+      where: { owner: address?.toLocaleLowerCase() }
+    }
+  })
+  const collections = data?.collections || []
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ variables: { skip: data?.collections.length || 0 }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
-      {!isValidating &&
-      !isFetchingPage &&
+      {!loading &&
       collections &&
       collections.length === 0 ? (
         <Flex
@@ -95,7 +109,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
           {collections.map((collection, i) => {
             return (
               <CollectionTableRow
-                key={`${collection?.collection?.id}-${i}`}
+                key={`${collection?.id}-${i}`}
                 collection={collection}
                 sortByTime={sortByTime}
               />
@@ -104,7 +118,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
           <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
-      {isValidating && (
+      {loading && (
         <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
@@ -114,7 +128,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
 }
 
 type CollectionTableRowProps = {
-  collection: ReturnType<typeof useUserCollections>['data'][0]
+  collection: Collection
   sortByTime: CollectionsTableSortingOption
 }
 
@@ -128,15 +142,15 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
   if (isSmallDevice) {
     return (
       <TableRow
-        key={collection?.collection?.id}
+        key={collection?.id}
         css={{ gridTemplateColumns: mobileTemplateColumns }}
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link
-            href={`/collection/${routePrefix}/${collection?.collection?.id}`}
+            href={`/collection/${routePrefix}/${collection?.id}`}
           >
             <Flex align="center">
-              {collection?.collection?.image && (
+              {collection?.image && (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -144,8 +158,8 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={collection?.collection?.image}
-                  alt={`${collection?.collection?.name}`}
+                  src={collection?.image}
+                  alt={`${collection?.name}`}
                   width={36}
                   height={36}
                 />
@@ -155,7 +169,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                 ellipsify
                 css={{ color: '$gray11', ml: '$2' }}
               >
-                {collection?.collection?.name}
+                {collection?.name}
               </Text>
             </Flex>
           </Link>
@@ -170,7 +184,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
             }}
           >
             <FormatCryptoCurrency
-              amount={collection?.collection?.volume?.[sortByTime]}
+              amount={collection?.volume?.[sortByTime]}
               maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
@@ -181,9 +195,9 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
               }}
             />
             {sortByTime != 'allTime' &&
-              collection?.collection?.volumeChange && (
+              collection?.volumeChange && (
                 <PercentChange
-                  value={collection?.collection?.volumeChange[sortByTime]}
+                  value={collection?.volumeChange[sortByTime]}
                 />
               )}
           </Flex>
@@ -191,7 +205,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
         <TableCell css={{ minWidth: 'max-content' }}>
           <Text style="subtitle2" css={{ minWidth: 'max-content' }}>
             <FormatCryptoCurrency
-              amount={collection?.collection?.topBidValue}
+              amount={collection?.topBidValue}
               maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
@@ -204,13 +218,13 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
 
   return (
     <TableRow
-      key={collection?.collection?.id}
+      key={collection?.id}
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/collection/${routePrefix}/${collection?.collection?.id}`}>
+        <Link href={`/collection/${routePrefix}/${collection?.id}`}>
           <Flex align="center">
-            {collection?.collection?.image && (
+            {collection?.image && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -218,14 +232,14 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                   aspectRatio: '1/1',
                 }}
                 loader={({ src }) => src}
-                src={collection?.collection?.image}
-                alt={`${collection?.collection?.name}`}
+                src={collection?.image}
+                alt={`${collection?.name}`}
                 width={48}
                 height={48}
               />
             )}
             <Text style="subtitle2" ellipsify css={{ ml: '$2' }}>
-              {collection?.collection?.name}
+              {collection?.name}
             </Text>
           </Flex>
         </Link>
@@ -238,13 +252,13 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
           css={{ height: '100%' }}
         >
           <FormatCryptoCurrency
-            amount={collection?.collection?.volume?.[sortByTime]}
+            amount={collection?.volume?.[sortByTime]}
             textStyle="subtitle2"
             logoHeight={14}
           />
-          {sortByTime != 'allTime' && collection?.collection?.volumeChange && (
+          {sortByTime != 'allTime' && collection?.volumeChange && (
             <PercentChange
-              value={collection?.collection?.volumeChange[sortByTime]}
+              value={collection?.volumeChange[sortByTime]}
             />
           )}
         </Flex>
@@ -252,7 +266,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       <TableCell>
         <Text style="subtitle2">
           <FormatCryptoCurrency
-            amount={collection?.collection?.topBidValue}
+            amount={collection?.topBidValue}
             textStyle="subtitle2"
             logoHeight={14}
           />
@@ -260,13 +274,13 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={collection?.collection?.floorAskPrice}
+          amount={collection?.floorAskPrice}
           textStyle="subtitle2"
           logoHeight={14}
         />
       </TableCell>
       <TableCell>
-        <Text style="subtitle2">{collection?.ownership?.tokenCount}</Text>
+        <Text style="subtitle2">{collection?.totalTokens}</Text>
       </TableCell>
     </TableRow>
   )

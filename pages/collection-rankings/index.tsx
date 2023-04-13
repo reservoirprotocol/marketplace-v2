@@ -25,6 +25,9 @@ import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { useRouter } from 'next/router'
+import { gql } from '__generated__'
+import { useQuery } from '@apollo/client'
+import { Collection_OrderBy } from '__generated__/graphql'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -65,14 +68,20 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery.community = chain.community
   }
 
-  const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
-    collectionQuery,
-    {
-      fallbackData: [ssr.collections[marketplaceChain.id]],
+  const COLLECTION_RANKINGS = gql(/* GraphQL */`
+  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {
+    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {
+      id
+      name
     }
-  )
+  }
+`);
 
-  let collections = data || []
+  const { data, loading, fetchMore } = useQuery(COLLECTION_RANKINGS, {
+    variables: { skip: 0, first: 10, collection_orderBy: Collection_OrderBy.TotalTokens }
+  })
+
+  let collections = data?.collections || []
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -80,7 +89,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   useEffect(() => {
     let isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ variables: { skip: data?.collections.length || 0 }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -143,17 +152,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <CollectionRankingsTable
               collections={collections}
               volumeKey={volumeKey}
-              loading={isValidating}
+              loading={loading}
             />
           )}
           <Box
             ref={loadMoreRef}
             css={{
-              display: isFetchingPage ? 'none' : 'block',
+              display: loading ? 'none' : 'block',
             }}
           ></Box>
         </Flex>
-        {(isFetchingPage || isValidating) && (
+        {(loading) && (
           <Flex align="center" justify="center" css={{ py: '$4' }}>
             <LoadingSpinner />
           </Flex>

@@ -61,6 +61,33 @@ import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
+import { gql } from '__generated__'
+import { initializeApollo } from 'graphql/apollo-client'
+
+type Token = {
+  id: string
+  tokenID: any
+  tokenURI?: string | null
+  owner: {
+    id: string
+  }
+  collection: {
+    id: string
+    name: string
+    totalTokens: number
+    // TO-DO: update later
+    floorAskPrice?: any
+    banner?: any
+    description?: any
+    openseaVerificationStatus?: any
+  }
+  ownership?: any
+  topBid?: any
+  kind?: any
+  attributes?: any
+  name?: any
+  image?: any
+}
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -87,65 +114,44 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
-  const { data: collections } = useCollections(
-    {
-      contract: contract,
-    },
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
-  const collection = collections && collections[0] ? collections[0] : null
-
-  const { data: tokens, mutate } = useDynamicTokens(
-    {
-      tokens: [`${contract}:${id}`],
-      includeAttributes: true,
-      includeTopBid: true,
-      includeQuantity: true,
-    },
-    {
-      fallbackData: [ssr.tokens],
-    }
-  )
-
+  
+  const { token } = ssr
+  const collection = token.collection
   const flagged = useTokenOpenseaBanned(collectionId, id)
-  const token = tokens && tokens[0] ? tokens[0] : undefined
-  const is1155 = token?.token?.kind === 'erc1155'
 
-  const { data: userTokens } = useUserTokens(
-    is1155 ? account.address : undefined,
-    {
-      tokens: [`${contract}:${id}`],
-    }
-  )
 
-  const { data: offers, isLoading: offersLoading } = useBids({
-    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
-    includeRawData: true,
-  })
 
-  const offer = offers && offers[0] ? offers[0] : undefined
-  const attributesData = useAttributes(collectionId)
+  // TO-DO: bids
+  // const { data: offers, isLoading: offersLoading } = useBids({
+  //   token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+  //   includeRawData: true,
+  // })
+
+  // const offer = offers && offers[0] ? offers[0] : undefined
+  // TO-DO: attributes
+  // const attributesData = useAttributes(collectionId)
 
   let countOwned = 0
-  if (is1155) {
-    countOwned = Number(userTokens?.[0]?.ownership?.tokenCount || 0)
-  } else {
-    countOwned =
-      token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
-        ? 1
-        : 0
-  }
+    // TO-DO: ERC1155
+  // if (is1155) {
+  //   countOwned = Number(userTokens?.[0]?.ownership?.tokenCount || 0)
+  // } else {
+  //   countOwned =
+  //     token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
+  //       ? 1
+  //       : 0
+  // }
 
+  // support later
+  const is1155 = false
   const isOwner = countOwned > 0
-  const owner = isOwner ? account?.address : token?.token?.owner
-  const { displayName: ownerFormatted } = useENSResolver(token?.token?.owner)
+  const owner = isOwner ? account?.address : token?.owner?.id
+  const { displayName: ownerFormatted } = useENSResolver(token?.owner?.id)
 
-  const tokenName = `${token?.token?.name || `#${token?.token?.tokenId}`}`
+  const tokenName = `${token?.collection?.name || `#${token?.tokenID}`}`
 
   const hasAttributes =
-    token?.token?.attributes && token?.token?.attributes.length > 0
+    token?.attributes && token?.attributes.length > 0
 
   const trigger = (
     <Button
@@ -207,14 +213,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     router.push(router, undefined, { shallow: true })
   }, [tabValue])
 
-  const pageTitle = token?.token?.name
-    ? token.token.name
-    : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
+  const pageTitle = token?.name
+    ? token.collection.name
+    : `${token?.tokenID} - ${token?.collection?.name}`
 
   return (
     <Layout>
       <Head
-        ogImage={token?.token?.image || collection?.banner}
+        ogImage={token?.image || collection?.banner}
         title={pageTitle}
         description={collection?.description as string}
       />
@@ -280,7 +286,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               },
             }}
           >
-            <TokenMedia
+            {/* <TokenMedia
               token={token?.token}
               videoOptions={{ autoPlay: true, muted: true }}
               style={{
@@ -291,17 +297,19 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 overflow: 'hidden',
               }}
               onRefreshToken={() => {
-                mutate?.()
+                // TO-DO: later
+                // mutate?.()
                 addToast?.({
                   title: 'Refresh token',
                   description: 'Request to refresh this token was accepted.',
                 })
               }}
-            />
+            /> */}
+            {/* TO-DO: later */}
             <FullscreenMedia token={token} />
           </Box>
 
-          {token?.token?.attributes && !isSmallDevice && (
+          {token?.attributes && !isSmallDevice && (
             <Grid
               css={{
                 maxWidth: '100%',
@@ -311,11 +319,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 mt: 24,
               }}
             >
-              {token?.token?.attributes?.map((attribute) => (
+              {token?.attributes?.map((attribute: any) => (
                 <AttributeCard
                   key={`${attribute.key}-${attribute.value}`}
                   attribute={attribute}
-                  collectionTokenCount={collection?.tokenCount || 0}
+                  collectionTokenCount={collection?.totalTokens || 0}
                   collectionId={collection?.id}
                 />
               ))}
@@ -338,7 +346,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${router.query.chain}/${token?.token?.collection?.id}`}
+                href={`/collection/${token?.collection?.id}`}
                 legacyBehavior={true}
               >
                 <Anchor
@@ -351,7 +359,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 >
                   <FontAwesomeIcon icon={faArrowLeft} height={16} />
                   <Text css={{ color: 'inherit' }} style="subtitle1" ellipsify>
-                    {token?.token?.collection?.name}
+                    {token?.collection?.name}
                   </Text>
                 </Anchor>
               </Link>
@@ -479,13 +487,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   </Link>
                 </Flex>
               )}
-              <RarityRank
+              {/* <RarityRank
                 token={token}
                 collection={collection}
                 collectionAttributes={attributesData?.data}
-              />
-              <PriceData token={token} />
-              {isMounted && (
+              /> */}
+              {/* <PriceData token={token} /> */}
+              {/* {isMounted && (
                 <TokenActions
                   token={token}
                   offer={offer}
@@ -493,7 +501,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   mutate={mutate}
                   account={account}
                 />
-              )}
+              )} */}
               <Tabs.Root
                 defaultValue=""
                 value={tabValue}
@@ -509,8 +517,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   <TabsTrigger value="info">Info</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
-                <TabsContent value="attributes">
-                  {token?.token?.attributes && (
+                {/* <TabsContent value="attributes">
+                  {token?.tokenID?.attributes && (
                     <Grid
                       css={{
                         gap: '$3',
@@ -531,7 +539,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                       ))}
                     </Grid>
                   )}
-                </TabsContent>
+                </TabsContent> */}
                 <TabsContent value="info">
                   {collection && (
                     <TokenInfo token={token} collection={collection} />
@@ -559,7 +567,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     </Dropdown>
                   )}
                   <TokenActivityTable
-                    id={`${contract}:${token?.token?.tokenId}`}
+                    id={`${contract}:${token?.tokenID}`}
                     activityTypes={activityTypes}
                   />
                 </TabsContent>
@@ -583,65 +591,44 @@ export const getStaticProps: GetStaticProps<{
   id?: string
   collectionId?: string
   ssr: {
-    collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
+    token: Token
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
   const id = params?.id?.toString()
-  const { reservoirBaseUrl, apiKey } =
-    supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
-    DefaultChain
 
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
+  const tokenIdQuery = `${contract?.toLocaleLowerCase()}-${id}`
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      contract: contract,
-      includeTopBid: true,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
+  const apolloClient = initializeApollo()
 
-  const headers = {
-    headers: {
-      'x-api-key': apiKey || '',
+  const GET_TOKEN_BY_ID = gql(/* GraphQL */`
+    query GetTokenById($id: ID!) {
+        token(id: $id) {
+          id
+          tokenID
+          tokenURI
+          collection {
+            id
+            name
+            totalTokens
+          }
+          owner {
+            id
+          }
+        }
+      }
+  `);
+
+  const { data } = await apolloClient.query({
+    query: GET_TOKEN_BY_ID,
+    variables: {
+      id: tokenIdQuery
     },
-  }
-
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery,
-    headers
-  )
-
-  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
-    tokens: [`${contract}:${id}`],
-    includeAttributes: true,
-    includeTopBid: true,
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-    includeDynamicPricing: true,
-  }
-
-  const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v6`,
-    tokensQuery,
-    headers
-  )
-  const promises = await Promise.allSettled([
-    collectionsPromise,
-    tokensPromise,
-  ]).catch(() => {})
-  const collection: Props['ssr']['collection'] =
-    promises?.[0].status === 'fulfilled' && promises[0].value.data
-      ? (promises[0].value.data as Props['ssr']['collection'])
-      : {}
-  const tokens: Props['ssr']['tokens'] =
-    promises?.[1].status === 'fulfilled' && promises[1].value.data
-      ? (promises[1].value.data as Props['ssr']['tokens'])
-      : {}
+  })
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } },
+    props: { collectionId, id, ssr: { token: data?.token } },
     revalidate: 20,
   }
 }

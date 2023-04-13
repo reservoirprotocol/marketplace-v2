@@ -17,9 +17,52 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import titleCase from 'utils/titleCase'
 import { useRouter } from 'next/router'
 
+type Token = {
+  id: string
+  tokenID: any
+  tokenURI?: string | null
+  owner: {
+    id: string
+  }
+  collection: {
+    id: string
+    name: string
+    totalTokens: number
+    // TO-DO: update later
+    floorAskPrice?: any
+    banner?: any
+    description?: any
+    openseaVerificationStatus?: any
+    image?: any
+  }
+  ownership?: any
+  topBid?: any
+  kind?: any
+  attributes?: any
+  name?: any
+  image?: any
+}
+
+type Collection = {
+  id: string
+  name: string
+  totalTokens: number
+  // TO-DO: update later
+  floorAskPrice?: any
+  banner?: any
+  description?: any
+  openseaVerificationStatus?: any
+  twitterUsername?: any
+  image?: any
+  discordUrl?: any
+  externalUrl?: any
+  royalties?: any
+}
+
+
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0] | null
-  collection: NonNullable<ReturnType<typeof useCollections>['data']>[0] | null
+  token: Token
+  collection: Collection
 }
 
 export const TokenInfo: FC<Props> = ({ token, collection }) => {
@@ -30,7 +73,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const isMounted = useMounted()
   const router = useRouter()
 
-  let chain = titleCase(router.query.chain as string)
+  let chain = "G.U Sandbox chain"
 
   const CollectionAction = styled(Flex, {
     px: '$4',
@@ -63,7 +106,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
 
   const blockExplorerUrl = `${
     marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
-  }/token/${token?.token?.contract}?a=${token?.token?.tokenId}`
+  }/token/${token?.collection?.id}?a=${token?.tokenID}`
   const twitterLink = collection?.twitterUsername
     ? `https://twitter.com/${collection?.twitterUsername}`
     : null
@@ -92,11 +135,11 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
-            src={token?.token?.collection?.image || collection?.image}
+            src={token?.collection?.image || collection?.image}
             style={{ width: 36, height: 36, borderRadius: 4 }}
           />
           <Text style="h6" ellipsify>
-            {token?.token?.collection?.name || collection?.name}
+            {token?.collection?.name || collection?.name}
           </Text>
           <OpenSeaVerified
             openseaVerificationStatus={collection?.openseaVerificationStatus}
@@ -197,7 +240,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               weight="medium"
             >
               <Flex align="center" css={{ gap: '$2' }}>
-                {truncateAddress(token?.token?.contract as string)}
+                {truncateAddress(token?.collection?.id as string)}
                 <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
               </Flex>
             </Anchor>
@@ -224,7 +267,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               Token ID
             </Text>
             <Text style="subtitle1" ellipsify css={{ maxWidth: '100%' }}>
-              {token?.token?.tokenId}
+              {token?.tokenID}
             </Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
@@ -235,7 +278,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               Token Standard
             </Text>
             <Text style="subtitle1" css={{ textTransform: 'uppercase' }}>
-              {token?.token?.kind}
+              {token?.kind}
             </Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
