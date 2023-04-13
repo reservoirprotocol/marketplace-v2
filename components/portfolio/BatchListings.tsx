@@ -63,8 +63,8 @@ const MINIMUM_AMOUNT = 0.000001
 
 const marketplaces = [
   {
-    name: 'Reservoir',
-    imageUrl: 'https://api.reservoir.tools/redirect/sources/reservoir/logo/v2',
+    name: 'SeaPort',
+    imageUrl: '/seaport-source-icon.png',
     orderbook: 'reservoir',
     orderKind: 'seaport-v1.4',
   },
