@@ -278,7 +278,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
-                token={token as ReturnType<typeof useTokens>['data'][0]}
+                tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 mutate={mutate}
                 buttonCss={{
@@ -411,7 +411,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         <Flex justify="end" css={{ gap: '$3' }}>
           {token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
-              token={token as ReturnType<typeof useTokens>['data'][0]}
+              tokenId={token.token.tokenId}
               collectionId={token?.token?.contract}
               buttonCss={{
                 px: '32px',

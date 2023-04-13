@@ -117,7 +117,7 @@ export const TokenActions: FC<Props> = ({
       )}
       {showAcceptOffer && (
         <AcceptBid
-          token={token}
+          tokenId={token.token?.tokenId}
           bidId={queryBidId}
           collectionId={token?.token?.contract}
           openState={
