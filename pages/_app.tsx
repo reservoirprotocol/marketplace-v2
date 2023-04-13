@@ -33,6 +33,8 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import { ApolloProvider } from "@apollo/client";
+import client from 'graphql/apollo-client'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -80,7 +82,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
       <WagmiConfig client={wagmiClient}>
         <ChainContextProvider>
           <AnalyticsProvider>
-            <MyApp {...props} />
+            <ApolloProvider client={client}>
+              <MyApp {...props} />
+            </ApolloProvider>
           </AnalyticsProvider>
         </ChainContextProvider>
       </WagmiConfig>
