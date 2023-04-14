@@ -1,10 +1,10 @@
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  extractMediaType,
-  TokenMedia,
-  useDynamicTokens,
-} from '@reservoir0x/reservoir-kit-ui'
+// import {
+//   extractMediaType,
+//   TokenMedia,
+//   useDynamicTokens,
+// } from '@reservoir0x/reservoir-kit-ui'
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
 import {
@@ -22,8 +22,33 @@ import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
 
+type Token = {
+  id: string
+  tokenID: any
+  tokenURI?: string | null
+  owner: {
+    id: string
+  }
+  collection: {
+    id: string
+    name: string
+    totalTokens: number
+    // TO-DO: update later
+    floorAskPrice?: any
+  }
+  ownership?: any
+  topBid?: any
+  kind?: any
+  market?: any
+  isFlagged?: any
+  isInCart?: any
+  rarityRank?: any
+  lastSale?: any
+}
+
+
 type TokenCardProps = {
-  token: ReturnType<typeof useDynamicTokens>['data'][0]
+  token: Token
   address: Address
   rarityEnabled: boolean
   addToCartEnabled?: boolean
@@ -46,12 +71,14 @@ export default ({
   tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
-  const mediaType = extractMediaType(token?.token)
+  // TO-DO: later
+  const mediaType = undefined
+  // const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
-  const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
+  const isOwner = token?.owner?.id?.toLowerCase() !== address?.toLowerCase()
 
   return (
     <Box
@@ -151,11 +178,12 @@ export default ({
       </Flex>
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
-          <TokenMedia
-            token={token?.token}
+          {/* TO-DO: later */}
+          {/* <TokenMedia
+            token={token}
             style={{
               width: '100%',
               transition: 'transform .3s ease-in-out',
@@ -182,12 +210,12 @@ export default ({
                 description: 'Request to refresh this token was accepted.',
               })
             }}
-          />
+          /> */}
         </Box>
       </Link>
       <Link
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
-      >
+        href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
+        >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
           direction="column"
@@ -203,9 +231,9 @@ export default ({
                   flex: 1,
                 }}
               >
-                {token?.token?.name || '#' + token?.token?.tokenId}{' '}
+                {token?.collection?.name || '#' + token?.tokenID}{' '}
               </Text>
-              {token?.token?.isFlagged && (
+              {token?.isFlagged && (
                 <Tooltip
                   content={
                     <Text style="body2" as="p">
@@ -233,15 +261,15 @@ export default ({
               }}
             >
               {rarityEnabled &&
-                token?.token?.kind !== 'erc1155' &&
-                token?.token?.rarityRank && (
+                token?.kind !== 'erc1155' &&
+                token?.rarityRank && (
                   <Flex align="center" css={{ gap: 5 }}>
                     <img
                       style={{ width: 13, height: 13 }}
                       src="/icons/rarity-icon.svg"
                     />
                     <Text style="subtitle3" as="p">
-                      {formatNumber(token?.token?.rarityRank)}
+                      {formatNumber(token?.rarityRank)}
                     </Text>
                   </Flex>
                 )}
@@ -288,16 +316,16 @@ export default ({
               )}
             </>
           </Flex>
-          {token?.token?.lastSale?.price?.amount?.decimal ? (
+          {token?.lastSale?.price?.amount?.decimal ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
                 Last Sale
               </Text>
               <FormatCryptoCurrency
                 logoHeight={12}
-                amount={token.token.lastSale.price.amount?.decimal}
-                address={token.token.lastSale.price.currency?.contract}
-                decimals={token.token.lastSale.price.currency?.decimals}
+                amount={token.lastSale.price.amount?.decimal}
+                address={token.lastSale.price.currency?.contract}
+                decimals={token.lastSale.price.currency?.decimals}
                 textStyle="subtitle3"
                 maximumFractionDigits={4}
               />

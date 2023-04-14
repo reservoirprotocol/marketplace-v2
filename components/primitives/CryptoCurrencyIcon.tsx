@@ -4,6 +4,7 @@ import { constants } from 'ethers'
 import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
 import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
+import { useTheme } from 'next-themes'
 
 type Props = {
   address: string
@@ -17,14 +18,10 @@ const CryptoCurrencyIcon: FC<Props> = ({
   chainId,
   css,
 }) => {
-  const client = useReservoirClient()
-  const chain = client?.chains?.find((chain) =>
-    chainId !== undefined ? chain.id === chainId : chain.default
-  )
-
+  const { theme } = useTheme()
   return (
     <StyledImg
-      src={`${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`}
+      src={theme === 'dark' ? `/icons/eth-icon-light.svg`: `/icons/eth-icon-dark.svg`}
       css={css}
     />
   )

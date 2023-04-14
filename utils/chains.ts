@@ -16,7 +16,7 @@ type ReservoirChain = Chain & {
   community?: string
 }
 
-export const DefaultChain: ReservoirChain = {
+export const Ethereum: ReservoirChain = {
   ...mainnet,
   // Any url to display the logo of the chain in light mode
   lightIconUrl: '/icons/eth-icon-dark.svg',
@@ -44,41 +44,44 @@ export const DefaultChain: ReservoirChain = {
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
 }
 
+export const gusanbox = {
+  id: 99999,
+  network: "G.U.Sandbox chain",
+  name: "G.U.Sandbox chain",
+  nativeCurrency: {
+    name: "GU Ether",
+    symbol: "STH",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://sandbox1.japanopenchain.org:8545"],
+    },
+    public: {
+      http: ["https://sandbox1.japanopenchain.org:8545"],
+    }
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://sandbox1.japanopenchain.org",
+    },
+  },
+  testnet: true,
+};
+
+export const DefaultChain = {
+  ...gusanbox,
+  lightIconUrl: '/icons/goerli-icon-dark.svg',
+  darkIconUrl: '/icons/goerli-icon-light.svg',
+  reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
+  proxyApi: '/api/reservoir/goerli',
+  routePrefix: 'goerli',
+  apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
+  coingeckoId: 'goerli-eth',
+  collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+  community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+}
 export default [
   DefaultChain,
-  {
-    ...polygon,
-    lightIconUrl: '/icons/polygon-icon-dark.svg',
-    darkIconUrl: '/icons/polygon-icon-light.svg',
-    reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
-    proxyApi: '/api/reservoir/polygon',
-    routePrefix: 'polygon',
-    apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
-    coingeckoId: 'matic-network',
-    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
-  },
-  {
-    ...arbitrum,
-    name: 'Arbitrum',
-    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-icon-light.svg',
-    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
-    proxyApi: '/api/reservoir/arbitrum',
-    routePrefix: 'arbitrum',
-    apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
-    coingeckoId: 'arbitrum-iou',
-  },
-  {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-  },
 ] as ReservoirChain[]

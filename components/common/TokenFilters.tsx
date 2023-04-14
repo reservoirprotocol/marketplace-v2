@@ -7,14 +7,18 @@ import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 
-type Collections =
-  | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
-  | ReturnType<typeof useUserCollections>['data']
+type Collection = {
+  id: string,
+  name: string,
+  totalTokens: number,
+  // TO-DO: update later
+  image?: string,
 
+}
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
-  collections: Collections
+  collections?: Collection[]
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
   scrollToTop?: () => void
@@ -54,10 +58,10 @@ export const TokenFilters: FC<Props> = ({
         <Flex direction="column">
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
-            let selected = collection?.collection?.id == filterCollection
+            let selected = collection?.id == filterCollection
             return (
               <Flex
-                key={collection?.collection?.id}
+                key={collection?.id}
                 css={{
                   py: '$2',
                   px: '$3',
@@ -74,12 +78,12 @@ export const TokenFilters: FC<Props> = ({
                   if (selected) {
                     setFilterCollection(undefined)
                   } else {
-                    setFilterCollection(collection?.collection?.id)
+                    setFilterCollection(collection?.id)
                   }
                   scrollToTop?.()
                 }}
               >
-                {collection?.collection?.image && (
+                {collection?.image && (
                   <Image
                     style={{
                       borderRadius: '4px',
@@ -87,8 +91,8 @@ export const TokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={collection?.collection?.image as string}
-                    alt={collection?.collection?.name as string}
+                    src={collection?.image as string}
+                    alt={collection?.name as string}
                     width={24}
                     height={24}
                   />
@@ -100,10 +104,10 @@ export const TokenFilters: FC<Props> = ({
                   }}
                   ellipsify
                 >
-                  {collection?.collection?.name}
+                  {collection?.name}
                 </Text>
                 <Text style="subtitle2" css={{ color: '$gray10' }}>
-                  {collection?.ownership?.tokenCount}
+                  {collection?.totalTokens}
                 </Text>
               </Flex>
             )

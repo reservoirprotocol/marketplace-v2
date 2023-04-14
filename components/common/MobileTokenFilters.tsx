@@ -9,12 +9,16 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 
-type Collections =
-  | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
-  | ReturnType<typeof useUserCollections>['data']
+type Collection = {
+  id: string,
+  name: string,
+  totalTokens: number,
+  // TO-DO: update later
+  image?: string,
+}
 
 type Props = {
-  collections: Collections
+  collections?: Collection[]
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
 }
@@ -135,10 +139,10 @@ export const MobileTokenFilters: FC<Props> = ({
             Collections
           </Text>
           {collections?.map((collection) => {
-            let selected = collection?.collection?.id == filterCollection
+            let selected = collection?.id == filterCollection
             return (
               <Flex
-                key={collection?.collection?.id}
+                key={collection?.id}
                 css={{
                   py: '$2',
                   px: '$4',
@@ -154,12 +158,12 @@ export const MobileTokenFilters: FC<Props> = ({
                   if (selected) {
                     setFilterCollection(undefined)
                   } else {
-                    setFilterCollection(collection?.collection?.id)
+                    setFilterCollection(collection?.id)
                   }
                   triggerRef?.current?.click()
                 }}
               >
-                {collection?.collection?.image && (
+                {collection?.image && (
                   <Image
                     style={{
                       borderRadius: '4px',
@@ -167,8 +171,8 @@ export const MobileTokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={collection?.collection?.image as string}
-                    alt={collection?.collection?.name as string}
+                    src={collection?.image as string}
+                    alt={collection?.name as string}
                     width={24}
                     height={24}
                   />
@@ -180,10 +184,11 @@ export const MobileTokenFilters: FC<Props> = ({
                   }}
                   ellipsify
                 >
-                  {collection?.collection?.name}
+                  {collection?.name}
                 </Text>
                 <Text style="subtitle2" css={{ color: '$gray10' }}>
-                  {collection?.ownership?.tokenCount}
+                  {/* TO-DO: this is total tokens of collection, must use total tokens of user owner */}
+                  {collection?.totalTokens}
                 </Text>
               </Flex>
             )

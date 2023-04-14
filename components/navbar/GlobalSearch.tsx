@@ -27,10 +27,36 @@ import Link from 'next/link'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { SearchCollection } from 'pages/api/globalSearch'
 import { formatNumber } from 'utils/numbers'
 import { useTheme } from 'next-themes'
 import Img from 'components/primitives/Img'
+import { gql } from '__generated__'
+import { useLazyQuery } from '@apollo/client';
+import { ethers } from 'ethers'
+
+const GLOBAL_SEARCH = gql(/* GraphQL */`
+  query GetCollectionById($id: ID!) {
+      collection(id: $id) {
+        id
+        name
+        totalTokens
+      }
+    }
+  `);
+
+type SearchCollection = { 
+  id: string
+  name: string
+  totalTokens: number
+  // To-dos: support later
+  image?: string
+  openseaVerificationStatus?: string
+  darkChainIcon?: string;
+  lightChainIcon?: string;
+  volumeCurrencySymbol?: string
+  allTimeVolume?: number
+  volumeCurrencyDecimals?: number
+}
 
 type Props = {
   collection: SearchCollection
@@ -41,13 +67,13 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
   const { theme } = useTheme()
 
   const tokenCount = useMemo(
-    () => formatNumber(collection.tokenCount),
-    [collection.tokenCount]
+    () => formatNumber(collection.totalTokens),
+    [collection.totalTokens]
   )
 
   return (
     <Link
-      href={`/collection/${collection.chainName}/${collection.collectionId}`}
+      href={`/collection/${collection.id}`}
       style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}
       onClick={() => handleSelectResult(collection)}
     >
@@ -161,7 +187,7 @@ type SearchResultProps = {
   }
   handleSelectResult: (result: SearchCollection) => void
 }
-
+ 
 const SearchResult: FC<SearchResultProps> = ({
   result,
   handleSelectResult,
@@ -193,19 +219,20 @@ const GlobalSearch = forwardRef<
 
   const debouncedSearch = useDebounce(search, 500)
 
+  const [ triggerSearch ] = useLazyQuery(GLOBAL_SEARCH)
+
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   useEffect(() => {
-    const getSearchResults = async () => {
+    const getSearchResults = async () => { 
       setSearching(true)
-      let res = await fetch(`/api/globalSearch?query=${debouncedSearch}`).then(
-        (res) => res.json()
-      )
-
-      setResults(res.results)
+      const { data } = await triggerSearch({
+        variables: { id: debouncedSearch }
+      })
+      setResults(data?.collection ? [data?.collection] as any: [])
       setSearching(false)
     }
-    if (debouncedSearch.length >= 2) {
+    if (ethers.utils.isAddress(debouncedSearch)) {
       getSearchResults()
     } else {
       setResults([])
@@ -229,7 +256,7 @@ const GlobalSearch = forwardRef<
         (result: SearchCollection) =>
           result.allTimeVolume !== undefined &&
           result.volumeCurrencySymbol !== undefined &&
-          result.tokenCount !== undefined
+          result.totalTokens !== undefined
       )
 
       setRecentResults(results)
@@ -240,7 +267,7 @@ const GlobalSearch = forwardRef<
   const handleSelectResult = (selectedResult: SearchCollection) => {
     if (
       !recentResults.find(
-        (result) => result.collectionId === selectedResult.collectionId
+        (result) => result.id === selectedResult.id
       )
     ) {
       setRecentResults([selectedResult, ...recentResults.slice(0, 4)])
@@ -360,7 +387,7 @@ const GlobalSearch = forwardRef<
                 {recentResults &&
                   recentResults.map((result) => (
                     <SearchResult
-                      key={result?.collectionId}
+                      key={result?.id}
                       result={{ type: 'collection', data: result }}
                       handleSelectResult={handleSelectResult}
                     />
@@ -372,7 +399,8 @@ const GlobalSearch = forwardRef<
                 .slice(0, 8)
                 .map((result) => (
                   <SearchResult
-                    result={result}
+                    // TO-DO: return only collection from now
+                    result={{ type: 'collection', data: result }} 
                     handleSelectResult={handleSelectResult}
                   />
                 ))}

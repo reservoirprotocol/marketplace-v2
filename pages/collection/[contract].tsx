@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from '../../../components/primitives'
+import { Text, Flex, Box } from '../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -48,6 +48,40 @@ import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
 import Link from 'next/link'
 import Img from 'components/primitives/Img'
+import { addApolloState, initializeApollo } from 'graphql/apollo-client'
+import { gql } from '__generated__'
+import { useQuery } from '@apollo/client'
+
+type Collection = {
+  id: string,
+  name: string,
+  totalTokens: number,
+  // TO-DO: update later
+  image?: string,
+  banner?: string,
+  description?: string
+  openseaVerificationStatus?: any
+}
+
+type Token = {
+  id: string
+  tokenID: any
+  tokenURI?: string | null
+  owner: {
+    id: string
+  }
+  collection: {
+    id: string
+    name: string
+    totalTokens: number
+    // TO-DO: update later
+    floorAskPrice?: any
+  }
+  ownership?: any
+  topBid?: any
+  kind?: any
+  market?: any
+}
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -83,93 +117,70 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    id,
-    includeTopBid: true,
+  const { collection } = ssr
+ 
+  const GET_TOKENS_BY_COLLECTION = gql(/* GraphQL */`
+  query GetTokensByCollection($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {
+    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {
+      id
+      tokenID
+      tokenURI
+      collection {
+        id
+        name
+        totalTokens
+      }
+      owner {
+        id
+      }
+    }
   }
+  `);
 
-  const { data: collections } = useCollections(collectionQuery, {
-    fallbackData: [ssr.collection],
-  })
-
-  let collection = collections && collections[0]
-
-  let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
-    limit: 20,
-    collection: id,
-    sortBy: 'floorAskPrice',
-    sortDirection: 'asc',
-    includeQuantity: true,
-    includeLastSale: true,
-  }
-
-  const sortDirection = router.query['sortDirection']?.toString()
-  const sortBy = router.query['sortBy']?.toString()
-
-  if (sortBy === 'tokenId' || sortBy === 'rarity') tokenQuery.sortBy = sortBy
-  if (sortDirection === 'desc') tokenQuery.sortDirection = 'desc'
-
-  // Extract all queries of attribute type
-  Object.keys({ ...router.query }).map((key) => {
-    if (
-      key.startsWith('attributes[') &&
-      key.endsWith(']') &&
-      router.query[key] !== ''
-    ) {
-      //@ts-ignore
-      tokenQuery[key] = router.query[key]
+  const { data, loading, fetchMore } = useQuery(GET_TOKENS_BY_COLLECTION, {
+    variables: {
+      first: 10,
+      skip: 0,
+      where: {
+        collection: collection?.id
+      }
     }
   })
 
-  const {
-    data: tokens,
-    mutate,
-    fetchNextPage,
-    setSize,
-    resetCache,
-    isFetchingInitialData,
-    isFetchingPage,
-    hasNextPage,
-  } = useDynamicTokens(tokenQuery, {
-    fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
-  })
+  const tokens = (data?.tokens || [] )as Token[]
 
-  const attributesData = useAttributes(id)
+  // TO-DO: query attributes
+  // const attributesData = useAttributes(id)
 
-  const attributes = useMemo(() => {
-    if (!attributesData.data) {
-      return []
-    }
-    return attributesData.data
-      ?.filter(
-        (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-      )
-      .sort((a, b) => a.key.localeCompare(b.key))
-  }, [attributesData.data])
+  // const attributes = useMemo(() => {
+  //   if (!attributesData.data) {
+  //     return []
+  //   }
+  //   return attributesData.data
+  //     ?.filter(
+  //       (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+  //     )
+  //     .sort((a, b) => a.key.localeCompare(b.key))
+  // }, [attributesData.data])
 
-  if (attributeFiltersOpen && attributesData.response && !attributes.length) {
-    setAttributeFiltersOpen(false)
-  }
+  // if (attributeFiltersOpen && attributesData.response && !attributes.length) {
+  //   setAttributeFiltersOpen(false)
+  // }
 
-  let creatorRoyalties = collection?.royalties?.bps
-    ? collection?.royalties?.bps * 0.01
-    : 0
-  let chain = titleCase(router.query.chain as string)
+  // const rarityEnabledCollection = Boolean(
+  //   collection?.tokenCount &&
+  //     +collection.tokenCount >= 2 &&
+  //     attributes &&
+  //     attributes?.length >= 2
+  // )
 
-  const rarityEnabledCollection = Boolean(
-    collection?.tokenCount &&
-      +collection.tokenCount >= 2 &&
-      attributes &&
-      attributes?.length >= 2
-  )
+  const attributes = [] as any
 
-  //@ts-ignore: Ignore until we regenerate the types
-  const contractKind = collection?.contractKind?.toUpperCase()
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ variables: { skip: data?.tokens.length || 0 }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -182,9 +193,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   return (
     <Layout>
       <Head
-        ogImage={ssr?.collection?.collections?.[0]?.banner}
-        title={ssr?.collection?.collections?.[0]?.name}
-        description={ssr?.collection?.collections?.[0]?.description as string}
+        ogImage={ssr?.collection?.banner}
+        title={ssr?.collection?.name}
+        description={ssr?.collection?.description as string}
       />
 
       {collection ? (
@@ -258,23 +269,25 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         <Text style="body1" color="subtle">
                           Token Standard{' '}
                         </Text>
-                        <Text style="body1">{contractKind}</Text>
+                        {/* TO-DO: support ERC1155 later */}
+                        <Text style="body1">ERC721</Text>
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
                           Chain{' '}
                         </Text>
                         <Link
-                          href={`/collection-rankings?chain=${router.query.chain}`}
+                          href={`/collection-rankings`}
                         >
-                          <Text style="body1">{chain}</Text>
+                          <Text style="body1">G.U Sandbox Chain</Text>
                         </Link>
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
                           Creator Earnings
                         </Text>
-                        <Text style="body1"> {creatorRoyalties}%</Text>
+                        {/* TO-DO: query royalty fee */}
+                        <Text style="body1"> 0%</Text>
                       </Box>
                     </Flex>
                   )}
@@ -314,32 +327,35 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 <Text style="body1" color="subtle">
                   Token Standard{' '}
                 </Text>
-                <Text style="body1">{contractKind}</Text>
+                {/* TO-DO: support ERC1155 later */}
+                <Text style="body1">ERC721</Text>
               </Flex>
               <Flex direction="column">
                 <Text style="body1" color="subtle">
                   Chain{' '}
                 </Text>
-                <Text style="body1">{chain}</Text>
+                <Text style="body1">G.U Sandbox Chain</Text>
               </Flex>
               <Flex direction="column">
                 <Text style="body1" color="subtle">
                   Creator Earnings
                 </Text>
-                <Text style="body1"> {creatorRoyalties}%</Text>
+                  {/* TO-DO: query royalty fee */}
+                <Text style="body1"> 0%</Text>
               </Flex>
             </Grid>
           )}
           <StatHeader collection={collection} />
           <Tabs.Root
             defaultValue="items"
-            onValueChange={(value) => {
-              if (value === 'items') {
-                resetCache()
-                setSize(1)
-                mutate()
-              }
-            }}
+            // TO-DO: update later
+            // onValueChange={(value) => {
+            //   if (value === 'items') {
+            //     resetCache()
+            //     setSize(1)
+            //     mutate()
+            //   }
+            // }}
           >
             <TabsList>
               <TabsTrigger value="items">Items</TabsTrigger>
@@ -354,7 +370,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 }}
                 ref={scrollRef}
               >
-                {isSmallDevice ? (
+                {/* {isSmallDevice ? (
                   <MobileAttributeFilters
                     attributes={attributes}
                     scrollToTop={scrollToTop}
@@ -366,7 +382,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     setOpen={setAttributeFiltersOpen}
                     scrollToTop={scrollToTop}
                   />
-                )}
+                )} */}
                 <Box
                   css={{
                     flex: 1,
@@ -419,7 +435,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       },
                     }}
                   >
-                    {isFetchingInitialData
+                    {loading
                       ? Array(10)
                           .fill(null)
                           .map((_, index) => (
@@ -433,8 +449,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               token?.market?.floorAsk?.quantityRemaining
                             }
                             address={address as Address}
-                            mutate={mutate}
-                            rarityEnabled={rarityEnabledCollection}
+                            // mutate={mutate}
+                            // TO-DO: later
+                            rarityEnabled={false}
                             onMediaPlayed={(e) => {
                               if (
                                 playingElement &&
@@ -451,17 +468,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             }}
                           />
                         ))}
-                    <Box
+                    {/* <Box
                       ref={loadMoreRef}
                       css={{
-                        display: isFetchingPage ? 'none' : 'block',
+                        display: loading ? 'none' : 'block',
                       }}
                     >
-                      {(hasNextPage || isFetchingPage) &&
-                        !isFetchingInitialData && <LoadingCard />}
-                    </Box>
-                    {(hasNextPage || isFetchingPage) &&
-                      !isFetchingInitialData && (
+                      {!loading && <LoadingCard />}
+                    </Box> */}
+                    {/* TO-DOs: has more update later */}
+                    {/* {
+                      !loading && (
                         <>
                           {Array(6)
                             .fill(null)
@@ -469,9 +486,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               <LoadingCard key={`loading-card-${index}`} />
                             ))}
                         </>
-                      )}
+                      )} */}
                   </Grid>
-                  {tokens.length == 0 && !isFetchingPage && (
+                  {tokens.length == 0 && !loading && (
                     <Flex
                       direction="column"
                       align="center"
@@ -544,89 +561,43 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collection?: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
+    collection?: Collection
     hasAttributes: boolean
   }
   id: string | undefined
 }> = async ({ params }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey, routePrefix } =
-    supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
-    DefaultChain
-  const headers: RequestInit = {
-    headers: {
-      'x-api-key': apiKey || '',
+
+  const apolloClient = initializeApollo()
+
+  const GET_COLLECTION_BY_ID = gql(/* GraphQL */`
+    query GetCollectionById($id: ID!) {
+        collection(id: $id) {
+          id
+          name
+          totalTokens
+        }
+      }
+  `);
+
+  const { data } = await apolloClient.query({
+    query: GET_COLLECTION_BY_ID,
+    variables: {
+      id: id?.toLocaleLowerCase() as string
     },
-  }
+  })
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      id,
-      includeTopBid: true,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
 
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery,
-    headers
-  )
+  // TO-DO: fetch list attributes later
+  const hasAttributes = false
 
-  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
-    collection: id,
-    sortBy: 'floorAskPrice',
-    sortDirection: 'asc',
-    limit: 20,
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-    includeDynamicPricing: true,
-    includeAttributes: true,
-    includeQuantity: true,
-    includeLastSale: true,
-  }
-
-  const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v6`,
-    tokensQuery,
-    headers
-  )
-
-  const promises = await Promise.allSettled([
-    collectionsPromise,
-    tokensPromise,
-  ]).catch(() => {})
-  const collection: Props['ssr']['collection'] =
-    promises?.[0].status === 'fulfilled' && promises[0].value.data
-      ? (promises[0].value.data as Props['ssr']['collection'])
-      : {}
-  const tokens: Props['ssr']['tokens'] =
-    promises?.[1].status === 'fulfilled' && promises[1].value.data
-      ? (promises[1].value.data as Props['ssr']['tokens'])
-      : {}
-
-  const hasAttributes =
-    tokens?.tokens?.some(
-      (token) => (token?.token?.attributes?.length || 0) > 0
-    ) || false
-
-  if (
-    collection &&
-    collection.collections?.[0].contractKind === 'erc1155' &&
-    Number(collection?.collections?.[0].tokenCount) === 1 &&
-    tokens?.tokens?.[0].token?.tokenId !== undefined
-  ) {
-    return {
-      redirect: {
-        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
-        permanent: false,
-      },
-    }
-  }
-
-  return {
-    props: { ssr: { collection, tokens, hasAttributes }, id },
-    revalidate: 30,
-  }
+  return addApolloState(apolloClient, {
+    props: {
+      ssr: { collection: data?.collection, hasAttributes },
+      id 
+    },
+    revalidate: 30
+  })
 }
 
 export default CollectionPage

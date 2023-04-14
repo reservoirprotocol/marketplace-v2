@@ -16,8 +16,9 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { motion } from 'framer-motion'
 
+
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
+  token?: any
 }
 
 const FullscreenMedia: FC<Props> = ({ token }) => {

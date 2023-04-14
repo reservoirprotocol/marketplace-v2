@@ -1,6 +1,7 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { Collection } from '__generated__/graphql'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import {
@@ -20,7 +21,7 @@ import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 type Props = {
-  collections: ReturnType<typeof useCollections>['data']
+  collections: Pick<Collection, "id"| "name">[]
   loading?: boolean
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
@@ -95,13 +96,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   rank,
   volumeKey,
 }) => {
-  const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   if (isSmallDevice) {
     return (
       <Link
-        href={`/collection/${routePrefix}/${collection.id}`}
+        href={`/collection/${collection.id}`}
         style={{ display: 'inline-block', minWidth: 0, marginBottom: 24 }}
         key={collection.id}
       >
@@ -176,7 +176,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link
-            href={`/collection/${routePrefix}/${collection.id}`}
+            href={`/collection/${collection.id}`}
             style={{ display: 'inline-block', width: '100%', minWidth: 0 }}
           >
             <Flex

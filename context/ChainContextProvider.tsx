@@ -45,7 +45,7 @@ const ChainContextProvider: FC<any> = ({ children }) => {
 
   let currentChain = DefaultChain
   if (globalChainId && supportedChainsMap[globalChainId]) {
-    currentChain = supportedChainsMap[globalChainId]
+    currentChain = supportedChainsMap[globalChainId] as any
   }
 
   return (
