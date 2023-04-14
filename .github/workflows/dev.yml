@@ -1,0 +1,52 @@
+name: Deploy to Development
+
+on:
+  push:
+    branches: ['main']
+
+env:
+  PROJECT_ID: 'gu-nft-marketplace-dev'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Cache node modules
+        id: cache
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: v1-dependencies-${{ hashFiles('**/pacckage.json') }}
+          restore-keys: |
+            v1-dependencies-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install npm modules
+        run: npm i
+
+      - name: Build Application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: 'https://gu-nft-marketplace-dev.an.r.appspot.com/graphql'
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+
+      - name: Set Config
+        run: gcloud config set app/cloud_build_timeout 1200
+
+      - name: Deploy to App Engine
+        run: gcloud app deploy development.yaml --quiet --no-promote
