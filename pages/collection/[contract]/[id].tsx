@@ -7,7 +7,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
-  TokenMedia,
+  // TokenMedia,
   useAttributes,
   useBids,
   useCollections,
@@ -64,6 +64,8 @@ import { Head } from 'components/Head'
 import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
 import { Token } from 'types/workaround'
+import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
+import { useNft } from 'use-nft'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -128,6 +130,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const hasAttributes =
     token?.attributes && token?.attributes.length > 0
+  
+  // TO-DO: remove later, should using token.image
+  const { nft } = useNft(token.collection.id, token.tokenID)
 
   const trigger = (
     <Button
@@ -262,8 +267,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               },
             }}
           >
-            {/* <TokenMedia
-              token={token?.token}
+            <TokenMedia
+              token={{...token, image: nft?.image }}
               videoOptions={{ autoPlay: true, muted: true }}
               style={{
                 width: '100%',
@@ -280,9 +285,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   description: 'Request to refresh this token was accepted.',
                 })
               }}
-            /> */}
+            />
             {/* TO-DO: later */}
-            <FullscreenMedia token={token} />
+            <FullscreenMedia token={{...token, image: nft?.image }} />
           </Box>
 
           {token?.attributes && !isSmallDevice && (

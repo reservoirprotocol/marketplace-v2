@@ -29,6 +29,7 @@ export type Token = {
   isFlagged?: any
   rarityRank?: any
   lastSale?: any
+  media?: any
 }
 
 export type Collection = {

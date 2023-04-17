@@ -1,5 +1,6 @@
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
 // import {
 //   extractMediaType,
 //   TokenMedia,
@@ -20,6 +21,7 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { Token } from 'types/workaround'
+import { useNft } from 'use-nft'
 import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
 
@@ -55,6 +57,9 @@ export default ({
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.owner?.id?.toLowerCase() !== address?.toLowerCase()
+
+  // TO-DO: remove later, should using token.image
+  const { nft } = useNft(token.collection.id, token.tokenID)
 
   return (
     <Box
@@ -157,9 +162,8 @@ export default ({
         href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
-          {/* TO-DO: later */}
-          {/* <TokenMedia
-            token={token}
+          <TokenMedia
+            token={{...token, image: nft?.image}}
             style={{
               width: '100%',
               transition: 'transform .3s ease-in-out',
@@ -186,7 +190,7 @@ export default ({
                 description: 'Request to refresh this token was accepted.',
               })
             }}
-          /> */}
+          />
         </Box>
       </Link>
       <Link

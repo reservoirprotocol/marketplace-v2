@@ -35,6 +35,7 @@ import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
+import { NftProvider } from 'use-nft'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -84,7 +85,12 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         <ChainContextProvider>
           <AnalyticsProvider>
             <ApolloProvider client={client}>
-              <MyApp {...props} />
+              {/* TO-DO: later */}
+              <NftProvider fetcher={["ethers", {
+                provider: wagmiClient.provider as any
+              }]}>
+                <MyApp {...props} />
+              </NftProvider>
             </ApolloProvider>
           </AnalyticsProvider>
         </ChainContextProvider>
