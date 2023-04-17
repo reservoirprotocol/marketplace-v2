@@ -19,33 +19,9 @@ import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
+import { Token } from 'types/workaround'
 import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
-
-type Token = {
-  id: string
-  tokenID: any
-  tokenURI?: string | null
-  owner: {
-    id: string
-  }
-  collection: {
-    id: string
-    name: string
-    totalTokens: number
-    // TO-DO: update later
-    floorAskPrice?: any
-  }
-  ownership?: any
-  topBid?: any
-  kind?: any
-  market?: any
-  isFlagged?: any
-  isInCart?: any
-  rarityRank?: any
-  lastSale?: any
-}
-
 
 type TokenCardProps = {
   token: Token

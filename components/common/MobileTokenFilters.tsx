@@ -8,14 +8,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
-
-type Collection = {
-  id: string,
-  name: string,
-  totalTokens: number,
-  // TO-DO: update later
-  image?: string,
-}
+import { Collection } from 'types/workaround'
 
 type Props = {
   collections?: Collection[]

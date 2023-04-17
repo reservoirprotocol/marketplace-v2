@@ -51,37 +51,7 @@ import Img from 'components/primitives/Img'
 import { addApolloState, initializeApollo } from 'graphql/apollo-client'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
-
-type Collection = {
-  id: string,
-  name: string,
-  totalTokens: number,
-  // TO-DO: update later
-  image?: string,
-  banner?: string,
-  description?: string
-  openseaVerificationStatus?: any
-}
-
-type Token = {
-  id: string
-  tokenID: any
-  tokenURI?: string | null
-  owner: {
-    id: string
-  }
-  collection: {
-    id: string
-    name: string
-    totalTokens: number
-    // TO-DO: update later
-    floorAskPrice?: any
-  }
-  ownership?: any
-  topBid?: any
-  kind?: any
-  market?: any
-}
+import { Collection, Token } from 'types/workaround'
 
 type ActivityTypes = Exclude<
   NonNullable<

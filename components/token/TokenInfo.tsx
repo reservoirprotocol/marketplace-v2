@@ -16,48 +16,7 @@ import ReactMarkdown from 'react-markdown'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import titleCase from 'utils/titleCase'
 import { useRouter } from 'next/router'
-
-type Token = {
-  id: string
-  tokenID: any
-  tokenURI?: string | null
-  owner: {
-    id: string
-  }
-  collection: {
-    id: string
-    name: string
-    totalTokens: number
-    // TO-DO: update later
-    floorAskPrice?: any
-    banner?: any
-    description?: any
-    openseaVerificationStatus?: any
-    image?: any
-  }
-  ownership?: any
-  topBid?: any
-  kind?: any
-  attributes?: any
-  name?: any
-  image?: any
-}
-
-type Collection = {
-  id: string
-  name: string
-  totalTokens: number
-  // TO-DO: update later
-  floorAskPrice?: any
-  banner?: any
-  description?: any
-  openseaVerificationStatus?: any
-  twitterUsername?: any
-  image?: any
-  discordUrl?: any
-  externalUrl?: any
-  royalties?: any
-}
+import { Collection, Token } from 'types/workaround'
 
 
 type Props = {

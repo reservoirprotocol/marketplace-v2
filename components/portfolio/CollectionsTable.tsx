@@ -27,18 +27,7 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { Collection_OrderBy } from '__generated__/graphql'
-
-type Collection = {
-  id: string,
-  name: string,
-  totalTokens: number,
-  // TO-DO: update later
-  image?: string,
-  volume?: any
-  volumeChange?: any
-  topBidValue?: any
-  floorAskPrice?: any
-}
+import { Collection } from 'types/workaround'
 
 type Props = {
   address: Address | undefined

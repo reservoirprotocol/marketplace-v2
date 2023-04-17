@@ -30,22 +30,7 @@ import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { Token_OrderBy } from '__generated__/graphql'
-
-type Token = {
-  id: string
-  tokenID: any
-  tokenURI?: string | null
-  collection: {
-    id: string
-    name: string
-    totalTokens: number
-    // TO-DO: update later
-    floorAskPrice?: any
-  }
-  ownership?: any
-  topBid?: any
-  kind?: any
-}
+import { Token } from 'types/workaround'
 
 type Props = {
   address: Address | undefined

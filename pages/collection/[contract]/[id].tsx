@@ -63,31 +63,7 @@ import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
 import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
-
-type Token = {
-  id: string
-  tokenID: any
-  tokenURI?: string | null
-  owner: {
-    id: string
-  }
-  collection: {
-    id: string
-    name: string
-    totalTokens: number
-    // TO-DO: update later
-    floorAskPrice?: any
-    banner?: any
-    description?: any
-    openseaVerificationStatus?: any
-  }
-  ownership?: any
-  topBid?: any
-  kind?: any
-  attributes?: any
-  name?: any
-  image?: any
-}
+import { Token } from 'types/workaround'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 

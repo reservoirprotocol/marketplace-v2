@@ -6,15 +6,8 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { Collection } from 'types/workaround'
 
-type Collection = {
-  id: string,
-  name: string,
-  totalTokens: number,
-  // TO-DO: update later
-  image?: string,
-
-}
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
