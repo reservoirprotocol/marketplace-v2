@@ -62,6 +62,7 @@ import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
 import { OffersTable } from 'components/token/OffersTable'
+import { ListingsTable } from 'components/token/ListingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -197,6 +198,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           break
         case 'activity':
           tab = 'activity'
+          break
+        case 'listings':
+          tab = 'listings'
           break
         case 'offers':
           tab = 'offers'
@@ -516,6 +520,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   )}
                   <TabsTrigger value="info">Info</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
+                  <TabsTrigger value="listings">Listings</TabsTrigger>
                   <TabsTrigger value="offers">Offers</TabsTrigger>
                 </TabsList>
                 <TabsContent value="attributes">
@@ -570,6 +575,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   <TokenActivityTable
                     id={`${contract}:${token?.token?.tokenId}`}
                     activityTypes={activityTypes}
+                  />
+                </TabsContent>
+                <TabsContent value="listings">
+                  <ListingsTable
+                    token={`${contract}:${token?.token?.tokenId}`}
+                    address={account.address}
+                    is1155={is1155}
+                    isOwner={isOwner}
                   />
                 </TabsContent>
                 <TabsContent value="offers" css={{ mr: -15, width: '100%' }}>
