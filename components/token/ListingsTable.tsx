@@ -243,8 +243,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
             />
           ) : null}
-          {/* Not owner, erc 1155 */}
-          {!isOwner && is1155 ? (
+          {/* Not user's listing, erc 1155 */}
+          {!isUserListing && is1155 ? (
             <AddToCart
               orderId={listing.id}
               buttonCss={{
