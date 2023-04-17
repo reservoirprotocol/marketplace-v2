@@ -1,4 +1,4 @@
-import React, { ComponentProps, FC } from 'react'
+import React, { ComponentProps, FC, ReactNode } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner } from 'wagmi'
 import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
@@ -9,13 +9,24 @@ import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
+  tokenId?: string
+  collectionId?: string
+  orderId?: string
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
+  buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
 }
 
-const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
+const BuyNow: FC<Props> = ({
+  tokenId,
+  collectionId,
+  orderId = undefined,
+  mutate,
+  buttonCss,
+  buttonProps = {},
+  buttonChildren,
+}) => {
   const { data: signer } = useSigner()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
@@ -27,23 +38,12 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     signer && activeChain?.id !== marketplaceChain.id
   )
 
-  if (
-    token?.market?.floorAsk?.price?.amount === null ||
-    token?.market?.floorAsk?.price?.amount === undefined
-  ) {
-    return null
-  }
-
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
-      Buy Now
+      {buttonChildren}
     </Button>
   )
-  const canBuy =
-    signer &&
-    token?.token?.tokenId &&
-    token?.token?.collection?.id &&
-    !isInTheWrongNetwork
+  const canBuy = signer && tokenId && collectionId && !isInTheWrongNetwork
 
   return !canBuy ? (
     <Button
@@ -64,13 +64,14 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
       }}
       {...buttonProps}
     >
-      Buy Now
+      {buttonChildren}
     </Button>
   ) : (
     <BuyModal
       trigger={trigger}
-      tokenId={token?.token?.tokenId}
-      collectionId={token?.token?.collection?.id}
+      tokenId={tokenId}
+      collectionId={collectionId}
+      orderId={orderId}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
       // referrer={"0xabc"}

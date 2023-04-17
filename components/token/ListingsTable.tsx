@@ -1,9 +1,10 @@
-import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
+import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useBids } from '@reservoir0x/reservoir-kit-ui'
-import { AcceptBid } from 'components/buttons'
-import CancelBid from 'components/buttons/CancelBid'
-import EditBid from 'components/buttons/EditBid'
+import { useListings } from '@reservoir0x/reservoir-kit-ui'
+import { BuyNow } from 'components/buttons'
+import AddToCart from 'components/buttons/AddToCart'
+import CancelListing from 'components/buttons/CancelListing'
+import EditListing from 'components/buttons/EditListing'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import {
   Box,
@@ -27,17 +28,22 @@ import { OnlyUserToggle } from './OnlyUserToggle'
 
 type Props = {
   address?: string
-  token: Parameters<typeof useBids>['0']['token']
+  token: Parameters<typeof useListings>['0']['token']
   is1155: boolean
   isOwner: boolean
 }
 
-export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
+export const ListingsTable: FC<Props> = ({
+  token,
+  address,
+  is1155,
+  isOwner,
+}) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
   const [userOnly, setUserOnly] = useState(false)
 
-  let bidsQuery: Parameters<typeof useBids>['0'] = {
+  let listingsQuery: Parameters<typeof useListings>['0'] = {
     maker: userOnly ? address : undefined,
     token: token,
     includeCriteriaMetadata: true,
@@ -48,21 +54,24 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
   const { chain } = useContext(ChainContext)
 
   if (chain.community) {
-    bidsQuery.community = chain.community
+    listingsQuery.community = chain.community
   }
 
   const {
-    data: offers,
+    data: listings,
     fetchNextPage,
     mutate,
     isValidating,
     isFetchingPage,
     isLoading,
-  } = useBids(bidsQuery, { revalidateFirstPage: true })
+  } = useListings(listingsQuery, { revalidateFirstPage: true })
 
-  const { data: userOffers } = useBids({ ...bidsQuery, maker: address })
+  const { data: userListings } = useListings({
+    ...listingsQuery,
+    maker: address,
+  })
 
-  const userHasOffers = userOffers.length > 0
+  const userHasListings = userListings.length > 0
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -73,20 +82,20 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
 
   return (
     <>
-      {!isValidating && !isFetchingPage && offers && offers.length === 0 ? (
+      {!isValidating && !isFetchingPage && listings && listings.length === 0 ? (
         <Flex
           direction="column"
           align="center"
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
           <Text css={{ color: '$gray11' }}>
-            <FontAwesomeIcon icon={faHand} size="2xl" />
+            <FontAwesomeIcon icon={faTag} size="2xl" />
           </Text>
-          <Text css={{ color: '$gray11' }}>No offers made yet</Text>
+          <Text css={{ color: '$gray11' }}>No listings yet</Text>
         </Flex>
       ) : (
         <Flex direction="column" css={{ gap: '$4' }}>
-          {address && userHasOffers ? (
+          {address && userHasListings && is1155 ? (
             <OnlyUserToggle
               checked={userOnly}
               onCheckedChange={(checked) => setUserOnly(checked)}
@@ -102,11 +111,11 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
               pb: '$2',
             }}
           >
-            {offers.map((offer, i) => {
+            {listings.map((listing, i) => {
               return (
-                <OfferTableRow
-                  key={`${offer?.id}-${i}`}
-                  offer={offer}
+                <ListingTableRow
+                  key={`${listing?.id}-${i}`}
+                  listing={listing}
                   address={address}
                   is1155={is1155}
                   isOwner={isOwner}
@@ -128,38 +137,38 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
   )
 }
 
-type OfferTableRowProps = {
-  offer: ReturnType<typeof useBids>['data'][0]
+type ListingTableRowProps = {
+  listing: ReturnType<typeof useListings>['data'][0]
   is1155: boolean
   isOwner: boolean
   address?: string
   mutate?: MutatorCallback
 }
 
-const OfferTableRow: FC<OfferTableRowProps> = ({
-  offer,
+const ListingTableRow: FC<ListingTableRowProps> = ({
+  listing,
   is1155,
   isOwner,
   address,
   mutate,
 }) => {
-  const { displayName: fromDisplayName } = useENSResolver(offer.maker)
+  const { displayName: fromDisplayName } = useENSResolver(listing.maker)
   const { reservoirBaseUrl } = useMarketplaceChain()
-  const expiration = useTimeSince(offer?.expiration)
+  const expiration = useTimeSince(listing?.expiration)
   const expirationText = expiration ? `Expires ${expiration}` : null
 
-  const isUserOffer = address?.toLowerCase() === offer.maker.toLowerCase()
+  const isUserListing = address?.toLowerCase() === listing.maker.toLowerCase()
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
+  const orderZone = listing?.rawData?.zone
+  const orderKind = listing?.kind
 
   const isOracleOrder =
     orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
 
-  const offerSourceName = offer?.source?.name
-  const offerSourceDomain = offer?.source?.domain
-  const offerSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
-    offerSourceDomain || offerSourceName
+  const listingSourceName = listing?.source?.name
+  const listingSourceDomain = listing?.source?.domain
+  const listingSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
+    listingSourceDomain || listingSourceName
   }/logo/v2`
 
   return (
@@ -179,14 +188,19 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
       >
         <Flex align="center" css={{ gap: '$1' }}>
           <FormatCryptoCurrency
-            amount={offer.price?.amount?.decimal}
-            address={offer.price?.currency?.contract}
+            amount={listing.price?.amount?.decimal}
+            address={listing.price?.currency?.contract}
             logoHeight={16}
             textStyle="h6"
           />
-          {offer.price?.amount?.usd ? (
+          {listing.price?.amount?.usd ? (
             <Text style="body2" css={{ color: '$gray11' }} ellipsify>
-              {formatDollar(offer.price?.amount?.usd)}
+              {formatDollar(listing.price?.amount?.usd)}
+            </Text>
+          ) : null}
+          {listing?.quantityRemaining && listing?.quantityRemaining > 1 ? (
+            <Text style="body2" color="subtle" css={{ ml: '$2' }}>
+              x{listing.quantityRemaining}
             </Text>
           ) : null}
         </Flex>
@@ -194,9 +208,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           <Text style="body2" color="subtle" css={{ lineHeight: '14.5px' }}>
             from
           </Text>
-          {offer.maker && offer.maker !== constants.AddressZero ? (
+          {listing.maker && listing.maker !== constants.AddressZero ? (
             <Link
-              href={`/profile/${offer.maker}`}
+              href={`/profile/${listing.maker}`}
               style={{ lineHeight: '14.5px' }}
             >
               <Text
@@ -214,35 +228,43 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           ) : (
             <span>-</span>
           )}
-
-          <img width={16} height={16} src={offerSourceLogo} />
+          <img width={16} height={16} src={listingSourceLogo} />
         </Flex>
       </Flex>
       <Flex direction="column" align="end" css={{ gap: '$2' }}>
         <Flex align="center" css={{ gap: '$2' }}>
-          {/* Owner and not user offer */}
-          {isOwner && !isUserOffer ? (
-            <AcceptBid
-              bidId={offer.id}
-              collectionId={offer.criteria?.data?.collection?.id}
-              tokenId={offer.criteria?.data?.token?.tokenId}
-              buttonChildren={
-                <Text style="subtitle2" css={{ color: 'white' }}>
-                  Accept
-                </Text>
-              }
-              buttonProps={{ color: 'primary' }}
+          {/* Not owner, erc 721 */}
+          {!isOwner && !is1155 ? (
+            <BuyNow
+              tokenId={listing.criteria?.data?.token?.tokenId}
+              collectionId={listing.criteria?.data?.collection?.id}
+              orderId={listing.id}
+              buttonChildren="Buy"
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
             />
           ) : null}
-          {/* Not Owner and is user offer, owner of erc 1155 and is your offer */}
-          {(!isOwner && isUserOffer) || (isOwner && is1155 && isUserOffer) ? (
+          {/* Not owner, erc 1155 */}
+          {!isOwner && is1155 ? (
+            <AddToCart
+              orderId={listing.id}
+              buttonCss={{
+                width: 42,
+                height: 36,
+                minHeight: 36,
+                p: 0,
+                justifyContent: 'center',
+              }}
+              buttonProps={{ corners: 'rounded' }}
+            />
+          ) : null}
+          {/* Owner, erc 721 or erc 1155 */}
+          {isOwner && isUserListing ? (
             <>
               {isOracleOrder ? (
-                <EditBid
-                  bidId={offer.id}
-                  tokenId={offer.criteria?.data?.token?.tokenId}
-                  collectionId={offer.criteria?.data?.collection?.id}
+                <EditListing
+                  listingId={listing.id}
+                  tokenId={listing.criteria?.data?.token?.tokenId}
+                  collectionId={listing.criteria?.data?.collection?.id}
                   buttonChildren={<Text style="subtitle2">Edit</Text>}
                   buttonCss={{
                     fontSize: 14,
@@ -255,8 +277,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                 />
               ) : null}
 
-              <CancelBid
-                bidId={offer?.id as string}
+              <CancelListing
+                listingId={listing?.id}
                 mutate={mutate}
                 trigger={
                   <Flex>
