@@ -10,19 +10,23 @@ import {
   DialogClose,
 } from '@radix-ui/react-dialog'
 import {
-  TokenMedia,
+  // TokenMedia,
   useTokens,
   extractMediaType,
 } from '@reservoir0x/reservoir-kit-ui'
 import { motion } from 'framer-motion'
+import { Token } from 'types/workaround'
+import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
 
 
 type Props = {
-  token?: any
+  token?: Token
 }
 
 const FullscreenMedia: FC<Props> = ({ token }) => {
-  const mediaType = extractMediaType(token?.token)
+    // TO-DO: later
+    const mediaType = undefined
+    // const mediaType = extractMediaType(token?.token)
 
   const trigger = (
     <Button
@@ -107,7 +111,7 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
                 }}
               >
                 <TokenMedia
-                  token={token?.token}
+                  token={token}
                   style={{
                     borderRadius: 0,
                     width: '100vw',
