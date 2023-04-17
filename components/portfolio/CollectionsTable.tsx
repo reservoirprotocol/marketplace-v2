@@ -222,7 +222,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
-        <Link href={`/collection/${routePrefix}/${collection?.id}`}>
+        <Link href={`/collection/${collection?.id}`}>
           <Flex align="center">
             {collection?.image && (
               <Image
