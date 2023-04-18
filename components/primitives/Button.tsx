@@ -74,6 +74,7 @@ const Button = styled('button', {
       },
     },
     size: {
+      none: {},
       xs: {
         p: '$space$3',
         lineHeight: '16px',
