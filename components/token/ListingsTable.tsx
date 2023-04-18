@@ -178,7 +178,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        py: '$2',
+        py: '$3',
       }}
     >
       <Flex
