@@ -17,6 +17,7 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import {
   EditListingModal,
+  EditListingStep,
   useTokens,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
@@ -37,6 +38,7 @@ import { useMarketplaceChain } from 'hooks'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
+import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { zoneAddresses } from 'utils/zoneAddresses'
 import CancelListing from 'components/buttons/CancelListing'
@@ -418,6 +420,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             mutate={mutate}
           />
           <Dropdown
+            modal={false}
             trigger={
               <Button
                 color="gray3"
@@ -427,6 +430,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 <FontAwesomeIcon icon={faEllipsis} />
               </Button>
             }
+            contentProps={{ asChild: true, forceMount: true }}
           >
             <DropdownMenuItem
               css={{ py: '$3', width: '100%' }}
@@ -492,6 +496,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 <Text>Refresh</Text>
               </Flex>
             </DropdownMenuItem>
+
             {isOracleOrder &&
             token?.ownership?.floorAsk?.id &&
             token?.token?.tokenId &&
@@ -524,6 +529,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 listingId={token?.ownership?.floorAsk?.id}
                 tokenId={token?.token?.tokenId}
                 collectionId={token?.token?.collection?.id}
+                onClose={(data, currentStep) => {
+                  if (mutate && currentStep == EditListingStep.Complete)
+                    mutate()
+                }}
               />
             ) : null}
 
