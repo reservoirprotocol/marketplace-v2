@@ -37,6 +37,7 @@ import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
 import { ChainContext } from 'context/ChainContextProvider'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
   address: Address | undefined
@@ -380,6 +381,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                         </Text>
                       </Flex>
                     )}
+                  <OpenSeaVerified
+                    openseaVerificationStatus={
+                      token?.token?.collection?.openseaVerificationStatus
+                    }
+                  />
                 </Flex>
                 <Text style="subtitle2" ellipsify>
                   #{token?.token?.tokenId}

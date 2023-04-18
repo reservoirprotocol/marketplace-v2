@@ -1395,6 +1395,21 @@
     "@radix-ui/react-use-controllable-state" "1.0.0"
     "@radix-ui/react-use-layout-effect" "1.0.0"
 
+"@radix-ui/react-collapsible@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-collapsible/-/react-collapsible-1.0.2.tgz#0583470c7caa8cd1ab6f606416288d19b3baf777"
+  integrity sha512-QNiDT6Au8jUU0K1WV+HEd4loH7C5CKQjeXxskwqyiyAkyCmW7qlQM5vSSJCIoQC+OVPyhgafSmGudRP8Qm1/gA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.0"
+    "@radix-ui/react-compose-refs" "1.0.0"
+    "@radix-ui/react-context" "1.0.0"
+    "@radix-ui/react-id" "1.0.0"
+    "@radix-ui/react-presence" "1.0.0"
+    "@radix-ui/react-primitive" "1.0.2"
+    "@radix-ui/react-use-controllable-state" "1.0.0"
+    "@radix-ui/react-use-layout-effect" "1.0.0"
+
 "@radix-ui/react-collection@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-collection/-/react-collection-1.0.0.tgz#0ec4c72fabd35a03b5787075ac799e3b17ca5710"
@@ -2012,15 +2027,16 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@0.14.5":
-  version "0.14.5"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.14.5.tgz#9fbf1703b57d4655b60b6ed034858155d90235cb"
-  integrity sha512-q+Vl4gvsIYWJpeKg77LWOsdIqoh79yBvDgTjDFcMNALYFfvgVMnOoTktr4Zbp9Mg/csvfhgbGUAu7morfbte+A==
+"@reservoir0x/reservoir-kit-ui@0.15.1":
+  version "0.15.1"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.15.1.tgz#6759d0a304d4d437c476c203472eab99e011f46f"
+  integrity sha512-436CRvKtYpVbXhHce++5PujRtpmUDQUbM6ZkjTRiVOoxckr2cpXHGc6n9yi8Isazsc2kvL4FHQ6WC1oGVrYkYQ==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
     "@fortawesome/react-fontawesome" "^0.2.0"
     "@radix-ui/colors" "^0.1.8"
+    "@radix-ui/react-collapsible" "^1.0.2"
     "@radix-ui/react-dialog" "1.0.1-rc.2"
     "@radix-ui/react-popover" "1.0.1-rc.2"
     "@radix-ui/react-scroll-area" "1.0.1-rc.2"
@@ -2028,7 +2044,7 @@
     "@radix-ui/react-switch" "1.0.0"
     "@radix-ui/react-toggle-group" "^1.0.0"
     "@react-hookz/web" "^19.2.0"
-    "@reservoir0x/reservoir-sdk" "0.7.2"
+    "@reservoir0x/reservoir-sdk" "0.9.0"
     "@stitches/react" "1.3.1-1"
     dayjs "^1.11.4"
     flatpickr "^4.6.13"
@@ -2036,10 +2052,10 @@
     react-flatpickr "^3.10.13"
     swr "2.0.1"
 
-"@reservoir0x/reservoir-sdk@0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-0.7.2.tgz#ab392a162c183e36a0d1bbd7254aa436e95f2e58"
-  integrity sha512-Xf/mDdj3erdqgNh7pDqF+pnKtwUCAKbQttyUVluTvWiIgshGIKUbsTfVIcQp2zA30PA3jh2k29X9x05fF9QZbA==
+"@reservoir0x/reservoir-sdk@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-0.9.0.tgz#ca4a31b26bcb790d74848838e0ac1d5c51497d31"
+  integrity sha512-Bi5xNAm8suWWzwJVvcM4X3dFFjfi8CaLMqLFa9cB/wMXHc1e/ahdM3+CSt0mNX65pp7z7EA3RB+FnuUU1eVNaA==
   dependencies:
     axios "^0.27.2"
 
