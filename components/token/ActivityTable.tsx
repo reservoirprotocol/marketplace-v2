@@ -333,10 +333,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell css={{ color: '$gray11' }}>
         <Flex align="center">
           {activity.type && logos[activity.type]}
-          <Text
-            style="subtitle1"
-            css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
-          >
+          <Text style="subtitle2" css={{ ml: '$2' }} color="subtle">
             {activityDescription}
           </Text>
         </Flex>
@@ -372,7 +369,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               alt={`${activity.order?.source?.name} Source`}
             />
           )}
-          <Text style="subtitle3" color="subtle">
+          <Text style="body2" color="subtle">
             {useTimeSince(activity?.timestamp)}
           </Text>
           {activity.txHash && (
@@ -401,7 +398,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               href={`/profile/${activity.fromAddress}`}
             >
               <Text
-                style="subtitle3"
+                style="subtitle2"
                 css={{
                   color: '$primary11',
                   '&:hover': {
@@ -415,7 +412,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           ) : (
             <span>-</span>
           )}
-          <Text style="subtitle3" css={{ fontSize: '12px', color: '$gray11' }}>
+          <Text style="body2" color="subtle">
             to
           </Text>
           {activity.toAddress &&
@@ -427,7 +424,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               href={`/profile/${activity.toAddress}`}
             >
               <Text
-                style="subtitle3"
+                style="subtitle2"
                 css={{
                   color: '$primary11',
                   '&:hover': {

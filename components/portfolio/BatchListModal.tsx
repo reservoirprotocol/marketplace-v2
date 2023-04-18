@@ -356,7 +356,7 @@ const BatchListModal: FC<Props> = ({
               maxWidth: 395,
               mx: 'auto',
             }}
-            style="body2"
+            style="body3"
             color="subtle"
           >
             {stepData?.currentStep.description}

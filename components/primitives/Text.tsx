@@ -45,6 +45,10 @@ export default styled('span', {
       },
       body2: {
         fontWeight: 400,
+        fontSize: 14,
+      },
+      body3: {
+        fontWeight: 400,
         fontSize: 12,
       },
     },

@@ -177,7 +177,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         align="start"
         css={{ height: '100%', gap: '$1' }}
       >
-        <Flex align="center" css={{ gap: '$1' }}>
+        <Flex align="center" css={{ gap: '$1', height: 36 }}>
           <FormatCryptoCurrency
             amount={offer.price?.amount?.decimal}
             address={offer.price?.currency?.contract}
@@ -200,7 +200,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               style={{ lineHeight: '14.5px' }}
             >
               <Text
-                style="subtitle3"
+                style="subtitle2"
                 css={{
                   color: '$primary11',
                   '&:hover': {
@@ -263,7 +263,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                     {!isOracleOrder ? (
                       <Tooltip
                         content={
-                          <Text style="body2" as="p">
+                          <Text style="body3" as="p">
                             Cancelling this order requires gas.
                           </Text>
                         }

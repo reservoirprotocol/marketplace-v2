@@ -135,7 +135,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               />
             </Flex>
             <Flex align="center">
-              <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
+              <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
                 Floor
               </Text>
               <FormatCryptoCurrency
