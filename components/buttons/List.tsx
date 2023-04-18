@@ -1,4 +1,3 @@
-import { ListModal, ListStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import {
   cloneElement,
@@ -14,13 +13,11 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-
-type ListingCurrencies = ComponentPropsWithoutRef<
-  typeof ListModal
->['currencies']
+import { Token } from 'types/workaround'
+import { ListModal } from 'components/@reservoir0x/reservoir-kit-ui/List/ListModal'
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
+  token?: Token
   buttonCss?: CSS
   buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
@@ -50,10 +47,8 @@ const List: FC<Props> = ({
     signer && marketplaceChain.id !== activeChain?.id
   )
 
-  let listingCurrencies: ListingCurrencies = undefined
-
-  const tokenId = token?.token?.tokenId
-  const contract = token?.token?.contract
+  const contract = token?.collection?.id
+  const tokenId = token?.tokenID
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
@@ -82,10 +77,6 @@ const List: FC<Props> = ({
         trigger={trigger}
         collectionId={contract}
         tokenId={tokenId}
-        currencies={listingCurrencies}
-        onClose={(data, stepData, currentStep) => {
-          if (mutate && currentStep == ListStep.Complete) mutate()
-        }}
         onListingError={(err: any) => {
           if (err?.code === 4001) {
             addToast?.({

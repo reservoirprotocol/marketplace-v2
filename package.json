@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.12",
+    "@cuonghx.gu-tech/looksrare-sdk": "^0.9.3",
     "@datadog/browser-rum": "^4.30.1",
     "@davatar/react": "^1.11.1",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",

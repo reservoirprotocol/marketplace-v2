@@ -4,7 +4,7 @@ dotenv.config({ path: '.env.development' });
 
 const config: CodegenConfig = {
   schema: process.env.NEXT_PUBLIC_API_URL,
-  documents: ['**/*.tsx'],
+  documents: ['**/*.tsx','**/queries/*.ts'],
   generates: {
     './__generated__/': {
       preset: 'client',

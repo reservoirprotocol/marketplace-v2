@@ -16,6 +16,9 @@ const documents = {
     "\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  ": types.GetCollectionByIdDocument,
     "\n  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {\n      id\n      name\n      totalTokens\n    }\n  }\n": types.GetUserCollectionsDocument,
     "\n  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n    }\n  }\n": types.GetUserTokensDocument,
+    "\n  mutation CreateOrder(\n    $createOrderInput: CreateOrderInput!\n  ) {\n    createOrder(\n      createOrderInput: $createOrderInput\n    ) {\n      hash\n    }\n  }\n": types.CreateOrderDocument,
+    "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n": types.GetNonceDocument,
+    "\nquery GetTokenById($id: ID!) {\n    token(id: $id) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n": types.GetTokenByIdDocument,
     "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n      id\n      name\n    }\n  }\n": types.GetCollectionsDocument,
     "\n  query GetTokensByCollection($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n  ": types.GetTokensByCollectionDocument,
     "\n    query GetCollectionById($id: ID!) {\n        collection(id: $id) {\n          id\n          name\n          totalTokens\n        }\n      }\n  ": types.GetCollectionByIdDocument,
@@ -49,6 +52,18 @@ export function gql(source: "\n  query GetUserCollections($first: Int, $skip: In
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation CreateOrder(\n    $createOrderInput: CreateOrderInput!\n  ) {\n    createOrder(\n      createOrderInput: $createOrderInput\n    ) {\n      hash\n    }\n  }\n"): (typeof documents)["\n  mutation CreateOrder(\n    $createOrderInput: CreateOrderInput!\n  ) {\n    createOrder(\n      createOrderInput: $createOrderInput\n    ) {\n      hash\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"): (typeof documents)["\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetTokenById($id: ID!) {\n    token(id: $id) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\nquery GetTokenById($id: ID!) {\n    token(id: $id) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

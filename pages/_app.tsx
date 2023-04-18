@@ -7,7 +7,7 @@ import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
-import { darkTheme, globalReset } from 'stitches.config'
+import { darkTheme, globalReset, lightTheme } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
 import {
   RainbowKitProvider,
@@ -15,7 +15,7 @@ import {
   darkTheme as rainbowDarkTheme,
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
-import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import { WagmiConfig, createClient, configureChains, useProvider, useSigner } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -36,6 +36,8 @@ import ChainContextProvider from 'context/ChainContextProvider'
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
 import { NftProvider } from 'use-nft'
+import { LooksRareSDKProvider } from 'context/LooksRareSDKProvider'
+import { Signer } from "@cuonghx.gu-tech/looksrare-sdk"
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -78,7 +80,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
       defaultTheme="dark"
       value={{
         dark: darkTheme.className,
-        light: 'light',
+        light: lightTheme.className,
       }}
     >
       <WagmiConfig client={wagmiClient}>
@@ -108,6 +110,9 @@ function MyApp({
 
   const { theme } = useTheme()
   const marketplaceChain = useMarketplaceChain()
+  const provider = useProvider()
+  const { data: signer } = useSigner<Signer>()
+  
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
@@ -181,7 +186,13 @@ function MyApp({
                 modalSize="compact"
               >
                 <ToastContextProvider>
-                  <FunctionalComponent {...pageProps} />
+                  <LooksRareSDKProvider options={{
+                    chainId: marketplaceChain.id,
+                    provider,
+                    signer
+                  }}>
+                    <FunctionalComponent {...pageProps} />
+                  </LooksRareSDKProvider>
                 </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>

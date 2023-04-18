@@ -37,7 +37,6 @@ export type Collection = {
   name: string
   totalTokens: number
   // TO-DO: update later
-  floorAskPrice?: any
   banner?: any
   description?: any
   openseaVerificationStatus?: any
@@ -51,4 +50,20 @@ export type Collection = {
   volumeChange?: any
   topBidValue?: any
   floorAskPrice?: any
+  floorAsk?:any
+}
+
+export type Marketplace = {
+  name?: string;
+  imageUrl?: string;
+  fee?: {
+    bps?: number;
+    percent?: number;
+  };
+  feeBps?: number;
+  orderbook?: string;
+  orderKind?: string;
+  listingEnabled?: boolean;
+  truePrice?: number
+  price?: number
 }

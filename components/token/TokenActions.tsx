@@ -12,7 +12,7 @@ import { MutatorCallback } from 'swr'
 import { useAccount } from 'wagmi'
 
 type Props = {
-  token: ReturnType<typeof useTokens>['data'][0]
+  token: any
   offer?: ReturnType<typeof useBids>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback

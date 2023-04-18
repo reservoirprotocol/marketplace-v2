@@ -31,6 +31,7 @@ import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { Token_OrderBy } from '__generated__/graphql'
 import { Token } from 'types/workaround'
+import { useNft } from 'use-nft'
 
 type Props = {
   address: Address | undefined
@@ -101,15 +102,13 @@ export const TokenTable: FC<Props> = ({
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
           <TableHeading />
-          {tokens.map((token, i) => {
+          {tokens.map((token, i: number) => {
             if (!token) return null
 
             return (
               <TokenTableRow
                 key={`${token.id}-${i}`}
                 token={token}
-                // TO-DO: listing actions
-                // mutate={mutate}
               />
             )
           })}
@@ -122,20 +121,15 @@ export const TokenTable: FC<Props> = ({
 
 type TokenTableRowProps = {
   token: Token
-  mutate?: MutatorCallback
 }
 
-const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
+const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  // let imageSrc: string = (
-  //   token?.tokenID
-  //     ? token?.token?.image || token?.token?.collection?.imageUrl
-  //     : token?.token?.collection?.imageUrl
-  // ) as string
-  // TO-DO: token image URI
-  let imageSrc = ""
+  // TO-DO: remove later, should using token.image
+  const { nft } = useNft(token.collection.id, token.tokenID)
+  let imageSrc = nft?.image
 
   if (isSmallDevice) {
     return (
@@ -165,8 +159,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                // TO-DO: token name
-                // alt={`${token?.token?.name}`}
                 alt={`${token.collection.name}-${token?.tokenID}`}
                 width={36}
                 height={36}
@@ -207,15 +199,14 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {/* <List
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              mutate={mutate}
+            <List
+              token={token}
               buttonCss={{
                 width: '100%',
                 maxWidth: '300px',
                 justifyContent: 'center',
                 px: '42px',
-                backgroundColor: '$gray3',
+                backgroundColor: '$gray6',
                 color: '$gray12',
                 mt: '$2',
                 '&:hover': {
@@ -223,7 +214,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 },
               }}
               buttonChildren="List"
-            /> */}
+            />
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
@@ -238,7 +229,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               <AcceptBid
                 token={token as ReturnType<typeof useTokens>['data'][0]}
                 collectionId={token?.collection?.id}
-                mutate={mutate}
                 buttonCss={{
                   width: '100%',
                   maxWidth: '300px',
@@ -376,24 +366,20 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   Sell
                 </Flex>
               }
-              mutate={mutate}
             />
           )}
-
-          {/* TO-DO: later */}
-          {/* <List
-            token={token as ReturnType<typeof useTokens>['data'][0]}
+          <List
+            token={token}
             buttonCss={{
               px: '42px',
-              backgroundColor: '$gray3',
+              backgroundColor: '$gray6',
               color: '$gray12',
               '&:hover': {
                 backgroundColor: '$gray4',
               },
             }}
             buttonChildren="List"
-            mutate={mutate}
-          /> */}
+          />
         </Flex>
       </TableCell>
     </TableRow>
