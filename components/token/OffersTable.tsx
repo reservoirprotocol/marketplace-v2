@@ -23,7 +23,7 @@ import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
 import { zoneAddresses } from 'utils/zoneAddresses'
-import { OnlyUserToggle } from './OnlyUserToggle'
+import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
   address?: string
@@ -87,7 +87,7 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
       ) : (
         <Flex direction="column" css={{ gap: '$4' }}>
           {address && userHasOffers ? (
-            <OnlyUserToggle
+            <OnlyUserOrdersToggle
               checked={userOnly}
               onCheckedChange={(checked) => setUserOnly(checked)}
             />
@@ -177,7 +177,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         align="start"
         css={{ height: '100%', gap: '$1' }}
       >
-        <Flex align="center" css={{ gap: '$1' }}>
+        <Flex align="center" css={{ gap: '$1', height: 36 }}>
           <FormatCryptoCurrency
             amount={offer.price?.amount?.decimal}
             address={offer.price?.currency?.contract}
@@ -200,7 +200,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               style={{ lineHeight: '14.5px' }}
             >
               <Text
-                style="subtitle3"
+                style="subtitle2"
                 css={{
                   color: '$primary11',
                   '&:hover': {
@@ -263,7 +263,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                     {!isOracleOrder ? (
                       <Tooltip
                         content={
-                          <Text style="body2" as="p">
+                          <Text style="body3" as="p">
                             Cancelling this order requires gas.
                           </Text>
                         }

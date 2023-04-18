@@ -24,7 +24,7 @@ import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
 import { zoneAddresses } from 'utils/zoneAddresses'
-import { OnlyUserToggle } from './OnlyUserToggle'
+import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
   address?: string
@@ -96,7 +96,7 @@ export const ListingsTable: FC<Props> = ({
       ) : (
         <Flex direction="column" css={{ gap: '$4' }}>
           {address && userHasListings && is1155 ? (
-            <OnlyUserToggle
+            <OnlyUserOrdersToggle
               checked={userOnly}
               onCheckedChange={(checked) => setUserOnly(checked)}
             />
@@ -184,9 +184,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
       <Flex
         direction="column"
         align="start"
-        css={{ height: '100%', gap: '$1' }}
+        css={{ height: '100%', gap: '$2' }}
       >
-        <Flex align="center" css={{ gap: '$1' }}>
+        <Flex align="center" css={{ gap: '$1', height: 36 }}>
           <FormatCryptoCurrency
             amount={listing.price?.amount?.decimal}
             address={listing.price?.currency?.contract}
@@ -199,9 +199,21 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
             </Text>
           ) : null}
           {listing?.quantityRemaining && listing?.quantityRemaining > 1 ? (
-            <Text style="body2" color="subtle" css={{ ml: '$2' }}>
-              x{listing.quantityRemaining}
-            </Text>
+            <Flex
+              justify="center"
+              align="center"
+              css={{
+                borderRadius: 4,
+                px: '$2',
+                py: '$1',
+                ml: '$1',
+                backgroundColor: '$gray2',
+              }}
+            >
+              <Text style="subtitle2" color="subtle">
+                x{listing.quantityRemaining}
+              </Text>
+            </Flex>
           ) : null}
         </Flex>
         <Flex align="center" css={{ gap: '$1' }}>
@@ -214,7 +226,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               style={{ lineHeight: '14.5px' }}
             >
               <Text
-                style="subtitle3"
+                style="subtitle2"
                 css={{
                   color: '$primary11',
                   '&:hover': {
@@ -285,7 +297,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
                     {!isOracleOrder ? (
                       <Tooltip
                         content={
-                          <Text style="body2" as="p">
+                          <Text style="body3" as="p">
                             Cancelling this order requires gas.
                           </Text>
                         }

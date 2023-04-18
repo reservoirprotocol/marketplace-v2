@@ -61,13 +61,13 @@ export default ({ token, collection, collectionAttributes }: Props) => {
     <Tooltip
       content={
         <Flex direction="column" align="start">
-          <Text style="body2">{topPercentileText}</Text>
-          <Text style="body2" ellipsify>
+          <Text style="body3">{topPercentileText}</Text>
+          <Text style="body3" ellipsify>
             Rarity rank:{' '}
             {`${formatNumber(rarityRank)}/
             ${formatNumber(tokenCount)}`}
           </Text>
-          <Text style="body2" color="subtle">
+          <Text style="body3" color="subtle">
             By Poprank
           </Text>
         </Flex>

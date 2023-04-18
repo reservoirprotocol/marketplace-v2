@@ -479,7 +479,7 @@ const TableHeading = () => (
         <Tooltip
           content={
             <Flex>
-              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
                 The floor price with royalties and fees removed. This is the eth
                 you would receive if you listed at the floor.
               </Text>
@@ -500,7 +500,7 @@ const TableHeading = () => (
         <Tooltip
           content={
             <Flex>
-              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
                 The eth you would receive if you sold instantly.
               </Text>
             </Flex>
