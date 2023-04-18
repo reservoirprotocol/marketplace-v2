@@ -143,7 +143,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+            href={`/collection/${offer?.contract}/${criteriaData?.token?.tokenId}`}
           >
             <Flex align="center">
               {imageSrc && (
@@ -253,7 +253,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+          href={`/collection/${offer?.contract}/${criteriaData?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (

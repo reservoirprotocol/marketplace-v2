@@ -141,8 +141,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const blockExplorerBaseUrl =
     marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const href = activity?.token?.tokenId
-    ? `/collection/${marketplaceChain.routePrefix}/${activity?.contract}/${activity?.token?.tokenId}`
-    : `/collection/${marketplaceChain.routePrefix}/${activity?.collection?.collectionId}`
+    ? `/collection/${activity?.contract}/${activity?.token?.tokenId}`
+    : `/collection/${activity?.collection?.collectionId}`
 
   if (!activity) {
     return null

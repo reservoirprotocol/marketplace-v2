@@ -153,7 +153,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         }}
       >
         <Link
-          href={`/collection/${routePrefix}/${token?.collection?.id}/${token?.tokenID}`}
+          href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -207,7 +207,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               textStyle="subtitle2"
               logoHeight={14}
             />
-            <List
+            {/* <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
               mutate={mutate}
               buttonCss={{
@@ -223,7 +223,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 },
               }}
               buttonChildren="List"
-            />
+            /> */}
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">

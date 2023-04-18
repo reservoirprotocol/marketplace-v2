@@ -49,4 +49,7 @@ jobs:
         run: gcloud config set app/cloud_build_timeout 1200
 
       - name: Deploy to App Engine
-        run: gcloud app deploy development.yaml --quiet --no-promote
+        run: gcloud app deploy development.yaml --quiet --promote
+
+      - name: Delete old versions
+        run: gcloud app versions list --format="value(version.id)" --sort-by="~version.createTime" | tail -n +3 | xargs -r gcloud app versions delete --quiet

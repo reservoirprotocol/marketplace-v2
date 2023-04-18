@@ -136,7 +136,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link
-            href={`/collection/${routePrefix}/${collection?.id}`}
+            href={`/collection/${collection?.id}`}
           >
             <Flex align="center">
               {collection?.image && (

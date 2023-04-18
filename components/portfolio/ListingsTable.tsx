@@ -142,7 +142,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+            href={`/collection/${listing?.contract}/${criteriaData?.token?.tokenId}`}
           >
             <Flex align="center">
               {imageSrc && (
@@ -252,7 +252,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+          href={`/collection/${listing?.contract}/${criteriaData?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
