@@ -192,7 +192,9 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
         <TableCell css={{ minWidth: 'max-content' }}>
           <Text style="subtitle2" css={{ minWidth: 'max-content' }}>
             <FormatCryptoCurrency
-              amount={collection?.collection?.topBidValue?.amount?.raw}
+              amount={collection?.collection?.topBidValue?.amount?.decimal}
+              address={collection?.collection?.topBidValue?.currency?.contract}
+              decimals={collection?.collection?.topBidValue?.currency?.decimals}
               maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
@@ -260,7 +262,9 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       <TableCell>
         <Text style="subtitle2">
           <FormatCryptoCurrency
-            amount={collection?.collection?.topBidValue?.amount?.raw}
+            amount={collection?.collection?.topBidValue?.amount?.decimal}
+            address={collection?.collection?.topBidValue?.currency?.contract}
+            decimals={collection?.collection?.topBidValue?.currency?.decimals}
             textStyle="subtitle2"
             logoHeight={14}
           />
@@ -268,7 +272,9 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={collection?.collection?.floorAskPrice?.amount?.raw}
+          amount={collection?.collection?.floorAskPrice?.amount?.decimal}
+          address={collection?.collection?.floorAskPrice?.currency?.contract}
+          decimals={collection?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle2"
           logoHeight={14}
         />
