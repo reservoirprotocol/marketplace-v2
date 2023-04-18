@@ -19,6 +19,7 @@ export const ConnectWalletButton: FC<Props> = () => {
               flex: '1',
               display: 'flex',
               justifyContent: 'flex',
+              zindex: '100',
             }}
           >
             {(() => {
