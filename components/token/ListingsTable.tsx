@@ -24,7 +24,7 @@ import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
 import { zoneAddresses } from 'utils/zoneAddresses'
-import { OnlyUserToggle } from './OnlyUserToggle'
+import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
   address?: string
@@ -96,7 +96,7 @@ export const ListingsTable: FC<Props> = ({
       ) : (
         <Flex direction="column" css={{ gap: '$4' }}>
           {address && userHasListings && is1155 ? (
-            <OnlyUserToggle
+            <OnlyUserOrdersToggle
               checked={userOnly}
               onCheckedChange={(checked) => setUserOnly(checked)}
             />

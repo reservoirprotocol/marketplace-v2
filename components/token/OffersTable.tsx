@@ -23,7 +23,7 @@ import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
 import { zoneAddresses } from 'utils/zoneAddresses'
-import { OnlyUserToggle } from './OnlyUserToggle'
+import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
   address?: string
@@ -87,7 +87,7 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
       ) : (
         <Flex direction="column" css={{ gap: '$4' }}>
           {address && userHasOffers ? (
-            <OnlyUserToggle
+            <OnlyUserOrdersToggle
               checked={userOnly}
               onCheckedChange={(checked) => setUserOnly(checked)}
             />

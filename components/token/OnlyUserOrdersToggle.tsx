@@ -6,7 +6,10 @@ type Props = {
   onCheckedChange: (checked: boolean) => void
 }
 
-export const OnlyUserToggle: FC<Props> = ({ checked, onCheckedChange }) => {
+export const OnlyUserOrdersToggle: FC<Props> = ({
+  checked,
+  onCheckedChange,
+}) => {
   return (
     <Flex
       align="center"
