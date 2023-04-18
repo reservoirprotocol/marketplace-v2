@@ -6,6 +6,7 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
+import { OpenSeaVerified } from './OpenSeaVerified'
 
 type Collections =
   | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
@@ -102,6 +103,11 @@ export const TokenFilters: FC<Props> = ({
                 >
                   {collection?.collection?.name}
                 </Text>
+                <OpenSeaVerified
+                  openseaVerificationStatus={
+                    collection?.collection?.openseaVerificationStatus
+                  }
+                />
                 <Text style="subtitle2" css={{ color: '$gray10' }}>
                   {collection?.ownership?.tokenCount}
                 </Text>
