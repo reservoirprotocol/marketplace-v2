@@ -36,6 +36,7 @@ import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
 import { ChainContext } from 'context/ChainContextProvider'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
+import { formatDollar } from 'utils/numbers'
 
 type Props = {
   address: Address | undefined
@@ -399,13 +400,20 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         />
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={token?.token?.topBid?.price?.netAmount?.native}
-          address={token?.token?.topBid?.price?.currency?.contract}
-          decimals={token?.token?.topBid?.price?.currency?.decimals}
-          textStyle="subtitle1"
-          logoHeight={14}
-        />
+        <Flex direction="column" align="start">
+          <FormatCryptoCurrency
+            amount={token?.token?.topBid?.price?.netAmount?.native}
+            address={token?.token?.topBid?.price?.currency?.contract}
+            decimals={token?.token?.topBid?.price?.currency?.decimals}
+            textStyle="subtitle1"
+            logoHeight={14}
+          />
+          {token?.token?.topBid?.price?.amount?.usd ? (
+            <Text style="body2" css={{ color: '$gray11' }} ellipsify>
+              {formatDollar(token?.token?.topBid?.price?.amount?.usd as number)}
+            </Text>
+          ) : null}
+        </Flex>
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
