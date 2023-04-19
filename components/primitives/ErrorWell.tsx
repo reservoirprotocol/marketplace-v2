@@ -21,7 +21,7 @@ export default function ErrorWell({ message, css }: Props) {
       align="center"
     >
       <FontAwesomeIcon icon={faCircleExclamation} width={16} height={16} />
-      <Text style="body2" color="error">
+      <Text style="body3" color="error">
         {message || 'Oops, something went wrong. Please try again.'}
       </Text>
     </Flex>

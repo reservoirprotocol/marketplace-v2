@@ -14,7 +14,7 @@ export const OpenSeaVerified: FC<Props> = ({ openseaVerificationStatus }) => {
       <Tooltip
         sideOffset={4}
         content={
-          <Text style="body2" css={{ display: 'block' }}>
+          <Text style="body3" css={{ display: 'block' }}>
             Verified by OpenSea
           </Text>
         }

@@ -101,7 +101,7 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
                   {value.value}
                 </Text>
 
-                <Text style="body2" css={{ color: '$gray11' }}>
+                <Text style="body3" css={{ color: '$gray11' }}>
                   {value.count}
                 </Text>
                 <Flex align="center">
