@@ -279,7 +279,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
-                token={token as ReturnType<typeof useTokens>['data'][0]}
+                tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 mutate={mutate}
                 buttonCss={{
@@ -417,7 +417,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         <Flex justify="end" css={{ gap: '$3' }}>
           {token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
-              token={token as ReturnType<typeof useTokens>['data'][0]}
+              tokenId={token.token.tokenId}
               collectionId={token?.token?.contract}
               buttonCss={{
                 px: '32px',
@@ -485,7 +485,7 @@ const TableHeading = () => (
         <Tooltip
           content={
             <Flex>
-              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
                 The floor price with royalties and fees removed. This is the eth
                 you would receive if you listed at the floor.
               </Text>
@@ -506,7 +506,7 @@ const TableHeading = () => (
         <Tooltip
           content={
             <Flex>
-              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
                 The eth you would receive if you sold instantly.
               </Text>
             </Flex>

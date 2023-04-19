@@ -94,30 +94,34 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-      {(!isOwner || is1155) && isListed && (
-        <Flex
-          css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
-        >
-          <BuyNow
-            token={token}
-            buttonCss={{ flex: 1, justifyContent: 'center' }}
-            buttonProps={{ corners: 'square' }}
-            mutate={mutate}
-          />
-          <AddToCart
-            token={token}
-            buttonCss={{
-              width: 52,
-              p: 0,
-              justifyContent: 'center',
-            }}
-            buttonProps={{ corners: 'square' }}
-          />
-        </Flex>
-      )}
+      {(!isOwner || is1155) &&
+        isListed &&
+        token?.market?.floorAsk?.price?.amount && (
+          <Flex
+            css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
+          >
+            <BuyNow
+              tokenId={token.token?.tokenId}
+              collectionId={token.token?.collection?.id}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
+              buttonProps={{ corners: 'square' }}
+              buttonChildren="Buy Now"
+              mutate={mutate}
+            />
+            <AddToCart
+              token={token}
+              buttonCss={{
+                width: 52,
+                p: 0,
+                justifyContent: 'center',
+              }}
+              buttonProps={{ corners: 'square' }}
+            />
+          </Flex>
+        )}
       {showAcceptOffer && (
         <AcceptBid
-          token={token}
+          tokenId={token.token?.tokenId}
           bidId={queryBidId}
           collectionId={token?.token?.contract}
           openState={
@@ -149,7 +153,7 @@ export const TokenActions: FC<Props> = ({
               {!isOracleOrder ? (
                 <Tooltip
                   content={
-                    <Text style="body2" as="p">
+                    <Text style="body3" as="p">
                       Cancelling this order requires gas.
                     </Text>
                   }
@@ -207,7 +211,7 @@ export const TokenActions: FC<Props> = ({
               {!isOracleOrder ? (
                 <Tooltip
                   content={
-                    <Text style="body2" as="p">
+                    <Text style="body3" as="p">
                       Cancelling this order requires gas.
                     </Text>
                   }
