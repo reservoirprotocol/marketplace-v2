@@ -40,6 +40,9 @@ export const fetchWithTimeout = async (
   const timeoutId = setTimeout(() => controller.abort(), timeout)
 
   try {
+    fetch(url, { ...options, signal }).then((res) => {
+      console.log(res.headers)
+    })
     const response = await fetch(url, { ...options, signal })
     clearTimeout(timeoutId)
     return response

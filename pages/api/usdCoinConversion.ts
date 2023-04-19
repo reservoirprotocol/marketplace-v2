@@ -10,7 +10,6 @@ let ids = supportedChains.map((chain) => chain.coingeckoId).join(',')
 
 export default async function handler() {
   let prices
-  let error
   let cacheSettings = 'maxage=0, s-maxage=86400 stale-while-revalidate' // Default cache settings
   try {
     const response = await fetchWithTimeout(
@@ -23,14 +22,12 @@ export default async function handler() {
   } catch (error) {
     console.error('Error fetching Coingecko data:', error)
     prices = null
-    error = error
     cacheSettings = 'maxage=0, s-maxage=300 stale-while-revalidate' // Reduce cache time if Coingecko API fails
   }
 
   return new NextResponse(
     JSON.stringify({
       prices,
-      error,
     }),
     {
       status: 200,
