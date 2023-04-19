@@ -88,7 +88,7 @@ const ChainToggle: FC = () => {
                   p: '$2',
                 }}
               >
-                <Text style="body2" as="p">
+                <Text style="body3" as="p">
                   {chainOption?.name}
                 </Text>
               </Box>

@@ -200,7 +200,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 {!isOracleOrder ? (
                   <Tooltip
                     content={
-                      <Text style="body2" as="p">
+                      <Text style="body3" as="p">
                         Cancelling this order requires gas.
                       </Text>
                     }
@@ -322,7 +322,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 {!isOracleOrder ? (
                   <Tooltip
                     content={
-                      <Text style="body2" as="p">
+                      <Text style="body3" as="p">
                         Cancelling this order requires gas.
                       </Text>
                     }

@@ -208,7 +208,7 @@ export default ({
               {token?.token?.isFlagged && (
                 <Tooltip
                   content={
-                    <Text style="body2" as="p">
+                    <Text style="body3" as="p">
                       Not tradeable on OpenSea
                     </Text>
                   }
@@ -305,7 +305,7 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {isOwner ? (
+      {isOwner && token?.market?.floorAsk?.price?.amount ? (
         <Flex
           className="token-button-container"
           css={{
@@ -319,7 +319,8 @@ export default ({
           }}
         >
           <BuyNow
-            token={token}
+            tokenId={token.token?.tokenId}
+            collectionId={token.token?.collection?.id}
             mutate={mutate}
             buttonCss={{
               justifyContent: 'center',
@@ -328,6 +329,7 @@ export default ({
             buttonProps={{
               corners: 'square',
             }}
+            buttonChildren="Buy Now"
           />
           {addToCartEnabled ? (
             <AddToCart

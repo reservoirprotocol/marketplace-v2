@@ -48,7 +48,6 @@ import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { zoneAddresses } from 'utils/zoneAddresses'
 import CancelListing from 'components/buttons/CancelListing'
@@ -56,6 +55,8 @@ import { ToastContext } from 'context/ToastContextProvider'
 import fetcher from 'utils/fetcher'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import { spin } from 'components/common/LoadingSpinner'
+import { formatDollar } from 'utils/numbers'
+import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
 type Props = {
   address: Address | undefined
@@ -313,7 +314,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
-                token={token as ReturnType<typeof useTokens>['data'][0]}
+                tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 mutate={mutate}
                 buttonCss={{
@@ -408,6 +409,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                         </Text>
                       </Flex>
                     )}
+                  <OpenSeaVerified
+                    openseaVerificationStatus={
+                      token?.token?.collection?.openseaVerificationStatus
+                    }
+                  />
                 </Flex>
                 <Text style="subtitle2" ellipsify>
                   #{token?.token?.tokenId}
@@ -434,19 +440,26 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         />
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={token?.token?.topBid?.price?.netAmount?.native}
-          address={token?.token?.topBid?.price?.currency?.contract}
-          decimals={token?.token?.topBid?.price?.currency?.decimals}
-          textStyle="subtitle1"
-          logoHeight={14}
-        />
+        <Flex direction="column" align="start">
+          <FormatCryptoCurrency
+            amount={token?.token?.topBid?.price?.netAmount?.native}
+            address={token?.token?.topBid?.price?.currency?.contract}
+            decimals={token?.token?.topBid?.price?.currency?.decimals}
+            textStyle="subtitle1"
+            logoHeight={14}
+          />
+          {token?.token?.topBid?.price?.amount?.usd ? (
+            <Text style="body2" css={{ color: '$gray11' }} ellipsify>
+              {formatDollar(token?.token?.topBid?.price?.amount?.usd as number)}
+            </Text>
+          ) : null}
+        </Flex>
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
           {token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
-              token={token as ReturnType<typeof useTokens>['data'][0]}
+              tokenId={token.token.tokenId}
               collectionId={token?.token?.contract}
               buttonCss={{
                 px: '32px',
@@ -674,7 +687,7 @@ const TableHeading = () => (
         <Tooltip
           content={
             <Flex>
-              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
                 The floor price with royalties and fees removed. This is the eth
                 you would receive if you listed at the floor.
               </Text>
@@ -695,7 +708,7 @@ const TableHeading = () => (
         <Tooltip
           content={
             <Flex>
-              <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
+              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
                 The eth you would receive if you sold instantly.
               </Text>
             </Flex>
