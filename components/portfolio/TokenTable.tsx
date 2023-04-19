@@ -5,6 +5,7 @@ import {
   useEffect,
   useRef,
   useContext,
+  useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
@@ -15,17 +16,28 @@ import {
   HeaderRow,
   Tooltip,
   FormatCryptoCurrency,
+  Button,
+  Box,
 } from '../primitives'
 import { List, AcceptBid } from 'components/buttons'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  EditListingModal,
+  EditListingStep,
+  useTokens,
+  useUserTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBolt,
   faCircleInfo,
+  faEdit,
+  faEllipsis,
+  faGasPump,
   faMagnifyingGlass,
+  faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
@@ -35,7 +47,14 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
 import { ChainContext } from 'context/ChainContextProvider'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
+import { zoneAddresses } from 'utils/zoneAddresses'
+import CancelListing from 'components/buttons/CancelListing'
+import { ToastContext } from 'context/ToastContextProvider'
+import fetcher from 'utils/fetcher'
+import { DATE_REGEX, timeTill } from 'utils/till'
+import { spin } from 'components/common/LoadingSpinner'
 import { formatDollar } from 'utils/numbers'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 
@@ -66,6 +85,7 @@ export const TokenTable: FC<Props> = ({
     sortBy: sortBy,
     collection: filterCollection,
     includeTopBid: true,
+    includeRawData: true,
     includeAttributes: true,
   }
 
@@ -150,7 +170,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   selectedItems,
   setSelectedItems,
 }) => {
-  const { routePrefix } = useMarketplaceChain()
+  const { routePrefix, proxyApi } = useMarketplaceChain()
+  const { addToast } = useContext(ToastContext)
+
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   const addSelectedItem = (item: UserToken) => {
@@ -182,6 +205,17 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       ? token?.token?.image || token?.token?.collection?.imageUrl
       : token?.token?.collection?.imageUrl
   ) as string
+
+  const orderZone = token?.ownership?.floorAsk?.rawData?.zone
+  // @ts-ignore
+  const orderKind = token?.ownership?.floorAsk?.kind
+
+  const isOracleOrder =
+    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+
+  const contract = token.token?.collection?.id
+    ? token.token?.collection.id?.split(':')[0]
+    : undefined
 
   if (isSmallDevice) {
     return (
@@ -458,6 +492,166 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             buttonChildren="List"
             mutate={mutate}
           />
+          <Dropdown
+            modal={false}
+            trigger={
+              <Button
+                color="gray3"
+                size="xs"
+                css={{ width: 44, justifyContent: 'center' }}
+              >
+                <FontAwesomeIcon icon={faEllipsis} />
+              </Button>
+            }
+            contentProps={{ asChild: true, forceMount: true }}
+          >
+            <DropdownMenuItem
+              css={{ py: '$3', width: '100%' }}
+              onClick={(e) => {
+                if (isRefreshing) {
+                  e.preventDefault()
+                  return
+                }
+                setIsRefreshing(true)
+                fetcher(
+                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  undefined,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      token: `${contract}:${token.token?.tokenId}`,
+                    }),
+                  }
+                )
+                  .then(({ data, response }) => {
+                    if (response.status === 200) {
+                      addToast?.({
+                        title: 'Refresh token',
+                        description:
+                          'Request to refresh this token was accepted.',
+                      })
+                    } else {
+                      throw data
+                    }
+                    setIsRefreshing(false)
+                  })
+                  .catch((e) => {
+                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
+
+                    addToast?.({
+                      title: 'Refresh token failed',
+                      description: ratelimit
+                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
+                            ratelimit
+                          )}.`
+                        : `This token was recently refreshed. Please try again later.`,
+                    })
+
+                    setIsRefreshing(false)
+                    throw e
+                  })
+              }}
+            >
+              <Flex align="center" css={{ gap: '$2' }}>
+                <Box
+                  css={{
+                    color: '$gray10',
+                    animation: isRefreshing
+                      ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+                      : 'none',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                </Box>
+                <Text>Refresh</Text>
+              </Flex>
+            </DropdownMenuItem>
+
+            {isOracleOrder &&
+            token?.ownership?.floorAsk?.id &&
+            token?.token?.tokenId &&
+            token?.token?.collection?.id ? (
+              <EditListingModal
+                trigger={
+                  <Flex
+                    align="center"
+                    css={{
+                      gap: '$2',
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Box>
+                    <Text>Edit Listing</Text>
+                  </Flex>
+                }
+                listingId={token?.ownership?.floorAsk?.id}
+                tokenId={token?.token?.tokenId}
+                collectionId={token?.token?.collection?.id}
+                onClose={(data, currentStep) => {
+                  if (mutate && currentStep == EditListingStep.Complete)
+                    mutate()
+                }}
+              />
+            ) : null}
+
+            {token?.ownership?.floorAsk?.id ? (
+              <CancelListing
+                listingId={token.ownership.floorAsk.id as string}
+                mutate={mutate}
+                trigger={
+                  <Flex
+                    css={{
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    {!isOracleOrder ? (
+                      <Tooltip
+                        content={
+                          <Text style="body2" as="p">
+                            Cancelling this order requires gas.
+                          </Text>
+                        }
+                      >
+                        <Flex align="center" css={{ gap: '$2' }}>
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon icon={faGasPump} />
+                          </Box>
+                          <Text color="error">Cancel</Text>
+                        </Flex>
+                      </Tooltip>
+                    ) : (
+                      <Text color="error">Cancel</Text>
+                    )}
+                  </Flex>
+                }
+              />
+            ) : null}
+          </Dropdown>
         </Flex>
       </TableCell>
     </TableRow>
