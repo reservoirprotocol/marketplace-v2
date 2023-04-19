@@ -252,6 +252,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                     minWidth: 80,
                     justifyContent: 'center',
                   }}
+                  mutate={mutate}
                 />
               ) : null}
 
