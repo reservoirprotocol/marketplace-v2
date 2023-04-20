@@ -38,6 +38,7 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_API_URL: 'https://gu-nft-marketplace-dev.an.r.appspot.com/graphql'
+          NEXT_PUBLIC_BASE_URL: 'https://front-end-dot-gu-nft-marketplace-dev.an.r.appspot.com'
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v0.2.0
