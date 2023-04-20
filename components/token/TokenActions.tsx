@@ -9,10 +9,11 @@ import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
+import { Token } from 'types/workaround'
 import { useAccount } from 'wagmi'
 
 type Props = {
-  token: any
+  token: Token
   offer?: ReturnType<typeof useBids>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
@@ -36,14 +37,14 @@ export const TokenActions: FC<Props> = ({
 
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
-  const is1155 = token?.token?.kind === 'erc1155'
+  const is1155 = token?.kind === 'erc1155'
 
   const showAcceptOffer =
     !is1155 &&
     token?.market?.topBid?.id !== null &&
     token?.market?.topBid?.id !== undefined &&
     isOwner &&
-    token?.token?.owner
+    token?.owner?.id
       ? true
       : false
 
@@ -51,8 +52,7 @@ export const TokenActions: FC<Props> = ({
     account.isConnected &&
     token?.market?.topBid?.maker?.toLowerCase() ===
       account?.address?.toLowerCase()
-  const isListed = token ? token?.market?.floorAsk?.id !== null : false
-
+  const isListed = token && token?.market?.floorAsk?.id
   const orderZone = offer?.rawData?.zone
   const orderKind = offer?.kind
 
@@ -94,7 +94,7 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-      {(!isOwner || is1155) && isListed && (
+      {/* {(!isOwner || is1155) && isListed && (
         <Flex
           css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
         >
@@ -114,12 +114,12 @@ export const TokenActions: FC<Props> = ({
             buttonProps={{ corners: 'square' }}
           />
         </Flex>
-      )}
-      {showAcceptOffer && (
+      )} */}
+      {/* {showAcceptOffer && (
         <AcceptBid
           token={token}
           bidId={queryBidId}
-          collectionId={token?.token?.contract}
+          collectionId={token?.collection.id}
           openState={
             isOwner && (queryBidId || deeplinkToAcceptBid)
               ? bidOpenState
@@ -129,17 +129,17 @@ export const TokenActions: FC<Props> = ({
           buttonCss={buttonCss}
           buttonChildren="Accept Offer"
         />
-      )}
+      )} */}
 
-      {(!isOwner || is1155) && (
+      {/* {(!isOwner || is1155) && (
         <Bid
-          tokenId={token?.token?.tokenId}
-          collectionId={token?.token?.collection?.id}
+          tokenId={token?.tokenID}
+          collectionId={token?.collection?.id}
           mutate={mutate}
           buttonCss={buttonCss}
         />
-      )}
-
+      )} */}
+{/* 
       {isTopBidder && !is1155 && (
         <CancelBid
           bidId={token?.market?.topBid?.id as string}
@@ -196,9 +196,9 @@ export const TokenActions: FC<Props> = ({
             </Flex>
           }
         />
-      )}
+      )} */}
 
-      {isOwner && isListed && !is1155 && (
+      {/* {isOwner && isListed && !is1155 && (
         <CancelListing
           listingId={token?.market?.floorAsk?.id as string}
           mutate={mutate}
@@ -243,7 +243,7 @@ export const TokenActions: FC<Props> = ({
             </Flex>
           }
         />
-      )}
+      )} */}
     </Grid>
   )
 }

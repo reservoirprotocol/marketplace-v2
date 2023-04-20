@@ -109,19 +109,21 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   // TO-DO: attributes
   // const attributesData = useAttributes(collectionId)
 
+  // TO-DO: support later
+  const is1155 = false
+  
   let countOwned = 0
     // TO-DO: ERC1155
-  // if (is1155) {
-  //   countOwned = Number(userTokens?.[0]?.ownership?.tokenCount || 0)
-  // } else {
-  //   countOwned =
-  //     token?.token?.owner?.toLowerCase() === account?.address?.toLowerCase()
-  //       ? 1
-  //       : 0
-  // }
+  if (is1155) {
+    // countOwned = Number(userTokens?.[0]?.ownership?.tokenCount || 0)
+  } else {
+    countOwned =
+      token?.owner?.id?.toLowerCase() === account?.address?.toLowerCase()
+        ? 1
+        : 0
+  }
 
-  // support later
-  const is1155 = false
+
   const isOwner = countOwned > 0
   const owner = isOwner ? account?.address : token?.owner?.id
   const { displayName: ownerFormatted } = useENSResolver(token?.owner?.id)
@@ -474,15 +476,15 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 collectionAttributes={attributesData?.data}
               /> */}
               {/* <PriceData token={token} /> */}
-              {/* {isMounted && (
+              {isMounted && (
                 <TokenActions
                   token={token}
-                  offer={offer}
+                  // offer={offer}
                   isOwner={isOwner}
-                  mutate={mutate}
+                  // mutate={mutate}
                   account={account}
                 />
-              )} */}
+              )}
               <Tabs.Root
                 defaultValue=""
                 value={tabValue}
