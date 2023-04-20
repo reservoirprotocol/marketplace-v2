@@ -31,6 +31,7 @@ type Props = {
   address: Address | undefined
 }
 
+const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
 export const OffersTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
