@@ -243,6 +243,14 @@ export const darkTheme = createTheme({
     ...slateDark,
     ...blackA,
     ...green,
+    ...crimsonDark,
+    ...violetDark,
+    ...violetDarkA,
+    ...slateDark,
+    ...greenDark,
+    ...whiteA,
+    ...redDark,
+    ...blackA,
 
     // accent colors
     accentBase: '$indigo1',
@@ -306,6 +314,55 @@ export const darkTheme = createTheme({
     contentBackground: '$neutralBgSubtle',
     wellBackground: '$neutralBase',
     popoverBackground: '$neutralBgActive',
+
+    //Primary
+    primary1: '$violet1',
+    primary2: '$violet2',
+    primary3: '$violet3',
+    primary4: '$violet4',
+    primary5: '$violet5',
+    primary6: '$violet6',
+    primary7: '$violet7',
+    primary8: '$violet8',
+    primary9: '$violet9',
+    primary10: '$violet10',
+    primary11: '$violet11',
+    primary12: '$violet12',
+
+    //Secondary
+    secondary1: '$violetA1',
+    secondary2: '$violetA2',
+    secondary3: '$violetA3',
+    secondary4: '$violetA4',
+    secondary5: '$violetA5',
+    secondary6: '$violetA6',
+    secondary7: '$violetA7',
+    secondary8: '$violetA8',
+    secondary9: '$violetA9',
+    secondary10: '$violetA10',
+    secondary11: '$violetA11',
+    secondary12: '$violetA12',
+
+    //Gray
+    gray1: '$slate1',
+    gray2: '$slate2',
+    gray3: '$slate3',
+    gray4: '$slate4',
+    gray5: '$slate5',
+    gray6: '$slate6',
+    gray7: '$slate7',
+    gray8: '$slate8',
+    gray9: '$slate9',
+    gray10: '$slate10',
+    gray11: '$slate11',
+    gray12: '$slate12',
+
+    accent: '#7000FF',
+
+    panelBg: '$gray3',
+    panelBorder: '$slate7',
+    panelShadow: 'transparent',
+    dropdownBg: '$gray3',
   },
 })
 
