@@ -169,7 +169,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        py: '$2',
+        py: '$3',
       }}
     >
       <Flex
@@ -252,6 +252,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
                     minWidth: 80,
                     justifyContent: 'center',
                   }}
+                  mutate={mutate}
                 />
               ) : null}
 

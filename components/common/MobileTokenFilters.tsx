@@ -8,6 +8,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
+import { OpenSeaVerified } from './OpenSeaVerified'
 
 type Collections =
   | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
@@ -182,6 +183,11 @@ export const MobileTokenFilters: FC<Props> = ({
                 >
                   {collection?.collection?.name}
                 </Text>
+                <OpenSeaVerified
+                  openseaVerificationStatus={
+                    collection?.collection?.openseaVerificationStatus
+                  }
+                />
                 <Text style="subtitle2" css={{ color: '$gray10' }}>
                   {collection?.ownership?.tokenCount}
                 </Text>

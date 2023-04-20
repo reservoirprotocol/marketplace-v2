@@ -178,7 +178,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        py: '$2',
+        py: '$3',
       }}
     >
       <Flex
@@ -253,6 +253,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               orderId={listing.id}
               buttonChildren="Buy"
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
+              mutate={mutate}
             />
           ) : null}
           {/* Not user's listing, erc 1155 */}
@@ -286,6 +287,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
                     minWidth: 80,
                     justifyContent: 'center',
                   }}
+                  mutate={mutate}
                 />
               ) : null}
 
