@@ -114,7 +114,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
         >
           <Anchor href="https://www.seaport.market/" target="_blank">
             <Text
-              style="body2"
+              style="body3"
               css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
             >
               Powered by <Logo />

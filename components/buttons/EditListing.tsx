@@ -1,44 +1,42 @@
-import {
-  AcceptBidModal,
-  AcceptBidStep,
-  useTokens,
-} from '@reservoir0x/reservoir-kit-ui'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { Button } from 'components/primitives'
+import { ToastContext } from 'context/ToastContextProvider'
+import { useMarketplaceChain } from 'hooks'
 import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
+import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { Button } from 'components/primitives'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { ToastContext } from '../../context/ToastContextProvider'
-import { useMarketplaceChain } from 'hooks'
+import {
+  EditListingModal,
+  EditListingStep,
+} from '@reservoir0x/reservoir-kit-ui'
 
 type Props = {
+  listingId?: string
   tokenId?: string
-  bidId?: string
   collectionId?: string
   disabled?: boolean
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   buttonCss?: CSS
-  buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
+  buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
 }
 
-const AcceptBid: FC<Props> = ({
+const EditListing: FC<Props> = ({
+  listingId,
   tokenId,
-  bidId,
   collectionId,
   disabled,
   openState,
   buttonCss,
-  buttonChildren,
   buttonProps,
+  buttonChildren,
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
-
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
@@ -52,7 +50,7 @@ const AcceptBid: FC<Props> = ({
   )
 
   const trigger = (
-    <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
+    <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
       {buttonChildren}
     </Button>
   )
@@ -74,24 +72,16 @@ const AcceptBid: FC<Props> = ({
     })
   } else
     return (
-      <AcceptBidModal
+      <EditListingModal
         trigger={trigger}
         openState={openState}
-        bidId={bidId}
-        collectionId={collectionId}
+        listingId={listingId}
         tokenId={tokenId}
-        onClose={(data, stepData, currentStep) => {
-          if (mutate && currentStep == AcceptBidStep.Complete) mutate()
+        collectionId={collectionId}
+        onClose={(data, currentStep) => {
+          if (mutate && currentStep == EditListingStep.Complete) mutate()
         }}
-        onBidAcceptError={(error: any) => {
-          if (error?.type === 'price mismatch') {
-            addToast?.({
-              title: 'Could not accept offer',
-              description: 'Offer was lower than expected.',
-            })
-            return
-          }
-          // Handle user rejection
+        onEditListingError={(error: any) => {
           if (error?.code === 4001) {
             addToast?.({
               title: 'User canceled transaction',
@@ -100,7 +90,7 @@ const AcceptBid: FC<Props> = ({
             return
           }
           addToast?.({
-            title: 'Could not accept offer',
+            title: 'Could not edit listing',
             description: 'The transaction was not completed.',
           })
         }}
@@ -108,4 +98,4 @@ const AcceptBid: FC<Props> = ({
     )
 }
 
-export default AcceptBid
+export default EditListing

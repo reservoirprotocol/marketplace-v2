@@ -25,16 +25,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
+import { zoneAddresses } from 'utils/zoneAddresses'
 
 type Props = {
   address: Address | undefined
 }
 
-const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
-const zoneAddresses = [
-  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
-  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
-]
 
 export const OffersTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -204,7 +200,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 {!isOracleOrder ? (
                   <Tooltip
                     content={
-                      <Text style="body2" as="p">
+                      <Text style="body3" as="p">
                         Cancelling this order requires gas.
                       </Text>
                     }
@@ -326,7 +322,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 {!isOracleOrder ? (
                   <Tooltip
                     content={
-                      <Text style="body2" as="p">
+                      <Text style="body3" as="p">
                         Cancelling this order requires gas.
                       </Text>
                     }

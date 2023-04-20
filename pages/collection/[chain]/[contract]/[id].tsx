@@ -61,6 +61,8 @@ import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
+import { OffersTable } from 'components/token/OffersTable'
+import { ListingsTable } from 'components/token/ListingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -197,6 +199,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
         case 'activity':
           tab = 'activity'
           break
+        case 'listings':
+          tab = 'listings'
+          break
+        case 'offers':
+          tab = 'offers'
+          break
       }
     }
     setTabValue(tab)
@@ -326,7 +334,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           direction="column"
           css={{
             flex: 1,
-            px: '$4',
+            px: '$3',
             width: '100%',
             '@md': {
               px: 0,
@@ -430,7 +438,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             {flagged && (
               <Tooltip
                 content={
-                  <Text style="body2" as="p">
+                  <Text style="body3" as="p">
                     Not tradeable on OpenSea
                   </Text>
                 }
@@ -499,15 +507,21 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
                 style={{
-                  paddingRight: 15,
+                  paddingRight: isSmallDevice ? 0 : 15,
                 }}
               >
-                <TabsList>
+                <TabsList
+                  css={{
+                    overflowX: isSmallDevice ? 'scroll' : 'unset',
+                  }}
+                >
                   {isMounted && isSmallDevice && hasAttributes && (
                     <TabsTrigger value="attributes">Attributes</TabsTrigger>
                   )}
                   <TabsTrigger value="info">Info</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
+                  <TabsTrigger value="listings">Listings</TabsTrigger>
+                  <TabsTrigger value="offers">Offers</TabsTrigger>
                 </TabsList>
                 <TabsContent value="attributes">
                   {token?.token?.attributes && (
@@ -561,6 +575,22 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   <TokenActivityTable
                     id={`${contract}:${token?.token?.tokenId}`}
                     activityTypes={activityTypes}
+                  />
+                </TabsContent>
+                <TabsContent value="listings">
+                  <ListingsTable
+                    token={`${contract}:${token?.token?.tokenId}`}
+                    address={account.address}
+                    is1155={is1155}
+                    isOwner={isOwner}
+                  />
+                </TabsContent>
+                <TabsContent value="offers" css={{ mr: -15, width: '100%' }}>
+                  <OffersTable
+                    token={`${contract}:${token?.token?.tokenId}`}
+                    address={account.address}
+                    is1155={is1155}
+                    isOwner={isOwner}
                   />
                 </TabsContent>
               </Tabs.Root>

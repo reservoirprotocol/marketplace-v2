@@ -167,7 +167,7 @@ export const ApprovalCollapsible: FC<Props> = ({
                 <Img src={marketplace.imageUrl} />
               ))}
             </Flex>
-            <Text style="body2" ellipsify>
+            <Text style="body3" ellipsify>
               Approve {collectionName} on {marketplaceNames}
             </Text>
           </Flex>
