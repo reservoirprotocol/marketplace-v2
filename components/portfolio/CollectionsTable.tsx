@@ -191,7 +191,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
         <TableCell css={{ minWidth: 'max-content' }}>
           <Text style="subtitle2" css={{ minWidth: 'max-content' }}>
             <FormatCryptoCurrency
-              amount={collection?.collection?.topBidValue?.amount?.decimal}
+              amount={collection?.collection?.topBidValue}
               maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
@@ -252,7 +252,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       <TableCell>
         <Text style="subtitle2">
           <FormatCryptoCurrency
-            amount={collection?.collection?.topBidValue?.amount?.decimal}
+            amount={collection?.collection?.topBidValue}
             textStyle="subtitle2"
             logoHeight={14}
           />
@@ -260,7 +260,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={collection?.collection?.floorAskPrice?.amount?.decimal}
+          amount={collection?.collection?.floorAskPrice}
           textStyle="subtitle2"
           logoHeight={14}
         />
