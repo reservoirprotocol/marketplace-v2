@@ -389,10 +389,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       css={{
                         ml: 'auto',
                         width: '100%',
-                        // flexDirection: 'row-reverse',
                         gap: '$2',
                         '@md': {
-                          // flexDirection: 'row',
                           width: 'max-content',
                           gap: '$3',
                         },

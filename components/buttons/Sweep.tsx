@@ -69,9 +69,6 @@ const Sweep: FC<Props> = ({
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
       // referrer={"0xabc"}
       // referrerFeeBps={250}
-      // onClose={(data) => {
-      //   if (mutate && data.stepData?.currentStep == SweepStep.Complete) mutate()
-      // }}
       onClose={(data, currentStep) => {
         if (mutate && currentStep == SweepStep.Complete) mutate()
       }}
