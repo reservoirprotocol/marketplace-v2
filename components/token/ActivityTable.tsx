@@ -213,12 +213,136 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         }}
       >
         <TableCell css={{ color: '$gray11' }}>
+          <Flex direction="column" css={{ gap: '$2' }}>
+            <Flex align="center">
+              {activity.type && logos[activity.type]}
+              <Text
+                style="subtitle1"
+                css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
+              >
+                {activityDescription}
+              </Text>
+            </Flex>
+            {activity.price &&
+            activity.price !== 0 &&
+            activity.type &&
+            !['transfer', 'mint'].includes(activity.type) ? (
+              <Flex align="center">
+                <FormatCryptoCurrency
+                  amount={activity.price}
+                  logoHeight={16}
+                  textStyle="subtitle1"
+                  css={{ mr: '$2', fontSize: '14px' }}
+                />
+              </Flex>
+            ) : (
+              <span>-</span>
+            )}
+          </Flex>
+        </TableCell>
+        <TableCell>
+          <Flex direction="column" css={{ gap: '$2' }}>
+            <Flex
+              align="center"
+              justify="end"
+              css={{
+                gap: '$3',
+              }}
+            >
+              {!!activity.order?.source?.icon && (
+                <img
+                  width="20px"
+                  height="20px"
+                  src={(activity.order?.source?.icon as string) || ''}
+                  alt={`${activity.order?.source?.name} Source`}
+                />
+              )}
+              <Text style="subtitle3" color="subtle">
+                {useTimeSince(activity?.timestamp)}
+              </Text>
+              {activity.txHash && (
+                <Anchor
+                  href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
+                  color="primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FontAwesomeIcon
+                    icon={faExternalLink}
+                    width={12}
+                    height={15}
+                  />
+                </Anchor>
+              )}
+            </Flex>
+            <Flex
+              align="baseline"
+              justify="end"
+              css={{
+                gap: '$3',
+              }}
+            >
+              {activity.fromAddress &&
+              activity.fromAddress !== constants.AddressZero ? (
+                <Link href={`/profile/${activity.fromAddress}`}>
+                  <Text
+                    style="subtitle3"
+                    css={{
+                      color: '$primary11',
+                      '&:hover': {
+                        color: '$primary10',
+                      },
+                    }}
+                  >
+                    {fromDisplayName}
+                  </Text>
+                </Link>
+              ) : (
+                <span>-</span>
+              )}
+              <Text
+                style="subtitle3"
+                css={{ fontSize: '12px', color: '$gray11' }}
+              >
+                to
+              </Text>
+              {activity.toAddress &&
+              activity.toAddress !== constants.AddressZero ? (
+                <Link href={`/profile/${activity.toAddress}`}>
+                  <Text
+                    style="subtitle3"
+                    css={{
+                      color: '$primary11',
+                      '&:hover': {
+                        color: '$primary10',
+                      },
+                    }}
+                  >
+                    {toDisplayName}
+                  </Text>
+                </Link>
+              ) : (
+                <span>-</span>
+              )}
+            </Flex>
+          </Flex>
+        </TableCell>
+      </TableRow>
+    )
+  }
+
+  return (
+    <TableRow
+      key={activity.txHash}
+      css={{
+        gridTemplateColumns: '1fr 1fr',
+      }}
+    >
+      <TableCell css={{ color: '$gray11' }}>
+        <Flex direction="column" css={{ gap: '$2' }}>
           <Flex align="center">
             {activity.type && logos[activity.type]}
-            <Text
-              style="subtitle1"
-              css={{ ml: '$2', color: '$gray11', fontSize: '14px' }}
-            >
+            <Text style="subtitle2" css={{ ml: '$2' }} color="subtle">
               {activityDescription}
             </Text>
           </Flex>
@@ -237,8 +361,10 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           ) : (
             <span>-</span>
           )}
-        </TableCell>
-        <TableCell>
+        </Flex>
+      </TableCell>
+      <TableCell>
+        <Flex direction="column" css={{ gap: '$2' }}>
           <Flex
             align="center"
             justify="end"
@@ -254,7 +380,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 alt={`${activity.order?.source?.name} Source`}
               />
             )}
-            <Text style="subtitle3" color="subtle">
+            <Text style="body2" color="subtle">
               {useTimeSince(activity?.timestamp)}
             </Text>
             {activity.txHash && (
@@ -269,7 +395,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             )}
           </Flex>
           <Flex
-            align="baseline"
             justify="end"
             css={{
               gap: '$3',
@@ -277,9 +402,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           >
             {activity.fromAddress &&
             activity.fromAddress !== constants.AddressZero ? (
-              <Link href={`/profile/${activity.fromAddress}`}>
+              <Link
+                style={{
+                  display: 'flex',
+                }}
+                href={`/profile/${activity.fromAddress}`}
+              >
                 <Text
-                  style="subtitle3"
+                  style="subtitle2"
                   css={{
                     color: '$primary11',
                     '&:hover': {
@@ -293,17 +423,19 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             ) : (
               <span>-</span>
             )}
-            <Text
-              style="subtitle3"
-              css={{ fontSize: '12px', color: '$gray11' }}
-            >
+            <Text style="body2" color="subtle">
               to
             </Text>
             {activity.toAddress &&
             activity.toAddress !== constants.AddressZero ? (
-              <Link href={`/profile/${activity.toAddress}`}>
+              <Link
+                style={{
+                  display: 'flex',
+                }}
+                href={`/profile/${activity.toAddress}`}
+              >
                 <Text
-                  style="subtitle3"
+                  style="subtitle2"
                   css={{
                     color: '$primary11',
                     '&:hover': {
@@ -318,126 +450,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               <span>-</span>
             )}
           </Flex>
-        </TableCell>
-      </TableRow>
-    )
-  }
-
-  return (
-    <TableRow
-      key={activity.txHash}
-      css={{
-        gridTemplateColumns: '1fr 1fr',
-      }}
-    >
-      <TableCell css={{ color: '$gray11' }}>
-        <Flex align="center">
-          {activity.type && logos[activity.type]}
-          <Text style="subtitle2" css={{ ml: '$2' }} color="subtle">
-            {activityDescription}
-          </Text>
-        </Flex>
-        {activity.price &&
-        activity.price !== 0 &&
-        activity.type &&
-        !['transfer', 'mint'].includes(activity.type) ? (
-          <Flex align="center">
-            <FormatCryptoCurrency
-              amount={activity.price}
-              logoHeight={16}
-              textStyle="subtitle1"
-              css={{ mr: '$2', fontSize: '14px' }}
-            />
-          </Flex>
-        ) : (
-          <span>-</span>
-        )}
-      </TableCell>
-      <TableCell>
-        <Flex
-          align="center"
-          justify="end"
-          css={{
-            gap: '$3',
-          }}
-        >
-          {!!activity.order?.source?.icon && (
-            <img
-              width="20px"
-              height="20px"
-              src={(activity.order?.source?.icon as string) || ''}
-              alt={`${activity.order?.source?.name} Source`}
-            />
-          )}
-          <Text style="body2" color="subtle">
-            {useTimeSince(activity?.timestamp)}
-          </Text>
-          {activity.txHash && (
-            <Anchor
-              href={`${blockExplorerBaseUrl}/tx/${activity.txHash}`}
-              color="primary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
-            </Anchor>
-          )}
-        </Flex>
-        <Flex
-          justify="end"
-          css={{
-            gap: '$3',
-          }}
-        >
-          {activity.fromAddress &&
-          activity.fromAddress !== constants.AddressZero ? (
-            <Link
-              style={{
-                display: 'flex',
-              }}
-              href={`/profile/${activity.fromAddress}`}
-            >
-              <Text
-                style="subtitle2"
-                css={{
-                  color: '$primary11',
-                  '&:hover': {
-                    color: '$primary10',
-                  },
-                }}
-              >
-                {fromDisplayName}
-              </Text>
-            </Link>
-          ) : (
-            <span>-</span>
-          )}
-          <Text style="body2" color="subtle">
-            to
-          </Text>
-          {activity.toAddress &&
-          activity.toAddress !== constants.AddressZero ? (
-            <Link
-              style={{
-                display: 'flex',
-              }}
-              href={`/profile/${activity.toAddress}`}
-            >
-              <Text
-                style="subtitle2"
-                css={{
-                  color: '$primary11',
-                  '&:hover': {
-                    color: '$primary10',
-                  },
-                }}
-              >
-                {toDisplayName}
-              </Text>
-            </Link>
-          ) : (
-            <span>-</span>
-          )}
         </Flex>
       </TableCell>
     </TableRow>
