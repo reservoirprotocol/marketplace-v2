@@ -9,6 +9,7 @@ import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
+import { zoneAddresses } from 'utils/zoneAddresses'
 import { useAccount } from 'wagmi'
 
 type Props = {
@@ -18,11 +19,6 @@ type Props = {
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
 }
-
-const zoneAddresses = [
-  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
-  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
-]
 
 export const TokenActions: FC<Props> = ({
   token,
@@ -94,30 +90,34 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-      {(!isOwner || is1155) && isListed && (
-        <Flex
-          css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
-        >
-          <BuyNow
-            token={token}
-            buttonCss={{ flex: 1, justifyContent: 'center' }}
-            buttonProps={{ corners: 'square' }}
-            mutate={mutate}
-          />
-          <AddToCart
-            token={token}
-            buttonCss={{
-              width: 52,
-              p: 0,
-              justifyContent: 'center',
-            }}
-            buttonProps={{ corners: 'square' }}
-          />
-        </Flex>
-      )}
+      {(!isOwner || is1155) &&
+        isListed &&
+        token?.market?.floorAsk?.price?.amount && (
+          <Flex
+            css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
+          >
+            <BuyNow
+              tokenId={token.token?.tokenId}
+              collectionId={token.token?.collection?.id}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
+              buttonProps={{ corners: 'square' }}
+              buttonChildren="Buy Now"
+              mutate={mutate}
+            />
+            <AddToCart
+              token={token}
+              buttonCss={{
+                width: 52,
+                p: 0,
+                justifyContent: 'center',
+              }}
+              buttonProps={{ corners: 'square' }}
+            />
+          </Flex>
+        )}
       {showAcceptOffer && (
         <AcceptBid
-          token={token}
+          tokenId={token.token?.tokenId}
           bidId={queryBidId}
           collectionId={token?.token?.contract}
           openState={
@@ -149,7 +149,7 @@ export const TokenActions: FC<Props> = ({
               {!isOracleOrder ? (
                 <Tooltip
                   content={
-                    <Text style="body2" as="p">
+                    <Text style="body3" as="p">
                       Cancelling this order requires gas.
                     </Text>
                   }
@@ -207,7 +207,7 @@ export const TokenActions: FC<Props> = ({
               {!isOracleOrder ? (
                 <Tooltip
                   content={
-                    <Text style="body2" as="p">
+                    <Text style="body3" as="p">
                       Cancelling this order requires gas.
                     </Text>
                   }

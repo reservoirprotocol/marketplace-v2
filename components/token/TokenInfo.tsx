@@ -248,7 +248,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               </Text>
               <Tooltip
                 content={
-                  <Text style="body2" as="p">
+                  <Text style="body3" as="p">
                     A fee on every order that goes to the collection creator.
                   </Text>
                 }
