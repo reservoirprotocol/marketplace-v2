@@ -1,6 +1,6 @@
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useBids, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { useBids, useListings, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
@@ -15,6 +15,7 @@ import { useAccount } from 'wagmi'
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
   offer?: ReturnType<typeof useBids>['data'][0]
+  listing?: ReturnType<typeof useListings>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
@@ -23,6 +24,7 @@ type Props = {
 export const TokenActions: FC<Props> = ({
   token,
   offer,
+  listing,
   isOwner,
   mutate,
   account,
@@ -49,11 +51,19 @@ export const TokenActions: FC<Props> = ({
       account?.address?.toLowerCase()
   const isListed = token ? token?.market?.floorAsk?.id !== null : false
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
+  const offerOrderZone = offer?.rawData?.zone
+  const offerOrderKind = offer?.kind
 
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const offerIsOracleOrder =
+    offerOrderKind === 'seaport-v1.4' &&
+    zoneAddresses.includes(offerOrderZone as string)
+
+  const listingOrderZone = listing?.rawData?.zone
+  const listingOrderKind = listing?.kind
+
+  const listingIsOracleOrder =
+    listingOrderKind === 'seaport-v1.4' &&
+    zoneAddresses.includes(listingOrderZone as string)
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
@@ -146,7 +156,7 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           trigger={
             <Flex>
-              {!isOracleOrder ? (
+              {!offerIsOracleOrder ? (
                 <Tooltip
                   content={
                     <Text style="body3" as="p">
@@ -204,7 +214,7 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           trigger={
             <Flex>
-              {!isOracleOrder ? (
+              {!listingIsOracleOrder ? (
                 <Tooltip
                   content={
                     <Text style="body3" as="p">
