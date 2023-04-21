@@ -25,6 +25,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
+import { useQuery } from '@apollo/client'
+import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
+import { useNft } from 'use-nft'
+import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 
 type Props = {
   address: Address | undefined
@@ -49,24 +54,42 @@ export const ListingsTable: FC<Props> = ({ address }) => {
 
   if (chain.community) listingsQuery.community = chain.community
 
-  const {
-    data: listings,
-    mutate,
-    fetchNextPage,
-    isFetchingPage,
-    isValidating,
-  } = useListings(listingsQuery)
+  // const {
+  //   data: listings,
+  //   mutate,
+  //   fetchNextPage,
+  //   isFetchingPage,
+  //   isValidating,
+  // } = useListings(listingsQuery)
+  const { data, loading, fetchMore } = useQuery(GET_ORDER_LISTINGS, {
+    variables: { 
+      first: 10,
+      skip: 0,
+      order_OrderBy: Order_OrderBy.CreatedAt,
+      orderDirection: OrderDirection.Desc,
+      where: {
+        signer: address,
+        isOrderAsk: true
+      }
+    }
+  })
+
+  const listings = data?.orders || []
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ 
+        variables: {
+          skip: listings.length
+        }
+      })
     }
   }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
-      {!isValidating && !isFetchingPage && listings && listings.length === 0 ? (
+      {!loading && listings && listings.length === 0 ? (
         <Flex
           direction="column"
           align="center"
@@ -83,16 +106,15 @@ export const ListingsTable: FC<Props> = ({ address }) => {
           {listings.map((listing, i) => {
             return (
               <ListingTableRow
-                key={`${listing?.id}-${i}`}
-                listing={listing}
-                mutate={mutate}
+                key={listing.hash}
+                listing={listing as Order}
               />
             )
           })}
           <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
-      {isValidating && (
+      {loading && (
         <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
@@ -102,33 +124,31 @@ export const ListingsTable: FC<Props> = ({ address }) => {
 }
 
 type ListingTableRowProps = {
-  listing: ReturnType<typeof useListings>['data'][0]
+  listing: Order
   mutate?: MutatorCallback
 }
 
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { routePrefix } = useMarketplaceChain()
-  const expiration = useTimeSince(listing?.expiration)
+  const expiration = useTimeSince(listing?.endTime ? Number(listing.endTime) : 0)
 
-  const orderZone = listing?.rawData?.zone
-  const orderKind = listing?.kind
+  const { data: tokenData, loading } = useQuery(GET_TOKEN_BY_ID, {
+    variables: { id: `${listing.collectionAddress}-${listing.tokenId}`}
+  })
+  const token = tokenData?.token
 
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
-
-  let criteriaData = listing?.criteria?.data
-
+  // TO-DO: remove later, should using token.image
+  const { nft } = useNft(listing.collectionAddress, listing.tokenId)
+  
   let imageSrc: string = (
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
+    nft?.image
   ) as string
 
   if (isSmallDevice) {
     return (
       <Flex
-        key={listing?.id}
+        key={listing?.hash}
         direction="column"
         align="start"
         css={{
@@ -142,7 +162,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/collection/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+            href={`/collection/${listing?.collectionAddress}/${listing?.tokenId}`}
           >
             <Flex align="center">
               {imageSrc && (
@@ -154,7 +174,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                   }}
                   loader={({ src }) => src}
                   src={imageSrc}
-                  alt={`${listing?.id}`}
+                  alt={`${listing?.hash}`}
                   width={36}
                   height={36}
                 />
@@ -168,40 +188,31 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {criteriaData?.collection?.name}
+                  {token?.collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{criteriaData?.token?.tokenId}
+                  #{listing?.tokenId}
                 </Text>
               </Flex>
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={listing?.price?.amount?.native}
-            address={listing?.price?.currency?.contract}
+            amount={listing?.price}
+            address={listing?.currencyAddress}
             textStyle="subtitle2"
             logoHeight={14}
           />
         </Flex>
         <Flex justify="between" align="center" css={{ width: '100%' }}>
-          <a href={`https://${listing?.source?.domain}`} target="_blank">
-            <Flex align="center" css={{ gap: '$2' }}>
-              <img
-                width="20px"
-                height="20px"
-                src={(listing?.source?.icon as string) || ''}
-                alt={`${listing?.source?.name}`}
-              />
-              <Text style="subtitle2">{expiration}</Text>
-            </Flex>
-          </a>
+          <Flex align="center" css={{ gap: '$2' }}>
+            <Text style="subtitle2">{expiration}</Text>
+          </Flex>
           <CancelListing
-            listingId={listing?.id as string}
+            listingId={listing?.hash}
             mutate={mutate}
             trigger={
               <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
+                <Tooltip
                     content={
                       <Text style="body2" as="p">
                         Cancelling this order requires gas.
@@ -213,6 +224,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                         color: '$red11',
                         minWidth: '150px',
                         justifyContent: 'center',
+                        backgroundColor: '$gray6'
                       }}
                       color="gray3"
                     >
@@ -225,18 +237,6 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       Cancel
                     </Button>
                   </Tooltip>
-                ) : (
-                  <Button
-                    css={{
-                      color: '$red11',
-                      minWidth: '150px',
-                      justifyContent: 'center',
-                    }}
-                    color="gray3"
-                  >
-                    Cancel
-                  </Button>
-                )}
               </Flex>
             }
           />
@@ -247,12 +247,12 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
 
   return (
     <TableRow
-      key={listing?.id}
+      key={listing?.hash}
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+          href={`/collection/${listing?.collectionAddress}/${listing?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -264,7 +264,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc as string}
-                alt={`${criteriaData?.token?.name}`}
+                alt={`${token?.collection?.name}`}
                 width={48}
                 height={48}
               />
@@ -277,10 +277,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {criteriaData?.collection?.name}
+                {token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{criteriaData?.token?.tokenId}
+                #{listing?.tokenId}
               </Text>
             </Flex>
           </Flex>
@@ -288,8 +288,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={listing?.price?.amount?.native}
-          address={listing?.price?.currency?.contract}
+          amount={listing?.price}
+          address={listing?.currencyAddress}
           textStyle="subtitle2"
           logoHeight={14}
         />
@@ -298,32 +298,13 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
       <TableCell>
-        <Flex align="center" css={{ gap: '$2' }}>
-          <img
-            width="20px"
-            height="20px"
-            src={(listing?.source?.icon as string) || ''}
-            alt={`${listing?.source?.name}`}
-          />
-          <Anchor
-            href={`https://${listing?.source?.domain as string}`}
-            target="_blank"
-            color="primary"
-            weight="normal"
-          >
-            {listing?.source?.name as string}
-          </Anchor>
-        </Flex>
-      </TableCell>
-      <TableCell>
         <Flex justify="end">
           <CancelListing
-            listingId={listing?.id as string}
+            listingId={listing?.hash}
             mutate={mutate}
             trigger={
               <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
+                <Tooltip
                     content={
                       <Text style="body2" as="p">
                         Cancelling this order requires gas.
@@ -335,6 +316,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                         color: '$red11',
                         minWidth: '150px',
                         justifyContent: 'center',
+                        backgroundColor: '$gray6'
                       }}
                       color="gray3"
                     >
@@ -347,18 +329,6 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                       Cancel
                     </Button>
                   </Tooltip>
-                ) : (
-                  <Button
-                    css={{
-                      color: '$red11',
-                      minWidth: '150px',
-                      justifyContent: 'center',
-                    }}
-                    color="gray3"
-                  >
-                    Cancel
-                  </Button>
-                )}
               </Flex>
             }
           />
@@ -368,7 +338,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   )
 }
 
-const headings = ['Items', 'Listed Price', 'Expiration', 'Marketplace', '']
+const headings = ['Items', 'Listed Price', 'Expiration', '']
 
 const TableHeading = () => (
   <HeaderRow
