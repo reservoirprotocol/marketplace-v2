@@ -1,11 +1,14 @@
+import { useQuery } from '@apollo/client'
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useBids, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
 import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
+import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -52,7 +55,6 @@ export const TokenActions: FC<Props> = ({
     account.isConnected &&
     token?.market?.topBid?.maker?.toLowerCase() ===
       account?.address?.toLowerCase()
-  const isListed = token && token?.market?.floorAsk?.id
   const orderZone = offer?.rawData?.zone
   const orderKind = offer?.kind
 
@@ -68,6 +70,25 @@ export const TokenActions: FC<Props> = ({
       maxWidth: 250,
     },
   }
+
+  const { data } = useQuery(GET_ORDER_LISTINGS, {
+    variables: { 
+      first: 10,
+      skip: 0,
+      order_OrderBy: Order_OrderBy.CreatedAt,
+      orderDirection: OrderDirection.Desc,
+      where: {
+        collectionAddress: token.collection.id,
+        tokenId: `${token.tokenID}`,
+        isOrderAsk: true
+      }
+    }
+  })
+
+  console.log(data)
+
+  const listing = data?.orders?.[0];
+  const isListed = token && listing
 
   return (
     <Grid
@@ -88,8 +109,8 @@ export const TokenActions: FC<Props> = ({
           mutate={mutate}
           buttonCss={buttonCss}
           buttonChildren={
-            token?.market?.floorAsk?.price?.amount?.decimal
-              ? 'Create New Listing'
+            isListed
+              ? 'Edit Listing'
               : 'List for Sale'
           }
         />
@@ -198,14 +219,12 @@ export const TokenActions: FC<Props> = ({
         />
       )} */}
 
-      {/* {isOwner && isListed && !is1155 && (
+      {isOwner && isListed && !is1155 && (
         <CancelListing
-          listingId={token?.market?.floorAsk?.id as string}
-          mutate={mutate}
+          listingId={listing.hash}
           trigger={
             <Flex>
-              {!isOracleOrder ? (
-                <Tooltip
+             <Tooltip
                   content={
                     <Text style="body2" as="p">
                       Cancelling this order requires gas.
@@ -216,6 +235,7 @@ export const TokenActions: FC<Props> = ({
                     css={{
                       color: '$red11',
                       minWidth: '150px',
+                      backgroundColor: '$gray6'
                     }}
                     color="gray3"
                   >
@@ -228,22 +248,10 @@ export const TokenActions: FC<Props> = ({
                     Cancel Listing
                   </Button>
                 </Tooltip>
-              ) : (
-                <Button
-                  css={{
-                    color: '$red11',
-                    minWidth: '150px',
-                    justifyContent: 'center',
-                  }}
-                  color="gray3"
-                >
-                  Cancel Listing
-                </Button>
-              )}
             </Flex>
           }
         />
-      )} */}
+      )}
     </Grid>
   )
 }

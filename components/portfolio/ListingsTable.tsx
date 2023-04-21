@@ -18,13 +18,12 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import { useListings } from '@reservoir0x/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-import { useMarketplaceChain, useTimeSince } from 'hooks'
+import { useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { ChainContext } from 'context/ChainContextProvider'
 import { useQuery } from '@apollo/client'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
@@ -37,30 +36,10 @@ type Props = {
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
-const zoneAddresses = [
-  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
-  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
-]
 export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let listingsQuery: Parameters<typeof useListings>['0'] = {
-    maker: address,
-    includeCriteriaMetadata: true,
-    includeRawData: true,
-  }
-  const { chain } = useContext(ChainContext)
-
-  if (chain.community) listingsQuery.community = chain.community
-
-  // const {
-  //   data: listings,
-  //   mutate,
-  //   fetchNextPage,
-  //   isFetchingPage,
-  //   isValidating,
-  // } = useListings(listingsQuery)
   const { data, loading, fetchMore } = useQuery(GET_ORDER_LISTINGS, {
     variables: { 
       first: 10,
@@ -130,7 +109,6 @@ type ListingTableRowProps = {
 
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.endTime ? Number(listing.endTime) : 0)
 
   const { data: tokenData, loading } = useQuery(GET_TOKEN_BY_ID, {
