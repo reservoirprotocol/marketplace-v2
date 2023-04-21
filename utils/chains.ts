@@ -79,8 +79,8 @@ export default [
   {
     ...optimism,
     name: 'Optimism',
-    lightIconUrl: '/icons/optimism-icon.svg',
-    darkIconUrl: '/icons/optimism-icon.svg',
+    lightIconUrl: '/icons/optimism-icon-dark.svg',
+    darkIconUrl: '/icons/optimism-icon-light.svg',
     reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
     proxyApi: '/api/reservoir/optimism',
     routePrefix: 'optimism',
