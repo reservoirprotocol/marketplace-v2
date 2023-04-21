@@ -12,6 +12,7 @@ import {
   useBids,
   useCollections,
   useDynamicTokens,
+  useListings,
   useTokenActivity,
   useTokenOpenseaBanned,
   useUserTokens,
@@ -122,12 +123,23 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const { data: offers, isLoading: offersLoading } = useBids({
+  const { data: offers } = useBids({
     token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
     includeRawData: true,
+    sortBy: 'price',
+    limit: 1,
+  })
+
+  const { data: listings } = useListings({
+    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+    includeRawData: true,
+    sortBy: 'price',
+    limit: 1,
   })
 
   const offer = offers && offers[0] ? offers[0] : undefined
+  const listing = listings && listings[0] ? listings[0] : undefined
+
   const attributesData = useAttributes(collectionId)
 
   let countOwned = 0
@@ -497,6 +509,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 <TokenActions
                   token={token}
                   offer={offer}
+                  listing={listing}
                   isOwner={isOwner}
                   mutate={mutate}
                   account={account}
