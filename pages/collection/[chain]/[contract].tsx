@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from '../../../components/primitives'
+import { Text, Flex, Box, Button } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -38,7 +38,11 @@ import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
-import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBroom,
+  faCopy,
+  faMagnifyingGlass,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
@@ -48,6 +52,7 @@ import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
 import Link from 'next/link'
 import Img from 'components/primitives/Img'
+import Sweep from 'components/buttons/Sweep'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -385,24 +390,56 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         ml: 'auto',
                         width: '100%',
                         flexDirection: 'row-reverse',
-                        gap: '$3',
+                        gap: '$2',
                         '@md': {
                           flexDirection: 'row',
                           width: 'max-content',
-                          gap: '$4',
+                          gap: '$3',
                         },
                       }}
                     >
-                      <SortTokens />
+                      <SortTokens
+                        css={{
+                          order: 3,
+                          px: '14px',
+                          justifyContent: 'center',
+                          '@md': {
+                            order: 1,
+                            width: '220px',
+                            minWidth: 'max-content',
+                            px: '$5',
+                          },
+                        }}
+                      />
+                      <Sweep
+                        collectionId={collection.id}
+                        buttonChildren={<FontAwesomeIcon icon={faBroom} />}
+                        buttonCss={{
+                          minWidth: 48,
+                          minHeight: 48,
+                          justifyContent: 'center',
+                          padding: 0,
+                          order: 1,
+                          '@md': {
+                            order: 2,
+                          },
+                        }}
+                        mutate={mutate}
+                      />
                       <CollectionOffer
                         collection={collection}
                         buttonCss={{
                           width: '100%',
                           justifyContent: 'center',
+                          order: 2,
+                          '@md': {
+                            order: 3,
+                          },
                           '@sm': {
                             maxWidth: '220px',
                           },
                         }}
+                        mutate={mutate}
                       />
                     </Flex>
                   </Flex>
