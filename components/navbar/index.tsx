@@ -137,7 +137,7 @@ const Navbar = () => {
               key={router.asPath}
             />
           </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
+          <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
             <Link href="/collection-rankings">
               <Button color="gray3">
                 <FontAwesomeIcon icon={faRankingStar} />
