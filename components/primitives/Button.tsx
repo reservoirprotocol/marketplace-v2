@@ -68,7 +68,7 @@ const Button = styled('button', {
         borderRadius: 99999,
       },
       circle: {
-        borderRadius: '99999px',
+        borderRadius: '8px',
         alignItems: 'center',
         justifyContent: 'center',
       },

@@ -139,7 +139,7 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
             <Link href="/collection-rankings">
-            <Button
+              <Button
                 css={{
                   '&:hover': {
                     background: '$gray8',
@@ -152,7 +152,14 @@ const Navbar = () => {
               </Button>
             </Link>
             <Link href="/portfolio">
-              <Button color="gray3">
+              <Button
+                css={{
+                  '&:hover': {
+                    background: '$gray8',
+                  },
+                }}
+                color="gray3"
+              >
                 <FontAwesomeIcon icon={faBolt} />
                     Sell
               </Button>
