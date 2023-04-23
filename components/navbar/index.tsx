@@ -135,16 +135,7 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/collection-rankings">
-              <NavItem 
-                active={router.pathname == '/collection-rankings'}
-                css={{
-                  backgroundColor: '$gray3',
-                  color: '$gray12',
-                  '&:hover': {
-                    backgroundColor: '$gray4',
-                  },
-                }}
-              >
+              <NavItem active={router.pathname == '/collection-rankings'}>
                 Rankings
               </NavItem>
             </Link>

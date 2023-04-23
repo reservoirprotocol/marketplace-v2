@@ -310,7 +310,7 @@ const GlobalSearch = forwardRef<
               width: '26px',
               height: '26px',
               borderRadius: '8px',
-              backgroundColor: '#e5e8eb',
+              backgroundColor: '#gray8',
               display: 'block',
               '@bp1100': { display: 'flex' },
             }}
