@@ -299,8 +299,6 @@ const GlobalSearch = forwardRef<
             position: 'absolute',
             top: '50%',
             right: '$4',
-            borderRadius: '8px',
-            background: '#gray5',
             zIndex: 2,
 
             transform: 'translate(0, -50%)',
@@ -312,7 +310,7 @@ const GlobalSearch = forwardRef<
               width: '26px',
               height: '26px',
               borderRadius: '8px',
-              backgroundColor: '#gray5',
+              backgroundColor: '#c1c8cd',
               display: 'block',
               '@bp1100': { display: 'flex' },
             }}
