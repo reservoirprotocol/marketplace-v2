@@ -59,18 +59,18 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 112, cursor: 'pointer' }}>
+            <Box css={{ width: 118, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/seaportMarketLogo.svg"
-                  width={112}
+                  width={118}
                   height={39}
                   alt="SeaPort"
                 />
               ) : (
                 <Image
                   src="/seaportMarketLogoLight.svg"
-                  width={112}
+                  width={119}
                   height={39}
                   alt="SeaPort"
                 />
