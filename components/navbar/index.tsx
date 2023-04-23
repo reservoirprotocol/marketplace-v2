@@ -64,14 +64,14 @@ const Navbar = () => {
                 <Image
                   src="/seaportMarketLogo.svg"
                   width={112}
-                  height={36}
+                  height={39}
                   alt="SeaPort"
                 />
               ) : (
                 <Image
                   src="/seaportMarketLogoLight.svg"
                   width={112}
-                  height={36}
+                  height={39}
                   alt="SeaPort"
                 />
               )}
