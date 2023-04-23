@@ -137,7 +137,15 @@ const Navbar = () => {
               key={router.asPath}
             />
           </Box>
-          <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
+          <Flex align="center"
+            css={{
+              gap: '$3',
+              mr: '$3',
+              '&:hover': {
+                background: '$gray8',
+              },
+            }}
+          >
             <Link href="/collection-rankings">
               <Button color="gray3">
                 <FontAwesomeIcon icon={faRankingStar} />
