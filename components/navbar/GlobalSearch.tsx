@@ -143,6 +143,7 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
         ) : (
           <Jazzicon
             diameter={32}
+            paperStyles={{ borderRadius: '8px' }}
             seed={jsNumberForAddress(wallet.address as string)}
           />
         )}
