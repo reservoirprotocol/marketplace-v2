@@ -68,19 +68,19 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-          <Box css={{ width: 132, cursor: 'pointer' }}>
+          <Box css={{ width: 136, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/seaportMarketLogo.svg"
-                  width={132}
-                  height={39}
+                  width={136}
+                  height={40}
                   alt="SeaPort"
                 />
               ) : (
                 <Image
                   src="/seaportMarketLogoLight.svg"
-                  width={132}
-                  height={39}
+                  width={136}
+                  height={40}
                   alt="SeaPort"
                 />
               )}
