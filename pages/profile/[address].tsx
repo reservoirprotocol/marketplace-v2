@@ -164,7 +164,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
         >
           <Flex align="center">
             {ensAvatar ? (
-              <Avatar size="xxl" src={ensAvatar} />
+              <Avatar size="xxl" corners="rounded" src={ensAvatar} />
             ) : (
               <Jazzicon
                 diameter={64}
