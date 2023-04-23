@@ -138,12 +138,10 @@ const Navbar = () => {
               <NavItem 
                 active={router.pathname == '/collection-rankings'}
                 css={{
-                  transition: '0.3s',
-                  display: 'block',
-                  padding: '12px 15px',
+                  backgroundColor: '$gray3',
+                  color: '$gray12',
                   '&:hover': {
-                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    borderRadius: '$md',
+                    backgroundColor: '$gray4',
                   },
                 }}
               >
@@ -151,20 +149,7 @@ const Navbar = () => {
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem 
-                active={router.pathname == '/portfolio'}
-                css={{
-                  transition: '0.3s',
-                  display: 'block',
-                  padding: '12px 15px',
-                  '&:hover': {
-                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    borderRadius: '$md',
-                  },
-                }}
-              >
-                Sell
-              </NavItem>
+              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
           </Flex>
         </Flex>
