@@ -299,6 +299,8 @@ const GlobalSearch = forwardRef<
             position: 'absolute',
             top: '50%',
             right: '$4',
+            borderRadius: '8px',
+            backgroundColor: '#gray5',
             zIndex: 2,
 
             transform: 'translate(0, -50%)',
