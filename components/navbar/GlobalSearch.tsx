@@ -309,9 +309,9 @@ const GlobalSearch = forwardRef<
               justifyContent: 'center',
               width: '26px',
               height: '26px',
-              borderradius: '8px',
-              backgroundcolor: '#e5e8eb',
-              display: 'none',
+              borderRadius: '8px',
+              backgroundColor: '#e5e8eb',
+              display: 'block',
               '@bp1100': { display: 'flex' },
             }}
           >
