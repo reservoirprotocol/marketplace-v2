@@ -23,8 +23,10 @@ import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
+import { useTheme } from 'next-themes'
 
 const HamburgerMenu = () => {
+  const { theme } = useTheme()
   const { address, isConnected } = useAccount()
   const { data: balance } = useBalance({ address })
   const {
@@ -66,13 +68,22 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-            <Box css={{ width: 34, cursor: 'pointer' }}>
-              <Image
-                src="/seaportLogo.svg"
-                width={34}
-                height={39}
-                alt="SeaPort"
-              />
+          <Box css={{ width: 168, cursor: 'pointer' }}>
+              {theme == 'dark' ? (
+                <Image
+                  src="/seaportMarketLogo.svg"
+                  width={168}
+                  height={40}
+                  alt="SeaPort"
+                />
+              ) : (
+                <Image
+                  src="/seaportMarketLogoLight.svg"
+                  width={112}
+                  height={40}
+                  alt="SeaPort"
+                />
+              )}
             </Box>
           </Link>
           <RadixDialog.Close>
