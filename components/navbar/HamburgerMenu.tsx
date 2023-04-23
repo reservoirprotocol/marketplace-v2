@@ -43,7 +43,7 @@ const HamburgerMenu = () => {
       size="small"
       color="gray3"
     >
-      <FontAwesomeIcon icon={faBars} width={16} height={16} />
+      <FontAwesomeIcon icon={faBars} width={24} height={24} />
     </Button>
   )
 

@@ -47,7 +47,7 @@ const MobileSearch = () => {
               },
             }}
           >
-            <FontAwesomeIcon icon={faChevronLeft} width={16} height={16} />
+            <FontAwesomeIcon icon={faChevronLeft} width={24} height={24} />
           </Flex>
         </RadixDialog.Close>
       </Flex>
@@ -62,7 +62,7 @@ const MobileSearch = () => {
           size="small"
           color="gray3"
         >
-          <FontAwesomeIcon icon={faMagnifyingGlass} width={16} height={16} />
+          <FontAwesomeIcon icon={faMagnifyingGlass} width={24} height={24} />
         </Button>
       </DialogTrigger>
       <DialogPortal>

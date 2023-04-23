@@ -24,7 +24,7 @@ const CartButton = () => {
           size="small"
           color="gray3"
         >
-          <FontAwesomeIcon icon={faShoppingCart} width="16" height="16" />
+          <FontAwesomeIcon icon={faShoppingCart} width="24" height="24" />
           {cartItems.length > 0 && (
             <Flex
               align="center"
