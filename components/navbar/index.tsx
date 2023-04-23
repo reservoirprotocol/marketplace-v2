@@ -59,19 +59,19 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 118, cursor: 'pointer' }}>
+            <Box css={{ width: 168, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/seaportMarketLogo.svg"
-                  width={118}
-                  height={39}
+                  width={168}
+                  height={40}
                   alt="SeaPort"
                 />
               ) : (
                 <Image
                   src="/seaportMarketLogoLight.svg"
-                  width={119}
-                  height={39}
+                  width={168}
+                  height={40}
                   alt="SeaPort"
                 />
               )}
@@ -107,19 +107,19 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 112, cursor: 'pointer' }}>
+            <Box css={{ width: 168, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/seaportMarketLogo.svg"
-                  width={112}
-                  height={36}
+                  width={168}
+                  height={40}
                   alt="SeaPort"
                 />
               ) : (
                 <Image
                   src="/seaportMarketLogoLight.svg"
                   width={112}
-                  height={36}
+                  height={40}
                   alt="SeaPort"
                 />
               )}
