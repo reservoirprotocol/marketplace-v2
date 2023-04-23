@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Box, Flex } from '../primitives'
+import { Box, Flex, Button } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -16,6 +16,10 @@ import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faBolt, faRankingStar,
+} from '@fortawesome/free-solid-svg-icons'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -135,12 +139,16 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/collection-rankings">
-              <NavItem active={router.pathname == '/collection-rankings'}>
-                Rankings
-              </NavItem>
+              <Button color="gray3">
+                <FontAwesomeIcon icon={faRankingStar} />
+                    Ranks
+              </Button>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <Button color="gray3">
+                <FontAwesomeIcon icon={faBolt} />
+                    Sell
+              </Button>
             </Link>
           </Flex>
         </Flex>
