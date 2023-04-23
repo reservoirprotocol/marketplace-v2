@@ -306,12 +306,16 @@ const GlobalSearch = forwardRef<
         >
           <Text
             css={{
-              color: '$gray9',
+              justifyContent: 'center',
+              width: '26px',
+              height: '26px',
+              borderradius: '8px',
+              backgroundcolor: '#e5e8eb',
               display: 'none',
-              '@bp1100': { display: 'block' },
+              '@bp1100': { display: 'flex' },
             }}
           >
-            ⌘K
+            /
           </Text>
         </Box>
       )}
