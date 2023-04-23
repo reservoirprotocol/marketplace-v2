@@ -26,10 +26,10 @@ const AvatarRoot = styled(AvatarPrimitive.Root, {
         size: 24,
       },
       medium: {
-        size: 36,
+        size: 44,
       },
       large: {
-        size: 44,
+        size: 48,
       },
       xl: {
         size: 56,
