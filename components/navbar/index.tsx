@@ -135,12 +135,36 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/collection-rankings">
-              <NavItem active={router.pathname == '/collection-rankings'}>
+              <NavItem 
+                active={router.pathname == '/collection-rankings'}
+                css={{
+                  transition: '0.3s',
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    borderRadius: '$md',
+                  },
+                }}
+              >
                 Rankings
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+              <NavItem 
+                active={router.pathname == '/portfolio'}
+                css={{
+                  transition: '0.3s',
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    borderRadius: '$md',
+                  },
+                }}
+              >
+                Sell
+              </NavItem>
             </Link>
           </Flex>
         </Flex>
