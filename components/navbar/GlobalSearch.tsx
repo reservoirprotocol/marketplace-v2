@@ -193,6 +193,8 @@ const GlobalSearch = forwardRef<
 
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
+  const { theme } = useTheme()
+
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
@@ -304,20 +306,37 @@ const GlobalSearch = forwardRef<
             transform: 'translate(0, -50%)',
           }}
         >
-          <Text
-            css={{
-              justifyContent: 'center',
-              width: '26px',
-              height: '26px',
-              borderRadius: '8px',
-              color: 'subtle',
-              backgroundColor: '#c1c8cd',
-              display: 'block',
-              '@bp1100': { display: 'flex' },
-            }}
-          >
-            /
-          </Text>
+          {theme == 'dark' ? (
+            <Text
+              css={{
+                justifyContent: 'center',
+                width: '26px',
+                height: '26px',
+                borderRadius: '8px',
+                color: 'subtle',
+                backgroundColor: '#202425',
+                display: 'block',
+                '@bp1100': { display: 'flex' },
+              }}
+            >
+              /
+            </Text>
+          ) : (
+            <Text
+              css={{
+                justifyContent: 'center',
+                width: '26px',
+                height: '26px',
+                borderRadius: '8px',
+                color: 'subtle',
+                backgroundColor: '#e6e8eb',
+                display: 'block',
+                '@bp1100': { display: 'flex' },
+              }}
+            >
+              /
+            </Text>
+          )}
         </Box>
       )}
       <Input
