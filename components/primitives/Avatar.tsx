@@ -40,7 +40,7 @@ const AvatarRoot = styled(AvatarPrimitive.Root, {
     },
     corners: {
       rounded: {
-        borderRadius: 4,
+        borderRadius: 8,
       },
       circle: {
         borderRadius: '100%',
@@ -49,7 +49,7 @@ const AvatarRoot = styled(AvatarPrimitive.Root, {
   },
   defaultVariants: {
     size: 'medium',
-    corners: 'circle',
+    corners: 'rounded',
   },
 })
 

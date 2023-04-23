@@ -31,7 +31,7 @@ export const Head: FC<Props> = ({
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@reservoir0x" />
+      <meta name="twitter:site" content="@Seaport_market" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
