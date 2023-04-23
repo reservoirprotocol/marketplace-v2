@@ -168,6 +168,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
             ) : (
               <Jazzicon
                 diameter={64}
+                paperStyles={{ borderRadius: '8px' }}
                 seed={jsNumberForAddress(address as string)}
               />
             )}

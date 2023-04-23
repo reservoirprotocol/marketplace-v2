@@ -39,7 +39,7 @@ export const ProfileDropdown: FC = () => {
       {ensAvatar ? (
         <Avatar size="medium" corners="rounded" src={ensAvatar} />
       ) : (
-        <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
+        <Jazzicon diameter={44} paperStyles={{ borderRadius: '8px' }} seed={jsNumberForAddress(address as string)} />
       )}
     </Button>
   )

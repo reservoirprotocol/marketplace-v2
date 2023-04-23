@@ -133,6 +133,7 @@ const HamburgerMenu = () => {
                   ) : (
                     <Jazzicon
                       diameter={36}
+                      paperStyles={{ borderRadius: '8px' }}
                       seed={jsNumberForAddress(address as string)}
                     />
                   )}
