@@ -300,7 +300,7 @@ const GlobalSearch = forwardRef<
             top: '50%',
             right: '$4',
             borderRadius: '8px',
-            backgroundColor: '#gray5',
+            background: '#gray5',
             zIndex: 2,
 
             transform: 'translate(0, -50%)',
