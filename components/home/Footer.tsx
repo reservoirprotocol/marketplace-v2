@@ -20,8 +20,6 @@ type SectionLinkProps = {
 
 const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
   <Anchor
-    target="_blank"
-    rel="noopener noreferrer"
     href={href}
     weight="medium"
     css={{ fontSize: 14, mt: 16 }}
