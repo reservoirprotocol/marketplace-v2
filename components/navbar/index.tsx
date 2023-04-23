@@ -60,12 +60,21 @@ const Navbar = () => {
         <Flex align="center">
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <Image
-                src="/seaportLogo.svg"
-                width={34}
-                height={39}
-                alt="SeaPort"
-              />
+              {theme == 'dark' ? (
+                <Image
+                  src="/seaportMarketLogo.svg"
+                  width={112}
+                  height={36}
+                  alt="SeaPort"
+                />
+              ) : (
+                <Image
+                  src="/seaportMarketLogoLight.svg"
+                  width={112}
+                  height={36}
+                  alt="SeaPort"
+                />
+              )}
             </Box>
           </Link>
         </Flex>
