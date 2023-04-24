@@ -44,7 +44,6 @@ import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import Transfer from '../buttons/Transfer'
 import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
 import { ChainContext } from 'context/ChainContextProvider'
@@ -286,7 +285,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            <Flex>
             <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
               mutate={mutate}
@@ -305,7 +303,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               buttonChildren="List"
             />
           </Flex>
-        </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
               You Get
@@ -317,7 +314,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
-              tokenId={token.token.tokenId}
+                tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 mutate={mutate}
                 buttonCss={{
@@ -443,7 +440,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         />
       </TableCell>
       <TableCell>
-      <Flex direction="column" align="start">
+        <Flex direction="column" align="start">
           <FormatCryptoCurrency
             amount={token?.token?.topBid?.price?.netAmount?.native}
             address={token?.token?.topBid?.price?.currency?.contract}
@@ -481,6 +478,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               mutate={mutate}
             />
           )}
+
           <List
             token={token as ReturnType<typeof useTokens>['data'][0]}
             buttonCss={{
@@ -492,10 +490,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               },
             }}
             buttonChildren="List"
-            mutate={mutate}
-          />
-          <Transfer
-            token={token as ReturnType<typeof useTokens>['data'][0]}
             mutate={mutate}
           />
           <Dropdown
