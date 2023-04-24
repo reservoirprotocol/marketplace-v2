@@ -464,10 +464,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
-          <Transfer
-            token={token as ReturnType<typeof useTokens>['data'][0]}
-            mutate={mutate}
-          />
           {token?.token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
               tokenId={token.token.tokenId}
@@ -489,7 +485,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               mutate={mutate}
             />
           )}
-
           <List
             token={token as ReturnType<typeof useTokens>['data'][0]}
             buttonCss={{
@@ -501,6 +496,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               },
             }}
             buttonChildren="List"
+            mutate={mutate}
+          />
+          <Transfer
+            token={token as ReturnType<typeof useTokens>['data'][0]}
             mutate={mutate}
           />
           <Dropdown
