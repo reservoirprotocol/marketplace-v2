@@ -80,6 +80,7 @@ const List: FC<Props> = ({
     return (
       <ListModal
         trigger={trigger}
+        oracleEnabled={true}
         collectionId={contract}
         tokenId={tokenId}
         currencies={listingCurrencies}
