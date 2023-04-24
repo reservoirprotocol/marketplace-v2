@@ -287,10 +287,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               logoHeight={14}
             />
             <Flex>
-            <Transfer
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              mutate={mutate}
-            />
             <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
               mutate={mutate}
