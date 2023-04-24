@@ -44,6 +44,7 @@ import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import Transfer from '../buttons/Transfer'
 import Checkbox from 'components/primitives/Checkbox'
 import { UserToken } from 'pages/portfolio'
 import { ChainContext } from 'context/ChainContextProvider'
@@ -490,6 +491,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               },
             }}
             buttonChildren="List"
+            mutate={mutate}
+          />
+          <Transfer
+            token={token as ReturnType<typeof useTokens>['data'][0]}
             mutate={mutate}
           />
           <Dropdown
