@@ -286,6 +286,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
+            <Flex>
             <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
               mutate={mutate}
@@ -341,6 +342,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             )}
           </Flex>
         </Flex>
+      </Flex>
     )
   }
 
