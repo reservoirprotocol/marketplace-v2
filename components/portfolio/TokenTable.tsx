@@ -290,6 +290,18 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
               mutate={mutate}
+              buttonCss={{
+                width: '100%',
+                maxWidth: '300px',
+                justifyContent: 'center',
+                px: '42px',
+                backgroundColor: '$gray3',
+                color: '$gray12',
+                mt: '$2',
+                '&:hover': {
+                  backgroundColor: '$gray4',
+                },
+              }}
               buttonChildren="List"
             />
           </Flex>
