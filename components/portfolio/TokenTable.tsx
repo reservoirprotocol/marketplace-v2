@@ -445,11 +445,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             amount={token?.token?.topBid?.price?.netAmount?.native}
             address={token?.token?.topBid?.price?.currency?.contract}
             decimals={token?.token?.topBid?.price?.currency?.decimals}
-            textStyle="subtitle1"
+            textStyle="subtitle2"
             logoHeight={14}
           />
           {token?.token?.topBid?.price?.amount?.usd ? (
-            <Text style="body2" css={{ color: '$gray11' }} ellipsify>
+            <Text style="subtitle3"  css={{ color: '$gray11' }} ellipsify>
               {formatDollar(token?.token?.topBid?.price?.amount?.usd as number)}
             </Text>
           ) : null}
