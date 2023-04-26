@@ -386,7 +386,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   overflow: 'hidden',
                 }}
               >
-                <Flex justify="between" css={{ gap: '$2' }}>
+                <Flex justify="between" align="center" css={{ gap: '$2' }}>
                   <Text style="subtitle3" ellipsify color="subtle">
                     {token?.token?.collection?.name}
                   </Text>
