@@ -13,6 +13,7 @@ import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
 import { Anchor, Flex } from 'components/primitives'
 import { v4 as uuidv4 } from 'uuid'
 import { Execute } from '@reservoir0x/reservoir-sdk'
+import { useNetwork } from 'wagmi'
 
 type ToastType = {
   id?: string
@@ -22,7 +23,8 @@ type ToastType = {
   status?: 'success' | 'error'
 }
 
-export type Path = NonNullable<Execute['path']>[0]
+type Path = NonNullable<Execute['path']>[0]
+type Step = Execute['steps'][0]
 
 export const ToastContext = createContext<{
   toasts: Array<ToastType>
@@ -37,10 +39,10 @@ export const ToastContext = createContext<{
 const ToastContextProvider: FC<any> = ({ children }) => {
   const [toasts, setToasts] = useState<Array<ToastType>>([])
 
-  const addToast = (toast: ToastType) => {
-    console.log(toast)
-    toast.id = uuidv4()
+  const { chains } = useNetwork()
 
+  const addToast = (toast: ToastType) => {
+    toast.id = uuidv4()
     setToasts([...toasts, toast])
   }
 
@@ -50,65 +52,98 @@ const ToastContextProvider: FC<any> = ({ children }) => {
     let eventListener: any
     if (client) {
       eventListener = client.addEventListener((event, chainId) => {
-        console.log(event, chainId)
-
-        const pathMap = event?.data.path
-          ? (event?.data.path as Path[]).reduce(
-              (paths: Record<string, Path>, path: Path) => {
-                if (path.orderId) {
-                  paths[path.orderId] = path
-                }
-
-                return paths
-              },
-              {} as Record<string, Path>
-            )
-          : {}
-
         switch (event.name) {
           case 'purchase_error':
             addToast?.({
               title: 'Purchase Failure',
-              description: event.data.error
-                ? event.data.error
-                : 'Failed to complete purchase',
+              status: 'error',
+              description:
+                event.data.error.length < 100
+                  ? event.data.error
+                  : 'Failed to complete purchase',
             })
             break
 
           case 'purchase_complete':
-            console.log('adding complete toast')
+            const chain = chains.find((chain) => chain.id === chainId)
+
+            const blockExplorerBaseUrl =
+              chain?.blockExplorers?.default?.url || 'https://etherscan.io'
+
+            const executableSteps: Execute['steps'] = event?.data?.steps.filter(
+              (step: Step) => step.items && step.items.length > 0
+            )
+
+            let stepCount = executableSteps.length
+
+            let currentStepItem: NonNullable<Step['items']>[0] | undefined
+
+            const currentStepIndex = executableSteps.findIndex((step: Step) => {
+              currentStepItem = step.items?.find(
+                (item) => item.status === 'incomplete'
+              )
+              return currentStepItem
+            })
+
+            const currentStep =
+              currentStepIndex > -1
+                ? executableSteps[currentStepIndex]
+                : executableSteps[stepCount - 1]
+
+            const pathMap = event?.data.path
+              ? (event?.data.path as Path[]).reduce(
+                  (paths: Record<string, Path>, path: Path) => {
+                    if (path.orderId) {
+                      paths[path.orderId] = path
+                    }
+
+                    return paths
+                  },
+                  {} as Record<string, Path>
+                )
+              : {}
+
+            const totalPurchases =
+              currentStep?.items?.reduce(
+                (total, item) => total + (item?.salesData?.length || 0),
+                0
+              ) || 0
+
+            const failedPurchases =
+              (Object.keys(pathMap).length || 0) - totalPurchases
+
             addToast?.({
-              title: 'Purchase Complete',
-              description: event.data.error
-                ? event.data.error
-                : 'Successfully completed purchase',
-              // action: (
-              //   <Flex direction="column">
-              //     {event.data?.steps?.items?.map((item) => {
-              //       const txHash = item.txHash
-              //         ? `${item.txHash.slice(0, 4)}...${item.txHash.slice(-4)}`
-              //         : ''
-              //       return (
-              //         <Anchor
-              //           href={`${blockExplorerBaseUrl}/tx/${item?.txHash}`}
-              //           color="primary"
-              //           weight="medium"
-              //           target="_blank"
-              //           css={{ fontSize: 12 }}
-              //         >
-              //           View transaction: {txHash}
-              //         </Anchor>
-              //       )
-              //     })}
-              //   </Flex>
-              // ),
+              title: failedPurchases
+                ? `${totalPurchases} ${
+                    totalPurchases > 1 ? 'items' : 'item'
+                  } purchased, ${failedPurchases} ${
+                    failedPurchases > 1 ? 'items' : 'item'
+                  } failed`
+                : 'Purchase was successful.',
+              status: failedPurchases ? 'error' : 'success',
+              action: (
+                <Flex direction="column" css={{ gap: '$1' }}>
+                  {currentStep.items?.map((item) => {
+                    const txHash = item.txHash
+                      ? `${item.txHash.slice(0, 4)}...${item.txHash.slice(-4)}`
+                      : ''
+                    return (
+                      <Anchor
+                        href={`${blockExplorerBaseUrl}/tx/${item?.txHash}`}
+                        color="primary"
+                        weight="medium"
+                        target="_blank"
+                        css={{ fontSize: 12 }}
+                      >
+                        View transaction: {txHash}
+                      </Anchor>
+                    )
+                  })}
+                </Flex>
+              ),
             })
             break
         }
-        // addToast?.({
-        //   title: 'Event',
-        //   description: '',
-        // })
       })
     }
     return () => {
@@ -118,26 +153,8 @@ const ToastContextProvider: FC<any> = ({ children }) => {
 
   return (
     <ToastContext.Provider value={{ toasts, addToast, setToasts }}>
-      {/* <ToastProvider duration={5000}> */}
       <ToastProvider duration={5000}>
         {children}
-        {/* <Toast
-          key={'test'}
-          title={'Purchase successful'}
-          // description={'Sorry, the purchased failed'}
-          status="success"
-          action={
-            <Anchor
-              color="primary"
-              weight="medium"
-              css={{ fontSize: 14 }}
-              href="reservoir.tools"
-              target="_blank"
-            >
-              View transaction
-            </Anchor>
-          }
-        /> */}
         {toasts.map((toast, idx) => {
           return (
             <Toast
@@ -146,6 +163,7 @@ const ToastContextProvider: FC<any> = ({ children }) => {
               title={toast.title}
               description={toast.description}
               action={toast.action}
+              status={toast.status}
             />
           )
         })}
