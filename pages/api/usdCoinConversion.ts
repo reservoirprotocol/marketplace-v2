@@ -15,7 +15,12 @@ export default async function handler() {
   try {
     const response = await fetchWithTimeout(
       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&ids=${ids}`,
-      {},
+      {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+        },
+      },
       5000 // Timeout in milliseconds (5 seconds)
     )
 
@@ -37,8 +42,6 @@ export default async function handler() {
       headers: {
         'content-type': 'application/json',
         'Cache-Control': cacheSettings,
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
       },
     }
   )
