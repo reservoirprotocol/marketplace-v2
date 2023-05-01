@@ -1,6 +1,6 @@
 import { Flex, Text, Button } from 'components/primitives'
 import { Dispatch, FC, SetStateAction } from 'react'
-import { UserToken } from 'pages/portfolio'
+import { UserToken } from 'pages/portfolio/[[...address]]'
 
 type Props = {
   selectedItems: UserToken[]

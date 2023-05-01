@@ -51,7 +51,7 @@ export const ProfileDropdown: FC = () => {
           e.preventDefault()
         }}
       >
-        <Link href={`/profile/${address}`} style={{ flex: 1 }}>
+        <Link href={`/portfolio/${address}`} style={{ flex: 1 }}>
           <Flex justify="between" align="center" css={{ width: '100%' }}>
             <Text style="body1">
               {shortEnsName ? shortEnsName : shortAddress}
