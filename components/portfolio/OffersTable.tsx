@@ -125,7 +125,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
     : ''
   const attributeDisplayText = attribute
     ? `${attribute?.key}: ${attribute?.value}`
-    : undefined
+    : ''
 
   let criteriaData = offer?.criteria?.data
 
