@@ -270,12 +270,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
-              Net Floor
+              Floor
             </Text>
             <FormatCryptoCurrency
-              amount={
-                token?.token?.collection?.floorAskPrice?.netAmount?.decimal
-              }
+              amount={token?.token?.collection?.floorAskPrice?.amount?.decimal}
               address={
                 token?.token?.collection?.floorAskPrice?.currency?.contract
               }
@@ -305,10 +303,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
-              You Get
+              Top Offer
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.topBid?.price?.netAmount?.native}
+              amount={token?.token?.topBid?.price?.amount?.native}
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -432,7 +430,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.collection?.floorAskPrice?.netAmount?.decimal}
+          amount={token?.token?.collection?.floorAskPrice?.amount?.decimal}
           address={token?.token?.collection?.floorAskPrice?.currency?.contract}
           decimals={token?.token?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle1"
@@ -442,14 +440,14 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       <TableCell>
         <Flex direction="column" align="start">
           <FormatCryptoCurrency
-            amount={token?.token?.topBid?.price?.netAmount?.native}
+            amount={token?.token?.topBid?.price?.amount?.native}
             address={token?.token?.topBid?.price?.currency?.contract}
             decimals={token?.token?.topBid?.price?.currency?.decimals}
             textStyle="subtitle2"
             logoHeight={14}
           />
           {token?.token?.topBid?.price?.amount?.usd ? (
-            <Text style="subtitle3"  css={{ color: '$gray11' }} ellipsify>
+            <Text style="subtitle3" css={{ color: '$gray11' }} ellipsify>
               {formatDollar(token?.token?.topBid?.price?.amount?.usd as number)}
             </Text>
           ) : null}
@@ -682,42 +680,15 @@ const TableHeading = () => (
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
         <Text style="subtitle3" color="subtle">
-          Net Floor
+          Floor
         </Text>
-        <Tooltip
-          content={
-            <Flex>
-              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
-                The floor price with royalties and fees removed. This is the eth
-                you would receive if you listed at the floor.
-              </Text>
-            </Flex>
-          }
-        >
-          <Text css={{ color: '$gray9' }}>
-            <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
-          </Text>
-        </Tooltip>
       </Flex>
     </TableCell>
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
         <Text style="subtitle3" color="subtle">
-          You Get
+          Top Offer
         </Text>
-        <Tooltip
-          content={
-            <Flex>
-              <Text style="body3" css={{ mx: '$2', maxWidth: '200px' }}>
-                The eth you would receive if you sold instantly.
-              </Text>
-            </Flex>
-          }
-        >
-          <Text css={{ color: '$gray9' }}>
-            <FontAwesomeIcon icon={faCircleInfo} width={12} height={12} />
-          </Text>
-        </Tooltip>
       </Flex>
     </TableCell>
     <TableCell></TableCell>
