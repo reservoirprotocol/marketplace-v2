@@ -64,10 +64,12 @@ type Props = {
   sortBy: PortfolioSortingOption
   isLoading?: boolean
   selectedItems: UserToken[]
+  isOwner: boolean
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
 }
 
-const desktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
+const ownerDesktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
+const desktopTemplateColumns = '1.25fr repeat(3, .75fr)'
 
 export const TokenTable: FC<Props> = ({
   address,
@@ -75,6 +77,7 @@ export const TokenTable: FC<Props> = ({
   sortBy,
   filterCollection,
   selectedItems,
+  isOwner,
   setSelectedItems,
 }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -129,7 +132,7 @@ export const TokenTable: FC<Props> = ({
         <Flex direction="column" css={{ width: '100%' }}>
           {isLoading ? null : (
             <>
-              <TableHeading />
+              <TableHeading isOwner={isOwner} />
               {tokens.map((token, i) => {
                 if (!token) return null
 
@@ -140,6 +143,7 @@ export const TokenTable: FC<Props> = ({
                     mutate={mutate}
                     selectedItems={selectedItems}
                     setSelectedItems={setSelectedItems}
+                    isOwner={isOwner}
                   />
                 )
               })}
@@ -162,6 +166,7 @@ type TokenTableRowProps = {
   mutate?: MutatorCallback
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
+  isOwner: boolean
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({
@@ -169,6 +174,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   mutate,
   selectedItems,
   setSelectedItems,
+  isOwner,
 }) => {
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const { addToast } = useContext(ToastContext)
@@ -283,23 +289,25 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            <List
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              mutate={mutate}
-              buttonCss={{
-                width: '100%',
-                maxWidth: '300px',
-                justifyContent: 'center',
-                px: '42px',
-                backgroundColor: '$gray3',
-                color: '$gray12',
-                mt: '$2',
-                '&:hover': {
-                  backgroundColor: '$gray4',
-                },
-              }}
-              buttonChildren="List"
-            />
+            {isOwner && (
+              <List
+                token={token as ReturnType<typeof useTokens>['data'][0]}
+                mutate={mutate}
+                buttonCss={{
+                  width: '100%',
+                  maxWidth: '300px',
+                  justifyContent: 'center',
+                  px: '42px',
+                  backgroundColor: '$gray3',
+                  color: '$gray12',
+                  mt: '$2',
+                  '&:hover': {
+                    backgroundColor: '$gray4',
+                  },
+                }}
+                buttonChildren="List"
+              />
+            )}
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
@@ -310,7 +318,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {token?.token?.topBid?.price?.amount?.decimal && (
+            {token?.token?.topBid?.price?.amount?.decimal && isOwner && (
               <AcceptBid
                 tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
@@ -344,7 +352,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   return (
     <TableRow
       key={token?.token?.tokenId}
-      css={{ gridTemplateColumns: desktopTemplateColumns }}
+      css={{
+        gridTemplateColumns: isOwner
+          ? ownerDesktopTemplateColumns
+          : desktopTemplateColumns,
+      }}
     >
       <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
         <Flex align="center" css={{ gap: '$3' }}>
@@ -550,215 +562,219 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           </Flex>
         </Tooltip>
       </TableCell>
-      <TableCell>
-        <Flex justify="end" css={{ gap: '$3' }}>
-          {token?.token?.topBid?.price?.amount?.decimal && (
-            <AcceptBid
-              tokenId={token.token.tokenId}
-              collectionId={token?.token?.contract}
+      {isOwner && (
+        <TableCell>
+          <Flex justify="end" css={{ gap: '$3' }}>
+            {token?.token?.topBid?.price?.amount?.decimal && (
+              <AcceptBid
+                tokenId={token.token.tokenId}
+                collectionId={token?.token?.contract}
+                buttonCss={{
+                  px: '32px',
+                  backgroundColor: '$primary9',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: '$primary10',
+                  },
+                }}
+                buttonChildren={
+                  <Flex align="center" css={{ gap: '$2' }}>
+                    <FontAwesomeIcon icon={faBolt} />
+                    Sell
+                  </Flex>
+                }
+                mutate={mutate}
+              />
+            )}
+
+            <List
+              token={token as ReturnType<typeof useTokens>['data'][0]}
               buttonCss={{
-                px: '32px',
-                backgroundColor: '$primary9',
-                color: 'white',
+                px: '42px',
+                backgroundColor: '$gray3',
+                color: '$gray12',
                 '&:hover': {
-                  backgroundColor: '$primary10',
+                  backgroundColor: '$gray4',
                 },
               }}
-              buttonChildren={
-                <Flex align="center" css={{ gap: '$2' }}>
-                  <FontAwesomeIcon icon={faBolt} />
-                  Sell
-                </Flex>
-              }
+              buttonChildren="List"
               mutate={mutate}
             />
-          )}
-
-          <List
-            token={token as ReturnType<typeof useTokens>['data'][0]}
-            buttonCss={{
-              px: '42px',
-              backgroundColor: '$gray3',
-              color: '$gray12',
-              '&:hover': {
-                backgroundColor: '$gray4',
-              },
-            }}
-            buttonChildren="List"
-            mutate={mutate}
-          />
-          <Dropdown
-            modal={false}
-            trigger={
-              <Button
-                color="gray3"
-                size="xs"
-                css={{ width: 44, justifyContent: 'center' }}
-              >
-                <FontAwesomeIcon icon={faEllipsis} />
-              </Button>
-            }
-            contentProps={{ asChild: true, forceMount: true }}
-          >
-            <DropdownMenuItem
-              css={{ py: '$3', width: '100%' }}
-              onClick={(e) => {
-                if (isRefreshing) {
-                  e.preventDefault()
-                  return
-                }
-                setIsRefreshing(true)
-                fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
-                  undefined,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      token: `${contract}:${token.token?.tokenId}`,
-                    }),
-                  }
-                )
-                  .then(({ data, response }) => {
-                    if (response.status === 200) {
-                      addToast?.({
-                        title: 'Refresh token',
-                        description:
-                          'Request to refresh this token was accepted.',
-                      })
-                    } else {
-                      throw data
-                    }
-                    setIsRefreshing(false)
-                  })
-                  .catch((e) => {
-                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
-
-                    addToast?.({
-                      title: 'Refresh token failed',
-                      description: ratelimit
-                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
-                            ratelimit
-                          )}.`
-                        : `This token was recently refreshed. Please try again later.`,
-                    })
-
-                    setIsRefreshing(false)
-                    throw e
-                  })
-              }}
-            >
-              <Flex align="center" css={{ gap: '$2' }}>
-                <Box
-                  css={{
-                    color: '$gray10',
-                    animation: isRefreshing
-                      ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
-                      : 'none',
-                  }}
+            <Dropdown
+              modal={false}
+              trigger={
+                <Button
+                  color="gray3"
+                  size="xs"
+                  css={{ width: 44, justifyContent: 'center' }}
                 >
-                  <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
-                </Box>
-                <Text>Refresh</Text>
-              </Flex>
-            </DropdownMenuItem>
+                  <FontAwesomeIcon icon={faEllipsis} />
+                </Button>
+              }
+              contentProps={{ asChild: true, forceMount: true }}
+            >
+              <DropdownMenuItem
+                css={{ py: '$3', width: '100%' }}
+                onClick={(e) => {
+                  if (isRefreshing) {
+                    e.preventDefault()
+                    return
+                  }
+                  setIsRefreshing(true)
+                  fetcher(
+                    `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                    undefined,
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        token: `${contract}:${token.token?.tokenId}`,
+                      }),
+                    }
+                  )
+                    .then(({ data, response }) => {
+                      if (response.status === 200) {
+                        addToast?.({
+                          title: 'Refresh token',
+                          description:
+                            'Request to refresh this token was accepted.',
+                        })
+                      } else {
+                        throw data
+                      }
+                      setIsRefreshing(false)
+                    })
+                    .catch((e) => {
+                      const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
 
-            {isOracleOrder &&
-            token?.ownership?.floorAsk?.id &&
-            token?.token?.tokenId &&
-            token?.token?.collection?.id ? (
-              <EditListingModal
-                trigger={
-                  <Flex
-                    align="center"
-                    css={{
-                      gap: '$2',
-                      px: '$2',
-                      py: '$3',
-                      borderRadius: 8,
-                      outline: 'none',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: '$gray5',
-                      },
-                      '&:focus': {
-                        backgroundColor: '$gray5',
-                      },
-                    }}
-                  >
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon icon={faEdit} />
-                    </Box>
-                    <Text>Edit Listing</Text>
-                  </Flex>
-                }
-                listingId={token?.ownership?.floorAsk?.id}
-                tokenId={token?.token?.tokenId}
-                collectionId={token?.token?.collection?.id}
-                onClose={(data, currentStep) => {
-                  if (mutate && currentStep == EditListingStep.Complete)
-                    mutate()
+                      addToast?.({
+                        title: 'Refresh token failed',
+                        description: ratelimit
+                          ? `This token was recently refreshed. The next available refresh is ${timeTill(
+                              ratelimit
+                            )}.`
+                          : `This token was recently refreshed. Please try again later.`,
+                      })
+
+                      setIsRefreshing(false)
+                      throw e
+                    })
                 }}
-              />
-            ) : null}
-
-            {token?.ownership?.floorAsk?.id ? (
-              <CancelListing
-                listingId={token.ownership.floorAsk.id as string}
-                mutate={mutate}
-                trigger={
-                  <Flex
+              >
+                <Flex align="center" css={{ gap: '$2' }}>
+                  <Box
                     css={{
-                      px: '$2',
-                      py: '$3',
-                      borderRadius: 8,
-                      outline: 'none',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundColor: '$gray5',
-                      },
-                      '&:focus': {
-                        backgroundColor: '$gray5',
-                      },
+                      color: '$gray10',
+                      animation: isRefreshing
+                        ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+                        : 'none',
                     }}
                   >
-                    {!isOracleOrder ? (
-                      <Tooltip
-                        content={
-                          <Text style="body2" as="p">
-                            Cancelling this order requires gas.
-                          </Text>
-                        }
-                      >
-                        <Flex align="center" css={{ gap: '$2' }}>
-                          <Box css={{ color: '$gray10' }}>
-                            <FontAwesomeIcon icon={faGasPump} />
-                          </Box>
-                          <Text color="error">Cancel</Text>
-                        </Flex>
-                      </Tooltip>
-                    ) : (
-                      <Text color="error">Cancel</Text>
-                    )}
-                  </Flex>
-                }
-              />
-            ) : null}
-          </Dropdown>
-        </Flex>
-      </TableCell>
+                    <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                  </Box>
+                  <Text>Refresh</Text>
+                </Flex>
+              </DropdownMenuItem>
+
+              {isOracleOrder &&
+              token?.ownership?.floorAsk?.id &&
+              token?.token?.tokenId &&
+              token?.token?.collection?.id ? (
+                <EditListingModal
+                  trigger={
+                    <Flex
+                      align="center"
+                      css={{
+                        gap: '$2',
+                        px: '$2',
+                        py: '$3',
+                        borderRadius: 8,
+                        outline: 'none',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: '$gray5',
+                        },
+                        '&:focus': {
+                          backgroundColor: '$gray5',
+                        },
+                      }}
+                    >
+                      <Box css={{ color: '$gray10' }}>
+                        <FontAwesomeIcon icon={faEdit} />
+                      </Box>
+                      <Text>Edit Listing</Text>
+                    </Flex>
+                  }
+                  listingId={token?.ownership?.floorAsk?.id}
+                  tokenId={token?.token?.tokenId}
+                  collectionId={token?.token?.collection?.id}
+                  onClose={(data, currentStep) => {
+                    if (mutate && currentStep == EditListingStep.Complete)
+                      mutate()
+                  }}
+                />
+              ) : null}
+
+              {token?.ownership?.floorAsk?.id ? (
+                <CancelListing
+                  listingId={token.ownership.floorAsk.id as string}
+                  mutate={mutate}
+                  trigger={
+                    <Flex
+                      css={{
+                        px: '$2',
+                        py: '$3',
+                        borderRadius: 8,
+                        outline: 'none',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundColor: '$gray5',
+                        },
+                        '&:focus': {
+                          backgroundColor: '$gray5',
+                        },
+                      }}
+                    >
+                      {!isOracleOrder ? (
+                        <Tooltip
+                          content={
+                            <Text style="body2" as="p">
+                              Cancelling this order requires gas.
+                            </Text>
+                          }
+                        >
+                          <Flex align="center" css={{ gap: '$2' }}>
+                            <Box css={{ color: '$gray10' }}>
+                              <FontAwesomeIcon icon={faGasPump} />
+                            </Box>
+                            <Text color="error">Cancel</Text>
+                          </Flex>
+                        </Tooltip>
+                      ) : (
+                        <Text color="error">Cancel</Text>
+                      )}
+                    </Flex>
+                  }
+                />
+              ) : null}
+            </Dropdown>
+          </Flex>
+        </TableCell>
+      )}
     </TableRow>
   )
 }
 
-const TableHeading = () => (
+const TableHeading: FC<{ isOwner: boolean }> = ({ isOwner }) => (
   <HeaderRow
     css={{
       display: 'none',
       '@md': { display: 'grid' },
-      gridTemplateColumns: desktopTemplateColumns,
+      gridTemplateColumns: isOwner
+        ? ownerDesktopTemplateColumns
+        : desktopTemplateColumns,
       position: 'sticky',
       top: NAVBAR_HEIGHT,
       backgroundColor: '$neutralBg',

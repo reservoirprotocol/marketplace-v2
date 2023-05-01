@@ -50,7 +50,7 @@ const IndexPage: NextPage = () => {
   const router = useRouter()
   const { address: accountAddress, isConnected } = useAccount()
   const address = router.query.address
-    ? (router.query.address as `0x${string}`)
+    ? (router.query.address[0] as `0x${string}`)
     : accountAddress
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
@@ -63,6 +63,8 @@ const IndexPage: NextPage = () => {
     useState<PortfolioSortingOption>('acquiredAt')
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
+  const isOwner =
+    !router.query.address || router.query.address[0] === accountAddress
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
@@ -160,8 +162,12 @@ const IndexPage: NextPage = () => {
                         <TabsTrigger value="collections">
                           Collections
                         </TabsTrigger>
-                        <TabsTrigger value="listings">Listings</TabsTrigger>
-                        <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        {isOwner && (
+                          <TabsTrigger value="listings">Listings</TabsTrigger>
+                        )}
+                        {isOwner && (
+                          <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        )}
                         <TabsTrigger value="activity">Activity</TabsTrigger>
                       </TabsList>
                     </Flex>
@@ -233,6 +239,7 @@ const IndexPage: NextPage = () => {
                             sortBy={sortByType}
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
+                            isOwner={isOwner}
                           />
                         </Box>
                         {!isSmallDevice && (
@@ -247,12 +254,16 @@ const IndexPage: NextPage = () => {
                     <TabsContent value="collections">
                       <CollectionsTable address={address} />
                     </TabsContent>
-                    <TabsContent value="listings">
-                      <ListingsTable address={address} />
-                    </TabsContent>
-                    <TabsContent value="offers">
-                      <OffersTable address={address} />
-                    </TabsContent>
+                    {isOwner && (
+                      <TabsContent value="listings">
+                        <ListingsTable address={address} />
+                      </TabsContent>
+                    )}
+                    {isOwner && (
+                      <TabsContent value="offers">
+                        <OffersTable address={address} />
+                      </TabsContent>
+                    )}
                     <TabsContent value="activity">
                       <Flex
                         css={{
