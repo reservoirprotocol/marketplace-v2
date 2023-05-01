@@ -1,4 +1,9 @@
-import { Flex, Text } from 'components/primitives'
+import {
+  Flex,
+  FormatCryptoCurrency,
+  Text,
+  Tooltip,
+} from 'components/primitives'
 import { Dispatch, FC, SetStateAction } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
@@ -7,10 +12,9 @@ import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from './OpenSeaVerified'
+import { PercentChange } from 'components/primitives/PercentChange'
 
-type Collections =
-  | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
-  | ReturnType<typeof useUserCollections>['data']
+type Collections = ReturnType<typeof useUserCollections>['data']
 
 type Props = {
   open: boolean
@@ -42,6 +46,7 @@ export const TokenFilters: FC<Props> = ({
       style={{
         transition: 'width .5s',
         width: open ? 350 : 0,
+        zIndex: 1000,
       }}
     >
       <CollapsibleContent
@@ -94,23 +99,61 @@ export const TokenFilters: FC<Props> = ({
                     height={24}
                   />
                 )}
-                <Text
-                  style="body1"
-                  css={{
-                    flex: 1,
-                  }}
-                  ellipsify
+                <Flex direction="column" css={{ minWidth: 0 }}>
+                  <Flex css={{ gap: '$1' }}>
+                    <Text
+                      style="body1"
+                      css={{
+                        flex: 1,
+                      }}
+                      ellipsify
+                    >
+                      {collection?.collection?.name}
+                    </Text>
+                    <OpenSeaVerified
+                      openseaVerificationStatus={
+                        collection?.collection?.openseaVerificationStatus
+                      }
+                    />
+                  </Flex>
+                  <Text style="subtitle3" css={{ color: '$gray10' }}>
+                    Owned: {collection?.ownership?.tokenCount}
+                  </Text>
+                </Flex>
+                <Flex
+                  direction="column"
+                  css={{ ml: 'auto', flexShrink: 0, alignItems: 'end' }}
                 >
-                  {collection?.collection?.name}
-                </Text>
-                <OpenSeaVerified
-                  openseaVerificationStatus={
-                    collection?.collection?.openseaVerificationStatus
-                  }
-                />
-                <Text style="subtitle2" css={{ color: '$gray10' }}>
-                  {collection?.ownership?.tokenCount}
-                </Text>
+                  <Flex css={{ gap: '$1' }}>
+                    <Text style="subtitle2">Floor</Text>
+                    <FormatCryptoCurrency
+                      logoHeight={15}
+                      amount={
+                        collection.collection?.floorAskPrice?.amount?.decimal
+                      }
+                      address={
+                        collection.collection?.floorAskPrice?.currency?.contract
+                      }
+                      textStyle="subtitle2"
+                    />
+                  </Flex>
+                  <Tooltip
+                    sideOffset={2}
+                    side="top"
+                    content={
+                      <Text style="body3" css={{ display: 'block' }}>
+                        24h Floor Price Change
+                      </Text>
+                    }
+                  >
+                    <div>
+                      <PercentChange
+                        value={collection.collection?.volumeChange?.['1day']}
+                        decimals={1}
+                      />
+                    </div>
+                  </Tooltip>
+                </Flex>
               </Flex>
             )
           })}
