@@ -9,11 +9,18 @@ import {
 type Props = {
   trigger: ReactNode
   children: ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
-export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
+export const FullscreenModal: FC<Props> = ({
+  trigger,
+  children,
+  open,
+  onOpenChange,
+}) => {
   return (
-    <DialogRoot modal={true}>
+    <DialogRoot modal={true} open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogPortal>
         <Overlay

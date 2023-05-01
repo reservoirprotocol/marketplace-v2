@@ -31,8 +31,9 @@ import PortfolioSortDropdown, {
 } from 'components/common/PortfolioSortDropdown'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import { UserActivityTable } from 'components/profile/UserActivityTable'
+import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { useRouter } from 'next/router'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -46,7 +47,11 @@ type ActivityTypes = Exclude<
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
-  const { address, isConnected } = useAccount()
+  const router = useRouter()
+  const { address: accountAddress, isConnected } = useAccount()
+  const address = router.query.address
+    ? (router.query.address as `0x${string}`)
+    : accountAddress
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -71,8 +76,11 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = chain.community
   }
 
-  const { data: collections, isLoading: collectionsLoading } =
-    useUserCollections(address as string, collectionQuery)
+  const {
+    data: collections,
+    isLoading: collectionsLoading,
+    fetchNextPage,
+  } = useUserCollections(address as string, collectionQuery)
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
@@ -171,6 +179,7 @@ const IndexPage: NextPage = () => {
                             collections={collections}
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
+                            loadMoreCollections={fetchNextPage}
                           />
                         ) : (
                           <TokenFilters
@@ -180,6 +189,7 @@ const IndexPage: NextPage = () => {
                             collections={collections}
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
+                            loadMoreCollections={fetchNextPage}
                           />
                         )}
                         <Box

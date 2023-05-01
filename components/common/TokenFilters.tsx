@@ -7,12 +7,12 @@ import {
 import { Dispatch, FC, SetStateAction } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
-import { paths } from '@reservoir0x/reservoir-sdk'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from './OpenSeaVerified'
 import { PercentChange } from 'components/primitives/PercentChange'
+import LoadMoreCollections from 'components/common/LoadMoreCollections'
 
 type Collections = ReturnType<typeof useUserCollections>['data']
 
@@ -23,6 +23,7 @@ type Props = {
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
   scrollToTop?: () => void
+  loadMoreCollections: () => void
   isLoading?: boolean
 }
 
@@ -34,6 +35,7 @@ export const TokenFilters: FC<Props> = ({
   setFilterCollection,
   isLoading,
   scrollToTop,
+  loadMoreCollections,
 }) => {
   if (collections?.length === 0 || collections == null || isLoading) {
     return null
@@ -46,7 +48,7 @@ export const TokenFilters: FC<Props> = ({
       style={{
         transition: 'width .5s',
         width: open ? 350 : 0,
-        zIndex: 1000,
+        zIndex: 900,
       }}
     >
       <CollapsibleContent
@@ -157,6 +159,7 @@ export const TokenFilters: FC<Props> = ({
               </Flex>
             )
           })}
+          <LoadMoreCollections loadMore={loadMoreCollections} />
         </Flex>
       </CollapsibleContent>
     </Collapsible.Root>
