@@ -422,11 +422,64 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         </Flex>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
-          textStyle="subtitle1"
-          logoHeight={14}
-        />
+        <Tooltip
+          side="left"
+          sideOffset="2"
+          open={
+            token?.ownership?.floorAsk?.price?.amount?.decimal
+              ? undefined
+              : false
+          }
+          content={
+            <Flex direction="column" css={{ gap: '$2' }}>
+              <Flex justify="between" css={{ gap: '$3' }}>
+                <Text style="body3">Total Listed Price</Text>
+                <FormatCryptoCurrency
+                  amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
+                  address={
+                    token?.ownership?.floorAsk?.price?.currency?.contract
+                  }
+                  decimals={
+                    token?.ownership?.floorAsk?.price?.currency?.decimals
+                  }
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">You Get</Text>
+                <FormatCryptoCurrency
+                  amount={token?.ownership?.floorAsk?.price?.netAmount?.decimal}
+                  address={
+                    token?.ownership?.floorAsk?.price?.currency?.contract
+                  }
+                  decimals={
+                    token?.ownership?.floorAsk?.price?.currency?.decimals
+                  }
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            </Flex>
+          }
+        >
+          <Flex align="center" css={{ gap: '$2' }}>
+            {token.ownership?.floorAsk?.source?.icon ? (
+              <img
+                src={token.ownership.floorAsk.source.icon as string}
+                alt="Listing Source Icon"
+                style={{ height: 16, width: 16 }}
+              />
+            ) : null}
+            <FormatCryptoCurrency
+              amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
+              address={token?.ownership?.floorAsk?.price?.currency?.contract}
+              decimals={token?.ownership?.floorAsk?.price?.currency?.decimals}
+              textStyle="subtitle1"
+              logoHeight={14}
+            />
+          </Flex>
+        </Tooltip>
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
@@ -438,20 +491,62 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         />
       </TableCell>
       <TableCell>
-        <Flex direction="column" align="start">
-          <FormatCryptoCurrency
-            amount={token?.token?.topBid?.price?.amount?.native}
-            address={token?.token?.topBid?.price?.currency?.contract}
-            decimals={token?.token?.topBid?.price?.currency?.decimals}
-            textStyle="subtitle2"
-            logoHeight={14}
-          />
-          {token?.token?.topBid?.price?.amount?.usd ? (
-            <Text style="subtitle3" css={{ color: '$gray11' }} ellipsify>
-              {formatDollar(token?.token?.topBid?.price?.amount?.usd as number)}
-            </Text>
-          ) : null}
-        </Flex>
+        <Tooltip
+          side="left"
+          sideOffset="2"
+          open={
+            token?.token?.topBid?.price?.amount?.decimal ? undefined : false
+          }
+          content={
+            <Flex direction="column" css={{ gap: '$2' }}>
+              <Flex justify="between" css={{ gap: '$3' }}>
+                <Text style="body3">Total Offer</Text>
+                <FormatCryptoCurrency
+                  amount={token?.token?.topBid?.price?.amount?.decimal}
+                  address={token?.token?.topBid?.price?.currency?.contract}
+                  decimals={token?.token?.topBid?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">You Get</Text>
+                <FormatCryptoCurrency
+                  amount={token?.token?.topBid?.price?.netAmount?.decimal}
+                  address={token?.token?.topBid?.price?.currency?.contract}
+                  decimals={token?.token?.topBid?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            </Flex>
+          }
+        >
+          <Flex direction="column" align="start">
+            {/* TODO: Replace this when the api is patched */}
+            {(token.token?.topBid as any)?.source?.icon ? (
+              <img
+                src={(token?.token?.topBid as any).source.icon as string}
+                alt="Listing Source Icon"
+                style={{ height: 16, width: 16 }}
+              />
+            ) : null}
+            <FormatCryptoCurrency
+              amount={token?.token?.topBid?.price?.amount?.decimal}
+              address={token?.token?.topBid?.price?.currency?.contract}
+              decimals={token?.token?.topBid?.price?.currency?.decimals}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+            {token?.token?.topBid?.price?.amount?.usd ? (
+              <Text style="subtitle3" css={{ color: '$gray11' }} ellipsify>
+                {formatDollar(
+                  token?.token?.topBid?.price?.amount?.usd as number
+                )}
+              </Text>
+            ) : null}
+          </Flex>
+        </Tooltip>
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
