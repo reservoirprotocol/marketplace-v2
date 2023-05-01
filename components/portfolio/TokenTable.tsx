@@ -523,21 +523,23 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           }
         >
           <Flex direction="column" align="start">
-            {/* TODO: Replace this when the api is patched */}
-            {(token.token?.topBid as any)?.source?.icon ? (
-              <img
-                src={(token?.token?.topBid as any).source.icon as string}
-                alt="Listing Source Icon"
-                style={{ height: 16, width: 16 }}
+            <Flex css={{ gap: '$2' }} align="center">
+              {/* TODO: Replace this when the api is patched */}
+              {(token.token?.topBid as any)?.source?.icon ? (
+                <img
+                  src={(token?.token?.topBid as any).source.icon as string}
+                  alt="Listing Source Icon"
+                  style={{ height: 16, width: 16 }}
+                />
+              ) : null}
+              <FormatCryptoCurrency
+                amount={token?.token?.topBid?.price?.amount?.decimal}
+                address={token?.token?.topBid?.price?.currency?.contract}
+                decimals={token?.token?.topBid?.price?.currency?.decimals}
+                textStyle="subtitle2"
+                logoHeight={14}
               />
-            ) : null}
-            <FormatCryptoCurrency
-              amount={token?.token?.topBid?.price?.amount?.decimal}
-              address={token?.token?.topBid?.price?.currency?.contract}
-              decimals={token?.token?.topBid?.price?.currency?.decimals}
-              textStyle="subtitle2"
-              logoHeight={14}
-            />
+            </Flex>
             {token?.token?.topBid?.price?.amount?.usd ? (
               <Text style="subtitle3" css={{ color: '$gray11' }} ellipsify>
                 {formatDollar(
