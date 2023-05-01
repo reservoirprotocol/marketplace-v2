@@ -119,7 +119,9 @@ const ToastContextProvider: FC<any> = ({ children }) => {
                   } purchased, ${failedPurchases} ${
                     failedPurchases > 1 ? 'items' : 'item'
                   } failed`
-                : 'Purchase was successful.',
+                : `${totalPurchases} ${
+                    totalPurchases > 1 ? 'items' : 'item'
+                  } purchased.`,
               status: failedPurchases ? 'error' : 'success',
               action: (
                 <Flex direction="column" css={{ gap: '$1' }}>
