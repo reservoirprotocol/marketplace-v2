@@ -27,7 +27,7 @@ export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
             border: '0px',
             minWidth: '100%',
             maxWidth: '100vw',
-            maxHeight: '100%',
+            maxHeight: '100dvh',
             top: 0,
           }}
         >
