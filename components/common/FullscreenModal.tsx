@@ -22,13 +22,12 @@ export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
           }}
           css={{
             width: '100%',
-            height: '100dvh',
+            height: '100%',
             borderRadius: '0px',
             border: '0px',
             minWidth: '100%',
             maxWidth: '100vw',
-            maxHeight: '100dvh',
-            minHeight: '-webkit-fill-available',
+            maxHeight: '100vh',
             top: 0,
           }}
         >
