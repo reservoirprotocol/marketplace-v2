@@ -28,6 +28,7 @@ export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
             minWidth: '100%',
             maxWidth: '100vw',
             maxHeight: '100dvh',
+            minHeight: '-webkit-fill-available',
             top: 0,
           }}
         >
