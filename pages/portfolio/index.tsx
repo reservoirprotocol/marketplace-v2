@@ -115,12 +115,26 @@ const IndexPage: NextPage = () => {
                 />
               ) : (
                 <>
-                  <Flex align="center" justify="between" css={{ gap: '$4' }}>
-                    <Text style="h4" css={{}}>
-                      Portfolio
-                    </Text>
-                    <ChainToggle />
-                  </Flex>
+                  {isSmallDevice ? (
+                    <Flex
+                      align="start"
+                      direction="column"
+                      justify="between"
+                      css={{ gap: '$4' }}
+                    >
+                      <Text style="h4" css={{}}>
+                        Portfolio
+                      </Text>
+                      <ChainToggle />
+                    </Flex>
+                  ) : (
+                    <Flex align="center" justify="between" css={{ gap: '$4' }}>
+                      <Text style="h4" css={{}}>
+                        Portfolio
+                      </Text>
+                      <ChainToggle />
+                    </Flex>
+                  )}
                   <Tabs.Root defaultValue="items">
                     <Flex
                       css={{
