@@ -112,7 +112,7 @@ export default [
     proxyApi: '/api/reservoir/bsc',
     routePrefix: 'bsc',
     apiKey: process.env.BSC_RESERVOIR_API_KEY,
-    coingeckoId: 'bsc-usd',
+    coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
   },
