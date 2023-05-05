@@ -284,7 +284,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             >
               {activity.fromAddress &&
               activity.fromAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.fromAddress}`}>
+                <Link href={`/portfolio/${activity.fromAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -308,7 +308,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               </Text>
               {activity.toAddress &&
               activity.toAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.toAddress}`}>
+                <Link href={`/portfolio/${activity.toAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -406,7 +406,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 style={{
                   display: 'flex',
                 }}
-                href={`/profile/${activity.fromAddress}`}
+                href={`/portfolio/${activity.fromAddress}`}
               >
                 <Text
                   style="subtitle2"
@@ -432,7 +432,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 style={{
                   display: 'flex',
                 }}
-                href={`/profile/${activity.toAddress}`}
+                href={`/portfolio/${activity.toAddress}`}
               >
                 <Text
                   style="subtitle2"

@@ -23,7 +23,7 @@ import {
 import { Currency, Listings, ListModal } from '@reservoir0x/reservoir-kit-ui'
 import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
-import { UserToken } from 'pages/portfolio'
+import { UserToken } from 'pages/portfolio/[[...address]]'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { useChainCurrency, useMarketplaceChain } from 'hooks'
 import BatchListModal from 'components/portfolio/BatchListModal'

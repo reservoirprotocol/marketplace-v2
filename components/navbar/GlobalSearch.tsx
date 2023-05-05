@@ -153,7 +153,7 @@ type WalletItemProps = {
 
 const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
   return (
-    <Link href={`/profile/${wallet.address}`}>
+    <Link href={`/portfolio/${wallet.address}`}>
       <Flex
         css={{
           p: '$2',
