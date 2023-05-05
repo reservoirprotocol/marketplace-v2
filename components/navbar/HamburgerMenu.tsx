@@ -17,16 +17,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAccount, useBalance, useDisconnect } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
+import Wallet from 'components/navbar/Wallet'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
-  const { data: balance } = useBalance({ address })
   const {
     avatar: ensAvatar,
     shortAddress,
@@ -138,7 +138,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Collections
+                Explore
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
@@ -151,31 +151,27 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Portfolio
+                Sell
               </Text>
             </Link>
-            <Flex
-              css={{
-                justifyContent: 'space-between',
-                borderBottom: '1px solid $gray4',
-              }}
-            >
-              <Text
-                style="subtitle1"
+            <Link href="/portfolio" legacyBehavior>
+              <Flex
+                direction="column"
                 css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
                   pb: '$4',
                   pt: '24px',
+                  gap: '$1',
                 }}
               >
-                Balance
-              </Text>
-              <FormatCryptoCurrency
-                amount={balance?.value}
-                decimals={balance?.decimals}
-                textStyle="subtitle1"
-                logoHeight={14}
-              />
-            </Flex>
+                <Text style="subtitle1">Portfolio</Text>
+                <Text style="body3" color="subtle">
+                  Manage your items, collections, listings and offers
+                </Text>
+              </Flex>
+            </Link>
+            <Wallet />
             <Flex
               css={{
                 justifyContent: 'space-between',
