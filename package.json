@@ -14,6 +14,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@next/font": "^13.1.6",
+    "@nftearth/reservoir-sdk": "^0.5.5",
     "@radix-ui/colors": "^0.1.8",
     "@radix-ui/popper": "^0.1.0",
     "@radix-ui/react-avatar": "^1.0.1",
@@ -29,7 +30,8 @@
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "0.12.2",
     "@reservoir0x/reservoir-kit-ui": "0.15.5",
-    "@types/uuid": "^9.0.1",
+    "@vercel/analytics": "^1.0.0",
+    "cors": "^2.8.5",
     "dayjs": "^1.11.6",
     "ethers": "^5.6.9",
     "framer-motion": "^6.3.6",
@@ -44,7 +46,6 @@
     "react-responsive": "^9.0.0",
     "swr": "2.0.1",
     "usehooks-ts": "^2.9.1",
-    "uuid": "^9.0.0",
     "wagmi": "^0.12.0"
   },
   "prettier": {
@@ -57,7 +58,11 @@
     "@types/node": "^12.12.21",
     "@types/react": "^18.0",
     "@types/react-dom": "^18.0",
+    "@uniswap/sdk-core": "^3.2.2",
+    "@uniswap/v3-sdk": "^3.9.0",
+    "@uniswap/widgets": "^2.51.2",
     "next-themes": "^0.2.0",
+    "react-redux": "^8.0.5",
     "typescript": "^4.9.4"
   }
 }
