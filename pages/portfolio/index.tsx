@@ -33,6 +33,8 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { SwapWidget } from '@uniswap/widgets'
+import '@uniswap/widgets/fonts.css'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -65,11 +67,40 @@ const IndexPage: NextPage = () => {
 
   const { chain } = useContext(ChainContext)
 
+
+
   if (chain.collectionSetId) {
     collectionQuery.collectionsSetId = chain.collectionSetId
   } else if (chain.community) {
     collectionQuery.community = chain.community
   }
+
+  const MY_TOKEN_LIST = [
+    {
+      "name": "Dai Stablecoin",
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "symbol": "DAI",
+      "decimals": 18,
+      "chainId": 1,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+    },
+    {
+      "name": "Tether USD",
+      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 1,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+    },
+    {
+      "name": "USD Coin",
+      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 1,
+      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+    },
+  ]
 
   const { data: collections, isLoading: collectionsLoading } =
     useUserCollections(address as string, collectionQuery)
@@ -155,6 +186,7 @@ const IndexPage: NextPage = () => {
                         <TabsTrigger value="listings">Listings</TabsTrigger>
                         <TabsTrigger value="offers">Offers Made</TabsTrigger>
                         <TabsTrigger value="activity">Activity</TabsTrigger>
+                        <TabsTrigger value="swap">Swap</TabsTrigger>
                       </TabsList>
                     </Flex>
 
@@ -282,6 +314,9 @@ const IndexPage: NextPage = () => {
                           />
                         </Box>
                       </Flex>
+                    </TabsContent>
+                    <TabsContent value="swap">
+                      <SwapWidget tokenList={MY_TOKEN_LIST} />
                     </TabsContent>
                   </Tabs.Root>
                 </>
