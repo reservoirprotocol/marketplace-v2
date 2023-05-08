@@ -39,7 +39,7 @@ export const AccountSidebar: FC = () => {
       }}
       corners="rounded"
       type="button"
-      color="gray3"
+      color="ghost"
     >
       {ensAvatar ? (
         <Avatar size="medium" corners="rounded" src={ensAvatar} />
