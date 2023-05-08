@@ -134,7 +134,7 @@ const ChainToggle: FC = () => {
             >
               <Box
                 css={{
-                  width: 48,
+                  width: 56,
                   display: 'flex',
                   justifyContent: 'center',
                 }}
