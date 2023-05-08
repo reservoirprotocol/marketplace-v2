@@ -109,11 +109,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(offer?.expiration)
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = offer?.rawData?.isNativeOffChainCancellable
 
   let criteriaData = offer?.criteria?.data
 

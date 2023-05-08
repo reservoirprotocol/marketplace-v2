@@ -108,11 +108,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
 
-  const orderZone = listing?.rawData?.zone
-  const orderKind = listing?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = listing?.rawData?.isNativeOffChainCancellable
 
   let criteriaData = listing?.criteria?.data
 
