@@ -51,7 +51,7 @@ const ChainToggle: FC = () => {
     return null
   }
 
-  if (supportedChains.length > 4) {
+  if (supportedChains.length > 3) {
     return (
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
