@@ -16,7 +16,7 @@ type Props = {
 export const Head: FC<Props> = ({
   ogImage = 'https://seaport.market/og-image.png',
   title = 'SeaPort, the ultimate NFT marketplace',
-  description = 'SeaPort is the ultimate web3 marketplace for NFTs and crypto collectibles. Browse, buy, sell, sweep, bulk buy and auction NFTs on more than 15 markeplaces today.',
+  description = 'SeaPort is the ultimate web3 marketplace for NFTs and crypto collectibles. Browse, buy, sell, sweep, bulk buy and auction NFTs on 5 chains from more than 15 markeplaces today.',
 }) => {
   return (
     <NextHead>
