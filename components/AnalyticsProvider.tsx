@@ -19,7 +19,7 @@ export const initializeAnalytics = () => {
       clientToken: ddClientToken,
       site: 'datadoghq.com',
       //CONFIGURABLE: Change the service name to customize how it appears in your DD dashboard
-      service: 'reservoir-marketplace',
+      service: 'seaport-market',
       env,
       sampleRate: 100,
       replaySampleRate: 100,
