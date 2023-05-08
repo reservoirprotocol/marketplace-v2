@@ -34,6 +34,9 @@ import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 import { useRouter } from 'next/router'
+import { ViewToggle } from 'components/portfolio/ViewToggle'
+
+type View = 'list' | 'grid'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -52,6 +55,9 @@ const IndexPage: NextPage = () => {
   const address = router.query.address
     ? (router.query.address[0] as `0x${string}`)
     : accountAddress
+  const [tabValue, setTabValue] = useState('items')
+
+  const [itemView, setItemView] = useState<View>('list')
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -96,6 +102,42 @@ const IndexPage: NextPage = () => {
     setSelectedItems([])
     setShowListingPage(false)
   }, [address])
+
+  useEffect(() => {
+    let tab = tabValue
+
+    let deeplinkTab: string | null = null
+    if (typeof window !== 'undefined') {
+      const params = new URL(window.location.href).searchParams
+      deeplinkTab = params.get('tab')
+    }
+
+    if (deeplinkTab) {
+      switch (deeplinkTab) {
+        case 'items':
+          tab = 'items'
+          break
+        case 'collections':
+          tab = 'collectons'
+          break
+        case 'listings':
+          tab = 'listings'
+          break
+        case 'offers':
+          tab = 'offers'
+          break
+        case 'activity':
+          tab = 'activity'
+          break
+      }
+    }
+    setTabValue(tab)
+  }, [isSmallDevice, router.asPath])
+
+  useEffect(() => {
+    router.query.tab = tabValue
+    router.push(router, undefined, { shallow: true })
+  }, [tabValue])
 
   if (!isMounted) {
     return null
@@ -145,7 +187,11 @@ const IndexPage: NextPage = () => {
                       <ChainToggle />
                     </Flex>
                   )}
-                  <Tabs.Root defaultValue="items">
+                  <Tabs.Root
+                    defaultValue="items"
+                    value={tabValue}
+                    onValueChange={(value) => setTabValue(value)}
+                  >
                     <Flex
                       css={{
                         overflowX: 'scroll',
@@ -205,12 +251,16 @@ const IndexPage: NextPage = () => {
                           }}
                         >
                           {isSmallDevice && (
-                            <Flex justify="center">
+                            <Flex justify="between" css={{ gap: '$3' }}>
                               <PortfolioSortDropdown
                                 option={sortByType}
                                 onOptionSelected={(option) => {
                                   setSortByType(option)
                                 }}
+                              />
+                              <ViewToggle
+                                itemView={itemView}
+                                setItemView={setItemView}
                               />
                             </Flex>
                           )}
@@ -224,12 +274,18 @@ const IndexPage: NextPage = () => {
                                 />
                               )}
                             {!isSmallDevice && !collectionsLoading && (
-                              <PortfolioSortDropdown
-                                option={sortByType}
-                                onOptionSelected={(option) => {
-                                  setSortByType(option)
-                                }}
-                              />
+                              <Flex align="center" css={{ gap: '$3' }}>
+                                <PortfolioSortDropdown
+                                  option={sortByType}
+                                  onOptionSelected={(option) => {
+                                    setSortByType(option)
+                                  }}
+                                />
+                                <ViewToggle
+                                  itemView={itemView}
+                                  setItemView={setItemView}
+                                />
+                              </Flex>
                             )}
                           </Flex>
                           <TokenTable
@@ -247,6 +303,7 @@ const IndexPage: NextPage = () => {
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
                             setShowListingPage={setShowListingPage}
+                            isOwner={isOwner}
                           />
                         )}
                       </Flex>
