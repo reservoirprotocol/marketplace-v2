@@ -33,6 +33,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { useRouter } from 'next/router'
 
 type ActivityTypes = Exclude<
   NonNullable<
