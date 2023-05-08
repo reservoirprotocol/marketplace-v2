@@ -174,7 +174,7 @@ const Navbar = () => {
         {isConnected ? (
           <AccountSidebar />
         ) : (
-          <Box css={{ maxWidth: '285px' }}>
+          <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />
           </Box>
         )}
