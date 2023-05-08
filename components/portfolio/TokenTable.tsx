@@ -601,6 +601,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               buttonChildren="List"
               mutate={mutate}
             />
+
+            <Transfer
+            token={token as ReturnType<typeof useTokens>['data'][0]}
+            mutate={mutate}
+            />
           <Dropdown
               modal={false}
               trigger={
