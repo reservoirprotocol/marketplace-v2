@@ -645,6 +645,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                       } else {
                         throw data
                       }
+                      setIsRefreshing(false)
+                    })
+                    .catch((e) => {
+                      const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
+
                       addToast?.({
                         title: 'Refresh token failed',
                         description: ratelimit
