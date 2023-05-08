@@ -196,7 +196,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           </Text>
           {offer.maker && offer.maker !== constants.AddressZero ? (
             <Link
-              href={`/profile/${offer.maker}`}
+              href={`/portfolio/${offer.maker}`}
               style={{ lineHeight: '14.5px' }}
             >
               <Text

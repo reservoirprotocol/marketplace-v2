@@ -31,7 +31,7 @@ import PortfolioSortDropdown, {
 } from 'components/common/PortfolioSortDropdown'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import { UserActivityTable } from 'components/profile/UserActivityTable'
+import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 
 type ActivityTypes = Exclude<
@@ -46,7 +46,11 @@ type ActivityTypes = Exclude<
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
-  const { address, isConnected } = useAccount()
+  const router = useRouter()
+  const { address: accountAddress, isConnected } = useAccount()
+  const address = router.query.address
+    ? (router.query.address[0] as `0x${string}`)
+    : accountAddress
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -58,6 +62,8 @@ const IndexPage: NextPage = () => {
     useState<PortfolioSortingOption>('acquiredAt')
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
+  const isOwner =
+    !router.query.address || router.query.address[0] === accountAddress
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
@@ -71,8 +77,11 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = chain.community
   }
 
-  const { data: collections, isLoading: collectionsLoading } =
-    useUserCollections(address as string, collectionQuery)
+  const {
+    data: collections,
+    isLoading: collectionsLoading,
+    fetchNextPage,
+  } = useUserCollections(address as string, collectionQuery)
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
@@ -138,8 +147,12 @@ const IndexPage: NextPage = () => {
                         <TabsTrigger value="collections">
                           Collections
                         </TabsTrigger>
-                        <TabsTrigger value="listings">Listings</TabsTrigger>
-                        <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        {isOwner && (
+                          <TabsTrigger value="listings">Listings</TabsTrigger>
+                        )}
+                        {isOwner && (
+                          <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        )}
                         <TabsTrigger value="activity">Activity</TabsTrigger>
                       </TabsList>
                     </Flex>
@@ -157,6 +170,7 @@ const IndexPage: NextPage = () => {
                             collections={collections}
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
+                            loadMoreCollections={fetchNextPage}
                           />
                         ) : (
                           <TokenFilters
@@ -166,6 +180,7 @@ const IndexPage: NextPage = () => {
                             collections={collections}
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
+                            loadMoreCollections={fetchNextPage}
                           />
                         )}
                         <Box
@@ -209,6 +224,7 @@ const IndexPage: NextPage = () => {
                             sortBy={sortByType}
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
+                            isOwner={isOwner}
                           />
                         </Box>
                         {!isSmallDevice && (
@@ -223,12 +239,16 @@ const IndexPage: NextPage = () => {
                     <TabsContent value="collections">
                       <CollectionsTable address={address} />
                     </TabsContent>
-                    <TabsContent value="listings">
-                      <ListingsTable address={address} />
-                    </TabsContent>
-                    <TabsContent value="offers">
-                      <OffersTable address={address} />
-                    </TabsContent>
+                    {isOwner && (
+                      <TabsContent value="listings">
+                        <ListingsTable address={address} />
+                      </TabsContent>
+                    )}
+                    {isOwner && (
+                      <TabsContent value="offers">
+                        <OffersTable address={address} />
+                      </TabsContent>
+                    )}
                     <TabsContent value="activity">
                       <Flex
                         css={{

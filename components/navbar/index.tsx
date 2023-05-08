@@ -14,8 +14,8 @@ import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
-import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
+import { AccountSidebar } from 'components/navbar/AccountSidebar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBolt, faRankingStar,
@@ -172,7 +172,7 @@ const Navbar = () => {
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
-          <ProfileDropdown />
+          <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '285px' }}>
             <ConnectWalletButton />
