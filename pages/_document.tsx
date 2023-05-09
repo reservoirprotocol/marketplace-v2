@@ -35,23 +35,23 @@ class MyDocument extends Document {
         <link
           rel="shortcut icon"
           type="image/svg"
-          href="https://marketplace.reservoir.tools/reservoir.svg"
+          href="https://ipfs.thirdwebcdn.com/ipfs/QmQTajuAUULwo1yagUzXCt8nv2gCu4tZRZRTM6YUo4vsQX/Add%20a%20heading%20(1200%20%C3%97%201200%20px).svg"
         />
 
-        {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir Market" />
-        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+        {/* aura meta tags */}
+        <meta property="aura:title" content="Aura NFT Exchange" />
+        <meta property="aura:icon" content="/aura-source-icon.png" />
         <meta
-          property="reservoir:token-url-mainnet"
-          content="/collection/ethereum/${contract}/${tokenId}"
+          property="aura:token-url-mainnet"
+          content="https://hub.auraexchange.org/collection/ethereum/${contract}/${tokenId}"
         />
         <meta
-          property="reservoir:token-url-goerli"
-          content="/collection/goerli/${contract}/${tokenId}"
+          property="aura:token-url-goerli"
+          content="https://hub.auraexchange.org/collection/goerli/${contract}/${tokenId}"
         />
         <meta
-          property="reservoir:token-url-polygon"
-          content="/collection/polygon/${contract}/${tokenId}"
+          property="aura:token-url-polygon"
+          content="https://hub.auraexchange.org/collection/polygon/${contract}/${tokenId}"
         />
         <body>
           <Main />

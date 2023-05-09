@@ -3,6 +3,8 @@ import { Text, Flex, Box } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useState } from 'react'
+import { faRocket } from '@fortawesome/free-solid-svg-icons'
+import Image from 'next/image'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
@@ -33,8 +35,6 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
-import { SwapWidget } from '@uniswap/widgets'
-import '@uniswap/widgets/fonts.css'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -67,40 +67,11 @@ const IndexPage: NextPage = () => {
 
   const { chain } = useContext(ChainContext)
 
-
-
   if (chain.collectionSetId) {
     collectionQuery.collectionsSetId = chain.collectionSetId
   } else if (chain.community) {
     collectionQuery.community = chain.community
   }
-
-  const MY_TOKEN_LIST = [
-    {
-      "name": "Dai Stablecoin",
-      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-      "symbol": "DAI",
-      "decimals": 18,
-      "chainId": 1,
-      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-    },
-    {
-      "name": "Tether USD",
-      "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
-      "symbol": "USDT",
-      "decimals": 6,
-      "chainId": 1,
-      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
-    },
-    {
-      "name": "USD Coin",
-      "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-      "symbol": "USDC",
-      "decimals": 6,
-      "chainId": 1,
-      "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-    },
-  ]
 
   const { data: collections, isLoading: collectionsLoading } =
     useUserCollections(address as string, collectionQuery)
@@ -316,7 +287,23 @@ const IndexPage: NextPage = () => {
                       </Flex>
                     </TabsContent>
                     <TabsContent value="swap">
-                      <SwapWidget tokenList={MY_TOKEN_LIST} />
+                      <Layout>
+                        <Flex
+                          direction="column"
+                          align="center"
+                          css={{ py: '200px', px: '$3', textAlign: 'center' }}
+                        >
+                          <Box css={{ color: '$gray11', mb: '30px' }}>
+                            <FontAwesomeIcon icon={faRocket} beatFade size="2xl" />
+                          </Box>
+                          <Text style="body1" color="subtle" css={{ mb: '$1' }}>
+                            Coming soon.
+                          </Text>
+                          <Text style="body1" color="subtle">
+                            The requested page is currently under construction by Aura HUB.
+                          </Text>
+                        </Flex>
+                      </Layout>
                     </TabsContent>
                   </Tabs.Root>
                 </>

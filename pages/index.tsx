@@ -1,6 +1,7 @@
 import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
+import Image from 'next/image'
 import { ComponentPropsWithoutRef, useContext, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
@@ -86,21 +87,56 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
           >
             <Text style="h3" css={{ mb: 24 }}>
-              Open Source Marketplace
+              Aura Exchange
             </Text>
             <Text style="body1" css={{ mb: 48 }}>
-              Reservoir Marketplace is an open-source project that showcases the
-              latest and greatest features of the Reservoir Platform.
+              Aura Exchange Marketplace is the NFT Marketplace
+              that adds utility to your project.
             </Text>
-            <a
-              href="https://github.com/reservoirprotocol/marketplace-v2"
-              target="_blank"
-            >
-              <Button color="gray3">View Source Code</Button>
-            </a>
           </Flex>
         )}
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+          <Flex
+            css={{
+              height: '100%',
+              textAlign: 'center',
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gridGap: '$3',
+              alignItems: 'center',
+              '@media screen and (max-width: 768px)': { // hide on screens smaller than 768px
+                display: 'none',
+              },
+            }}
+          >
+            <Text style="h1" as="h1">
+              Aura HUB
+              <br />
+              <Text style="h4" as="h4">
+                List on multiple marketplaces at once
+                <br />
+                Completely gas free!
+              </Text>
+              <br />
+              <Text style="h6" as="h6">
+                List on all major marketplaces at once, with zero listing fees.
+                <br />
+                We aggregate over 160 NFT marketplaces to give you the best
+                <br />
+                possible exsposure to sell your digital assets.
+              </Text>
+            </Text>
+            <Link href="/portfolio">
+              <Box css={{ width: 750, cursor: 'pointer' }}>
+                <Image
+                  src="/listings.png"
+                  width={750}
+                  height={571}
+                  alt="Listing"
+                />
+              </Box>
+            </Link>
+          </Flex>
+        <Flex css={{ my: '$6', gap: 75 }} direction="column">
           <Flex
             justify="between"
             align="start"
@@ -148,6 +184,40 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Link>
           </Box>
         </Flex>
+          <Flex
+          css={{
+            height: '100%',
+            textAlign: 'center',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridGap: '$3',
+            alignItems: 'center',
+            '@media screen and (max-width: 768px)': { // hide on screens smaller than 768px
+              display: 'none',
+            },
+          }}
+        >
+          <Link href="https://www.auraexchange.org/mint" target='_blank' >
+            <Box css={{ width: 750, cursor: 'pointer' }}>
+              <Image
+                src="/revshare.png"
+                width={750}
+                height={571}
+                alt="Listing"
+              />
+
+            </Box>
+          </Link>
+          <Text style="h1" as="h1">
+            Aura Exchange Membership
+            <br />
+            <Text style="h4" as="h4">
+              Aura shares 70% of all trading profit revenue with our community
+              <br />
+              Mint Aura Member NFTs for just $1 each to share in exchange profits
+            </Text>
+          </Text>
+        </Flex>
         <Footer />
       </Box>
     </Layout>
@@ -164,12 +234,12 @@ export const getStaticProps: GetStaticProps<{
   }
 }> = async () => {
   let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      includeTopBid: true,
-      limit: 10,
-    }
+  {
+    sortBy: '1DayVolume',
+    normalizeRoyalties: NORMALIZE_ROYALTIES,
+    includeTopBid: true,
+    limit: 10,
+  }
 
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {

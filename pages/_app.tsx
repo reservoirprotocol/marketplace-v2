@@ -33,6 +33,8 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import { Analytics } from '@vercel/analytics/react'
+
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -161,8 +163,8 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            // marketplaceFee: 250,
-            // marketplaceFeeRecipient: "0xabc"
+            marketplaceFee: 100,
+            marketplaceFeeRecipient: "0xd2f6BF9e792DbBCA466D93bCC5a939e2D1c72B2B"
           }}
           theme={reservoirKitTheme}
         >
@@ -175,6 +177,7 @@ function MyApp({
               >
                 <ToastContextProvider>
                   <FunctionalComponent {...pageProps} />
+                  <Analytics />
                 </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>
