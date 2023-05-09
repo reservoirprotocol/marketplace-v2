@@ -2127,8 +2127,8 @@
   integrity sha512-6DbL4FjqmjpHsfNAqmduDoseIg6ciDBv/AIaxDJldMl0GR77g6/fxU8dpXDT/E43FYTLepjt8K0TbyAoXZeOHQ==
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
-
-"@reservoir0x/reservoir-kit-ui@^0.16.1":
+    
+"@reservoir0x/reservoir-kit-ui@0.16.1"
   version "0.16.1"
   resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.16.1.tgz#d9f1a3287c758ec458164d6f28a7358a4677e07a"
   integrity sha512-Df/tp5rl5gjorTSZdV/ZrtooeDZDRTp3gje1Ta/DGH9BaoKh3GWzto0MptOyJK54bkF/QnueQnEozMvBrVPJKw==
