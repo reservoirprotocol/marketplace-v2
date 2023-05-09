@@ -61,9 +61,9 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
-                width={34}
-                height={39}
+                src="/aura.png"
+                width={112}
+                height={36}
                 alt="Reservoir"
               />
             </Box>
@@ -104,7 +104,7 @@ const Navbar = () => {
                   src="/aura.png"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="aura"
                 />
               ) : (
                 <Image
@@ -133,24 +133,8 @@ const Navbar = () => {
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
-            <Link href="https://www.auraexchange.org/mint" target="_blank">
-              <NavItem active={router.pathname == '/portfolio'}>Mint Aura Pass</NavItem>
-            </Link>
-            <Link href="/">
-              <NavItem
-                active={router.pathname == '/'}
-                css={{
-                  transition: '0.3s',
-                  display: 'block',
-                  padding: '12px 15px',
-                  '&:hover': {
-                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
-                    borderRadius: '$md',
-                  },
-                }}
-              >
-                Leaderboard
-              </NavItem>
+            <Link href="/mint">
+            <NavItem active={router.pathname == '/mint'}>Mint Aura Pass</NavItem>
             </Link>
           </Flex>
         </Flex>
