@@ -101,14 +101,14 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
+                  src="/aura.png"
                   width={112}
                   height={36}
                   alt="Reservoir"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
+                  src="/aura-light.png"
                   width={112}
                   height={36}
                   alt="Reservoir"
@@ -119,7 +119,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder="Search contract address"
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -133,8 +133,24 @@ const Navbar = () => {
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
+            <Link href="https://www.auraexchange.org/mint" target="_blank">
+              <NavItem active={router.pathname == '/portfolio'}>Mint Aura Pass</NavItem>
+            </Link>
+            <Link href="/">
+              <NavItem
+                active={router.pathname == '/'}
+                css={{
+                  transition: '0.3s',
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$gray1' : '$panelShadow',
+                    borderRadius: '$md',
+                  },
+                }}
+              >
+                Leaderboard
+              </NavItem>
             </Link>
           </Flex>
         </Flex>

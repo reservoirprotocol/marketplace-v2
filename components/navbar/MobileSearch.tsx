@@ -22,7 +22,7 @@ const MobileSearch = () => {
         pt: '$4',
       }}
     >
-      <GlobalSearch placeholder="Search collections and addresses" />
+      <GlobalSearch placeholder="Search contract address" />
       <Flex
         css={{
           position: 'absolute',

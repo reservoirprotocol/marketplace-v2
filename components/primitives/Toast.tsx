@@ -2,10 +2,6 @@ import { FC, ReactNode, useContext } from 'react'
 import { keyframes, styled } from '@stitches/react'
 import * as ToastPrimitive from '@radix-ui/react-toast'
 import { ToastContext } from 'context/ToastContextProvider'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import Box from './Box'
-import { faCircleCheck, faCircleXmark } from '@fortawesome/free-solid-svg-icons'
-import Flex from './Flex'
 
 const VIEWPORT_PADDING = 25
 
@@ -36,9 +32,11 @@ const ToastRoot = styled(ToastPrimitive.Root, {
   backgroundColor: '$gray3',
   borderRadius: 6,
   padding: 12,
-  display: 'flex',
-  gap: 8,
-  alignItems: 'start',
+  display: 'grid',
+  gridTemplateAreas: "'title action' 'description action'",
+  gridTemplateColumns: 'auto max-content',
+  columnGap: '15px',
+  alignItems: 'center',
 
   '&[data-state="closed"]:first-child': {
     animation: `${hide} 100ms ease-in`,
@@ -59,6 +57,7 @@ const ToastTitle = styled(ToastPrimitive.Title, {
   gridArea: 'title',
   fontSize: '14px',
   fontWeight: 500,
+  marginBottom: '2px',
 })
 
 const ToastDescription = styled(ToastPrimitive.Description, {
@@ -68,19 +67,18 @@ const ToastDescription = styled(ToastPrimitive.Description, {
   color: '$gray11',
 })
 
-const ToastAction = styled(ToastPrimitive.Action, {})
+const ToastAction = styled(ToastPrimitive.Action, {
+  gridArea: 'action',
+})
 
 type Props = {
-  id?: string
   title?: string
   description?: string
   action?: ReactNode
-  status?: 'success' | 'error'
 }
 
-const Toast: FC<Props> = ({ id, title, description, action, status }) => {
+const Toast: FC<Props> = ({ title, description, action }) => {
   const { toasts, setToasts } = useContext(ToastContext)
-
   return (
     <>
       <ToastRoot
@@ -88,27 +86,17 @@ const Toast: FC<Props> = ({ id, title, description, action, status }) => {
         onOpenChange={(open) => {
           if (!open) {
             setTimeout(
-              () => setToasts?.(toasts.filter((toast) => toast.id != id)),
+              () => setToasts?.(toasts.filter((toast) => toast.title != title)),
               100
             )
           }
         }}
       >
-        {status !== undefined ? (
-          <Box css={{ color: status === 'error' ? '$red10' : '$green10' }}>
-            <FontAwesomeIcon
-              icon={status === 'error' ? faCircleXmark : faCircleCheck}
-              width={16}
-            />
-          </Box>
-        ) : null}
-        <Flex direction="column">
-          <ToastTitle>{title}</ToastTitle>
-          <ToastDescription>{description}</ToastDescription>
-          <ToastAction asChild altText="Toast action">
-            {action}
-          </ToastAction>
-        </Flex>
+        <ToastTitle>{title}</ToastTitle>
+        <ToastDescription>{description}</ToastDescription>
+        <ToastAction asChild altText="Toast action">
+          {action}
+        </ToastAction>
       </ToastRoot>
     </>
   )

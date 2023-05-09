@@ -13,26 +13,37 @@ type Props = {
 
 export const FullscreenModal: FC<Props> = ({ trigger, children }) => {
   return (
-    <DialogRoot modal={false}>
+    <DialogRoot modal={true}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogPortal>
-        <Content
-          onInteractOutside={(e) => {
-            e.preventDefault()
-          }}
+        <Overlay
           css={{
-            width: '100%',
-            height: '100%',
-            borderRadius: '0px',
-            border: '0px',
-            minWidth: '100%',
-            maxWidth: '100vw',
-            maxHeight: '100vh',
+            position: 'fixed',
             top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
           }}
         >
-          {children}
-        </Content>
+          <Content
+            onInteractOutside={(e) => {
+              e.preventDefault()
+            }}
+            css={{
+              width: '100%',
+              height: '100%',
+              borderRadius: '0px',
+              border: '0px',
+              minWidth: '100%',
+              maxWidth: '100vw',
+              maxHeight: '100vh',
+              top: 0,
+            }}
+          >
+            {children}
+          </Content>
+        </Overlay>
       </DialogPortal>
     </DialogRoot>
   )

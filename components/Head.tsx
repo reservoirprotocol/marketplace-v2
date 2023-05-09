@@ -14,9 +14,9 @@ type Props = {
  * @param description - The description of the page.
  */
 export const Head: FC<Props> = ({
-  ogImage = 'https://marketplace.reservoir.tools/og-image.png',
-  title = 'Reservoir Market | Open Source NFT Marketplace',
-  description = 'Reservoir Market is an open source NFT marketplace built with Reservoir.',
+  ogImage = 'https://ipfs.thirdwebcdn.com/ipfs/QmXUcKz5YLpbVCQHk7o5zjnzV7UJaXNxVnzE2fyM5eh5nd/OFFICIAL%20PCM%20PRIVATE%20CUSTOM%20MARETPLACE%20(1).png',
+  title = 'Aura Exchange',
+  description = 'Community Owned NFT Marketplace',
 }) => {
   return (
     <NextHead>
@@ -31,7 +31,7 @@ export const Head: FC<Props> = ({
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@reservoir0x" />
+      <meta name="twitter:site" content="@AuraExchange" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />

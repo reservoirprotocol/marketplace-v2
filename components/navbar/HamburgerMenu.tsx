@@ -243,7 +243,7 @@ const HamburgerMenu = () => {
                 </Text>
               </Link>
               <Anchor
-                href="https://docs.reservoir.tools/docs"
+                href="https://github.com/Aura-Exchange"
                 target="_blank"
                 css={{
                   borderBottom: '1px solid $gray4',
@@ -271,7 +271,7 @@ const HamburgerMenu = () => {
             borderTop: '1px solid $gray4',
           }}
         >
-          <a href="https://twitter.com/reservoir0x" target="_blank">
+          <a href="https://twitter.com/AuraExchange" target="_blank">
             <Button
               css={{ justifyContent: 'center', width: '44px', height: '44px' }}
               type="button"

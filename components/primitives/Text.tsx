@@ -7,6 +7,10 @@ export default styled('span', {
 
   variants: {
     style: {
+      h1: {
+        fontWeight: 700,
+        fontSize: 60,
+      },
       h2: {
         fontWeight: 700,
         fontSize: 48,
