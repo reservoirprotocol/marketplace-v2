@@ -190,7 +190,7 @@ export default async function handler(req: Request) {
         },
       }
       const { data } = await fetcher(
-        `${reservoirBaseUrl}/collections/v2?name=${query}&limit=6`,
+        `${reservoirBaseUrl}/collections/v5?name=${query}&limit=6`,
         {},
         headers
       )
