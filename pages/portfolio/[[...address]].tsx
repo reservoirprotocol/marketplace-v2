@@ -35,7 +35,6 @@ import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 import { useRouter } from 'next/router'
 import { ItemView, ViewToggle } from 'components/portfolio/ViewToggle'
-import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type ActivityTypes = Exclude<
   NonNullable<
