@@ -95,47 +95,43 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Text>
           </Flex>
         )}
-          <Flex
-            css={{
-              height: '100%',
-              textAlign: 'center',
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gridGap: '$3',
-              alignItems: 'center',
-              '@media screen and (max-width: 768px)': { // hide on screens smaller than 768px
-                display: 'none',
-              },
-            }}
-          >
-            <Text style="h1" as="h1">
-              Aura HUB
-              <br />
-              <Text style="h4" as="h4">
-                List on multiple marketplaces at once
-                <br />
-                Completely gas free!
-              </Text>
-              <br />
-              <Text style="h6" as="h6">
-                List on all major marketplaces at once, with zero listing fees.
-                <br />
-                We aggregate over 160 NFT marketplaces to give you the best
-                <br />
-                possible exsposure to sell your digital assets.
-              </Text>
+        <Flex
+          css={{
+            height: '100%',
+            textAlign: 'center',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridGap: '$3',
+            alignItems: 'center',
+            '@media screen and (max-width: 768px)': { // hide on screens smaller than 768px
+              display: 'none',
+            },
+          }}
+        >
+          <Text style="h1" as="h1">
+            Aura HUB
+            <br />
+            <Text style="body1" css={{ mb: 48 }}>
+              List on multiple marketplaces at once
+              Completely gas free!
+              <br/>
+              List on all major marketplaces at once, with zero listing fees.
+              <br/>
+              We aggregate over 160 NFT marketplaces to give you the best
+              possible exsposure to sell your digital assets.
             </Text>
-            <Link href="/portfolio">
-              <Box css={{ width: 750, cursor: 'pointer' }}>
-                <Image
-                  src="/listings.png"
-                  width={750}
-                  height={571}
-                  alt="Listing"
-                />
-              </Box>
-            </Link>
-          </Flex>
+          </Text>
+          <Link href="/portfolio">
+            <Box css={{ width: 750, cursor: 'pointer' }}>
+              <Image
+                src="/listings.png"
+                width={750}
+                height={571}
+                alt="Listing"
+              />
+            </Box>
+          </Link>
+        </Flex>
         <Flex css={{ my: '$6', gap: 75 }} direction="column">
           <Flex
             justify="between"
@@ -184,7 +180,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Link>
           </Box>
         </Flex>
-          <Flex
+        <Flex
           css={{
             height: '100%',
             textAlign: 'center',
@@ -197,21 +193,20 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             },
           }}
         >
-          <Link href="https://www.auraexchange.org/mint" target='_blank' >
-            <Box css={{ width: 750, cursor: 'pointer' }}>
-              <Image
-                src="/revshare.png"
-                width={750}
-                height={571}
-                alt="Listing"
-              />
 
-            </Box>
-          </Link>
+          <Box css={{ width: 750, cursor: 'pointer' }}>
+            <Image
+              src="/revshare.png"
+              width={750}
+              height={571}
+              alt="Listing"
+            />
+
+          </Box>
           <Text style="h1" as="h1">
             Aura Exchange Membership
             <br />
-            <Text style="h4" as="h4">
+            <Text style="body1" css={{ mb: 48 }}>
               Aura shares 70% of all trading profit revenue with our community
               <br />
               Mint Aura Member NFTs for just $1 each to share in exchange profits
