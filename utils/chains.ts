@@ -5,6 +5,7 @@ import {
   polygon,
   optimism,
   Chain,
+  bsc,
 } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
@@ -75,6 +76,8 @@ export default [
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
     coingeckoId: 'arbitrum-iou',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
   },
   {
     ...optimism,
@@ -86,6 +89,8 @@ export default [
     routePrefix: 'optimism',
     apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
     coingeckoId: 'optimism',
+    collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
   {
     ...goerli,
@@ -96,7 +101,19 @@ export default [
     routePrefix: 'goerli',
     apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
     coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+  },
+  {
+    ...bsc,
+    lightIconUrl: '/icons/bsc-icon-dark.svg',
+    darkIconUrl: '/icons/bsc-icon-light.svg',
+    reservoirBaseUrl: 'https://api-bsc.reservoir.tools',
+    proxyApi: '/api/reservoir/bsc',
+    routePrefix: 'bsc',
+    apiKey: process.env.BSC_RESERVOIR_API_KEY,
+    coingeckoId: 'binancecoin',
+    collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
   },
 ] as ReservoirChain[]
