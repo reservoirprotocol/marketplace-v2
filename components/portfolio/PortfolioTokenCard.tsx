@@ -1,57 +1,128 @@
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import {
+  faCheck,
+  faEdit,
+  faEllipsis,
+  faGasPump,
+  faHand,
+  faPlus,
+  faRefresh,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  EditListingModal,
+  EditListingStep,
   extractMediaType,
   TokenMedia,
   useDynamicTokens,
+  useTokens,
+  useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
-import AddToCart from 'components/buttons/AddToCart'
+import { AcceptBid } from 'components/buttons'
 import BuyNow from 'components/buttons/BuyNow'
+import CancelListing from 'components/buttons/CancelListing'
+import List from 'components/buttons/List'
+import { spin } from 'components/common/LoadingSpinner'
 import {
   Box,
+  Button,
   Flex,
   FormatCryptoCurrency,
   Text,
   Tooltip,
 } from 'components/primitives'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
-import { SyntheticEvent, useContext } from 'react'
+import { UserToken } from 'pages/portfolio/[[...address]]'
+import {
+  Dispatch,
+  SetStateAction,
+  SyntheticEvent,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import { MutatorCallback } from 'swr'
+import { useMediaQuery } from 'react-responsive'
+import fetcher from 'utils/fetcher'
 import { formatNumber } from 'utils/numbers'
+import { DATE_REGEX, timeTill } from 'utils/till'
+import { zoneAddresses } from 'utils/zoneAddresses'
 import { Address } from 'wagmi'
+import Image from 'next/image'
 
 type PortfolioTokenCardProps = {
-  token: ReturnType<typeof useDynamicTokens>['data'][0]
+  token: ReturnType<typeof useUserTokens>['data'][0]
   address: Address
+  isOwner: boolean
   rarityEnabled: boolean
-  addToCartEnabled?: boolean
+  tokenCount?: string
+  orderQuantity?: number
+  selectedItems: UserToken[]
+  setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   mutate?: MutatorCallback
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
-  tokenCount?: string
-  orderQuantity?: number
 }
 
 export default ({
   token,
   address,
+  isOwner,
   rarityEnabled = true,
-  addToCartEnabled = true,
-  mutate,
-  onMediaPlayed,
   orderQuantity,
   tokenCount,
+  selectedItems,
+  setSelectedItems,
+  mutate,
+  onMediaPlayed,
 }: PortfolioTokenCardProps) => {
   const { addToast } = useContext(ToastContext)
-  const mediaType = extractMediaType(token?.token)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  let dynamicToken = token as ReturnType<typeof useDynamicTokens>['data'][0]
+
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+
+  const mediaType = extractMediaType(dynamicToken?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
-  const tokenIsInCart = token && token?.isInCart
-  const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
+
+  const orderZone = token?.ownership?.floorAsk?.rawData?.zone
+  // @ts-ignore
+  const orderKind = token?.ownership?.floorAsk?.kind
+
+  const isOracleOrder =
+    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+
+  const contract = token.token?.collection?.id
+    ? token.token?.collection.id?.split(':')[0]
+    : undefined
+
+  const addSelectedItem = (item: UserToken) => {
+    setSelectedItems([...selectedItems, item])
+  }
+
+  const removeSelectedItem = (item: UserToken) => {
+    setSelectedItems(
+      selectedItems.filter(
+        (selectedItem) =>
+          selectedItem?.token?.tokenId !== item?.token?.tokenId ||
+          selectedItem?.token?.contract !== item?.token?.contract
+      )
+    )
+  }
+
+  const isSelectedItem = useMemo(() => {
+    return selectedItems.some(
+      (selectedItem) =>
+        selectedItem?.token?.tokenId === token?.token?.tokenId &&
+        selectedItem?.token?.contract === token?.token?.contract
+    )
+  }, [selectedItems])
 
   return (
     <Box
@@ -127,35 +198,49 @@ export default ({
           </Text>
         </Flex>
       )}
-      <Flex
-        justify="center"
-        align="center"
-        css={{
-          borderRadius: '99999px',
-          width: 48,
-          height: 48,
-          backgroundColor: '$primary9',
-          position: 'absolute',
-          right: '$2',
-          zIndex: 1,
-          transition: `visibility 0s linear ${
-            tokenIsInCart ? '' : '250ms'
-          }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
-          opacity: tokenIsInCart ? 1 : 0,
-          top: tokenIsInCart ? '$2' : 50,
-          visibility: tokenIsInCart ? 'visible' : 'hidden',
-          color: 'white',
-        }}
-      >
-        <FontAwesomeIcon icon={faCheck} width={20} height={20} />
-      </Flex>
+      {isOwner && !isSmallDevice ? (
+        <Button
+          css={{
+            borderRadius: '99999px',
+            width: 48,
+            height: 48,
+            backgroundColor: isSelectedItem ? '$primary9' : '#15171833',
+            '&:hover': {
+              backgroundColor: isSelectedItem ? '$primary9' : '#15171859',
+            },
+            opacity: isSelectedItem ? 1 : 1,
+            position: 'absolute',
+            right: '$2',
+            zIndex: 1,
+            top: '$2',
+            color: 'white',
+            p: 0,
+            justifyContent: 'center',
+          }}
+          onClick={(e) => {
+            e.preventDefault()
+
+            if (!isSelectedItem) {
+              addSelectedItem(token)
+            } else {
+              removeSelectedItem(token)
+            }
+          }}
+        >
+          <FontAwesomeIcon
+            icon={isSelectedItem ? faCheck : faPlus}
+            width={20}
+            height={20}
+          />
+        </Button>
+      ) : null}
       <Link
         passHref
         href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
-            token={token?.token}
+            token={dynamicToken?.token}
             style={{
               width: '100%',
               transition: 'transform .3s ease-in-out',
@@ -193,7 +278,21 @@ export default ({
           direction="column"
         >
           <Flex css={{ mb: '$4' }} align="center" justify="between">
-            <Flex align="center" css={{ gap: '$1', minWidth: 0 }}>
+            <Flex align="center" css={{ gap: '$2', minWidth: 0 }}>
+              {token?.token?.collection?.imageUrl ? (
+                <Image
+                  style={{
+                    borderRadius: '4px',
+                    objectFit: 'cover',
+                    aspectRatio: '1/1',
+                  }}
+                  loader={({ src }) => src}
+                  src={token?.token?.collection?.imageUrl}
+                  alt={`${token?.token?.name}`}
+                  width={24}
+                  height={24}
+                />
+              ) : null}
               <Text
                 style="subtitle1"
                 as="p"
@@ -205,47 +304,30 @@ export default ({
               >
                 {token?.token?.name || '#' + token?.token?.tokenId}{' '}
               </Text>
-              {token?.token?.isFlagged && (
-                <Tooltip
-                  content={
-                    <Text style="body3" as="p">
-                      Not tradeable on OpenSea
-                    </Text>
-                  }
-                >
-                  <Text css={{ color: '$red10' }}>
-                    <FontAwesomeIcon
-                      icon={faCircleExclamation}
-                      width={16}
-                      height={16}
-                    />
-                  </Text>
-                </Tooltip>
-              )}
             </Flex>
-            <Box
-              css={{
-                px: '$1',
-                py: 2,
-                background: '$gray5',
-                borderRadius: 8,
-                minWidth: 'max-content',
-              }}
-            >
-              {rarityEnabled &&
-                token?.token?.kind !== 'erc1155' &&
-                token?.token?.rarityRank && (
-                  <Flex align="center" css={{ gap: 5 }}>
-                    <img
-                      style={{ width: 13, height: 13 }}
-                      src="/icons/rarity-icon.svg"
-                    />
-                    <Text style="subtitle3" as="p">
-                      {formatNumber(token?.token?.rarityRank)}
-                    </Text>
-                  </Flex>
-                )}
-            </Box>
+            {rarityEnabled &&
+            token?.token?.kind !== 'erc1155' &&
+            token?.token?.rarityRank ? (
+              <Box
+                css={{
+                  px: '$1',
+                  py: 2,
+                  background: '$gray5',
+                  borderRadius: 8,
+                  minWidth: 'max-content',
+                }}
+              >
+                <Flex align="center" css={{ gap: 5 }}>
+                  <img
+                    style={{ width: 13, height: 13 }}
+                    src="/icons/rarity-icon.svg"
+                  />
+                  <Text style="subtitle3" as="p">
+                    {formatNumber(token?.token?.rarityRank)}
+                  </Text>
+                </Flex>
+              </Box>
+            ) : null}
           </Flex>
 
           <Flex align="center" css={{ gap: '$2' }}>
@@ -258,11 +340,13 @@ export default ({
                 textOverflow: 'ellipsis',
               }}
             >
-              {token?.market?.floorAsk?.price && (
+              {token?.ownership?.floorAsk?.price && (
                 <FormatCryptoCurrency
                   logoHeight={18}
-                  amount={token?.market?.floorAsk?.price?.amount?.decimal}
-                  address={token?.market?.floorAsk?.price?.currency?.contract}
+                  amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
+                  address={
+                    token?.ownership?.floorAsk?.price?.currency?.contract
+                  }
                   textStyle="h6"
                   css={{
                     textOverflow: 'ellipsis',
@@ -276,14 +360,14 @@ export default ({
             </Box>
 
             <>
-              {token?.market?.floorAsk?.source?.name && (
+              {token?.ownership?.floorAsk?.source?.name && (
                 <img
                   style={{
                     width: 20,
                     height: 20,
                     borderRadius: '50%',
                   }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+                  src={`${proxyApi}/redirect/sources/${token?.ownership?.floorAsk?.source?.domain}/logo/v2`}
                 />
               )}
             </>
@@ -305,7 +389,7 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {isOwner && token?.market?.floorAsk?.price?.amount ? (
+      {!isOwner && token?.ownership?.floorAsk?.price?.amount ? (
         <Flex
           className="token-button-container"
           css={{
@@ -331,17 +415,227 @@ export default ({
             }}
             buttonChildren="Buy Now"
           />
-          {addToCartEnabled ? (
-            <AddToCart
-              token={token}
-              buttonCss={{
-                width: 52,
-                p: 0,
-                justifyContent: 'center',
+        </Flex>
+      ) : null}
+      {isOwner ? (
+        <Flex
+          className="token-button-container"
+          css={{
+            width: '100%',
+            transition: 'bottom 0.25s ease-in-out',
+            position: 'absolute',
+            bottom: -44,
+            left: 0,
+            right: 0,
+            gap: 1,
+          }}
+        >
+          <List
+            token={token as ReturnType<typeof useTokens>['data'][0]}
+            buttonCss={{
+              justifyContent: 'center',
+              flex: 1,
+            }}
+            buttonProps={{
+              corners: 'square',
+            }}
+            buttonChildren="List"
+            mutate={mutate}
+          />
+          <Dropdown
+            modal={false}
+            trigger={
+              <Button
+                corners="square"
+                size="xs"
+                css={{ width: 44, justifyContent: 'center' }}
+              >
+                <FontAwesomeIcon icon={faEllipsis} />
+              </Button>
+            }
+            contentProps={{
+              asChild: true,
+              forceMount: true,
+              align: 'start',
+              alignOffset: -18,
+            }}
+          >
+            {token?.token?.topBid?.price?.amount?.decimal && isOwner && (
+              <AcceptBid
+                tokenId={token.token.tokenId}
+                collectionId={token?.token?.contract}
+                mutate={mutate}
+                buttonCss={{
+                  gap: '$2',
+                  px: '$2',
+                  py: '$3',
+                  borderRadius: 8,
+                  outline: 'none',
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: '$gray5',
+                  },
+                  '&:focus': {
+                    backgroundColor: '$gray5',
+                  },
+                }}
+                buttonChildren={
+                  <>
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faHand} />
+                    </Box>
+                    <Text>Accept Best Offer</Text>
+                  </>
+                }
+              />
+            )}
+            <DropdownMenuItem
+              css={{ py: '$3', width: '100%' }}
+              onClick={(e) => {
+                if (isRefreshing) {
+                  e.preventDefault()
+                  return
+                }
+                setIsRefreshing(true)
+                fetcher(
+                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  undefined,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      token: `${contract}:${token.token?.tokenId}`,
+                    }),
+                  }
+                )
+                  .then(({ data, response }) => {
+                    if (response.status === 200) {
+                      addToast?.({
+                        title: 'Refresh token',
+                        description:
+                          'Request to refresh this token was accepted.',
+                      })
+                    } else {
+                      throw data
+                    }
+                    setIsRefreshing(false)
+                  })
+                  .catch((e) => {
+                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
+
+                    addToast?.({
+                      title: 'Refresh token failed',
+                      description: ratelimit
+                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
+                            ratelimit
+                          )}.`
+                        : `This token was recently refreshed. Please try again later.`,
+                    })
+
+                    setIsRefreshing(false)
+                    throw e
+                  })
               }}
-              buttonProps={{ corners: 'square' }}
-            />
-          ) : null}
+            >
+              <Flex align="center" css={{ gap: '$2' }}>
+                <Box
+                  css={{
+                    color: '$gray10',
+                    animation: isRefreshing
+                      ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+                      : 'none',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                </Box>
+                <Text>Refresh Token</Text>
+              </Flex>
+            </DropdownMenuItem>
+
+            {isOracleOrder &&
+            token?.ownership?.floorAsk?.id &&
+            token?.token?.tokenId &&
+            token?.token?.collection?.id ? (
+              <EditListingModal
+                trigger={
+                  <Flex
+                    align="center"
+                    css={{
+                      gap: '$2',
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Box>
+                    <Text>Edit Listing</Text>
+                  </Flex>
+                }
+                listingId={token?.ownership?.floorAsk?.id}
+                tokenId={token?.token?.tokenId}
+                collectionId={token?.token?.collection?.id}
+                onClose={(data, currentStep) => {
+                  if (mutate && currentStep == EditListingStep.Complete)
+                    mutate()
+                }}
+              />
+            ) : null}
+
+            {token?.ownership?.floorAsk?.id ? (
+              <CancelListing
+                listingId={token.ownership.floorAsk.id as string}
+                mutate={mutate}
+                trigger={
+                  <Flex
+                    css={{
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    {!isOracleOrder ? (
+                      <Tooltip
+                        content={
+                          <Text style="body2" as="p">
+                            Canceling this order requires gas.
+                          </Text>
+                        }
+                      >
+                        <Flex align="center" css={{ gap: '$2' }}>
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon icon={faGasPump} />
+                          </Box>
+                          <Text color="error">Cancel Listing</Text>
+                        </Flex>
+                      </Tooltip>
+                    ) : (
+                      <Text color="error">Cancel</Text>
+                    )}
+                  </Flex>
+                }
+              />
+            ) : null}
+          </Dropdown>
         </Flex>
       ) : null}
     </Box>

@@ -34,9 +34,8 @@ import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 import { useRouter } from 'next/router'
-import { ViewToggle } from 'components/portfolio/ViewToggle'
-
-type View = 'list' | 'grid'
+import { ItemView, ViewToggle } from 'components/portfolio/ViewToggle'
+import { NAVBAR_HEIGHT } from 'components/navbar'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -56,8 +55,7 @@ const IndexPage: NextPage = () => {
     ? (router.query.address[0] as `0x${string}`)
     : accountAddress
   const [tabValue, setTabValue] = useState('items')
-
-  const [itemView, setItemView] = useState<View>('list')
+  const [itemView, setItemView] = useState<ItemView>('list')
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -274,7 +272,11 @@ const IndexPage: NextPage = () => {
                                 />
                               )}
                             {!isSmallDevice && !collectionsLoading && (
-                              <Flex align="center" css={{ gap: '$3' }}>
+                              <Flex
+                                align="center"
+                                justify="between"
+                                css={{ gap: '$3' }}
+                              >
                                 <PortfolioSortDropdown
                                   option={sortByType}
                                   onOptionSelected={(option) => {
@@ -296,6 +298,7 @@ const IndexPage: NextPage = () => {
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
                             isOwner={isOwner}
+                            itemView={itemView}
                           />
                         </Box>
                         {!isSmallDevice && (
