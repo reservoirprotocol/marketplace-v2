@@ -115,13 +115,17 @@ const IndexPage: NextPage = () => {
           tab = 'items'
           break
         case 'collections':
-          tab = 'collectons'
+          tab = 'collections'
           break
         case 'listings':
-          tab = 'listings'
+          if (isOwner) {
+            tab = 'listings'
+          }
           break
         case 'offers':
-          tab = 'offers'
+          if (isOwner) {
+            tab = 'offers'
+          }
           break
         case 'activity':
           tab = 'activity'
