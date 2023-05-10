@@ -26,6 +26,7 @@ import { useRouter } from 'next/router'
 export const AccountSidebar: FC = () => {
   const { address } = useAccount()
   const { disconnect } = useDisconnect()
+  const router = useRouter()
   const {
     avatar: ensAvatar,
     shortAddress,
