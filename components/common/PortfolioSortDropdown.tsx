@@ -66,7 +66,10 @@ const PortfolioSortDropdown: FC<Props> = ({ option, onOptionSelected }) => {
             px: '14px',
             justifyContent: 'space-between',
             width: '100%',
+            height: 48,
             minWidth: 'max-content',
+            maxWidth: 300,
+            '@md': {
             '@md': {
               width: '220px',
               minWidth: 'max-content',
@@ -93,6 +96,7 @@ const PortfolioSortDropdown: FC<Props> = ({ option, onOptionSelected }) => {
           zIndex: 1000,
           width: sortWidth,
           minWidth: 'max-content',
+          maxWidth: 300,
           '@md': {
             width: '220px',
             minWidth: 'max-content',

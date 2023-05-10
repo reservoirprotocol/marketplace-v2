@@ -516,7 +516,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
               )}
               <Tabs.Root
-                defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
                 style={{

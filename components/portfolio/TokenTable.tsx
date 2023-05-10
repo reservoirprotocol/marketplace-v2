@@ -18,6 +18,7 @@ import {
   FormatCryptoCurrency,
   Button,
   Box,
+  Grid,
 } from '../primitives'
 import { List, AcceptBid } from 'components/buttons'
 import Image from 'next/image'
@@ -58,6 +59,8 @@ import { DATE_REGEX, timeTill } from 'utils/till'
 import { spin } from 'components/common/LoadingSpinner'
 import { formatDollar } from 'utils/numbers'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import { ItemView } from './ViewToggle'
+import PortfolioTokenCard from './PortfolioTokenCard'
 
 type Props = {
   address: Address | undefined
@@ -66,6 +69,7 @@ type Props = {
   isLoading?: boolean
   selectedItems: UserToken[]
   isOwner: boolean
+  itemView: ItemView
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
 }
 
@@ -79,10 +83,15 @@ export const TokenTable: FC<Props> = ({
   filterCollection,
   selectedItems,
   isOwner,
+  itemView,
   setSelectedItems,
 }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+
+  const [playingElement, setPlayingElement] = useState<
+    HTMLAudioElement | HTMLVideoElement | null
+  >()
 
   let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
     limit: 20,
@@ -107,7 +116,7 @@ export const TokenTable: FC<Props> = ({
     mutate,
     isFetchingPage,
     isValidating,
-  } = useUserTokens(address, tokenQuery, {})
+  } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -131,7 +140,7 @@ export const TokenTable: FC<Props> = ({
         </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%' }}>
-          {isLoading ? null : (
+          {isLoading ? null : itemView === 'list' ? (
             <>
               <TableHeading isOwner={isOwner} />
               {tokens.map((token, i) => {
@@ -149,6 +158,50 @@ export const TokenTable: FC<Props> = ({
                 )
               })}
             </>
+          ) : (
+            <Grid
+              css={{
+                gap: '$4',
+                width: '100%',
+                pb: '$6',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                '@md': {
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                },
+              }}
+            >
+              {tokens?.map((token, i) => (
+                <PortfolioTokenCard
+                  key={i}
+                  token={token}
+                  isOwner={isOwner}
+                  address={address as Address}
+                  tokenCount={
+                    token?.token?.kind === 'erc1155'
+                      ? token.ownership?.tokenCount
+                      : undefined
+                  }
+                  mutate={mutate}
+                  selectedItems={selectedItems}
+                  setSelectedItems={setSelectedItems}
+                  rarityEnabled={true}
+                  onMediaPlayed={(e) => {
+                    if (
+                      playingElement &&
+                      playingElement !== e.nativeEvent.target
+                    ) {
+                      playingElement.pause()
+                    }
+                    const element =
+                      (e.nativeEvent.target as HTMLAudioElement) ||
+                      (e.nativeEvent.target as HTMLVideoElement)
+                    if (element) {
+                      setPlayingElement(element)
+                    }
+                  }}
+                />
+              ))}
+            </Grid>
           )}
           <div ref={loadMoreRef}></div>
         </Flex>
@@ -361,16 +414,18 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
     >
       <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
         <Flex align="center" css={{ gap: '$3' }}>
-          <Checkbox
-            checked={isSelectedItem(token)}
-            onCheckedChange={(checked) => {
-              if (checked) {
-                addSelectedItem(token)
-              } else {
-                removeSelectedItem(token)
-              }
-            }}
-          />
+          {isOwner ? (
+            <Checkbox
+              checked={isSelectedItem(token)}
+              onCheckedChange={(checked) => {
+                if (checked) {
+                  addSelectedItem(token)
+                } else {
+                  removeSelectedItem(token)
+                }
+              }}
+            />
+          ) : null}
           <Link
             href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
           >
@@ -810,6 +865,6 @@ const TableHeading: FC<{ isOwner: boolean }> = ({ isOwner }) => (
         </Text>
       </Flex>
     </TableCell>
-    <TableCell></TableCell>
+    {isOwner ? <TableCell></TableCell> : null}
   </HeaderRow>
 )
