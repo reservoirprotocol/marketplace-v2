@@ -157,7 +157,7 @@ function MyApp({
               return {
                 id,
                 baseApiUrl: `${baseUrl}${proxyApi}`,
-                default: marketplaceChain.id === id,
+                active: marketplaceChain.id === id,
               }
             }),
             disablePoweredByReservoir: true,
