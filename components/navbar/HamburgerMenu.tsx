@@ -52,7 +52,6 @@ const HamburgerMenu = () => {
         css={{
           flexDirection: 'column',
           justifyContent: 'space-between',
-          height: '100%',
         }}
       >
         <Flex

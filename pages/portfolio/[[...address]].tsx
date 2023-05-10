@@ -18,7 +18,6 @@ import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
-import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
@@ -202,9 +201,6 @@ const IndexPage: NextPage = () => {
                         }}
                       >
                         <TabsTrigger value="items">Items</TabsTrigger>
-                        <TabsTrigger value="collections">
-                          Collections
-                        </TabsTrigger>
                         {isOwner && (
                           <TabsTrigger value="listings">Listings</TabsTrigger>
                         )}
@@ -309,9 +305,6 @@ const IndexPage: NextPage = () => {
                           />
                         )}
                       </Flex>
-                    </TabsContent>
-                    <TabsContent value="collections">
-                      <CollectionsTable address={address} />
                     </TabsContent>
                     {isOwner && (
                       <TabsContent value="listings">
