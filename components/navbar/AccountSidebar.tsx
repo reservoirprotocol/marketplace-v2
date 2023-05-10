@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
 import { useAccount, useDisconnect } from 'wagmi'
 import { useENSResolver } from 'hooks'
@@ -21,6 +21,7 @@ import {
 import CopyText from 'components/common/CopyText'
 import Link from 'next/link'
 import Wallet from './Wallet'
+import { useRouter } from 'next/router'
 
 export const AccountSidebar: FC = () => {
   const { address } = useAccount()
@@ -31,6 +32,10 @@ export const AccountSidebar: FC = () => {
     shortName: shortEnsName,
   } = useENSResolver(address)
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    setOpen(false)
+  }, [router.asPath])
 
   const trigger = (
     <Button
@@ -96,7 +101,7 @@ export const AccountSidebar: FC = () => {
                   right: '-100%',
                 }}
               >
-                <Flex direction="column" css={{ pt: 42, px: '$4' }}>
+                <Flex direction="column" css={{ py: 42, px: '$4' }}>
                   <Button
                     color="ghost"
                     css={{ color: '$gray10', ml: 'auto', mr: 10 }}
@@ -163,7 +168,7 @@ export const AccountSidebar: FC = () => {
                     </CopyText>
                   </Flex>
                   <Grid css={{ gridTemplateColumns: '1fr 1fr', mt: 32 }}>
-                    <Link href="/portfolio">
+                    <Link href="/portfolio?tab=items">
                       <Flex
                         align="center"
                         css={{
@@ -177,7 +182,7 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">My Items</Text>
                       </Flex>
                     </Link>
-                    <Link href="/portfolio">
+                    <Link href="/portfolio?tab=listings">
                       <Flex
                         align="center"
                         css={{
@@ -191,7 +196,7 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">Listings</Text>
                       </Flex>
                     </Link>
-                    <Link href="/portfolio">
+                    <Link href="/portfolio?tab=offers">
                       <Flex
                         align="center"
                         css={{
@@ -205,7 +210,7 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">Offers Made</Text>
                       </Flex>
                     </Link>
-                    <Link href="/portfolio">
+                    <Link href="/portfolio?tab=activity">
                       <Flex
                         align="center"
                         css={{
