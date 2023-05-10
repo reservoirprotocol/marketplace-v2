@@ -70,7 +70,6 @@ const PortfolioSortDropdown: FC<Props> = ({ option, onOptionSelected }) => {
             minWidth: 'max-content',
             maxWidth: 300,
             '@md': {
-            '@md': {
               width: '220px',
               minWidth: 'max-content',
               px: '$4',
