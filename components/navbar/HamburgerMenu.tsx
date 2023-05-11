@@ -199,27 +199,6 @@ const HamburgerMenu = () => {
                 />
               </Box>
             </Flex>
-            <Flex
-              css={{
-                pt: '24px',
-                pb: '$5',
-                px: '$4',
-                gap: '$4',
-                width: '100%',
-                borderTop: '1px solid $gray4',
-              }}
-            >
-              <a href="https://twitter.com/Seaport_market" target="_blank">
-                <Button
-                  css={{ justifyContent: 'center', width: '44px', height: '44px' }}
-                  type="button"
-                  size="small"
-                  color="gray3"
-                >
-                  <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
-                </Button>
-              </a>
-            </Flex>
           </Flex>
         ) : (
           <Flex
