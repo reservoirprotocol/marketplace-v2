@@ -107,6 +107,7 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
                 <OfferTableRow
                   key={`${offer?.id}-${i}`}
                   offer={offer}
+                  tokenString={token}
                   address={address}
                   is1155={is1155}
                   isOwner={isOwner}
@@ -130,6 +131,7 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
 
 type OfferTableRowProps = {
   offer: ReturnType<typeof useBids>['data'][0]
+  tokenString: Parameters<typeof useBids>['0']['token']
   is1155: boolean
   isOwner: boolean
   address?: string
@@ -138,6 +140,7 @@ type OfferTableRowProps = {
 
 const OfferTableRow: FC<OfferTableRowProps> = ({
   offer,
+  tokenString,
   is1155,
   isOwner,
   address,
@@ -149,6 +152,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
   const expirationText = expiration ? `Expires ${expiration}` : null
 
   const isUserOffer = address?.toLowerCase() === offer.maker.toLowerCase()
+
+  const contract = tokenString?.split(':')[0]
+  const tokenId = tokenString?.split(':')[1]
 
   const isOracleOrder = offer?.rawData?.isNativeOffChainCancellable
 
@@ -220,8 +226,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           {isOwner && !isUserOffer ? (
             <AcceptBid
               bidId={offer.id}
-              collectionId={offer.criteria?.data?.collection?.id}
-              tokenId={offer.criteria?.data?.token?.tokenId}
+              collectionId={offer.criteria?.data?.collection?.id || contract}
+              tokenId={offer.criteria?.data?.token?.tokenId || tokenId}
               buttonChildren={
                 <Text style="subtitle2" css={{ color: 'white' }}>
                   Accept
@@ -237,8 +243,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               {isOracleOrder ? (
                 <EditBid
                   bidId={offer.id}
-                  tokenId={offer.criteria?.data?.token?.tokenId}
-                  collectionId={offer.criteria?.data?.collection?.id}
+                  tokenId={offer.criteria?.data?.token?.tokenId || tokenId}
+                  collectionId={
+                    offer.criteria?.data?.collection?.id || contract
+                  }
                   buttonChildren={<Text style="subtitle2">Edit</Text>}
                   buttonCss={{
                     fontSize: 14,
