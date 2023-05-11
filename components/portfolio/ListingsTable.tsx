@@ -26,6 +26,7 @@ import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import { zoneAddresses } from 'utils/zoneAddresses'
+import Img from 'components/primitives/Img'
 
 type Props = {
   address: Address | undefined
@@ -108,7 +109,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
 
-  const isOracleOrder = listing?.rawData?.isNativeOffChainCancellable
+  const isOracleOrder = listing?.isNativeOffChainCancellable
 
   let criteriaData = listing?.criteria?.data
 
@@ -138,20 +139,18 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
           >
             <Flex align="center">
-              {imageSrc && (
-                <Image
-                  style={{
-                    borderRadius: '4px',
-                    objectFit: 'cover',
-                    aspectRatio: '1/1',
-                  }}
-                  loader={({ src }) => src}
-                  src={imageSrc}
-                  alt={`${listing?.id}`}
-                  width={36}
-                  height={36}
-                />
-              )}
+              <Img
+                css={{
+                  borderRadius: '4px',
+                  objectFit: 'cover',
+                  aspectRatio: '1/1',
+                }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${listing?.id}`}
+                width={36}
+                height={36}
+              />
               <Flex
                 direction="column"
                 css={{
@@ -248,20 +247,18 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
           href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
         >
           <Flex align="center">
-            {imageSrc && (
-              <Image
-                style={{
-                  borderRadius: '4px',
-                  objectFit: 'cover',
-                  aspectRatio: '1/1',
-                }}
-                loader={({ src }) => src}
-                src={imageSrc as string}
-                alt={`${criteriaData?.token?.name}`}
-                width={48}
-                height={48}
-              />
-            )}
+            <Img
+              css={{
+                borderRadius: '4px',
+                objectFit: 'cover',
+                aspectRatio: '1/1',
+              }}
+              loader={({ src }) => src}
+              src={imageSrc as string}
+              alt={`${criteriaData?.token?.name}`}
+              width={48}
+              height={48}
+            />
             <Flex
               direction="column"
               css={{

@@ -493,7 +493,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     diameter={16}
                     seed={jsNumberForAddress(owner || '')}
                   />
-                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                  <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
                     <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                       {isMounted ? ownerFormatted : ''}
                     </Anchor>
@@ -517,7 +517,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
               )}
               <Tabs.Root
-                defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
                 style={{

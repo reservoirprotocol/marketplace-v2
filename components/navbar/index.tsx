@@ -14,8 +14,8 @@ import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
-import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
+import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -144,7 +144,7 @@ const Navbar = () => {
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
-          <ProfileDropdown />
+          <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />

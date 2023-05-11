@@ -2134,10 +2134,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@0.16.2":
-  version "0.16.2"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.16.2.tgz#8d67f2920ad3d50c791f21ce056a387d540fafeb"
-  integrity sha512-j31+gsX1iA/2SIMCQVfjgRP6nL4QL749XECZy9A0q0Chf1RI4kLD2UUGnrvaVnFOvLsrsZ1Gl24wiKwBHFE3ig==
+"@reservoir0x/reservoir-kit-ui@0.16.3":
+  version "0.16.3"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-0.16.3.tgz#a1c5d496746459ec4c4889f71908c45768729594"
+  integrity sha512-Tiw3FsZvh3i7wYtE/zO7GwjeXStQ7aoWJwdLydnBVX2tp4Di1zsB4fnlD613yJ27kNElp/sPtyHyC8BPxQ9zeg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"

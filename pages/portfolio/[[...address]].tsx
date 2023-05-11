@@ -18,7 +18,6 @@ import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
-import { CollectionsTable } from 'components/portfolio/CollectionsTable'
 import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import ChainToggle from 'components/common/ChainToggle'
@@ -31,8 +30,10 @@ import PortfolioSortDropdown, {
 } from 'components/common/PortfolioSortDropdown'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import { UserActivityTable } from 'components/profile/UserActivityTable'
+import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { useRouter } from 'next/router'
+import { ItemView, ViewToggle } from 'components/portfolio/ViewToggle'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -46,7 +47,13 @@ type ActivityTypes = Exclude<
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
-  const { address, isConnected } = useAccount()
+  const router = useRouter()
+  const { address: accountAddress, isConnected } = useAccount()
+  const address = router.query.address
+    ? (router.query.address[0] as `0x${string}`)
+    : accountAddress
+  const [tabValue, setTabValue] = useState('items')
+  const [itemView, setItemView] = useState<ItemView>('list')
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -58,6 +65,8 @@ const IndexPage: NextPage = () => {
     useState<PortfolioSortingOption>('acquiredAt')
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
+  const isOwner =
+    !router.query.address || router.query.address[0] === accountAddress
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
@@ -71,8 +80,11 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = chain.community
   }
 
-  const { data: collections, isLoading: collectionsLoading } =
-    useUserCollections(address as string, collectionQuery)
+  const {
+    data: collections,
+    isLoading: collectionsLoading,
+    fetchNextPage,
+  } = useUserCollections(address as string, collectionQuery)
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
@@ -86,6 +98,46 @@ const IndexPage: NextPage = () => {
     setSelectedItems([])
     setShowListingPage(false)
   }, [address])
+
+  useEffect(() => {
+    let tab = tabValue
+
+    let deeplinkTab: string | null = null
+    if (typeof window !== 'undefined') {
+      const params = new URL(window.location.href).searchParams
+      deeplinkTab = params.get('tab')
+    }
+
+    if (deeplinkTab) {
+      switch (deeplinkTab) {
+        case 'items':
+          tab = 'items'
+          break
+        case 'collections':
+          tab = 'collections'
+          break
+        case 'listings':
+          if (isOwner) {
+            tab = 'listings'
+          }
+          break
+        case 'offers':
+          if (isOwner) {
+            tab = 'offers'
+          }
+          break
+        case 'activity':
+          tab = 'activity'
+          break
+      }
+    }
+    setTabValue(tab)
+  }, [isSmallDevice, router.asPath])
+
+  useEffect(() => {
+    router.query.tab = tabValue
+    router.push(router, undefined, { shallow: true })
+  }, [tabValue])
 
   if (!isMounted) {
     return null
@@ -135,7 +187,11 @@ const IndexPage: NextPage = () => {
                       <ChainToggle />
                     </Flex>
                   )}
-                  <Tabs.Root defaultValue="items">
+                  <Tabs.Root
+                    defaultValue="items"
+                    value={tabValue}
+                    onValueChange={(value) => setTabValue(value)}
+                  >
                     <Flex
                       css={{
                         overflowX: 'scroll',
@@ -149,11 +205,12 @@ const IndexPage: NextPage = () => {
                         }}
                       >
                         <TabsTrigger value="items">Items</TabsTrigger>
-                        <TabsTrigger value="collections">
-                          Collections
-                        </TabsTrigger>
-                        <TabsTrigger value="listings">Listings</TabsTrigger>
-                        <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        {isOwner && (
+                          <TabsTrigger value="listings">Listings</TabsTrigger>
+                        )}
+                        {isOwner && (
+                          <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                        )}
                         <TabsTrigger value="activity">Activity</TabsTrigger>
                       </TabsList>
                     </Flex>
@@ -171,15 +228,18 @@ const IndexPage: NextPage = () => {
                             collections={collections}
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
+                            loadMoreCollections={fetchNextPage}
                           />
                         ) : (
                           <TokenFilters
                             isLoading={collectionsLoading}
+                            isOwner={isOwner}
                             open={tokenFiltersOpen}
                             setOpen={setTokenFiltersOpen}
                             collections={collections}
                             filterCollection={filterCollection}
                             setFilterCollection={setFilterCollection}
+                            loadMoreCollections={fetchNextPage}
                           />
                         )}
                         <Box
@@ -189,12 +249,16 @@ const IndexPage: NextPage = () => {
                           }}
                         >
                           {isSmallDevice && (
-                            <Flex justify="center">
+                            <Flex justify="between" css={{ gap: '$3' }}>
                               <PortfolioSortDropdown
                                 option={sortByType}
                                 onOptionSelected={(option) => {
                                   setSortByType(option)
                                 }}
+                              />
+                              <ViewToggle
+                                itemView={itemView}
+                                setItemView={setItemView}
                               />
                             </Flex>
                           )}
@@ -208,12 +272,22 @@ const IndexPage: NextPage = () => {
                                 />
                               )}
                             {!isSmallDevice && !collectionsLoading && (
-                              <PortfolioSortDropdown
-                                option={sortByType}
-                                onOptionSelected={(option) => {
-                                  setSortByType(option)
-                                }}
-                              />
+                              <Flex
+                                align="center"
+                                justify="between"
+                                css={{ gap: '$3' }}
+                              >
+                                <PortfolioSortDropdown
+                                  option={sortByType}
+                                  onOptionSelected={(option) => {
+                                    setSortByType(option)
+                                  }}
+                                />
+                                <ViewToggle
+                                  itemView={itemView}
+                                  setItemView={setItemView}
+                                />
+                              </Flex>
                             )}
                           </Flex>
                           <TokenTable
@@ -223,6 +297,8 @@ const IndexPage: NextPage = () => {
                             sortBy={sortByType}
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
+                            isOwner={isOwner}
+                            itemView={itemView}
                           />
                         </Box>
                         {!isSmallDevice && (
@@ -230,19 +306,21 @@ const IndexPage: NextPage = () => {
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
                             setShowListingPage={setShowListingPage}
+                            isOwner={isOwner}
                           />
                         )}
                       </Flex>
                     </TabsContent>
-                    <TabsContent value="collections">
-                      <CollectionsTable address={address} />
-                    </TabsContent>
-                    <TabsContent value="listings">
-                      <ListingsTable address={address} />
-                    </TabsContent>
-                    <TabsContent value="offers">
-                      <OffersTable address={address} />
-                    </TabsContent>
+                    {isOwner && (
+                      <TabsContent value="listings">
+                        <ListingsTable address={address} />
+                      </TabsContent>
+                    )}
+                    {isOwner && (
+                      <TabsContent value="offers">
+                        <OffersTable address={address} />
+                      </TabsContent>
+                    )}
                     <TabsContent value="activity">
                       <Flex
                         css={{

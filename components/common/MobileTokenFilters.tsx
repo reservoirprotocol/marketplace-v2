@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useRef, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useRef } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { Button, Flex, Text } from 'components/primitives'
 import Image from 'next/image'
@@ -9,6 +9,7 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 import { OpenSeaVerified } from './OpenSeaVerified'
+import LoadMoreCollections from 'components/common/LoadMoreCollections'
 
 type Collections =
   | paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']['collections']
@@ -18,12 +19,14 @@ type Props = {
   collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
+  loadMoreCollections: () => void
 }
 
 export const MobileTokenFilters: FC<Props> = ({
   collections,
   filterCollection,
   setFilterCollection,
+  loadMoreCollections,
 }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -194,6 +197,7 @@ export const MobileTokenFilters: FC<Props> = ({
               </Flex>
             )
           })}
+          <LoadMoreCollections loadMore={loadMoreCollections} />
         </Flex>
       </Flex>
     </FullscreenModal>
