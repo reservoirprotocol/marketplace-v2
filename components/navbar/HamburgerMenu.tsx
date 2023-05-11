@@ -54,7 +54,6 @@ const HamburgerMenu = () => {
         css={{
           flexDirection: 'column',
           justifyContent: 'space-between',
-          height: '100%',
         }}
       >
         <Flex
@@ -157,19 +156,6 @@ const HamburgerMenu = () => {
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
-              <Text
-                style="subtitle1"
-                css={{
-                  borderBottom: '1px solid $gray4',
-                  cursor: 'pointer',
-                  pb: '$4',
-                  pt: '24px',
-                }}
-              >
-                Sell
-              </Text>
-            </Link>
-            <Link href="/portfolio" legacyBehavior>
               <Flex
                 direction="column"
                 css={{
@@ -180,9 +166,9 @@ const HamburgerMenu = () => {
                   gap: '$1',
                 }}
               >
-                <Text style="subtitle1">Portfolio</Text>
+                <Text style="subtitle1">Sell</Text>
                 <Text style="body3" color="subtle">
-                  Manage your items, collections, listings and offers
+                  Sell your items, Manage listings and offers
                 </Text>
               </Flex>
             </Link>
@@ -278,29 +264,29 @@ const HamburgerMenu = () => {
             <Box>
               <ConnectWalletButton />
             </Box>
-            <Flex
-              css={{
-                pt: '24px',
-                pb: '$5',
-                px: '$4',
-                gap: '$4',
-                width: '100%',
-                borderTop: '1px solid $gray4',
-              }}
-            >
-              <a href="https://twitter.com/Seaport_market" target="_blank">
-                <Button
-                  css={{ justifyContent: 'center', width: '44px', height: '44px' }}
-                  type="button"
-                  size="small"
-                  color="gray3"
-                >
-                  <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
-                </Button>
-              </a>
-            </Flex>
           </Flex>
         )}
+        <Flex
+          css={{
+            pt: '24px',
+            pb: '$5',
+            px: '$4',
+            gap: '$4',
+            width: '100%',
+            borderTop: '1px solid $gray4',
+          }}
+        >
+          <a href="https://twitter.com/Seaport_market" target="_blank">
+            <Button
+              css={{ justifyContent: 'center', width: '44px', height: '44px' }}
+              type="button"
+              size="small"
+              color="gray3"
+            >
+              <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
+            </Button>
+          </a>
+        </Flex>
       </Flex>
     </FullscreenModal>
   )
