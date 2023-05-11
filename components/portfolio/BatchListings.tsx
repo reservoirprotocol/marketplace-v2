@@ -63,9 +63,9 @@ const MINIMUM_AMOUNT = 0.000001
 
 const marketplaces = [
   {
-    name: 'Reservoir',
-    imageUrl: 'https://api.reservoir.tools/redirect/sources/reservoir/logo/v2',
-    orderbook: 'reservoir',
+    name: 'Aura',
+    imageUrl: 'https://ipfs.thirdwebcdn.com/ipfs/QmQTajuAUULwo1yagUzXCt8nv2gCu4tZRZRTM6YUo4vsQX/Add%20a%20heading%20(1200%20%C3%97%201200%20px).svg',
+    orderbook: 'aura',
     orderKind: 'seaport-v1.4',
   },
   {
@@ -127,8 +127,8 @@ const BatchListings: FC<Props> = ({
       ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
       : '1.3fr .6fr 1.6fr 1fr repeat(2, .9fr) .6fr .3fr'
     : isLargeDevice
-    ? '1.1fr 2.7fr 1fr repeat(2, .7fr) .5fr .3fr'
-    : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
+      ? '1.1fr 2.7fr 1fr repeat(2, .7fr) .5fr .3fr'
+      : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
 
   const generateListings = useCallback(() => {
     const listings = selectedItems.flatMap((item) => {
