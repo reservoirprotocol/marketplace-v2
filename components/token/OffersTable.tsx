@@ -150,7 +150,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
 
   const isUserOffer = address?.toLowerCase() === offer.maker.toLowerCase()
 
-  const isOracleOrder = offer?.rawData?.isNativeOffChainCancellable
+  const isOracleOrder = offer?.isNativeOffChainCancellable
 
   const offerSourceName = offer?.source?.name
   const offerSourceDomain = offer?.source?.domain

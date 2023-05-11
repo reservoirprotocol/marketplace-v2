@@ -207,7 +207,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   ) as string
 
   const isOracleOrder =
-    token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
+    token?.ownership?.floorAsk?.isNativeOffChainCancellable
 
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]
