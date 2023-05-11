@@ -30,6 +30,23 @@ class MyDocument extends Document {
         {/* Meta tags */}
         <meta name="keywords" content="nft, ethereum, protocol" />
         <meta name="keywords" content="NFT, API, Protocol" />
+        <meta property="aura:title" content="Aura Exchange" />
+        <meta
+          property="aura:icon"
+          content="https://ipfs.thirdwebcdn.com/ipfs/QmQTajuAUULwo1yagUzXCt8nv2gCu4tZRZRTM6YUo4vsQX/Add%20a%20heading%20(1200%20%C3%97%201200%20px).svg"
+        />
+        <meta
+          property="aura:token-url-mainnet"
+          content="https://hub.auraexchange.org/collection/ethereum/${contract}/${tokenId}"
+        />
+        <meta
+          property="aura:token-url-goerli"
+          content="https://hub.auraexchange.org/collection/goerli/${contract}/${tokenId}"
+        />
+        <meta
+          property="aura:token-url-polygon"
+          content="https://hub.auraexchange.org/collection/polygon/${contract}/${tokenId}"
+        />
 
         {/* Favicon */}
         <link
