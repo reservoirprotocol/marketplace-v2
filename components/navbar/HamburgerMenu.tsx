@@ -178,7 +178,6 @@ const HamburgerMenu = () => {
                 justifyContent: 'space-between',
                 cursor: 'pointer',
                 alignItems: 'center',
-                borderBottom: '1px solid $gray4',
               }}
               onClick={() => disconnect()}
             >
