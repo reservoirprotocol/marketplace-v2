@@ -23,34 +23,23 @@ export const FullscreenModal: FC<Props> = ({
     <DialogRoot modal={true} open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogPortal>
-        <Overlay
+        <Content
+          onInteractOutside={(e) => {
+            e.preventDefault()
+          }}
           css={{
-            position: 'fixed',
+            width: '100%',
+            height: '100%',
+            borderRadius: '0px',
+            border: '0px',
+            minWidth: '100%',
+            maxWidth: '100vw',
+            maxHeight: '100vh',
             top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 9999,
           }}
         >
-          <Content
-            onInteractOutside={(e) => {
-              e.preventDefault()
-            }}
-            css={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '0px',
-              border: '0px',
-              minWidth: '100%',
-              maxWidth: '100vw',
-              maxHeight: '100vh',
-              top: 0,
-            }}
-          >
-            {children}
-          </Content>
-        </Overlay>
+          {children}
+        </Content>
       </DialogPortal>
     </DialogRoot>
   )

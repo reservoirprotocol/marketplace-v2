@@ -28,7 +28,8 @@
     "@radix-ui/react-toggle-group": "^1.0.1",
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "0.12.2",
-    "@reservoir0x/reservoir-kit-ui": "0.15.5",
+    "@reservoir0x/reservoir-kit-ui": "0.16.3",
+    "@types/uuid": "^9.0.1",
     "dayjs": "^1.11.6",
     "ethers": "^5.6.9",
     "framer-motion": "^6.3.6",
@@ -42,8 +43,11 @@
     "react-markdown": "^8.0.4",
     "react-responsive": "^9.0.0",
     "swr": "2.0.1",
+    "upgrade": "^1.1.0",
     "usehooks-ts": "^2.9.1",
-    "wagmi": "^0.12.0"
+    "uuid": "^9.0.0",
+    "wagmi": "^0.12.0",
+    "yarn": "^1.22.19"
   },
   "prettier": {
     "semi": false,
