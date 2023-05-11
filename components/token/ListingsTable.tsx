@@ -159,7 +159,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   const isUserListing = address?.toLowerCase() === listing.maker.toLowerCase()
 
-  const isOracleOrder = listing?.rawData?.isNativeOffChainCancellable;
+  const isOracleOrder = listing?.isNativeOffChainCancellable
 
   const listingSourceName = listing?.source?.name
   const listingSourceDomain = listing?.source?.domain

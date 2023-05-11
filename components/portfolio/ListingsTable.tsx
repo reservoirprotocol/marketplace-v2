@@ -109,7 +109,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
 
-  const isOracleOrder = listing?.rawData?.isNativeOffChainCancellable
+  const isOracleOrder = listing?.isNativeOffChainCancellable
 
   let criteriaData = listing?.criteria?.data
 

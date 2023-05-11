@@ -110,7 +110,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(offer?.expiration)
 
-  const isOracleOrder = offer?.rawData?.isNativeOffChainCancellable
+  const isOracleOrder = offer?.isNativeOffChainCancellable
 
   const isCollectionOffer = offer?.criteria?.kind !== 'token'
 
