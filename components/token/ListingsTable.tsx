@@ -159,11 +159,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   const isUserListing = address?.toLowerCase() === listing.maker.toLowerCase()
 
-  const orderZone = listing?.rawData?.zone
-  const orderKind = listing?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = listing?.isNativeOffChainCancellable
 
   const listingSourceName = listing?.source?.name
   const listingSourceDomain = listing?.source?.domain
