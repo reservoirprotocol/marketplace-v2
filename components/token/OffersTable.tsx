@@ -156,11 +156,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
   const contract = tokenString?.split(':')[0]
   const tokenId = tokenString?.split(':')[1]
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = offer?.rawData?.isNativeOffChainCancellable
 
   const offerSourceName = offer?.source?.name
   const offerSourceDomain = offer?.source?.domain
