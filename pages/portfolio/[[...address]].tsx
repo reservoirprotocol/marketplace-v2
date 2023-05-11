@@ -233,6 +233,7 @@ const IndexPage: NextPage = () => {
                         ) : (
                           <TokenFilters
                             isLoading={collectionsLoading}
+                            isOwner={isOwner}
                             open={tokenFiltersOpen}
                             setOpen={setTokenFiltersOpen}
                             collections={collections}
