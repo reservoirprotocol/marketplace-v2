@@ -116,6 +116,7 @@ export const ListingsTable: FC<Props> = ({
                 <ListingTableRow
                   key={`${listing?.id}-${i}`}
                   listing={listing}
+                  tokenString={token}
                   address={address}
                   is1155={is1155}
                   isOwner={isOwner}
@@ -139,6 +140,7 @@ export const ListingsTable: FC<Props> = ({
 
 type ListingTableRowProps = {
   listing: ReturnType<typeof useListings>['data'][0]
+  tokenString: Parameters<typeof useListings>['0']['token']
   is1155: boolean
   isOwner: boolean
   address?: string
@@ -147,6 +149,7 @@ type ListingTableRowProps = {
 
 const ListingTableRow: FC<ListingTableRowProps> = ({
   listing,
+  tokenString,
   is1155,
   isOwner,
   address,
@@ -160,6 +163,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
   const isUserListing = address?.toLowerCase() === listing.maker.toLowerCase()
 
   const isOracleOrder = listing?.isNativeOffChainCancellable
+  const contract = tokenString?.split(':')[0]
+  const tokenId = tokenString?.split(':')[1]
 
   const listingSourceName = listing?.source?.name
   const listingSourceDomain = listing?.source?.domain
@@ -244,8 +249,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
           {/* Not owner, erc 721 */}
           {!isOwner && !is1155 ? (
             <BuyNow
-              tokenId={listing.criteria?.data?.token?.tokenId}
-              collectionId={listing.criteria?.data?.collection?.id}
+              tokenId={listing.criteria?.data?.token?.tokenId || tokenId}
+              collectionId={listing.criteria?.data?.collection?.id || contract}
               orderId={listing.id}
               buttonChildren="Buy"
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
@@ -272,8 +277,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               {isOracleOrder ? (
                 <EditListing
                   listingId={listing.id}
-                  tokenId={listing.criteria?.data?.token?.tokenId}
-                  collectionId={listing.criteria?.data?.collection?.id}
+                  tokenId={listing.criteria?.data?.token?.tokenId || tokenId}
+                  collectionId={
+                    listing.criteria?.data?.collection?.id || contract
+                  }
                   buttonChildren={<Text style="subtitle2">Edit</Text>}
                   buttonCss={{
                     fontSize: 14,
