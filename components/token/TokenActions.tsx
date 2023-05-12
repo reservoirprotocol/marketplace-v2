@@ -51,19 +51,9 @@ export const TokenActions: FC<Props> = ({
       account?.address?.toLowerCase()
   const isListed = token ? token?.market?.floorAsk?.id !== null : false
 
-  const offerOrderZone = offer?.rawData?.zone
-  const offerOrderKind = offer?.kind
+  const offerIsOracleOrder = offer?.isNativeOffChainCancellable
 
-  const offerIsOracleOrder =
-    offerOrderKind === 'seaport-v1.4' &&
-    zoneAddresses.includes(offerOrderZone as string)
-
-  const listingOrderZone = listing?.rawData?.zone
-  const listingOrderKind = listing?.kind
-
-  const listingIsOracleOrder =
-    listingOrderKind === 'seaport-v1.4' &&
-    zoneAddresses.includes(listingOrderZone as string)
+  const listingIsOracleOrder = listing?.isNativeOffChainCancellable
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',

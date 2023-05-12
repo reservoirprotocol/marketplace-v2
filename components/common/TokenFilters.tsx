@@ -25,6 +25,7 @@ type Props = {
   scrollToTop?: () => void
   loadMoreCollections: () => void
   isLoading?: boolean
+  isOwner?: boolean
 }
 
 export const TokenFilters: FC<Props> = ({
@@ -34,6 +35,7 @@ export const TokenFilters: FC<Props> = ({
   filterCollection,
   setFilterCollection,
   isLoading,
+  isOwner,
   scrollToTop,
   loadMoreCollections,
 }) => {
@@ -55,7 +57,7 @@ export const TokenFilters: FC<Props> = ({
         css={{
           position: 'sticky',
           top: 16 + 80,
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
+          height: `calc(100vh - ${NAVBAR_HEIGHT}px - ${isOwner ? 90 : 32})`,
           overflow: 'auto',
         }}
       >

@@ -266,13 +266,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       : token?.token?.collection?.imageUrl
   ) as string
 
-  const orderZone = token?.ownership?.floorAsk?.rawData?.zone
-  // @ts-ignore
-  const orderKind = token?.ownership?.floorAsk?.kind
-
   const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
-
+    token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]
     : undefined

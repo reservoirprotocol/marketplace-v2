@@ -110,11 +110,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(offer?.expiration)
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = offer?.isNativeOffChainCancellable
 
   const isCollectionOffer = offer?.criteria?.kind !== 'token'
 
@@ -127,7 +123,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
     ? `${attribute?.key}: ${attribute?.value}`
     : ''
 
-    let criteriaData = offer?.criteria?.data
+  let criteriaData = offer?.criteria?.data
 
   let imageSrc: string = (
     criteriaData?.token?.tokenId
@@ -273,7 +269,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
           }
         >
           <Flex align="center">
-          <Img
+            <Img
               css={{
                 borderRadius: '4px',
                 objectFit: 'cover',
