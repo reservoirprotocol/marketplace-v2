@@ -134,7 +134,25 @@ const Navbar = () => {
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
             <Link href="/mint">
-            <NavItem active={router.pathname == '/mint'}>Mint Aura Pass</NavItem>
+              <NavItem active={router.pathname == '/mint'}>Mint Aura Pass</NavItem>
+            </Link>
+          </Flex>
+          <Flex>
+            <Link href="/leaderboard">
+              <NavItem
+                active={router.pathname == '/leaderboard'}
+                css={{
+                  transition: '0.3s',
+                  display: 'block',
+                  padding: '12px 15px',
+                  '&:hover': {
+                    background: theme === 'dark' ? '$blackA1' : '$panelShadow',
+                    borderRadius: '$md',
+                  },
+                }}
+              >
+                Leaderboard
+              </NavItem>
             </Link>
           </Flex>
         </Flex>
