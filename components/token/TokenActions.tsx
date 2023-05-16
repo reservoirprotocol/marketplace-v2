@@ -50,9 +50,9 @@ export const TokenActions: FC<Props> = ({
       account?.address?.toLowerCase()
   const isListed = token ? token?.market?.floorAsk?.id !== null : false
 
-  const offerIsOracleOrder = offer?.rawData?.isNativeOffChainCancellable
+  const offerIsOracleOrder = offer?.isNativeOffChainCancellable
 
-  const listingIsOracleOrder = listing?.rawData?.isNativeOffChainCancellable
+  const listingIsOracleOrder = listing?.isNativeOffChainCancellable
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',

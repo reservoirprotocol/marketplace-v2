@@ -87,6 +87,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
+  const [activityNames, setActivityNames] = useState<string[]>([])
 
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
@@ -174,7 +175,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     >
       {isSmallDevice ? null : (
         <Text style="body1">
-          {activityTypes.map(titleCase).join(', ') || 'All Events'}
+          {activityNames.map(titleCase).join(', ') || 'All Events'}
         </Text>
       )}
       <Text css={{ color: '$slate10' }}>
@@ -492,7 +493,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     diameter={16}
                     seed={jsNumberForAddress(owner || '')}
                   />
-                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                  <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
                     <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                       {isMounted ? ownerFormatted : ''}
                     </Anchor>
@@ -516,7 +517,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
               )}
               <Tabs.Root
-                defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
                 style={{
@@ -581,6 +581,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                         open={activityFiltersOpen}
                         setOpen={setActivityFiltersOpen}
                         activityTypes={activityTypes}
+                        activityNames={activityNames}
+                        setActivityNames={setActivityNames}
                         setActivityTypes={setActivityTypes}
                       />
                     </Dropdown>

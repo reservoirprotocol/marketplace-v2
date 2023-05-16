@@ -1,25 +1,27 @@
 import { Flex, Text, Button } from 'components/primitives'
 import { Dispatch, FC, SetStateAction } from 'react'
-import { UserToken } from 'pages/portfolio'
+import { UserToken } from 'pages/portfolio/[[...address]]'
 
 type Props = {
+  isOwner: boolean
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   setShowListingPage: Dispatch<SetStateAction<boolean>>
 }
 
 const BatchActionsFooter: FC<Props> = ({
+  isOwner,
   selectedItems,
   setSelectedItems,
   setShowListingPage,
 }) => {
   let selectedItemCount = selectedItems.length
 
-  if (selectedItemCount == 0) {
+  if (!isOwner) {
     return null
   }
 
-  let itemSubject = selectedItemCount > 1 ? 'items' : 'item'
+  let itemSubject = selectedItemCount === 1 ? 'item' : 'items'
 
   return (
     <Flex
@@ -34,13 +36,13 @@ const BatchActionsFooter: FC<Props> = ({
         py: '$4',
         borderTop: '1px solid $gray7',
         backgroundColor: '$neutralBg',
+        zIndex: 999,
       }}
     >
       <Flex align="center" css={{ gap: 24 }}>
         <Text>
           {selectedItemCount} {itemSubject}
         </Text>
-        {/* TODO: Select All button */}
         <Button
           color={'ghost'}
           css={{ color: '$primary11' }}
@@ -51,8 +53,13 @@ const BatchActionsFooter: FC<Props> = ({
       </Flex>
 
       <Flex align="center">
-        <Button onClick={() => setShowListingPage(true)}>
-          List {selectedItemCount} {itemSubject}
+        <Button
+          onClick={() => setShowListingPage(true)}
+          disabled={selectedItemCount < 1}
+        >
+          {selectedItemCount > 0
+            ? `List ${selectedItemCount} ${itemSubject}`
+            : 'List'}
         </Button>
       </Flex>
     </Flex>
