@@ -49,7 +49,6 @@ import { UserToken } from 'pages/portfolio/[[...address]]'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import CancelListing from 'components/buttons/CancelListing'
 import { ToastContext } from 'context/ToastContextProvider'
 import fetcher from 'utils/fetcher'
@@ -264,8 +263,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       : token?.token?.collection?.imageUrl
   ) as string
 
-  const isOracleOrder =
-    token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
+  const isOracleOrder = token?.ownership?.floorAsk?.isNativeOffChainCancellable
 
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]

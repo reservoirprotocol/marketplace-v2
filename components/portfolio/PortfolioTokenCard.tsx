@@ -48,7 +48,6 @@ import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
 import { formatNumber } from 'utils/numbers'
 import { DATE_REGEX, timeTill } from 'utils/till'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import { Address } from 'wagmi'
 import Image from 'next/image'
 
