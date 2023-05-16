@@ -23,7 +23,6 @@ import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
