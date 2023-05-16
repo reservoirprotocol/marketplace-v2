@@ -25,7 +25,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
-import { zoneAddresses } from 'utils/zoneAddresses'
 
 type Props = {
   address: Address | undefined
