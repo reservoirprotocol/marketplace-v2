@@ -23,7 +23,6 @@ import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
@@ -162,10 +161,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   const isUserListing = address?.toLowerCase() === listing.maker.toLowerCase()
 
+  const isOracleOrder = listing?.isNativeOffChainCancellable
+
   const contract = tokenString?.split(':')[0]
   const tokenId = tokenString?.split(':')[1]
-
-  const isOracleOrder = listing?.rawData?.isNativeOffChainCancellable
 
   const listingSourceName = listing?.source?.name
   const listingSourceDomain = listing?.source?.domain

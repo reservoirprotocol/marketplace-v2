@@ -22,7 +22,6 @@ import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 
 type Props = {
@@ -153,10 +152,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
 
   const isUserOffer = address?.toLowerCase() === offer.maker.toLowerCase()
 
+  const isOracleOrder = offer?.isNativeOffChainCancellable
+
   const contract = tokenString?.split(':')[0]
   const tokenId = tokenString?.split(':')[1]
-
-  const isOracleOrder = offer?.rawData?.isNativeOffChainCancellable
 
   const offerSourceName = offer?.source?.name
   const offerSourceDomain = offer?.source?.domain
