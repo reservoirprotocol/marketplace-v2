@@ -360,7 +360,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               Top Offer
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.topBid?.price?.amount?.native}
+              amount={token?.token?.topBid?.price?.amount?.decimal}
+              address={token?.token?.topBid?.price?.currency?.contract}
+              decimals={token?.token?.topBid?.price?.currency?.decimals}
               textStyle="subtitle2"
               logoHeight={14}
             />
