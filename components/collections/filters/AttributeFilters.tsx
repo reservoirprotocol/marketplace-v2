@@ -33,7 +33,7 @@ export const AttributeFilters: FC<Props> = ({
         css={{
           position: 'sticky',
           top: 16 + 80,
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px - 32px)`,
+          height: `calc(100vh - ${NAVBAR_HEIGHT}px )`,
           overflow: 'auto',
           marginBottom: 16,
           background: 'transparent',
