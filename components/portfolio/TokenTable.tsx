@@ -335,25 +335,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {isOwner && (
-              <List
-                token={token as ReturnType<typeof useTokens>['data'][0]}
-                mutate={mutate}
-                buttonCss={{
-                  width: '100%',
-                  maxWidth: '300px',
-                  justifyContent: 'center',
-                  px: '42px',
-                  backgroundColor: '$gray3',
-                  color: '$gray12',
-                  mt: '$2',
-                  '&:hover': {
-                    backgroundColor: '$gray4',
-                  },
-                }}
-                buttonChildren="List"
-              />
-            )}
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
@@ -364,32 +345,216 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {token?.token?.topBid?.price?.amount?.decimal && isOwner && (
-              <AcceptBid
-                tokenId={token.token.tokenId}
-                collectionId={token?.token?.contract}
-                mutate={mutate}
-                buttonCss={{
-                  width: '100%',
-                  maxWidth: '300px',
+          </Flex>
+        </Flex>
+        <Flex css={{ gap: '$2', width: '100%' }}>
+          {token?.token?.topBid?.price?.amount?.decimal && isOwner ? (
+            <AcceptBid
+              tokenId={token.token.tokenId}
+              collectionId={token?.token?.contract}
+              mutate={mutate}
+              buttonCss={{
+                width: '100%',
+                maxWidth: '300px',
+                justifyContent: 'center',
+                px: '20px',
+                backgroundColor: '$primary9',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '$primary10',
+                },
+              }}
+              buttonChildren={
+                <Flex align="center" css={{ gap: '$2' }}>
+                  <FontAwesomeIcon icon={faBolt} />
+                  Sell
+                </Flex>
+              }
+            />
+          ) : null}
+          {isOwner ? (
+            <List
+              token={token as ReturnType<typeof useTokens>['data'][0]}
+              mutate={mutate}
+              buttonCss={{
+                width: '100%',
+                maxWidth: '300px',
+                justifyContent: 'center',
+                px: '20px',
+                backgroundColor: '$gray3',
+                color: '$gray12',
+                '&:hover': {
+                  backgroundColor: '$gray4',
+                },
+              }}
+              buttonChildren="List"
+            />
+          ) : null}
+          <Dropdown
+            modal={false}
+            trigger={
+              <Button
+                color="gray3"
+                size="xs"
+                css={{
+                  width: 44,
+                  height: 44,
                   justifyContent: 'center',
-                  px: '32px',
-                  backgroundColor: '$primary9',
-                  color: 'white',
-                  mt: '$2',
-                  '&:hover': {
-                    backgroundColor: '$primary10',
-                  },
+                  flexShrink: 0,
                 }}
-                buttonChildren={
-                  <Flex align="center" css={{ gap: '$2' }}>
-                    <FontAwesomeIcon icon={faBolt} />
-                    Sell
+              >
+                <FontAwesomeIcon icon={faEllipsis} />
+              </Button>
+            }
+            contentProps={{ asChild: true, forceMount: true }}
+          >
+            <DropdownMenuItem
+              css={{ py: '$3', width: '100%' }}
+              onClick={(e) => {
+                if (isRefreshing) {
+                  e.preventDefault()
+                  return
+                }
+                setIsRefreshing(true)
+                fetcher(
+                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  undefined,
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      token: `${contract}:${token.token?.tokenId}`,
+                    }),
+                  }
+                )
+                  .then(({ data, response }) => {
+                    if (response.status === 200) {
+                      addToast?.({
+                        title: 'Refresh token',
+                        description:
+                          'Request to refresh this token was accepted.',
+                      })
+                    } else {
+                      throw data
+                    }
+                    setIsRefreshing(false)
+                  })
+                  .catch((e) => {
+                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
+
+                    addToast?.({
+                      title: 'Refresh token failed',
+                      description: ratelimit
+                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
+                            ratelimit
+                          )}.`
+                        : `This token was recently refreshed. Please try again later.`,
+                    })
+
+                    setIsRefreshing(false)
+                    throw e
+                  })
+              }}
+            >
+              <Flex align="center" css={{ gap: '$2' }}>
+                <Box
+                  css={{
+                    color: '$gray10',
+                    animation: isRefreshing
+                      ? `${spin} 1s cubic-bezier(0.76, 0.35, 0.2, 0.7) infinite`
+                      : 'none',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
+                </Box>
+                <Text>Refresh</Text>
+              </Flex>
+            </DropdownMenuItem>
+
+            {isOracleOrder &&
+            token?.ownership?.floorAsk?.id &&
+            token?.token?.tokenId &&
+            token?.token?.collection?.id ? (
+              <EditListingModal
+                trigger={
+                  <Flex
+                    align="center"
+                    css={{
+                      gap: '$2',
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    <Box css={{ color: '$gray10' }}>
+                      <FontAwesomeIcon icon={faEdit} />
+                    </Box>
+                    <Text>Edit Listing</Text>
+                  </Flex>
+                }
+                listingId={token?.ownership?.floorAsk?.id}
+                tokenId={token?.token?.tokenId}
+                collectionId={token?.token?.collection?.id}
+                onClose={(data, currentStep) => {
+                  if (mutate && currentStep == EditListingStep.Complete)
+                    mutate()
+                }}
+              />
+            ) : null}
+
+            {token?.ownership?.floorAsk?.id ? (
+              <CancelListing
+                listingId={token.ownership.floorAsk.id as string}
+                mutate={mutate}
+                trigger={
+                  <Flex
+                    css={{
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    {!isOracleOrder ? (
+                      <Tooltip
+                        content={
+                          <Text style="body2" as="p">
+                            Cancelling this order requires gas.
+                          </Text>
+                        }
+                      >
+                        <Flex align="center" css={{ gap: '$2' }}>
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon icon={faGasPump} />
+                          </Box>
+                          <Text color="error">Cancel</Text>
+                        </Flex>
+                      </Tooltip>
+                    ) : (
+                      <Text color="error">Cancel</Text>
+                    )}
                   </Flex>
                 }
               />
-            )}
-          </Flex>
+            ) : null}
+          </Dropdown>
         </Flex>
       </Flex>
     )
@@ -814,7 +979,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
     </TableRow>
   )
 }
-
 const TableHeading: FC<{ isOwner: boolean }> = ({ isOwner }) => (
   <HeaderRow
     css={{
