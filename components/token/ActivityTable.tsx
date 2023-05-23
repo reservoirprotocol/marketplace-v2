@@ -330,6 +330,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       </TableRow>
     )
   }
+  
   return (
     <TableRow
       key={activity.txHash}
