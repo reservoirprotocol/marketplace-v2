@@ -11,6 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   useCollectionActivity,
+  useSearchActivities,
   useTokenActivity,
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
@@ -59,7 +60,7 @@ type Props = {
 type TokenActivityTableProps = {
   id: string
   activityTypes: NonNullable<
-    Exclude<Parameters<typeof useTokenActivity>['1'], boolean>
+    Exclude<Parameters<typeof useSearchActivities>['0'], boolean>
   >['types']
 }
 
@@ -67,9 +68,9 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
   id,
   activityTypes,
 }) => {
-  const data = useTokenActivity(
-    id,
+  const data = useSearchActivities(
     {
+      token: id,
       types: activityTypes,
     },
     {
