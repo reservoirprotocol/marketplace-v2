@@ -1,6 +1,9 @@
 import { FC, useContext, useEffect } from 'react'
 import { ActivityTable } from 'components/common/ActivityTable'
-import { useUsersActivity } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useSearchActivities,
+  useUsersActivity,
+} from '@reservoir0x/reservoir-kit-ui'
 import { ChainContext } from 'context/ChainContextProvider'
 
 type ActivityQuery = NonNullable<
@@ -14,7 +17,7 @@ type Props = {
 }
 
 export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
-  let activityQuery: Parameters<typeof useUsersActivity>['1'] = {
+  let activityQuery: Parameters<typeof useSearchActivities>['0'] = {
     limit: 20,
     types: activityTypes,
   }
@@ -31,6 +34,17 @@ export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
     revalidateOnMount: true,
     fallbackData: [],
   })
+
+  const newData = useSearchActivities(
+    {
+      ...activityQuery,
+      users: user ? [user] : undefined,
+    },
+    {
+      revalidateOnMount: true,
+      fallbackData: [],
+    }
+  )
 
   useEffect(() => {
     data.mutate()
