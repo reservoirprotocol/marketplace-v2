@@ -1005,18 +1005,14 @@ const TableHeading: FC<{ isOwner: boolean }> = ({ isOwner }) => (
       </Text>
     </TableCell>
     <TableCell>
-      <Flex align="center" css={{ gap: '$2' }}>
-        <Text style="subtitle3" color="subtle">
-          Floor
-        </Text>
-      </Flex>
+      <Text style="subtitle3" color="subtle">
+        Floor
+      </Text>
     </TableCell>
     <TableCell>
-      <Flex align="center" css={{ gap: '$2' }}>
-        <Text style="subtitle3" color="subtle">
-          Top Offer
-        </Text>
-      </Flex>
+      <Text style="subtitle3" color="subtle">
+        Top Offer
+      </Text>
     </TableCell>
     {isOwner ? <TableCell></TableCell> : null}
   </HeaderRow>
