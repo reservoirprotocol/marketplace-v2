@@ -226,10 +226,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             {activity.price?.amount?.decimal &&
             activity.price.amount?.decimal !== 0 &&
             activity.type &&
-            !['transfer'].includes(activity.type) ? (
+            activity.type !== 'transfer' ? (
               <Flex align="center">
                 <FormatCryptoCurrency
                   amount={activity.price.amount?.decimal}
+                  address={activity.price.currency?.contract}
                   logoHeight={16}
                   textStyle="subtitle1"
                   css={{ mr: '$2', fontSize: '14px' }}
@@ -330,7 +331,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       </TableRow>
     )
   }
-  
+
   return (
     <TableRow
       key={activity.txHash}
@@ -349,10 +350,10 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           {activity.price?.amount?.decimal &&
           activity.price.amount?.decimal !== 0 &&
           activity.type &&
-          !['transfer'].includes(activity.type) ? (
+          activity.type !== 'transfer' ? (
             <Flex align="center">
               <FormatCryptoCurrency
-                amount={activity.price.amount.decimal}
+                amount={activity.price.amount?.decimal}
                 address={activity.price.currency?.contract}
                 logoHeight={16}
                 textStyle="subtitle1"
