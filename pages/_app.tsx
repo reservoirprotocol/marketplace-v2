@@ -157,6 +157,7 @@ function MyApp({
                 active: marketplaceChain.id === id,
               }
             }),
+            logLevel: 4,
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
