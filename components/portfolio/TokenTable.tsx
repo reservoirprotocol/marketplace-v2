@@ -6,6 +6,8 @@ import {
   useRef,
   useContext,
   useState,
+  useImperativeHandle,
+  forwardRef,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
@@ -73,144 +75,160 @@ type Props = {
 const ownerDesktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr)'
 
-export const TokenTable: FC<Props> = ({
-  address,
-  isLoading,
-  sortBy,
-  filterCollection,
-  selectedItems,
-  isOwner,
-  itemView,
-  setSelectedItems,
-}) => {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+export type TokenTableRef = { mutate: () => void }
 
-  const [playingElement, setPlayingElement] = useState<
-    HTMLAudioElement | HTMLVideoElement | null
-  >()
+export const TokenTable = forwardRef<TokenTableRef, Props>(
+  (
+    {
+      address,
+      isLoading,
+      sortBy,
+      filterCollection,
+      selectedItems,
+      isOwner,
+      itemView,
+      setSelectedItems,
+    },
+    ref
+  ) => {
+    const loadMoreRef = useRef<HTMLDivElement>(null)
+    const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
-    limit: 20,
-    sortBy: sortBy,
-    collection: filterCollection,
-    includeTopBid: true,
-    includeRawData: true,
-    includeAttributes: true,
-  }
+    const [playingElement, setPlayingElement] = useState<
+      HTMLAudioElement | HTMLVideoElement | null
+    >()
 
-  const { chain } = useContext(ChainContext)
-
-  if (chain.collectionSetId) {
-    tokenQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    tokenQuery.community = chain.community
-  }
-
-  const {
-    data: tokens,
-    fetchNextPage,
-    mutate,
-    isFetchingPage,
-    isValidating,
-  } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
-
-  useEffect(() => {
-    const isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
+    let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
+      limit: 20,
+      sortBy: sortBy,
+      collection: filterCollection,
+      includeTopBid: true,
+      includeRawData: true,
+      includeAttributes: true,
     }
-  }, [loadMoreObserver?.isIntersecting])
 
-  return (
-    <>
-      {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
-        <Flex
-          direction="column"
-          align="center"
-          css={{ py: '$6', gap: '$4', width: '100%' }}
-        >
-          <Text css={{ color: '$gray11' }}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-          </Text>
-          <Text css={{ color: '$gray11' }}>No items found</Text>
-        </Flex>
-      ) : (
-        <Flex direction="column" css={{ width: '100%' }}>
-          {isLoading ? null : itemView === 'list' ? (
-            <>
-              <TableHeading isOwner={isOwner} />
-              {tokens.map((token, i) => {
-                if (!token) return null
+    const { chain } = useContext(ChainContext)
 
-                return (
-                  <TokenTableRow
-                    key={`${token.token?.tokenId}-${i}`}
+    if (chain.collectionSetId) {
+      tokenQuery.collectionsSetId = chain.collectionSetId
+    } else if (chain.community) {
+      tokenQuery.community = chain.community
+    }
+
+    const {
+      data: tokens,
+      fetchNextPage,
+      mutate,
+      isFetchingPage,
+      isValidating,
+    } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
+
+    useEffect(() => {
+      const isVisible = !!loadMoreObserver?.isIntersecting
+      if (isVisible) {
+        fetchNextPage()
+      }
+    }, [loadMoreObserver?.isIntersecting])
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        mutate: () => {},
+      }),
+      [mutate]
+    )
+
+    return (
+      <>
+        {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
+          <Flex
+            direction="column"
+            align="center"
+            css={{ py: '$6', gap: '$4', width: '100%' }}
+          >
+            <Text css={{ color: '$gray11' }}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+            </Text>
+            <Text css={{ color: '$gray11' }}>No items found</Text>
+          </Flex>
+        ) : (
+          <Flex direction="column" css={{ width: '100%' }}>
+            {isLoading ? null : itemView === 'list' ? (
+              <>
+                <TableHeading isOwner={isOwner} />
+                {tokens.map((token, i) => {
+                  if (!token) return null
+
+                  return (
+                    <TokenTableRow
+                      key={`${token.token?.tokenId}-${i}`}
+                      token={token}
+                      mutate={mutate}
+                      selectedItems={selectedItems}
+                      setSelectedItems={setSelectedItems}
+                      isOwner={isOwner}
+                    />
+                  )
+                })}
+              </>
+            ) : (
+              <Grid
+                css={{
+                  gap: '$4',
+                  width: '100%',
+                  pb: '$6',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  '@md': {
+                    gridTemplateColumns:
+                      'repeat(auto-fill, minmax(240px, 1fr))',
+                  },
+                }}
+              >
+                {tokens?.map((token, i) => (
+                  <PortfolioTokenCard
+                    key={i}
                     token={token}
+                    isOwner={isOwner}
+                    address={address as Address}
+                    tokenCount={
+                      token?.token?.kind === 'erc1155'
+                        ? token.ownership?.tokenCount
+                        : undefined
+                    }
                     mutate={mutate}
                     selectedItems={selectedItems}
                     setSelectedItems={setSelectedItems}
-                    isOwner={isOwner}
+                    rarityEnabled={true}
+                    onMediaPlayed={(e) => {
+                      if (
+                        playingElement &&
+                        playingElement !== e.nativeEvent.target
+                      ) {
+                        playingElement.pause()
+                      }
+                      const element =
+                        (e.nativeEvent.target as HTMLAudioElement) ||
+                        (e.nativeEvent.target as HTMLVideoElement)
+                      if (element) {
+                        setPlayingElement(element)
+                      }
+                    }}
                   />
-                )
-              })}
-            </>
-          ) : (
-            <Grid
-              css={{
-                gap: '$4',
-                width: '100%',
-                pb: '$6',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                '@md': {
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                },
-              }}
-            >
-              {tokens?.map((token, i) => (
-                <PortfolioTokenCard
-                  key={i}
-                  token={token}
-                  isOwner={isOwner}
-                  address={address as Address}
-                  tokenCount={
-                    token?.token?.kind === 'erc1155'
-                      ? token.ownership?.tokenCount
-                      : undefined
-                  }
-                  mutate={mutate}
-                  selectedItems={selectedItems}
-                  setSelectedItems={setSelectedItems}
-                  rarityEnabled={true}
-                  onMediaPlayed={(e) => {
-                    if (
-                      playingElement &&
-                      playingElement !== e.nativeEvent.target
-                    ) {
-                      playingElement.pause()
-                    }
-                    const element =
-                      (e.nativeEvent.target as HTMLAudioElement) ||
-                      (e.nativeEvent.target as HTMLVideoElement)
-                    if (element) {
-                      setPlayingElement(element)
-                    }
-                  }}
-                />
-              ))}
-            </Grid>
-          )}
-          <div ref={loadMoreRef}></div>
-        </Flex>
-      )}
-      {isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
-          <LoadingSpinner />
-        </Flex>
-      )}
-    </>
-  )
-}
+                ))}
+              </Grid>
+            )}
+            <div ref={loadMoreRef}></div>
+          </Flex>
+        )}
+        {isValidating && (
+          <Flex align="center" justify="center" css={{ py: '$6' }}>
+            <LoadingSpinner />
+          </Flex>
+        )}
+      </>
+    )
+  }
+)
 
 type TokenTableRowProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]

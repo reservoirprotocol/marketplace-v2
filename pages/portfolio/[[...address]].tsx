@@ -2,16 +2,18 @@ import { NextPage } from 'next'
 import { Text, Flex, Box } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import {
+  AcceptBidModal,
+  AcceptBidStep,
   useUserCollections,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { useMounted } from '../../hooks'
-import { TokenTable } from 'components/portfolio/TokenTable'
+import { TokenTable, TokenTableRef } from 'components/portfolio/TokenTable'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import { TokenFilters } from 'components/common/TokenFilters'
@@ -34,6 +36,7 @@ import { UserActivityTable } from 'components/portfolio/UserActivityTable'
 import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 import { useRouter } from 'next/router'
 import { ItemView, ViewToggle } from 'components/portfolio/ViewToggle'
+import { ToastContext } from 'context/ToastContextProvider'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -65,6 +68,7 @@ const IndexPage: NextPage = () => {
     useState<PortfolioSortingOption>('acquiredAt')
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
+  const { addToast } = useContext(ToastContext)
   const isOwner =
     !router.query.address || router.query.address[0] === accountAddress
 
@@ -88,7 +92,20 @@ const IndexPage: NextPage = () => {
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
+  const [batchAcceptBidModalOpen, setBatchAcceptBidModalOpen] = useState(false)
   const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
+  const tokenTableRef = useRef<TokenTableRef>(null)
+
+  const sellableItems = useMemo(
+    () =>
+      selectedItems
+        .filter((item) => item.token?.topBid?.id !== null)
+        .map((item) => ({
+          tokenId: item.token?.tokenId as string,
+          collectionId: item.token?.collection?.id as string,
+        })),
+    [selectedItems]
+  )
 
   useEffect(() => {
     setSelectedItems([])
@@ -97,6 +114,7 @@ const IndexPage: NextPage = () => {
   useEffect(() => {
     setSelectedItems([])
     setShowListingPage(false)
+    setBatchAcceptBidModalOpen(false)
   }, [address])
 
   useEffect(() => {
@@ -283,6 +301,7 @@ const IndexPage: NextPage = () => {
                             )}
                           </Flex>
                           <TokenTable
+                            ref={tokenTableRef}
                             isLoading={collectionsLoading}
                             address={address}
                             filterCollection={filterCollection}
@@ -298,6 +317,7 @@ const IndexPage: NextPage = () => {
                             selectedItems={selectedItems}
                             setSelectedItems={setSelectedItems}
                             setShowListingPage={setShowListingPage}
+                            setOpenAcceptBidModal={setBatchAcceptBidModalOpen}
                             isOwner={isOwner}
                           />
                         )}
@@ -376,6 +396,41 @@ const IndexPage: NextPage = () => {
             </Flex>
           )}
         </Flex>
+        <AcceptBidModal
+          trigger={null}
+          openState={[batchAcceptBidModalOpen, setBatchAcceptBidModalOpen]}
+          tokens={sellableItems}
+          onClose={(data, stepData, currentStep) => {
+            if (
+              tokenTableRef &&
+              tokenTableRef.current?.mutate &&
+              currentStep == AcceptBidStep.Complete
+            ) {
+              tokenTableRef.current.mutate()
+            }
+          }}
+          onBidAcceptError={(error: any) => {
+            if (error?.type === 'price mismatch') {
+              addToast?.({
+                title: 'Could not accept offer',
+                description: 'Offer was lower than expected.',
+              })
+              return
+            }
+            // Handle user rejection
+            if (error?.code === 4001) {
+              addToast?.({
+                title: 'User canceled transaction',
+                description: 'You have canceled the transaction.',
+              })
+              return
+            }
+            addToast?.({
+              title: 'Could not accept offer',
+              description: 'The transaction was not completed.',
+            })
+          }}
+        />
       </Layout>
     </>
   )
