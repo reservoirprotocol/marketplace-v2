@@ -91,15 +91,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
-  const { data: collections } = useCollections(
-    {
-      contract: contract,
-    },
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
-  const collection = collections && collections[0] ? collections[0] : null
 
   const { data: tokens, mutate } = useDynamicTokens(
     {
@@ -116,6 +107,16 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
   const is1155 = token?.token?.kind === 'erc1155'
+
+  const { data: collections } = useCollections(
+    {
+      id: token?.token?.collection?.id,
+    },
+    {
+      fallbackData: [ssr.collection],
+    }
+  )
+  const collection = collections && collections[0] ? collections[0] : null
 
   const { data: userTokens } = useUserTokens(
     is1155 ? account.address : undefined,
@@ -640,24 +641,11 @@ export const getStaticProps: GetStaticProps<{
 
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      contract: contract,
-      includeTopBid: true,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
-
   const headers = {
     headers: {
       'x-api-key': apiKey || '',
     },
   }
-
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery,
-    headers
-  )
 
   let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
@@ -672,18 +660,29 @@ export const getStaticProps: GetStaticProps<{
     tokensQuery,
     headers
   )
-  const promises = await Promise.allSettled([
-    collectionsPromise,
-    tokensPromise,
-  ]).catch(() => {})
-  const collection: Props['ssr']['collection'] =
-    promises?.[0].status === 'fulfilled' && promises[0].value.data
-      ? (promises[0].value.data as Props['ssr']['collection'])
-      : {}
-  const tokens: Props['ssr']['tokens'] =
-    promises?.[1].status === 'fulfilled' && promises[1].value.data
-      ? (promises[1].value.data as Props['ssr']['tokens'])
-      : {}
+
+  const tokensResponse = await tokensPromise
+  const tokens = tokensResponse.data
+    ? (tokensResponse.data as Props['ssr']['tokens'])
+    : {}
+
+  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+    {
+      id: tokens?.tokens?.[0]?.token?.collection?.id,
+      includeTopBid: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
+    }
+
+  const collectionsPromise = fetcher(
+    `${reservoirBaseUrl}/collections/v5`,
+    collectionQuery,
+    headers
+  )
+
+  const collectionsResponse = await collectionsPromise
+  const collection = collectionsResponse.data
+    ? (collectionsResponse.data as Props['ssr']['collection'])
+    : {}
 
   return {
     props: { collectionId, id, ssr: { collection, tokens } },
