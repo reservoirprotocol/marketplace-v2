@@ -153,7 +153,7 @@ const IndexPage: NextPage = () => {
             },
           }}
         >
-          {isConnected ? (
+          {!isOwner || isConnected ? (
             <>
               {showListingPage && !isSmallDevice ? (
                 <BatchListings
