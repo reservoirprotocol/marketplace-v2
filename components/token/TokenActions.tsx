@@ -9,7 +9,6 @@ import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import { useAccount } from 'wagmi'
 
 type Props = {
