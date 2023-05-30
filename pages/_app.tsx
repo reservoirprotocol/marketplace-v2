@@ -160,6 +160,7 @@ function MyApp({
                 active: marketplaceChain.id === id,
               }
             }),
+            logLevel: 4,
             disablePoweredByReservoir: true,
             marketplaceFee: +`${FEE_BPS || 0}`,
             marketplaceFeeRecipient: FEE_RECIPIENT,

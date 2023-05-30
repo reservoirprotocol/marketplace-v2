@@ -118,14 +118,10 @@ const IndexPage: NextPage = () => {
           tab = 'collections'
           break
         case 'listings':
-          if (isOwner) {
-            tab = 'listings'
-          }
+          tab = 'listings'
           break
         case 'offers':
-          if (isOwner) {
-            tab = 'offers'
-          }
+          tab = 'offers'
           break
         case 'activity':
           tab = 'activity'
@@ -158,7 +154,7 @@ const IndexPage: NextPage = () => {
             },
           }}
         >
-          {isConnected ? (
+          {!isOwner || isConnected ? (
             <>
               {showListingPage && !isSmallDevice ? (
                 <BatchListings
@@ -192,12 +188,8 @@ const IndexPage: NextPage = () => {
                         }}
                       >
                         <TabsTrigger value="items">Items</TabsTrigger>
-                        {isOwner && (
-                          <TabsTrigger value="listings">Listings</TabsTrigger>
-                        )}
-                        {isOwner && (
-                          <TabsTrigger value="offers">Offers Made</TabsTrigger>
-                        )}
+                        <TabsTrigger value="listings">Listings</TabsTrigger>
+                        <TabsTrigger value="offers">Offers Made</TabsTrigger>
                         <TabsTrigger value="activity">Activity</TabsTrigger>
                       </TabsList>
                     </Flex>
@@ -297,16 +289,12 @@ const IndexPage: NextPage = () => {
                         )}
                       </Flex>
                     </TabsContent>
-                    {isOwner && (
-                      <TabsContent value="listings">
-                        <ListingsTable address={address} />
-                      </TabsContent>
-                    )}
-                    {isOwner && (
-                      <TabsContent value="offers">
-                        <OffersTable address={address} />
-                      </TabsContent>
-                    )}
+                    <TabsContent value="listings">
+                      <ListingsTable address={address} isOwner={isOwner} />
+                    </TabsContent>
+                    <TabsContent value="offers">
+                      <OffersTable address={address} isOwner={isOwner} />
+                    </TabsContent>
                     <TabsContent value="activity">
                       <Flex
                         css={{
