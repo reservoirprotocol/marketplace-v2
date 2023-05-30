@@ -187,7 +187,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={offer?.price?.amount?.native}
+            amount={offer?.price?.amount?.decimal}
             address={offer?.price?.currency?.contract}
             textStyle="subtitle2"
             logoHeight={14}
@@ -306,7 +306,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={offer?.price?.amount?.native}
+          amount={offer?.price?.amount?.decimal}
           address={offer?.price?.currency?.contract}
           textStyle="subtitle2"
           logoHeight={14}

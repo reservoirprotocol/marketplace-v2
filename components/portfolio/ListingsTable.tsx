@@ -175,7 +175,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={listing?.price?.amount?.native}
+            amount={listing?.price?.amount?.decimal}
             address={listing?.price?.currency?.contract}
             textStyle="subtitle2"
             logoHeight={14}
@@ -298,7 +298,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={listing?.price?.amount?.native}
+          amount={listing?.price?.amount?.decimal}
           address={listing?.price?.currency?.contract}
           textStyle="subtitle2"
           logoHeight={14}
