@@ -71,6 +71,8 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
     id,
     {
       types: activityTypes,
+      //@ts-ignore - until we add the types
+      es: 1,
     },
     {
       revalidateOnMount: true,
