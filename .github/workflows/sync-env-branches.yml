@@ -10,8 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Syncing branches
     steps:
-      - uses: actions/checkout@v2
       - name: Set Git config
+        uses: actions/checkout@v2
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
@@ -22,3 +22,11 @@ jobs:
           git pull
           git merge --no-ff main -m "Auto-merge main into testnet"
           git push
+      - name: Report Status
+        uses: ravsamhq/notify-slack-action@v1
+        if: always()
+        with:
+          status: ${{ job.status }}
+          notify_when: 'failure'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.ACTION_MONITORING_SLACK }}
