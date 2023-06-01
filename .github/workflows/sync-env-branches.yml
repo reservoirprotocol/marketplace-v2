@@ -1,0 +1,24 @@
+name: Sync branches with main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Sync testnet with main
+        run: |
+          git fetch --unshallow
+          git checkout testnets
+          git pull
+          git merge --no-ff main -m "Auto-merge main into testnet"
+          git push
