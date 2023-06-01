@@ -114,8 +114,8 @@ export default [
   DefaultChain,
   {
     ...sepolia,
-    lightIconUrl: '/icons/sepolia-icon-dark.svg',
-    darkIconUrl: '/icons/sepolia-icon-light.svg',
+    lightIconUrl: '/icons/goerli-icon-dark.svg',
+    darkIconUrl: '/icons/goerli-icon-light.svg',
     reservoirBaseUrl: 'https://api-sepolia.reservoir.tools',
     proxyApi: '/api/reservoir/sepolia',
     routePrefix: 'sepolia',
@@ -139,7 +139,7 @@ export default [
   {
     ...baseGoerli,
     lightIconUrl: '/icons/base-goerli-icon-dark.svg',
-    darkIconUrl: '/icons/base-goerli-light.svg',
+    darkIconUrl: '/icons/base-goerli-icon-light.svg',
     reservoirBaseUrl: 'https://api-base-goerli.reservoir.tools',
     proxyApi: '/api/reservoir/base-goerli',
     routePrefix: 'base-goerli',
@@ -162,8 +162,8 @@ export default [
   },
   {
     ...scrollTestnet,
-    lightIconUrl: '/icons/scroll-alpha-icon-dark.svg',
-    darkIconUrl: '/icons/scroll-alpha-icon-light.svg',
+    lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
+    darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
     reservoirBaseUrl: 'https://api-scroll-alpha.reservoir.tools',
     proxyApi: '/api/reservoir/scroll-alpha',
     routePrefix: 'scroll-alpha',
@@ -176,7 +176,7 @@ export default [
   {
     ...zoraTestnet,
     lightIconUrl: '/icons/zora-testnet-icon-dark.svg',
-    darkIconUrl: '/icons/zora-testnet-light.svg',
+    darkIconUrl: '/icons/zora-testnet-icon-light.svg',
     reservoirBaseUrl: 'https://api-zora-testnet.reservoir.tools',
     proxyApi: '/api/reservoir/zora-testnet',
     routePrefix: 'zora-testnet',
