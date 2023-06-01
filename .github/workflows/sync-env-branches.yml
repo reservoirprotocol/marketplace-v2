@@ -20,5 +20,5 @@ jobs:
           git fetch --unshallow
           git checkout testnets
           git pull
-          git merge --no-ff dev -m "Auto-merge main into testnet"
+          git merge --no-ff main -m "Auto-merge main into testnet"
           git push
