@@ -18,7 +18,7 @@ jobs:
       - name: Sync testnet with main
         run: |
           git fetch --unshallow
-          git checkout testnets
+          git checkout testnetss
           git pull
           git merge --no-ff main -m "Auto-merge main into testnet"
           git push
