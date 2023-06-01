@@ -1,11 +1,70 @@
 import {
-  arbitrum,
   goerli,
-  mainnet,
-  polygon,
-  optimism,
+  sepolia,
+  // polygonMumbai,
+  baseGoerli,
+  scrollTestnet,
   Chain,
 } from 'wagmi/chains'
+
+//Chains that are missing from wagmi:
+export const arbitrumNova = {
+  id: 42_170,
+  name: 'Arbitrum Nova',
+  network: 'arbitrum-nova',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    blast: {
+      http: ['https://arbitrum-nova.public.blastapi.io'],
+      webSocket: ['wss://arbitrum-nova.public.blastapi.io'],
+    },
+    default: {
+      http: ['https://nova.arbitrum.io/rpc'],
+    },
+    public: {
+      http: ['https://nova.arbitrum.io/rpc'],
+    },
+  },
+  blockExplorers: {
+    etherscan: { name: 'Arbiscan', url: 'https://nova.arbiscan.io' },
+    blockScout: {
+      name: 'BlockScout',
+      url: 'https://nova-explorer.arbitrum.io/',
+    },
+    default: { name: 'Arbiscan', url: 'https://nova.arbiscan.io' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 1746963,
+    },
+  },
+} as const satisfies Chain
+
+export const zoraTestnet = {
+  id: 999,
+  name: 'Zora Testnet',
+  network: 'zora-testnet',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://testnet.rpc.zora.co'],
+    },
+    public: {
+      http: ['https://testnet.rpc.zora.co'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Zora Testnet explorer',
+      url: 'https://testnet.explorer.zora.co',
+    },
+    default: {
+      name: 'Zora Testnet explorer',
+      url: 'https://testnet.explorer.zora.co',
+    },
+  },
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -24,79 +83,106 @@ type ReservoirChain = Chain & {
 }
 
 export const DefaultChain: ReservoirChain = {
-  ...mainnet,
+  ...goerli,
   // Any url to display the logo of the chain in light mode
-  lightIconUrl: '/icons/eth-icon-dark.svg',
+  lightIconUrl: '/icons/goerli-icon-dark.svg',
   // Any url to display the logo of the chain in dark mode
-  darkIconUrl: '/icons/eth-icon-light.svg',
+  darkIconUrl: '/icons/goerli-icon-light.svg',
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
-  reservoirBaseUrl: 'https://api.reservoir.tools',
+  reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
   // Used on the client side portions of the marketplace that need an api key added
   // Prevents the api key from being leaked in the clientside requests
   // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
   // Doing so will omit the api key unless further changes are made
-  proxyApi: '/api/reservoir/ethereum',
+  proxyApi: '/api/reservoir/goerli',
   // A prefix used in the asset specific routes on the app (tokens/collections)
-  routePrefix: 'ethereum',
+  routePrefix: 'goerli',
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-  apiKey: process.env.ETH_RESERVOIR_API_KEY,
+  apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
-  coingeckoId: 'ethereum',
-  collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
-  community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  coingeckoId: 'goerli-eth',
+  collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
+  community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
 }
 
 export default [
   DefaultChain,
   {
-    ...polygon,
-    lightIconUrl: '/icons/polygon-icon-dark.svg',
-    darkIconUrl: '/icons/polygon-icon-light.svg',
-    reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
-    proxyApi: '/api/reservoir/polygon',
-    routePrefix: 'polygon',
-    apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
-    coingeckoId: 'matic-network',
-    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    ...sepolia,
+    lightIconUrl: '/icons/sepolia-icon-dark.svg',
+    darkIconUrl: '/icons/sepolia-icon-light.svg',
+    reservoirBaseUrl: 'https://api-sepolia.reservoir.tools',
+    proxyApi: '/api/reservoir/sepolia',
+    routePrefix: 'sepolia',
+    apiKey: process.env.SEPOLIA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
+  },
+  // {
+  //   ...polygonMumbai,
+  //   lightIconUrl: '/icons/mumbai-icon-dark.svg',
+  //   darkIconUrl: '/icons/mumbai-icon-light.svg',
+  //   reservoirBaseUrl: 'https://api-mumbai.reservoir.tools',
+  //   proxyApi: '/api/reservoir/mumbai',
+  //   routePrefix: 'mumbai',
+  //   apiKey: process.env.MUMBAI_RESERVOIR_API_KEY,
+  //   coingeckoId: 'matic-network',
+  //   collectionSetId: process.env.NEXT_PUBLIC_MUMBAI_COLLECTION_SET_ID,
+  //   community: process.env.NEXT_PUBLIC_MUMBAI_COMMUNITY,
+  // },
+  {
+    ...baseGoerli,
+    lightIconUrl: '/icons/base-goerli-icon-dark.svg',
+    darkIconUrl: '/icons/base-goerli-light.svg',
+    reservoirBaseUrl: 'https://api-base-goerli.reservoir.tools',
+    proxyApi: '/api/reservoir/base-goerli',
+    routePrefix: 'base-goerli',
+    apiKey: process.env.BASE_GOERLI_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_BASE_GOERLI_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BASE_GOERLI_COMMUNITY,
   },
   {
-    ...arbitrum,
-    name: 'Arbitrum',
-    lightIconUrl: '/icons/arbitrum-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-icon-light.svg',
-    reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
-    proxyApi: '/api/reservoir/arbitrum',
-    routePrefix: 'arbitrum',
-    apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
-    coingeckoId: 'arbitrum-iou',
+    ...arbitrumNova,
+    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
+    reservoirBaseUrl: 'https://api-arbitrum-nova.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum-nova',
+    routePrefix: 'arbitrum-nova',
+    apiKey: process.env.ARBITRUM_NOVA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
   },
   {
-    ...optimism,
-    name: 'Optimism',
-    lightIconUrl: '/icons/optimism-icon-dark.svg',
-    darkIconUrl: '/icons/optimism-icon-light.svg',
-    reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
-    proxyApi: '/api/reservoir/optimism',
-    routePrefix: 'optimism',
-    apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
-    coingeckoId: 'optimism',
+    ...scrollTestnet,
+    lightIconUrl: '/icons/scroll-alpha-icon-dark.svg',
+    darkIconUrl: '/icons/scroll-alpha-icon-light.svg',
+    reservoirBaseUrl: 'https://api-scroll-alpha.reservoir.tools',
+    proxyApi: '/api/reservoir/scroll-alpha',
+    routePrefix: 'scroll-alpha',
+    apiKey: process.env.SCROLL_ALPHA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COMMUNITY,
+    name: 'Scroll Alpha',
   },
   {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    ...zoraTestnet,
+    lightIconUrl: '/icons/zora-testnet-icon-dark.svg',
+    darkIconUrl: '/icons/zora-testnet-light.svg',
+    reservoirBaseUrl: 'https://api-zora-testnet.reservoir.tools',
+    proxyApi: '/api/reservoir/zora-testnet',
+    routePrefix: 'zora-testnet',
+    apiKey: process.env.ZORA_TESTNET_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ZORA_TESTNET_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ZORA_TESTNET_COMMUNITY,
   },
 ] as ReservoirChain[]
