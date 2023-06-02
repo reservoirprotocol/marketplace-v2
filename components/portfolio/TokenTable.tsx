@@ -143,6 +143,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
           case 'accept_offer_complete': {
             if (!acceptBidModalOpen && !selectedItems.length) {
               mutate()
+              setSelectedItems([])
             }
             break
           }
