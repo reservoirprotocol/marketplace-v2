@@ -6,8 +6,9 @@ import {
   useRef,
   useContext,
   useState,
-  useImperativeHandle,
   forwardRef,
+  ReactElement,
+  useImperativeHandle,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
@@ -29,6 +30,7 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import {
   EditListingModal,
   EditListingStep,
+  useReservoirClient,
   useTokens,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
@@ -69,13 +71,14 @@ type Props = {
   selectedItems: UserToken[]
   isOwner: boolean
   itemView: ItemView
+  acceptModalOpen?: boolean
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
 }
 
 const ownerDesktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr)'
 
-export type TokenTableRef = { mutate: () => void }
+export type TokenTableRef = { mutate: any }
 
 export const TokenTable = forwardRef<TokenTableRef, Props>(
   (
@@ -93,6 +96,8 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
   ) => {
     const loadMoreRef = useRef<HTMLDivElement>(null)
     const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+    const client = useReservoirClient()
+    const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
     const [playingElement, setPlayingElement] = useState<
       HTMLAudioElement | HTMLVideoElement | null
@@ -130,13 +135,36 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       }
     }, [loadMoreObserver?.isIntersecting])
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        mutate: () => {},
-      }),
-      [mutate]
-    )
+    useEffect(() => {
+      const eventListener: Parameters<
+        NonNullable<ReturnType<typeof useReservoirClient>>['addEventListener']
+      >['0'] = (event, chainId) => {
+        switch (event.name) {
+          case 'accept_offer_complete': {
+            if (!acceptBidModalOpen && !selectedItems.length) {
+              mutate()
+              setSelectedItems([])
+            }
+            break
+          }
+        }
+      }
+      client?.addEventListener(eventListener)
+
+      return () => {
+        client?.removeEventListener(eventListener)
+      }
+    }, [client])
+
+    useEffect(() => {
+      if (acceptBidModalOpen) {
+        setSelectedItems([])
+      }
+    }, [acceptBidModalOpen])
+
+    useImperativeHandle(ref, () => ({
+      mutate,
+    }))
 
     return (
       <>
@@ -167,6 +195,9 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
                       selectedItems={selectedItems}
                       setSelectedItems={setSelectedItems}
                       isOwner={isOwner}
+                      onAcceptBidModalOpened={(open) => {
+                        setAcceptBidModalOpen(open)
+                      }}
                     />
                   )
                 })}
@@ -235,15 +266,17 @@ type TokenTableRowProps = {
   mutate?: MutatorCallback
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
+  onAcceptBidModalOpened: (open: boolean) => void
   isOwner: boolean
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({
   token,
-  mutate,
   selectedItems,
-  setSelectedItems,
   isOwner,
+  onAcceptBidModalOpened,
+  mutate,
+  setSelectedItems,
 }) => {
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const { addToast } = useContext(ToastContext)
@@ -273,7 +306,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
     )
   }
 
-  const itemId = `${token?.token?.contract}/${token?.token?.tokenId}`
+  const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -373,6 +406,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               tokenId={token.token.tokenId}
               collectionId={token?.token?.contract}
               mutate={mutate}
+              openState={[
+                acceptBidModalOpen,
+                (open) => {
+                  if (open !== acceptBidModalOpen) {
+                    onAcceptBidModalOpened(open as boolean)
+                  }
+                  setAcceptBidModalOpen(open)
+                },
+              ]}
               buttonCss={{
                 width: '100%',
                 maxWidth: '300px',
@@ -800,6 +842,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           <Flex justify="end" css={{ gap: '$3' }}>
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
+                openState={[
+                  acceptBidModalOpen,
+                  (open) => {
+                    if (open !== acceptBidModalOpen) {
+                      onAcceptBidModalOpened(open as boolean)
+                    }
+                    setAcceptBidModalOpen(open)
+                  },
+                ]}
                 tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 buttonCss={{
