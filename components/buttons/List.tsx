@@ -57,6 +57,7 @@ const List: FC<Props> = ({
     signer && marketplaceChain.id !== activeChain?.id
   )
 
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for listing
   let listingCurrencies: ListingCurrencies = undefined
   if (marketplaceChain.id === mainnet.id) {
     listingCurrencies = [
