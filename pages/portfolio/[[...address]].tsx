@@ -94,7 +94,6 @@ const IndexPage: NextPage = () => {
   const [showListingPage, setShowListingPage] = useState(false)
   const [batchAcceptBidModalOpen, setBatchAcceptBidModalOpen] = useState(false)
   const [selectedItems, setSelectedItems] = useState<UserToken[]>([])
-  const tokenTableRef = useRef<TokenTableRef>(null)
 
   const sellableItems = useMemo(
     () =>
@@ -106,6 +105,8 @@ const IndexPage: NextPage = () => {
         })),
     [selectedItems]
   )
+
+  const tokenTableRef = useRef<TokenTableRef>(null)
 
   useEffect(() => {
     setSelectedItems([])
@@ -401,12 +402,9 @@ const IndexPage: NextPage = () => {
           openState={[batchAcceptBidModalOpen, setBatchAcceptBidModalOpen]}
           tokens={sellableItems}
           onClose={(data, stepData, currentStep) => {
-            if (
-              tokenTableRef &&
-              tokenTableRef.current?.mutate &&
-              currentStep == AcceptBidStep.Complete
-            ) {
-              tokenTableRef.current.mutate()
+            if (tokenTableRef && currentStep == AcceptBidStep.Complete) {
+              tokenTableRef.current?.mutate()
+              setSelectedItems([])
             }
           }}
           onBidAcceptError={(error: any) => {
