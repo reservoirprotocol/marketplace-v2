@@ -17,7 +17,7 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
-import { constants } from 'ethers'
+import { zeroAddress } from 'viem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faExternalLink,
@@ -290,8 +290,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 From
               </Text>
-              {activity.fromAddress &&
-              activity.fromAddress !== constants.AddressZero ? (
+              {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
                 <Link href={`/portfolio/${activity.fromAddress}`}>
                   <Text
                     style="subtitle3"
@@ -314,8 +313,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 to
               </Text>
-              {activity.toAddress &&
-              activity.toAddress !== constants.AddressZero ? (
+              {activity.toAddress && activity.toAddress !== zeroAddress ? (
                 <Link href={`/portfolio/${activity.toAddress}`}>
                   <Text
                     style="subtitle3"
@@ -424,8 +422,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         )}
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-        {activity.fromAddress &&
-        activity.fromAddress !== constants.AddressZero ? (
+        {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               From
@@ -459,7 +456,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         )}
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-        {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
+        {activity.toAddress && activity.toAddress !== zeroAddress ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               To

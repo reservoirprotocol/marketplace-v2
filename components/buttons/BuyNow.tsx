@@ -1,6 +1,6 @@
 import React, { ComponentProps, FC, ReactNode } from 'react'
 import { SWRResponse } from 'swr'
-import { useNetwork, useSigner } from 'wagmi'
+import { useNetwork, useWalletClient } from 'wagmi'
 import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
@@ -27,7 +27,7 @@ const BuyNow: FC<Props> = ({
   buttonProps = {},
   buttonChildren,
 }) => {
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()

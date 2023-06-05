@@ -2,7 +2,12 @@ import { BidModal, BidStep, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import {
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  useSwitchNetwork,
+} from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
@@ -26,7 +31,7 @@ const CollectionOffer: FC<Props> = ({
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
   const [attribute, setAttribute] = useState<Trait>(undefined)
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()

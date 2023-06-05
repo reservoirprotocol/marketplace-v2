@@ -1,7 +1,7 @@
-import { ethers } from 'ethers'
 import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import supportedChains from 'utils/chains'
+import { isAddress as isViemAddress } from 'viem'
 
 const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
 
@@ -58,7 +58,7 @@ export default async function handler(req: Request) {
     )
   })
 
-  let isAddress = ethers.utils.isAddress(query as string)
+  let isAddress = isViemAddress(query as string)
 
   if (isAddress) {
     const promises = supportedChains.map(async (chain) => {
