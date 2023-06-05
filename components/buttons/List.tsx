@@ -10,10 +10,17 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import {
+  mainnet,
+  useAccount,
+  useNetwork,
+  useSigner,
+  useSwitchNetwork,
+} from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { constants } from 'ethers'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -50,7 +57,23 @@ const List: FC<Props> = ({
     signer && marketplaceChain.id !== activeChain?.id
   )
 
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for listing
   let listingCurrencies: ListingCurrencies = undefined
+  if (marketplaceChain.id === mainnet.id) {
+    listingCurrencies = [
+      {
+        contract: constants.AddressZero,
+        symbol: 'ETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        symbol: 'USDC',
+        decimals: 6,
+        coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
 
   const tokenId = token?.token?.tokenId
   const contract = token?.token?.contract
