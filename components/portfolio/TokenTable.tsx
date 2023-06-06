@@ -6,6 +6,9 @@ import {
   useRef,
   useContext,
   useState,
+  forwardRef,
+  ReactElement,
+  useImperativeHandle,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
@@ -27,6 +30,7 @@ import LoadingSpinner from '../common/LoadingSpinner'
 import {
   EditListingModal,
   EditListingStep,
+  useReservoirClient,
   useTokens,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
@@ -67,165 +71,212 @@ type Props = {
   selectedItems: UserToken[]
   isOwner: boolean
   itemView: ItemView
+  acceptModalOpen?: boolean
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
 }
 
 const ownerDesktopTemplateColumns = '1.25fr repeat(3, .75fr) 1.5fr'
 const desktopTemplateColumns = '1.25fr repeat(3, .75fr)'
 
-export const TokenTable: FC<Props> = ({
-  address,
-  isLoading,
-  sortBy,
-  filterCollection,
-  selectedItems,
-  isOwner,
-  itemView,
-  setSelectedItems,
-}) => {
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+export type TokenTableRef = { mutate: any }
 
-  const [playingElement, setPlayingElement] = useState<
-    HTMLAudioElement | HTMLVideoElement | null
-  >()
+export const TokenTable = forwardRef<TokenTableRef, Props>(
+  (
+    {
+      address,
+      isLoading,
+      sortBy,
+      filterCollection,
+      selectedItems,
+      isOwner,
+      itemView,
+      setSelectedItems,
+    },
+    ref
+  ) => {
+    const loadMoreRef = useRef<HTMLDivElement>(null)
+    const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+    const client = useReservoirClient()
+    const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
-  let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
-    limit: 20,
-    sortBy: sortBy,
-    collection: filterCollection,
-    includeTopBid: true,
-    includeRawData: true,
-    includeAttributes: true,
-  }
+    const [playingElement, setPlayingElement] = useState<
+      HTMLAudioElement | HTMLVideoElement | null
+    >()
 
-  const { chain } = useContext(ChainContext)
-
-  if (chain.collectionSetId) {
-    tokenQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    tokenQuery.community = chain.community
-  }
-
-  const {
-    data: tokens,
-    fetchNextPage,
-    mutate,
-    isFetchingPage,
-    isValidating,
-  } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
-
-  useEffect(() => {
-    const isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
+    let tokenQuery: Parameters<typeof useUserTokens>['1'] = {
+      limit: 20,
+      sortBy: sortBy,
+      collection: filterCollection,
+      includeTopBid: true,
+      includeRawData: true,
+      includeAttributes: true,
     }
-  }, [loadMoreObserver?.isIntersecting])
 
-  return (
-    <>
-      {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
-        <Flex
-          direction="column"
-          align="center"
-          css={{ py: '$6', gap: '$4', width: '100%' }}
-        >
-          <Text css={{ color: '$gray11' }}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-          </Text>
-          <Text css={{ color: '$gray11' }}>No items found</Text>
-        </Flex>
-      ) : (
-        <Flex direction="column" css={{ width: '100%' }}>
-          {isLoading ? null : itemView === 'list' ? (
-            <>
-              <TableHeading isOwner={isOwner} />
-              {tokens.map((token, i) => {
-                if (!token) return null
+    const { chain } = useContext(ChainContext)
 
-                return (
-                  <TokenTableRow
-                    key={`${token.token?.tokenId}-${i}`}
+    if (chain.collectionSetId) {
+      tokenQuery.collectionsSetId = chain.collectionSetId
+    } else if (chain.community) {
+      tokenQuery.community = chain.community
+    }
+
+    const {
+      data: tokens,
+      fetchNextPage,
+      mutate,
+      isFetchingPage,
+      isValidating,
+    } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
+
+    useEffect(() => {
+      const isVisible = !!loadMoreObserver?.isIntersecting
+      if (isVisible) {
+        fetchNextPage()
+      }
+    }, [loadMoreObserver?.isIntersecting])
+
+    useEffect(() => {
+      const eventListener: Parameters<
+        NonNullable<ReturnType<typeof useReservoirClient>>['addEventListener']
+      >['0'] = (event, chainId) => {
+        switch (event.name) {
+          case 'accept_offer_complete': {
+            if (!acceptBidModalOpen && !selectedItems.length) {
+              mutate()
+              setSelectedItems([])
+            }
+            break
+          }
+        }
+      }
+      client?.addEventListener(eventListener)
+
+      return () => {
+        client?.removeEventListener(eventListener)
+      }
+    }, [client])
+
+    useEffect(() => {
+      if (acceptBidModalOpen) {
+        setSelectedItems([])
+      }
+    }, [acceptBidModalOpen])
+
+    useImperativeHandle(ref, () => ({
+      mutate,
+    }))
+
+    return (
+      <>
+        {!isValidating && !isFetchingPage && tokens && tokens.length === 0 ? (
+          <Flex
+            direction="column"
+            align="center"
+            css={{ py: '$6', gap: '$4', width: '100%' }}
+          >
+            <Text css={{ color: '$gray11' }}>
+              <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+            </Text>
+            <Text css={{ color: '$gray11' }}>No items found</Text>
+          </Flex>
+        ) : (
+          <Flex direction="column" css={{ width: '100%' }}>
+            {isLoading ? null : itemView === 'list' ? (
+              <>
+                <TableHeading isOwner={isOwner} />
+                {tokens.map((token, i) => {
+                  if (!token) return null
+
+                  return (
+                    <TokenTableRow
+                      key={`${token.token?.tokenId}-${i}`}
+                      token={token}
+                      mutate={mutate}
+                      selectedItems={selectedItems}
+                      setSelectedItems={setSelectedItems}
+                      isOwner={isOwner}
+                      onAcceptBidModalOpened={(open) => {
+                        setAcceptBidModalOpen(open)
+                      }}
+                    />
+                  )
+                })}
+              </>
+            ) : (
+              <Grid
+                css={{
+                  gap: '$4',
+                  width: '100%',
+                  pb: '$6',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  '@md': {
+                    gridTemplateColumns:
+                      'repeat(auto-fill, minmax(240px, 1fr))',
+                  },
+                }}
+              >
+                {tokens?.map((token, i) => (
+                  <PortfolioTokenCard
+                    key={i}
                     token={token}
+                    isOwner={isOwner}
+                    address={address as Address}
+                    tokenCount={
+                      token?.token?.kind === 'erc1155'
+                        ? token.ownership?.tokenCount
+                        : undefined
+                    }
                     mutate={mutate}
                     selectedItems={selectedItems}
                     setSelectedItems={setSelectedItems}
-                    isOwner={isOwner}
+                    rarityEnabled={true}
+                    onMediaPlayed={(e) => {
+                      if (
+                        playingElement &&
+                        playingElement !== e.nativeEvent.target
+                      ) {
+                        playingElement.pause()
+                      }
+                      const element =
+                        (e.nativeEvent.target as HTMLAudioElement) ||
+                        (e.nativeEvent.target as HTMLVideoElement)
+                      if (element) {
+                        setPlayingElement(element)
+                      }
+                    }}
                   />
-                )
-              })}
-            </>
-          ) : (
-            <Grid
-              css={{
-                gap: '$4',
-                width: '100%',
-                pb: '$6',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-                '@md': {
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                },
-              }}
-            >
-              {tokens?.map((token, i) => (
-                <PortfolioTokenCard
-                  key={i}
-                  token={token}
-                  isOwner={isOwner}
-                  address={address as Address}
-                  tokenCount={
-                    token?.token?.kind === 'erc1155'
-                      ? token.ownership?.tokenCount
-                      : undefined
-                  }
-                  mutate={mutate}
-                  selectedItems={selectedItems}
-                  setSelectedItems={setSelectedItems}
-                  rarityEnabled={true}
-                  onMediaPlayed={(e) => {
-                    if (
-                      playingElement &&
-                      playingElement !== e.nativeEvent.target
-                    ) {
-                      playingElement.pause()
-                    }
-                    const element =
-                      (e.nativeEvent.target as HTMLAudioElement) ||
-                      (e.nativeEvent.target as HTMLVideoElement)
-                    if (element) {
-                      setPlayingElement(element)
-                    }
-                  }}
-                />
-              ))}
-            </Grid>
-          )}
-          <div ref={loadMoreRef}></div>
-        </Flex>
-      )}
-      {isValidating && (
-        <Flex align="center" justify="center" css={{ py: '$6' }}>
-          <LoadingSpinner />
-        </Flex>
-      )}
-    </>
-  )
-}
+                ))}
+              </Grid>
+            )}
+            <div ref={loadMoreRef}></div>
+          </Flex>
+        )}
+        {isValidating && (
+          <Flex align="center" justify="center" css={{ py: '$6' }}>
+            <LoadingSpinner />
+          </Flex>
+        )}
+      </>
+    )
+  }
+)
 
 type TokenTableRowProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
   mutate?: MutatorCallback
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
+  onAcceptBidModalOpened: (open: boolean) => void
   isOwner: boolean
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({
   token,
-  mutate,
   selectedItems,
-  setSelectedItems,
   isOwner,
+  onAcceptBidModalOpened,
+  mutate,
+  setSelectedItems,
 }) => {
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const { addToast } = useContext(ToastContext)
@@ -255,7 +306,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
     )
   }
 
-  const itemId = `${token?.token?.contract}/${token?.token?.tokenId}`
+  const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
   let imageSrc: string = (
     token?.token?.tokenId
@@ -355,6 +406,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               tokenId={token.token.tokenId}
               collectionId={token?.token?.contract}
               mutate={mutate}
+              openState={[
+                acceptBidModalOpen,
+                (open) => {
+                  if (open !== acceptBidModalOpen) {
+                    onAcceptBidModalOpened(open as boolean)
+                  }
+                  setAcceptBidModalOpen(open)
+                },
+              ]}
               buttonCss={{
                 width: '100%',
                 maxWidth: '300px',
@@ -782,6 +842,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           <Flex justify="end" css={{ gap: '$3' }}>
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
+                openState={[
+                  acceptBidModalOpen,
+                  (open) => {
+                    if (open !== acceptBidModalOpen) {
+                      onAcceptBidModalOpened(open as boolean)
+                    }
+                    setAcceptBidModalOpen(open)
+                  },
+                ]}
                 tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 buttonCss={{
