@@ -1,12 +1,25 @@
 import { BidModal, BidStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { cloneElement, ComponentProps, FC, useContext } from 'react'
+import {
+  cloneElement,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  useContext,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import {
+  mainnet,
+  useAccount,
+  useNetwork,
+  useSigner,
+  useSwitchNetwork,
+} from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { constants } from 'ethers'
 
 type Props = {
   tokenId?: string | undefined
@@ -17,6 +30,8 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   mutate?: SWRResponse['mutate']
 }
+
+type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
 
 const Bid: FC<Props> = ({
   tokenId,
@@ -48,6 +63,24 @@ const Bid: FC<Props> = ({
     </Button>
   )
 
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for bidding
+  let bidCurrencies: BiddingCurrencies = undefined
+  if (marketplaceChain.id === mainnet.id) {
+    bidCurrencies = [
+      {
+        contract: constants.AddressZero,
+        symbol: 'ETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        symbol: 'USDC',
+        decimals: 6,
+        coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
+
   if (isDisconnected || isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
@@ -70,6 +103,7 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
+        currencies={bidCurrencies}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}
