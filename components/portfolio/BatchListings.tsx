@@ -31,6 +31,8 @@ import { useMediaQuery } from 'react-responsive'
 import { BatchListingsTableHeading } from './BatchListingsTableHeading'
 import { BatchListingsTableRow } from './BatchListingsTableRow'
 import wrappedContracts from 'utils/wrappedContracts'
+import { constants } from 'ethers'
+import { mainnet } from 'wagmi'
 
 export type BatchListing = {
   token: UserToken
@@ -105,7 +107,7 @@ const BatchListings: FC<Props> = ({
     symbol: chainCurrency.symbol,
   }
   // CONFIGURABLE: Here you can configure which currencies you would like to support for batch listing
-  const currencies: ListingCurrencies = [
+  let currencies: ListingCurrencies = [
     { ...defaultCurrency },
     {
       contract: wrappedContracts[chain.id],
@@ -113,6 +115,15 @@ const BatchListings: FC<Props> = ({
       symbol: `W${defaultCurrency.symbol}`,
     },
   ]
+
+  if (chain.id === mainnet.id) {
+    currencies.push({
+      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      symbol: 'USDC',
+      decimals: 6,
+      coinGeckoId: 'usd-coin',
+    })
+  }
 
   const [currency, setCurrency] = useState<Currency>(
     currencies && currencies[0] ? currencies[0] : defaultCurrency
