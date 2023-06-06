@@ -15,7 +15,6 @@ import {
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
 import LoadingSpinner from 'components/common/LoadingSpinner'
-import { constants } from 'ethers'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import Link from 'next/link'
 import { FC, useEffect, useRef } from 'react'
@@ -30,6 +29,7 @@ import {
   TableRow,
   Text,
 } from '../primitives'
+import { zeroAddress } from 'viem'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -285,8 +285,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 gap: '$3',
               }}
             >
-              {activity.fromAddress &&
-              activity.fromAddress !== constants.AddressZero ? (
+              {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
                 <Link href={`/portfolio/${activity.fromAddress}`}>
                   <Text
                     style="subtitle3"
@@ -309,8 +308,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 to
               </Text>
-              {activity.toAddress &&
-              activity.toAddress !== constants.AddressZero ? (
+              {activity.toAddress && activity.toAddress !== zeroAddress ? (
                 <Link href={`/portfolio/${activity.toAddress}`}>
                   <Text
                     style="subtitle3"
@@ -404,8 +402,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               gap: '$3',
             }}
           >
-            {activity.fromAddress &&
-            activity.fromAddress !== constants.AddressZero ? (
+            {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
               <Link
                 style={{
                   display: 'flex',
@@ -430,8 +427,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="body2" color="subtle">
               to
             </Text>
-            {activity.toAddress &&
-            activity.toAddress !== constants.AddressZero ? (
+            {activity.toAddress && activity.toAddress !== zeroAddress ? (
               <Link
                 style={{
                   display: 'flex',

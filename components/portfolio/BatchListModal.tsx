@@ -11,17 +11,15 @@ import LoadingSpinner from 'components/common/LoadingSpinner'
 import { Modal } from 'components/common/Modal'
 import TransactionProgress from 'components/common/TransactionProgress'
 import { BatchListing, Marketplace } from 'components/portfolio/BatchListings'
-import ProgressBar from 'components/portfolio/ProgressBar'
 import { Box, Button, Flex, Text } from 'components/primitives'
 import ErrorWell from 'components/primitives/ErrorWell'
 import dayjs from 'dayjs'
-import { constants } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils.js'
 import { useMarketplaceChain } from 'hooks'
 import { UserToken } from 'pages/portfolio/[[...address]]'
 import { FC, useCallback, useEffect, useState } from 'react'
-import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { ApprovalCollapsible } from './ApprovalCollapsible'
+import { parseUnits, zeroAddress } from 'viem'
 
 enum BatchListStep {
   Approving,
@@ -56,7 +54,7 @@ const BatchListModal: FC<Props> = ({
   onCloseComplete,
 }) => {
   const [open, setOpen] = useState(false)
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
@@ -159,9 +157,10 @@ const BatchListModal: FC<Props> = ({
 
       const convertedListing: Listings[0] = {
         token: token,
-        weiPrice: parseUnits(`${+listing.price}`, currency.decimals)
-          .mul(listing.quantity)
-          .toString(),
+        weiPrice: (
+          parseUnits(`${+listing.price}`, currency.decimals || 18) *
+          BigInt(listing.quantity)
+        ).toString(),
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
         quantity: listing.quantity,
@@ -171,7 +170,7 @@ const BatchListModal: FC<Props> = ({
         convertedListing.expirationTime = expirationTime
       }
 
-      if (currency && currency.contract != constants.AddressZero) {
+      if (currency && currency.contract != zeroAddress) {
         convertedListing.currency = currency.contract
       }
 

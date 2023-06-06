@@ -1,5 +1,4 @@
-import { utils } from 'ethers'
-import { BigNumberish } from '@ethersproject/bignumber'
+import { formatUnits } from 'viem'
 import { isSafariBrowser } from './browser'
 
 const { format: formatUsdCurrency } = new Intl.NumberFormat('en-US', {
@@ -36,7 +35,6 @@ const truncateFractionAndFormat = (
 
       let formattedValue = ''
       for (let idx = 0; idx < value.length && idx < digits; idx++) {
-
         formattedValue += value[idx]
       }
       return formattedValue
@@ -52,7 +50,7 @@ const truncateFractionAndFormat = (
  * @returns returns the ETH value as a `string` or `-` if the amount is `null` or `undefined`
  */
 function formatBN(
-  amount: BigNumberish | null | undefined,
+  amount: string | number | bigint | null | undefined,
   maximumFractionDigits: number,
   decimals: number = 18
 ) {
@@ -61,7 +59,7 @@ function formatBN(
   const amountToFormat =
     typeof amount === 'number'
       ? amount
-      : +utils.formatUnits(amount, decimals)
+      : +formatUnits(BigInt(amount), decimals || 18)
 
   if (amountToFormat === 0) {
     return amountToFormat
@@ -80,7 +78,7 @@ function formatBN(
   // New issue introduced in Safari v16 causes a regression and now need lessPrecision flagged in format options
   if (isSafari) {
     //@ts-ignore
-    formatOptions.roundingPriority = "lessPrecision"
+    formatOptions.roundingPriority = 'lessPrecision'
   }
 
   const parts = new Intl.NumberFormat('en-US', formatOptions).formatToParts(
@@ -112,8 +110,7 @@ function formatBN(
           }
         )
       }
-    } 
-    else if (!partsIncludesFraction && partsIncludeCompactIdentifier) {
+    } else if (!partsIncludesFraction && partsIncludeCompactIdentifier) {
       const compactIdentifier = parts.find((part) => part.type === 'compact')
       const integerIndex = parts.findIndex((part) => part.type === 'integer')
       const integer = parts[integerIndex]
