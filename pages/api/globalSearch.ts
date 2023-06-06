@@ -53,9 +53,13 @@ export default async function handler(req: Request) {
       query.community = community
     }
 
-    promises.push(
-      fetcher(`${reservoirBaseUrl}/search/collections/v1`, query, headers)
+    const promise = fetcher(
+      `${reservoirBaseUrl}/search/collections/v1`,
+      query,
+      headers
     )
+    promise.catch((e: any) => console.warn('Failed to search', e))
+    promises.push(promise)
   })
 
   let isAddress = isViemAddress(query as string)
@@ -146,9 +150,12 @@ export default async function handler(req: Request) {
       (res) => res.json()
     )
 
-    const responses = await Promise.all(promises)
+    const responses = await Promise.allSettled(promises)
     responses.forEach((response, index) => {
-      const chainSearchResults = response.data.collections.map(
+      if (response.status === 'rejected') {
+        return
+      }
+      const chainSearchResults = response.value.data.collections.map(
         (collection: SearchCollection) => ({
           type: 'collection',
           data: {

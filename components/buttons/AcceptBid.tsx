@@ -1,9 +1,12 @@
+import { AcceptBidModal, AcceptBidStep } from '@reservoir0x/reservoir-kit-ui'
 import {
-  AcceptBidModal,
-  AcceptBidStep,
-  useTokens,
-} from '@reservoir0x/reservoir-kit-ui'
-import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
+  cloneElement,
+  ComponentProps,
+  FC,
+  ReactNode,
+  useContext,
+  useMemo,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
@@ -62,6 +65,18 @@ const AcceptBid: FC<Props> = ({
     </Button>
   )
 
+  const tokens = useMemo(() => {
+    return collectionId && tokenId
+      ? [
+          {
+            collectionId: collectionId,
+            tokenId: tokenId,
+            bidIds: bidId ? [bidId] : undefined,
+          },
+        ]
+      : []
+  }, [collectionId, tokenId, bidId])
+
   if (isDisconnected || isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
@@ -82,11 +97,11 @@ const AcceptBid: FC<Props> = ({
       <AcceptBidModal
         trigger={trigger}
         openState={openState}
-        bidId={bidId}
-        collectionId={collectionId}
-        tokenId={tokenId}
+        tokens={tokens}
         onClose={(data, stepData, currentStep) => {
-          if (mutate && currentStep == AcceptBidStep.Complete) mutate()
+          if (mutate && currentStep == AcceptBidStep.Complete) {
+            mutate()
+          }
         }}
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {

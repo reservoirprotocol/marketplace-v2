@@ -23,7 +23,6 @@ type ToastType = {
   status?: 'success' | 'error'
 }
 
-type Path = NonNullable<Execute['path']>[0]
 type Step = Execute['steps'][0]
 
 export const ToastContext = createContext<{
@@ -64,7 +63,19 @@ const ToastContextProvider: FC<any> = ({ children }) => {
             })
             break
 
+          case 'accept_offer_error':
+            addToast?.({
+              title: 'Failed to sell',
+              status: 'error',
+              description:
+                event.data.error.length < 100
+                  ? event.data.error
+                  : 'Failed to accept offer(s)',
+            })
+            break
+
           case 'purchase_complete':
+          case 'accept_offer_complete':
             const chain = chains.find((chain) => chain.id === chainId)
 
             const blockExplorerBaseUrl =
@@ -90,38 +101,33 @@ const ToastContextProvider: FC<any> = ({ children }) => {
                 ? executableSteps[currentStepIndex]
                 : executableSteps[stepCount - 1]
 
-            const pathMap = event?.data.path
-              ? (event?.data.path as Path[]).reduce(
-                  (paths: Record<string, Path>, path: Path) => {
-                    if (path.orderId) {
-                      paths[path.orderId] = path
-                    }
+            const purchaseTxHashes =
+              currentStep?.items?.reduce((txHashes, item) => {
+                item.salesData?.forEach((saleData) => {
+                  if (saleData.txHash) {
+                    txHashes.add(saleData.txHash)
+                  }
+                })
+                return txHashes
+              }, new Set<string>()) || []
 
-                    return paths
-                  },
-                  {} as Record<string, Path>
-                )
-              : {}
-
-            const totalPurchases =
-              currentStep?.items?.reduce(
-                (total, item) => total + (item?.salesData?.length || 0),
-                0
-              ) || 0
+            const totalPurchases = Array.from(purchaseTxHashes).length
 
             const failedPurchases =
-              (Object.keys(pathMap).length || 0) - totalPurchases
+              totalPurchases - (currentStep?.items?.length || 0)
 
+            const action =
+              event.name === 'accept_offer_complete' ? 'sold' : 'purchased'
             addToast?.({
               title: failedPurchases
                 ? `${totalPurchases} ${
                     totalPurchases > 1 ? 'items' : 'item'
-                  } purchased, ${failedPurchases} ${
+                  } ${action}, ${failedPurchases} ${
                     failedPurchases > 1 ? 'items' : 'item'
-                  } failed`
+                  } ${action}`
                 : `${totalPurchases} ${
                     totalPurchases > 1 ? 'items' : 'item'
-                  } purchased.`,
+                  } ${action}.`,
               status: failedPurchases ? 'error' : 'success',
               action: (
                 <Flex direction="column" css={{ gap: '$1' }}>
