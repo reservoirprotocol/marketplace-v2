@@ -19,7 +19,6 @@ import {
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { constants } from 'ethers'
 
 type Props = {
   tokenId?: string | undefined
