@@ -22,7 +22,6 @@ import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { constants } from 'ethers'
 
 type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
@@ -89,8 +88,8 @@ const CollectionOffer: FC<Props> = ({
   if (marketplaceChain.id === mainnet.id) {
     bidCurrencies = [
       {
-        contract: constants.AddressZero,
-        symbol: 'ETH',
+        contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        symbol: 'WETH',
         coinGeckoId: 'ethereum',
       },
       {
