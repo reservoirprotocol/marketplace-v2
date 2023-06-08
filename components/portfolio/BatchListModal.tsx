@@ -233,9 +233,12 @@ const BatchListModal: FC<Props> = ({
       })
       .catch((e: any) => {
         const error = e as Error
-        const transactionError = new Error(error?.message || '', {
-          cause: error,
-        })
+        const transactionError = new Error(
+          'Oops, something went wrong. Please try again.',
+          {
+            cause: error,
+          }
+        )
         setTransactionError(transactionError)
       })
   }, [client, listings, signer])
