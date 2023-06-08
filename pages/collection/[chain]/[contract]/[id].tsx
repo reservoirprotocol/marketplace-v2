@@ -14,7 +14,6 @@ import {
   useDynamicTokens,
   useListings,
   useTokenActivity,
-  useTokenOpenseaBanned,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -104,7 +103,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
   const is1155 = token?.token?.kind === 'erc1155'
 
@@ -449,23 +447,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Text style="h4" css={{ wordBreak: 'break-all' }}>
               {tokenName}
             </Text>
-            {flagged && (
-              <Tooltip
-                content={
-                  <Text style="body3" as="p">
-                    Not tradeable on OpenSea
-                  </Text>
-                }
-              >
-                <Text css={{ color: '$red10' }}>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    width={16}
-                    height={16}
-                  />
-                </Text>
-              </Tooltip>
-            )}
           </Flex>
           {token && (
             <>
