@@ -2,7 +2,7 @@ import React, { ComponentProps, FC, ReactNode } from 'react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { SweepModal, SweepStep } from '@reservoir0x/reservoir-kit-ui'
 import { useMarketplaceChain } from 'hooks'
-import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
 import { SWRResponse } from 'swr'
@@ -22,7 +22,7 @@ const Sweep: FC<Props> = ({
   buttonChildren,
   mutate,
 }) => {
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()

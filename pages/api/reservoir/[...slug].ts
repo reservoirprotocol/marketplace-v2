@@ -1,9 +1,9 @@
 import { setParams } from '@reservoir0x/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import { constants } from 'ethers'
-import { goerli, mainnet } from 'wagmi'
+import { goerli, mainnet } from 'wagmi/chains'
 import wrappedContracts from 'utils/wrappedContracts'
+import { zeroAddress } from 'viem'
 
 // A proxy API endpoint to redirect all requests to `/api/reservoir/*` to
 // MAINNET: https://api.reservoir.tools/{endpoint}/{query-string}
@@ -43,7 +43,7 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       [mainnet.id as number, goerli.id].includes(chain.id) &&
       endpoint.includes('currency')
     ) {
-      if (endpoint.includes(constants.AddressZero)) {
+      if (endpoint.includes(zeroAddress)) {
         res.redirect('/icons/currency/no-padding-eth.png')
         return
       } else if (
