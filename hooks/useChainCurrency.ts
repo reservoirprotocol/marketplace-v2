@@ -1,6 +1,6 @@
-import { constants } from 'ethers'
 import { mainnet, goerli } from 'wagmi/chains'
 import { useMarketplaceChain } from 'hooks'
+import { zeroAddress } from 'viem'
 
 export default function () {
   const chain = useMarketplaceChain()
@@ -11,13 +11,13 @@ export default function () {
       name: 'Ethereum',
       symbol: 'ETH',
       decimals: 18,
-      address: constants.AddressZero,
+      address: zeroAddress,
       chainId: chain?.id || mainnet.id,
     }
   } else {
     return {
       ...chain.nativeCurrency,
-      address: constants.AddressZero,
+      address: zeroAddress,
       chainId: chain.id,
     }
   }

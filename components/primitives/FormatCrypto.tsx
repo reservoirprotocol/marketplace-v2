@@ -1,10 +1,9 @@
-import { BigNumberish } from 'ethers'
 import { formatBN } from '../../utils/numbers'
 import React, { FC } from 'react'
 import { Flex, Text } from './index'
 
 type Props = {
-  amount: BigNumberish | null | undefined
+  amount: string | number | bigint | null | undefined
   maximumFractionDigits?: number
   decimals?: number
   css?: Parameters<typeof Text>['0']['css']
