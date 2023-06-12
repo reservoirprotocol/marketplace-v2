@@ -77,7 +77,7 @@ export const ApprovalCollapsible: FC<Props> = ({
 
   const collectionImage =
     batchListingData[orderIndexes[0]]?.token?.token?.collection?.imageUrl ||
-    batchListingData[orderIndexes[0]]?.token?.token?.image ||
+    batchListingData[orderIndexes[0]]?.token?.token?.imageSmall ||
     ''
 
   const collectionName =

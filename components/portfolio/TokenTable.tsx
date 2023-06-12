@@ -310,7 +310,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
 
   let imageSrc: string = (
     token?.token?.tokenId
-      ? token?.token?.image || token?.token?.collection?.imageUrl
+      ? token?.token?.imageSmall || token?.token?.collection?.imageUrl
       : token?.token?.collection?.imageUrl
   ) as string
 
