@@ -615,13 +615,6 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                     )}
                   </Flex>
                 }
-                listingId={token?.ownership?.floorAsk?.id}
-                tokenId={token?.token?.tokenId}
-                collectionId={token?.token?.collection?.id}
-                onClose={(data, currentStep) => {
-                  if (mutate && currentStep == EditListingStep.Complete)
-                    mutate()
-                }}
               />
             ) : null}
           </Dropdown>
