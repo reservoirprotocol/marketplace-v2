@@ -422,7 +422,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         )}
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-      {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
+        {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               From

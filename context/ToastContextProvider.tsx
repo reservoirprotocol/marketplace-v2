@@ -63,19 +63,19 @@ const ToastContextProvider: FC<any> = ({ children }) => {
             })
             break
 
-            case 'accept_offer_error':
-              addToast?.({
-                title: 'Failed to sell',
-                status: 'error',
-                description:
-                  event.data.error.length < 100
-                    ? event.data.error
-                    : 'Failed to accept offer(s)',
-              })
-              break
-  
-            case 'purchase_complete':
-            case 'accept_offer_complete':
+          case 'accept_offer_error':
+            addToast?.({
+              title: 'Failed to sell',
+              status: 'error',
+              description:
+                event.data.error.length < 100
+                  ? event.data.error
+                  : 'Failed to accept offer(s)',
+            })
+            break
+
+          case 'purchase_complete':
+          case 'accept_offer_complete':
             const chain = chains.find((chain) => chain.id === chainId)
 
             const blockExplorerBaseUrl =

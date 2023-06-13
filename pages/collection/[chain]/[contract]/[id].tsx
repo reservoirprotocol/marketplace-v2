@@ -641,7 +641,6 @@ export const getStaticProps: GetStaticProps<{
     tokensQuery,
     headers
   )
-  
   const tokensResponse = await tokensPromise
   const tokens = tokensResponse.data
     ? (tokensResponse.data as Props['ssr']['tokens'])

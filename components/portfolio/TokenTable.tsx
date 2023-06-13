@@ -247,21 +247,21 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
                       }
                     }}
                   />
-                  ))}
-                  </Grid>
-                )}
-                <div ref={loadMoreRef}></div>
-              </Flex>
+                ))}
+              </Grid>
             )}
-            {isValidating && (
-              <Flex align="center" justify="center" css={{ py: '$6' }}>
-                <LoadingSpinner />
-              </Flex>
-            )}
-          </>
-        )
-      }
+            <div ref={loadMoreRef}></div>
+          </Flex>
+        )}
+        {isValidating && (
+          <Flex align="center" justify="center" css={{ py: '$6' }}>
+            <LoadingSpinner />
+          </Flex>
+        )}
+      </>
     )
+  }
+)
 
 type TokenTableRowProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
@@ -399,7 +399,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            </Flex>
+          </Flex>
         </Flex>
         <Flex css={{ gap: '$2', width: '100%' }}>
           {token?.token?.topBid?.price?.amount?.decimal && isOwner ? (
@@ -573,51 +573,58 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                     mutate()
                 }}
               />
-              ) : null}
+            ) : null}
 
-              {token?.ownership?.floorAsk?.id ? (
-                <CancelListing
-                  listingId={token.ownership.floorAsk.id as string}
-                  mutate={mutate}
-                  trigger={
-                    <Flex
-                      css={{
-                        px: '$2',
-                        py: '$3',
-                        borderRadius: 8,
-                        outline: 'none',
-                        cursor: 'pointer',
-                        '&:hover': {
-                          backgroundColor: '$gray5',
-                        },
-                        '&:focus': {
-                          backgroundColor: '$gray5',
-                        },
-                      }}
-                    >
-                      {!isOracleOrder ? (
-                        <Tooltip
-                          content={
-                            <Text style="body2" as="p">
-                              Cancelling this order requires gas.
-                            </Text>
-                          }
-                        >
-                          <Flex align="center" css={{ gap: '$2' }}>
-                            <Box css={{ color: '$gray10' }}>
-                              <FontAwesomeIcon icon={faGasPump} />
-                            </Box>
-                            <Text color="error">Cancel</Text>
-                          </Flex>
-                        </Tooltip>
-                      ) : (
-                        <Text color="error">Cancel</Text>
-                      )}
-                    </Flex>
-                  }
-                />
-              ) : null}
-            </Dropdown>
+            {token?.ownership?.floorAsk?.id ? (
+              <CancelListing
+                listingId={token.ownership.floorAsk.id as string}
+                mutate={mutate}
+                trigger={
+                  <Flex
+                    css={{
+                      px: '$2',
+                      py: '$3',
+                      borderRadius: 8,
+                      outline: 'none',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundColor: '$gray5',
+                      },
+                      '&:focus': {
+                        backgroundColor: '$gray5',
+                      },
+                    }}
+                  >
+                    {!isOracleOrder ? (
+                      <Tooltip
+                        content={
+                          <Text style="body2" as="p">
+                            Cancelling this order requires gas.
+                          </Text>
+                        }
+                      >
+                        <Flex align="center" css={{ gap: '$2' }}>
+                          <Box css={{ color: '$gray10' }}>
+                            <FontAwesomeIcon icon={faGasPump} />
+                          </Box>
+                          <Text color="error">Cancel</Text>
+                        </Flex>
+                      </Tooltip>
+                    ) : (
+                      <Text color="error">Cancel</Text>
+                    )}
+                  </Flex>
+                }
+                listingId={token?.ownership?.floorAsk?.id}
+                tokenId={token?.token?.tokenId}
+                collectionId={token?.token?.collection?.id}
+                onClose={(data, currentStep) => {
+                  if (mutate && currentStep == EditListingStep.Complete)
+                    mutate()
+                }}
+              />
+            ) : null}
+          </Dropdown>
         </Flex>
       </Flex>
     )
@@ -710,7 +717,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         </Flex>
       </TableCell>
       <TableCell>
-      <Tooltip
+        <Tooltip
           side="left"
           sideOffset="2"
           open={
@@ -779,7 +786,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         />
       </TableCell>
       <TableCell>
-      <Tooltip
+        <Tooltip
           side="left"
           sideOffset="2"
           open={
@@ -843,16 +850,16 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
           <Flex justify="end" css={{ gap: '$3' }}>
             {token?.token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
-              openState={[
-                acceptBidModalOpen,
-                (open) => {
-                  if (open !== acceptBidModalOpen) {
-                    onAcceptBidModalOpened(open as boolean)
-                  }
-                  setAcceptBidModalOpen(open)
-                },
-              ]}  
-              tokenId={token.token.tokenId}
+                openState={[
+                  acceptBidModalOpen,
+                  (open) => {
+                    if (open !== acceptBidModalOpen) {
+                      onAcceptBidModalOpened(open as boolean)
+                    }
+                    setAcceptBidModalOpen(open)
+                  },
+                ]}
+                tokenId={token.token.tokenId}
                 collectionId={token?.token?.contract}
                 buttonCss={{
                   px: '32px',

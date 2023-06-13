@@ -153,7 +153,6 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
   const isUserOffer = address?.toLowerCase() === offer.maker.toLowerCase()
 
   const isOracleOrder = offer?.isNativeOffChainCancellable
-
   const contract = tokenString?.split(':')[0]
   const tokenId = tokenString?.split(':')[1]
 

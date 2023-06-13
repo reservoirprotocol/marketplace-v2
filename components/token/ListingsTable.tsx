@@ -162,7 +162,6 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
   const isUserListing = address?.toLowerCase() === listing.maker.toLowerCase()
 
   const isOracleOrder = listing?.isNativeOffChainCancellable
-
   const contract = tokenString?.split(':')[0]
   const tokenId = tokenString?.split(':')[1]
 

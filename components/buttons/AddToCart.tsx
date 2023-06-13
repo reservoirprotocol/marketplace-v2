@@ -82,6 +82,57 @@ const AddToCart: FC<Props> = ({
     )
   }
 
+  const hasOrderId = !!orderId
+
+  if (hasOrderId) {
+    const orderIsInCart = items.find((item) => item.order?.id === orderId)
+
+    return (
+      <>
+        <Button
+          css={buttonCss}
+          color="primary"
+          onClick={async () => {
+            if (!isConnected) {
+              openConnectModal?.()
+            }
+
+            if (orderIsInCart) {
+              remove([orderId as string])
+            } else if (cartChain && cartChain?.id !== marketplaceChain.id) {
+              setConfirmationOpen(true)
+            } else {
+              add([{ orderId: orderId }], marketplaceChain.id).then(() => {
+                addToast?.({
+                  title: 'Added to cart',
+                })
+              })
+            }
+          }}
+          {...buttonProps}
+        >
+          <FontAwesomeIcon
+            icon={orderIsInCart ? faMinus : faShoppingCart}
+            width="16"
+            height="16"
+          />
+        </Button>
+        <ConfirmationModal
+          title="Could not add item to cart"
+          message="Your cart has items from a different chain than the item you are trying to add. Adding this item will clear your existing cart and start a new one."
+          open={confirmationOpen}
+          onOpenChange={setConfirmationOpen}
+          onConfirmed={(confirmed) => {
+            if (confirmed) {
+              clear()
+              add([{ orderId: orderId }], marketplaceChain.id)
+            }
+          }}
+        />
+      </>
+    )
+  }
+
   if (!token || (!('market' in token) && !('id' in token))) {
     return null
   }
@@ -134,7 +185,6 @@ const AddToCart: FC<Props> = ({
           height="16"
         />
       </Button>
-      
       <ConfirmationModal
         title="Could not add item to cart"
         message="Your cart has items from a different chain than the item you are trying to add. Adding this item will clear your existing cart and start a new one."

@@ -112,7 +112,6 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
   const expiration = useTimeSince(offer?.expiration)
 
   const isOracleOrder = offer?.isNativeOffChainCancellable
-
   const isCollectionOffer = offer?.criteria?.kind !== 'token'
 
   // @ts-ignore

@@ -130,21 +130,28 @@ const Wallet = () => {
         switch (currency.chain.id) {
           case polygon.id: {
             balance = maticBalance.data?.value || 0n
+            break
           }
           case mainnet.id: {
             balance = ethBalance.data?.value || 0n
             break
           }
         }
-      } else if (nonNativeBalances && nonNativeBalances[i]) {
+      } else {
         const index = nonNativeCurrencies.findIndex(
           (nonNativeCurrency) =>
+            nonNativeCurrency.chain.id === currency.chain.id &&
             nonNativeCurrency.symbol === currency.symbol &&
             nonNativeCurrency.coinGeckoId === currency.coinGeckoId
         )
-        balance = nonNativeBalances[index]
-          ? (nonNativeBalances[index] as string | number | bigint)
-          : 0
+        balance =
+          nonNativeBalances &&
+          nonNativeBalances[index] &&
+          (typeof nonNativeBalances[index] === 'string' ||
+            typeof nonNativeBalances[index] === 'number' ||
+            typeof nonNativeBalances[index] === 'bigint')
+            ? (nonNativeBalances[index] as string | number | bigint)
+            : 0n
       }
 
       const conversion =

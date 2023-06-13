@@ -213,7 +213,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         }}
       >
         <TableCell css={{ color: '$gray11' }}>
-        <Flex direction="column" css={{ gap: '$2' }}>
+          <Flex direction="column" css={{ gap: '$2' }}>
             <Flex align="center">
               {activity.type && logos[activity.type]}
               <Text

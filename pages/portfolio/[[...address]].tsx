@@ -50,14 +50,7 @@ type ActivityTypes = Exclude<
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
-  const router = useRouter()
-  const { address: accountAddress, isConnected } = useAccount()
-  const address = router.query.address
-    ? (router.query.address[0] as `0x${string}`)
-    : accountAddress
-
-  const [tabValue, setTabValue] = useState('items')
-  const [itemView, setItemView] = useState<ItemView>('list')
+  const { address, isConnected } = useAccount()
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -183,17 +176,27 @@ const IndexPage: NextPage = () => {
                 />
               ) : (
                 <>
-                  <Flex align="center" justify="between" css={{ gap: '$4' }}>
-                    <Text style="h4" css={{}}>
-                      Portfolio
-                    </Text>
-                    <ChainToggle />
-                  </Flex>
-                  <Tabs.Root
-                    defaultValue="items"
-                    value={tabValue}
-                    onValueChange={(value) => setTabValue(value)}
-                  >
+                  {isSmallDevice ? (
+                    <Flex
+                      align="start"
+                      direction="column"
+                      justify="between"
+                      css={{ gap: '$4' }}
+                    >
+                      <Text style="h4" css={{}}>
+                        Portfolio
+                      </Text>
+                      <ChainToggle />
+                    </Flex>
+                  ) : (
+                    <Flex align="center" justify="between" css={{ gap: '$4' }}>
+                      <Text style="h4" css={{}}>
+                        Portfolio
+                      </Text>
+                      <ChainToggle />
+                    </Flex>
+                  )}
+                  <Tabs.Root defaultValue="items">
                     <Flex
                       css={{
                         overflowX: 'scroll',
@@ -231,6 +234,7 @@ const IndexPage: NextPage = () => {
                         ) : (
                           <TokenFilters
                             isLoading={collectionsLoading}
+                            isOwner={isOwner}
                             open={tokenFiltersOpen}
                             setOpen={setTokenFiltersOpen}
                             collections={collections}
@@ -269,22 +273,12 @@ const IndexPage: NextPage = () => {
                                 />
                               )}
                             {!isSmallDevice && !collectionsLoading && (
-                              <Flex
-                              align="center"
-                              justify="between"
-                              css={{ gap: '$3' }}
-                            >
                               <PortfolioSortDropdown
                                 option={sortByType}
                                 onOptionSelected={(option) => {
                                   setSortByType(option)
                                 }}
                               />
-                              <ViewToggle
-                                itemView={itemView}
-                                setItemView={setItemView}
-                              />
-                            </Flex>
                             )}
                           </Flex>
                           <TokenTable
