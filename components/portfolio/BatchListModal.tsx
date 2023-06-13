@@ -342,7 +342,7 @@ const BatchListModal: FC<Props> = ({
                   justify="center"
                   css={{ mb: '$3' }}
                   fromImgs={stepData.listings.map(
-                    (listing) => listing.token.token?.image as string
+                    (listing) => listing.token.token?.imageSmall as string
                   )}
                   toImgs={uniqueMarketplaces.map((marketplace) => {
                     return marketplace?.imageUrl || ''
