@@ -9,7 +9,6 @@ import {
 } from 'components/primitives'
 import { mainnet, polygon, optimism } from 'wagmi/chains'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
-import { BigNumber, BigNumberish, constants } from 'ethers'
 import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
 import { zeroAddress, formatUnits } from 'viem'
