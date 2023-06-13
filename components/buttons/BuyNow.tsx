@@ -72,10 +72,10 @@ const BuyNow: FC<Props> = ({
       tokenId={tokenId}
       collectionId={collectionId}
       orderId={orderId}
-      referrer={"0x4c31e558393312a1d3bE14C45A3656A2e915F53D"}
-      referrerFeeBps={50}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
-      // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
+      //apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
+      //referrer={"0x4c31e558393312a1d3bE14C45A3656A2e915F53D"}
+      //referrerFeeBps={50}
       // feesOnTopBps={"0x4c31e558393312a1d3bE14C45A3656A2e915F53D:50"}
       // feesOnTopFixed={"0xabc:10000000000000000"}
       onClose={(data, stepData, currentStep) => {
