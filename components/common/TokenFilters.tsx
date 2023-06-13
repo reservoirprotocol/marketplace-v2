@@ -67,10 +67,6 @@ export const TokenFilters: FC<Props> = ({
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
 
-            const collectionImage = useMemo(() => {
-              return optimizeImage(collection?.collection?.image as string, 250)
-            }, [collection?.collection?.image])
-
             return (
               <Flex
                 key={collection?.collection?.id}
@@ -103,7 +99,10 @@ export const TokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={collectionImage}
+                    src={optimizeImage(
+                      collection?.collection?.image as string,
+                      250
+                    )}
                     alt={collection?.collection?.name as string}
                     width={24}
                     height={24}

@@ -18,6 +18,6 @@ const optimizeImage = (imageHref: string | undefined, width: number) => {
   } catch (e) {
     console.warn('Failed to optimize image', e)
   }
-  return imageHref
+  return imageHref ? imageHref : ''
 }
 export default optimizeImage
