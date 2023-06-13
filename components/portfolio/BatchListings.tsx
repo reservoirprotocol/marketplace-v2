@@ -31,7 +31,6 @@ import { useMediaQuery } from 'react-responsive'
 import { BatchListingsTableHeading } from './BatchListingsTableHeading'
 import { BatchListingsTableRow } from './BatchListingsTableRow'
 import wrappedContracts from 'utils/wrappedContracts'
-import { constants } from 'ethers'
 import { mainnet } from 'wagmi'
 
 export type BatchListing = {

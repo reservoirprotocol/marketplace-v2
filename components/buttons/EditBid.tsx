@@ -3,7 +3,12 @@ import { Button } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import {
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  useSwitchNetwork,
+} from 'wagmi'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { EditBidModal, EditBidStep } from '@reservoir0x/reservoir-kit-ui'
@@ -39,7 +44,7 @@ const EditBid: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(

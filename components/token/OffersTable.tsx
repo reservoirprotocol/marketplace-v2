@@ -15,7 +15,6 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ChainContext } from 'context/ChainContextProvider'
-import { constants } from 'ethers'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import Link from 'next/link'
 import { FC, useContext, useEffect, useRef, useState } from 'react'
@@ -23,6 +22,7 @@ import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
+import { zeroAddress } from 'viem'
 
 type Props = {
   address?: string
@@ -195,7 +195,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           <Text style="body2" color="subtle" css={{ lineHeight: '14.5px' }}>
             from
           </Text>
-          {offer.maker && offer.maker !== constants.AddressZero ? (
+          {offer.maker && offer.maker !== zeroAddress ? (
             <Link
               href={`/profile/${offer.maker}`}
               style={{ lineHeight: '14.5px' }}

@@ -11,16 +11,16 @@ import {
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import {
-  mainnet,
   useAccount,
   useNetwork,
-  useSigner,
+  useWalletClient,
+  mainnet,
   useSwitchNetwork,
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { constants } from 'ethers'
+import { zeroAddress } from 'viem'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -50,7 +50,7 @@ const List: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
@@ -62,7 +62,7 @@ const List: FC<Props> = ({
   if (marketplaceChain.id === mainnet.id) {
     listingCurrencies = [
       {
-        contract: constants.AddressZero,
+        contract: zeroAddress,
         symbol: 'ETH',
         coinGeckoId: 'ethereum',
       },

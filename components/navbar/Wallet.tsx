@@ -12,13 +12,13 @@ import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import { BigNumber, BigNumberish, constants } from 'ethers'
 import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
-import { formatUnits } from 'ethers/lib/utils.js'
+import { zeroAddress, formatUnits } from 'viem'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
 const currencies = [
   {
-    address: constants.AddressZero,
+    address: zeroAddress,
     symbol: 'ETH',
     decimals: mainnet.nativeCurrency.decimals,
     chain: {
@@ -38,7 +38,7 @@ const currencies = [
     coinGeckoId: 'weth',
   },
   {
-    address: constants.AddressZero,
+    address: zeroAddress,
     symbol: 'MATIC',
     decimals: polygon.nativeCurrency.decimals,
     chain: {
@@ -71,11 +71,11 @@ const currencies = [
 
 type EnhancedCurrency = (typeof currencies)[0] & {
   usdPrice: number
-  balance: BigNumberish
+  balance: string | number | bigint
 }
 
 const nonNativeCurrencies = currencies.filter(
-  (currency) => currency.address !== constants.AddressZero
+  (currency) => currency.address !== zeroAddress
 )
 
 const currencySymbols = currencies.map((currency) => currency.symbol).join(',')
@@ -96,6 +96,7 @@ const Wallet = () => {
     })),
     watch: true,
     enabled: address ? true : false,
+    allowFailure: false,
   })
 
   //CONFIGURABLE: Configure these by just changing the chainId to fetch native balance info, in addition to changing this
@@ -123,15 +124,15 @@ const Wallet = () => {
     }, {} as Record<string, (typeof usdConversions)[0]>)
 
     return currencies.map((currency, i) => {
-      let balance: BigNumberish = 0
-      if (currency.address === constants.AddressZero) {
+      let balance: string | number | bigint = 0n
+      if (currency.address === zeroAddress) {
         //CONFIGURABLE: Configure these to show the fetched balance results configured above in the useBalance hooks
         switch (currency.chain.id) {
           case polygon.id: {
-            balance = maticBalance.data?.value || 0
+            balance = maticBalance.data?.value || 0n
           }
           case mainnet.id: {
-            balance = ethBalance.data?.value || 0
+            balance = ethBalance.data?.value || 0n
             break
           }
         }
@@ -142,7 +143,7 @@ const Wallet = () => {
             nonNativeCurrency.coinGeckoId === currency.coinGeckoId
         )
         balance = nonNativeBalances[index]
-          ? (nonNativeBalances[index] as BigNumberish)
+          ? (nonNativeBalances[index] as string | number | bigint)
           : 0
       }
 
@@ -153,7 +154,8 @@ const Wallet = () => {
             : currency.symbol.toLowerCase()
         ]
       const usdPrice =
-        +formatUnits(BigNumber.from(balance)) * (conversion?.price || 0)
+        Number(formatUnits(BigInt(balance), currency?.decimals || 18)) *
+        (conversion?.price || 0)
       return {
         ...currency,
         usdPrice,
