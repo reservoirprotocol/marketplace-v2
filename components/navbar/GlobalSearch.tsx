@@ -46,6 +46,10 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
     [collection.tokenCount]
   )
 
+  const collectionImage = useMemo(() => {
+    return optimizeImage(collection.image!, 250)
+  }, [collection.image!])
+
   return (
     <Link
       href={`/collection/${collection.chainName}/${collection.collectionId}`}
@@ -66,7 +70,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
         align="center"
       >
         <Img
-          src={optimizeImage(collection.image!, 250)}
+          src={collectionImage}
           style={{ width: 36, height: 36, borderRadius: 4 }}
           width={36}
           height={36}

@@ -4,7 +4,7 @@ import {
   Text,
   Tooltip,
 } from 'components/primitives'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
 import Image from 'next/image'
@@ -66,6 +66,11 @@ export const TokenFilters: FC<Props> = ({
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
+
+            const collectionImage = useMemo(() => {
+              return optimizeImage(collection?.collection?.image as string, 250)
+            }, [collection?.collection?.image])
+
             return (
               <Flex
                 key={collection?.collection?.id}
@@ -98,10 +103,7 @@ export const TokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={optimizeImage(
-                      collection?.collection?.image as string,
-                      250
-                    )}
+                    src={collectionImage}
                     alt={collection?.collection?.name as string}
                     width={24}
                     height={24}

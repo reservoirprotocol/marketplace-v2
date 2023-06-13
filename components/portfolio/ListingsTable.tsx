@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -120,12 +120,18 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   let criteriaData = listing?.criteria?.data
 
-  let imageSrc: string = optimizeImage(
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image,
-    250
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      criteriaData?.token?.tokenId
+        ? criteriaData?.token?.image || criteriaData?.collection?.image
+        : criteriaData?.collection?.image,
+      250
+    )
+  }, [
+    criteriaData?.token?.tokenId,
+    criteriaData?.token?.image,
+    criteriaData?.collection?.image,
+  ])
 
   if (isSmallDevice) {
     return (

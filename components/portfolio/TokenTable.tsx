@@ -7,8 +7,8 @@ import {
   useContext,
   useState,
   forwardRef,
-  ReactElement,
   useImperativeHandle,
+  useMemo,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
@@ -309,12 +309,16 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
 
   const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
-  let imageSrc: string = (
-    token?.token?.tokenId
+  const imageSrc = useMemo(() => {
+    return token?.token?.tokenId
       ? token?.token?.imageSmall ||
-        optimizeImage(token?.token?.collection?.imageUrl, 250)
+          optimizeImage(token?.token?.collection?.imageUrl, 250)
       : optimizeImage(token?.token?.collection?.imageUrl, 250)
-  ) as string
+  }, [
+    token?.token?.tokenId,
+    token?.token?.imageSmall,
+    token?.token?.collection?.imageUrl,
+  ])
 
   const isOracleOrder = token?.ownership?.floorAsk?.isNativeOffChainCancellable
 

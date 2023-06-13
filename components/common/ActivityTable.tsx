@@ -2,7 +2,7 @@ import {
   useCollectionActivity,
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -149,12 +149,18 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     return null
   }
 
-  let imageSrc: string = optimizeImage(
-    activity?.token?.tokenId
-      ? activity?.token?.tokenImage || activity?.collection?.collectionImage
-      : activity?.collection?.collectionImage,
-    250
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      activity?.token?.tokenId
+        ? activity?.token?.tokenImage || activity?.collection?.collectionImage
+        : activity?.collection?.collectionImage,
+      250
+    )
+  }, [
+    activity?.token?.tokenId,
+    activity?.token?.tokenImage,
+    activity?.collection?.collectionImage,
+  ])
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')
   let attributeDescription = ''

@@ -76,13 +76,12 @@ export const ApprovalCollapsible: FC<Props> = ({
       .join(' and ')
   }, [marketplacesSeekingApproval])
 
-  const collectionImage =
-    optimizeImage(
-      batchListingData[orderIndexes[0]]?.token?.token?.collection?.imageUrl,
-      250
-    ) ||
-    batchListingData[orderIndexes[0]]?.token?.token?.imageSmall ||
-    ''
+  const collectionImage: string = useMemo(() => {
+    const token = batchListingData[orderIndexes[0]]?.token?.token
+    return (
+      optimizeImage(token?.collection?.imageUrl, 250) || token?.imageSmall || ''
+    )
+  }, [batchListingData, orderIndexes])
 
   const collectionName =
     batchListingData[orderIndexes[0]]?.token?.token?.collection?.name ||

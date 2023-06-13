@@ -91,6 +91,10 @@ export default ({
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
 
+  const collectionImage = useMemo(() => {
+    return optimizeImage(token?.token?.collection?.imageUrl, 500)
+  }, [token?.token?.collection?.imageUrl])
+
   const isOracleOrder =
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
 
@@ -283,7 +287,7 @@ export default ({
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={optimizeImage(token?.token?.collection?.imageUrl, 500)}
+                  src={collectionImage}
                   alt={`${token?.token?.name}`}
                   width={24}
                   height={24}

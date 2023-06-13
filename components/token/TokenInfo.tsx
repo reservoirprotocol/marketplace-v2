@@ -1,6 +1,6 @@
 import { useCollections, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Anchor, Button, Flex, Text, Tooltip } from 'components/primitives'
-import { ComponentPropsWithoutRef, FC, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, FC, useRef, useState, useMemo } from 'react'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faExternalLink,
@@ -46,6 +46,13 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       background: '$gray4',
     },
   })
+
+  const collectionImage = useMemo(() => {
+    return optimizeImage(
+      token?.token?.collection?.image || collection?.image,
+      250
+    )
+  }, [token?.token?.collection?.image, collection?.image])
 
   const etherscanImage = (
     <img
@@ -93,10 +100,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
-            src={optimizeImage(
-              token?.token?.collection?.image || collection?.image,
-              250
-            )}
+            src={collectionImage}
             style={{ width: 36, height: 36, borderRadius: 4 }}
           />
           <Text style="h6" ellipsify>

@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useRef } from 'react'
+import { Dispatch, FC, SetStateAction, useRef, useMemo } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import { Button, Flex, Text } from 'components/primitives'
 import Image from 'next/image'
@@ -141,6 +141,11 @@ export const MobileTokenFilters: FC<Props> = ({
           </Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
+
+            const collectionImage = useMemo(() => {
+              return optimizeImage(collection?.collection?.image as string, 250)
+            }, [collection?.collection?.image])
+
             return (
               <Flex
                 key={collection?.collection?.id}
@@ -172,10 +177,7 @@ export const MobileTokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={optimizeImage(
-                      collection?.collection?.image as string,
-                      250
-                    )}
+                    src={collectionImage}
                     alt={collection?.collection?.name as string}
                     width={24}
                     height={24}
