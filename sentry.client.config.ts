@@ -9,7 +9,7 @@ Sentry.init({
   dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   // Adjust this value in production, or use tracesSampler for greater control
-  tracesSampleRate: 1,
+  tracesSampleRate: 0.3,
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,
@@ -22,11 +22,7 @@ Sentry.init({
 
   // You can remove this option if you're not planning to use the Sentry Session Replay feature:
   integrations: [
-    new Sentry.Replay({
-      // Additional Replay configuration goes in here, for example:
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
+    new Sentry.Replay(),
     new CaptureConsoleIntegration({
       // array of methods that should be captured
       // defaults to ['log', 'info', 'warn', 'error', 'debug', 'assert']
