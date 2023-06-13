@@ -50,6 +50,7 @@ import { formatNumber } from 'utils/numbers'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import { Address } from 'wagmi'
 import Image from 'next/image'
+import optimizeImage from 'utils/optimizeImage'
 
 type PortfolioTokenCardProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
@@ -282,7 +283,7 @@ export default ({
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={token?.token?.collection?.imageUrl}
+                  src={optimizeImage(token?.token?.collection?.imageUrl, 500)}
                   alt={`${token?.token?.name}`}
                   width={24}
                   height={24}

@@ -18,6 +18,7 @@ import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   collections: ReturnType<typeof useCollections>['data']
@@ -110,7 +111,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             {rank}
           </Text>
           <Img
-            src={collection.image as string}
+            src={optimizeImage(collection.image as string, 250)}
             css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
             alt="Collection Image"
             width={48}
@@ -193,7 +194,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 {rank}
               </Text>
               <Img
-                src={collection.image as string}
+                src={optimizeImage(collection.image as string, 250)}
                 css={{
                   borderRadius: 8,
                   width: 56,
@@ -235,7 +236,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               image ? (
                 <img
                   key={image + i}
-                  src={image}
+                  src={optimizeImage(image, 250)}
                   style={{
                     borderRadius: 8,
                     width: 56,

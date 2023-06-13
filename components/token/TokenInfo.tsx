@@ -16,6 +16,7 @@ import ReactMarkdown from 'react-markdown'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import titleCase from 'utils/titleCase'
 import { useRouter } from 'next/router'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0] | null
@@ -92,7 +93,10 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
-            src={token?.token?.collection?.image || collection?.image}
+            src={optimizeImage(
+              token?.token?.collection?.image || collection?.image,
+              250
+            )}
             style={{ width: 36, height: 36, borderRadius: 4 }}
           />
           <Text style="h6" ellipsify>

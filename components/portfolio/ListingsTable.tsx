@@ -26,6 +26,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
 import { BuyNow } from 'components/buttons'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
@@ -119,10 +120,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   let criteriaData = listing?.criteria?.data
 
-  let imageSrc: string = (
+  let imageSrc: string = optimizeImage(
     criteriaData?.token?.tokenId
       ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
+      : criteriaData?.collection?.image,
+    250
   ) as string
 
   if (isSmallDevice) {

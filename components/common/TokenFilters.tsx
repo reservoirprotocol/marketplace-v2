@@ -13,6 +13,7 @@ import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from './OpenSeaVerified'
 import { PercentChange } from 'components/primitives/PercentChange'
 import LoadMoreCollections from 'components/common/LoadMoreCollections'
+import optimizeImage from 'utils/optimizeImage'
 
 type Collections = ReturnType<typeof useUserCollections>['data']
 
@@ -97,7 +98,10 @@ export const TokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={collection?.collection?.image as string}
+                    src={optimizeImage(
+                      collection?.collection?.image as string,
+                      250
+                    )}
                     alt={collection?.collection?.name as string}
                     width={24}
                     height={24}

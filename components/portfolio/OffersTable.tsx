@@ -25,6 +25,7 @@ import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
@@ -125,10 +126,11 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
 
   let criteriaData = offer?.criteria?.data
 
-  let imageSrc: string = (
+  let imageSrc: string = optimizeImage(
     criteriaData?.token?.tokenId
       ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
+      : criteriaData?.collection?.image,
+    250
   ) as string
 
   if (isSmallDevice) {

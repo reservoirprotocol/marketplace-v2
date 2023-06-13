@@ -31,6 +31,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
 import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -148,10 +149,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     return null
   }
 
-  let imageSrc: string = (
+  let imageSrc: string = optimizeImage(
     activity?.token?.tokenId
       ? activity?.token?.tokenImage || activity?.collection?.collectionImage
-      : activity?.collection?.collectionImage
+      : activity?.collection?.collectionImage,
+    250
   ) as string
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')

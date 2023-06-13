@@ -62,6 +62,7 @@ import { formatDollar } from 'utils/numbers'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { ItemView } from './ViewToggle'
 import PortfolioTokenCard from './PortfolioTokenCard'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
@@ -310,8 +311,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
 
   let imageSrc: string = (
     token?.token?.tokenId
-      ? token?.token?.imageSmall || token?.token?.collection?.imageUrl
-      : token?.token?.collection?.imageUrl
+      ? token?.token?.imageSmall ||
+        optimizeImage(token?.token?.collection?.imageUrl, 250)
+      : optimizeImage(token?.token?.collection?.imageUrl, 250)
   ) as string
 
   const isOracleOrder = token?.ownership?.floorAsk?.isNativeOffChainCancellable
