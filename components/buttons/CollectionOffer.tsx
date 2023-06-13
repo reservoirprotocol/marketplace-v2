@@ -13,7 +13,7 @@ import {
   mainnet,
   useAccount,
   useNetwork,
-  useSigner,
+  useWalletClient,
   useSwitchNetwork,
 } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
@@ -41,7 +41,7 @@ const CollectionOffer: FC<Props> = ({
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
   const [attribute, setAttribute] = useState<Trait>(undefined)
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()

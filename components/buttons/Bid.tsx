@@ -10,10 +10,10 @@ import {
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import {
-  mainnet,
   useAccount,
   useNetwork,
-  useSigner,
+  useWalletClient,
+  mainnet,
   useSwitchNetwork,
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -49,7 +49,7 @@ const Bid: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
