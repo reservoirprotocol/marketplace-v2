@@ -50,7 +50,13 @@ type ActivityTypes = Exclude<
 export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
-  const { address, isConnected } = useAccount()
+  const router = useRouter()
+  const { address: accountAddress, isConnected } = useAccount()
+  const address = router.query.address
+    ? (router.query.address[0] as `0x${string}`)
+    : accountAddress
+  const [tabValue, setTabValue] = useState('items')
+  const [itemView, setItemView] = useState<ItemView>('list')
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
@@ -196,7 +202,11 @@ const IndexPage: NextPage = () => {
                       <ChainToggle />
                     </Flex>
                   )}
-                  <Tabs.Root defaultValue="items">
+                  <Tabs.Root
+                    defaultValue="items"
+                    value={tabValue}
+                    onValueChange={(value) => setTabValue(value)}
+                  >
                     <Flex
                       css={{
                         overflowX: 'scroll',
@@ -273,12 +283,22 @@ const IndexPage: NextPage = () => {
                                 />
                               )}
                             {!isSmallDevice && !collectionsLoading && (
-                              <PortfolioSortDropdown
-                                option={sortByType}
-                                onOptionSelected={(option) => {
-                                  setSortByType(option)
-                                }}
-                              />
+                              <Flex
+                                align="center"
+                                justify="between"
+                                css={{ gap: '$3' }}
+                              >
+                                <PortfolioSortDropdown
+                                  option={sortByType}
+                                  onOptionSelected={(option) => {
+                                    setSortByType(option)
+                                  }}
+                                />
+                                <ViewToggle
+                                  itemView={itemView}
+                                  setItemView={setItemView}
+                                />
+                              </Flex>
                             )}
                           </Flex>
                           <TokenTable
