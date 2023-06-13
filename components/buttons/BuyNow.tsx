@@ -74,8 +74,8 @@ const BuyNow: FC<Props> = ({
       orderId={orderId}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
-      // referrer={"0xabc"}
-      // referrerFeeBps={250}
+      // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
+      // feesOnTopBps={["0xabc:50"]}
       onClose={(data, stepData, currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
       }}
