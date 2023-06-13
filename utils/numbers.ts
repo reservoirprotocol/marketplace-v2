@@ -111,7 +111,7 @@ function formatBN(
         )
       }
     } 
-    } else if (!partsIncludesFraction && partsIncludeCompactIdentifier) {
+  } else if (!partsIncludesFraction && partsIncludeCompactIdentifier) {
       const compactIdentifier = parts.find((part) => part.type === 'compact')
       const integerIndex = parts.findIndex((part) => part.type === 'integer')
       const integer = parts[integerIndex]
