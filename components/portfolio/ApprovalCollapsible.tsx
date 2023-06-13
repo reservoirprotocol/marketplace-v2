@@ -14,6 +14,7 @@ import { BatchListingData } from './BatchListModal'
 import { styled } from '@stitches/react'
 import { Marketplace } from './BatchListings'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import optimizeImage from 'utils/optimizeImage'
 
 const Img = styled('img', {
   height: 24,
@@ -75,10 +76,12 @@ export const ApprovalCollapsible: FC<Props> = ({
       .join(' and ')
   }, [marketplacesSeekingApproval])
 
-  const collectionImage =
-    batchListingData[orderIndexes[0]]?.token?.token?.collection?.imageUrl ||
-    batchListingData[orderIndexes[0]]?.token?.token?.image ||
-    ''
+  const collectionImage: string = useMemo(() => {
+    const token = batchListingData[orderIndexes[0]]?.token?.token
+    return (
+      optimizeImage(token?.collection?.imageUrl, 250) || token?.imageSmall || ''
+    )
+  }, [batchListingData, orderIndexes])
 
   const collectionName =
     batchListingData[orderIndexes[0]]?.token?.token?.collection?.name ||
