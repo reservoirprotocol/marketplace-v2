@@ -237,15 +237,11 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             }}
           >
             {collection?.sampleImages?.map((image, i) => {
-              const optimizedImage: string = useMemo(() => {
-                return optimizeImage(image, 250)
-              }, [image])
-
               if (image) {
                 return (
                   <img
                     key={image + i}
-                    src={optimizedImage}
+                    src={optimizeImage(image, 250)}
                     style={{
                       borderRadius: 8,
                       width: 56,
