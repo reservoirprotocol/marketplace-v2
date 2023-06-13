@@ -144,7 +144,11 @@ const Wallet = () => {
             nonNativeCurrency.coinGeckoId === currency.coinGeckoId
         )
         balance =
-          nonNativeBalances && nonNativeBalances[index]
+          nonNativeBalances &&
+          nonNativeBalances[index] &&
+          (typeof nonNativeBalances[index] === 'string' ||
+            typeof nonNativeBalances[index] === 'number' ||
+            typeof nonNativeBalances[index] === 'bigint')
             ? (nonNativeBalances[index] as string | number | bigint)
             : 0n
       }
