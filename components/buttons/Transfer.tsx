@@ -94,7 +94,6 @@ const Transfer = ({ token, mutate } : TransferProps) => {
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { writeAsync, data, isLoading, error: error } = useContractWrite({
-    mode: 'recklesslyUnprepared',
     address: (token?.token?.contract || '0x0') as `0x${string}`,
     abi: token?.token?.kind === 'erc721' ? ERC721NFTAbi : ERC1155NFTAbi,
     functionName: 'safeTransferFrom',
