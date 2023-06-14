@@ -1646,7 +1646,7 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@rainbow-me/rainbowkit@^1.0.0":
+"@rainbow-me/rainbowkit@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@rainbow-me/rainbowkit/-/rainbowkit-1.0.1.tgz#c852383a5a16fb6452e2533992aa2cd6d562a992"
   integrity sha512-P+2lgHaN5X84K1e+MARUydyhYRS+nStN4H470QloBBWP5UsidHZpSJGd4qi0WFtfR6zBff96N6kmsfJo7PjFhQ==
