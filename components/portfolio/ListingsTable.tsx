@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -26,6 +26,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
 import { BuyNow } from 'components/buttons'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
@@ -119,11 +120,18 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   let criteriaData = listing?.criteria?.data
 
-  let imageSrc: string = (
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      criteriaData?.token?.tokenId
+        ? criteriaData?.token?.image || criteriaData?.collection?.image
+        : criteriaData?.collection?.image,
+      250
+    )
+  }, [
+    criteriaData?.token?.tokenId,
+    criteriaData?.token?.image,
+    criteriaData?.collection?.image,
+  ])
 
   if (isSmallDevice) {
     return (

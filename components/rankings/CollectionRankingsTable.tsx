@@ -16,8 +16,9 @@ import Img from 'components/primitives/Img'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
-import { ComponentPropsWithoutRef, FC, useState } from 'react'
+import { ComponentPropsWithoutRef, FC, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   collections: ReturnType<typeof useCollections>['data']
@@ -98,6 +99,10 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
+  const collectionImage = useMemo(() => {
+    return optimizeImage(collection.image as string, 250)
+  }, [collection.image])
+  
   if (isSmallDevice) {
     return (
       <Link
@@ -110,7 +115,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             {rank}
           </Text>
           <Img
-            src={collection.image as string}
+            src={collectionImage}
             css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
             alt="Collection Image"
             width={48}
@@ -231,25 +236,28 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               minWidth: 0,
             }}
           >
-            {collection?.sampleImages?.map((image, i) =>
-              image ? (
-                <img
-                  key={image + i}
-                  src={image}
-                  style={{
-                    borderRadius: 8,
-                    width: 56,
-                    height: 56,
-                    objectFit: 'cover',
-                  }}
-                  onError={(
-                    e: React.SyntheticEvent<HTMLImageElement, Event>
-                  ) => {
-                    e.currentTarget.style.visibility = 'hidden'
-                  }}
-                />
-              ) : null
-            )}
+            {collection?.sampleImages?.map((image, i) => {
+              if (image) {
+                return (
+                  <img
+                    key={image + i}
+                    src={optimizeImage(image, 250)}
+                    style={{
+                      borderRadius: 8,
+                      width: 56,
+                      height: 56,
+                      objectFit: 'cover',
+                    }}
+                    onError={(
+                      e: React.SyntheticEvent<HTMLImageElement, Event>
+                    ) => {
+                      e.currentTarget.style.visibility = 'hidden'
+                    }}
+                  />
+                )
+              }
+              return null
+            })}
           </Flex>
         </TableCell>
         <TableCell>

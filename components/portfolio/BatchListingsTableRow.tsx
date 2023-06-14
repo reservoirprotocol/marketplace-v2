@@ -28,6 +28,7 @@ import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import useMarketplaceFees from 'hooks/useOpenseaFees'
 import { ToastContext } from 'context/ToastContextProvider'
 import { BatchListing, Marketplace } from './BatchListings'
+import optimizeImage from 'utils/optimizeImage'
 
 type BatchListingsTableRowProps = {
   listing: BatchListing
@@ -74,6 +75,10 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   const [marketplaceFee, setMarketplaceFee] = useState<number>(0)
   const [marketplaceFeePercent, setMarketplaceFeePercent] = useState<number>(0)
 
+  const tokenImage = useMemo(() => {
+    return optimizeImage(listing.token.token?.image, 250)
+  }, [listing.token.token?.image])
+  
   const { addToast } = useContext(ToastContext)
 
   const marketplace = selectedMarketplaces.find(
@@ -239,7 +244,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
             }}
           />
           <img
-            src={listing.token.token?.image}
+            src={tokenImage}
             style={{
               width: 48,
               height: 48,

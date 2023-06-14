@@ -7,8 +7,8 @@ import {
   useContext,
   useState,
   forwardRef,
-  ReactElement,
   useImperativeHandle,
+  useMemo,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
@@ -64,6 +64,7 @@ import { formatDollar } from 'utils/numbers'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { ItemView } from './ViewToggle'
 import PortfolioTokenCard from './PortfolioTokenCard'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
@@ -310,11 +311,16 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
 
   const [acceptBidModalOpen, setAcceptBidModalOpen] = useState(false)
 
-  let imageSrc: string = (
-    token?.token?.tokenId
-      ? token?.token?.image || token?.token?.collection?.imageUrl
-      : token?.token?.collection?.imageUrl
-  ) as string
+  const imageSrc = useMemo(() => {
+    return token?.token?.tokenId
+      ? token?.token?.imageSmall ||
+          optimizeImage(token?.token?.collection?.imageUrl, 250)
+      : optimizeImage(token?.token?.collection?.imageUrl, 250)
+  }, [
+    token?.token?.tokenId,
+    token?.token?.imageSmall,
+    token?.token?.collection?.imageUrl,
+  ])
 
   const isOracleOrder = token?.ownership?.floorAsk?.isNativeOffChainCancellable
   const contract = token.token?.collection?.id

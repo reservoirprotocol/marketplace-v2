@@ -31,6 +31,7 @@ import { SearchCollection } from 'pages/api/globalSearch'
 import { formatNumber } from 'utils/numbers'
 import { useTheme } from 'next-themes'
 import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   collection: SearchCollection
@@ -44,6 +45,10 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
     () => formatNumber(collection.tokenCount),
     [collection.tokenCount]
   )
+
+  const collectionImage = useMemo(() => {
+    return optimizeImage(collection.image!, 250)
+  }, [collection.image!])
 
   return (
     <Link
@@ -63,7 +68,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
         align="center"
       >
         <Img
-          src={collection.image || 'https://via.placeholder.com/32?text='}
+          src={collectionImage || 'https://via.placeholder.com/32?text='}
           style={{ width: 40, height: 40, borderRadius: 4 }}
           width={40}
           height={40}
