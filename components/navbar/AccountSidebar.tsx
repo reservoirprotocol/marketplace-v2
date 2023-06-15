@@ -1,14 +1,3 @@
-import { FC, useEffect, useState } from 'react'
-import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
-import { useAccount, useDisconnect } from 'wagmi'
-import { useENSResolver } from 'hooks'
-import { Box, Button, Flex, Grid, Text } from 'components/primitives'
-import { Avatar } from 'components/primitives/Avatar'
-import Jazzicon from 'react-jazzicon/dist/Jazzicon'
-import { jsNumberForAddress } from 'react-jazzicon'
-import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { AnimatePresence, motion } from 'framer-motion'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChartLine,
   faClose,
@@ -18,10 +7,20 @@ import {
   faRightFromBracket,
   faStore,
 } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
 import CopyText from 'components/common/CopyText'
+import { Box, Button, Flex, Grid, Text } from 'components/primitives'
+import { Avatar } from 'components/primitives/Avatar'
+import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useENSResolver } from 'hooks'
 import Link from 'next/link'
-import Wallet from './Wallet'
 import { useRouter } from 'next/router'
+import { FC, useEffect, useState } from 'react'
+import Blockies from 'react-blockies'
+import { useAccount, useDisconnect } from 'wagmi'
+import Wallet from './Wallet'
 
 export const AccountSidebar: FC = () => {
   const { address } = useAccount()
@@ -50,7 +49,16 @@ export const AccountSidebar: FC = () => {
       {ensAvatar ? (
         <Avatar size="medium" src={ensAvatar} />
       ) : (
-        <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
+        <Flex
+          css={{
+            width: 44,
+            height: 44,
+            borderRadius: '100px',
+            overflow: 'hidden',
+          }}
+        >
+          <Blockies size={11} seed={address || ''} />
+        </Flex>
       )}
     </Button>
   )
@@ -116,10 +124,16 @@ export const AccountSidebar: FC = () => {
                     {ensAvatar ? (
                       <Avatar size="medium" src={ensAvatar} />
                     ) : (
-                      <Jazzicon
-                        diameter={44}
-                        seed={jsNumberForAddress(address as string)}
-                      />
+                      <Flex
+                        css={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: '100px',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <Blockies size={11} seed={address || ''} />
+                      </Flex>
                     )}
                     <CopyText
                       text={address || ''}

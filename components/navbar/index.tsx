@@ -1,22 +1,22 @@
-import { useRef } from 'react'
-import { Box, Flex } from '../primitives'
-import GlobalSearch from './GlobalSearch'
-import { useRouter } from 'next/router'
-import { useHotkeys } from 'react-hotkeys-hook'
-import Link from 'next/link'
-import Image from 'next/image'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import NavItem from './NavItem'
-import ThemeSwitcher from './ThemeSwitcher'
+import { AccountSidebar } from 'components/navbar/AccountSidebar'
+import { useTheme } from 'next-themes'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import LoreCartButton from 'plugins/lore/CartButton'
+import { useRef } from 'react'
+import { useHotkeys } from 'react-hotkeys-hook'
+import { useMediaQuery } from 'react-responsive'
+import { useAccount } from 'wagmi'
+import { useMounted } from '../../hooks'
+import { Box, Flex } from '../primitives'
+import CartButton from './CartButton'
+import GlobalSearch from './GlobalSearch'
 import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
-import { useTheme } from 'next-themes'
-import { useMediaQuery } from 'react-responsive'
-import { useMounted } from '../../hooks'
-import { useAccount } from 'wagmi'
-import CartButton from './CartButton'
-import { AccountSidebar } from 'components/navbar/AccountSidebar'
-import LoreCartButton from 'plugins/lore/CartButton'
+import NavItem from './NavItem'
+import ThemeSwitcher from './ThemeSwitcher'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -60,13 +60,22 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 34, cursor: 'pointer' }}>
-              <Image
-                src="/reservoirLogo.svg"
-                width={34}
-                height={39}
-                alt="Reservoir"
-              />
+            <Box css={{ width: 68, cursor: 'pointer' }}>
+              {theme == 'dark' ? (
+                <Image
+                  src="/dark-mode.svg"
+                  width={68}
+                  height={39}
+                  alt="Lore logo"
+                />
+              ) : (
+                <Image
+                  src="/light-mode.svg"
+                  width={68}
+                  height={39}
+                  alt="Lore logo"
+                />
+              )}
             </Box>
           </Link>
         </Flex>
@@ -102,17 +111,17 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
+                  src="/dark-mode.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="Lore logo"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
+                  src="/light-mode.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="Lore logo"
                 />
               )}
             </Box>

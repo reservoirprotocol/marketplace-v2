@@ -1,4 +1,3 @@
-import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import {
   Box,
   Button,
@@ -7,11 +6,12 @@ import {
   FormatCurrency,
   Text,
 } from 'components/primitives'
-import { mainnet, polygon, optimism } from 'wagmi/chains'
-import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
+import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
-import { zeroAddress, formatUnits } from 'viem'
+import { formatUnits, zeroAddress } from 'viem'
+import { erc20ABI, useAccount, useBalance, useContractReads } from 'wagmi'
+import { mainnet, optimism, polygon } from 'wagmi/chains'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below

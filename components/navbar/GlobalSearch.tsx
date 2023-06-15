@@ -1,36 +1,28 @@
-import {
-  Box,
-  Text,
-  Flex,
-  Input,
-  Button,
-  FormatCurrency,
-  FormatCrypto,
-} from '../primitives'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Box, Button, Flex, FormatCrypto, Input, Text } from '../primitives'
 
 import {
-  useEffect,
-  useState,
-  forwardRef,
-  ElementRef,
   ComponentPropsWithoutRef,
+  ElementRef,
   FC,
+  forwardRef,
+  useEffect,
   useMemo,
+  useState,
 } from 'react'
 
-import { useDebounce } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
+import { useDebounce } from 'usehooks-ts'
 
-import Link from 'next/link'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
-import { SearchCollection } from 'pages/api/globalSearch'
-import { formatNumber } from 'utils/numbers'
-import { useTheme } from 'next-themes'
 import Img from 'components/primitives/Img'
+import { useTheme } from 'next-themes'
+import Link from 'next/link'
+import { SearchCollection } from 'pages/api/globalSearch'
+import Blockies from 'react-blockies'
+import { formatNumber } from 'utils/numbers'
 import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
@@ -148,10 +140,16 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
             style={{ width: 32, height: 32, borderRadius: 4 }}
           />
         ) : (
-          <Jazzicon
-            diameter={32}
-            seed={jsNumberForAddress(wallet.address as string)}
-          />
+          <Flex
+            css={{
+              width: 32,
+              height: 32,
+              borderRadius: '100px',
+              overflow: 'hidden',
+            }}
+          >
+            <Blockies size={9} seed={wallet.address || ''} />
+          </Flex>
         )}
         <Text style="subtitle1">{wallet.displayName}</Text>
       </Flex>

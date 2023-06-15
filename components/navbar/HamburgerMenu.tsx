@@ -1,31 +1,27 @@
-import {
-  Anchor,
-  Box,
-  Button,
-  Flex,
-  FormatCryptoCurrency,
-  Text,
-} from 'components/primitives'
-import { Avatar } from 'components/primitives/Avatar'
-import * as RadixDialog from '@radix-ui/react-dialog'
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faBars,
-  faXmark,
   faRightFromBracket,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTwitter } from '@fortawesome/free-brands-svg-icons'
-import Link from 'next/link'
-import Image from 'next/image'
-import { useAccount, useDisconnect } from 'wagmi'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
-import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
+import * as RadixDialog from '@radix-ui/react-dialog'
 import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useENSResolver } from 'hooks'
+import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
+import { Anchor, Box, Button, Flex, Text } from 'components/primitives'
+import { Avatar } from 'components/primitives/Avatar'
+import { useENSResolver } from 'hooks'
+import { useTheme } from 'next-themes'
+import Image from 'next/image'
+import Link from 'next/link'
+import Blockies from 'react-blockies'
+import { useAccount, useDisconnect } from 'wagmi'
 
 const HamburgerMenu = () => {
+  const { theme } = useTheme()
+
   const { address, isConnected } = useAccount()
   const {
     avatar: ensAvatar,
@@ -65,13 +61,22 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-            <Box css={{ width: 34, cursor: 'pointer' }}>
-              <Image
-                src="/reservoirLogo.svg"
-                width={34}
-                height={39}
-                alt="Reservoir"
-              />
+            <Box css={{ width: 68, cursor: 'pointer' }}>
+              {theme == 'dark' ? (
+                <Image
+                  src="/dark-mode.svg"
+                  width={68}
+                  height={39}
+                  alt="Lore logo"
+                />
+              ) : (
+                <Image
+                  src="/light-mode.svg"
+                  width={68}
+                  height={39}
+                  alt="Lore logo"
+                />
+              )}
             </Box>
           </Link>
           <RadixDialog.Close>
@@ -116,10 +121,17 @@ const HamburgerMenu = () => {
                   {ensAvatar ? (
                     <Avatar size="medium" src={ensAvatar} />
                   ) : (
-                    <Jazzicon
-                      diameter={36}
-                      seed={jsNumberForAddress(address as string)}
-                    />
+                    <Flex
+                      css={{
+                        width: 36,
+                        height: 36,
+                        borderRadius: '100px',
+                        overflow: 'hidden',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Blockies size={9} seed={address || ''} />
+                    </Flex>
                   )}
                   <Text style="subtitle1" css={{ ml: '$2' }}>
                     {shortEnsName ? shortEnsName : shortAddress}

@@ -1,6 +1,6 @@
+import { datadogRum } from '@datadog/browser-rum'
 import { FC, ReactElement, useEffect } from 'react'
 import { useAccount } from 'wagmi'
-import { datadogRum } from '@datadog/browser-rum'
 
 const env = process.env.NODE_ENV
 const ddApplicationId = process.env.NEXT_PUBLIC_DATADOG_APPLICATION_ID
@@ -19,7 +19,7 @@ export const initializeAnalytics = () => {
       clientToken: ddClientToken,
       site: 'datadoghq.com',
       //CONFIGURABLE: Change the service name to customize how it appears in your DD dashboard
-      service: 'reservoir-marketplace',
+      service: 'lore-marketplace',
       env,
       sampleRate: 100,
       replaySampleRate: 100,

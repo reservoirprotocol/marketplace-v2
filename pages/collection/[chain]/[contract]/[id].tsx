@@ -1,7 +1,6 @@
 import {
   faArrowLeft,
   faChevronDown,
-  faCircleExclamation,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,28 +16,23 @@ import {
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { ActivityFilters } from 'components/token/ActivityFilters'
 import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
+import { Head } from 'components/Head'
 import Layout from 'components/Layout'
-import {
-  Anchor,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Text,
-  Tooltip,
-} from 'components/primitives'
+import { Anchor, Box, Button, Flex, Grid, Text } from 'components/primitives'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
+import { ActivityFilters } from 'components/token/ActivityFilters'
+import { TokenActivityTable } from 'components/token/ActivityTable'
 import AttributeCard from 'components/token/AttributeCard'
 import FullscreenMedia from 'components/token/FullscreenMedia'
+import { ListingsTable } from 'components/token/ListingsTable'
+import { OffersTable } from 'components/token/OffersTable'
 import { PriceData } from 'components/token/PriceData'
 import RarityRank from 'components/token/RarityRank'
 import { TokenActions } from 'components/token/TokenActions'
-import { TokenActivityTable } from 'components/token/ActivityTable'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
@@ -52,17 +46,13 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useContext, useEffect, useState } from 'react'
-import { jsNumberForAddress } from 'react-jazzicon'
-import Jazzicon from 'react-jazzicon/dist/Jazzicon'
+import Blockies from 'react-blockies'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
-import { Head } from 'components/Head'
-import { OffersTable } from 'components/token/OffersTable'
-import { ListingsTable } from 'components/token/ListingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -471,10 +461,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
                     Owner
                   </Text>
-                  <Jazzicon
-                    diameter={16}
-                    seed={jsNumberForAddress(owner || '')}
-                  />
+                  <Flex
+                    css={{
+                      width: 16,
+                      height: 16,
+                      borderRadius: '100px',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <Blockies size={16} scale={1} seed={owner || ''} />
+                  </Flex>
+
                   <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
                     <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                       {isMounted ? ownerFormatted : ''}
