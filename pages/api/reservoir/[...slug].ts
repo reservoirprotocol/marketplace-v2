@@ -5,6 +5,17 @@ import { goerli, mainnet } from 'wagmi/chains'
 import wrappedContracts from 'utils/wrappedContracts'
 import { zeroAddress } from 'viem'
 
+const topBidsRe= /^\/orders\/users\/.+\/top-bids\/v4$/g
+const blurApis = ['/execute/sell/v7', topBidsRe,'/execute/buy/v7','/orders/asks/v4','/orders/bids/v5']
+function excludeBlurListings(url: URL) {
+  for (let blurApi of blurApis) {
+    if((typeof blurApi ==='string' && url.pathname===blurApi) || (typeof blurApi!=='string' && blurApi.test(url.pathname))) {
+      url.searchParams.set('excludeEOA', 'true')
+      return;
+    }
+  }
+}
+
 // A proxy API endpoint to redirect all requests to `/api/reservoir/*` to
 // MAINNET: https://api.reservoir.tools/{endpoint}/{query-string}
 // RINKEBY: https://api-rinkeby.reservoir.tools/{endpoint}/{query-string}
@@ -57,6 +68,8 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     res.redirect(url.href)
     return
   }
+
+  excludeBlurListings(url)
 
   try {
     const options: RequestInit | undefined = {
