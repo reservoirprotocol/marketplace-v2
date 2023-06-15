@@ -2,14 +2,21 @@ import AnalyticsProvider, {
   initializeAnalytics,
 } from 'components/AnalyticsProvider'
 initializeAnalytics()
+import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 
 import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
-import { ConnectKitProvider, getDefaultClient } from 'connectkit'
-import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import '@rainbow-me/rainbowkit/styles.css'
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+  darkTheme as rainbowDarkTheme,
+  lightTheme as rainbowLightTheme,
+} from '@rainbow-me/rainbowkit'
+import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -38,28 +45,20 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-export const COLLECTION_SET_ID = process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  ? process.env.NEXT_PUBLIC_COLLECTION_SET_ID
-  : undefined
-
-export const COMMUNITY = process.env.NEXT_PUBLIC_COMMUNITY
-  ? process.env.NEXT_PUBLIC_COMMUNITY
-  : undefined
-
-const { chains, provider } = configureChains(supportedChains, [
+const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
 
-const { connectors } = getDefaultClient({
+const { connectors } = getDefaultWallets({
   appName: 'Reservoir Marketplace',
   chains,
 })
 
-const wagmiClient = createClient({
+const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
-  provider,
+  publicClient,
 })
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
@@ -80,10 +79,12 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         light: 'light',
       }}
     >
-      <WagmiConfig client={wagmiClient}>
+      <WagmiConfig config={wagmiClient}>
         <ChainContextProvider>
           <AnalyticsProvider>
-            <MyApp {...props} />
+            <ErrorTrackingProvider>
+              <MyApp {...props} />
+            </ErrorTrackingProvider>
           </AnalyticsProvider>
         </ChainContextProvider>
       </WagmiConfig>
@@ -104,11 +105,27 @@ function MyApp({
     ReservoirKitTheme | undefined
   >()
 
+  const [rainbowKitTheme, setRainbowKitTheme] = useState<
+    | ReturnType<typeof rainbowDarkTheme>
+    | ReturnType<typeof rainbowLightTheme>
+    | undefined
+  >()
+
   useEffect(() => {
     if (theme == 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
+      setRainbowKitTheme(
+        rainbowDarkTheme({
+          borderRadius: 'small',
+        })
+      )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
+      setRainbowKitTheme(
+        rainbowLightTheme({
+          borderRadius: 'small',
+        })
+      )
     }
   }, [theme])
 
@@ -141,25 +158,31 @@ function MyApp({
               return {
                 id,
                 baseApiUrl: `${baseUrl}${proxyApi}`,
-                default: marketplaceChain.id === id,
+                active: marketplaceChain.id === id,
               }
             }),
+            logLevel: 4,
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
+            //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
+            // Note that this impacts orders created on your marketplace (offers/listings)
+            // marketplaceFee: 250,
+            // marketplaceFeeRecipient: "0xabc"
           }}
           theme={reservoirKitTheme}
         >
           <CartProvider>
             <Tooltip.Provider>
-              <ConnectKitProvider
-                mode={theme == 'dark' ? 'dark' : 'light'}
-                options={{ initialChainId: 0 }}
+              <RainbowKitProvider
+                chains={chains}
+                theme={rainbowKitTheme}
+                modalSize="compact"
               >
                 <ToastContextProvider>
                   <FunctionalComponent {...pageProps} />
                   <LoreCheckout />
                 </ToastContextProvider>
-              </ConnectKitProvider>
+              </RainbowKitProvider>
             </Tooltip.Provider>
           </CartProvider>
         </ReservoirKitProvider>

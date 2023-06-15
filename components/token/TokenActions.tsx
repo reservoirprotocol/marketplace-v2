@@ -1,9 +1,11 @@
-import { useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { faGasPump } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useBids, useListings, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
-import { Button, Flex, Grid } from 'components/primitives'
+import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -11,6 +13,8 @@ import { useAccount } from 'wagmi'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
+  offer?: ReturnType<typeof useBids>['data'][0]
+  listing?: ReturnType<typeof useListings>['data'][0]
   isOwner: boolean
   mutate?: MutatorCallback
   account: ReturnType<typeof useAccount>
@@ -18,6 +22,8 @@ type Props = {
 
 export const TokenActions: FC<Props> = ({
   token,
+  offer,
+  listing,
   isOwner,
   mutate,
   account,
@@ -43,6 +49,10 @@ export const TokenActions: FC<Props> = ({
     token?.market?.topBid?.maker?.toLowerCase() ===
       account?.address?.toLowerCase()
   const isListed = token ? token?.market?.floorAsk?.id !== null : false
+
+  const offerIsOracleOrder = offer?.isNativeOffChainCancellable
+
+  const listingIsOracleOrder = listing?.isNativeOffChainCancellable
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
@@ -79,30 +89,34 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-      {(!isOwner || is1155) && isListed && (
-        <Flex
-          css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
-        >
-          <BuyNow
-            token={token}
-            buttonCss={{ flex: 1, justifyContent: 'center' }}
-            buttonProps={{ corners: 'square' }}
-            mutate={mutate}
-          />
-          <AddToCart
-            token={token}
-            buttonCss={{
-              width: 52,
-              p: 0,
-              justifyContent: 'center',
-            }}
-            buttonProps={{ corners: 'square' }}
-          />
-        </Flex>
-      )}
+      {(!isOwner || is1155) &&
+        isListed &&
+        token?.market?.floorAsk?.price?.amount && (
+          <Flex
+            css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
+          >
+            <BuyNow
+              tokenId={token.token?.tokenId}
+              collectionId={token.token?.collection?.id}
+              buttonCss={{ flex: 1, justifyContent: 'center' }}
+              buttonProps={{ corners: 'square' }}
+              buttonChildren="Buy Now"
+              mutate={mutate}
+            />
+            <AddToCart
+              token={token}
+              buttonCss={{
+                width: 52,
+                p: 0,
+                justifyContent: 'center',
+              }}
+              buttonProps={{ corners: 'square' }}
+            />
+          </Flex>
+        )}
       {showAcceptOffer && (
         <AcceptBid
-          token={token}
+          tokenId={token.token?.tokenId}
           bidId={queryBidId}
           collectionId={token?.token?.contract}
           openState={
@@ -130,12 +144,55 @@ export const TokenActions: FC<Props> = ({
           bidId={token?.market?.topBid?.id as string}
           mutate={mutate}
           trigger={
-            <Button
-              css={{ color: '$red11', justifyContent: 'center' }}
-              color="gray3"
-            >
-              Cancel Offer
-            </Button>
+            <Flex>
+              {!offerIsOracleOrder ? (
+                <Tooltip
+                  content={
+                    <Text style="body3" as="p">
+                      Cancelling this order requires gas.
+                    </Text>
+                  }
+                >
+                  <Button
+                    css={{
+                      color: '$red11',
+                      width: '100%',
+                      height: 52,
+                      justifyContent: 'center',
+                      minWidth: 'max-content',
+                      '@sm': {
+                        maxWidth: 250,
+                      },
+                    }}
+                    color="gray3"
+                  >
+                    <FontAwesomeIcon
+                      color="#697177"
+                      icon={faGasPump}
+                      width="16"
+                      height="16"
+                    />
+                    Cancel Offer
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button
+                  css={{
+                    color: '$red11',
+                    width: '100%',
+                    height: 52,
+                    justifyContent: 'center',
+                    minWidth: 'max-content',
+                    '@sm': {
+                      maxWidth: 250,
+                    },
+                  }}
+                  color="gray3"
+                >
+                  Cancel Offer
+                </Button>
+              )}
+            </Flex>
           }
         />
       )}
@@ -145,12 +202,44 @@ export const TokenActions: FC<Props> = ({
           listingId={token?.market?.floorAsk?.id as string}
           mutate={mutate}
           trigger={
-            <Button
-              css={{ color: '$red11', justifyContent: 'center' }}
-              color="gray3"
-            >
-              Cancel Listing
-            </Button>
+            <Flex>
+              {!listingIsOracleOrder ? (
+                <Tooltip
+                  content={
+                    <Text style="body3" as="p">
+                      Cancelling this order requires gas.
+                    </Text>
+                  }
+                >
+                  <Button
+                    css={{
+                      color: '$red11',
+                      minWidth: '150px',
+                    }}
+                    color="gray3"
+                  >
+                    <FontAwesomeIcon
+                      color="#697177"
+                      icon={faGasPump}
+                      width="16"
+                      height="16"
+                    />
+                    Cancel Listing
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button
+                  css={{
+                    color: '$red11',
+                    minWidth: '150px',
+                    justifyContent: 'center',
+                  }}
+                  color="gray3"
+                >
+                  Cancel Listing
+                </Button>
+              )}
+            </Flex>
           }
         />
       )}

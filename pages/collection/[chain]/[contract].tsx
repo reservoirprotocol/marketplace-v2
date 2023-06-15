@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from '../../../components/primitives'
+import { Text, Flex, Box, Button } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -13,7 +13,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
 import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
@@ -38,7 +38,11 @@ import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
-import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBroom,
+  faCopy,
+  faMagnifyingGlass,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
@@ -46,6 +50,9 @@ import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
+import Link from 'next/link'
+import Img from 'components/primitives/Img'
+import Sweep from 'components/buttons/Sweep'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -61,9 +68,7 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
-  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(
-    ssr.hasAttributes ? true : false
-  )
+  const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
@@ -100,6 +105,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
     includeQuantity: true,
+    includeLastSale: true,
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
@@ -135,10 +141,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   const attributesData = useAttributes(id)
 
-  const attributes =
-    attributesData.data?.filter(
-      (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-    ) || []
+  const attributes = useMemo(() => {
+    if (!attributesData.data) {
+      return []
+    }
+    return attributesData.data
+      ?.filter(
+        (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+      )
+      .sort((a, b) => a.key.localeCompare(b.key))
+  }, [attributesData.data])
 
   if (attributeFiltersOpen && attributesData.response && !attributes.length) {
     setAttributeFiltersOpen(false)
@@ -195,14 +207,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <img
-                  src={collection.image}
+                <Img
+                  src={collection.image!}
+                  width={64}
+                  height={64}
                   style={{
                     width: 64,
                     height: 64,
                     borderRadius: 8,
                     objectFit: 'cover',
                   }}
+                  alt="Collection Page Image"
                 />
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
@@ -254,7 +269,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         <Text style="body1" color="subtle">
                           Chain{' '}
                         </Text>
-                        <Text style="body1">{chain}</Text>
+                        <Link
+                          href={`/collection-rankings?chain=${router.query.chain}`}
+                        >
+                          <Text style="body1">{chain}</Text>
+                        </Link>
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
@@ -370,25 +389,55 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       css={{
                         ml: 'auto',
                         width: '100%',
-                        flexDirection: 'row-reverse',
-                        gap: '$3',
+                        gap: '$2',
                         '@md': {
-                          flexDirection: 'row',
                           width: 'max-content',
-                          gap: '$4',
+                          gap: '$3',
                         },
                       }}
                     >
-                      <SortTokens />
+                      <SortTokens
+                        css={{
+                          order: 3,
+                          px: '14px',
+                          justifyContent: 'center',
+                          '@md': {
+                            order: 1,
+                            width: '220px',
+                            minWidth: 'max-content',
+                            px: '$5',
+                          },
+                        }}
+                      />
+                      <Sweep
+                        collectionId={collection.id}
+                        buttonChildren={<FontAwesomeIcon icon={faBroom} />}
+                        buttonCss={{
+                          minWidth: 48,
+                          minHeight: 48,
+                          justifyContent: 'center',
+                          padding: 0,
+                          order: 1,
+                          '@md': {
+                            order: 2,
+                          },
+                        }}
+                        mutate={mutate}
+                      />
                       <CollectionOffer
                         collection={collection}
                         buttonCss={{
                           width: '100%',
                           justifyContent: 'center',
+                          order: 2,
+                          '@md': {
+                            order: 3,
+                          },
                           '@sm': {
                             maxWidth: '220px',
                           },
                         }}
+                        mutate={mutate}
                       />
                     </Flex>
                   </Flex>
@@ -531,7 +580,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps<{
   ssr: {
     collection?: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens?: paths['/tokens/v5']['get']['responses']['200']['schema']
+    tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
   id: string | undefined
@@ -559,7 +608,7 @@ export const getStaticProps: GetStaticProps<{
     headers
   )
 
-  let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
+  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
     collection: id,
     sortBy: 'floorAskPrice',
     sortDirection: 'asc',
@@ -568,10 +617,11 @@ export const getStaticProps: GetStaticProps<{
     includeDynamicPricing: true,
     includeAttributes: true,
     includeQuantity: true,
+    includeLastSale: true,
   }
 
   const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v5`,
+    `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
     headers
   )

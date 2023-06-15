@@ -1,21 +1,29 @@
+import { AcceptBidModal, AcceptBidStep } from '@reservoir0x/reservoir-kit-ui'
 import {
-  AcceptBidModal,
-  AcceptBidStep,
-  useTokens,
-} from '@reservoir0x/reservoir-kit-ui'
-import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
+  cloneElement,
+  ComponentProps,
+  FC,
+  ReactNode,
+  useContext,
+  useMemo,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
-import { useModal } from 'connectkit'
+import {
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  useSwitchNetwork,
+} from 'wagmi'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
-  bidId?: string | undefined
-  collectionId?: string | undefined
+  tokenId?: string
+  bidId?: string
+  collectionId?: string
   disabled?: boolean
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   buttonCss?: CSS
@@ -25,7 +33,7 @@ type Props = {
 }
 
 const AcceptBid: FC<Props> = ({
-  token,
+  tokenId,
   bidId,
   collectionId,
   disabled,
@@ -36,7 +44,7 @@ const AcceptBid: FC<Props> = ({
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
 
   const marketplaceChain = useMarketplaceChain()
@@ -44,7 +52,7 @@ const AcceptBid: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
@@ -57,6 +65,18 @@ const AcceptBid: FC<Props> = ({
     </Button>
   )
 
+  const tokens = useMemo(() => {
+    return collectionId && tokenId
+      ? [
+          {
+            collectionId: collectionId,
+            tokenId: tokenId,
+            bidIds: bidId ? [bidId] : undefined,
+          },
+        ]
+      : []
+  }, [collectionId, tokenId, bidId])
+
   if (isDisconnected || isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
@@ -68,7 +88,7 @@ const AcceptBid: FC<Props> = ({
         }
 
         if (!signer) {
-          setOpen(true)
+          openConnectModal?.()
         }
       },
     })
@@ -77,11 +97,11 @@ const AcceptBid: FC<Props> = ({
       <AcceptBidModal
         trigger={trigger}
         openState={openState}
-        bidId={bidId}
-        collectionId={collectionId}
-        tokenId={token?.token?.tokenId}
+        tokens={tokens}
         onClose={(data, stepData, currentStep) => {
-          if (mutate && currentStep == AcceptBidStep.Complete) mutate()
+          if (mutate && currentStep == AcceptBidStep.Complete) {
+            mutate()
+          }
         }}
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {

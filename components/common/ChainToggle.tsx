@@ -6,10 +6,14 @@ import { useContext } from 'react'
 import { ChainContext } from 'context/ChainContextProvider'
 import { TooltipArrow } from 'components/primitives/Tooltip'
 import { useMounted } from 'hooks'
+import { useTheme } from 'next-themes'
+import { useRouter } from 'next/router'
 
 const ChainToggle: FC = () => {
+  const router = useRouter()
   const { chain, switchCurrentChain } = useContext(ChainContext)
   const isMounted = useMounted()
+  const { theme } = useTheme()
 
   if (!isMounted || supportedChains.length === 1) {
     return null
@@ -21,16 +25,42 @@ const ChainToggle: FC = () => {
         <TooltipPrimitive.Root delayDuration={0} key={chainOption.name}>
           <TooltipPrimitive.Trigger>
             <ToggleGroupItem
+              asChild
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
-              onClick={() => switchCurrentChain(chainOption.id)}
-              css={{
-                width: 56,
-                display: 'flex',
-                justifyContent: 'center',
+              onClick={() => {
+                if (router.query.chain) {
+                  Object.keys(router.query).forEach(
+                    (param) => delete router.query[param]
+                  )
+                  router.replace(
+                    {
+                      pathname: router.pathname,
+                      query: router.query,
+                    },
+                    undefined,
+                    { shallow: true }
+                  )
+                }
+                switchCurrentChain(chainOption.id)
               }}
             >
-              <img src={chainOption.iconUrl} style={{ height: 20 }} />
+              <Box
+                css={{
+                  width: 56,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <img
+                  src={
+                    theme === 'dark'
+                      ? chainOption.darkIconUrl
+                      : chainOption.lightIconUrl
+                  }
+                  style={{ height: 20 }}
+                />
+              </Box>
             </ToggleGroupItem>
           </TooltipPrimitive.Trigger>
           <TooltipPrimitive.Content
@@ -58,7 +88,7 @@ const ChainToggle: FC = () => {
                   p: '$2',
                 }}
               >
-                <Text style="body2" as="p">
+                <Text style="body3" as="p">
                   {chainOption?.name}
                 </Text>
               </Box>

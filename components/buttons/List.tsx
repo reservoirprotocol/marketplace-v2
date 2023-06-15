@@ -10,10 +10,17 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
-import { useModal } from 'connectkit'
+import {
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  mainnet,
+  useSwitchNetwork,
+} from 'wagmi'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { zeroAddress } from 'viem'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
@@ -35,7 +42,7 @@ const List: FC<Props> = ({
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
 
   const marketplaceChain = useMarketplaceChain()
@@ -43,14 +50,30 @@ const List: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
     signer && marketplaceChain.id !== activeChain?.id
   )
 
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for listing
   let listingCurrencies: ListingCurrencies = undefined
+  if (marketplaceChain.id === mainnet.id) {
+    listingCurrencies = [
+      {
+        contract: zeroAddress,
+        symbol: 'ETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        symbol: 'USDC',
+        decimals: 6,
+        coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
 
   const tokenId = token?.token?.tokenId
   const contract = token?.token?.contract
@@ -72,7 +95,7 @@ const List: FC<Props> = ({
         }
 
         if (!signer) {
-          setOpen(true)
+          openConnectModal?.()
         }
       },
     })

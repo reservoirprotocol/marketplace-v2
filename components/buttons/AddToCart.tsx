@@ -2,7 +2,7 @@ import React, { ComponentProps, FC, useContext, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { useCart } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { useModal } from 'connectkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -12,18 +12,75 @@ import { ConfirmationModal } from 'components/common/ConfirmationModal'
 
 type Props = {
   token?: Parameters<ReturnType<typeof useCart>['add']>[0][0]
+  orderId?: string
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
 }
 
-const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
+const AddToCart: FC<Props> = ({
+  token,
+  orderId = undefined,
+  buttonCss,
+  buttonProps,
+}) => {
   const { addToast } = useContext(ToastContext)
   const { data: items, add, remove, clear } = useCart((cart) => cart.items)
   const { data: cartChain } = useCart((cart) => cart.chain)
   const { isConnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
+
+  const hasOrderId = !!orderId
+
+  if (hasOrderId) {
+    const orderIsInCart = items.find((item) => item.order?.id === orderId)
+
+    return (
+      <>
+        <Button
+          css={buttonCss}
+          color="primary"
+          onClick={async () => {
+            if (!isConnected) {
+              openConnectModal?.()
+            }
+
+            if (orderIsInCart) {
+              remove([orderId as string])
+            } else if (cartChain && cartChain?.id !== marketplaceChain.id) {
+              setConfirmationOpen(true)
+            } else {
+              add([{ orderId: orderId }], marketplaceChain.id).then(() => {
+                addToast?.({
+                  title: 'Added to cart',
+                })
+              })
+            }
+          }}
+          {...buttonProps}
+        >
+          <FontAwesomeIcon
+            icon={orderIsInCart ? faMinus : faShoppingCart}
+            width="16"
+            height="16"
+          />
+        </Button>
+        <ConfirmationModal
+          title="Could not add item to cart"
+          message="Your cart has items from a different chain than the item you are trying to add. Adding this item will clear your existing cart and start a new one."
+          open={confirmationOpen}
+          onOpenChange={setConfirmationOpen}
+          onConfirmed={(confirmed) => {
+            if (confirmed) {
+              clear()
+              add([{ orderId: orderId }], marketplaceChain.id)
+            }
+          }}
+        />
+      </>
+    )
+  }
 
   if (!token || (!('market' in token) && !('id' in token))) {
     return null
@@ -54,7 +111,7 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
         color="primary"
         onClick={async () => {
           if (!isConnected) {
-            setOpen(true)
+            openConnectModal?.()
           }
 
           if (isInCart) {
@@ -77,6 +134,7 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
           height="16"
         />
       </Button>
+
       <ConfirmationModal
         title="Could not add item to cart"
         message="Your cart has items from a different chain than the item you are trying to add. Adding this item will clear your existing cart and start a new one."

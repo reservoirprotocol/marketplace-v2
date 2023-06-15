@@ -1,9 +1,8 @@
 import React, { FC } from 'react'
-import { useChainCurrency } from '../../hooks'
-import { constants } from 'ethers'
 import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
 import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
+import { zeroAddress } from 'viem'
 
 type Props = {
   address: string
@@ -13,13 +12,13 @@ type Props = {
 const StyledImg = styled('img', {})
 
 const CryptoCurrencyIcon: FC<Props> = ({
-  address = constants.AddressZero,
+  address = zeroAddress,
   chainId,
   css,
 }) => {
   const client = useReservoirClient()
   const chain = client?.chains?.find((chain) =>
-    chainId !== undefined ? chain.id === chainId : chain.default
+    chainId !== undefined ? chain.id === chainId : chain.active
   )
 
   return (

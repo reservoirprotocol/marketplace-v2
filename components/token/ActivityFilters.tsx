@@ -33,14 +33,18 @@ type Props = {
   open: boolean
   setOpen: (open: boolean) => void
   activityTypes: NonNullable<ActivityTypes>
+  activityNames: string[]
   setActivityTypes: (activityTypes: ActivityTypes) => void
+  setActivityNames: (activityNames: string[]) => void
 }
 
 export const ActivityFilters: FC<Props> = ({
   open,
   setOpen,
   activityTypes,
+  activityNames,
   setActivityTypes,
+  setActivityNames,
 }) => {
   const filters: Filters = [
     {
@@ -119,7 +123,13 @@ export const ActivityFilters: FC<Props> = ({
                   onCheckedChange={(checked) => {
                     if (checked) {
                       setActivityTypes([...activityTypes, filter.type])
+                      setActivityNames([...activityNames, filter.name])
                     } else {
+                      setActivityNames(
+                        activityNames.filter((item) => {
+                          return item != filter.name
+                        })
+                      )
                       setActivityTypes(
                         activityTypes.filter((item) => {
                           return item != filter.type

@@ -1,4 +1,12 @@
-import { Box, Text, Flex, Input, Button } from '../primitives'
+import {
+  Box,
+  Text,
+  Flex,
+  Input,
+  Button,
+  FormatCurrency,
+  FormatCrypto,
+} from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -9,6 +17,7 @@ import {
   ElementRef,
   ComponentPropsWithoutRef,
   FC,
+  useMemo,
 } from 'react'
 
 import { useDebounce } from 'usehooks-ts'
@@ -19,6 +28,10 @@ import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { SearchCollection } from 'pages/api/globalSearch'
+import { formatNumber } from 'utils/numbers'
+import { useTheme } from 'next-themes'
+import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   collection: SearchCollection
@@ -26,6 +39,17 @@ type Props = {
 }
 
 const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
+  const { theme } = useTheme()
+
+  const tokenCount = useMemo(
+    () => formatNumber(collection.tokenCount),
+    [collection.tokenCount]
+  )
+
+  const collectionImage = useMemo(() => {
+    return optimizeImage(collection.image!, 250)
+  }, [collection.image!])
+
   return (
     <Link
       href={`/collection/${collection.chainName}/${collection.collectionId}`}
@@ -44,23 +68,52 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           width: '100%',
         }}
         align="center"
-        justify="between"
       >
-        <Flex align="center" css={{ gap: '$2', minWidth: 0 }}>
-          <img
-            src={collection.image}
-            style={{ width: 32, height: 32, borderRadius: 4 }}
-          />
-          <Text style="subtitle1" ellipsify>
-            {collection.name}
-          </Text>
-          <OpenSeaVerified
-            openseaVerificationStatus={collection?.openseaVerificationStatus}
-          />
+        <Img
+          src={collectionImage}
+          style={{ width: 36, height: 36, borderRadius: 4 }}
+          width={36}
+          height={36}
+          alt="Searchbar Collection Image"
+        />
+        <Flex direction="column" css={{ minWidth: 0 }}>
+          <Flex align="center" css={{ gap: '$1' }}>
+            <Text style="subtitle1" ellipsify>
+              {collection.name}
+            </Text>
+            <OpenSeaVerified
+              openseaVerificationStatus={collection?.openseaVerificationStatus}
+            />
+          </Flex>
+          <Flex align="center" css={{ gap: '$1' }}>
+            <Box css={{ height: 12, minWidth: 'max-content' }}>
+              <img
+                src={
+                  theme === 'dark'
+                    ? collection.darkChainIcon
+                    : collection.lightChainIcon
+                }
+                style={{ height: 12 }}
+              />
+            </Box>
+            {tokenCount && (
+              <Text style="subtitle3" color="subtle">
+                {tokenCount} items
+              </Text>
+            )}
+          </Flex>
         </Flex>
-        <Box css={{ height: 12, minWidth: 'max-content' }}>
-          <img src={collection.chainIcon} style={{ height: 12 }} />
-        </Box>
+        {collection.volumeCurrencySymbol && (
+          <Flex css={{ ml: 'auto', flexShrink: 0, gap: '$1' }}>
+            <FormatCrypto
+              textStyle="subtitle2"
+              amount={collection.allTimeVolume}
+              decimals={collection.volumeCurrencyDecimals}
+              maximumFractionDigits={2}
+            />
+            {collection.volumeCurrencySymbol}
+          </Flex>
+        )}
       </Flex>
     </Link>
   )
@@ -78,7 +131,7 @@ type WalletItemProps = {
 
 const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
   return (
-    <Link href={`/profile/${wallet.address}`}>
+    <Link href={`/portfolio/${wallet.address}`}>
       <Flex
         css={{
           p: '$2',
@@ -174,7 +227,17 @@ const GlobalSearch = forwardRef<
   useEffect(() => {
     const storedRecentResults = localStorage.getItem('recentResults')
     if (storedRecentResults) {
-      setRecentResults(JSON.parse(storedRecentResults))
+      let results = JSON.parse(storedRecentResults)
+
+      //migration code for results that are missing data
+      results = results.filter(
+        (result: SearchCollection) =>
+          result.allTimeVolume !== undefined &&
+          result.volumeCurrencySymbol !== undefined &&
+          result.tokenCount !== undefined
+      )
+
+      setRecentResults(results)
     }
   }, [])
 
@@ -285,7 +348,7 @@ const GlobalSearch = forwardRef<
               top: '100%',
               left: 0,
               right: 0,
-              background: isMobile ? 'transparent' : '$gray3',
+              background: isMobile ? 'transparent' : '$dropdownBg',
               borderRadius: isMobile ? 0 : 8,
               zIndex: 4,
               mt: '$2',
