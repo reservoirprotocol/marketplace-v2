@@ -1,5 +1,5 @@
-import { FC } from 'react'
 import NextHead from 'next/head'
+import { FC } from 'react'
 
 type Props = {
   ogImage?: string
@@ -14,9 +14,9 @@ type Props = {
  * @param description - The description of the page.
  */
 export const Head: FC<Props> = ({
-  ogImage = 'https://marketplace.reservoir.tools/og-image.png',
-  title = 'Reservoir Market | Open Source NFT Marketplace',
-  description = 'Reservoir Market is an open source NFT marketplace built with Reservoir.',
+  ogImage = 'https://nccmlpufieusnuqflhrr.supabase.co/storage/v1/object/public/squads-og-logos/lore_meta_main.png',
+  title = 'Lore Market',
+  description = 'Lore Market is an open source NFT marketplace built with Reservoir.',
 }) => {
   return (
     <NextHead>
