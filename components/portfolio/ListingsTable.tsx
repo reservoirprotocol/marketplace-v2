@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -12,7 +12,6 @@ import {
   Box,
   Tooltip,
 } from '../primitives'
-import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import { useListings } from '@reservoir0x/reservoir-kit-ui'
@@ -22,25 +21,21 @@ import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faCircleExclamation,
-  faGasPump,
-  faTag,
-} from '@fortawesome/free-solid-svg-icons'
-import { COMMUNITY } from 'pages/_app'
+import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
+import { ChainContext } from 'context/ChainContextProvider'
+import Img from 'components/primitives/Img'
+import { BuyNow } from 'components/buttons'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
+  isOwner: boolean
 }
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
-const zoneAddresses = [
-  '0xe1066481cc3b038badd0c68dfa5c8f163c3ff192', // Ethereum - 0xe1...92
-  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
-]
-export const ListingsTable: FC<Props> = ({ address }) => {
+export const ListingsTable: FC<Props> = ({ address, isOwner }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
@@ -49,8 +44,9 @@ export const ListingsTable: FC<Props> = ({ address }) => {
     includeCriteriaMetadata: true,
     includeRawData: true,
   }
+  const { chain } = useContext(ChainContext)
 
-  if (COMMUNITY) listingsQuery.community = COMMUNITY
+  if (chain.community) listingsQuery.community = chain.community
 
   const {
     data: listings,
@@ -88,6 +84,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
               <ListingTableRow
                 key={`${listing?.id}-${i}`}
                 listing={listing}
+                isOwner={isOwner}
                 mutate={mutate}
               />
             )
@@ -106,27 +103,35 @@ export const ListingsTable: FC<Props> = ({ address }) => {
 
 type ListingTableRowProps = {
   listing: ReturnType<typeof useListings>['data'][0]
+  isOwner: boolean
   mutate?: MutatorCallback
 }
 
-const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
+const ListingTableRow: FC<ListingTableRowProps> = ({
+  listing,
+  isOwner,
+  mutate,
+}) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
 
-  const orderZone = listing?.rawData?.zone
-  const orderKind = listing?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = listing?.isNativeOffChainCancellable
 
   let criteriaData = listing?.criteria?.data
 
-  let imageSrc: string = (
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      criteriaData?.token?.tokenId
+        ? criteriaData?.token?.image || criteriaData?.collection?.image
+        : criteriaData?.collection?.image,
+      250
+    )
+  }, [
+    criteriaData?.token?.tokenId,
+    criteriaData?.token?.image,
+    criteriaData?.collection?.image,
+  ])
 
   if (isSmallDevice) {
     return (
@@ -148,20 +153,18 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
           >
             <Flex align="center">
-              {imageSrc && (
-                <Image
-                  style={{
-                    borderRadius: '4px',
-                    objectFit: 'cover',
-                    aspectRatio: '1/1',
-                  }}
-                  loader={({ src }) => src}
-                  src={imageSrc}
-                  alt={`${listing?.id}`}
-                  width={36}
-                  height={36}
-                />
-              )}
+              <Img
+                css={{
+                  borderRadius: '4px',
+                  objectFit: 'cover',
+                  aspectRatio: '1/1',
+                }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${listing?.id}`}
+                width={36}
+                height={36}
+              />
               <Flex
                 direction="column"
                 css={{
@@ -180,7 +183,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={listing?.price?.amount?.native}
+            amount={listing?.price?.amount?.decimal}
             address={listing?.price?.currency?.contract}
             textStyle="subtitle2"
             logoHeight={14}
@@ -198,37 +201,65 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               <Text style="subtitle2">{expiration}</Text>
             </Flex>
           </a>
-          <CancelListing
-            listingId={listing?.id as string}
-            mutate={mutate}
-            trigger={
-              <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
-                    content={
-                      <Text style="body2" as="p">
-                        Cancelling this order requires gas.
-                      </Text>
-                    }
-                  >
-                    <Button css={{ color: '$red11' }} color="gray3">
-                      <FontAwesomeIcon
-                        color="#697177"
-                        icon={faGasPump}
-                        width="16"
-                        height="16"
-                      />
+          {isOwner ? (
+            <CancelListing
+              listingId={listing?.id as string}
+              mutate={mutate}
+              trigger={
+                <Flex>
+                  {!isOracleOrder ? (
+                    <Tooltip
+                      content={
+                        <Text style="body3" as="p">
+                          Cancelling this order requires gas.
+                        </Text>
+                      }
+                    >
+                      <Button
+                        css={{
+                          color: '$red11',
+                          minWidth: '150px',
+                          justifyContent: 'center',
+                        }}
+                        color="gray3"
+                      >
+                        <FontAwesomeIcon
+                          color="#697177"
+                          icon={faGasPump}
+                          width="16"
+                          height="16"
+                        />
+                        Cancel
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       Cancel
                     </Button>
-                  </Tooltip>
-                ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
-                    Cancel
-                  </Button>
-                )}
-              </Flex>
-            }
-          />
+                  )}
+                </Flex>
+              }
+            />
+          ) : (
+            <BuyNow
+              tokenId={listing?.criteria?.data?.token?.tokenId}
+              collectionId={listing?.criteria?.data?.collection?.id}
+              orderId={listing?.id}
+              mutate={mutate}
+              buttonCss={{
+                minWidth: '150px',
+                justifyContent: 'center',
+              }}
+              buttonChildren="Buy Now"
+            />
+          )}
         </Flex>
       </Flex>
     )
@@ -244,20 +275,18 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
           href={`/collection/${routePrefix}/${listing?.contract}/${criteriaData?.token?.tokenId}`}
         >
           <Flex align="center">
-            {imageSrc && (
-              <Image
-                style={{
-                  borderRadius: '4px',
-                  objectFit: 'cover',
-                  aspectRatio: '1/1',
-                }}
-                loader={({ src }) => src}
-                src={imageSrc as string}
-                alt={`${criteriaData?.token?.name}`}
-                width={48}
-                height={48}
-              />
-            )}
+            <Img
+              css={{
+                borderRadius: '4px',
+                objectFit: 'cover',
+                aspectRatio: '1/1',
+              }}
+              loader={({ src }) => src}
+              src={imageSrc as string}
+              alt={`${criteriaData?.token?.name}`}
+              width={48}
+              height={48}
+            />
             <Flex
               direction="column"
               css={{
@@ -277,7 +306,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={listing?.price?.amount?.native}
+          amount={listing?.price?.amount?.decimal}
           address={listing?.price?.currency?.contract}
           textStyle="subtitle2"
           logoHeight={14}
@@ -306,37 +335,65 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
       </TableCell>
       <TableCell>
         <Flex justify="end">
-          <CancelListing
-            listingId={listing?.id as string}
-            mutate={mutate}
-            trigger={
-              <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
-                    content={
-                      <Text style="body2" as="p">
-                        Cancelling this order requires gas.
-                      </Text>
-                    }
-                  >
-                    <Button css={{ color: '$red11' }} color="gray3">
-                      <FontAwesomeIcon
-                        color="#697177"
-                        icon={faGasPump}
-                        width="16"
-                        height="16"
-                      />
+          {isOwner ? (
+            <CancelListing
+              listingId={listing?.id as string}
+              mutate={mutate}
+              trigger={
+                <Flex>
+                  {!isOracleOrder ? (
+                    <Tooltip
+                      content={
+                        <Text style="body3" as="p">
+                          Cancelling this order requires gas.
+                        </Text>
+                      }
+                    >
+                      <Button
+                        css={{
+                          color: '$red11',
+                          minWidth: '150px',
+                          justifyContent: 'center',
+                        }}
+                        color="gray3"
+                      >
+                        <FontAwesomeIcon
+                          color="#697177"
+                          icon={faGasPump}
+                          width="16"
+                          height="16"
+                        />
+                        Cancel
+                      </Button>
+                    </Tooltip>
+                  ) : (
+                    <Button
+                      css={{
+                        color: '$red11',
+                        minWidth: '150px',
+                        justifyContent: 'center',
+                      }}
+                      color="gray3"
+                    >
                       Cancel
                     </Button>
-                  </Tooltip>
-                ) : (
-                  <Button css={{ color: '$red11' }} color="gray3">
-                    Cancel
-                  </Button>
-                )}
-              </Flex>
-            }
-          />
+                  )}
+                </Flex>
+              }
+            />
+          ) : (
+            <BuyNow
+              tokenId={listing?.criteria?.data?.token?.tokenId}
+              collectionId={listing?.criteria?.data?.collection?.id}
+              orderId={listing?.id}
+              mutate={mutate}
+              buttonCss={{
+                minWidth: '150px',
+                justifyContent: 'center',
+              }}
+              buttonChildren="Buy Now"
+            />
+          )}
         </Flex>
       </TableCell>
     </TableRow>

@@ -1,12 +1,25 @@
 import { BidModal, BidStep, Trait } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useRouter } from 'next/router'
-import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import {
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
+import {
+  mainnet,
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  useSwitchNetwork,
+} from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
-import { useModal } from 'connectkit'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -17,6 +30,8 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
 }
 
+type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
+
 const CollectionOffer: FC<Props> = ({
   collection,
   mutate,
@@ -26,10 +41,10 @@ const CollectionOffer: FC<Props> = ({
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
   const [attribute, setAttribute] = useState<Trait>(undefined)
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
@@ -68,6 +83,24 @@ const CollectionOffer: FC<Props> = ({
   )
   const isAttributeModal = !!attribute
 
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for bidding
+  let bidCurrencies: BiddingCurrencies = undefined
+  if (marketplaceChain.id === mainnet.id) {
+    bidCurrencies = [
+      {
+        contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        symbol: 'WETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        symbol: 'USDC',
+        decimals: 6,
+        coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
+
   if (isDisconnected || isInTheWrongNetwork) {
     return (
       <Button
@@ -82,7 +115,7 @@ const CollectionOffer: FC<Props> = ({
           }
 
           if (!signer) {
-            setOpen(true)
+            openConnectModal?.()
           }
         }}
         {...buttonProps}
@@ -102,6 +135,7 @@ const CollectionOffer: FC<Props> = ({
               </Button>
             }
             attribute={attribute}
+            currencies={bidCurrencies}
             onClose={(data, stepData, currentStep) => {
               if (mutate && currentStep == BidStep.Complete) mutate()
             }}

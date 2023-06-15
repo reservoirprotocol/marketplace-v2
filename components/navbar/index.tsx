@@ -14,8 +14,8 @@ import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
-import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
+import { AccountSidebar } from 'components/navbar/AccountSidebar'
 import LoreCartButton from 'plugins/lore/CartButton'
 
 export const NAVBAR_HEIGHT = 81
@@ -146,7 +146,7 @@ const Navbar = () => {
         <CartButton />
         <LoreCartButton />
         {isConnected ? (
-          <ProfileDropdown />
+          <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />

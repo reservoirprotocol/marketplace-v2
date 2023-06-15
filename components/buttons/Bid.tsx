@@ -1,10 +1,22 @@
 import { BidModal, BidStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { cloneElement, ComponentProps, FC, useContext } from 'react'
+import {
+  cloneElement,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  useContext,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
-import { useModal } from 'connectkit'
+import {
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  mainnet,
+  useSwitchNetwork,
+} from 'wagmi'
+import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -18,6 +30,8 @@ type Props = {
   mutate?: SWRResponse['mutate']
 }
 
+type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
+
 const Bid: FC<Props> = ({
   tokenId,
   collectionId,
@@ -28,14 +42,14 @@ const Bid: FC<Props> = ({
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
-  const { setOpen } = useModal()
+  const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
@@ -48,6 +62,24 @@ const Bid: FC<Props> = ({
     </Button>
   )
 
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for bidding
+  let bidCurrencies: BiddingCurrencies = undefined
+  if (marketplaceChain.id === mainnet.id) {
+    bidCurrencies = [
+      {
+        contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        symbol: 'WETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        symbol: 'USDC',
+        decimals: 6,
+        coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
+
   if (isDisconnected || isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
@@ -59,7 +91,7 @@ const Bid: FC<Props> = ({
         }
 
         if (!signer) {
-          setOpen(true)
+          openConnectModal?.()
         }
       },
     })
@@ -70,6 +102,7 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
+        currencies={bidCurrencies}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}

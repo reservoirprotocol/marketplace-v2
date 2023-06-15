@@ -9,10 +9,11 @@ import * as Tabs from '@radix-ui/react-tabs'
 import {
   TokenMedia,
   useAttributes,
+  useBids,
   useCollections,
   useDynamicTokens,
+  useListings,
   useTokenActivity,
-  useTokenOpenseaBanned,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -60,6 +61,8 @@ import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
+import { OffersTable } from 'components/token/OffersTable'
+import { ListingsTable } from 'components/token/ListingsTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -83,33 +86,35 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
+  const [activityNames, setActivityNames] = useState<string[]>([])
 
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
-  const { data: collections } = useCollections(
-    {
-      contract: contract,
-    },
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
-  const collection = collections && collections[0] ? collections[0] : null
 
   const { data: tokens, mutate } = useDynamicTokens(
     {
       tokens: [`${contract}:${id}`],
       includeAttributes: true,
       includeTopBid: true,
+      includeQuantity: true,
     },
     {
       fallbackData: [ssr.tokens],
     }
   )
 
-  const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
   const is1155 = token?.token?.kind === 'erc1155'
+
+  const { data: collections } = useCollections(
+    {
+      id: token?.token?.collection?.id,
+    },
+    {
+      fallbackData: [ssr.collection],
+    }
+  )
+  const collection = collections && collections[0] ? collections[0] : null
 
   const { data: userTokens } = useUserTokens(
     is1155 ? account.address : undefined,
@@ -118,7 +123,24 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const attributesData = useAttributes(id)
+  const { data: offers } = useBids({
+    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+    includeRawData: true,
+    sortBy: 'price',
+    limit: 1,
+  })
+
+  const { data: listings } = useListings({
+    token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
+    includeRawData: true,
+    sortBy: 'price',
+    limit: 1,
+  })
+
+  const offer = offers && offers[0] ? offers[0] : undefined
+  const listing = listings && listings[0] ? listings[0] : undefined
+
+  const attributesData = useAttributes(collectionId)
 
   let countOwned = 0
   if (is1155) {
@@ -152,7 +174,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     >
       {isSmallDevice ? null : (
         <Text style="body1">
-          {activityTypes.map(titleCase).join(', ') || 'All Events'}
+          {activityNames.map(titleCase).join(', ') || 'All Events'}
         </Text>
       )}
       <Text css={{ color: '$slate10' }}>
@@ -188,6 +210,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           break
         case 'activity':
           tab = 'activity'
+          break
+        case 'listings':
+          tab = 'listings'
+          break
+        case 'offers':
+          tab = 'offers'
           break
       }
     }
@@ -318,7 +346,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           direction="column"
           css={{
             flex: 1,
-            px: '$4',
+            px: '$3',
             width: '100%',
             '@md': {
               px: 0,
@@ -419,23 +447,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Text style="h4" css={{ wordBreak: 'break-all' }}>
               {tokenName}
             </Text>
-            {flagged && (
-              <Tooltip
-                content={
-                  <Text style="body2" as="p">
-                    Not tradeable on OpenSea
-                  </Text>
-                }
-              >
-                <Text css={{ color: '$red10' }}>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    width={16}
-                    height={16}
-                  />
-                </Text>
-              </Tooltip>
-            )}
           </Flex>
           {token && (
             <>
@@ -464,7 +475,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     diameter={16}
                     seed={jsNumberForAddress(owner || '')}
                   />
-                  <Link href={`/profile/${owner}`} legacyBehavior={true}>
+                  <Link href={`/portfolio/${owner}`} legacyBehavior={true}>
                     <Anchor color="primary" weight="normal" css={{ ml: '$1' }}>
                       {isMounted ? ownerFormatted : ''}
                     </Anchor>
@@ -480,22 +491,32 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               {isMounted && (
                 <TokenActions
                   token={token}
+                  offer={offer}
+                  listing={listing}
                   isOwner={isOwner}
                   mutate={mutate}
                   account={account}
                 />
               )}
               <Tabs.Root
-                defaultValue=""
                 value={tabValue}
                 onValueChange={(value) => setTabValue(value)}
+                style={{
+                  paddingRight: isSmallDevice ? 0 : 15,
+                }}
               >
-                <TabsList>
+                <TabsList
+                  css={{
+                    overflowX: isSmallDevice ? 'scroll' : 'unset',
+                  }}
+                >
                   {isMounted && isSmallDevice && hasAttributes && (
                     <TabsTrigger value="attributes">Attributes</TabsTrigger>
                   )}
                   <TabsTrigger value="info">Info</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
+                  <TabsTrigger value="listings">Listings</TabsTrigger>
+                  <TabsTrigger value="offers">Offers</TabsTrigger>
                 </TabsList>
                 <TabsContent value="attributes">
                   {token?.token?.attributes && (
@@ -525,7 +546,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     <TokenInfo token={token} collection={collection} />
                   )}
                 </TabsContent>
-                <TabsContent value="activity">
+                <TabsContent value="activity" css={{ mr: -15 }}>
                   {isSmallDevice ? (
                     <MobileActivityFilters
                       activityTypes={activityTypes}
@@ -542,13 +563,31 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                         open={activityFiltersOpen}
                         setOpen={setActivityFiltersOpen}
                         activityTypes={activityTypes}
+                        activityNames={activityNames}
+                        setActivityNames={setActivityNames}
                         setActivityTypes={setActivityTypes}
                       />
                     </Dropdown>
                   )}
                   <TokenActivityTable
-                    id={`${token.token?.collection?.id}:${token?.token?.tokenId}`}
+                    id={`${contract}:${token?.token?.tokenId}`}
                     activityTypes={activityTypes}
+                  />
+                </TabsContent>
+                <TabsContent value="listings">
+                  <ListingsTable
+                    token={`${contract}:${token?.token?.tokenId}`}
+                    address={account.address}
+                    is1155={is1155}
+                    isOwner={isOwner}
+                  />
+                </TabsContent>
+                <TabsContent value="offers" css={{ mr: -15, width: '100%' }}>
+                  <OffersTable
+                    token={`${contract}:${token?.token?.tokenId}`}
+                    address={account.address}
+                    is1155={is1155}
+                    isOwner={isOwner}
                   />
                 </TabsContent>
               </Tabs.Root>
@@ -572,7 +611,7 @@ export const getStaticProps: GetStaticProps<{
   collectionId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v5']['get']['responses']['200']['schema']
+    tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
@@ -583,26 +622,13 @@ export const getStaticProps: GetStaticProps<{
 
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      contract: contract,
-      includeTopBid: true,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
-
   const headers = {
     headers: {
       'x-api-key': apiKey || '',
     },
   }
 
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery,
-    headers
-  )
-
-  let tokensQuery: paths['/tokens/v5']['get']['parameters']['query'] = {
+  let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
     tokens: [`${contract}:${id}`],
     includeAttributes: true,
     includeTopBid: true,
@@ -611,22 +637,33 @@ export const getStaticProps: GetStaticProps<{
   }
 
   const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v5`,
+    `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
     headers
   )
-  const promises = await Promise.allSettled([
-    collectionsPromise,
-    tokensPromise,
-  ]).catch(() => {})
-  const collection: Props['ssr']['collection'] =
-    promises?.[0].status === 'fulfilled' && promises[0].value.data
-      ? (promises[0].value.data as Props['ssr']['collection'])
-      : {}
-  const tokens: Props['ssr']['tokens'] =
-    promises?.[1].status === 'fulfilled' && promises[1].value.data
-      ? (promises[1].value.data as Props['ssr']['tokens'])
-      : {}
+
+  const tokensResponse = await tokensPromise
+  const tokens = tokensResponse.data
+    ? (tokensResponse.data as Props['ssr']['tokens'])
+    : {}
+
+  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+    {
+      id: tokens?.tokens?.[0]?.token?.collection?.id,
+      includeTopBid: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
+    }
+
+  const collectionsPromise = fetcher(
+    `${reservoirBaseUrl}/collections/v5`,
+    collectionQuery,
+    headers
+  )
+
+  const collectionsResponse = await collectionsPromise
+  const collection = collectionsResponse.data
+    ? (collectionsResponse.data as Props['ssr']['collection'])
+    : {}
 
   return {
     props: { collectionId, id, ssr: { collection, tokens } },

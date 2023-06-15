@@ -14,7 +14,7 @@ const DropdownMenuContent = styled(DropdownMenuPrimitive.DropdownMenuContent, {
   p: '$2',
   borderRadius: 8,
   zIndex: 5,
-  background: '$panelBg',
+  background: '$dropdownBg',
   $$borderColor: '$colors$gray7',
   boxShadow: '0 0 0 1px $$borderColor',
 })

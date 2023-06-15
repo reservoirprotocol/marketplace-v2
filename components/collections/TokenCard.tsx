@@ -208,7 +208,7 @@ export default ({
               {token?.token?.isFlagged && (
                 <Tooltip
                   content={
-                    <Text style="body2" as="p">
+                    <Text style="body3" as="p">
                       Not tradeable on OpenSea
                     </Text>
                   }
@@ -258,19 +258,21 @@ export default ({
                 textOverflow: 'ellipsis',
               }}
             >
-              <FormatCryptoCurrency
-                logoHeight={18}
-                amount={token?.market?.floorAsk?.price?.amount?.decimal}
-                address={token?.market?.floorAsk?.price?.currency?.contract}
-                textStyle="h6"
-                css={{
-                  textOverflow: 'ellipsis',
-                  minWidth: 0,
-                  with: '100%',
-                  overflow: 'hidden',
-                }}
-                maximumFractionDigits={4}
-              />
+              {token?.market?.floorAsk?.price && (
+                <FormatCryptoCurrency
+                  logoHeight={18}
+                  amount={token?.market?.floorAsk?.price?.amount?.decimal}
+                  address={token?.market?.floorAsk?.price?.currency?.contract}
+                  textStyle="h6"
+                  css={{
+                    textOverflow: 'ellipsis',
+                    minWidth: 0,
+                    with: '100%',
+                    overflow: 'hidden',
+                  }}
+                  maximumFractionDigits={4}
+                />
+              )}
             </Box>
 
             <>
@@ -286,14 +288,16 @@ export default ({
               )}
             </>
           </Flex>
-          {token?.token?.lastBuy?.value ? (
+          {token?.token?.lastSale?.price?.amount?.decimal ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
                 Last Sale
               </Text>
               <FormatCryptoCurrency
                 logoHeight={12}
-                amount={token.token.lastBuy.value}
+                amount={token.token.lastSale.price.amount?.decimal}
+                address={token.token.lastSale.price.currency?.contract}
+                decimals={token.token.lastSale.price.currency?.decimals}
                 textStyle="subtitle3"
                 maximumFractionDigits={4}
               />
@@ -301,7 +305,7 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {isOwner ? (
+      {isOwner && token?.market?.floorAsk?.price?.amount ? (
         <Flex
           className="token-button-container"
           css={{
@@ -315,7 +319,8 @@ export default ({
           }}
         >
           <BuyNow
-            token={token}
+            tokenId={token.token?.tokenId}
+            collectionId={token.token?.collection?.id}
             mutate={mutate}
             buttonCss={{
               justifyContent: 'center',
@@ -324,6 +329,7 @@ export default ({
             buttonProps={{
               corners: 'square',
             }}
+            buttonChildren="Buy Now"
           />
           {addToCartEnabled ? (
             <AddToCart
