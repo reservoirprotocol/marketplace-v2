@@ -464,9 +464,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <TokenCard
                             key={i}
                             token={token}
-                            orderQuantity={
-                              token?.market?.floorAsk?.quantityRemaining
-                            }
                             address={address as Address}
                             mutate={mutate}
                             rarityEnabled={rarityEnabledCollection}
