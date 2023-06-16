@@ -86,7 +86,7 @@ const loreLightTheme: ReservoirKitTheme = {
     headline: Aeonik.style.fontFamily,
   },
   assets: {
-    ethIcon: 'sand',
+    ethIcon: 'gray',
   },
   colors: {
     // accent colors
@@ -225,7 +225,7 @@ const loreDarkTheme: ReservoirKitTheme = {
     overlayBackground: '$blackA10',
     headerBackground: '$neutralBgHover',
     footerBackground: '$neutralBg',
-    contentBackground: loreTheme.sand900,
+    contentBackground: loreTheme.Gray900,
     wellBackground: '$neutralBase',
     popoverBackground: '$neutralBgActive',
   },
