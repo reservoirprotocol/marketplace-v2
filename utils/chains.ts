@@ -1,12 +1,30 @@
-import {
-  arbitrum,
-  goerli,
-  mainnet,
-  polygon,
-  optimism,
-  Chain,
-  bsc,
-} from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+
+//Chains that are missing from wagmi:
+export const zora = {
+  id: 7777777,
+  name: 'Zora',
+  network: 'zora',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.zora.co'],
+    },
+    public: {
+      http: ['https://rpc.zora.co'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.co',
+    },
+    default: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.co',
+    },
+  },
+} as const satisfies Chain
 
 //Chains that are missing from wagmi:
 export const arbitrumNova = {
@@ -139,16 +157,15 @@ export default [
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
   {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    ...zora,
+    name: 'Zora',
+    lightIconUrl: '/icons/zora-icon-dark.svg',
+    darkIconUrl: '/icons/zora-icon-light.svg',
+    reservoirBaseUrl: 'https://api-zora.reservoir.tools',
+    proxyApi: '/api/reservoir/zora',
+    routePrefix: 'zora',
+    apiKey: process.env.ZORA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
   },
   {
     ...bsc,
