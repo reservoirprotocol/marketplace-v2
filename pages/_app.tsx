@@ -74,8 +74,8 @@ const wagmiClient = createConfig({
   publicClient,
 })
 
-// @Irwin This replaces the light theme for modals
-// As a note, these can't actually grab the stitches theme variables (gray1, red1, primary1), so you'll have to replace them with the loreTheme.XXX variables
+// Replaced with Lore colors
+// As a note, these can't actually grab the stitches theme variables (sand1, red1, primary1), so they'll have to be replaced with the loreTheme.XXX variables
 const loreLightTheme: ReservoirKitTheme = {
   radii: {
     borderRadius: '4px',
@@ -86,50 +86,50 @@ const loreLightTheme: ReservoirKitTheme = {
     headline: Aeonik.style.fontFamily,
   },
   assets: {
-    ethIcon: 'gray',
+    ethIcon: 'sand',
   },
   colors: {
     // accent colors
-    accentBase: '$indigo1',
-    accentBgSubtle: '$indigo2',
-    accentBg: '$indigo3',
-    accentBgHover: '$indigo4',
-    accentBgActive: '$indigo5',
-    accentLine: '$indigo6',
-    accentBorder: '$indigo7',
-    accentBorderHover: '$indigo8',
-    accentSolid: '$indigo9',
-    accentSolidHover: '$indigo10',
-    accentText: '$indigo11',
-    accentTextContrast: '$indigo12',
+    accentBase: '$brown1',
+    accentBgSubtle: '$brown2',
+    accentBg: '$brown3',
+    accentBgHover: '$brown4',
+    accentBgActive: '$brown5',
+    accentLine: '$brown6',
+    accentBorder: '$brown7',
+    accentBorderHover: '$brown8',
+    accentSolid: '$brown9',
+    accentSolidHover: '$brown10',
+    accentText: '$brown11',
+    accentTextContrast: '$brown12',
 
-    // neutral colors
-    neutralBase: loreTheme.Gray100, //  @Irwin this is an example of how to replace with our lore colors
+    // neutral colors -> Replaced with Lore colors
+    neutralBase: '$sand1',
     neutralBgSubtle: 'white',
-    neutralBg: '$gray3',
-    neutralBgHover: '$gray2',
-    neutralBgActive: '$gray5',
-    neutralLine: '$gray6',
-    neutralBorder: '$gray7',
-    neutralBorderHover: '$gray8',
-    neutralSolid: '$gray9',
-    neutralSolidHover: '$gray10',
-    neutralText: '$gray11',
-    neutralTextContrast: '$gray12',
+    neutralBg: '$sand3',
+    neutralBgHover: '$sand2',
+    neutralBgActive: '$sand5',
+    neutralLine: '$sand6',
+    neutralBorder: '$sand7',
+    neutralBorderHover: '$sand8',
+    neutralSolid: '$sand9',
+    neutralSolidHover: '$sand10',
+    neutralText: '$sand11',
+    neutralTextContrast: '$sand12',
 
     // secondary colors
-    secondaryBase: '$indigoA1',
-    secondaryBgSubtle: '$indigoA2',
-    secondaryBg: '$indigoA3',
-    secondaryBgHover: '$indigoA4',
-    secondaryBgActive: '$indigoA5',
-    secondaryLine: '$indigoA6',
-    secondaryBorder: '$indigoA7',
-    secondaryBorderHover: '$indigoA8',
-    secondarySolid: '$indigoA9',
-    secondarySolidHover: '$indigoA10',
-    secondaryText: '$indigoA11',
-    secondaryTextContrast: '$indigoA12',
+    secondaryBase: '$brownA1',
+    secondaryBgSubtle: '$brownA2',
+    secondaryBg: '$brownA3',
+    secondaryBgHover: '$brownA4',
+    secondaryBgActive: '$brownA5',
+    secondaryLine: '$brownA6',
+    secondaryBorder: '$brownA7',
+    secondaryBorderHover: '$brownA8',
+    secondarySolid: '$brownA9',
+    secondarySolidHover: '$brownA10',
+    secondaryText: '$brownA11',
+    secondaryTextContrast: '$brownA12',
 
     // general colors
     borderColor: '$neutralBorder',
@@ -148,12 +148,12 @@ const loreLightTheme: ReservoirKitTheme = {
     headerBackground: '$neutralBgHover',
     footerBackground: '$neutralBgHover',
     contentBackground: '$neutralBgSubtle',
-    wellBackground: '$gray3',
+    wellBackground: '$sand3',
     popoverBackground: '$neutralBase',
   },
 }
 
-// @Irwin This replaces the dark theme for modals
+// -> Replaced with Lore colors
 const loreDarkTheme: ReservoirKitTheme = {
   radii: {
     borderRadius: '4px',
@@ -168,18 +168,18 @@ const loreDarkTheme: ReservoirKitTheme = {
   },
   colors: {
     // accent colors
-    accentBase: '$indigo1',
-    accentBgSubtle: '$indigo2',
-    accentBg: '$indigo3',
-    accentBgHover: '$indigo4',
-    accentBgActive: '$indigo5',
-    accentLine: '$indigo6',
-    accentBorder: '$indigo7',
-    accentBorderHover: '$indigo8',
-    accentSolid: '$indigo9',
-    accentSolidHover: '$indigo10',
-    accentText: '$indigo11',
-    accentTextContrast: '$indigo12',
+    accentBase: '$brown1',
+    accentBgSubtle: '$brown2',
+    accentBg: '$brown3',
+    accentBgHover: '$brown4',
+    accentBgActive: '$brown5',
+    accentLine: '$brown6',
+    accentBorder: '$brown7',
+    accentBorderHover: '$brown8',
+    accentSolid: '$brown9',
+    accentSolidHover: '$brown10',
+    accentText: '$brown11',
+    accentTextContrast: '$brown12',
 
     // neutral colors
     neutralBase: '$slate1',
@@ -196,18 +196,18 @@ const loreDarkTheme: ReservoirKitTheme = {
     neutralTextContrast: '$slate12',
 
     // secondary colors
-    secondaryBase: '$indigoA1',
-    secondaryBgSubtle: '$indigoA2',
-    secondaryBg: '$indigoA3',
-    secondaryBgHover: '$indigoA4',
-    secondaryBgActive: '$indigoA5',
-    secondaryLine: '$indigoA6',
-    secondaryBorder: '$indigoA7',
-    secondaryBorderHover: '$indigoA8',
-    secondarySolid: '$indigoA9',
-    secondarySolidHover: '$indigoA10',
-    secondaryText: '$indigoA11',
-    secondaryTextContrast: '$indigoA12',
+    secondaryBase: '$brownA1',
+    secondaryBgSubtle: '$brownA2',
+    secondaryBg: '$brownA3',
+    secondaryBgHover: '$brownA4',
+    secondaryBgActive: '$brownA5',
+    secondaryLine: '$brownA6',
+    secondaryBorder: '$brownA7',
+    secondaryBorderHover: '$brownA8',
+    secondarySolid: '$brownA9',
+    secondarySolidHover: '$brownA10',
+    secondaryText: '$brownA11',
+    secondaryTextContrast: '$brownA12',
 
     // general colors
     borderColor: '$neutralBorder',
@@ -225,7 +225,7 @@ const loreDarkTheme: ReservoirKitTheme = {
     overlayBackground: '$blackA10',
     headerBackground: '$neutralBgHover',
     footerBackground: '$neutralBg',
-    contentBackground: loreTheme.Gray900,
+    contentBackground: loreTheme.sand900,
     wellBackground: '$neutralBase',
     popoverBackground: '$neutralBgActive',
   },

@@ -197,7 +197,7 @@ const AeonikMono = localFont({
 export const { createTheme, keyframes, styled, globalCss, getCssText } =
   createStitches({
     theme: {
-      // @Irwin This is the Light Theme for the overall app
+      //  Replaced with Lore colors
       colors: {
         ...crimson,
         ...violet,
@@ -402,7 +402,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
 export const globalReset = globalCss(reset)
 
 export const darkTheme = createTheme({
-  // @Irwin This is the Dark Theme for the overall app
+  // Replaced with Lore colors
   colors: {
     ...crimsonDark,
     ...violetDark,
