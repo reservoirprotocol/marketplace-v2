@@ -19,7 +19,6 @@ export const ConnectWalletButton: FC<Props> = () => {
               flex: '1',
               display: 'flex',
               justifyContent: 'flex',
-              position: 'relative',
             }}
           >
             {(() => {
