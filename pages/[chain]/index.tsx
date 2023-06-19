@@ -1,4 +1,9 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useContext, useState } from 'react'
@@ -9,7 +14,7 @@ import { useAccount } from 'wagmi'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from './_app'
+import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
 import ChainToggle from 'components/common/ChainToggle'
@@ -85,8 +90,12 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             align="center"
             css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
           >
-            <Text style="h3" css={{ mb: 24 }}>
-              Open Source Marketplace
+            <Text style="h4" css={{ mb: 24 }}>
+              reservoir{' '}
+              <Text style="h4" color="subtle">
+                on
+              </Text>{' '}
+              {marketplaceChain.name}
             </Text>
             <Text style="body1" css={{ mb: 48 }}>
               Reservoir Marketplace is an open-source project that showcases the
@@ -135,7 +144,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             />
           )}
           <Box css={{ alignSelf: 'center' }}>
-            <Link href="/collection-rankings">
+            <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
               <Button
                 css={{
                   minWidth: 224,
@@ -152,6 +161,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       </Box>
     </Layout>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
 }
 
 type CollectionSchema =

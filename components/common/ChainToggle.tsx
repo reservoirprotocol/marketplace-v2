@@ -29,20 +29,12 @@ const ChainToggle: FC = () => {
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
               onClick={() => {
-                if (router.query.chain) {
-                  Object.keys(router.query).forEach(
-                    (param) => delete router.query[param]
-                  )
-                  router.replace(
-                    {
-                      pathname: router.pathname,
-                      query: router.query,
-                    },
-                    undefined,
-                    { shallow: true }
-                  )
-                }
+                const newUrl = router.asPath.replace(
+                  chain.routePrefix,
+                  chainOption.routePrefix
+                )
                 switchCurrentChain(chainOption.id)
+                router.replace(newUrl, undefined, { scroll: false })
               }}
             >
               <Box

@@ -151,7 +151,7 @@ export default ({
       </Flex>
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/collection/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia

@@ -236,7 +236,7 @@ export default ({
       ) : null}
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/collection/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
@@ -271,7 +271,7 @@ export default ({
         </Box>
       </Link>
       <Link
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/collection/${token?.token?.contract}/${token?.token?.tokenId}`}
       >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}

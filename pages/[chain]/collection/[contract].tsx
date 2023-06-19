@@ -270,7 +270,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           Chain{' '}
                         </Text>
                         <Link
-                          href={`/collection-rankings?chain=${router.query.chain}`}
+                          href={`/${router.query.chain}/collection-rankings?chain=${router.query.chain}`}
                         >
                           <Text style="body1">{chain}</Text>
                         </Link>
@@ -652,7 +652,7 @@ export const getStaticProps: GetStaticProps<{
   ) {
     return {
       redirect: {
-        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
+        destination: `/${routePrefix}/collection/${id}/${tokens.tokens[0].token.tokenId}`,
         permanent: false,
       },
     }
