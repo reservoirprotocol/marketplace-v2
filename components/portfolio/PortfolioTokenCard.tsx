@@ -166,35 +166,7 @@ export default ({
             }}
             ellipsify
           >
-            x{tokenCount}
-          </Text>
-        </Flex>
-      )}
-      {orderQuantity && orderQuantity > 1 && (
-        <Flex
-          justify="center"
-          align="center"
-          css={{
-            borderRadius: 8,
-            px: '$2',
-            py: '$1',
-            mr: '$2',
-            position: 'absolute',
-            left: '$2',
-            top: '$2',
-            zIndex: 1,
-            maxWidth: '50%',
-            backgroundColor: 'rgba(	38, 41, 43, 0.3)',
-            backdropFilter: 'blur(2px)',
-          }}
-        >
-          <Text
-            css={{
-              color: '$whiteA12',
-            }}
-            ellipsify
-          >
-            x{orderQuantity}
+            x{formatNumber(tokenCount, 0, true)}
           </Text>
         </Flex>
       )}
