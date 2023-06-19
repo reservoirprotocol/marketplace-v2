@@ -58,7 +58,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import fetcher from 'utils/fetcher'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import { spin } from 'components/common/LoadingSpinner'
-import { formatDollar } from 'utils/numbers'
+import { formatDollar, formatNumber } from 'utils/numbers'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { ItemView } from './ViewToggle'
 import PortfolioTokenCard from './PortfolioTokenCard'
@@ -696,7 +696,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                           style="subtitle3"
                           css={{ px: '$2', fontSize: 10 }}
                         >
-                          x{token?.ownership?.tokenCount}
+                          x{formatNumber(token?.ownership?.tokenCount, 0, true)}
                         </Text>
                       </Flex>
                     )}
