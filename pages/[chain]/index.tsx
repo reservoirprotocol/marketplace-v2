@@ -106,7 +106,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 },
               }}
               trigger={
-                <Flex css={{ gap: '$3', alignItems: 'center' }}>
+                <Flex
+                  css={{ gap: '$3', alignItems: 'center', cursor: 'pointer' }}
+                >
                   <Text style="h3">{' ' + marketplaceChain.name}</Text>
                   <FontAwesomeIcon
                     icon={faChevronDown}
