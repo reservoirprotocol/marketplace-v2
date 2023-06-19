@@ -270,7 +270,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           Chain{' '}
                         </Text>
                         <Link
-                          href={`/${router.query.chain}/collection-rankings?chain=${router.query.chain}`}
+                          href={`/${router.query.chain}/collection-rankings`}
                         >
                           <Text style="body1">{chain}</Text>
                         </Link>
