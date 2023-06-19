@@ -93,8 +93,8 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
         >
           <Flex align="center" css={{ mb: '$4', gap: '$3' }}>
-            <Text style="h4">Explore NFTs</Text>{' '}
-            <Text style="h4" color="subtle">
+            <Text style="h3">Explore NFTs</Text>{' '}
+            <Text style="h3" color="subtle">
               on
             </Text>
             <Dropdown
@@ -107,7 +107,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               }}
               trigger={
                 <Flex css={{ gap: '$3', alignItems: 'center' }}>
-                  <Text style="h4">{' ' + marketplaceChain.name}</Text>
+                  <Text style="h3">{' ' + marketplaceChain.name}</Text>
                   <FontAwesomeIcon
                     icon={faChevronDown}
                     width={16}
