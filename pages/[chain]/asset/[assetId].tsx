@@ -1,7 +1,6 @@
 import {
   faArrowLeft,
   faChevronDown,
-  faCircleExclamation,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -22,15 +21,7 @@ import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Layout from 'components/Layout'
-import {
-  Anchor,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Text,
-  Tooltip,
-} from 'components/primitives'
+import { Anchor, Box, Button, Flex, Grid, Text } from 'components/primitives'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
 import AttributeCard from 'components/token/AttributeCard'
@@ -75,7 +66,10 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
+  const assetIdPieces = assetId ? assetId.toString().split(':') : []
+  let collectionId = assetIdPieces[0]
+  const id = assetIdPieces[1]
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -607,15 +601,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<{
-  id?: string
-  collectionId?: string
+  assetId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
-  let collectionId = params?.contract?.toString()
-  const id = params?.id?.toString()
+  const assetId = params?.assetId ? params.assetId.toString().split(':') : []
+  let collectionId = assetId[0]
+  const id = assetId[1]
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
@@ -666,7 +660,7 @@ export const getStaticProps: GetStaticProps<{
     : {}
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } },
+    props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
     revalidate: 20,
   }
 }

@@ -649,7 +649,7 @@ export const getStaticProps: GetStaticProps<{
   ) {
     return {
       redirect: {
-        destination: `/${routePrefix}/asset/${id}/${tokens.tokens[0].token.tokenId}`,
+        destination: `/${routePrefix}/asset/${id}:${tokens.tokens[0].token.tokenId}`,
         permanent: false,
       },
     }
