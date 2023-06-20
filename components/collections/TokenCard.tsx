@@ -32,7 +32,6 @@ type TokenCardProps = {
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
   tokenCount?: string
-  orderQuantity?: number
 }
 
 export default ({

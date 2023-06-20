@@ -102,7 +102,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   const collectionImage = useMemo(() => {
     return optimizeImage(collection.image as string, 250)
   }, [collection.image])
-  
   if (isSmallDevice) {
     return (
       <Link
@@ -198,7 +197,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 {rank}
               </Text>
               <Img
-                src={collection.image as string}
+                src={collectionImage}
                 css={{
                   borderRadius: 8,
                   width: 56,

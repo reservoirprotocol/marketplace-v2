@@ -1,10 +1,4 @@
-import {
-  mainnet,
-  polygon,
-  arbitrum,
-  optimism,
-  Chain,
-} from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, Chain } from 'wagmi/chains'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.

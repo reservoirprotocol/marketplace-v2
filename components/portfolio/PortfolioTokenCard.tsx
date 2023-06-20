@@ -94,7 +94,6 @@ export default ({
   const collectionImage = useMemo(() => {
     return optimizeImage(token?.token?.collection?.imageUrl, 500)
   }, [token?.token?.collection?.imageUrl])
-  
   const isOracleOrder =
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
 
@@ -251,7 +250,7 @@ export default ({
         >
           <Flex css={{ mb: '$4' }} align="center" justify="between">
             <Flex align="center" css={{ gap: '$2', minWidth: 0 }}>
-              {token?.token?.collection?.imageUrl ? (
+              {collectionImage ? (
                 <Image
                   style={{
                     borderRadius: '4px',
