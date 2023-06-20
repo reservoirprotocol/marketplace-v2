@@ -31,17 +31,11 @@ const ChainToggle: FC = () => {
 
   const switchChains = useCallback(
     (chainOption: (typeof supportedChains)[0]) => {
-      if (router.query.chain) {
-        Object.keys(router.query).forEach((param) => delete router.query[param])
-        router.replace(
-          {
-            pathname: router.pathname,
-            query: router.query,
-          },
-          undefined,
-          { shallow: true }
-        )
-      }
+      const newUrl = router.asPath.replace(
+        chain.routePrefix,
+        chainOption.routePrefix
+      )
+      router.replace(newUrl, undefined, { scroll: false })
       switchCurrentChain(chainOption.id)
     },
     [router.query, switchCurrentChain]

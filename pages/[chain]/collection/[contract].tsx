@@ -270,7 +270,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           Chain{' '}
                         </Text>
                         <Link
-                          href={`/collection-rankings?chain=${router.query.chain}`}
+                          href={`/${router.query.chain}/collection-rankings`}
                         >
                           <Text style="body1">{chain}</Text>
                         </Link>
@@ -464,9 +464,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <TokenCard
                             key={i}
                             token={token}
-                            orderQuantity={
-                              token?.market?.floorAsk?.quantityRemaining
-                            }
                             address={address as Address}
                             mutate={mutate}
                             rarityEnabled={rarityEnabledCollection}
@@ -652,7 +649,7 @@ export const getStaticProps: GetStaticProps<{
   ) {
     return {
       redirect: {
-        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
+        destination: `/${routePrefix}/collection/${id}/${tokens.tokens[0].token.tokenId}`,
         permanent: false,
       },
     }
