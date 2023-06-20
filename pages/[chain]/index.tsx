@@ -92,57 +92,75 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           align="center"
           css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
         >
-          <Flex align="center" css={{ mb: '$4', gap: '$3' }}>
+          <Flex
+            css={{
+              mb: '$4',
+              gap: '$3',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              '@bp600': {
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            }}
+          >
             <Text style="h3">Explore NFTs</Text>{' '}
-            <Text style="h3" color="subtle">
-              on
-            </Text>
-            <Dropdown
-              contentProps={{
-                sideOffset: 8,
-                asChild: true,
-                style: {
-                  margin: 0,
-                },
-              }}
-              trigger={
-                <Flex
-                  css={{ gap: '$3', alignItems: 'center', cursor: 'pointer' }}
-                >
-                  <Text style="h3">{' ' + marketplaceChain.name}</Text>
-                  <FontAwesomeIcon
-                    icon={faChevronDown}
-                    width={16}
-                    height={16}
-                    color="#9BA1A6"
-                  />
-                </Flex>
-              }
-            >
-              <Flex direction="column" css={{ minWidth: 150 }}>
-                {supportedChains.map(({ name, id, routePrefix }) => (
-                  <DropdownMenuItem
-                    key={id}
-                    onClick={() => {
-                      const newUrl = router.asPath.replace(
-                        chain.routePrefix,
-                        routePrefix
-                      )
-                      switchCurrentChain(id)
-                      router.replace(newUrl, undefined, { scroll: false })
-                    }}
+            <Flex css={{ gap: '$3' }}>
+              <Text style="h3" color="subtle">
+                on
+              </Text>
+              <Dropdown
+                contentProps={{
+                  sideOffset: 8,
+                  asChild: true,
+                  style: {
+                    margin: 0,
+                  },
+                }}
+                trigger={
+                  <Flex
+                    css={{ gap: '$3', alignItems: 'center', cursor: 'pointer' }}
                   >
-                    <Text
-                      style="h6"
-                      color={id === marketplaceChain.id ? undefined : 'subtle'}
-                      css={{ cursor: 'pointer' }}
+                    <Text style="h3">{' ' + marketplaceChain.name}</Text>
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      width={16}
+                      height={16}
+                      color="#9BA1A6"
+                    />
+                  </Flex>
+                }
+              >
+                <Flex direction="column" css={{ minWidth: 150 }}>
+                  {supportedChains.map(({ name, id, routePrefix }) => (
+                    <DropdownMenuItem
+                      css={{
+                        textAlign: 'left',
+                      }}
+                      key={id}
+                      onClick={() => {
+                        const newUrl = router.asPath.replace(
+                          chain.routePrefix,
+                          routePrefix
+                        )
+                        switchCurrentChain(id)
+                        router.replace(newUrl, undefined, { scroll: false })
+                      }}
                     >
-                      {name}
-                    </Text>
-                  </DropdownMenuItem>
-                ))}
-              </Flex>
-            </Dropdown>
+                      <Text
+                        style="h6"
+                        color={
+                          id === marketplaceChain.id ? undefined : 'subtle'
+                        }
+                        css={{ cursor: 'pointer' }}
+                      >
+                        {name}
+                      </Text>
+                    </DropdownMenuItem>
+                  ))}
+                </Flex>
+              </Dropdown>
+            </Flex>
           </Flex>
           <Text style="body1" color="subtle" css={{ mb: 48 }}>
             Multi-Chain Explorer, powered by Reservoir
