@@ -224,7 +224,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
 
   useEffect(() => {
     router.query.tab = tabValue
-    router.push(router, undefined, { shallow: true })
+    router.replace(router, undefined, { shallow: true })
   }, [tabValue])
 
   const pageTitle = token?.token?.name
