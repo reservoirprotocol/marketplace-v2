@@ -150,7 +150,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/${routePrefix}/asset/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+            href={`/${routePrefix}/asset/${listing?.contract}:${criteriaData?.token?.tokenId}`}
           >
             <Flex align="center">
               <Img
@@ -272,7 +272,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/${routePrefix}/asset/${listing?.contract}/${criteriaData?.token?.tokenId}`}
+          href={`/${routePrefix}/asset/${listing?.contract}:${criteriaData?.token?.tokenId}`}
         >
           <Flex align="center">
             <Img

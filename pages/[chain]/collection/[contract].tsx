@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box, Button } from '../../../components/primitives'
+import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -649,7 +649,7 @@ export const getStaticProps: GetStaticProps<{
   ) {
     return {
       redirect: {
-        destination: `/${routePrefix}/collection/${id}/${tokens.tokens[0].token.tokenId}`,
+        destination: `/${routePrefix}/asset/${id}:${tokens.tokens[0].token.tokenId}`,
         permanent: false,
       },
     }

@@ -342,7 +342,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
         }}
       >
         <Link
-          href={`/${routePrefix}/asset/${token?.token?.contract}/${token?.token?.tokenId}`}
+          href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -652,7 +652,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
             />
           ) : null}
           <Link
-            href={`/${routePrefix}/asset/${token?.token?.contract}/${token?.token?.tokenId}`}
+            href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
           >
             <Flex align="center">
               {imageSrc && (
