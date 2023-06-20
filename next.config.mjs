@@ -36,7 +36,7 @@ const nextConfig = {
       },
       {
         source: '/collection/:chain/:collection/:tokenId',
-        destination: '/:chain/asset/:collection/:tokenId',
+        destination: '/:chain/asset/:collection%3A:tokenId',
         permanent: true,
       },
       {
