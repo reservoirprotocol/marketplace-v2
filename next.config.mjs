@@ -19,10 +19,7 @@ const nextConfig = {
     hideSourceMaps: false,
   },
   experimental: {
-    transpilePackages: [
-      '@reservoir0x/reservoir-kit-ui',
-      '@reservoir0x/reservoir-sdk',
-    ],
+    transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
   },
   async redirects() {
     return [

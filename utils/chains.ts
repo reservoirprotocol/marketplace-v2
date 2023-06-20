@@ -1,5 +1,30 @@
 import { arbitrum, mainnet, polygon, optimism, Chain } from 'wagmi/chains'
-import { zora } from '@reservoir0x/reservoir-sdk'
+
+//Chains that are missing from wagmi:
+export const zora = {
+  id: 7777777,
+  name: 'Zora',
+  network: 'zora',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.zora.co'],
+    },
+    public: {
+      http: ['https://rpc.zora.co'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.co',
+    },
+    default: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.co',
+    },
+  },
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
