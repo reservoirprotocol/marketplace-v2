@@ -14,6 +14,7 @@ import { OpenSeaVerified } from './OpenSeaVerified'
 import { PercentChange } from 'components/primitives/PercentChange'
 import LoadMoreCollections from 'components/common/LoadMoreCollections'
 import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type Collections = ReturnType<typeof useUserCollections>['data']
 
@@ -126,7 +127,7 @@ export const TokenFilters: FC<Props> = ({
                     />
                   </Flex>
                   <Text style="subtitle3" css={{ color: '$gray10' }}>
-                    Owned: {collection?.ownership?.tokenCount}
+                    Owned: {formatNumber(collection?.ownership?.tokenCount)}
                   </Text>
                 </Flex>
                 <Flex

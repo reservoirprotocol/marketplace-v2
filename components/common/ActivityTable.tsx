@@ -32,6 +32,7 @@ import {
 import LoadingSpinner from './LoadingSpinner'
 import Img from 'components/primitives/Img'
 import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -423,7 +424,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="subtitle3" color="subtle">
               Quantity
             </Text>
-            <Text style="subtitle3">{activity.amount}</Text>
+            <Text style="subtitle3">{formatNumber(activity.amount)}</Text>
           </Flex>
         ) : (
           <span>-</span>
