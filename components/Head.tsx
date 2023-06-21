@@ -46,7 +46,7 @@ export const Head: FC<Props> = ({
       <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="Reservoir Market Banner" />
+      <meta property="og:image:alt" content="Reservoir NFT Explorer Banner" />
     </NextHead>
   )
 }
