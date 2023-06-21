@@ -158,8 +158,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
           <Link
             href={
               isCollectionOffer
-                ? `/collection/${routePrefix}/${offer?.contract}${attributeQueryParam}`
-                : `/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`
+                ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+                : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
             }
           >
             <Flex align="center">
@@ -275,8 +275,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         <Link
           href={
             isCollectionOffer
-              ? `/collection/${routePrefix}/${offer?.contract}${attributeQueryParam}`
-              : `/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`
+              ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+              : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
           }
         >
           <Flex align="center">

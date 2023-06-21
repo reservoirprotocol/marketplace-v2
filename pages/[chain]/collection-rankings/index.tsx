@@ -1,4 +1,9 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import {
@@ -13,7 +18,7 @@ import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../_app'
+import { NORMALIZE_ROYALTIES } from '../../_app'
 import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -161,6 +166,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       </Box>
     </Layout>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
 }
 
 type CollectionSchema =

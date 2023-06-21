@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box, Button } from '../../../components/primitives'
+import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -270,7 +270,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           Chain{' '}
                         </Text>
                         <Link
-                          href={`/collection-rankings?chain=${router.query.chain}`}
+                          href={`/${router.query.chain}/collection-rankings`}
                         >
                           <Text style="body1">{chain}</Text>
                         </Link>
@@ -649,7 +649,7 @@ export const getStaticProps: GetStaticProps<{
   ) {
     return {
       redirect: {
-        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
+        destination: `/${routePrefix}/asset/${id}:${tokens.tokens[0].token.tokenId}`,
         permanent: false,
       },
     }
