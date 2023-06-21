@@ -1,15 +1,19 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import { ComponentPropsWithoutRef, useContext, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
-import { useAccount } from 'wagmi'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from './_app'
+import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
 import ChainToggle from 'components/common/ChainToggle'
@@ -19,6 +23,10 @@ import CollectionsTimeDropdown, {
 import { Head } from 'components/Head'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { ChainContext } from 'context/ChainContextProvider'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useRouter } from 'next/router'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -29,7 +37,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('1DayVolume')
   const marketplaceChain = useMarketplaceChain()
-  const { isDisconnected } = useAccount()
+  const router = useRouter()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 10,
@@ -37,7 +45,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     includeTopBid: true,
   }
 
-  const { chain } = useContext(ChainContext)
+  const { chain, switchCurrentChain } = useContext(ChainContext)
 
   if (chain.collectionSetId) {
     collectionQuery.collectionsSetId = chain.collectionSetId
@@ -79,27 +87,85 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        {isDisconnected && (
+        <Flex
+          direction="column"
+          align="center"
+          css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
+        >
           <Flex
-            direction="column"
-            align="center"
-            css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
+            css={{
+              mb: '$4',
+              gap: '$3',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              '@bp600': {
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            }}
           >
-            <Text style="h3" css={{ mb: 24 }}>
-              Open Source Marketplace
-            </Text>
-            <Text style="body1" css={{ mb: 48 }}>
-              Reservoir Marketplace is an open-source project that showcases the
-              latest and greatest features of the Reservoir Platform.
-            </Text>
-            <a
-              href="https://github.com/reservoirprotocol/marketplace-v2"
-              target="_blank"
-            >
-              <Button color="gray3">View Source Code</Button>
-            </a>
+            <Text style="h3">Explore NFTs</Text>{' '}
+            <Flex css={{ gap: '$3' }}>
+              <Text style="h3" color="subtle">
+                on
+              </Text>
+              <Dropdown
+                contentProps={{
+                  sideOffset: 8,
+                  asChild: true,
+                  style: {
+                    margin: 0,
+                  },
+                }}
+                trigger={
+                  <Flex
+                    css={{ gap: '$3', alignItems: 'center', cursor: 'pointer' }}
+                  >
+                    <Text style="h3">{' ' + marketplaceChain.name}</Text>
+                    <FontAwesomeIcon
+                      icon={faChevronDown}
+                      width={16}
+                      height={16}
+                      color="#9BA1A6"
+                    />
+                  </Flex>
+                }
+              >
+                <Flex direction="column" css={{ minWidth: 150 }}>
+                  {supportedChains.map(({ name, id, routePrefix }) => (
+                    <DropdownMenuItem
+                      css={{
+                        textAlign: 'left',
+                      }}
+                      key={id}
+                      onClick={() => {
+                        const newUrl = router.asPath.replace(
+                          chain.routePrefix,
+                          routePrefix
+                        )
+                        switchCurrentChain(id)
+                        router.replace(newUrl, undefined, { scroll: false })
+                      }}
+                    >
+                      <Text
+                        style="h6"
+                        color={
+                          id === marketplaceChain.id ? undefined : 'subtle'
+                        }
+                        css={{ cursor: 'pointer' }}
+                      >
+                        {name}
+                      </Text>
+                    </DropdownMenuItem>
+                  ))}
+                </Flex>
+              </Dropdown>
+            </Flex>
           </Flex>
-        )}
+          <Text style="body1" color="subtle" css={{ mb: 48 }}>
+            Multi-Chain Explorer, powered by Reservoir
+          </Text>
+        </Flex>
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
@@ -135,7 +201,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             />
           )}
           <Box css={{ alignSelf: 'center' }}>
-            <Link href="/collection-rankings">
+            <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
               <Button
                 css={{
                   minWidth: 224,
@@ -152,6 +218,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       </Box>
     </Layout>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
 }
 
 type CollectionSchema =

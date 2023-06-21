@@ -33,6 +33,32 @@ export const zoraTestnet = {
   },
 } as const satisfies Chain
 
+//Chains that are missing from wagmi:
+export const zora = {
+  id: 7777777,
+  name: 'Zora',
+  network: 'zora',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.zora.co'],
+    },
+    public: {
+      http: ['https://rpc.zora.co'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.co',
+    },
+    default: {
+      name: 'Zora explorer',
+      url: 'https://explorer.zora.co',
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -139,5 +165,16 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ZORA_TESTNET_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ZORA_TESTNET_COMMUNITY,
+  },
+  {
+    ...zora,
+    name: 'Zora',
+    lightIconUrl: '/icons/zora-icon-dark.svg',
+    darkIconUrl: '/icons/zora-icon-light.svg',
+    reservoirBaseUrl: 'https://api-zora.reservoir.tools',
+    proxyApi: '/api/reservoir/zora',
+    routePrefix: 'zora',
+    apiKey: process.env.ZORA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
   },
 ] as ReservoirChain[]

@@ -1,11 +1,4 @@
-import {
-  Anchor,
-  Box,
-  Button,
-  Flex,
-  FormatCryptoCurrency,
-  Text,
-} from 'components/primitives'
+import { Anchor, Box, Button, Flex, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
 import * as RadixDialog from '@radix-ui/react-dialog'
 import {
@@ -21,7 +14,7 @@ import { useAccount, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useENSResolver } from 'hooks'
+import { useENSResolver, useMarketplaceChain } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
 
@@ -33,6 +26,7 @@ const HamburgerMenu = () => {
     shortName: shortEnsName,
   } = useENSResolver(address)
   const { disconnect } = useDisconnect()
+  const { routePrefix } = useMarketplaceChain()
 
   const trigger = (
     <Button
@@ -127,7 +121,7 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href="/collection-rankings" legacyBehavior>
+            <Link href={`/${routePrefix}/collection-rankings`} legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
