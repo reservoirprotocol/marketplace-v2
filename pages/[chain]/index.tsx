@@ -89,8 +89,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       >
         <Flex
           direction="column"
-          align="center"
-          css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
+          css={{
+            mx: 'auto',
+            maxWidth: 728,
+            pt: '$5',
+            textAlign: 'center',
+            alignItems: 'flex-start',
+            '@bp600': { alignItems: 'center' },
+          }}
         >
           <Flex
             css={{
@@ -98,14 +104,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               gap: '$3',
               flexDirection: 'column',
               alignItems: 'flex-start',
+              maxWidth: '100%',
               '@bp600': {
                 flexDirection: 'row',
                 alignItems: 'center',
               },
             }}
           >
-            <Text style="h3">Explore NFTs</Text>{' '}
-            <Flex css={{ gap: '$3' }}>
+            <Text style="h3" css={{ flexShrink: 0 }}>
+              Explore NFTs
+            </Text>{' '}
+            <Flex css={{ gap: '$3', maxWidth: '100%' }}>
               <Text style="h3" color="subtle">
                 on
               </Text>
@@ -119,9 +128,16 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 trigger={
                   <Flex
-                    css={{ gap: '$3', alignItems: 'center', cursor: 'pointer' }}
+                    css={{
+                      gap: '$3',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      minWidth: 0,
+                    }}
                   >
-                    <Text style="h3">{' ' + marketplaceChain.name}</Text>
+                    <Text style="h3" ellipsify>
+                      {' ' + marketplaceChain.name}
+                    </Text>
                     <FontAwesomeIcon
                       icon={faChevronDown}
                       width={16}
