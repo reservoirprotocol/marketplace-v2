@@ -222,7 +222,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
           </Text>
           {listing.maker && listing.maker !== zeroAddress ? (
             <Link
-              href={`/profile/${listing.maker}`}
+              href={`/portfolio/${listing.maker}`}
               style={{ lineHeight: '14.5px' }}
             >
               <Text

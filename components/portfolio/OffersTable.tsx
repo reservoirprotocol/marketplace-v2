@@ -213,6 +213,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
               <Text style="subtitle2">{expiration}</Text>
             </Flex>
           </a>
+
           {isOwner ? (
             <CancelBid
               bidId={offer?.id as string}

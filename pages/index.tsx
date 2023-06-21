@@ -99,8 +99,8 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               href="/portfolio"
             >
               <Button color="gray3">
-              <FontAwesomeIcon icon={faBolt} />
-                  Sell</Button>
+                <FontAwesomeIcon icon={faBolt} /> Sell
+              </Button>
             </a>
           </Flex>
         )}

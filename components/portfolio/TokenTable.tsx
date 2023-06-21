@@ -323,6 +323,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
   ])
 
   const isOracleOrder = token?.ownership?.floorAsk?.isNativeOffChainCancellable
+
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]
     : undefined
@@ -891,12 +892,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               buttonChildren="List"
               mutate={mutate}
             />
-
+            
             <Transfer
             token={token as ReturnType<typeof useTokens>['data'][0]}
             mutate={mutate}
             />
-          <Dropdown
+            <Dropdown
               modal={false}
               trigger={
                 <Button
@@ -929,7 +930,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                         token: `${contract}:${token.token?.tokenId}`,
                       }),
                     }
-                    )
+                  )
                     .then(({ data, response }) => {
                       if (response.status === 200) {
                         addToast?.({

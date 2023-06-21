@@ -94,6 +94,7 @@ export default ({
   const collectionImage = useMemo(() => {
     return optimizeImage(token?.token?.collection?.imageUrl, 500)
   }, [token?.token?.collection?.imageUrl])
+
   const isOracleOrder =
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
 

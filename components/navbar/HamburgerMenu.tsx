@@ -67,7 +67,7 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-          <Box css={{ width: 136, cursor: 'pointer' }}>
+            <Box css={{ width: 136, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/seaportMarketLogo.svg"
@@ -128,7 +128,7 @@ const HamburgerMenu = () => {
               >
                 <Flex css={{ alignItems: 'center' }}>
                   {ensAvatar ? (
-                    <Avatar size="medium" corners="rounded" src={ensAvatar} />
+                    <Avatar size="medium" src={ensAvatar} />
                   ) : (
                     <Jazzicon
                       diameter={36}

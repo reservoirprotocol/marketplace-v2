@@ -66,9 +66,9 @@ const ThemeSwitcher = () => {
         aria-label="Theme Switcher"
       >
         {theme == 'dark' ? (
-          <FontAwesomeIcon icon={faSun} width={16} height={16} />
-        ) : (
           <FontAwesomeIcon icon={faMoon} width={16} height={16} />
+        ) : (
+          <FontAwesomeIcon icon={faSun} width={16} height={16} />
         )}
       </Button>
     </Box>

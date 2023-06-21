@@ -99,6 +99,7 @@ export default ({
           </Text>
         </Flex>
       )}
+
       {is1155 && token?.token?.supply && (
         <Flex
           justify="center"

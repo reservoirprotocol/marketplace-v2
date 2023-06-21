@@ -53,7 +53,7 @@ const { chains, publicClient } = configureChains(supportedChains, [
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'SeaPort Marketplace',
+  appName: 'SeaPort Market',
   chains,
 })
 
@@ -164,11 +164,11 @@ function MyApp({
               }
             }),
             logLevel: 4,
+            source: source,
+            normalizeRoyalties: NORMALIZE_ROYALTIES,
             disablePoweredByReservoir: true,
             marketplaceFee: +`${FEE_BPS || 0}`,
             marketplaceFeeRecipient: FEE_RECIPIENT,
-            source: source,
-            normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
             // marketplaceFee: 250,

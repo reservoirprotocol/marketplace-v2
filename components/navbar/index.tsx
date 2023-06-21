@@ -21,6 +21,7 @@ import {
   faBolt, faRankingStar,
 } from '@fortawesome/free-solid-svg-icons'
 
+
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
@@ -63,7 +64,7 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href="/">
-            <Box css={{ width: 136, cursor: 'pointer' }}>
+          <Box css={{ width: 136, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
                   src="/seaportMarketLogo.svg"

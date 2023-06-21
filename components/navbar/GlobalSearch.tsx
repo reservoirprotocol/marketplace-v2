@@ -64,6 +64,8 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           '&:hover': {
             background: '$gray4',
           },
+          minWidth: 0,
+          width: '100%',
         }}
         align="center"
       >
@@ -197,9 +199,9 @@ const GlobalSearch = forwardRef<
 
   const debouncedSearch = useDebounce(search, 500)
 
-  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
-
   const { theme } = useTheme()
+
+  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
   useEffect(() => {
     const getSearchResults = async () => {

@@ -65,11 +65,12 @@ const Sweep: FC<Props> = ({
     <SweepModal
       trigger={trigger}
       collectionId={collectionId}
-      feesOnTopBps={["0x4c31e558393312a1d3bE14C45A3656A2e915F53D:50"]}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
-      //apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
+      // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
+      // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
       // feesOnTopBps={["0xabc:50", "0xdef:50"]}
       // feesOnTopFixed={["0xabc:50", "0xdef:10000000000000000"]}
+      feesOnTopBps={["0x4c31e558393312a1d3bE14C45A3656A2e915F53D:50"]}
       onClose={(data, currentStep) => {
         if (mutate && currentStep == SweepStep.Complete) mutate()
       }}

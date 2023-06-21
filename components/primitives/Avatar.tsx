@@ -49,7 +49,7 @@ const AvatarRoot = styled(AvatarPrimitive.Root, {
   },
   defaultVariants: {
     size: 'large',
-    corners: 'rounded',
+    corners: 'circle',
   },
 })
 

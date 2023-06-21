@@ -43,12 +43,12 @@ export const AccountSidebar: FC = () => {
       css={{
         justifyContent: 'center',
       }}
-      corners="rounded"
+      corners="circle"
       type="button"
-      color="ghost"
+      color="gray3"
     >
       {ensAvatar ? (
-        <Avatar size="medium" corners="rounded" src={ensAvatar} />
+        <Avatar size="medium" src={ensAvatar} />
       ) : (
         <Jazzicon diameter={44} paperStyles={{ borderRadius: '8px' }} seed={jsNumberForAddress(address as string)} />
       )}
@@ -114,7 +114,7 @@ export const AccountSidebar: FC = () => {
                   </Button>
                   <Flex align="center" css={{ gap: '$3', ml: '$3' }}>
                     {ensAvatar ? (
-                      <Avatar size="medium" corners="rounded" src={ensAvatar} />
+                      <Avatar size="medium" src={ensAvatar} />
                     ) : (
                       <Jazzicon
                         diameter={44}

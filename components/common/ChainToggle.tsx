@@ -47,6 +47,7 @@ const ChainToggle: FC = () => {
     [router.query, switchCurrentChain]
   )
 
+
   if (!isMounted || supportedChains.length === 1) {
     return null
   }

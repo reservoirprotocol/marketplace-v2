@@ -53,6 +53,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       250
     )
   }, [token?.token?.collection?.image, collection?.image])
+
   const etherscanImage = (
     <img
       src={

@@ -78,6 +78,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   const tokenImage = useMemo(() => {
     return optimizeImage(listing.token.token?.image, 250)
   }, [listing.token.token?.image])
+
   const { addToast } = useContext(ToastContext)
 
   const marketplace = selectedMarketplaces.find(

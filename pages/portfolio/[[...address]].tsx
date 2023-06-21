@@ -203,11 +203,11 @@ const IndexPage: NextPage = () => {
                   >
                     <Flex align="center">
                       {ensAvatar ? (
-                        <Avatar size="xxl" corners="rounded" src={ensAvatar} />
+                        <Avatar size="xxl" src={ensAvatar} />
                       ) : (
                         <Jazzicon
                           diameter={64}
-                          paperStyles={{ borderRadius: '8px' }} 
+                          paperStyles={{ borderRadius: '8px' }}
                           seed={jsNumberForAddress(address as string)}
                         />
                       )}
