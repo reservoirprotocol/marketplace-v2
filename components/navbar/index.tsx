@@ -141,15 +141,7 @@ const Navbar = () => {
           </Box>
           <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
             <Link href={`/${routePrefix}/collection-rankings`}>
-              <NavItem
-                css={{
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                color="gray3"
-                active={router.pathname.includes('collection-rankings')}
-              >
+              <NavItem active={router.pathname.includes('collection-rankings')}>
                 <FontAwesomeIcon icon={faRankingStar} />
                     Ranks
               </NavItem>
