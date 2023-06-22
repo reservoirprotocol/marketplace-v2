@@ -16,6 +16,7 @@ import { useMarketplaceChain, useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBolt, faRankingStar,
 } from '@fortawesome/free-solid-svg-icons'
@@ -141,7 +142,6 @@ const Navbar = () => {
           <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                <FontAwesomeIcon icon={faRankingStar} />
                     Ranks
               </NavItem>
             </Link>
