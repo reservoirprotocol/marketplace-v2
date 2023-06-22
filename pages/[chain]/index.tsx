@@ -16,6 +16,10 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+  faBolt,
+} from '@fortawesome/free-solid-svg-icons'
 import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
@@ -87,101 +91,20 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        <Flex
-          direction="column"
-          css={{
-            mx: 'auto',
-            maxWidth: 728,
-            pt: '$5',
-            textAlign: 'center',
-            alignItems: 'flex-start',
-            '@bp600': { alignItems: 'center' },
-          }}
-        >
+        {isDisconnected && (
           <Flex
-            css={{
-              mb: '$4',
-              gap: '$3',
-              flexDirection: 'column',
-              alignItems: 'flex-start',
-              maxWidth: '100%',
-              '@bp600': {
-                flexDirection: 'row',
-                alignItems: 'center',
-              },
-            }}
+            direction="column"
+            align="center"
+            css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
           >
-            <Text style="h3" css={{ flexShrink: 0 }}>
-              Sell your NFTs
-            </Text>{' '}
-            <Flex css={{ gap: '$3', maxWidth: '100%' }}>
-              <Text style="h3" color="subtle">
-                on
-              </Text>
-              <Dropdown
-                contentProps={{
-                  sideOffset: 8,
-                  asChild: true,
-                  style: {
-                    margin: 0,
-                  },
-                }}
-                trigger={
-                  <Flex
-                    css={{
-                      gap: '$3',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      minWidth: 0,
-                    }}
-                  >
-                    <Text style="h3" ellipsify>
-                      {' ' + marketplaceChain.name}
-                    </Text>
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      width={16}
-                      height={16}
-                      color="#9BA1A6"
-                    />
-                  </Flex>
-                }
-              >
-                <Flex direction="column" css={{ minWidth: 150 }}>
-                  {supportedChains.map(({ name, id, routePrefix }) => (
-                    <DropdownMenuItem
-                      css={{
-                        textAlign: 'left',
-                      }}
-                      key={id}
-                      onClick={() => {
-                        const newUrl = router.asPath.replace(
-                          chain.routePrefix,
-                          routePrefix
-                        )
-                        switchCurrentChain(id)
-                        router.replace(newUrl, undefined, { scroll: false })
-                      }}
-                    >
-                      <Text
-                        style="h6"
-                        color={
-                          id === marketplaceChain.id ? undefined : 'subtle'
-                        }
-                        css={{ cursor: 'pointer' }}
-                      >
-                        {name}
-                      </Text>
-                    </DropdownMenuItem>
-                  ))}
-                </Flex>
-              </Dropdown>
-            </Flex>
+            <Text style="h3" css={{ mb: 24 }}>
+              Sell your NFT instantly
+            </Text>
+            <Text style="body1" css={{ mb: 48 }}>
+              Instant sell your NFT's across all major marketplaces.
+            </Text>
           </Flex>
-          <Text style="body1" color="subtle" css={{ mb: 48 }}>
-            Instant sell your NFT's across all major marketplaces
-          </Text>
-        </Flex>
+        )}
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
