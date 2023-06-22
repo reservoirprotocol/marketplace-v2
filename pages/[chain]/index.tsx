@@ -27,8 +27,6 @@ import CollectionsTimeDropdown, {
 import { Head } from 'components/Head'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { ChainContext } from 'context/ChainContextProvider'
-import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
 
