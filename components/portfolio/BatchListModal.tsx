@@ -54,7 +54,7 @@ const BatchListModal: FC<Props> = ({
   onCloseComplete,
 }) => {
   const [open, setOpen] = useState(false)
-  const { data: signer } = useWalletClient()
+  const { data: wallet } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
@@ -62,7 +62,7 @@ const BatchListModal: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
   const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
+    wallet && activeChain?.id !== marketplaceChain.id
   )
   const client = useReservoirClient()
   const [batchListStep, setBatchListStep] = useState<BatchListStep>(
@@ -120,8 +120,8 @@ const BatchListModal: FC<Props> = ({
   }, [stepData])
 
   const listTokens = useCallback(() => {
-    if (!signer) {
-      const error = new Error('Missing a signer')
+    if (!wallet) {
+      const error = new Error('Missing a wallet')
       setTransactionError(error)
       throw error
     }
@@ -185,7 +185,7 @@ const BatchListModal: FC<Props> = ({
     client.actions
       .listToken({
         listings: batchListingData.map((data) => data.listing),
-        signer,
+        wallet,
         onProgress: (steps: Execute['steps']) => {
           const executableSteps = steps.filter(
             (step) => step.items && step.items.length > 0
@@ -241,7 +241,7 @@ const BatchListModal: FC<Props> = ({
         )
         setTransactionError(transactionError)
       })
-  }, [client, listings, signer])
+  }, [client, listings, wallet])
 
   const trigger = (
     <Button disabled={disabled} onClick={listTokens}>
@@ -260,7 +260,7 @@ const BatchListModal: FC<Props> = ({
             }
           }
 
-          if (!signer) {
+          if (!wallet) {
             openConnectModal?.()
           }
         }}
