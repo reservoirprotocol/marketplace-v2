@@ -179,7 +179,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             </Flex>
           </Flex>
           <Text style="body1" color="subtle" css={{ mb: 48 }}>
-            Multi-Chain Explorer, powered by Reservoir
+            Instant sell your NFT's across all major marketplaces
           </Text>
         </Flex>
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
