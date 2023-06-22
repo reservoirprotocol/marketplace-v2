@@ -143,7 +143,7 @@ const Navbar = () => {
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
                 <FontAwesomeIcon icon={faRankingStar} />
-                    Ranks
+                    Rankings
               </NavItem>
             </Link>
             <Link href="/portfolio">
