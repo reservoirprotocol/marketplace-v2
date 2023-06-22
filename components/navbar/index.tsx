@@ -12,7 +12,7 @@ import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
 import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
-import { useMounted } from '../../hooks'
+import { useMarketplaceChain, useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
@@ -30,6 +30,7 @@ const Navbar = () => {
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
+  const { routePrefix } = useMarketplaceChain()
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -63,7 +64,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
+          <Link href={`/${routePrefix}`}>
           <Box css={{ width: 136, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
@@ -111,7 +112,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
+          <Link href={`/${routePrefix}`}>
             <Box css={{ width: 136, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
@@ -139,18 +140,19 @@ const Navbar = () => {
             />
           </Box>
           <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
-            <Link href="/collection-rankings">
-              <Button
+            <Link href={`/${routePrefix}/collection-rankings`}>
+              <NavItem
                 css={{
                   '&:hover': {
                     background: '$gray8',
                   },
                 }}
                 color="gray3"
+                active={router.pathname.includes('collection-rankings')}
               >
                 <FontAwesomeIcon icon={faRankingStar} />
                     Ranks
-              </Button>
+              </NavItem>
             </Link>
             <Link href="/portfolio">
               <Button

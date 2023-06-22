@@ -130,7 +130,12 @@ const ChainToggle: FC = () => {
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
               onClick={() => {
-                switchChains(chainOption)
+                const newUrl = router.asPath.replace(
+                  chain.routePrefix,
+                  chainOption.routePrefix
+                )
+                switchCurrentChain(chainOption.id)
+                router.replace(newUrl, undefined, { scroll: false })
               }}
             >
               <Box

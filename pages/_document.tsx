@@ -43,15 +43,27 @@ class MyDocument extends Document {
         <meta property="reservoir:icon" content="/seaport-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
-          content="/collection/ethereum/${contract}/${tokenId}"
+          content="/ethereum/asset/${contract}:${tokenId}"
         />
         <meta
           property="reservoir:token-url-goerli"
-          content="/collection/goerli/${contract}/${tokenId}"
+          content="/goerli/asset/${contract}:${tokenId}"
         />
         <meta
           property="reservoir:token-url-polygon"
-          content="/collection/polygon/${contract}/${tokenId}"
+          content="/polygon/asset/${contract}:${tokenId}"
+        />
+        <meta
+          property="reservoir:token-url-arbitrum"
+          content="/arbitrum/asset/${contract}:${tokenId}"
+        />
+        <meta
+          property="reservoir:token-url-optimism"
+          content="/optimism/asset/${contract}:${tokenId}"
+        />
+        <meta
+          property="reservoir:token-url-zora"
+          content="/zora/asset/${contract}:${tokenId}"
         />
         <body>
           <Main />
