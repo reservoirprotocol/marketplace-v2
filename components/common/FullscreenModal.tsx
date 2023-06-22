@@ -20,7 +20,7 @@ export const FullscreenModal: FC<Props> = ({
   onOpenChange,
 }) => {
   return (
-    <DialogRoot modal={true} open={open} onOpenChange={onOpenChange}>
+    <DialogRoot modal={false} open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogPortal>
         <Content

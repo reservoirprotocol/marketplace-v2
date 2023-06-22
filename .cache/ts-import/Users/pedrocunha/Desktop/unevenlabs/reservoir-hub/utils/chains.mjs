@@ -2,25 +2,27 @@ import { arbitrum, mainnet, polygon, optimism } from 'wagmi/chains';
 //Chains that are missing from wagmi:
 export const zora = {
     id: 7777777,
-    name: 'Zora',
+    name: 'ZORA',
     network: 'zora',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     rpcUrls: {
         default: {
             http: ['https://rpc.zora.co'],
+            webSocket: ['wss://rpc.zora.co'],
         },
         public: {
             http: ['https://rpc.zora.co'],
+            webSocket: ['wss://rpc.zora.co'],
         },
     },
     blockExplorers: {
         etherscan: {
-            name: 'Zora explorer',
-            url: 'https://explorer.zora.co',
+            name: 'ZORA',
+            url: 'https://explorer.zora.energy',
         },
         default: {
-            name: 'Zora explorer',
-            url: 'https://explorer.zora.co',
+            name: 'ZORA',
+            url: 'https://explorer.zora.energy',
         },
     },
 };

@@ -217,8 +217,11 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   }, [isSmallDevice])
 
   useEffect(() => {
-    router.query.tab = tabValue
-    router.replace(router, undefined, { shallow: true })
+    const updatedUrl = new URL(`${window.location.origin}${router.asPath}`)
+    updatedUrl.searchParams.set('tab', tabValue)
+    router.replace(updatedUrl, undefined, {
+      shallow: true,
+    })
   }, [tabValue])
 
   const pageTitle = token?.token?.name

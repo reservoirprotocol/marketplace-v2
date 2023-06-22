@@ -29,4 +29,23 @@ Sentry.init({
       levels: ['error'],
     }),
   ],
+  ignoreErrors: ['User rejected the request'],
+  beforeSend(event) {
+    try {
+      //Ignore errors from chrome extension
+      if (
+        event.exception?.values &&
+        event.exception.values[0].stacktrace &&
+        event.exception.values[0].stacktrace.frames &&
+        event.exception.values[0].stacktrace.frames[0].filename &&
+        event.exception.values[0].stacktrace.frames[0].filename.includes(
+          'app://inject'
+        )
+      ) {
+        return null
+      }
+    } catch (e) {}
+
+    return event
+  },
 })
