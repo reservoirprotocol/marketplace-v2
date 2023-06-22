@@ -16,10 +16,6 @@ import { useMarketplaceChain, useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faBolt, faRankingStar,
-} from '@fortawesome/free-solid-svg-icons'
 
 
 export const NAVBAR_HEIGHT = 81
@@ -139,24 +135,14 @@ const Navbar = () => {
               key={router.asPath}
             />
           </Box>
-          <Flex align="center" css={{ gap: '$3', mr: '$3' }}>
+          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                    Ranks
+                Ranks
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <Button
-                css={{
-                  '&:hover': {
-                    background: '$gray8',
-                  },
-                }}
-                color="gray3"
-              >
-                <FontAwesomeIcon icon={faBolt} />
-                    Sell
-              </Button>
+              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
           </Flex>
         </Flex>
