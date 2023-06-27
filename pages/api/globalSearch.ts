@@ -18,6 +18,7 @@ export type SearchCollection = NonNullable<
   floorAskCurrencyDecimals?: number
   tokenCount: string
   allTimeUsdVolume?: number
+  chainRoutePrefix: string
 }
 
 type Collection = NonNullable<
@@ -92,6 +93,7 @@ export default async function handler(req: Request) {
           floorAskCurrencyDecimals: chain.nativeCurrency.decimals,
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
+          chainRoutePrefix: chain.routePrefix,
           chainId: chain.id,
           lightChainIcon: chain.lightIconUrl,
           darkChainIcon: chain.darkIconUrl,
@@ -166,6 +168,7 @@ export default async function handler(req: Request) {
           data: {
             ...collection,
             chainName: supportedChains[index].name.toLowerCase(),
+            chainRoutePrefix: supportedChains[index].routePrefix,
             chainId: supportedChains[index].id,
             lightChainIcon: supportedChains[index].lightIconUrl,
             darkChainIcon: supportedChains[index].darkIconUrl,
