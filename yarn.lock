@@ -3401,6 +3401,11 @@ fast-stable-stringify@^1.0.0:
   resolved "https://registry.yarnpkg.com/fast-stable-stringify/-/fast-stable-stringify-1.0.0.tgz#5c5543462b22aeeefd36d05b34e51c78cb86d313"
   integrity sha512-wpYMUmFu5f00Sm0cj2pfivpmawLZ0NKdviQ4w9zJeR8JVtOpOxHmLaJuj0vxvGqMJQWyP/COUkF75/57OKyRag==
 
+fflate@^0.4.1:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/fflate/-/fflate-0.4.8.tgz#f90b82aefbd8ac174213abb338bd7ef848f0f5ae"
+  integrity sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==
+
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -4534,6 +4539,13 @@ postcss@8.4.14:
     nanoid "^3.3.4"
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
+
+posthog-js@^1.68.4:
+  version "1.68.4"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.68.4.tgz#c9ec6edc8f6f274970d4f05c4ffa3a2564581b1a"
+  integrity sha512-rHk4uk99nvWiDTU7P2mFdEfzFR6km0hvOpCR3tm/+F7kCJKs7QDkMblOZZHZultxM4wSNyB4neeohmnHjKYUhQ==
+  dependencies:
+    fflate "^0.4.1"
 
 preact@^10.12.0:
   version "10.13.1"
