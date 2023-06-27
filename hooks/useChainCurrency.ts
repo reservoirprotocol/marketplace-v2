@@ -17,7 +17,7 @@ export default function () {
   } else {
     return {
       ...chain.nativeCurrency,
-      address: zeroAddress,
+      address: chain.currencyAddress || zeroAddress,
       chainId: chain.id,
     }
   }

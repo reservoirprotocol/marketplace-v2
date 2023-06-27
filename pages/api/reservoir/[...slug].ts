@@ -1,7 +1,7 @@
 import { setParams } from '@reservoir0x/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import { goerli, mainnet } from 'wagmi/chains'
+import { arbitrum, goerli, mainnet } from 'wagmi/chains'
 import wrappedContracts from 'utils/wrappedContracts'
 import { zeroAddress } from 'viem'
 
@@ -50,6 +50,11 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
         endpoint.includes(wrappedContracts['1'].toLowerCase()) ||
         endpoint.includes(wrappedContracts['5'].toLowerCase())
       ) {
+        res.redirect('/icons/currency/no-padding-weth.png')
+        return
+      }
+    } else if (arbitrum.id === chain.id) {
+      if (endpoint.includes(wrappedContracts['42161'])) {
         res.redirect('/icons/currency/no-padding-weth.png')
         return
       }

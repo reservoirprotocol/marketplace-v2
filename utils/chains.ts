@@ -42,6 +42,7 @@ type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
+  currencyAddress?: string
 }
 
 export const DefaultChain: ReservoirChain = {

@@ -635,25 +635,25 @@ export const getStaticProps: GetStaticProps<{
     promises?.[1].status === 'fulfilled' && promises[1].value.data
       ? (promises[1].value.data as Props['ssr']['tokens'])
       : {}
-
+  console.log(id)
   const hasAttributes =
     tokens?.tokens?.some(
       (token) => (token?.token?.attributes?.length || 0) > 0
     ) || false
 
-  if (
-    collection &&
-    collection.collections?.[0].contractKind === 'erc1155' &&
-    Number(collection?.collections?.[0].tokenCount) === 1 &&
-    tokens?.tokens?.[0].token?.tokenId !== undefined
-  ) {
-    return {
-      redirect: {
-        destination: `/${routePrefix}/asset/${id}:${tokens.tokens[0].token.tokenId}`,
-        permanent: false,
-      },
-    }
-  }
+  // if (
+  //   collection &&
+  //   collection.collections?.[0].contractKind === 'erc1155' &&
+  //   Number(collection?.collections?.[0].tokenCount) === 1 &&
+  //   tokens?.tokens?.[0].token?.tokenId !== undefined
+  // ) {
+  //   return {
+  //     redirect: {
+  //       destination: `/${routePrefix}/asset/${id}:${tokens.tokens[0].token.tokenId}`,
+  //       permanent: false,
+  //     },
+  //   }
+  // }
 
   return {
     props: { ssr: { collection, tokens, hasAttributes }, id },

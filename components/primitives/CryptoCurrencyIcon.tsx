@@ -21,6 +21,12 @@ const CryptoCurrencyIcon: FC<Props> = ({
     chainId !== undefined ? chain.id === chainId : chain.active
   )
 
+  //@ts-ignore for now
+  if (address === zeroAddress && chain?.currencyAddress) {
+    //@ts-ignore for now
+    address = chain.currencyAddress
+  }
+
   return (
     <StyledImg
       src={`${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`}

@@ -25,6 +25,7 @@ const currencies = [
       name: mainnet.name,
     },
     coinGeckoId: 'ethereum',
+    native: true,
   },
   {
     address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -45,6 +46,7 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'matic-network',
+    native: true,
   },
   {
     address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
@@ -55,6 +57,7 @@ const currencies = [
       name: polygon.name,
     },
     coinGeckoId: 'weth',
+    native: false,
   },
   {
     address: '0x4200000000000000000000000000000000000006',
@@ -65,6 +68,7 @@ const currencies = [
       name: optimism.name,
     },
     coinGeckoId: 'weth',
+    native: false,
   },
 ]
 
@@ -73,9 +77,7 @@ type EnhancedCurrency = (typeof currencies)[0] & {
   balance: string | number | bigint
 }
 
-const nonNativeCurrencies = currencies.filter(
-  (currency) => currency.address !== zeroAddress
-)
+const nonNativeCurrencies = currencies.filter((currency) => !currency.native)
 
 const currencySymbols = currencies.map((currency) => currency.symbol).join(',')
 const currencyCoingeckoIds = currencies
@@ -124,7 +126,7 @@ const Wallet = () => {
 
     return currencies.map((currency, i) => {
       let balance: string | number | bigint = 0n
-      if (currency.address === zeroAddress) {
+      if (currency.native) {
         //CONFIGURABLE: Configure these to show the fetched balance results configured above in the useBalance hooks
         switch (currency.chain.id) {
           case polygon.id: {
