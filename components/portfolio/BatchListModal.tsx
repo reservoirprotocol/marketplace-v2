@@ -11,17 +11,15 @@ import LoadingSpinner from 'components/common/LoadingSpinner'
 import { Modal } from 'components/common/Modal'
 import TransactionProgress from 'components/common/TransactionProgress'
 import { BatchListing, Marketplace } from 'components/portfolio/BatchListings'
-import ProgressBar from 'components/portfolio/ProgressBar'
 import { Box, Button, Flex, Text } from 'components/primitives'
 import ErrorWell from 'components/primitives/ErrorWell'
 import dayjs from 'dayjs'
-import { constants } from 'ethers'
-import { parseUnits } from 'ethers/lib/utils.js'
 import { useMarketplaceChain } from 'hooks'
-import { UserToken } from 'pages/portfolio'
+import { UserToken } from 'pages/portfolio/[[...address]]'
 import { FC, useCallback, useEffect, useState } from 'react'
-import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { ApprovalCollapsible } from './ApprovalCollapsible'
+import { parseUnits, zeroAddress } from 'viem'
 
 enum BatchListStep {
   Approving,
@@ -56,7 +54,7 @@ const BatchListModal: FC<Props> = ({
   onCloseComplete,
 }) => {
   const [open, setOpen] = useState(false)
-  const { data: signer } = useSigner()
+  const { data: wallet } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
@@ -64,7 +62,7 @@ const BatchListModal: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
   const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
+    wallet && activeChain?.id !== marketplaceChain.id
   )
   const client = useReservoirClient()
   const [batchListStep, setBatchListStep] = useState<BatchListStep>(
@@ -122,8 +120,8 @@ const BatchListModal: FC<Props> = ({
   }, [stepData])
 
   const listTokens = useCallback(() => {
-    if (!signer) {
-      const error = new Error('Missing a signer')
+    if (!wallet) {
+      const error = new Error('Missing a wallet')
       setTransactionError(error)
       throw error
     }
@@ -159,9 +157,10 @@ const BatchListModal: FC<Props> = ({
 
       const convertedListing: Listings[0] = {
         token: token,
-        weiPrice: parseUnits(`${+listing.price}`, currency.decimals)
-          .mul(listing.quantity)
-          .toString(),
+        weiPrice: (
+          parseUnits(`${+listing.price}`, currency.decimals || 18) *
+          BigInt(listing.quantity)
+        ).toString(),
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
         quantity: listing.quantity,
@@ -171,7 +170,7 @@ const BatchListModal: FC<Props> = ({
         convertedListing.expirationTime = expirationTime
       }
 
-      if (currency && currency.contract != constants.AddressZero) {
+      if (currency && currency.contract != zeroAddress) {
         convertedListing.currency = currency.contract
       }
 
@@ -186,7 +185,7 @@ const BatchListModal: FC<Props> = ({
     client.actions
       .listToken({
         listings: batchListingData.map((data) => data.listing),
-        signer,
+        wallet,
         onProgress: (steps: Execute['steps']) => {
           const executableSteps = steps.filter(
             (step) => step.items && step.items.length > 0
@@ -234,12 +233,15 @@ const BatchListModal: FC<Props> = ({
       })
       .catch((e: any) => {
         const error = e as Error
-        const transactionError = new Error(error?.message || '', {
-          cause: error,
-        })
+        const transactionError = new Error(
+          'Oops, something went wrong. Please try again.',
+          {
+            cause: error,
+          }
+        )
         setTransactionError(transactionError)
       })
-  }, [client, listings, signer])
+  }, [client, listings, wallet])
 
   const trigger = (
     <Button disabled={disabled} onClick={listTokens}>
@@ -258,7 +260,7 @@ const BatchListModal: FC<Props> = ({
             }
           }
 
-          if (!signer) {
+          if (!wallet) {
             openConnectModal?.()
           }
         }}
@@ -340,7 +342,7 @@ const BatchListModal: FC<Props> = ({
                   justify="center"
                   css={{ mb: '$3' }}
                   fromImgs={stepData.listings.map(
-                    (listing) => listing.token.token?.image as string
+                    (listing) => listing.token.token?.imageSmall as string
                   )}
                   toImgs={uniqueMarketplaces.map((marketplace) => {
                     return marketplace?.imageUrl || ''

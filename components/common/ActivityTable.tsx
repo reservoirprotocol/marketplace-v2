@@ -2,7 +2,7 @@ import {
   useCollectionActivity,
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC, useEffect, useRef } from 'react'
+import { FC, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -17,7 +17,7 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
-import { constants } from 'ethers'
+import { zeroAddress } from 'viem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faExternalLink,
@@ -31,6 +31,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
 import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -141,18 +143,25 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const blockExplorerBaseUrl =
     marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const href = activity?.token?.tokenId
-    ? `/collection/${marketplaceChain.routePrefix}/${activity?.contract}/${activity?.token?.tokenId}`
-    : `/collection/${marketplaceChain.routePrefix}/${activity?.collection?.collectionId}`
+    ? `/${marketplaceChain.routePrefix}/asset/${activity?.contract}:${activity?.token?.tokenId}`
+    : `/${marketplaceChain.routePrefix}/collection/${activity?.collection?.collectionId}`
 
   if (!activity) {
     return null
   }
 
-  let imageSrc: string = (
-    activity?.token?.tokenId
-      ? activity?.token?.tokenImage || activity?.collection?.collectionImage
-      : activity?.collection?.collectionImage
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      activity?.token?.tokenId
+        ? activity?.token?.tokenImage || activity?.collection?.collectionImage
+        : activity?.collection?.collectionImage,
+      250
+    )
+  }, [
+    activity?.token?.tokenId,
+    activity?.token?.tokenImage,
+    activity?.collection?.collectionImage,
+  ])
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')
   let attributeDescription = ''
@@ -262,16 +271,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 </Flex>
               </Link>
               {activity.price &&
-              activity.price !== 0 &&
+              activity.price.amount?.decimal !== 0 &&
               activity.type &&
-              !['transfer', 'mint'].includes(activity.type) ? (
+              activity.type !== 'transfer' ? (
                 <Flex
                   direction="column"
                   align="center"
                   css={{ minWidth: 'max-content', pl: '$2' }}
                 >
                   <FormatCryptoCurrency
-                    amount={activity.price}
+                    amount={activity.price.amount?.decimal}
+                    address={activity.price.currency?.contract}
                     logoHeight={16}
                     textStyle="subtitle1"
                     css={{ mr: '$2', fontSize: '14px' }}
@@ -289,9 +299,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 From
               </Text>
-              {activity.fromAddress &&
-              activity.fromAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.fromAddress}`}>
+              {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
+                <Link href={`/portfolio/${activity.fromAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -313,9 +322,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 to
               </Text>
-              {activity.toAddress &&
-              activity.toAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.toAddress}`}>
+              {activity.toAddress && activity.toAddress !== zeroAddress ? (
+                <Link href={`/portfolio/${activity.toAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -394,12 +402,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       </TableCell>
       <TableCell>
         {activity.price &&
-        activity.price !== 0 &&
+        activity.price.amount?.decimal !== 0 &&
         activity.type &&
-        !['transfer', 'mint'].includes(activity.type) ? (
+        activity.type !== 'transfer' ? (
           <Flex align="center">
             <FormatCryptoCurrency
-              amount={activity.price}
+              amount={activity.price.amount?.decimal}
+              address={activity.price.currency?.contract}
               logoHeight={16}
               textStyle="subtitle1"
               css={{ mr: '$2', fontSize: '14px' }}
@@ -415,21 +424,20 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="subtitle3" color="subtle">
               Quantity
             </Text>
-            <Text style="subtitle3">{activity.amount}</Text>
+            <Text style="subtitle3">{formatNumber(activity.amount)}</Text>
           </Flex>
         ) : (
           <span>-</span>
         )}
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-        {activity.fromAddress &&
-        activity.fromAddress !== constants.AddressZero ? (
+        {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               From
             </Text>
             <Link
-              href={`/profile/${activity.fromAddress}`}
+              href={`/portfolio/${activity.fromAddress}`}
               style={{
                 maxWidth: '100%',
                 minWidth: 0,
@@ -457,13 +465,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         )}
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-        {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
+        {activity.toAddress && activity.toAddress !== zeroAddress ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               To
             </Text>
             <Link
-              href={`/profile/${activity.toAddress}`}
+              href={`/portfolio/${activity.toAddress}`}
               style={{
                 maxWidth: '100%',
                 minWidth: 0,

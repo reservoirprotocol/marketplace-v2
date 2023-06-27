@@ -1,25 +1,33 @@
 import { Flex, Text, Button } from 'components/primitives'
-import { Dispatch, FC, SetStateAction } from 'react'
-import { UserToken } from 'pages/portfolio'
+import { Dispatch, FC, SetStateAction, useMemo } from 'react'
+import { UserToken } from 'pages/portfolio/[[...address]]'
 
 type Props = {
+  isOwner: boolean
   selectedItems: UserToken[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
   setShowListingPage: Dispatch<SetStateAction<boolean>>
+  setOpenAcceptBidModal: Dispatch<SetStateAction<boolean>>
 }
 
 const BatchActionsFooter: FC<Props> = ({
+  isOwner,
   selectedItems,
   setSelectedItems,
   setShowListingPage,
+  setOpenAcceptBidModal,
 }) => {
-  let selectedItemCount = selectedItems.length
-
-  if (selectedItemCount == 0) {
+  if (!isOwner) {
     return null
   }
 
-  let itemSubject = selectedItemCount > 1 ? 'items' : 'item'
+  const sellableItems = useMemo(
+    () => selectedItems.filter((item) => item.token?.topBid?.id !== null),
+    [selectedItems]
+  )
+
+  const listItemSubject = selectedItems.length === 1 ? 'item' : 'items'
+  const sellItemSubject = sellableItems.length === 1 ? 'item' : 'items'
 
   return (
     <Flex
@@ -34,13 +42,13 @@ const BatchActionsFooter: FC<Props> = ({
         py: '$4',
         borderTop: '1px solid $gray7',
         backgroundColor: '$neutralBg',
+        zIndex: 999,
       }}
     >
       <Flex align="center" css={{ gap: 24 }}>
         <Text>
-          {selectedItemCount} {itemSubject}
+          {selectedItems.length} {listItemSubject}
         </Text>
-        {/* TODO: Select All button */}
         <Button
           color={'ghost'}
           css={{ color: '$primary11' }}
@@ -50,10 +58,26 @@ const BatchActionsFooter: FC<Props> = ({
         </Button>
       </Flex>
 
-      <Flex align="center">
-        <Button onClick={() => setShowListingPage(true)}>
-          List {selectedItemCount} {itemSubject}
+      <Flex align="center" css={{ gap: '$4' }}>
+        <Button
+          onClick={() => setShowListingPage(true)}
+          disabled={selectedItems.length < 1}
+          color={sellableItems.length > 0 ? 'gray3' : 'primary'}
+        >
+          {selectedItems.length > 0
+            ? `List ${selectedItems.length} ${listItemSubject}`
+            : 'List'}
         </Button>
+        {sellableItems.length > 0 ? (
+          <Button
+            onClick={() => setOpenAcceptBidModal(true)}
+            disabled={sellableItems.length < 1}
+          >
+            {sellableItems.length > 0
+              ? `Sell ${sellableItems.length} ${sellItemSubject}`
+              : 'Sell'}
+          </Button>
+        ) : null}
       </Flex>
     </Flex>
   )

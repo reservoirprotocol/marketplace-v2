@@ -17,8 +17,8 @@ const Overlay = styled(DialogPrimitive.Overlay, {
 })
 
 const AnimatedOverlay = forwardRef<
-  ElementRef<typeof DialogPrimitive.Overlay>,
-  ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
+  ElementRef<typeof Overlay>,
+  ComponentPropsWithoutRef<typeof Overlay>
 >(({ ...props }, forwardedRef) => (
   <Overlay {...props} forceMount asChild>
     <motion.div

@@ -1,9 +1,21 @@
 import { BidModal, BidStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { cloneElement, ComponentProps, FC, useContext } from 'react'
+import {
+  cloneElement,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  useContext,
+} from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
+import {
+  useAccount,
+  useNetwork,
+  useWalletClient,
+  mainnet,
+  useSwitchNetwork,
+} from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
@@ -17,6 +29,8 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   mutate?: SWRResponse['mutate']
 }
+
+type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
 
 const Bid: FC<Props> = ({
   tokenId,
@@ -35,7 +49,7 @@ const Bid: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
 
-  const { data: signer } = useSigner()
+  const { data: signer } = useWalletClient()
   const { chain: activeChain } = useNetwork()
 
   const isInTheWrongNetwork = Boolean(
@@ -47,6 +61,24 @@ const Bid: FC<Props> = ({
       Make Offer
     </Button>
   )
+
+  // CONFIGURABLE: Here you can configure which currencies you would like to support for bidding
+  let bidCurrencies: BiddingCurrencies = undefined
+  if (marketplaceChain.id === mainnet.id) {
+    bidCurrencies = [
+      {
+        contract: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        symbol: 'WETH',
+        coinGeckoId: 'ethereum',
+      },
+      {
+        contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+        symbol: 'USDC',
+        decimals: 6,
+        coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
 
   if (isDisconnected || isInTheWrongNetwork) {
     return cloneElement(trigger, {
@@ -70,6 +102,7 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
+        currencies={bidCurrencies}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}

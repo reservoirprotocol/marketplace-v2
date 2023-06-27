@@ -12,10 +12,10 @@ import HamburgerMenu from './HamburgerMenu'
 import MobileSearch from './MobileSearch'
 import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
-import { useMounted } from '../../hooks'
+import { useMarketplaceChain, useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
-import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
+import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -25,6 +25,7 @@ const Navbar = () => {
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
+  const { routePrefix } = useMarketplaceChain()
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -58,7 +59,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
+          <Link href={`/${routePrefix}`}>
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
                 src="/reservoirLogo.svg"
@@ -97,7 +98,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
+          <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
@@ -125,8 +126,8 @@ const Navbar = () => {
             />
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            <Link href="/collection-rankings">
-              <NavItem active={router.pathname == '/collection-rankings'}>
+            <Link href={`/${routePrefix}/collection-rankings`}>
+              <NavItem active={router.pathname.includes('collection-rankings')}>
                 Collections
               </NavItem>
             </Link>
@@ -144,7 +145,7 @@ const Navbar = () => {
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
-          <ProfileDropdown />
+          <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />

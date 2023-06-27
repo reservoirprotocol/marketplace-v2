@@ -15,7 +15,6 @@ import {
   useUsersActivity,
 } from '@reservoir0x/reservoir-kit-ui'
 import LoadingSpinner from 'components/common/LoadingSpinner'
-import { constants } from 'ethers'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import Link from 'next/link'
 import { FC, useEffect, useRef } from 'react'
@@ -30,6 +29,7 @@ import {
   TableRow,
   Text,
 } from '../primitives'
+import { zeroAddress } from 'viem'
 
 type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
 type CollectionActivity = CollectionActivityResponse['data'][0]
@@ -224,12 +224,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               </Text>
             </Flex>
             {activity.price &&
-            activity.price !== 0 &&
+            activity.price.amount?.decimal !== 0 &&
             activity.type &&
-            !['transfer', 'mint'].includes(activity.type) ? (
+            activity.type !== 'transfer' ? (
               <Flex align="center">
                 <FormatCryptoCurrency
-                  amount={activity.price}
+                  amount={activity.price.amount?.decimal}
+                  address={activity.price.currency?.contract}
                   logoHeight={16}
                   textStyle="subtitle1"
                   css={{ mr: '$2', fontSize: '14px' }}
@@ -282,9 +283,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 gap: '$3',
               }}
             >
-              {activity.fromAddress &&
-              activity.fromAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.fromAddress}`}>
+              {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
+                <Link href={`/portfolio/${activity.fromAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -306,9 +306,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 to
               </Text>
-              {activity.toAddress &&
-              activity.toAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.toAddress}`}>
+              {activity.toAddress && activity.toAddress !== zeroAddress ? (
+                <Link href={`/portfolio/${activity.toAddress}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -347,12 +346,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             </Text>
           </Flex>
           {activity.price &&
-          activity.price !== 0 &&
+          activity.price.amount?.decimal !== 0 &&
           activity.type &&
-          !['transfer', 'mint'].includes(activity.type) ? (
+          activity.type !== 'transfer' ? (
             <Flex align="center">
               <FormatCryptoCurrency
-                amount={activity.price}
+                amount={activity.price.amount?.decimal}
+                address={activity.price.currency?.contract}
                 logoHeight={16}
                 textStyle="subtitle1"
                 css={{ mr: '$2', fontSize: '14px' }}
@@ -400,13 +400,12 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               gap: '$3',
             }}
           >
-            {activity.fromAddress &&
-            activity.fromAddress !== constants.AddressZero ? (
+            {activity.fromAddress && activity.fromAddress !== zeroAddress ? (
               <Link
                 style={{
                   display: 'flex',
                 }}
-                href={`/profile/${activity.fromAddress}`}
+                href={`/portfolio/${activity.fromAddress}`}
               >
                 <Text
                   style="subtitle2"
@@ -426,13 +425,12 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             <Text style="body2" color="subtle">
               to
             </Text>
-            {activity.toAddress &&
-            activity.toAddress !== constants.AddressZero ? (
+            {activity.toAddress && activity.toAddress !== zeroAddress ? (
               <Link
                 style={{
                   display: 'flex',
                 }}
-                href={`/profile/${activity.toAddress}`}
+                href={`/portfolio/${activity.toAddress}`}
               >
                 <Text
                   style="subtitle2"

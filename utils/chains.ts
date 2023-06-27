@@ -1,12 +1,32 @@
-import {
-  arbitrum,
-  goerli,
-  mainnet,
-  polygon,
-  optimism,
-  Chain,
-  bsc,
-} from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+
+//Chains that are missing from wagmi:
+export const zora = {
+  id: 7777777,
+  name: 'ZORA',
+  network: 'zora',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.zora.co'],
+      webSocket: ['wss://rpc.zora.co'],
+    },
+    public: {
+      http: ['https://rpc.zora.co'],
+      webSocket: ['wss://rpc.zora.co'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'ZORA',
+      url: 'https://explorer.zora.energy',
+    },
+    default: {
+      name: 'ZORA',
+      url: 'https://explorer.zora.energy',
+    },
+  },
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -93,16 +113,15 @@ export default [
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
   {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    ...zora,
+    name: 'Zora',
+    lightIconUrl: '/icons/zora-icon-dark.svg',
+    darkIconUrl: '/icons/zora-icon-light.svg',
+    reservoirBaseUrl: 'https://api-zora.reservoir.tools',
+    proxyApi: '/api/reservoir/zora',
+    routePrefix: 'zora',
+    apiKey: process.env.ZORA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
   },
   {
     ...bsc,

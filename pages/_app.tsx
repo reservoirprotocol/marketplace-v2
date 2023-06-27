@@ -2,6 +2,7 @@ import AnalyticsProvider, {
   initializeAnalytics,
 } from 'components/AnalyticsProvider'
 initializeAnalytics()
+import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 
 import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
@@ -15,7 +16,7 @@ import {
   darkTheme as rainbowDarkTheme,
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
-import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -43,20 +44,20 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-const { chains, provider } = configureChains(supportedChains, [
+const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir Marketplace',
+  appName: 'Reservoir NFT Explorer',
   chains,
 })
 
-const wagmiClient = createClient({
+const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
-  provider,
+  publicClient,
 })
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
@@ -77,10 +78,12 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         light: 'light',
       }}
     >
-      <WagmiConfig client={wagmiClient}>
+      <WagmiConfig config={wagmiClient}>
         <ChainContextProvider>
           <AnalyticsProvider>
-            <MyApp {...props} />
+            <ErrorTrackingProvider>
+              <MyApp {...props} />
+            </ErrorTrackingProvider>
           </AnalyticsProvider>
         </ChainContextProvider>
       </WagmiConfig>
@@ -154,9 +157,10 @@ function MyApp({
               return {
                 id,
                 baseApiUrl: `${baseUrl}${proxyApi}`,
-                default: marketplaceChain.id === id,
+                active: marketplaceChain.id === id,
               }
             }),
+            logLevel: 4,
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)

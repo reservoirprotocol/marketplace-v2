@@ -15,15 +15,14 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ChainContext } from 'context/ChainContextProvider'
-import { constants } from 'ethers'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import Link from 'next/link'
 import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
-import { zoneAddresses } from 'utils/zoneAddresses'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
+import { zeroAddress } from 'viem'
 
 type Props = {
   address?: string
@@ -107,6 +106,7 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
                 <OfferTableRow
                   key={`${offer?.id}-${i}`}
                   offer={offer}
+                  tokenString={token}
                   address={address}
                   is1155={is1155}
                   isOwner={isOwner}
@@ -130,6 +130,7 @@ export const OffersTable: FC<Props> = ({ token, address, is1155, isOwner }) => {
 
 type OfferTableRowProps = {
   offer: ReturnType<typeof useBids>['data'][0]
+  tokenString: Parameters<typeof useBids>['0']['token']
   is1155: boolean
   isOwner: boolean
   address?: string
@@ -138,6 +139,7 @@ type OfferTableRowProps = {
 
 const OfferTableRow: FC<OfferTableRowProps> = ({
   offer,
+  tokenString,
   is1155,
   isOwner,
   address,
@@ -150,11 +152,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
 
   const isUserOffer = address?.toLowerCase() === offer.maker.toLowerCase()
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  const isOracleOrder = offer?.isNativeOffChainCancellable
+  const contract = tokenString?.split(':')[0]
+  const tokenId = tokenString?.split(':')[1]
 
   const offerSourceName = offer?.source?.name
   const offerSourceDomain = offer?.source?.domain
@@ -194,9 +194,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           <Text style="body2" color="subtle" css={{ lineHeight: '14.5px' }}>
             from
           </Text>
-          {offer.maker && offer.maker !== constants.AddressZero ? (
+          {offer.maker && offer.maker !== zeroAddress ? (
             <Link
-              href={`/profile/${offer.maker}`}
+              href={`/portfolio/${offer.maker}`}
               style={{ lineHeight: '14.5px' }}
             >
               <Text
@@ -224,8 +224,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           {isOwner && !isUserOffer ? (
             <AcceptBid
               bidId={offer.id}
-              collectionId={offer.criteria?.data?.collection?.id}
-              tokenId={offer.criteria?.data?.token?.tokenId}
+              collectionId={offer.criteria?.data?.collection?.id || contract}
+              tokenId={offer.criteria?.data?.token?.tokenId || tokenId}
               buttonChildren={
                 <Text style="subtitle2" css={{ color: 'white' }}>
                   Accept
@@ -241,8 +241,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
               {isOracleOrder ? (
                 <EditBid
                   bidId={offer.id}
-                  tokenId={offer.criteria?.data?.token?.tokenId}
-                  collectionId={offer.criteria?.data?.collection?.id}
+                  tokenId={offer.criteria?.data?.token?.tokenId || tokenId}
+                  collectionId={
+                    offer.criteria?.data?.collection?.id || contract
+                  }
                   buttonChildren={<Text style="subtitle2">Edit</Text>}
                   buttonCss={{
                     fontSize: 14,

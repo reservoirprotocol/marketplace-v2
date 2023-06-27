@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -12,7 +12,6 @@ import {
   Box,
   Tooltip,
 } from '../primitives'
-import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import { useBids } from '@reservoir0x/reservoir-kit-ui'
@@ -25,15 +24,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
-import { zoneAddresses } from 'utils/zoneAddresses'
+import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
+  isOwner: boolean
 }
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
 
-export const OffersTable: FC<Props> = ({ address }) => {
+export const OffersTable: FC<Props> = ({ address, isOwner }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
@@ -83,6 +84,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
               <OfferTableRow
                 key={`${offer?.id}-${i}`}
                 offer={offer}
+                isOwner={isOwner}
                 mutate={mutate}
               />
             )
@@ -101,27 +103,41 @@ export const OffersTable: FC<Props> = ({ address }) => {
 
 type OfferTableRowProps = {
   offer: ReturnType<typeof useBids>['data'][0]
+  isOwner: boolean
   mutate?: MutatorCallback
 }
 
-const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
+const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const { routePrefix } = useMarketplaceChain()
   const expiration = useTimeSince(offer?.expiration)
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
+  const isOracleOrder = offer?.isNativeOffChainCancellable
+  const isCollectionOffer = offer?.criteria?.kind !== 'token'
 
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  // @ts-ignore
+  const attribute = offer?.criteria?.data?.attribute
+  const attributeQueryParam = attribute
+    ? `?attributes[${attribute.key}]=${attribute.value}`
+    : ''
+  const attributeDisplayText = attribute
+    ? `${attribute?.key}: ${attribute?.value}`
+    : ''
 
   let criteriaData = offer?.criteria?.data
 
-  let imageSrc: string = (
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      criteriaData?.token?.tokenId
+        ? criteriaData?.token?.image || criteriaData?.collection?.image
+        : criteriaData?.collection?.image,
+      250
+    )
+  }, [
+    criteriaData?.token?.tokenId,
+    criteriaData?.token?.image,
+    criteriaData?.collection?.image,
+  ])
 
   if (isSmallDevice) {
     return (
@@ -140,23 +156,25 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+            href={
+              isCollectionOffer
+                ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+                : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
+            }
           >
             <Flex align="center">
-              {imageSrc && (
-                <Image
-                  style={{
-                    borderRadius: '4px',
-                    objectFit: 'cover',
-                    aspectRatio: '1/1',
-                  }}
-                  loader={({ src }) => src}
-                  src={imageSrc}
-                  alt={`${offer?.id}`}
-                  width={36}
-                  height={36}
-                />
-              )}
+              <Img
+                css={{
+                  borderRadius: '4px',
+                  objectFit: 'cover',
+                  aspectRatio: '1/1',
+                }}
+                loader={({ src }) => src}
+                src={imageSrc}
+                alt={`${offer?.id}`}
+                width={36}
+                height={36}
+              />
               <Flex
                 direction="column"
                 css={{
@@ -169,13 +187,15 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                   {criteriaData?.collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{criteriaData?.token?.tokenId}
+                  {isCollectionOffer
+                    ? attributeDisplayText
+                    : `#${criteriaData?.token?.tokenId}`}
                 </Text>
               </Flex>
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={offer?.price?.amount?.native}
+            amount={offer?.price?.amount?.decimal}
             address={offer?.price?.currency?.contract}
             textStyle="subtitle2"
             logoHeight={14}
@@ -193,19 +213,39 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
               <Text style="subtitle2">{expiration}</Text>
             </Flex>
           </a>
-          <CancelBid
-            bidId={offer?.id as string}
-            mutate={mutate}
-            trigger={
-              <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
-                    content={
-                      <Text style="body3" as="p">
-                        Cancelling this order requires gas.
-                      </Text>
-                    }
-                  >
+
+          {isOwner ? (
+            <CancelBid
+              bidId={offer?.id as string}
+              mutate={mutate}
+              trigger={
+                <Flex>
+                  {!isOracleOrder ? (
+                    <Tooltip
+                      content={
+                        <Text style="body3" as="p">
+                          Cancelling this order requires gas.
+                        </Text>
+                      }
+                    >
+                      <Button
+                        css={{
+                          color: '$red11',
+                          minWidth: '150px',
+                          justifyContent: 'center',
+                        }}
+                        color="gray3"
+                      >
+                        <FontAwesomeIcon
+                          color="#697177"
+                          icon={faGasPump}
+                          width="16"
+                          height="16"
+                        />
+                        Cancel
+                      </Button>
+                    </Tooltip>
+                  ) : (
                     <Button
                       css={{
                         color: '$red11',
@@ -214,30 +254,13 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                       }}
                       color="gray3"
                     >
-                      <FontAwesomeIcon
-                        color="#697177"
-                        icon={faGasPump}
-                        width="16"
-                        height="16"
-                      />
                       Cancel
                     </Button>
-                  </Tooltip>
-                ) : (
-                  <Button
-                    css={{
-                      color: '$red11',
-                      minWidth: '150px',
-                      justifyContent: 'center',
-                    }}
-                    color="gray3"
-                  >
-                    Cancel
-                  </Button>
-                )}
-              </Flex>
-            }
-          />
+                  )}
+                </Flex>
+              }
+            />
+          ) : null}
         </Flex>
       </Flex>
     )
@@ -250,23 +273,26 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+          href={
+            isCollectionOffer
+              ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+              : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
+          }
         >
           <Flex align="center">
-            {imageSrc && (
-              <Image
-                style={{
-                  borderRadius: '4px',
-                  objectFit: 'cover',
-                  aspectRatio: '1/1',
-                }}
-                loader={({ src }) => src}
-                src={imageSrc}
-                alt={`${criteriaData?.token?.name}`}
-                width={48}
-                height={48}
-              />
-            )}
+            <Img
+              css={{
+                borderRadius: '4px',
+                objectFit: 'cover',
+                aspectRatio: '1/1',
+              }}
+              loader={({ src }) => src}
+              src={imageSrc}
+              alt={`${criteriaData?.token?.name}`}
+              width={48}
+              height={48}
+            />
+
             <Flex
               direction="column"
               css={{
@@ -278,7 +304,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 {criteriaData?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{criteriaData?.token?.tokenId}
+                {isCollectionOffer
+                  ? attributeDisplayText
+                  : `#${criteriaData?.token?.tokenId}`}
               </Text>
             </Flex>
           </Flex>
@@ -286,7 +314,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={offer?.price?.amount?.native}
+          amount={offer?.price?.amount?.decimal}
           address={offer?.price?.currency?.contract}
           textStyle="subtitle2"
           logoHeight={14}
@@ -315,19 +343,38 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       </TableCell>
       <TableCell>
         <Flex justify="end">
-          <CancelBid
-            bidId={offer?.id as string}
-            mutate={mutate}
-            trigger={
-              <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
-                    content={
-                      <Text style="body3" as="p">
-                        Cancelling this order requires gas.
-                      </Text>
-                    }
-                  >
+          {isOwner ? (
+            <CancelBid
+              bidId={offer?.id as string}
+              mutate={mutate}
+              trigger={
+                <Flex>
+                  {!isOracleOrder ? (
+                    <Tooltip
+                      content={
+                        <Text style="body3" as="p">
+                          Cancelling this order requires gas.
+                        </Text>
+                      }
+                    >
+                      <Button
+                        css={{
+                          color: '$red11',
+                          minWidth: '150px',
+                          justifyContent: 'center',
+                        }}
+                        color="gray3"
+                      >
+                        <FontAwesomeIcon
+                          color="#697177"
+                          icon={faGasPump}
+                          width="16"
+                          height="16"
+                        />
+                        Cancel
+                      </Button>
+                    </Tooltip>
+                  ) : (
                     <Button
                       css={{
                         color: '$red11',
@@ -336,30 +383,13 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                       }}
                       color="gray3"
                     >
-                      <FontAwesomeIcon
-                        color="#697177"
-                        icon={faGasPump}
-                        width="16"
-                        height="16"
-                      />
                       Cancel
                     </Button>
-                  </Tooltip>
-                ) : (
-                  <Button
-                    css={{
-                      color: '$red11',
-                      minWidth: '150px',
-                      justifyContent: 'center',
-                    }}
-                    color="gray3"
-                  >
-                    Cancel
-                  </Button>
-                )}
-              </Flex>
-            }
-          />
+                  )}
+                </Flex>
+              }
+            />
+          ) : null}
         </Flex>
       </TableCell>
     </TableRow>
