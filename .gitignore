@@ -34,6 +34,7 @@ yarn-error.log*
 
 # vercel
 .vercel
+.cache
 
 # Sentry Auth Token
 .sentryclirc
