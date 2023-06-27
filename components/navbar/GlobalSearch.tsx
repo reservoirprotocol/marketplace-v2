@@ -52,7 +52,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
 
   return (
     <Link
-      href={`/${collection.chainName}/collection/${collection.collectionId}`}
+      href={`/${collection.chainRoutePrefix}/collection/${collection.collectionId}`}
       style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}
       onClick={() => handleSelectResult(collection)}
     >

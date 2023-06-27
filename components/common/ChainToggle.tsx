@@ -99,7 +99,14 @@ const ChainToggle: FC = () => {
             <DropdownMenuItem
               key={supportedChain.id}
               css={{ py: '$3', px: '$1', display: 'flex', gap: '$2' }}
-              onClick={() => switchChains(supportedChain)}
+              onClick={() => {
+                const newUrl = router.asPath.replace(
+                  chain.routePrefix,
+                  supportedChain.routePrefix
+                )
+                switchCurrentChain(supportedChain.id)
+                router.replace(newUrl, undefined, { scroll: false })
+              }}
             >
               <Flex css={{ width: 30 }} justify="center" align="center">
                 <img
