@@ -1,4 +1,11 @@
-import { arbitrum, mainnet, polygon, optimism, Chain } from 'wagmi/chains'
+import {
+  arbitrum,
+  mainnet,
+  polygon,
+  optimism,
+  Chain,
+  polygonMumbai,
+} from 'wagmi/chains'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -42,7 +49,7 @@ type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
-  currencyAddress?: string
+  nativeCurrencyAddress?: string
 }
 
 export const DefaultChain: ReservoirChain = {

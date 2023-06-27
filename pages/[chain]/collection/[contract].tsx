@@ -168,7 +168,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  //@ts-ignore: Ignore until we regenerate the types
   const contractKind = collection?.contractKind?.toUpperCase()
 
   useEffect(() => {

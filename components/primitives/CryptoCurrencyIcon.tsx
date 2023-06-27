@@ -21,10 +21,8 @@ const CryptoCurrencyIcon: FC<Props> = ({
     chainId !== undefined ? chain.id === chainId : chain.active
   )
 
-  //@ts-ignore for now
-  if (address === zeroAddress && chain?.currencyAddress) {
-    //@ts-ignore for now
-    address = chain.currencyAddress
+  if (address === zeroAddress && chain?.nativeCurrencyAddress) {
+    address = chain.nativeCurrencyAddress
   }
 
   return (
