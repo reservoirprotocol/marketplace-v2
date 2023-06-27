@@ -184,10 +184,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
+  const encodedImageUrl = ssr?.collection?.collections?.[0]?.banner
+    ? encodeURIComponent(ssr?.collection?.collections?.[0]?.banner as string)
+    : ''
+
   return (
     <Layout>
       <Head
-        ogImage={ssr?.collection?.collections?.[0]?.banner}
+        ogImage={`/api/og/collection?image=${encodedImageUrl}&floorPrice=${collection?.floorAsk?.price?.amount?.decimal}`} //floorPrice=${collection?.floorAsk?.price?.amount?.decimal}&
+        // ogImage={ssr?.collection?.collections?.[0]?.banner}
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
       />
