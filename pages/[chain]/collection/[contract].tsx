@@ -641,20 +641,6 @@ export const getStaticProps: GetStaticProps<{
       (token) => (token?.token?.attributes?.length || 0) > 0
     ) || false
 
-  if (
-    collection &&
-    collection.collections?.[0].contractKind === 'erc1155' &&
-    Number(collection?.collections?.[0].tokenCount) === 1 &&
-    tokens?.tokens?.[0].token?.tokenId !== undefined
-  ) {
-    return {
-      redirect: {
-        destination: `/${routePrefix}/asset/${id}:${tokens.tokens[0].token.tokenId}`,
-        permanent: false,
-      },
-    }
-  }
-
   return {
     props: { ssr: { collection, tokens, hasAttributes }, id },
     revalidate: 30,
