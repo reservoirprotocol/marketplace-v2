@@ -46,6 +46,8 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
 
 const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
+const WALLET_CONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 
 const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
@@ -54,6 +56,7 @@ const { chains, publicClient } = configureChains(supportedChains, [
 
 const { connectors } = getDefaultWallets({
   appName: 'SeaPort Market',
+  projectId: WALLET_CONNECT_PROJECT_ID,
   chains,
 })
 
