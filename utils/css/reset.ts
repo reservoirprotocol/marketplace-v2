@@ -38,6 +38,9 @@ export const reset = {
     width: '100%',
     '-webkit-font-smoothing': 'antialiased',
     overflowY: 'overlay',
+
+    // Wallet Connect Modal's zIndex
+    '--wcm-z-index': 99999,
   },
 
   /*
