@@ -44,6 +44,9 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
+const WALLET_CONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+
 const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
@@ -51,6 +54,7 @@ const { chains, publicClient } = configureChains(supportedChains, [
 
 const { connectors } = getDefaultWallets({
   appName: 'Reservoir NFT Explorer',
+  projectId: WALLET_CONNECT_PROJECT_ID,
   chains,
 })
 

@@ -43,6 +43,10 @@ const developerSectionLinks = [
     name: 'Github',
     href: 'https://github.com/reservoirprotocol',
   },
+  {
+    name: 'Testnets',
+    href: 'https://testnets.reservoir.tools',
+  },
 ]
 
 const companySectionLinks = [
