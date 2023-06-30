@@ -1,4 +1,4 @@
-import { arbitrum, mainnet, polygon, optimism, Chain } from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -96,6 +96,8 @@ export default [
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
     coingeckoId: 'arbitrum-iou',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
   },
   {
     ...optimism,
@@ -107,6 +109,8 @@ export default [
     routePrefix: 'optimism',
     apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
     coingeckoId: 'optimism',
+    collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
   {
     ...zora,
@@ -118,5 +122,17 @@ export default [
     routePrefix: 'zora',
     apiKey: process.env.ZORA_RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
+  },
+  {
+    ...bsc,
+    lightIconUrl: '/icons/bsc-icon-dark.svg',
+    darkIconUrl: '/icons/bsc-icon-light.svg',
+    reservoirBaseUrl: 'https://api-bsc.reservoir.tools',
+    proxyApi: '/api/reservoir/bsc',
+    routePrefix: 'bsc',
+    apiKey: process.env.BSC_RESERVOIR_API_KEY,
+    coingeckoId: 'binancecoin',
+    collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
   },
 ] as ReservoirChain[]
