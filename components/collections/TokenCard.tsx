@@ -287,18 +287,22 @@ export default ({
               ) : null}
             </Flex>
 
-            <>
-              {token?.market?.floorAsk?.source?.name && (
-                <img
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: '50%',
-                  }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
-                />
-              )}
-            </>
+            {token?.market?.floorAsk?.source?.name ? (
+              <img
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  const url = `${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
+                  window.open(url, '_blank')
+                }}
+                src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+              />
+            ) : null}
           </Flex>
           {token?.token?.lastSale?.price?.amount?.decimal ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
