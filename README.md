@@ -6,7 +6,7 @@ The ultimate NFT marketplace.
 
 ## About The Project
 
-SeaPort Market v3.5 is NFT marketplace built to enables access to instant liquidity aggregated from major marketplace.
+SeaPort Market is NFT marketplace built to enables access to instant liquidity aggregated from major marketplace.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
