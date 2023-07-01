@@ -7,64 +7,75 @@ import {
   FormatCurrency,
   Text,
 } from 'components/primitives'
-import { mainnet, polygon, optimism } from 'wagmi/chains'
+import { goerli, polygonMumbai, sepolia } from 'wagmi/chains'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
 import { zeroAddress, formatUnits } from 'viem'
+import wrappedContracts from 'utils/wrappedContracts'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
 const currencies = [
   {
     address: zeroAddress,
-    symbol: 'ETH',
-    decimals: mainnet.nativeCurrency.decimals,
+    symbol: goerli.nativeCurrency.symbol,
+    decimals: goerli.nativeCurrency.decimals,
     chain: {
-      id: mainnet.id,
-      name: mainnet.name,
+      id: goerli.id,
+      name: goerli.name,
     },
     coinGeckoId: 'ethereum',
   },
   {
-    address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    address: wrappedContracts[goerli.id],
     symbol: 'WETH',
-    decimals: mainnet.nativeCurrency.decimals,
+    decimals: goerli.nativeCurrency.decimals,
     chain: {
-      id: mainnet.id,
-      name: mainnet.name,
+      id: goerli.id,
+      name: goerli.name,
     },
     coinGeckoId: 'weth',
   },
   {
     address: zeroAddress,
-    symbol: 'MATIC',
-    decimals: polygon.nativeCurrency.decimals,
+    symbol: polygonMumbai.nativeCurrency.symbol,
+    decimals: polygonMumbai.nativeCurrency.decimals,
     chain: {
-      id: polygon.id,
-      name: polygon.name,
+      id: polygonMumbai.id,
+      name: polygonMumbai.name,
     },
     coinGeckoId: 'matic-network',
   },
   {
-    address: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+    address: wrappedContracts[polygonMumbai.id],
     symbol: 'WETH',
-    decimals: polygon.nativeCurrency.decimals,
+    decimals: polygonMumbai.nativeCurrency.decimals,
     chain: {
-      id: polygon.id,
-      name: polygon.name,
+      id: polygonMumbai.id,
+      name: polygonMumbai.name,
     },
     coinGeckoId: 'weth',
   },
   {
-    address: '0x4200000000000000000000000000000000000006',
-    symbol: 'WETH',
-    decimals: optimism.nativeCurrency.decimals,
+    address: zeroAddress,
+    symbol: sepolia.nativeCurrency.symbol,
+    decimals: sepolia.nativeCurrency.decimals,
     chain: {
-      id: optimism.id,
-      name: optimism.name,
+      id: sepolia.id,
+      name: sepolia.name,
     },
-    coinGeckoId: 'weth',
+    coinGeckoId: 'ethereum',
+  },
+  {
+    address: wrappedContracts[sepolia.id],
+    symbol: 'WETH',
+    decimals: sepolia.nativeCurrency.decimals,
+    chain: {
+      id: sepolia.id,
+      name: sepolia.name,
+    },
+    coinGeckoId: 'ethereum',
   },
 ]
 
@@ -100,13 +111,17 @@ const Wallet = () => {
 
   //CONFIGURABLE: Configure these by just changing the chainId to fetch native balance info, in addition to changing this
   // also make sure you change the enhancedCurrencies function to take into account for these new balances
-  const ethBalance = useBalance({
+  const goerliBalance = useBalance({
     address,
-    chainId: mainnet.id,
+    chainId: goerli.id,
   })
   const maticBalance = useBalance({
     address,
-    chainId: polygon.id,
+    chainId: polygonMumbai.id,
+  })
+  const sepoliaBalance = useBalance({
+    address,
+    chainId: sepolia.id,
   })
 
   const usdConversions = useCoinConversion(
@@ -127,12 +142,16 @@ const Wallet = () => {
       if (currency.address === zeroAddress) {
         //CONFIGURABLE: Configure these to show the fetched balance results configured above in the useBalance hooks
         switch (currency.chain.id) {
-          case polygon.id: {
+          case polygonMumbai.id: {
             balance = maticBalance.data?.value || 0n
             break
           }
-          case mainnet.id: {
-            balance = ethBalance.data?.value || 0n
+          case goerli.id: {
+            balance = goerliBalance.data?.value || 0n
+            break
+          }
+          case sepolia.id: {
+            balance = sepoliaBalance.data?.value || 0n
             break
           }
         }
@@ -169,7 +188,13 @@ const Wallet = () => {
       }
     }) as EnhancedCurrency[]
     //CONFIGURABLE: Configure these to regenerate whenever a native balance changes, non native balances are already handled
-  }, [usdConversions, nonNativeBalances, ethBalance, maticBalance])
+  }, [
+    usdConversions,
+    nonNativeBalances,
+    goerliBalance,
+    maticBalance,
+    sepoliaBalance,
+  ])
 
   const totalUsdBalance = useMemo(() => {
     return enhancedCurrencies.reduce(
