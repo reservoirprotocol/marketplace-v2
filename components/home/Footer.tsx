@@ -37,6 +37,10 @@ const developerSectionLinks = [
     name: 'Sell',
     href: '/portfolio',
   },
+  {
+    name: 'Testnets',
+    href: 'https://testnets.reservoir.tools',
+  },
 ]
 
 const companySectionLinks = [
