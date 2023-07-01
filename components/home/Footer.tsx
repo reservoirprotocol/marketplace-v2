@@ -39,7 +39,7 @@ const developerSectionLinks = [
   },
   {
     name: 'Testnets',
-    href: 'https://testnets.reservoir.tools',
+    href: 'https://testnets.seaport.market',
   },
 ]
 
