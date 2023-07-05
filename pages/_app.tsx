@@ -40,11 +40,13 @@ const inter = Inter({
   subsets: ['latin'],
 })
 
+const MARKETPLACE_FEES = process.env.NEXT_PUBLIC_MARKETPLACE_FEES
+  ? (JSON.parse(process.env.NEXT_PUBLIC_MARKETPLACE_FEES) as string[])
+  : undefined
 export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-const FEE_BPS = process.env.NEXT_PUBLIC_FEE_BPS
 const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
@@ -170,7 +172,7 @@ function MyApp({
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             disablePoweredByReservoir: true,
-            marketplaceFees: 50,
+            marketplaceFees: MARKETPLACE_FEES,
             marketplaceFeeRecipient: FEE_RECIPIENT,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
