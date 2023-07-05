@@ -16,7 +16,6 @@ import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
-import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
@@ -24,7 +23,7 @@ import { Head } from 'components/Head'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown, faSprout } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
 
@@ -135,6 +134,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                       minWidth: 0,
                     }}
                   >
+                    <img
+                      src={`/home/logos/${marketplaceChain.routePrefix}-logo.png`}
+                      alt={`${marketplaceChain.name} Logo`}
+                      style={{ width: 40, height: 40 }}
+                    />
                     <Text style="h3" ellipsify>
                       {' ' + marketplaceChain.name}
                     </Text>
@@ -182,6 +186,31 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             Multi-Chain Explorer, powered by Reservoir
           </Text>
         </Flex>
+        <Flex>
+          <Flex
+            align="center"
+            css={{
+              border: '1px solid',
+              borderColor: '$gray6',
+              p: '$4',
+              borderRadius: 8,
+              gap: '$4',
+            }}
+          >
+            <FontAwesomeIcon
+              icon={faSprout}
+              width={25}
+              height={25}
+              color="#9BA1A6"
+            />
+            <Flex direction="column">
+              <Text style="subtitle2" color="subtle">
+                7d Mints
+              </Text>
+              <Text style="h6">200,000</Text>
+            </Flex>
+          </Flex>
+        </Flex>
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
@@ -206,7 +235,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                   setSortByTime(option)
                 }}
               />
-              <ChainToggle />
             </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
