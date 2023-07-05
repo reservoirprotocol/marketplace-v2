@@ -170,7 +170,7 @@ function MyApp({
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             disablePoweredByReservoir: true,
-            marketplaceFee: FEE_BPS,
+            marketplaceFees: FEE_BPS,
             marketplaceFeeRecipient: FEE_RECIPIENT,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
