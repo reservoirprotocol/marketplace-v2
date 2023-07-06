@@ -47,7 +47,6 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-const FEE_RECIPIENT = process.env.NEXT_PUBLIC_FEE_RECIPIENT
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 
@@ -173,7 +172,6 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             disablePoweredByReservoir: true,
             marketplaceFees: MARKETPLACE_FEES,
-            marketplaceFeeRecipient: FEE_RECIPIENT,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
             // marketplaceFee: 250,
