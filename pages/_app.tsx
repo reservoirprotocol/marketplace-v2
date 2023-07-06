@@ -34,7 +34,6 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
-import { useRouter } from 'next/router'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -43,9 +42,6 @@ const inter = Inter({
 
 const MARKETPLACE_FEES = process.env.NEXT_PUBLIC_MARKETPLACE_FEES
   ? (JSON.parse(process.env.NEXT_PUBLIC_MARKETPLACE_FEES) as string[])
-  : undefined
-  const FEES_ON_TOP = process.env.NEXT_PUBLIC_FEES_ON_TOP
-  ? (JSON.parse(process.env.NEXT_PUBLIC_FEES_ON_TOP) as string[])
   : undefined
 export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
@@ -110,13 +106,6 @@ function MyApp({
   globalReset()
 
   const { theme } = useTheme()
-  const router = useRouter()
-  const cartFeeBps = router.query.cartFeeBps
-    ? JSON.parse(router.query.cartFeeBps as string)
-    : undefined
-  const cartFeeFixed = router.query.cartFeeFixed
-    ? JSON.parse(router.query.cartFeeFixed as string)
-    : undefined
   const marketplaceChain = useMarketplaceChain()
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
@@ -183,7 +172,6 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             disablePoweredByReservoir: true,
             marketplaceFees: MARKETPLACE_FEES,
-            feesOnTop: FEES_ON_TOP,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
             // marketplaceFee: 250,
@@ -191,7 +179,7 @@ function MyApp({
           }}
           theme={reservoirKitTheme}
         >
-          <CartProvider feesOnTopBps={cartFeeBps} feesOnTopFixed={cartFeeFixed}>
+          <CartProvider>
             <Tooltip.Provider>
               <RainbowKitProvider
                 chains={chains}
