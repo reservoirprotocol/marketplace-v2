@@ -174,12 +174,12 @@ function MyApp({
             marketplaceFees: MARKETPLACE_FEES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            // marketplaceFee: 250,
-            // marketplaceFeeRecipient: "0xabc"
+            // feesOnTopBps={["0xabc:50", "0xdef:50"]}
+            // feesOnTopFixed={["0xabc:50", "0xdef:10000000000000000"]}
           }}
           theme={reservoirKitTheme}
         >
-          <CartProvider>
+          <CartProvider feesOnTopBps={["0x4c31e558393312a1d3bE14C45A3656A2e915F53D:50"]}>
             <Tooltip.Provider>
               <RainbowKitProvider
                 chains={chains}
