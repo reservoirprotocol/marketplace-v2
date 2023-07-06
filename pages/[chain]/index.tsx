@@ -4,75 +4,75 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box, Button } from 'components/primitives'
+import {
+  Text,
+  Flex,
+  Box,
+  Button,
+  ToggleGroup,
+  ToggleGroupItem,
+} from 'components/primitives'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useContext, useState } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import Link from 'next/link'
-import CollectionsTimeDropdown, {
-  CollectionsSortingOption,
-} from 'components/common/CollectionsTimeDropdown'
 import { Head } from 'components/Head'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
-import { faChevronDown, faSprout } from '@fortawesome/free-solid-svg-icons'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
+import { ChainStats } from 'components/home/ChainStats'
+import useTopSellingCollections from 'hooks/useTopSellingCollections'
+import { CollectionTopSellingTable } from 'components/home/CollectionTopSellingTable'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
-  const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
   const marketplaceChain = useMarketplaceChain()
   const router = useRouter()
-
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 10,
-    sortBy: sortByTime,
-    includeTopBid: true,
-  }
+  const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('any')
+  const [minutesFilter, setMinutesFilter] = useState<number>(1440)
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
+  // const { data, isValidating } = useCollections(
+  //   {},
+  //   {
+  //     fallbackData: [ssr.collections[marketplaceChain.id]],
+  //   }
+  // )
 
-  const { data, isValidating } = useCollections(collectionQuery, {
-    fallbackData: [ssr.collections[marketplaceChain.id]],
-  })
+  const startTime = useMemo(() => {
+    const now = new Date()
+    const timestamp = Math.floor(now.getTime() / 1000)
+    return timestamp - minutesFilter * 60
+  }, [minutesFilter])
 
-  let collections = data || []
-
-  let volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
-
-  switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
-      break
-    case '7DayVolume':
-      volumeKey = '7day'
-      break
-    case '30DayVolume':
-      volumeKey = '30day'
-      break
-  }
+  const {
+    data: topSellingCollections,
+    collections,
+    isValidating,
+  } = useTopSellingCollections(
+    {
+      startTime,
+      fillType,
+      limit: 20,
+      includeRecentSales: true,
+    },
+    {
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+    }
+  )
 
   return (
     <Layout>
@@ -186,31 +186,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             Multi-Chain Explorer, powered by Reservoir
           </Text>
         </Flex>
-        <Flex>
-          <Flex
-            align="center"
-            css={{
-              border: '1px solid',
-              borderColor: '$gray6',
-              p: '$4',
-              borderRadius: 8,
-              gap: '$4',
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faSprout}
-              width={25}
-              height={25}
-              color="#9BA1A6"
-            />
-            <Flex direction="column">
-              <Text style="subtitle2" color="subtle">
-                7d Mints
-              </Text>
-              <Text style="h6">200,000</Text>
-            </Flex>
-          </Flex>
-        </Flex>
+        <ChainStats />
         <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
@@ -224,39 +200,53 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               },
             }}
           >
-            <Text style="h4" as="h4">
-              Popular Collections
-            </Text>
-            <Flex align="center" css={{ gap: '$4' }}>
-              <CollectionsTimeDropdown
-                compact={compactToggleNames && isMounted}
-                option={sortByTime}
-                onOptionSelected={(option) => {
-                  setSortByTime(option)
-                }}
-              />
-            </Flex>
+            <ToggleGroup
+              type="single"
+              value={fillType}
+              onValueChange={(value) => setFillType(value as typeof fillType)}
+              css={{ flexShrink: 0 }}
+            >
+              <ToggleGroupItem value="any" css={{ minWidth: 160, p: '$4' }}>
+                <Text style="subtitle1">All Sales</Text>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="mint" css={{ minWidth: 160, p: '$4' }}>
+                <Text style="subtitle1">Mints</Text>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="sale" css={{ minWidth: 160, p: '$4' }}>
+                <Text style="subtitle1">Trades</Text>
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <ToggleGroup
+              type="single"
+              value={`${minutesFilter}`}
+              onValueChange={(value) => setMinutesFilter(+value)}
+              css={{ flexShrink: 0 }}
+            >
+              <ToggleGroupItem value="5" css={{ minWidth: 80, p: '$4' }}>
+                <Text style="subtitle1">5m</Text>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="30" css={{ minWidth: 80, p: '$4' }}>
+                <Text style="subtitle1">30m</Text>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="60" css={{ minWidth: 80, p: '$4' }}>
+                <Text style="subtitle1">1h</Text>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="360" css={{ minWidth: 80, p: '$4' }}>
+                <Text style="subtitle1">6h</Text>
+              </ToggleGroupItem>
+              <ToggleGroupItem value="1440" css={{ minWidth: 80, p: '$4' }}>
+                <Text style="subtitle1">24h</Text>
+              </ToggleGroupItem>
+            </ToggleGroup>
           </Flex>
           {isSSR || !isMounted ? null : (
-            <CollectionRankingsTable
+            <CollectionTopSellingTable
+              topSellingCollections={topSellingCollections?.collections}
               collections={collections}
               loading={isValidating}
-              volumeKey={volumeKey}
+              fillType={fillType}
             />
           )}
-          <Box css={{ alignSelf: 'center' }}>
-            <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
-              <Button
-                css={{
-                  minWidth: 224,
-                  justifyContent: 'center',
-                }}
-                size="large"
-              >
-                View All
-              </Button>
-            </Link>
-          </Box>
         </Flex>
         <Footer />
       </Box>
