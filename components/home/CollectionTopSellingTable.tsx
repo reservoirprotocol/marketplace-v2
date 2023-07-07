@@ -67,18 +67,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
 
   return (
     <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
-      {isSmallDevice ? (
-        <Flex justify="between" css={{ mb: '$4', '@md': { display: 'none' } }}>
-          <Text style="subtitle3" color="subtle">
-            Collection
-          </Text>
-          <Text style="subtitle3" color="subtle">
-            Volume
-          </Text>
-        </Flex>
-      ) : (
-        <CollectionTableHeading fillType={fillType} />
-      )}
+      {!isSmallDevice ? <CollectionTableHeading fillType={fillType} /> : null}
       <Flex direction="column" css={{ position: 'relative' }}>
         {topSellingCollections?.map((collection, i) => {
           switch (fillType) {
@@ -89,6 +78,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
                   topSellingCollection={collection}
                   collection={collections[collection.id as string]}
                   rank={i + 1}
+                  isSmallDevice={isSmallDevice}
                 />
               )
             case 'mint':
@@ -98,6 +88,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
                   topSellingCollection={collection}
                   collection={collections[collection.id as string]}
                   rank={i + 1}
+                  isSmallDevice={isSmallDevice}
                 />
               )
             case 'any':
@@ -108,6 +99,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
                   topSellingCollection={collection}
                   collection={collections[collection.id as string]}
                   rank={i + 1}
+                  isSmallDevice={isSmallDevice}
                 />
               )
           }
@@ -180,7 +172,8 @@ const CollectionCell: FC<{
 
 const RecentSalesCell: FC<{
   topSellingCollection: NonNullable<Props['topSellingCollections']>[0]
-}> = ({ topSellingCollection }) => {
+  isSmallDevice: boolean
+}> = ({ topSellingCollection, isSmallDevice }) => {
   const images =
     useMemo(
       () =>
@@ -194,23 +187,28 @@ const RecentSalesCell: FC<{
     ) || []
 
   return (
-    <TableCell css={{ minWidth: 0 }}>
-      <Flex css={{ gap: '$2' }}>
-        {images.map((image) => (
-          <Img
-            src={image}
-            alt="Token Image"
-            width={56}
-            height={56}
-            unoptimized
-            css={{
-              borderRadius: 8,
-              width: 56,
-              height: 56,
-              objectFit: 'cover',
-            }}
-          />
-        ))}
+    <TableCell css={{ minWidth: 0, pb: isSmallDevice ? '$4' : '$3' }}>
+      <Flex direction="column" css={{ gap: '$2' }}>
+        <Text style="subtitle3" color="subtle">
+          Recent Activity
+        </Text>
+        <Flex css={{ gap: '$2', overflowX: 'scroll' }}>
+          {images.map((image) => (
+            <Img
+              src={image}
+              alt="Token Image"
+              width={56}
+              height={56}
+              unoptimized
+              css={{
+                borderRadius: 8,
+                width: 56,
+                height: 56,
+                objectFit: 'cover',
+              }}
+            />
+          ))}
+        </Flex>
       </Flex>
     </TableCell>
   )
@@ -224,18 +222,21 @@ type CollectionTableRowProps = {
   >[0]
   collection: ReturnType<typeof useTopSellingCollections>['collections'][0]
   rank: number
+  isSmallDevice: boolean
 }
 
 const AllSalesTableRow: FC<CollectionTableRowProps> = ({
   collection,
   topSellingCollection,
   rank,
+  isSmallDevice,
 }) => {
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
   const mintPrice = mintData?.price.amount?.native || 0
   const floorAsk = collection?.floorAsk?.price?.amount?.native || 0
+
   return (
     <TableRow
       key={topSellingCollection.id}
@@ -274,7 +275,10 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           {formatNumber(topSellingCollection.count)}
         </Text>
       </TableCell>
-      <RecentSalesCell topSellingCollection={topSellingCollection} />
+      <RecentSalesCell
+        topSellingCollection={topSellingCollection}
+        isSmallDevice={isSmallDevice}
+      />
     </TableRow>
   )
 }
@@ -293,71 +297,83 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
 
   if (isSmallDevice) {
     return (
-      <Link
-        href={`/${routePrefix}/collection/${topSellingCollection.id}`}
-        style={{ display: 'inline-block', minWidth: 0, marginBottom: 24 }}
-        key={topSellingCollection.id}
+      <Flex
+        direction="column"
+        css={{ borderBottom: '1px solid $gray3', pt: '$4' }}
       >
-        <Flex align="center" css={{ cursor: 'pointer' }}>
-          <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
-            {rank}
-          </Text>
-          <Img
-            src={collectionImage}
-            css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
-            alt="Collection Image"
-            width={48}
-            height={48}
-            unoptimized
-          />
-          <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
-            <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
-              <Text
+        <Link
+          href={`/${routePrefix}/collection/${topSellingCollection.id}`}
+          style={{ display: 'inline-block', minWidth: 0 }}
+          key={topSellingCollection.id}
+        >
+          <Flex justify="between" css={{ gap: '$3' }}>
+            <Flex align="center" css={{ cursor: 'pointer', width: '100%' }}>
+              <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
+                {rank}
+              </Text>
+              <Img
+                src={collectionImage}
                 css={{
-                  display: 'inline-block',
+                  borderRadius: 8,
+                  width: 48,
+                  height: 48,
+                  objectFit: 'cover',
                 }}
-                style="subtitle1"
-                ellipsify
-              >
-                {topSellingCollection?.name}
-              </Text>
-              <OpenSeaVerified
-                openseaVerificationStatus={
-                  collection?.openseaVerificationStatus
-                }
+                alt="Collection Image"
+                width={48}
+                height={48}
+                unoptimized
               />
+              <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
+                <Flex
+                  align="center"
+                  css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
+                >
+                  <Text
+                    css={{
+                      display: 'inline-block',
+                    }}
+                    style="subtitle1"
+                    ellipsify
+                  >
+                    {topSellingCollection?.name}
+                  </Text>
+                  <OpenSeaVerified
+                    openseaVerificationStatus={
+                      collection?.openseaVerificationStatus
+                    }
+                  />
+                </Flex>
+                <Flex align="center">
+                  <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
+                    Floor
+                  </Text>
+                  <FormatCryptoCurrency
+                    amount={collection?.floorAsk?.price?.amount?.decimal}
+                    address={collection?.floorAsk?.price?.currency?.contract}
+                    decimals={collection?.floorAsk?.price?.currency?.decimals}
+                    logoHeight={16}
+                    maximumFractionDigits={2}
+                    textStyle="subtitle2"
+                  />
+                </Flex>
+              </Box>
             </Flex>
-            <Flex align="center">
-              <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
-                Floor
+            <Flex direction="column" css={{ gap: '$2' }}>
+              <Text style="subtitle3" color="subtle">
+                Sales
               </Text>
-              <FormatCryptoCurrency
-                amount={collection?.floorAsk?.price?.amount?.decimal}
-                address={collection?.floorAsk?.price?.currency?.contract}
-                decimals={collection?.floorAsk?.price?.currency?.decimals}
-                logoHeight={16}
-                maximumFractionDigits={2}
-                textStyle="subtitle2"
-              />
+              <Text style="subtitle3">
+                {formatNumber(topSellingCollection.count)}
+              </Text>
             </Flex>
-          </Box>
-
-          {/* <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            <FormatCryptoCurrency
-              amount={collection?.volume?.[volumeKey]}
-              maximumFractionDigits={1}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
-            {volumeKey !== 'allTime' && (
-              <PercentChange
-                value={collection?.volumeChange?.[volumeKey]}
-                decimals={1}
-              />
-            )}
-          </Flex> */}
-        </Flex>
-      </Link>
+          </Flex>
+        </Link>
+        <RecentSalesCell
+          topSellingCollection={topSellingCollection}
+          isSmallDevice={isSmallDevice}
+        />
+      </Flex>
     )
   } else {
     return (
@@ -386,7 +402,10 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
             {formatNumber(topSellingCollection.count)}
           </Text>
         </TableCell>
-        <RecentSalesCell topSellingCollection={topSellingCollection} />
+        <RecentSalesCell
+          topSellingCollection={topSellingCollection}
+          isSmallDevice={isSmallDevice}
+        />
       </TableRow>
     )
   }
@@ -396,6 +415,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
   collection,
   topSellingCollection,
   rank,
+  isSmallDevice,
 }) => {
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
@@ -433,7 +453,10 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
           {formatNumber(topSellingCollection.count)}
         </Text>
       </TableCell>
-      <RecentSalesCell topSellingCollection={topSellingCollection} />
+      <RecentSalesCell
+        topSellingCollection={topSellingCollection}
+        isSmallDevice={isSmallDevice}
+      />
     </TableRow>
   )
 }

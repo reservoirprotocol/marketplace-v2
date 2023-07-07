@@ -4,14 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import {
-  Text,
-  Flex,
-  Box,
-  Button,
-  ToggleGroup,
-  ToggleGroupItem,
-} from 'components/primitives'
+import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import { useContext, useMemo, useState } from 'react'
 import { Footer } from 'components/home/Footer'
@@ -21,7 +14,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
-import Link from 'next/link'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
@@ -31,12 +23,15 @@ import { useRouter } from 'next/router'
 import { ChainStats } from 'components/home/ChainStats'
 import useTopSellingCollections from 'hooks/useTopSellingCollections'
 import { CollectionTopSellingTable } from 'components/home/CollectionTopSellingTable'
+import { FillTypeToggle } from 'components/home/FillTypeToggle'
+import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
   const router = useRouter()
   const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('any')
@@ -142,12 +137,15 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                     <Text style="h3" ellipsify>
                       {' ' + marketplaceChain.name}
                     </Text>
-                    <FontAwesomeIcon
-                      icon={faChevronDown}
-                      width={16}
-                      height={16}
-                      color="#9BA1A6"
-                    />
+                    <Box
+                      css={{
+                        color: '$gray10',
+                        transition: 'transform',
+                        '[data-state=open] &': { transform: 'rotate(180deg)' },
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faChevronDown} width={16} />
+                    </Box>
                   </Flex>
                 }
               >
@@ -182,62 +180,31 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               </Dropdown>
             </Flex>
           </Flex>
-          <Text style="body1" color="subtle" css={{ mb: 48 }}>
+          <Text
+            style="body1"
+            color="subtle"
+            css={{ mb: 48, textAlign: 'left' }}
+          >
             Multi-Chain Explorer, powered by Reservoir
           </Text>
         </Flex>
-        <ChainStats />
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+        {!isSmallDevice ? <ChainStats /> : null}
+        <Flex
+          css={{ mb: '$6', '@sm': { my: '$6' }, gap: 32 }}
+          direction="column"
+        >
           <Flex
             justify="between"
-            align="start"
+            align="center"
             css={{
-              flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
+              gap: '$2',
             }}
           >
-            <ToggleGroup
-              type="single"
-              value={fillType}
-              onValueChange={(value) => setFillType(value as typeof fillType)}
-              css={{ flexShrink: 0 }}
-            >
-              <ToggleGroupItem value="any" css={{ minWidth: 160, p: '$4' }}>
-                <Text style="subtitle1">All Sales</Text>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="mint" css={{ minWidth: 160, p: '$4' }}>
-                <Text style="subtitle1">Mints</Text>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="sale" css={{ minWidth: 160, p: '$4' }}>
-                <Text style="subtitle1">Trades</Text>
-              </ToggleGroupItem>
-            </ToggleGroup>
-            <ToggleGroup
-              type="single"
-              value={`${minutesFilter}`}
-              onValueChange={(value) => setMinutesFilter(+value)}
-              css={{ flexShrink: 0 }}
-            >
-              <ToggleGroupItem value="5" css={{ minWidth: 80, p: '$4' }}>
-                <Text style="subtitle1">5m</Text>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="30" css={{ minWidth: 80, p: '$4' }}>
-                <Text style="subtitle1">30m</Text>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="60" css={{ minWidth: 80, p: '$4' }}>
-                <Text style="subtitle1">1h</Text>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="360" css={{ minWidth: 80, p: '$4' }}>
-                <Text style="subtitle1">6h</Text>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="1440" css={{ minWidth: 80, p: '$4' }}>
-                <Text style="subtitle1">24h</Text>
-              </ToggleGroupItem>
-            </ToggleGroup>
+            <FillTypeToggle fillType={fillType} setFillType={setFillType} />
+            <TimeFilterToggle
+              minutesFilter={minutesFilter}
+              setMinutesFilter={setMinutesFilter}
+            />
           </Flex>
           {isSSR || !isMounted ? null : (
             <CollectionTopSellingTable
