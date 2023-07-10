@@ -100,6 +100,7 @@ export const FillTypeToggle: FC<Props> = ({ fillType, setFillType }) => {
     >
       {fillTypesFilters.map((fillType) => (
         <ToggleGroupItem
+          key={fillType.value}
           value={fillType.value}
           css={{ minWidth: 160, p: '$4' }}
         >
