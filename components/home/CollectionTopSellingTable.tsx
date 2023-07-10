@@ -33,7 +33,7 @@ type Props = {
 }
 
 const fourTemplateColumns = '1.5fr 1fr 1fr 1.5fr'
-const fiveTemplateColumns = '1.5fr 1fr 1fr 1.5fr'
+const fiveTemplateColumns = '1.6fr 1fr 1fr 1fr 1.6fr'
 
 export const CollectionTopSellingTable: FC<Props> = ({
   topSellingCollections,
@@ -43,14 +43,7 @@ export const CollectionTopSellingTable: FC<Props> = ({
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  if (loading) {
-    return null
-  }
-
-  if (
-    topSellingCollections?.length === 0 ||
-    Object.entries(collections).length === 0
-  ) {
+  if (!loading && topSellingCollections?.length === 0) {
     return (
       <Flex
         direction="column"
@@ -189,10 +182,12 @@ const RecentSalesCell: FC<{
   return (
     <TableCell css={{ minWidth: 0, pb: isSmallDevice ? '$4' : '$3' }}>
       <Flex direction="column" css={{ gap: '$2' }}>
-        <Text style="subtitle3" color="subtle">
-          Recent Activity
-        </Text>
-        <Flex css={{ gap: '$2', overflowX: 'scroll' }}>
+        {isSmallDevice ? (
+          <Text style="subtitle3" color="subtle">
+            Recent Activity
+          </Text>
+        ) : null}
+        <Flex css={{ gap: '$2', overflowX: 'auto' }}>
           {images.map((image) => (
             <Img
               src={image}
@@ -380,7 +375,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fiveTemplateColumns,
+          gridTemplateColumns: fourTemplateColumns,
         }}
       >
         <CollectionCell
@@ -465,16 +460,10 @@ const anyHeadings = [
   'Collection',
   'Floor Price (Including Mints)',
   'Sales',
-  'Recent Sales',
+  'Recent Activity',
 ]
-const mintHeadings = ['Collection', 'Mint Price', 'Sales', 'Recent Sales']
-const saleHeadings = [
-  'Collection',
-  'Volume',
-  'Floor Price',
-  'Sales',
-  'Recent Sales',
-]
+const mintHeadings = ['Collection', 'Mint Price', 'Sales', 'Recent Activity']
+const saleHeadings = ['Collection', 'Floor Price', 'Sales', 'Recent Activity']
 
 type CollectionTableHeadingProps = {
   fillType: FillType
@@ -493,7 +482,7 @@ const CollectionTableHeading: FC<CollectionTableHeadingProps> = ({
       break
     case 'sale':
       headings = saleHeadings
-      columns = fiveTemplateColumns
+      columns = fourTemplateColumns
       break
     case 'any':
     default:

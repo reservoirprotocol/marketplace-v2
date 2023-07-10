@@ -46,6 +46,7 @@ export default function (
         : false,
       swrOptions
     )
+
   const collectionsMap = useMemo(() => {
     return collections.reduce((map, collection) => {
       map[collection.id as string] = collection
