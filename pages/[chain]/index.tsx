@@ -1,6 +1,12 @@
-import { NextPage } from 'next'
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  InferGetStaticPropsType,
+  NextPage,
+} from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
@@ -17,10 +23,11 @@ import useTopSellingCollections from 'hooks/useTopSellingCollections'
 import { CollectionTopSellingTable } from 'components/home/CollectionTopSellingTable'
 import { FillTypeToggle } from 'components/home/FillTypeToggle'
 import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
+import fetcher from 'utils/fetcher'
 
-type Props = {}
+type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const IndexPage: NextPage<Props> = ({}) => {
+const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
@@ -28,11 +35,6 @@ const IndexPage: NextPage<Props> = ({}) => {
   const router = useRouter()
   const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('any')
   const [minutesFilter, setMinutesFilter] = useState<number>(1440)
-  const [topSellingCollections, setTopSellingCollections] =
-    useState<ReturnType<typeof useTopSellingCollections>['data']>(undefined)
-  const [collections, setCollections] = useState<
-    ReturnType<typeof useTopSellingCollections>['collections']
-  >({})
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
 
@@ -43,7 +45,7 @@ const IndexPage: NextPage<Props> = ({}) => {
   }, [minutesFilter])
 
   const {
-    data,
+    data: topSellingCollectionsData,
     collections: collectionsData,
     isValidating,
   } = useTopSellingCollections(
@@ -56,16 +58,27 @@ const IndexPage: NextPage<Props> = ({}) => {
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
+      fallbackData: [
+        ssr.topSellingCollections[marketplaceChain.id].collections,
+      ],
     },
     chain?.id
   )
 
+  const [topSellingCollections, setTopSellingCollections] = useState<
+    ReturnType<typeof useTopSellingCollections>['data']
+  >(ssr.topSellingCollections[marketplaceChain.id])
+  const [collections, setCollections] =
+    useState<ReturnType<typeof useTopSellingCollections>['collections']>(
+      collectionsData
+    )
+
   useEffect(() => {
     if (!isValidating) {
-      setTopSellingCollections(data)
+      setTopSellingCollections(topSellingCollectionsData)
       setCollections(collectionsData)
     }
-  }, [data, collectionsData, isValidating])
+  }, [isValidating])
 
   return (
     <Layout>
@@ -217,6 +230,65 @@ const IndexPage: NextPage<Props> = ({}) => {
       </Box>
     </Layout>
   )
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+type TopSellingCollectionsSchema =
+  paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
+
+type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
+
+type CollectionSchema =
+  paths['/collections/v5']['get']['responses']['200']['schema']
+type ChainCollections = Record<string, CollectionSchema>
+
+export const getStaticProps: GetStaticProps<{
+  ssr: {
+    topSellingCollections: ChainTopSellingCollections
+  }
+}> = async () => {
+  const now = new Date()
+  const timestamp = Math.floor(now.getTime() / 1000)
+  const startTime = timestamp - 1440 * 60 // 24hrs ago
+
+  let topSellingCollectionsQuery: paths['/collections/top-selling/v1']['get']['parameters']['query'] =
+    {
+      startTime: startTime,
+      fillType: 'any',
+      limit: 20,
+      includeRecentSales: true,
+    }
+
+  const promises: ReturnType<typeof fetcher>[] = []
+  supportedChains.forEach((chain) => {
+    const query = { ...topSellingCollectionsQuery }
+
+    promises.push(
+      fetcher(`${chain.reservoirBaseUrl}/collections/top-selling/v1`, query, {
+        headers: {
+          'x-api-key': chain.apiKey || '',
+        },
+      })
+    )
+  })
+  const responses = await Promise.allSettled(promises)
+  const topSellingCollections: ChainCollections = {}
+  responses.forEach((response, i) => {
+    if (response.status === 'fulfilled') {
+      topSellingCollections[supportedChains[i].id] = response.value.data
+    }
+  })
+
+  return {
+    props: { ssr: { topSellingCollections } },
+    revalidate: 5,
+  }
 }
 
 export default IndexPage
