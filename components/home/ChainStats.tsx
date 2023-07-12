@@ -7,7 +7,7 @@ import {
   faShoppingCart,
   faSprout,
 } from '@fortawesome/free-solid-svg-icons'
-import { useChainStats } from 'hooks'
+import { useChainStats, useMarketplaceChain } from 'hooks'
 import { formatNumber } from 'utils/numbers'
 
 type Section = {
@@ -19,6 +19,8 @@ type Section = {
 export const ChainStats = () => {
   const { data: statsData } = useChainStats()
   const stats = statsData?.stats?.['7day']
+
+  const chain = useMarketplaceChain()
 
   const statsSections = useMemo(() => {
     const sections: Section[] = [
@@ -54,7 +56,7 @@ export const ChainStats = () => {
       )
     }
     return sections
-  }, [stats])
+  }, [stats, chain])
 
   return (
     <Flex css={{ gap: 24 }}>
