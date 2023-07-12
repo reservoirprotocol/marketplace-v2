@@ -10,6 +10,7 @@ import {
   TableCell,
   TableRow,
   Text,
+  Tooltip,
 } from 'components/primitives'
 import Img from 'components/primitives/Img'
 import { useMarketplaceChain } from 'hooks'
@@ -163,50 +164,55 @@ const CollectionCell: FC<{
 }
 
 const RecentSalesCell: FC<{
+  collection: NonNullable<Props['collections']>[0]
   topSellingCollection: NonNullable<Props['topSellingCollections']>[0]
   isSmallDevice: boolean
-}> = ({ topSellingCollection, isSmallDevice }) => {
-  const images =
-    useMemo(
-      () =>
-        topSellingCollection?.recentSales?.reduce((images, sale) => {
-          if (sale?.token?.image && images.length < 5) {
-            images.push(optimizeImage(sale.token.image as string, 100))
-          }
-          return images
-        }, [] as string[]),
-      [topSellingCollection]
-    ) || []
+}> = ({ collection, topSellingCollection, isSmallDevice }) => {
+  const recentSales =
+    useMemo(() => {
+      return topSellingCollection?.recentSales?.slice(0, 5)
+    }, [topSellingCollection]) || []
 
   return (
     <TableCell
       css={{
         minWidth: 0,
-        pb: images?.length > 0 ? (isSmallDevice ? '$4' : '$3') : 0,
+        pb: recentSales?.length > 0 ? (isSmallDevice ? '$4' : '$3') : 0,
       }}
     >
       <Flex direction="column" css={{ gap: '$2' }}>
-        {isSmallDevice && images?.length > 0 ? (
+        {isSmallDevice && recentSales?.length > 0 ? (
           <Text style="subtitle3" color="subtle">
             Recent Activity
           </Text>
         ) : null}
         <Flex css={{ gap: '$2', overflowX: 'auto' }}>
-          {images.map((image, idx) => (
-            <Img
+          {recentSales?.map((sale, idx) => (
+            <Tooltip
               key={idx}
-              src={image}
-              alt="Token Image"
-              width={56}
-              height={56}
-              unoptimized
-              css={{
-                borderRadius: 8,
-                width: 56,
-                height: 56,
-                objectFit: 'cover',
-              }}
-            />
+              open={sale?.token?.name ? undefined : false}
+              content={
+                <Text style="body3" as="p">
+                  {sale?.token?.name}
+                </Text>
+              }
+            >
+              <Flex>
+                <Img
+                  src={sale?.token?.image || collection?.image || ''}
+                  alt="Token Image"
+                  width={56}
+                  height={56}
+                  unoptimized
+                  css={{
+                    borderRadius: 8,
+                    width: 56,
+                    height: 56,
+                    objectFit: 'cover',
+                  }}
+                />
+              </Flex>
+            </Tooltip>
           ))}
         </Flex>
       </Flex>
@@ -321,6 +327,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           </Flex>
         </Link>
         <RecentSalesCell
+          collection={collection}
           topSellingCollection={topSellingCollection}
           isSmallDevice={isSmallDevice}
         />
@@ -366,6 +373,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           </Text>
         </TableCell>
         <RecentSalesCell
+          collection={collection}
           topSellingCollection={topSellingCollection}
           isSmallDevice={isSmallDevice}
         />
@@ -463,6 +471,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
           </Flex>
         </Link>
         <RecentSalesCell
+          collection={collection}
           topSellingCollection={topSellingCollection}
           isSmallDevice={isSmallDevice}
         />
@@ -496,6 +505,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
           </Text>
         </TableCell>
         <RecentSalesCell
+          collection={collection}
           topSellingCollection={topSellingCollection}
           isSmallDevice={isSmallDevice}
         />
@@ -604,6 +614,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
           </Flex>
         </Link>
         <RecentSalesCell
+          collection={collection}
           topSellingCollection={topSellingCollection}
           isSmallDevice={isSmallDevice}
         />
@@ -643,6 +654,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
         </Text>
       </TableCell>
       <RecentSalesCell
+        collection={collection}
         topSellingCollection={topSellingCollection}
         isSmallDevice={isSmallDevice}
       />
