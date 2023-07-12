@@ -1,7 +1,8 @@
 import { FC, useMemo } from 'react'
-import { Flex, Text } from '../primitives'
+import { Flex, FormatCryptoCurrency, Text } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
+  IconDefinition,
   faImage,
   faShoppingCart,
   faSprout,
@@ -9,12 +10,18 @@ import {
 import { useChainStats } from 'hooks'
 import { formatNumber } from 'utils/numbers'
 
+type Section = {
+  title: string
+  stat: string | JSX.Element
+  icon: IconDefinition
+}
+
 export const ChainStats = () => {
   const { data: statsData } = useChainStats()
   const stats = statsData?.stats?.['7day']
 
   const statsSections = useMemo(() => {
-    const sections = [
+    const sections: Section[] = [
       {
         title: '7d Mints',
         stat: '-',
@@ -26,7 +33,7 @@ export const ChainStats = () => {
         icon: faShoppingCart,
       },
       {
-        title: '7d New Collections',
+        title: '7d Total Volume',
         stat: '-',
         icon: faImage,
       },
@@ -38,9 +45,13 @@ export const ChainStats = () => {
       sections[1].stat = `${
         stats.saleCount ? formatNumber(stats.saleCount) : 0
       }`
-      sections[2].stat = `${
-        stats.totalCount ? formatNumber(stats.totalCount) : 0
-      }`
+      sections[2].stat = (
+        <FormatCryptoCurrency
+          amount={stats.totalVolume}
+          textStyle="h6"
+          logoHeight={14}
+        />
+      )
     }
     return sections
   }, [stats])
