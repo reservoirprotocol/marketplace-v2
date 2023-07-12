@@ -178,6 +178,7 @@ const RecentSalesCell: FC<{
       css={{
         minWidth: 0,
         pb: recentSales?.length > 0 ? (isSmallDevice ? '$4' : '$3') : 0,
+        px: isSmallDevice ? 0 : '$3',
       }}
     >
       <Flex direction="column" css={{ gap: '$2' }}>
@@ -197,7 +198,7 @@ const RecentSalesCell: FC<{
                 </Text>
               }
             >
-              <Flex>
+              <Flex css={{ flexShrink: 0 }}>
                 <Img
                   src={sale?.token?.image || collection?.image || ''}
                   alt="Token Image"
@@ -251,86 +252,91 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
 
   if (isSmallDevice) {
     return (
-      <Flex
-        direction="column"
-        css={{ borderBottom: '1px solid $gray3', pt: '$4' }}
-      >
-        <Link
-          href={`/${routePrefix}/collection/${topSellingCollection.id}`}
-          style={{ display: 'inline-block', minWidth: 0 }}
-          key={topSellingCollection.id}
+      <Flex css={{ pt: '$4', borderBottom: '1px solid $gray3' }}>
+        <Text css={{ pt: '$1', mr: '$3', width: 15 }} style="subtitle3">
+          {rank}
+        </Text>
+        <Flex
+          direction="column"
+          css={{
+            width: '100%',
+            overflow: 'hidden',
+          }}
         >
-          <Flex justify="between" css={{ gap: '$3' }}>
-            <Flex
-              align="center"
-              css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
-            >
-              <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
-                {rank}
-              </Text>
-              <Img
-                src={collectionImage}
-                css={{
-                  borderRadius: 8,
-                  width: 48,
-                  height: 48,
-                  objectFit: 'cover',
-                }}
-                alt="Collection Image"
-                width={48}
-                height={48}
-                unoptimized
-              />
-              <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
-                <Flex
-                  align="center"
-                  css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
-                >
-                  <Text
-                    css={{
-                      display: 'inline-block',
-                    }}
-                    style="subtitle1"
-                    ellipsify
+          <Link
+            href={`/${routePrefix}/collection/${topSellingCollection.id}`}
+            style={{ display: 'inline-block', minWidth: 0 }}
+            key={topSellingCollection.id}
+          >
+            <Flex justify="between" css={{ gap: '$3' }}>
+              <Flex
+                align="center"
+                css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
+              >
+                <Img
+                  src={collectionImage}
+                  css={{
+                    borderRadius: 8,
+                    width: 48,
+                    height: 48,
+                    objectFit: 'cover',
+                  }}
+                  alt="Collection Image"
+                  width={48}
+                  height={48}
+                  unoptimized
+                />
+                <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
+                  <Flex
+                    align="center"
+                    css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
                   >
-                    {topSellingCollection?.name}
-                  </Text>
-                  <OpenSeaVerified
-                    openseaVerificationStatus={
-                      collection?.openseaVerificationStatus
-                    }
-                  />
-                </Flex>
-                <Flex align="center">
-                  <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
-                    Floor
-                  </Text>
-                  <FormatCryptoCurrency
-                    amount={collection?.floorAsk?.price?.amount?.decimal}
-                    address={collection?.floorAsk?.price?.currency?.contract}
-                    decimals={collection?.floorAsk?.price?.currency?.decimals}
-                    logoHeight={16}
-                    maximumFractionDigits={2}
-                    textStyle="subtitle2"
-                  />
-                </Flex>
-              </Box>
+                    <Text
+                      css={{
+                        display: 'inline-block',
+                      }}
+                      style="subtitle1"
+                      ellipsify
+                    >
+                      {topSellingCollection?.name}
+                    </Text>
+                    <OpenSeaVerified
+                      openseaVerificationStatus={
+                        collection?.openseaVerificationStatus
+                      }
+                    />
+                  </Flex>
+                  <Flex align="center">
+                    <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
+                      Floor
+                    </Text>
+                    <FormatCryptoCurrency
+                      amount={collection?.floorAsk?.price?.amount?.decimal}
+                      address={collection?.floorAsk?.price?.currency?.contract}
+                      decimals={collection?.floorAsk?.price?.currency?.decimals}
+                      logoHeight={16}
+                      maximumFractionDigits={2}
+                      textStyle="subtitle2"
+                    />
+                  </Flex>
+                </Box>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
+                  Sales
+                </Text>
+                <Text style="subtitle3">
+                  {formatNumber(topSellingCollection.count)}
+                </Text>
+              </Flex>
             </Flex>
-            <Flex direction="column" css={{ gap: '$2' }}>
-              <Text style="subtitle3" color="subtle">
-                Sales
-              </Text>
-              <Text style="subtitle3">
-                {formatNumber(topSellingCollection.count)}
-              </Text>
-            </Flex>
-          </Flex>
-        </Link>
-        <RecentSalesCell
-          collection={collection}
-          topSellingCollection={topSellingCollection}
-          isSmallDevice={isSmallDevice}
-        />
+          </Link>
+          <RecentSalesCell
+            collection={collection}
+            topSellingCollection={topSellingCollection}
+            isSmallDevice={isSmallDevice}
+          />
+        </Flex>
       </Flex>
     )
   } else
@@ -349,7 +355,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
         <TableCell>
           {mintData && mintPrice < floorAsk ? (
             mintPrice === 0 ? (
-              'Free'
+              <Text style="subtitle2">Free</Text>
             ) : (
               <FormatCryptoCurrency
                 amount={mintPrice}
@@ -395,86 +401,85 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
 
   if (isSmallDevice) {
     return (
-      <Flex
-        direction="column"
-        css={{ borderBottom: '1px solid $gray3', pt: '$4' }}
-      >
-        <Link
-          href={`/${routePrefix}/collection/${topSellingCollection.id}`}
-          style={{ display: 'inline-block', minWidth: 0 }}
-          key={topSellingCollection.id}
-        >
-          <Flex justify="between" css={{ gap: '$3' }}>
-            <Flex
-              align="center"
-              css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
-            >
-              <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
-                {rank}
-              </Text>
-              <Img
-                src={collectionImage}
-                css={{
-                  borderRadius: 8,
-                  width: 48,
-                  height: 48,
-                  objectFit: 'cover',
-                }}
-                alt="Collection Image"
-                width={48}
-                height={48}
-                unoptimized
-              />
-              <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
-                <Flex
-                  align="center"
-                  css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
-                >
-                  <Text
-                    css={{
-                      display: 'inline-block',
-                    }}
-                    style="subtitle1"
-                    ellipsify
+      <Flex css={{ pt: '$4', borderBottom: '1px solid $gray3' }}>
+        <Text css={{ pt: '$1', mr: '$3', width: 15 }} style="subtitle3">
+          {rank}
+        </Text>
+        <Flex direction="column" css={{ width: '100%', overflow: 'hidden' }}>
+          <Link
+            href={`/${routePrefix}/collection/${topSellingCollection.id}`}
+            style={{ display: 'inline-block', minWidth: 0 }}
+            key={topSellingCollection.id}
+          >
+            <Flex justify="between" css={{ gap: '$3' }}>
+              <Flex
+                align="center"
+                css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
+              >
+                <Img
+                  src={collectionImage}
+                  css={{
+                    borderRadius: 8,
+                    width: 48,
+                    height: 48,
+                    objectFit: 'cover',
+                  }}
+                  alt="Collection Image"
+                  width={48}
+                  height={48}
+                  unoptimized
+                />
+                <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
+                  <Flex
+                    align="center"
+                    css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
                   >
-                    {topSellingCollection?.name}
-                  </Text>
-                  <OpenSeaVerified
-                    openseaVerificationStatus={
-                      collection?.openseaVerificationStatus
-                    }
-                  />
-                </Flex>
-                <Flex align="center">
-                  <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
-                    Floor
-                  </Text>
-                  <FormatCryptoCurrency
-                    amount={collection?.floorAsk?.price?.amount?.decimal}
-                    address={collection?.floorAsk?.price?.currency?.contract}
-                    decimals={collection?.floorAsk?.price?.currency?.decimals}
-                    logoHeight={16}
-                    maximumFractionDigits={2}
-                    textStyle="subtitle2"
-                  />
-                </Flex>
-              </Box>
+                    <Text
+                      css={{
+                        display: 'inline-block',
+                      }}
+                      style="subtitle1"
+                      ellipsify
+                    >
+                      {topSellingCollection?.name}
+                    </Text>
+                    <OpenSeaVerified
+                      openseaVerificationStatus={
+                        collection?.openseaVerificationStatus
+                      }
+                    />
+                  </Flex>
+                  <Flex align="center">
+                    <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
+                      Floor
+                    </Text>
+                    <FormatCryptoCurrency
+                      amount={collection?.floorAsk?.price?.amount?.decimal}
+                      address={collection?.floorAsk?.price?.currency?.contract}
+                      decimals={collection?.floorAsk?.price?.currency?.decimals}
+                      logoHeight={16}
+                      maximumFractionDigits={2}
+                      textStyle="subtitle2"
+                    />
+                  </Flex>
+                </Box>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
+                  Sales
+                </Text>
+                <Text style="subtitle3">
+                  {formatNumber(topSellingCollection.count)}
+                </Text>
+              </Flex>
             </Flex>
-            <Flex direction="column" css={{ gap: '$2' }}>
-              <Text style="subtitle3" color="subtle">
-                Sales
-              </Text>
-              <Text style="subtitle3">
-                {formatNumber(topSellingCollection.count)}
-              </Text>
-            </Flex>
-          </Flex>
-        </Link>
-        <RecentSalesCell
-          collection={collection}
-          topSellingCollection={topSellingCollection}
-          isSmallDevice={isSmallDevice}
-        />
+          </Link>
+          <RecentSalesCell
+            collection={collection}
+            topSellingCollection={topSellingCollection}
+            isSmallDevice={isSmallDevice}
+          />
+        </Flex>
       </Flex>
     )
   } else {
@@ -533,91 +538,90 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
 
   if (isSmallDevice) {
     return (
-      <Flex
-        direction="column"
-        css={{ borderBottom: '1px solid $gray3', pt: '$4' }}
-      >
-        <Link
-          href={`/${routePrefix}/collection/${topSellingCollection.id}`}
-          style={{ display: 'inline-block', minWidth: 0 }}
-          key={topSellingCollection.id}
-        >
-          <Flex justify="between" css={{ gap: '$3' }}>
-            <Flex
-              align="center"
-              css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
-            >
-              <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
-                {rank}
-              </Text>
-              <Img
-                src={collectionImage}
-                css={{
-                  borderRadius: 8,
-                  width: 48,
-                  height: 48,
-                  objectFit: 'cover',
-                }}
-                alt="Collection Image"
-                width={48}
-                height={48}
-                unoptimized
-              />
-              <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
-                <Flex
-                  align="center"
-                  css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
-                >
-                  <Text
-                    css={{
-                      display: 'inline-block',
-                    }}
-                    style="subtitle1"
-                    ellipsify
+      <Flex css={{ pt: '$4', borderBottom: '1px solid $gray3' }}>
+        <Text css={{ pt: '$1', mr: '$3', width: 15 }} style="subtitle3">
+          {rank}
+        </Text>
+        <Flex direction="column" css={{ width: '100%', overflow: 'hidden' }}>
+          <Link
+            href={`/${routePrefix}/collection/${topSellingCollection.id}`}
+            style={{ display: 'inline-block', minWidth: 0 }}
+            key={topSellingCollection.id}
+          >
+            <Flex justify="between" css={{ gap: '$3' }}>
+              <Flex
+                align="center"
+                css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
+              >
+                <Img
+                  src={collectionImage}
+                  css={{
+                    borderRadius: 8,
+                    width: 48,
+                    height: 48,
+                    objectFit: 'cover',
+                  }}
+                  alt="Collection Image"
+                  width={48}
+                  height={48}
+                  unoptimized
+                />
+                <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
+                  <Flex
+                    align="center"
+                    css={{ gap: '$2', mb: 4, maxWidth: '80%' }}
                   >
-                    {topSellingCollection?.name}
-                  </Text>
-                  <OpenSeaVerified
-                    openseaVerificationStatus={
-                      collection?.openseaVerificationStatus
-                    }
-                  />
-                </Flex>
-                <Flex align="center">
-                  <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
-                    Mint Price
-                  </Text>
-                  {mintData ? (
-                    mintPrice === 0 ? (
-                      <Text style="body3">Free</Text>
+                    <Text
+                      css={{
+                        display: 'inline-block',
+                      }}
+                      style="subtitle1"
+                      ellipsify
+                    >
+                      {topSellingCollection?.name}
+                    </Text>
+                    <OpenSeaVerified
+                      openseaVerificationStatus={
+                        collection?.openseaVerificationStatus
+                      }
+                    />
+                  </Flex>
+                  <Flex align="center">
+                    <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
+                      Mint Price
+                    </Text>
+                    {mintData ? (
+                      mintPrice === 0 ? (
+                        <Text style="body3">Free</Text>
+                      ) : (
+                        <FormatCryptoCurrency
+                          amount={mintPrice}
+                          textStyle="body3"
+                          logoHeight={14}
+                        />
+                      )
                     ) : (
-                      <FormatCryptoCurrency
-                        amount={mintPrice}
-                        textStyle="body3"
-                        logoHeight={14}
-                      />
-                    )
-                  ) : (
-                    '-'
-                  )}
-                </Flex>
-              </Box>
+                      '-'
+                    )}
+                  </Flex>
+                </Box>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
+                  Sales
+                </Text>
+                <Text style="subtitle3">
+                  {formatNumber(topSellingCollection.count)}
+                </Text>
+              </Flex>
             </Flex>
-            <Flex direction="column" css={{ gap: '$2' }}>
-              <Text style="subtitle3" color="subtle">
-                Sales
-              </Text>
-              <Text style="subtitle3">
-                {formatNumber(topSellingCollection.count)}
-              </Text>
-            </Flex>
-          </Flex>
-        </Link>
-        <RecentSalesCell
-          collection={collection}
-          topSellingCollection={topSellingCollection}
-          isSmallDevice={isSmallDevice}
-        />
+          </Link>
+          <RecentSalesCell
+            collection={collection}
+            topSellingCollection={topSellingCollection}
+            isSmallDevice={isSmallDevice}
+          />
+        </Flex>
       </Flex>
     )
   }
@@ -636,7 +640,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
       <TableCell>
         {mintData ? (
           mintPrice === 0 ? (
-            'Free'
+            <Text style="subtitle2">Free</Text>
           ) : (
             <FormatCryptoCurrency
               amount={mintPrice}
