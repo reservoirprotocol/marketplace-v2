@@ -31,7 +31,7 @@ type Props = {
   fillType: FillType
 }
 
-const fourTemplateColumns = '1.5fr 1fr 1fr 1.5fr'
+const fourTemplateColumns = '1.5fr 1fr 1fr 324px'
 const fiveTemplateColumns = '1.6fr 1fr 1fr 1fr 1.6fr'
 
 export const CollectionTopSellingTable: FC<Props> = ({
@@ -340,7 +340,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           rank={rank}
         />
         <TableCell>
-          {mintPrice < floorAsk ? (
+          {mintData && mintPrice < floorAsk ? (
             mintPrice === 0 ? (
               'Free'
             ) : (
