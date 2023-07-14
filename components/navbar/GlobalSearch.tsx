@@ -18,6 +18,7 @@ import {
   ComponentPropsWithoutRef,
   FC,
   useMemo,
+  useContext,
 } from 'react'
 
 import { useDebounce } from 'usehooks-ts'
@@ -32,6 +33,8 @@ import { formatNumber } from 'utils/numbers'
 import { useTheme } from 'next-themes'
 import Img from 'components/primitives/Img'
 import optimizeImage from 'utils/optimizeImage'
+import { SearchChainSwitcher } from './SearchChainSwitcher'
+import { ChainContext } from 'context/ChainContextProvider'
 
 type Props = {
   collection: SearchCollection
@@ -187,8 +190,11 @@ const GlobalSearch = forwardRef<
   ElementRef<typeof Input>,
   ComponentPropsWithoutRef<typeof Input>
 >(({ children, ...props }, forwardedRef) => {
+  const { chain } = useContext(ChainContext)
+
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
+  const [searchChain, setSearchChain] = useState(chain.name)
   const [results, setResults] = useState([])
   const [recentResults, setRecentResults] = useState<SearchCollection[]>([])
   const [showSearchBox, setShowSearchBox] = useState(false)
@@ -357,6 +363,10 @@ const GlobalSearch = forwardRef<
               width: '100%',
             }}
           >
+            <SearchChainSwitcher
+              searchChain={searchChain}
+              setSearchChain={setSearchChain}
+            />
             {hasRecentResults && !hasResults && search.length <= 3 && (
               <Flex direction="column" css={{ pt: '$2' }}>
                 <Text css={{ ml: '$2' }} style="subtitle2" color="subtle">
