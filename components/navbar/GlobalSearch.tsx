@@ -217,7 +217,6 @@ const GlobalSearch = forwardRef<
         `/api/globalSearch?query=${debouncedSearch}&searchChain=${searchChain}`
       ).then((res) => res.json())
 
-      console.log(res)
       setResults(res.results)
       setFallbackResults(res.fallbackResults)
       setSearching(false)
