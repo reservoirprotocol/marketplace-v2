@@ -151,7 +151,7 @@ export default [
     proxyApi: '/api/reservoir/avalanche',
     routePrefix: 'avalanche',
     apiKey: process.env.AVALANCHE_RESERVOIR_API_KEY,
-    coingeckoId: 'ethereum',
+    coingeckoId: 'avalanche-2',
     collectionSetId: process.env.NEXT_PUBLIC_AVALANCHE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_AVALANCHE_COMMUNITY,
   },
