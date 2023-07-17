@@ -4,73 +4,81 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box, Button } from 'components/primitives'
+import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useContext, useState } from 'react'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
-import { useAccount } from 'wagmi'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
-import Link from 'next/link'
-import ChainToggle from 'components/common/ChainToggle'
-import CollectionsTimeDropdown, {
-  CollectionsSortingOption,
-} from 'components/common/CollectionsTimeDropdown'
 import { Head } from 'components/Head'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { ChainContext } from 'context/ChainContextProvider'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useRouter } from 'next/router'
+import { ChainStats } from 'components/home/ChainStats'
+import useTopSellingCollections from 'hooks/useTopSellingCollections'
+import { CollectionTopSellingTable } from 'components/home/CollectionTopSellingTable'
+import { FillTypeToggle } from 'components/home/FillTypeToggle'
+import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
+import fetcher from 'utils/fetcher'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
-  const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
-  const { isDisconnected } = useAccount()
-
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 10,
-    sortBy: sortByTime,
-    includeTopBid: true,
-  }
+  const router = useRouter()
+  const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('any')
+  const [minutesFilter, setMinutesFilter] = useState<number>(1440)
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
+  const startTime = useMemo(() => {
+    const now = new Date()
+    const timestamp = Math.floor(now.getTime() / 1000)
+    return timestamp - minutesFilter * 60
+  }, [minutesFilter])
 
-  const { data, isValidating } = useCollections(collectionQuery, {
-    fallbackData: [ssr.collections[marketplaceChain.id]],
-  })
+  const {
+    data: topSellingCollectionsData,
+    collections: collectionsData,
+    isValidating,
+  } = useTopSellingCollections(
+    {
+      startTime,
+      fillType,
+      limit: 20,
+      includeRecentSales: true,
+    },
+    {
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+      fallbackData: [
+        ssr.topSellingCollections[marketplaceChain.id].collections,
+      ],
+    },
+    chain?.id
+  )
 
-  let collections = data || []
+  const [topSellingCollections, setTopSellingCollections] = useState<
+    ReturnType<typeof useTopSellingCollections>['data']
+  >(ssr.topSellingCollections[marketplaceChain.id])
+  const [collections, setCollections] =
+    useState<ReturnType<typeof useTopSellingCollections>['collections']>(
+      collectionsData
+    )
 
-  let volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
-
-  switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
-      break
-    case '7DayVolume':
-      volumeKey = '7day'
-      break
-    case '30DayVolume':
-      volumeKey = '30day'
-      break
-  }
+  useEffect(() => {
+    if (!isValidating) {
+      setTopSellingCollections(topSellingCollectionsData)
+      setCollections(collectionsData)
+    }
+  }, [isValidating])
 
   return (
     <Layout>
@@ -84,67 +92,139 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           },
         }}
       >
-        {isDisconnected && (
+        <Flex
+          direction="column"
+          css={{
+            mx: 'auto',
+            maxWidth: 728,
+            pt: '$5',
+            textAlign: 'center',
+            alignItems: 'flex-start',
+            '@bp600': { alignItems: 'center' },
+          }}
+        >
           <Flex
-            direction="column"
-            align="center"
-            css={{ mx: 'auto', maxWidth: 728, pt: '$5', textAlign: 'center' }}
-          >
-            <Text style="h3" css={{ mb: 24 }}>
-              Sell your NFT instantly
-            </Text>
-            <Text style="body1" css={{ mb: 48 }}>
-              Instant sell your NFT's across all major marketplaces.
-            </Text>
-          </Flex>
-        )}
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
-          <Flex
-            justify="between"
-            align="start"
             css={{
+              mb: '$4',
+              gap: '$3',
               flexDirection: 'column',
-              gap: 24,
-              '@bp800': {
-                alignItems: 'center',
+              alignItems: 'flex-start',
+              maxWidth: '100%',
+              '@bp600': {
                 flexDirection: 'row',
+                alignItems: 'center',
               },
             }}
           >
-            <Text style="h4" as="h4">
-              Trending
-            </Text>
-            <Flex align="center" css={{ gap: '$4' }}>
-              <CollectionsTimeDropdown
-                compact={compactToggleNames && isMounted}
-                option={sortByTime}
-                onOptionSelected={(option) => {
-                  setSortByTime(option)
+            <Text style="h3" css={{ flexShrink: 0 }}>
+              Sell NFTs
+            </Text>{' '}
+            <Flex css={{ gap: '$3', maxWidth: '100%' }}>
+              <Text style="h3" color="subtle">
+                on
+              </Text>
+              <Dropdown
+                contentProps={{
+                  sideOffset: 8,
+                  asChild: true,
+                  style: {
+                    margin: 0,
+                  },
                 }}
-              />
-              <ChainToggle />
+                trigger={
+                  <Flex
+                    css={{
+                      gap: '$3',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      minWidth: 0,
+                    }}
+                  >
+                    <img
+                      src={`/home/logos/${marketplaceChain.routePrefix}-logo.png`}
+                      alt={`${marketplaceChain.name} Logo`}
+                      style={{ width: 40, height: 40 }}
+                    />
+                    <Text style="h3" ellipsify>
+                      {' ' + marketplaceChain.name}
+                    </Text>
+                    <Box
+                      css={{
+                        color: '$gray10',
+                        transition: 'transform',
+                        '[data-state=open] &': { transform: 'rotate(180deg)' },
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faChevronDown} width={16} />
+                    </Box>
+                  </Flex>
+                }
+              >
+                <Flex direction="column" css={{ minWidth: 150 }}>
+                  {supportedChains.map(({ name, id, routePrefix }) => (
+                    <DropdownMenuItem
+                      css={{
+                        textAlign: 'left',
+                      }}
+                      key={id}
+                      onClick={() => {
+                        switchCurrentChain(id)
+
+                        router.replace(routePrefix, undefined, {
+                          scroll: false,
+                          shallow: true,
+                        })
+                      }}
+                    >
+                      <Text
+                        style="h6"
+                        color={
+                          id === marketplaceChain.id ? undefined : 'subtle'
+                        }
+                        css={{ cursor: 'pointer' }}
+                      >
+                        {name}
+                      </Text>
+                    </DropdownMenuItem>
+                  ))}
+                </Flex>
+              </Dropdown>
             </Flex>
           </Flex>
+          <Text
+            style="body1"
+            color="subtle"
+            css={{ mb: 48, textAlign: 'left' }}
+          >
+            Sell your NFTs instantly across markeplaces
+          </Text>
+        </Flex>
+        {!isSmallDevice ? <ChainStats /> : null}
+        <Flex
+          css={{ mb: '$6', '@sm': { my: '$6' }, gap: 32 }}
+          direction="column"
+        >
+          <Flex
+            justify="between"
+            align="center"
+            css={{
+              gap: '$2',
+            }}
+          >
+            <FillTypeToggle fillType={fillType} setFillType={setFillType} />
+            <TimeFilterToggle
+              minutesFilter={minutesFilter}
+              setMinutesFilter={setMinutesFilter}
+            />
+          </Flex>
           {isSSR || !isMounted ? null : (
-            <CollectionRankingsTable
+            <CollectionTopSellingTable
+              topSellingCollections={topSellingCollections?.collections}
               collections={collections}
               loading={isValidating}
-              volumeKey={volumeKey}
+              fillType={fillType}
             />
           )}
-          <Box css={{ alignSelf: 'center' }}>
-            <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
-              <Button
-                css={{
-                  minWidth: 224,
-                  justifyContent: 'center',
-                }}
-                size="large"
-              >
-                View All
-              </Button>
-            </Link>
-          </Box>
         </Flex>
         <Footer />
       </Box>
@@ -159,33 +239,38 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
+type TopSellingCollectionsSchema =
+  paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
+
+type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
+
 type CollectionSchema =
   paths['/collections/v5']['get']['responses']['200']['schema']
 type ChainCollections = Record<string, CollectionSchema>
 
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collections: ChainCollections
+    topSellingCollections: ChainTopSellingCollections
   }
 }> = async () => {
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  const now = new Date()
+  const timestamp = Math.floor(now.getTime() / 1000)
+  const startTime = timestamp - 1440 * 60 // 24hrs ago
+
+  let topSellingCollectionsQuery: paths['/collections/top-selling/v1']['get']['parameters']['query'] =
     {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      includeTopBid: true,
-      limit: 10,
+      startTime: startTime,
+      fillType: 'any',
+      limit: 20,
+      includeRecentSales: true,
     }
 
   const promises: ReturnType<typeof fetcher>[] = []
   supportedChains.forEach((chain) => {
-    const query = { ...collectionQuery }
-    if (chain.collectionSetId) {
-      query.collectionsSetId = chain.collectionSetId
-    } else if (chain.community) {
-      query.community = chain.community
-    }
+    const query = { ...topSellingCollectionsQuery }
+
     promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, query, {
+      fetcher(`${chain.reservoirBaseUrl}/collections/top-selling/v1`, query, {
         headers: {
           'x-api-key': chain.apiKey || '',
         },
@@ -193,15 +278,15 @@ export const getStaticProps: GetStaticProps<{
     )
   })
   const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
+  const topSellingCollections: ChainCollections = {}
   responses.forEach((response, i) => {
     if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
+      topSellingCollections[supportedChains[i].id] = response.value.data
     }
   })
 
   return {
-    props: { ssr: { collections } },
+    props: { ssr: { topSellingCollections } },
     revalidate: 5,
   }
 }
