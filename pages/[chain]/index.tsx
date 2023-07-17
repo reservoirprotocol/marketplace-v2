@@ -225,6 +225,19 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               fillType={fillType}
             />
           )}
+          <Box css={{ alignSelf: 'center' }}>
+            <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
+              <Button
+                css={{
+                  minWidth: 224,
+                  justifyContent: 'center',
+                }}
+                size="large"
+              >
+                View All
+              </Button>
+            </Link>
+          </Box>
         </Flex>
         <Footer />
       </Box>
