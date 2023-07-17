@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box } from 'components/primitives'
+import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useContext, useEffect, useMemo, useState } from 'react'
@@ -12,6 +12,7 @@ import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import supportedChains from 'utils/chains'
+import Link from 'next/link'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
@@ -225,6 +226,19 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               fillType={fillType}
             />
           )}
+          <Box css={{ alignSelf: 'center' }}>
+            <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
+              <Button
+                css={{
+                  minWidth: 224,
+                  justifyContent: 'center',
+                }}
+                size="large"
+              >
+                View All
+              </Button>
+            </Link>
+          </Box>
         </Flex>
         <Footer />
       </Box>
