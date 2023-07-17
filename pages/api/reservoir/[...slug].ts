@@ -1,7 +1,7 @@
 import { setParams } from '@reservoir0x/reservoir-sdk'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import { goerli, mainnet } from 'wagmi/chains'
+import { arbitrum, goerli, mainnet, optimism, zora } from 'wagmi/chains'
 import wrappedContracts from 'utils/wrappedContracts'
 import { zeroAddress } from 'viem'
 
@@ -39,8 +39,15 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     // Redirect eth and weth currency icons to self-hosted
     // versions without any padding
     endpoint = endpoint.toLowerCase()
+    console.log(endpoint)
     if (
-      [mainnet.id as number, goerli.id].includes(chain.id) &&
+      [
+        mainnet.id as number,
+        goerli.id,
+        zora.id,
+        optimism.id,
+        arbitrum.id,
+      ].includes(chain.id) &&
       endpoint.includes('currency')
     ) {
       if (endpoint.includes(zeroAddress)) {

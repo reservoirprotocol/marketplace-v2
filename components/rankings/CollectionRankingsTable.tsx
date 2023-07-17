@@ -291,9 +291,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {volumeKey != 'allTime' && collection?.floorSaleChange && (
-              <PercentChange value={collection?.floorSaleChange[volumeKey]} />
-            )}
           </Flex>
         </TableCell>
         <TableCell>
