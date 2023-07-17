@@ -6,11 +6,9 @@ import {
   Text,
 } from 'components/primitives'
 import * as TooltipPrimitive from '@radix-ui/react-tooltip'
-import { ChainContext } from 'context/ChainContextProvider'
 import { useMounted } from 'hooks'
 import { useTheme } from 'next-themes'
-import { useRouter } from 'next/router'
-import { Dispatch, FC, SetStateAction, useContext } from 'react'
+import { Dispatch, FC, SetStateAction } from 'react'
 import supportedChains from 'utils/chains'
 import { TooltipArrow } from 'components/primitives/Tooltip'
 
@@ -34,22 +32,31 @@ export const SearchChainSwitcher: FC<Props> = ({
     <ToggleGroup
       type="single"
       value={searchChain}
-      css={{ borderRadius: 0, gap: 0 }}
+      css={{
+        pb: '$1',
+        borderRadius: 0,
+        gap: 0,
+        overflow: 'auto',
+        width: '100%',
+        justifyContent: 'space-between',
+      }}
     >
       {supportedChains.map((chainOption) => (
         <TooltipPrimitive.Root delayDuration={0} key={chainOption.name}>
-          <TooltipPrimitive.Trigger>
+          <TooltipPrimitive.Trigger style={{ width: '100%', minWidth: 60 }}>
             <ToggleGroupItem
               asChild
-              value={chainOption.name}
-              disabled={chainOption.name === searchChain}
+              value={chainOption.routePrefix}
+              disabled={chainOption.routePrefix === searchChain}
               onClick={() => {
-                setSearchChain(chainOption.name)
+                setSearchChain(chainOption.routePrefix)
               }}
               css={{
                 backgroundColor: 'transparent',
-                px: '$5',
+                px: '$4',
                 borderRadius: 0,
+                width: '100%',
+                zIndex: 9999,
                 borderBottom: '1px solid $gray5',
                 '&[data-state=on]': {
                   backgroundColor: 'transparent',
