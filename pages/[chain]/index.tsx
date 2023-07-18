@@ -34,7 +34,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
   const router = useRouter()
-  const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('any')
+  const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('sale')
   const [minutesFilter, setMinutesFilter] = useState<number>(1440)
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -269,7 +269,7 @@ export const getStaticProps: GetStaticProps<{
   let topSellingCollectionsQuery: paths['/collections/top-selling/v1']['get']['parameters']['query'] =
     {
       startTime: startTime,
-      fillType: 'any',
+      fillType: 'sale',
       limit: 20,
       includeRecentSales: true,
     }
