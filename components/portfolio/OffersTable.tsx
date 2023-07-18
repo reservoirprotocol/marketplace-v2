@@ -194,12 +194,33 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
               </Flex>
             </Flex>
           </Link>
-          <FormatCryptoCurrency
-            amount={offer?.price?.amount?.decimal}
-            address={offer?.price?.currency?.contract}
-            textStyle="subtitle2"
-            logoHeight={14}
-          />
+          <Tooltip
+            side="left"
+            sideOffset="1"
+            open={offer?.price?.netAmount?.decimal ? undefined : false}
+            content={
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">Net Amount</Text>
+                <FormatCryptoCurrency
+                  amount={offer?.price?.netAmount?.decimal}
+                  address={offer?.price?.currency?.contract}
+                  decimals={offer?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            }
+          >
+            <Flex>
+              <FormatCryptoCurrency
+                amount={offer?.price?.amount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="subtitle2"
+                logoHeight={14}
+              />
+            </Flex>
+          </Tooltip>
         </Flex>
         <Flex justify="between" align="center" css={{ width: '100%' }}>
           <a href={`https://${offer?.source?.domain}`} target="_blank">
@@ -313,12 +334,33 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         </Link>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={offer?.price?.amount?.decimal}
-          address={offer?.price?.currency?.contract}
-          textStyle="subtitle2"
-          logoHeight={14}
-        />
+        <Tooltip
+          side="left"
+          sideOffset="1"
+          open={offer?.price?.netAmount?.decimal ? undefined : false}
+          content={
+            <Flex justify="between" css={{ gap: '$2' }}>
+              <Text style="body3">Net Amount</Text>
+              <FormatCryptoCurrency
+                amount={offer?.price?.netAmount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="subtitle3"
+                logoHeight={14}
+              />
+            </Flex>
+          }
+        >
+          <Flex>
+            <FormatCryptoCurrency
+              amount={offer?.price?.amount?.decimal}
+              address={offer?.price?.currency?.contract}
+              decimals={offer?.price?.currency?.decimals}
+              textStyle="subtitle1"
+              logoHeight={14}
+            />
+          </Flex>
+        </Tooltip>
       </TableCell>
       <TableCell>
         <Text style="subtitle2">{expiration}</Text>
