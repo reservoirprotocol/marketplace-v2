@@ -1,4 +1,12 @@
-import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+import {
+  arbitrum,
+  mainnet,
+  polygon,
+  optimism,
+  Chain,
+  bsc,
+  avalanche,
+} from 'wagmi/chains'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -134,5 +142,17 @@ export default [
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+  },
+  {
+    ...avalanche,
+    lightIconUrl: '/icons/avalanche-icon-dark.svg',
+    darkIconUrl: '/icons/avalanche-icon-light.svg',
+    reservoirBaseUrl: 'https://api-avalanche.reservoir.tools',
+    proxyApi: '/api/reservoir/avalanche',
+    routePrefix: 'avalanche',
+    apiKey: process.env.AVALANCHE_RESERVOIR_API_KEY,
+    coingeckoId: 'avalanche-2',
+    collectionSetId: process.env.NEXT_PUBLIC_AVALANCHE_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_AVALANCHE_COMMUNITY,
   },
 ] as ReservoirChain[]
