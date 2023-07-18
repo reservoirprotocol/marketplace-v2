@@ -36,6 +36,31 @@ export const zora = {
   },
 } as const satisfies Chain
 
+export const base = {
+  id: 8453,
+  name: 'Base',
+  network: 'base',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+    public: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Basescan',
+      url: 'https://basescan.org',
+    },
+    default: {
+      name: 'BaseScan',
+      url: 'https://basescan.org',
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -154,5 +179,17 @@ export default [
     coingeckoId: 'avalanche-2',
     collectionSetId: process.env.NEXT_PUBLIC_AVALANCHE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_AVALANCHE_COMMUNITY,
+  },
+  {
+    ...base,
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/base-icon-light.svg',
+    reservoirBaseUrl: 'https://api-base.reservoir.tools',
+    proxyApi: '/api/reservoir/base',
+    routePrefix: 'base',
+    apiKey: process.env.BASE_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
   },
 ] as ReservoirChain[]
