@@ -41,6 +41,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
   faBroom,
   faCopy,
+  faHand,
   faMagnifyingGlass,
   faSeedling,
 } from '@fortawesome/free-solid-svg-icons'
@@ -109,7 +110,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const mintPrice =
     mintData?.price?.amount?.decimal === 0
       ? 'Free'
-      : mintData?.price?.amount?.decimal
+      : `${
+          mintData?.price?.amount?.decimal
+        } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
 
   let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 20,
@@ -216,7 +219,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             },
           }}
         >
-          <Flex justify="between" css={{ mb: '$4' }}>
+          <Flex justify="between" css={{ mb: '$4', gap: '$2' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
                 <Img
@@ -241,7 +244,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         collection?.openseaVerificationStatus
                       }
                     />
-                    {mintData ? (
+                    {mintData && !isSmallDevice ? (
                       <Flex
                         align="center"
                         css={{
@@ -321,6 +324,29 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             </Flex>
             <CollectionActions collection={collection} />
           </Flex>
+          {mintData && isSmallDevice ? (
+            <Flex
+              align="center"
+              css={{
+                borderRadius: 4,
+                px: '$3',
+                py: 7,
+                backgroundColor: '$gray3',
+                gap: '$3',
+                mb: '$4',
+                width: 'max-content',
+              }}
+            >
+              <Flex
+                css={{
+                  color: '$green9',
+                }}
+              >
+                <FontAwesomeIcon icon={faSeedling} />
+              </Flex>
+              <Text style="body3">Minting Now</Text>
+            </Flex>
+          ) : null}
           {smallSubtitle && (
             <Grid
               css={{
@@ -419,6 +445,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       />
                     )}
                     <Flex
+                      justify={'end'}
                       css={{
                         ml: 'auto',
                         width: '100%',
@@ -431,7 +458,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     >
                       <SortTokens
                         css={{
-                          order: 3,
+                          order: 4,
                           px: '14px',
                           justifyContent: 'center',
                           '@md': {
@@ -450,7 +477,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           minHeight: 48,
                           justifyContent: 'center',
                           padding: 0,
-                          order: 1,
+                          order: 2,
                           '@md': {
                             order: 2,
                           },
@@ -463,17 +490,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           collectionId={collection.id}
                           buttonChildren={
                             <>
-                              <FontAwesomeIcon icon={faSeedling} /> Mint for{' '}
-                              {mintPrice}
+                              <FontAwesomeIcon icon={faSeedling} />
+                              {isSmallDevice ? 'Mint' : `Mint for ${mintPrice}`}
                             </>
                           }
                           buttonCss={{
-                            width: 'max-content',
+                            minWidth: 'max-content',
                             flexShrink: 0,
+                            flexGrow: 1,
                             justifyContent: 'center',
-                            order: 1,
+                            order: 3,
+                            px: '$2',
+                            maxWidth: '220px',
                             '@md': {
                               order: 2,
+                              px: '$5',
                             },
                           }}
                           mutate={mutate}
@@ -481,12 +512,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       ) : null}
                       <CollectionOffer
                         collection={collection}
+                        buttonChildren={
+                          mintData ? <FontAwesomeIcon icon={faHand} /> : null
+                        }
+                        buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
                         buttonCss={{
-                          width: '100%',
+                          width: mintData ? 48 : '100%',
+                          height: mintData ? 48 : '100%',
+                          padding: mintData ? 0 : '',
+                          // width: '100%',
                           justifyContent: 'center',
-                          order: 2,
+                          order: 1,
                           '@md': {
-                            order: 3,
+                            order: 1,
                           },
                           '@sm': {
                             maxWidth: '220px',
