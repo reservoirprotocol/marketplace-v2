@@ -20,16 +20,16 @@ type Props = {
 
 const fillTypesFilters = [
   {
-    value: 'any',
-    display: 'All Sales',
+    value: 'sale',
+    display: 'Trades',
   },
   {
     value: 'mint',
     display: 'Mints',
   },
   {
-    value: 'sale',
-    display: 'Trades',
+    value: 'any',
+    display: 'All Sales',
   },
 ]
 
