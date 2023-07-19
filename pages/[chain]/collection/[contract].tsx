@@ -496,6 +496,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           }
                           buttonCss={{
                             minWidth: 'max-content',
+                            whiteSpace: 'nowrap',
                             flexShrink: 0,
                             flexGrow: 1,
                             justifyContent: 'center',
