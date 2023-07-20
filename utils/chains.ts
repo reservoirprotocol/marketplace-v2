@@ -62,7 +62,7 @@ export const base = {
   },
 } as const satisfies Chain
 export const arbitrumNova = {
-  id: 42_170,
+  id: 42170,
   name: 'Arbitrum Nova',
   network: 'arbitrum-nova',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
