@@ -27,13 +27,14 @@ import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
 import { BuyNow } from 'components/buttons'
 import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type Props = {
   address: Address | undefined
   isOwner: boolean
 }
 
-const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
+const desktopTemplateColumns = '1.25fr .75fr repeat(4, 1fr)'
 
 export const ListingsTable: FC<Props> = ({ address, isOwner }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -176,9 +177,29 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
                   {criteriaData?.collection?.name}
                 </Text>
-                <Text style="subtitle2" ellipsify>
-                  #{criteriaData?.token?.tokenId}
-                </Text>
+                {listing?.quantityRemaining &&
+                listing?.quantityRemaining > 1 ? (
+                  <Flex css={{ gap: '$2' }} align="center">
+                    <Text style="subtitle2" ellipsify>
+                      #{criteriaData?.token?.tokenId}
+                    </Text>
+                    <Flex
+                      justify="center"
+                      align="center"
+                      css={{
+                        borderRadius: 4,
+                        px: '$2',
+                        py: '$1',
+                        ml: '$1',
+                        backgroundColor: '$gray2',
+                      }}
+                    >
+                      <Text style="subtitle2" color="subtle">
+                        x{formatNumber(listing.quantityRemaining, 0, true)}
+                      </Text>
+                    </Flex>
+                  </Flex>
+                ) : null}
               </Flex>
             </Flex>
           </Link>
@@ -313,6 +334,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
         />
       </TableCell>
       <TableCell>
+        <Text style="subtitle2">{formatNumber(listing.quantityRemaining)}</Text>
+      </TableCell>
+      <TableCell>
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
       <TableCell>
@@ -400,7 +424,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
   )
 }
 
-const headings = ['Items', 'Listed Price', 'Expiration', 'Marketplace', '']
+const headings = [
+  'Items',
+  'Listed Price',
+  'Quantity',
+  'Expiration',
+  'Marketplace',
+  '',
+]
 
 const TableHeading = () => (
   <HeaderRow
