@@ -15,7 +15,6 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ChainContext } from 'context/ChainContextProvider'
-import { constants } from 'ethers'
 import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
 import Link from 'next/link'
 import { FC, useContext, useEffect, useRef, useState } from 'react'
@@ -23,6 +22,7 @@ import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { formatDollar } from 'utils/numbers'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
+import { zeroAddress } from 'viem'
 
 type Props = {
   address?: string
@@ -178,12 +178,32 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
         css={{ height: '100%', gap: '$1' }}
       >
         <Flex align="center" css={{ gap: '$1', height: 36 }}>
-          <FormatCryptoCurrency
-            amount={offer.price?.amount?.decimal}
-            address={offer.price?.currency?.contract}
-            logoHeight={16}
-            textStyle="h6"
-          />
+          <Tooltip
+            side="top"
+            open={offer?.price?.netAmount?.decimal ? undefined : false}
+            content={
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">Net Amount</Text>
+                <FormatCryptoCurrency
+                  amount={offer?.price?.netAmount?.decimal}
+                  address={offer?.price?.currency?.contract}
+                  decimals={offer?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            }
+          >
+            <Flex>
+              <FormatCryptoCurrency
+                amount={offer?.price?.amount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="h6"
+                logoHeight={16}
+              />
+            </Flex>
+          </Tooltip>
           {offer.price?.amount?.usd ? (
             <Text style="body2" css={{ color: '$gray11' }} ellipsify>
               {formatDollar(offer.price?.amount?.usd)}
@@ -194,7 +214,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
           <Text style="body2" color="subtle" css={{ lineHeight: '14.5px' }}>
             from
           </Text>
-          {offer.maker && offer.maker !== constants.AddressZero ? (
+          {offer.maker && offer.maker !== zeroAddress ? (
             <Link
               href={`/portfolio/${offer.maker}`}
               style={{ lineHeight: '14.5px' }}

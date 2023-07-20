@@ -1,11 +1,32 @@
-import {
-  arbitrum,
-  goerli,
-  mainnet,
-  polygon,
-  optimism,
-  Chain,
-} from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+
+//Chains that are missing from wagmi:
+export const zora = {
+  id: 7777777,
+  name: 'ZORA',
+  network: 'zora',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.zora.co'],
+      webSocket: ['wss://rpc.zora.co'],
+    },
+    public: {
+      http: ['https://rpc.zora.co'],
+      webSocket: ['wss://rpc.zora.co'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'ZORA',
+      url: 'https://explorer.zora.energy',
+    },
+    default: {
+      name: 'ZORA',
+      url: 'https://explorer.zora.energy',
+    },
+  },
+} as const satisfies Chain
 
 //Chains that are missing from wagmi:
 export const arbitrumNova = {
@@ -45,7 +66,7 @@ export const arbitrumNova = {
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
 
-type ReservoirChain = Chain & {
+export type ReservoirChain = Chain & {
   lightIconUrl: string
   darkIconUrl: string
   reservoirBaseUrl: string
@@ -109,6 +130,8 @@ export default [
     routePrefix: 'arbitrum',
     apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
     coingeckoId: 'arbitrum-iou',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
   },
   {
     ...arbitrumNova,
@@ -132,17 +155,30 @@ export default [
     routePrefix: 'optimism',
     apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
     coingeckoId: 'optimism',
+    collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
   },
   {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    ...zora,
+    name: 'Zora',
+    lightIconUrl: '/icons/zora-icon-dark.svg',
+    darkIconUrl: '/icons/zora-icon-light.svg',
+    reservoirBaseUrl: 'https://api-zora.reservoir.tools',
+    proxyApi: '/api/reservoir/zora',
+    routePrefix: 'zora',
+    apiKey: process.env.ZORA_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+  },
+  {
+    ...bsc,
+    lightIconUrl: '/icons/bsc-icon-dark.svg',
+    darkIconUrl: '/icons/bsc-icon-light.svg',
+    reservoirBaseUrl: 'https://api-bsc.reservoir.tools',
+    proxyApi: '/api/reservoir/bsc',
+    routePrefix: 'bsc',
+    apiKey: process.env.BSC_RESERVOIR_API_KEY,
+    coingeckoId: 'binancecoin',
+    collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
   },
 ] as ReservoirChain[]

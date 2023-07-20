@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef } from 'react'
+import { FC, useContext, useEffect, useRef, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -25,6 +25,7 @@ import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
+import optimizeImage from 'utils/optimizeImage'
 
 type Props = {
   address: Address | undefined
@@ -125,11 +126,18 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
 
   let criteriaData = offer?.criteria?.data
 
-  let imageSrc: string = (
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
-  ) as string
+  const imageSrc = useMemo(() => {
+    return optimizeImage(
+      criteriaData?.token?.tokenId
+        ? criteriaData?.token?.image || criteriaData?.collection?.image
+        : criteriaData?.collection?.image,
+      250
+    )
+  }, [
+    criteriaData?.token?.tokenId,
+    criteriaData?.token?.image,
+    criteriaData?.collection?.image,
+  ])
 
   if (isSmallDevice) {
     return (
@@ -150,8 +158,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
           <Link
             href={
               isCollectionOffer
-                ? `/collection/${routePrefix}/${offer?.contract}${attributeQueryParam}`
-                : `/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`
+                ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+                : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
             }
           >
             <Flex align="center">
@@ -186,12 +194,33 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
               </Flex>
             </Flex>
           </Link>
-          <FormatCryptoCurrency
-            amount={offer?.price?.amount?.decimal}
-            address={offer?.price?.currency?.contract}
-            textStyle="subtitle2"
-            logoHeight={14}
-          />
+          <Tooltip
+            side="left"
+            sideOffset="1"
+            open={offer?.price?.netAmount?.decimal ? undefined : false}
+            content={
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">Net Amount</Text>
+                <FormatCryptoCurrency
+                  amount={offer?.price?.netAmount?.decimal}
+                  address={offer?.price?.currency?.contract}
+                  decimals={offer?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            }
+          >
+            <Flex>
+              <FormatCryptoCurrency
+                amount={offer?.price?.amount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="subtitle2"
+                logoHeight={14}
+              />
+            </Flex>
+          </Tooltip>
         </Flex>
         <Flex justify="between" align="center" css={{ width: '100%' }}>
           <a href={`https://${offer?.source?.domain}`} target="_blank">
@@ -267,8 +296,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         <Link
           href={
             isCollectionOffer
-              ? `/collection/${routePrefix}/${offer?.contract}${attributeQueryParam}`
-              : `/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`
+              ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+              : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
           }
         >
           <Flex align="center">
@@ -305,12 +334,33 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         </Link>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={offer?.price?.amount?.decimal}
-          address={offer?.price?.currency?.contract}
-          textStyle="subtitle2"
-          logoHeight={14}
-        />
+        <Tooltip
+          side="left"
+          sideOffset="1"
+          open={offer?.price?.netAmount?.decimal ? undefined : false}
+          content={
+            <Flex justify="between" css={{ gap: '$2' }}>
+              <Text style="body3">Net Amount</Text>
+              <FormatCryptoCurrency
+                amount={offer?.price?.netAmount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="subtitle3"
+                logoHeight={14}
+              />
+            </Flex>
+          }
+        >
+          <Flex>
+            <FormatCryptoCurrency
+              amount={offer?.price?.amount?.decimal}
+              address={offer?.price?.currency?.contract}
+              decimals={offer?.price?.currency?.decimals}
+              textStyle="subtitle1"
+              logoHeight={14}
+            />
+          </Flex>
+        </Tooltip>
       </TableCell>
       <TableCell>
         <Text style="subtitle2">{expiration}</Text>

@@ -1,7 +1,6 @@
 import {
   faArrowLeft,
   faChevronDown,
-  faCircleExclamation,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -14,7 +13,6 @@ import {
   useDynamicTokens,
   useListings,
   useTokenActivity,
-  useTokenOpenseaBanned,
   useUserTokens,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -23,15 +21,7 @@ import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Layout from 'components/Layout'
-import {
-  Anchor,
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Text,
-  Tooltip,
-} from 'components/primitives'
+import { Anchor, Box, Button, Flex, Grid, Text } from 'components/primitives'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
 import AttributeCard from 'components/token/AttributeCard'
@@ -76,7 +66,10 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
+  const assetIdPieces = assetId ? assetId.toString().split(':') : []
+  let collectionId = assetIdPieces[0]
+  const id = assetIdPieces[1]
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -104,7 +97,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     }
   )
 
-  const flagged = useTokenOpenseaBanned(collectionId, id)
   const token = tokens && tokens[0] ? tokens[0] : undefined
   const is1155 = token?.token?.kind === 'erc1155'
 
@@ -225,8 +217,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   }, [isSmallDevice])
 
   useEffect(() => {
-    router.query.tab = tabValue
-    router.push(router, undefined, { shallow: true })
+    const updatedUrl = new URL(`${window.location.origin}${router.asPath}`)
+    updatedUrl.searchParams.set('tab', tabValue)
+    router.replace(updatedUrl, undefined, {
+      shallow: true,
+    })
   }, [tabValue])
 
   const pageTitle = token?.token?.name
@@ -360,7 +355,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${router.query.chain}/${token?.token?.collection?.id}`}
+                href={`/${router.query.chain}/collection/${token?.token?.collection?.id}`}
                 legacyBehavior={true}
               >
                 <Anchor
@@ -449,23 +444,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             <Text style="h4" css={{ wordBreak: 'break-all' }}>
               {tokenName}
             </Text>
-            {flagged && (
-              <Tooltip
-                content={
-                  <Text style="body3" as="p">
-                    Not tradeable on OpenSea
-                  </Text>
-                }
-              >
-                <Text css={{ color: '$red10' }}>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    width={16}
-                    height={16}
-                  />
-                </Text>
-              </Tooltip>
-            )}
           </Flex>
           {token && (
             <>
@@ -626,15 +604,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<{
-  id?: string
-  collectionId?: string
+  assetId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
 }> = async ({ params }) => {
-  let collectionId = params?.contract?.toString()
-  const id = params?.id?.toString()
+  const assetId = params?.assetId ? params.assetId.toString().split(':') : []
+  let collectionId = assetId[0]
+  const id = assetId[1]
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
@@ -685,7 +663,7 @@ export const getStaticProps: GetStaticProps<{
     : {}
 
   return {
-    props: { collectionId, id, ssr: { collection, tokens } },
+    props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
     revalidate: 20,
   }
 }

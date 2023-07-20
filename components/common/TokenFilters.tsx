@@ -4,7 +4,7 @@ import {
   Text,
   Tooltip,
 } from 'components/primitives'
-import { Dispatch, FC, SetStateAction } from 'react'
+import { Dispatch, FC, SetStateAction, useMemo } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
 import Image from 'next/image'
@@ -13,6 +13,8 @@ import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from './OpenSeaVerified'
 import { PercentChange } from 'components/primitives/PercentChange'
 import LoadMoreCollections from 'components/common/LoadMoreCollections'
+import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type Collections = ReturnType<typeof useUserCollections>['data']
 
@@ -65,6 +67,7 @@ export const TokenFilters: FC<Props> = ({
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
+
             return (
               <Flex
                 key={collection?.collection?.id}
@@ -97,7 +100,10 @@ export const TokenFilters: FC<Props> = ({
                       aspectRatio: '1/1',
                     }}
                     loader={({ src }) => src}
-                    src={collection?.collection?.image as string}
+                    src={optimizeImage(
+                      collection?.collection?.image as string,
+                      250
+                    )}
                     alt={collection?.collection?.name as string}
                     width={24}
                     height={24}
@@ -121,7 +127,7 @@ export const TokenFilters: FC<Props> = ({
                     />
                   </Flex>
                   <Text style="subtitle3" css={{ color: '$gray10' }}>
-                    Owned: {collection?.ownership?.tokenCount}
+                    Owned: {formatNumber(collection?.ownership?.tokenCount)}
                   </Text>
                 </Flex>
                 <Flex

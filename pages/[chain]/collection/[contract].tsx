@@ -4,7 +4,7 @@ import {
   InferGetStaticPropsType,
   NextPage,
 } from 'next'
-import { Text, Flex, Box, Button } from '../../../components/primitives'
+import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -270,7 +270,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           Chain{' '}
                         </Text>
                         <Link
-                          href={`/collection-rankings?chain=${router.query.chain}`}
+                          href={`/${router.query.chain}/collection-rankings`}
                         >
                           <Text style="body1">{chain}</Text>
                         </Link>
@@ -464,9 +464,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <TokenCard
                             key={i}
                             token={token}
-                            orderQuantity={
-                              token?.market?.floorAsk?.quantityRemaining
-                            }
                             address={address as Address}
                             mutate={mutate}
                             rarityEnabled={rarityEnabledCollection}
@@ -643,20 +640,6 @@ export const getStaticProps: GetStaticProps<{
     tokens?.tokens?.some(
       (token) => (token?.token?.attributes?.length || 0) > 0
     ) || false
-
-  if (
-    collection &&
-    collection.collections?.[0].contractKind === 'erc1155' &&
-    Number(collection?.collections?.[0].tokenCount) === 1 &&
-    tokens?.tokens?.[0].token?.tokenId !== undefined
-  ) {
-    return {
-      redirect: {
-        destination: `/collection/${routePrefix}/${id}/${tokens.tokens[0].token.tokenId}`,
-        permanent: false,
-      },
-    }
-  }
 
   return {
     props: { ssr: { collection, tokens, hasAttributes }, id },

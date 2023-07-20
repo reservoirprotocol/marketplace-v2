@@ -50,6 +50,7 @@ import { formatNumber } from 'utils/numbers'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import { Address } from 'wagmi'
 import Image from 'next/image'
+import optimizeImage from 'utils/optimizeImage'
 
 type PortfolioTokenCardProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]
@@ -89,6 +90,10 @@ export default ({
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
+
+  const collectionImage = useMemo(() => {
+    return optimizeImage(token?.token?.collection?.imageUrl, 500)
+  }, [token?.token?.collection?.imageUrl])
 
   const isOracleOrder =
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
@@ -161,35 +166,7 @@ export default ({
             }}
             ellipsify
           >
-            x{tokenCount}
-          </Text>
-        </Flex>
-      )}
-      {orderQuantity && orderQuantity > 1 && (
-        <Flex
-          justify="center"
-          align="center"
-          css={{
-            borderRadius: 8,
-            px: '$2',
-            py: '$1',
-            mr: '$2',
-            position: 'absolute',
-            left: '$2',
-            top: '$2',
-            zIndex: 1,
-            maxWidth: '50%',
-            backgroundColor: 'rgba(	38, 41, 43, 0.3)',
-            backdropFilter: 'blur(2px)',
-          }}
-        >
-          <Text
-            css={{
-              color: '$whiteA12',
-            }}
-            ellipsify
-          >
-            x{orderQuantity}
+            x{formatNumber(tokenCount, 0, true)}
           </Text>
         </Flex>
       )}
@@ -231,7 +208,7 @@ export default ({
       ) : null}
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
@@ -266,7 +243,7 @@ export default ({
         </Box>
       </Link>
       <Link
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
@@ -274,7 +251,7 @@ export default ({
         >
           <Flex css={{ mb: '$4' }} align="center" justify="between">
             <Flex align="center" css={{ gap: '$2', minWidth: 0 }}>
-              {token?.token?.collection?.imageUrl ? (
+              {collectionImage ? (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -282,7 +259,7 @@ export default ({
                     aspectRatio: '1/1',
                   }}
                   loader={({ src }) => src}
-                  src={token?.token?.collection?.imageUrl}
+                  src={collectionImage}
                   alt={`${token?.token?.name}`}
                   width={24}
                   height={24}

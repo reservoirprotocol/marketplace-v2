@@ -16,7 +16,7 @@ import {
   darkTheme as rainbowDarkTheme,
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
-import { WagmiConfig, createClient, configureChains } from 'wagmi'
+import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -44,20 +44,24 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
-const { chains, provider } = configureChains(supportedChains, [
+const WALLET_CONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+
+const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir Marketplace',
+  appName: 'Reservoir NFT Explorer',
+  projectId: WALLET_CONNECT_PROJECT_ID,
   chains,
 })
 
-const wagmiClient = createClient({
+const wagmiClient = createConfig({
   autoConnect: true,
   connectors,
-  provider,
+  publicClient,
 })
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
@@ -78,7 +82,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         light: 'light',
       }}
     >
-      <WagmiConfig client={wagmiClient}>
+      <WagmiConfig config={wagmiClient}>
         <ChainContextProvider>
           <AnalyticsProvider>
             <ErrorTrackingProvider>
