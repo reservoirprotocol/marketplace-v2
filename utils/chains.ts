@@ -9,7 +9,7 @@ import {
 
 //Chains that are missing from wagmi:
 export const arbitrumNova = {
-  id: 42_170,
+  id: 42170,
   name: 'Arbitrum Nova',
   network: 'arbitrum-nova',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
