@@ -54,9 +54,9 @@ Reservoir Market v2 is lightly configurable with the configurations below. You c
 | Environment Variable | Required | Description | Example |
 |--------------------------------|----------|-------------------------------------------------------------------------------------|---------------------|
 | NEXT_PUBLIC_HOST_URL | `true` | The domain that the deployed project is hosted on. | http://localhost:3000 |
-| ETH_RESERVOIR_API_KEY | `false` | Ethereum Reservoir API key provided by the Reservoir Protocol. [Get your own API key](https://reservoir.tools/request-api-key). | 123e4567-e89b-12d3-a456-426614174000 |
-| GOERLI_RESERVOIR_API_KEY | `false` | Goerli Reservoir API key provided by the Reservoir Protocol. [Get your own API key](https://reservoir.tools/request-api-key). | 123e4567-e89b-12d3-a456-426614174000 |
-| POLYGON_RESERVOIR_API_KEY | `false` | Polygon Reservoir API key provided by the Reservoir Protocol. [Get your own API key](https://reservoir.tools/request-api-key). | 123e4567-e89b-12d3-a456-426614174000 |
+| RESERVOIR_API_KEY | `false` | Ethereum Reservoir API key provided by the Reservoir Protocol. [Get your own API key](https://reservoir.tools/request-api-key). | 123e4567-e89b-12d3-a456-426614174000 |
+| RESERVOIR_API_KEY | `false` | Goerli Reservoir API key provided by the Reservoir Protocol. [Get your own API key](https://reservoir.tools/request-api-key). | 123e4567-e89b-12d3-a456-426614174000 |
+| RESERVOIR_API_KEY | `false` | Polygon Reservoir API key provided by the Reservoir Protocol. [Get your own API key](https://reservoir.tools/request-api-key). | 123e4567-e89b-12d3-a456-426614174000 |
 | NEXT_PUBLIC_ALCHEMY_ID | `true` | Alchemy API key required for removing rate limiting restrictions. Sometimes used to fetch wallet token balance. [Get your own API key here](https://docs.alchemy.com/alchemy/introduction/getting-started#1.create-an-alchemy-key). | 123e4567-e89b-12d3-a456-426614174000 |
 | NEXT_PUBLIC_ETH_COLLECTION_SET_ID | `false` | Use this to configure a community marketplace. This will only impact the mainnet network. Generate your collection set ID [here](https://docs.reservoir.tools/reference/postcollectionssetsv1). | f566ba09c14f56aedeed3f77e3ae7f5ff28b9177714d3827a87b7a182f8f90ff |
 | NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID | `false` | Use this to configure a community marketplace. This will only impact the polygon network. Generate your collection set ID [here](https://docs.reservoir.tools/reference/postcollectionssetsv1). | f566ba09c14f56aedeed3f77e3ae7f5ff28b9177714d3827a87b7a182f8f90ff |
