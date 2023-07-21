@@ -221,7 +221,7 @@ export default ({
               borderRadius: 0,
               aspectRatio: '1/1',
             }}
-            preview={showPreview}
+            staticOnly={showPreview}
             audioOptions={{
               onPlay: (e) => {
                 onMediaPlayed?.(e)

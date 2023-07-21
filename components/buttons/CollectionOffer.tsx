@@ -5,6 +5,7 @@ import {
   ComponentProps,
   ComponentPropsWithoutRef,
   FC,
+  ReactNode,
   useContext,
   useEffect,
   useState,
@@ -27,6 +28,7 @@ type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
   mutate?: SWRResponse['mutate']
   buttonCss?: CSS
+  buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
 }
 
@@ -36,6 +38,7 @@ const CollectionOffer: FC<Props> = ({
   collection,
   mutate,
   buttonCss,
+  buttonChildren,
   buttonProps = {},
 }) => {
   const router = useRouter()
@@ -101,6 +104,16 @@ const CollectionOffer: FC<Props> = ({
     ]
   }
 
+  const trigger = (
+    <Button css={buttonCss} color="primary" {...buttonProps}>
+      {buttonChildren
+        ? buttonChildren
+        : isAttributeModal
+        ? 'Attribute Offer'
+        : 'Collection Offer'}
+    </Button>
+  )
+
   if (isDisconnected || isInTheWrongNetwork) {
     return (
       <Button
@@ -120,7 +133,11 @@ const CollectionOffer: FC<Props> = ({
         }}
         {...buttonProps}
       >
-        {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
+        {buttonChildren
+          ? buttonChildren
+          : isAttributeModal
+          ? 'Attribute Offer'
+          : 'Collection Offer'}
       </Button>
     )
   } else
@@ -129,11 +146,7 @@ const CollectionOffer: FC<Props> = ({
         {isSupported && (
           <BidModal
             collectionId={collection?.id}
-            trigger={
-              <Button css={buttonCss} {...buttonProps}>
-                {isAttributeModal ? 'Attribute Offer' : 'Collection Offer'}
-              </Button>
-            }
+            trigger={trigger}
             attribute={attribute}
             currencies={bidCurrencies}
             onClose={(data, stepData, currentStep) => {
