@@ -1,4 +1,4 @@
-<h3 align="center">SeaPort Market v3</h3>
+<h3 align="center">SeaPort Market</h3>
   <p align="center">
 The ultimate NFT marketplace.
 
