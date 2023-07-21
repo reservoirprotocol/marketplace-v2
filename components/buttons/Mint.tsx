@@ -16,7 +16,7 @@ type Props = {
   mutate?: SWRResponse['mutate']
 }
 
-const Sweep: FC<Props> = ({
+const Mint: FC<Props> = ({
   collectionId,
   tokenId,
   buttonCss,
@@ -68,11 +68,7 @@ const Sweep: FC<Props> = ({
       trigger={trigger}
       collectionId={collectionId}
       tokenId={tokenId}
-      mode={'trade'}
-      //CONFIGURABLE: set any fees on top of orders, note that these will only
-      // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
-      // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
-      // feesOnTopBps={["0xabc:50"]}
+      mode={'mint'}
       onClose={(data, currentStep) => {
         if (mutate && currentStep == CollectStep.Complete) mutate()
       }}
@@ -80,4 +76,4 @@ const Sweep: FC<Props> = ({
   )
 }
 
-export default Sweep
+export default Mint
