@@ -213,7 +213,6 @@ const Transfer = ({ token, mutate } : TransferProps) => {
                     marginBottom: 20,
                     border: '2px solid #5D770D'
                   }}
-                  preview={showPreview}
                   onRefreshToken={() => {
                     mutate?.()
                     addToast?.({
