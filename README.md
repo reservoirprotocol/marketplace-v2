@@ -1,4 +1,4 @@
-<h3 align="center">SeaPort Market v3</h3>
+<h3 align="center">SeaPort Market</h3>
   <p align="center">
 The ultimate NFT marketplace.
 
@@ -6,7 +6,7 @@ The ultimate NFT marketplace.
 
 ## About The Project
 
-SeaPort Market v3.8 is NFT marketplace built to enables access to instant liquidity aggregated from major marketplace.
+SeaPort Market v4 is NFT marketplace built to enables access to instant liquidity aggregated from major marketplace.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
