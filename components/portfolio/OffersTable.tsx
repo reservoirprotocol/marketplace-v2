@@ -26,13 +26,14 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
 import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type Props = {
   address: Address | undefined
   isOwner: boolean
 }
 
-const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
+const desktopTemplateColumns = '1.25fr .75fr repeat(4, 1fr)'
 
 export const OffersTable: FC<Props> = ({ address, isOwner }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -186,11 +187,30 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
                   {criteriaData?.collection?.name}
                 </Text>
-                <Text style="subtitle2" ellipsify>
-                  {isCollectionOffer
-                    ? attributeDisplayText
-                    : `#${criteriaData?.token?.tokenId}`}
-                </Text>
+                <Flex css={{ gap: '$2' }} align="center">
+                  <Text style="subtitle2" ellipsify>
+                    {isCollectionOffer
+                      ? attributeDisplayText
+                      : `#${criteriaData?.token?.tokenId}`}
+                  </Text>
+                  {offer?.quantityRemaining && offer?.quantityRemaining > 1 ? (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      css={{
+                        borderRadius: 4,
+                        px: '$2',
+                        py: '$1',
+                        ml: '$1',
+                        backgroundColor: '$gray2',
+                      }}
+                    >
+                      <Text style="subtitle2" color="subtle">
+                        x{formatNumber(offer.quantityRemaining, 0, true)}
+                      </Text>
+                    </Flex>
+                  ) : null}
+                </Flex>
               </Flex>
             </Flex>
           </Link>
@@ -363,6 +383,11 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         </Tooltip>
       </TableCell>
       <TableCell>
+        <Text style="subtitle2">
+          {formatNumber(offer.quantityRemaining, 0, true)}
+        </Text>
+      </TableCell>
+      <TableCell>
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
       <TableCell>
@@ -438,7 +463,14 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
   )
 }
 
-const headings = ['Items', 'Offer Amount', 'Expiration', 'Marketplace', '']
+const headings = [
+  'Items',
+  'Offer Amount',
+  'Quantity',
+  'Expiration',
+  'Marketplace',
+  '',
+]
 
 const TableHeading = () => (
   <HeaderRow
