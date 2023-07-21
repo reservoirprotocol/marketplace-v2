@@ -141,11 +141,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                       minWidth: 0,
                     }}
                   >
-                    <img
-                      src={`/home/logos/${marketplaceChain.routePrefix}-logo.png`}
-                      alt={`${marketplaceChain.name} Logo`}
-                      style={{ width: 40, height: 40 }}
-                    />
                     <Text style="h3" ellipsify>
                       {' ' + marketplaceChain.name}
                     </Text>
