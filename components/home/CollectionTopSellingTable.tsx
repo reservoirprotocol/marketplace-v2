@@ -20,6 +20,7 @@ import { FC, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { formatNumber } from 'utils/numbers'
 import optimizeImage from 'utils/optimizeImage'
+import { ActiveMintTooltip } from './ActiveMintTooltip'
 
 type FillType = 'any' | 'mint' | 'sale'
 
@@ -108,6 +109,11 @@ const CollectionCell: FC<{
   rank: number
 }> = ({ collection, topSellingCollection, rank }) => {
   const { routePrefix } = useMarketplaceChain()
+
+  const mintData = collection?.mintStages?.find(
+    (stage) => stage.kind === 'public'
+  )
+
   const collectionImage = useMemo(() => {
     return optimizeImage(topSellingCollection?.image as string, 250)
   }, [topSellingCollection?.image])
@@ -157,6 +163,7 @@ const CollectionCell: FC<{
           <OpenSeaVerified
             openseaVerificationStatus={collection?.openseaVerificationStatus}
           />
+          {mintData ? <ActiveMintTooltip /> : null}
         </Flex>
       </Link>
     </TableCell>
@@ -305,6 +312,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
                         collection?.openseaVerificationStatus
                       }
                     />
+                    {mintData ? <ActiveMintTooltip /> : null}
                   </Flex>
                   <Flex align="center">
                     <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
@@ -395,6 +403,10 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
 }) => {
   const { routePrefix } = useMarketplaceChain()
 
+  const mintData = collection?.mintStages?.find(
+    (stage) => stage.kind === 'public'
+  )
+
   const collectionImage = useMemo(() => {
     return optimizeImage(topSellingCollection?.image as string, 250)
   }, [topSellingCollection?.image])
@@ -448,6 +460,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
                         collection?.openseaVerificationStatus
                       }
                     />
+                    {mintData ? <ActiveMintTooltip /> : null}
                   </Flex>
                   <Flex align="center">
                     <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
@@ -585,6 +598,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
                         collection?.openseaVerificationStatus
                       }
                     />
+                    {mintData ? <ActiveMintTooltip /> : null}
                   </Flex>
                   <Flex align="center">
                     <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
