@@ -115,8 +115,11 @@ const CollectionCell: FC<{
   )
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(topSellingCollection?.image as string, 250)
-  }, [topSellingCollection?.image])
+    return optimizeImage(
+      collection?.image || (topSellingCollection?.image as string),
+      250
+    )
+  }, [collection?.image, topSellingCollection?.image])
   return (
     <TableCell css={{ minWidth: 0 }}>
       <Link
@@ -254,8 +257,11 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
   const { routePrefix } = useMarketplaceChain()
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(topSellingCollection?.image as string, 250)
-  }, [topSellingCollection?.image])
+    return optimizeImage(
+      collection?.image || (topSellingCollection?.image as string),
+      250
+    )
+  }, [collection?.image, topSellingCollection?.image])
 
   if (isSmallDevice) {
     return (
@@ -408,8 +414,11 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
   )
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(topSellingCollection?.image as string, 250)
-  }, [topSellingCollection?.image])
+    return optimizeImage(
+      collection?.image || (topSellingCollection?.image as string),
+      250
+    )
+  }, [collection?.image, topSellingCollection?.image])
 
   if (isSmallDevice) {
     return (
@@ -546,8 +555,11 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
   const mintPrice = mintData?.price.amount?.decimal || 0
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(topSellingCollection?.image as string, 250)
-  }, [topSellingCollection?.image])
+    return optimizeImage(
+      collection?.image || (topSellingCollection?.image as string),
+      250
+    )
+  }, [collection?.image, topSellingCollection?.image])
 
   if (isSmallDevice) {
     return (
