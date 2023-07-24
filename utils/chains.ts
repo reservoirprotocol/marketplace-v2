@@ -140,7 +140,7 @@ export default [
     reservoirBaseUrl: 'https://api-arbitrum-nova.reservoir.tools',
     proxyApi: '/api/reservoir/arbitrum-nova',
     routePrefix: 'arbitrum-nova',
-    apiKey: process.env.ARBITRUM_NOVA_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
