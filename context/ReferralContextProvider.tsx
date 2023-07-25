@@ -1,64 +1,60 @@
 import { useState, createContext, FC, useEffect } from 'react'
 
-type CachedReferral = { code: string; date: string }
+type CachedReferrer = { referrer: string; date: string }
 
 export const ReferralContext = createContext<{
-  bpsFee?: string
+  feesOnTop?: string[]
 }>({
-  bpsFee: undefined,
+  feesOnTop: undefined,
 })
 
-const REFERRAL_CACHE_KEY = 'reservoir.referral'
+const REFERRER_CACHE_KEY = 'reservoir.referrer'
 
 const ReferralContextProvider: FC<any> = ({ children }) => {
-  const [bpsFee, setBpsFee] = useState<string | undefined>(
-    process.env.NEXT_PUBLIC_REFERRAL_FEE
-  )
+  const [feesOnTop, setFeesOnTop] = useState<string[] | undefined>()
 
   useEffect(() => {
-    if (!process.env.NEXT_PUBLIC_REFERRAL_FEE) {
+    if (!process.env.NEXT_PUBLIC_REFERRER) {
+      setFeesOnTop(undefined)
       return
     }
-    const explorerFeePieces = process.env.NEXT_PUBLIC_REFERRAL_FEE.split(':')
 
     const params = new URL(window.location.href).searchParams
-    const urlReferralCode = params.get('referral')
-    let cachedReferral: string | null | CachedReferral =
-      localStorage.getItem(REFERRAL_CACHE_KEY)
-    if (cachedReferral) {
-      try {
-        cachedReferral = JSON.parse(cachedReferral)
-      } catch (e) {
-        localStorage.removeItem(REFERRAL_CACHE_KEY)
-        console.warn('Removed corrupted referral code', e)
-      }
+    let urlReferrer = params.get('referrer')
+    let cachedReferrer: string | null | CachedReferrer =
+      localStorage.getItem(REFERRER_CACHE_KEY)
+    try {
+      cachedReferrer = JSON.parse(cachedReferrer as string)
+    } catch (e) {
+      localStorage.removeItem(REFERRER_CACHE_KEY)
+      console.warn('Removed corrupt referrer', e)
     }
     if (
-      urlReferralCode &&
-      urlReferralCode !== (cachedReferral as CachedReferral)?.code
+      urlReferrer &&
+      urlReferrer !== (cachedReferrer as CachedReferrer)?.referrer
     ) {
       localStorage.setItem(
-        REFERRAL_CACHE_KEY,
+        REFERRER_CACHE_KEY,
         JSON.stringify({
-          code: urlReferralCode,
+          referrer: urlReferrer,
           date: new Date().toISOString(),
         })
       )
-
-      //api to fetch the fee from the server
-      const referralDetails = {
-        recipient: '0x03508bB71268BBA25ECaCC8F620e01866650532c',
-        bps: 100,
-      }
-      if (referralDetails) {
-      }
+    } else {
+      urlReferrer = (cachedReferrer as CachedReferrer)?.referrer
     }
-    //check url for referral code
-    //check localstorage for referral code validity
+
+    const recipients = [process.env.NEXT_PUBLIC_REFERRER]
+    if (urlReferrer) {
+      recipients.push(urlReferrer)
+    }
+    //TODO figure out the fee
+    const totalFee = 100
+    setFeesOnTop(recipients.map((recipient) => `${recipient}:${totalFee / 2}`))
   }, [])
 
   return (
-    <ReferralContext.Provider value={{ bpsFee }}>
+    <ReferralContext.Provider value={{ feesOnTop }}>
       {children}
     </ReferralContext.Provider>
   )
