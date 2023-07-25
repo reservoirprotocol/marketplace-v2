@@ -28,7 +28,31 @@ export const zora = {
   },
 } as const satisfies Chain
 
-//Chains that are missing from wagmi:
+export const base = {
+  id: 8453,
+  name: 'Base',
+  network: 'base',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+    public: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Basescan',
+      url: 'https://basescan.org',
+    },
+    default: {
+      name: 'BaseScan',
+      url: 'https://basescan.org',
+    },
+  },
+} as const satisfies Chain
+
 export const arbitrumNova = {
   id: 42170,
   name: 'Arbitrum Nova',
@@ -180,5 +204,17 @@ export default [
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+  },
+  {
+    ...base,
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/base-icon-light.svg',
+    reservoirBaseUrl: 'https://api-base.reservoir.tools',
+    proxyApi: '/api/reservoir/base',
+    routePrefix: 'base',
+    apiKey: process.env.BASE_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
   },
 ] as ReservoirChain[]
