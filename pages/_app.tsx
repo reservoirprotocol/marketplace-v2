@@ -56,7 +56,7 @@ const { chains, publicClient } = configureChains(supportedChains, [
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir NFT Explorer',
+  appName: 'Public Market',
   projectId: WALLET_CONNECT_PROJECT_ID,
   chains,
 })
@@ -71,7 +71,7 @@ const wagmiClient = createConfig({
 const reservoirKitThemeOverrides = {
   headlineFont: inter.style.fontFamily,
   font: inter.style.fontFamily,
-  primaryColor: '#6E56CB',
+  primaryColor: '#171717',
   primaryHoverColor: '#644fc1',
 }
 
@@ -79,7 +79,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="light"
       value={{
         dark: darkTheme.className,
         light: 'light',

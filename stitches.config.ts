@@ -5,6 +5,8 @@ import {
   violetDark,
   slateDark,
   greenDark,
+  iris,
+  gray,
   green,
   violetDarkA,
   whiteA,
@@ -34,6 +36,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
   createStitches({
     theme: {
       colors: {
+        ...gray,
         ...crimson,
         ...violet,
         ...violetA,
@@ -41,24 +44,45 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         ...red,
         ...whiteA,
         ...blackA,
+        ...iris,
         ...green,
         ...indigo,
 
         //Aliases
 
         //Primary
-        primary1: '$violet1',
+        /*primary1: '$violet1',
         primary2: '$violet2',
         primary3: '$violet3',
         primary4: '$violet4',
-        primary5: '$violet5',
+        primary5: '$gray5',
         primary6: '$violet6',
         primary7: '$violet7',
         primary8: '$violet8',
         primary9: '$violet9',
         primary10: '$violet10',
+        //primary9: '$gray12',
+        // primary10: '$gray11',
         primary11: '$violet11',
+        // primary12: '$gray12',
         primary12: '$violet12',
+        */
+
+        primary1: '$iris1',
+        primary2: '$iris2',
+        primary3: '$iris3',
+        primary4: '$iris4',
+        primary5: '$iris5',
+        primary6: '$iris6',
+        primary7: '$iris7',
+        primary8: '$iris8',
+        primary9: '$iris9',
+        primary10: '$iris10',
+        //primary9: '$gray12',
+        // primary10: '$gray11',
+        primary11: '$iris11',
+        // primary12: '$gray12',
+        primary12: '$iris12',
 
         //Secondary
         secondary1: '$violetA1',
@@ -211,7 +235,7 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
       sm: '(min-width: 600px)',
       md: '(min-width: 900px)',
       lg: '(min-width: 1200px)',
-      xl: '(min-width: 1400px)',
+      xl: '(min-width: 1820px)',
       bp300: '(min-width: 300px)',
       bp400: '(min-width: 400px)',
       bp500: '(min-width: 500px)',

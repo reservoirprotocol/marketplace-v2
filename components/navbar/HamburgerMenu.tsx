@@ -59,11 +59,11 @@ const HamburgerMenu = () => {
           justify="between"
         >
           <Link href="/">
-            <Box css={{ width: 34, cursor: 'pointer' }}>
+            <Box css={{ width: 46, cursor: 'pointer' }}>
               <Image
                 src="/reservoirLogo.svg"
-                width={34}
-                height={39}
+                width={36}
+                height={36}
                 alt="Reservoir"
               />
             </Box>
@@ -134,7 +134,7 @@ const HamburgerMenu = () => {
                 Explore
               </Text>
             </Link>
-            <Link href="/portfolio" legacyBehavior>
+            <Link href="/ethereum/collection-rankings" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -144,9 +144,23 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Sell
+                NFTs
               </Text>
             </Link>
+
+            <Anchor
+              href="https://docs.reservoir.tools/docs"
+              target="_blank"
+              css={{
+                borderBottom: '1px solid $gray4',
+                cursor: 'pointer',
+                pb: '$4',
+                pt: '24px',
+                width: '100%',
+              }}
+            >
+              <Text style="subtitle1">Developers</Text>
+            </Anchor>
             <Link href="/portfolio" legacyBehavior>
               <Flex
                 direction="column"

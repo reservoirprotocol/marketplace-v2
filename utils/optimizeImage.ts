@@ -14,6 +14,12 @@ const optimizeImage = (imageHref: string | undefined, width: number) => {
         return `${newImage[0]}=${width}`
       }
       return `${imageHref}?w=${width}`
+    } else if (url.host == 'img.seadn.io') {
+      if (imageHref.includes('w=')) {
+        let newImage = imageHref.split('=')
+        return `${newImage[0]}=${width}`
+      }
+      return `${imageHref}?w=${width}`
     }
   } catch (e) {
     console.warn('Failed to optimize image', e)

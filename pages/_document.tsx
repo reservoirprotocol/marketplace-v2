@@ -32,14 +32,14 @@ class MyDocument extends Document {
         <meta name="keywords" content="NFT, API, Protocol" />
 
         {/* Favicon */}
-        <link
+        {/*<link
           rel="shortcut icon"
           type="image/svg"
           href="https://marketplace.reservoir.tools/reservoir.svg"
-        />
+    />*/}
 
         {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir NFT Explorer" />
+        <meta property="reservoir:title" content="Public Market" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"

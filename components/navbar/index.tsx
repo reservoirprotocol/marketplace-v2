@@ -23,7 +23,7 @@ export const NAVBAR_HEIGHT_MOBILE = 77
 const Navbar = () => {
   const { theme } = useTheme()
   const { isConnected } = useAccount()
-  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
+  const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
 
@@ -60,11 +60,11 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
-            <Box css={{ width: 34, cursor: 'pointer' }}>
+            <Box css={{ width: 46, cursor: 'pointer' }}>
               <Image
                 src="/reservoirLogo.svg"
-                width={34}
-                height={39}
+                width={36}
+                height={36}
                 alt="Reservoir"
               />
             </Box>
@@ -82,8 +82,11 @@ const Navbar = () => {
       css={{
         height: NAVBAR_HEIGHT,
         px: '$5',
+        '@xl': {
+          px: '$6',
+        },
         width: '100%',
-        maxWidth: 1920,
+        // maxWidth: 1920,
         mx: 'auto',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
@@ -96,52 +99,80 @@ const Navbar = () => {
       align="center"
       justify="between"
     >
-      <Box css={{ flex: 1 }}>
+      <Box
+        css={{
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+      >
         <Flex align="center">
-          <Link href={`/${routePrefix}`}>
-            <Box css={{ width: 112, cursor: 'pointer' }}>
-              {theme == 'dark' ? (
-                <Image
-                  src="/reservoirMarketLogo.svg"
-                  width={112}
-                  height={36}
-                  alt="Reservoir"
-                />
-              ) : (
-                <Image
-                  src="/reservoirMarketLogoLight.svg"
-                  width={112}
-                  height={36}
-                  alt="Reservoir"
-                />
-              )}
+          <Link href={`/`}>
+            <Box css={{ cursor: 'pointer' }}>
+              <Image
+                src="/reservoirLogo.svg"
+                width={36}
+                height={36}
+                alt="Reservoir"
+              />
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
-            <GlobalSearch
-              ref={searchRef}
-              placeholder="Search collections and addresses"
-              containerCss={{ width: '100%' }}
-              key={router.asPath}
-            />
-          </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
+          <Flex
+            align="center"
+            css={{
+              gap: '$5',
+              ml: '$5',
+            }}
+          >
+            <Link href={`/`}>
+              <NavItem active={router.pathname.includes('collection-rankings')}>
+                Featured
+              </NavItem>
+            </Link>
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
                 Collections
               </NavItem>
             </Link>
-            <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
-            </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
-            </Link>
+
+            {false && (
+              <Link href={`/${routePrefix}/collection-rankings`}>
+                <NavItem
+                  active={router.pathname.includes('collection-rankings')}
+                >
+                  Mints
+                </NavItem>
+              </Link>
+            )}
+            {false && (
+              <Link href="/swap">
+                <NavItem active={router.pathname == '/swap'}>Swap</NavItem>
+              </Link>
+            )}
           </Flex>
         </Flex>
       </Box>
+      <Box css={{ flex: 1, px: '$5' }}>
+        <GlobalSearch
+          ref={searchRef}
+          placeholder="Search collections and addresses"
+          containerCss={{ width: '100%' }}
+          key={router.asPath}
+        />
+      </Box>
 
-      <Flex css={{ gap: '$3' }} justify="end" align="center">
+      <Flex
+        css={{
+          gap: '$3',
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+        justify="end"
+        align="center"
+      >
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (

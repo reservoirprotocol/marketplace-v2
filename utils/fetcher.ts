@@ -13,11 +13,13 @@ const fetcher = async (
 
   const path = new URL(url)
   setParams(path, params)
+  console.log(path)
 
   const response = await fetch(path.href, {
     headers,
     ...data,
   })
+  console.log(response)
   const json = await response.json()
 
   return { data: json, response }
