@@ -19,7 +19,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
-  openState: ComponentPropsWithoutRef<typeof CollectModal>['openState']
+  openState?: ComponentPropsWithoutRef<typeof CollectModal>['openState']
 }
 
 const Sweep: FC<Props> = ({

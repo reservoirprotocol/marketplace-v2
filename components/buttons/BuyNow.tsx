@@ -21,7 +21,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
-  openState: ComponentPropsWithoutRef<typeof BuyModal>['openState']
+  openState?: ComponentPropsWithoutRef<typeof BuyModal>['openState']
 }
 
 const BuyNow: FC<Props> = ({
