@@ -27,6 +27,7 @@ type TokenCardProps = {
   address: Address
   rarityEnabled: boolean
   addToCartEnabled?: boolean
+  showSource?: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
@@ -42,6 +43,7 @@ export default ({
   mutate,
   onMediaPlayed,
   tokenCount,
+  showSource = false,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
@@ -193,13 +195,14 @@ export default ({
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
           direction="column"
         >
-          <Flex css={{ mb: '$4' }} align="center" justify="between">
+          <Flex css={{ mb: '$2' }} align="center" justify="between">
             <Flex align="center" css={{ gap: '$1', minWidth: 0 }}>
               <Text
                 style="subtitle1"
                 as="p"
                 ellipsify
                 css={{
+                  fontWeight: 600,
                   pr: '$1',
                   flex: 1,
                 }}
@@ -269,6 +272,7 @@ export default ({
                       minWidth: 0,
                       with: '100%',
                       overflow: 'hidden',
+                      fontSize: 18,
                     }}
                     maximumFractionDigits={4}
                   />
@@ -287,7 +291,7 @@ export default ({
               ) : null}
             </Flex>
 
-            {token?.market?.floorAsk?.source?.name ? (
+            {showSource && token?.market?.floorAsk?.source?.name ? (
               <img
                 style={{
                   width: 20,

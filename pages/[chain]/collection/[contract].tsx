@@ -28,7 +28,11 @@ import fetcher from 'utils/fetcher'
 import { useRouter } from 'next/router'
 import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
-import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
+import {
+  TabsListAlt as TabsList,
+  TabsTriggerAlt as TabsTrigger,
+  TabsContent,
+} from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
@@ -206,209 +210,173 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
       />
-
-      {collection ? (
-        <Flex
-          direction="column"
-          css={{
-            px: '$4',
-            pt: '$5',
-            pb: 0,
-            '@sm': {
-              px: '$5',
-            },
-          }}
-        >
-          <Flex justify="between" css={{ mb: '$4', gap: '$2' }}>
-            <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
-              <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <Img
-                  src={collection.image!}
-                  width={64}
-                  height={64}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: 8,
-                    objectFit: 'cover',
-                  }}
-                  alt="Collection Page Image"
-                />
-                <Box css={{ minWidth: 0 }}>
-                  <Flex align="center" css={{ gap: '$2', mb: '$1' }}>
-                    <Text style="h5" as="h6" ellipsify>
-                      {collection.name}
-                    </Text>
-                    <OpenSeaVerified
-                      openseaVerificationStatus={
-                        collection?.openseaVerificationStatus
-                      }
-                    />
-                    {mintData && !isSmallDevice ? (
-                      <Flex
-                        align="center"
-                        css={{
-                          borderRadius: 4,
-                          px: '$3',
-                          py: 7,
-                          backgroundColor: '$gray3',
-                          gap: '$3',
-                        }}
-                      >
-                        <Flex
-                          css={{
-                            color: '$green9',
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faSeedling} />
-                        </Flex>
-                        <Text style="body3">Minting Now</Text>
-                      </Flex>
-                    ) : null}
-                  </Flex>
-
-                  {!smallSubtitle && (
-                    <Flex align="end" css={{ gap: 24 }}>
-                      <CopyText
-                        text={collection.id as string}
-                        css={{ width: 'max-content' }}
-                      >
-                        <Flex css={{ gap: '$2', width: 'max-content' }}>
-                          {!isSmallDevice && (
-                            <Text style="body1" color="subtle">
-                              Collection
-                            </Text>
-                          )}
-                          <Text
-                            style="body1"
-                            color={isSmallDevice ? 'subtle' : undefined}
-                            as="p"
-                          >
-                            {truncateAddress(collection.id as string)}
-                          </Text>
-                          <Box css={{ color: '$gray10' }}>
-                            <FontAwesomeIcon
-                              icon={faCopy}
-                              width={16}
-                              height={16}
-                            />
-                          </Box>
-                        </Flex>
-                      </CopyText>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Token Standard{' '}
-                        </Text>
-                        <Text style="body1">{contractKind}</Text>
-                      </Box>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Chain{' '}
-                        </Text>
-                        <Link
-                          href={`/${router.query.chain}/collection-rankings`}
-                        >
-                          <Text style="body1">{chain}</Text>
-                        </Link>
-                      </Box>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Creator Earnings
-                        </Text>
-                        <Text style="body1"> {creatorRoyalties}%</Text>
-                      </Box>
-                    </Flex>
-                  )}
-                </Box>
-              </Flex>
-            </Flex>
-            <CollectionActions collection={collection} />
-          </Flex>
-          {mintData && isSmallDevice ? (
-            <Flex
-              align="center"
-              css={{
-                borderRadius: 4,
-                px: '$3',
-                py: 7,
-                backgroundColor: '$gray3',
-                gap: '$3',
-                mb: '$4',
-                width: 'max-content',
-              }}
-            >
-              <Flex
-                css={{
-                  color: '$green9',
-                }}
-              >
-                <FontAwesomeIcon icon={faSeedling} />
-              </Flex>
-              <Text style="body3">Minting Now</Text>
-            </Flex>
-          ) : null}
-          {smallSubtitle && (
-            <Grid
-              css={{
-                gap: 12,
-                mb: 24,
-                gridTemplateColumns: '1fr 1fr',
-                maxWidth: 550,
-              }}
-            >
-              <CopyText
-                text={collection.id as string}
-                css={{ width: 'max-content' }}
-              >
-                <Flex css={{ width: 'max-content' }} direction="column">
-                  <Text style="body1" color="subtle">
-                    Collection
-                  </Text>
-                  <Flex css={{ gap: '$2' }}>
-                    <Text style="body1" as="p">
-                      {truncateAddress(collection.id as string)}
-                    </Text>
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                    </Box>
-                  </Flex>
-                </Flex>
-              </CopyText>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Token Standard{' '}
-                </Text>
-                <Text style="body1">{contractKind}</Text>
-              </Flex>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Chain{' '}
-                </Text>
-                <Text style="body1">{chain}</Text>
-              </Flex>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Creator Earnings
-                </Text>
-                <Text style="body1"> {creatorRoyalties}%</Text>
-              </Flex>
-            </Grid>
-          )}
-          <StatHeader collection={collection} />
-          <Tabs.Root
-            defaultValue="items"
-            onValueChange={(value) => {
-              if (value === 'items') {
-                resetCache()
-                setSize(1)
-                mutate()
-              }
+      <Tabs.Root
+        defaultValue="items"
+        onValueChange={(value) => {
+          if (value === 'items') {
+            resetCache()
+            setSize(1)
+            mutate()
+          }
+        }}
+      >
+        {collection ? (
+          <Flex
+            direction="column"
+            css={{
+              px: '$4',
+              pt: '$4',
+              pb: 0,
+              '@sm': {
+                px: '$5',
+              },
             }}
           >
-            <TabsList>
-              <TabsTrigger value="items">Items</TabsTrigger>
-              <TabsTrigger value="activity">Activity</TabsTrigger>
-            </TabsList>
+            <Flex justify="between" css={{ mb: '$4', gap: '$2' }}>
+              <Flex
+                direction="column"
+                css={{ gap: '$4', minWidth: 0, flex: 1 }}
+              >
+                <Flex css={{ gap: '$4', flex: 1 }} align="center">
+                  <Img
+                    src={collection.image!}
+                    width={64}
+                    height={64}
+                    style={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: 8,
+                      objectFit: 'cover',
+                    }}
+                    alt="Collection Page Image"
+                  />
+                  <Box css={{ minWidth: 0, width: 220 }}>
+                    <Flex align="center" css={{ gap: '$2', mb: '$1' }}>
+                      <Text style="h5" as="h6" ellipsify>
+                        {collection.name}
+                      </Text>
+                      <OpenSeaVerified
+                        openseaVerificationStatus={
+                          collection?.openseaVerificationStatus
+                        }
+                      />
+                      {mintData && !isSmallDevice ? (
+                        <Flex
+                          align="center"
+                          css={{
+                            borderRadius: 4,
+                            px: '$3',
+                            py: 7,
+                            backgroundColor: '$gray3',
+                            gap: '$3',
+                          }}
+                        >
+                          <Flex
+                            css={{
+                              color: '$green9',
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faSeedling} />
+                          </Flex>
+                          <Text style="body3">Minting Now</Text>
+                        </Flex>
+                      ) : null}
+                    </Flex>
+                    <Text as="p" style="body2" color="subtle" css={{ mt: -4 }}>
+                      {truncateAddress(collection.primaryContract)}
+                    </Text>
+                  </Box>
+                  <TabsList css={{ ml: '$5' }}>
+                    <TabsTrigger value="items">Items</TabsTrigger>
+                    <TabsTrigger value="overview">Overview</TabsTrigger>
+                    <TabsTrigger value="activity">Activity</TabsTrigger>
+                  </TabsList>
+                </Flex>
+              </Flex>
+              <Flex align="center">
+                <Flex css={{ alignItems: 'center', gap: '$3' }}>
+                  <Sweep
+                    collectionId={collection.id}
+                    buttonChildren={
+                      <Flex css={{ gap: '$3' }} align="center" justify="center">
+                        <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                          Collect
+                        </Text>
+                        <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                          {`${collection.floorAsk?.price?.amount?.native} ETH`}
+                        </Text>
+                      </Flex>
+                    }
+                    buttonCss={{ order: 2 }}
+                    mutate={mutate}
+                  />
+                  {/* Collection Mint */}
+                  {mintData ? (
+                    <Mint
+                      collectionId={collection.id}
+                      buttonChildren={
+                        <>
+                          <FontAwesomeIcon icon={faSeedling} />
+                          {isSmallDevice ? 'Mint' : `Mint for ${mintPrice}`}
+                        </>
+                      }
+                      buttonCss={{
+                        minWidth: 'max-content',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                        flexGrow: 1,
+                        justifyContent: 'center',
+                        px: '$2',
+                        maxWidth: '220px',
+                        '@md': {
+                          order: 2,
+                          px: '$5',
+                        },
+                      }}
+                      mutate={mutate}
+                    />
+                  ) : null}
+                  <CollectionOffer
+                    collection={collection}
+                    buttonChildren={<FontAwesomeIcon icon={faHand} />}
+                    buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
+                    buttonCss={{ px: '$4' }}
+                    mutate={mutate}
+                  />
+                </Flex>
+              </Flex>
+            </Flex>
+            {mintData && isSmallDevice ? (
+              <Flex
+                align="center"
+                css={{
+                  borderRadius: 4,
+                  px: '$3',
+                  py: 7,
+                  backgroundColor: '$gray3',
+                  gap: '$3',
+                  mb: '$4',
+                  width: 'max-content',
+                }}
+              >
+                <Flex
+                  css={{
+                    color: '$green9',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSeedling} />
+                </Flex>
+                <Text style="body3">Minting Now</Text>
+              </Flex>
+            ) : null}
+            <Box
+              css={{
+                width: '100%',
+                height: 0,
+                mb: '$4',
+                borderBottom: '1px solid $gray5',
+              }}
+            />
 
             <TabsContent value="items">
               <Flex
@@ -468,70 +436,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             px: '$5',
                           },
                         }}
-                      />
-                      <Sweep
-                        collectionId={collection.id}
-                        buttonChildren={<FontAwesomeIcon icon={faBroom} />}
-                        buttonCss={{
-                          minWidth: 48,
-                          minHeight: 48,
-                          justifyContent: 'center',
-                          padding: 0,
-                          order: 2,
-                          '@md': {
-                            order: 2,
-                          },
-                        }}
-                        mutate={mutate}
-                      />
-                      {/* Collection Mint */}
-                      {mintData ? (
-                        <Mint
-                          collectionId={collection.id}
-                          buttonChildren={
-                            <>
-                              <FontAwesomeIcon icon={faSeedling} />
-                              {isSmallDevice ? 'Mint' : `Mint for ${mintPrice}`}
-                            </>
-                          }
-                          buttonCss={{
-                            minWidth: 'max-content',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                            flexGrow: 1,
-                            justifyContent: 'center',
-                            order: 3,
-                            px: '$2',
-                            maxWidth: '220px',
-                            '@md': {
-                              order: 2,
-                              px: '$5',
-                            },
-                          }}
-                          mutate={mutate}
-                        />
-                      ) : null}
-                      <CollectionOffer
-                        collection={collection}
-                        buttonChildren={
-                          mintData ? <FontAwesomeIcon icon={faHand} /> : null
-                        }
-                        buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
-                        buttonCss={{
-                          width: mintData ? 48 : '100%',
-                          height: mintData ? 48 : '100%',
-                          padding: mintData ? 0 : '',
-                          // width: '100%',
-                          justifyContent: 'center',
-                          order: 1,
-                          '@md': {
-                            order: 1,
-                          },
-                          '@sm': {
-                            maxWidth: '220px',
-                          },
-                        }}
-                        mutate={mutate}
                       />
                     </Flex>
                   </Flex>
@@ -652,11 +556,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </TabsContent>
-          </Tabs.Root>
-        </Flex>
-      ) : (
-        <Box />
-      )}
+          </Flex>
+        ) : (
+          <Box />
+        )}
+      </Tabs.Root>
     </Layout>
   )
 }
