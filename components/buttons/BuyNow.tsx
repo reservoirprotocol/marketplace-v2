@@ -1,12 +1,17 @@
-import React, { ComponentProps, FC, ReactNode } from 'react'
+import React, {
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  FC,
+  ReactNode,
+} from 'react'
 import { SWRResponse } from 'swr'
-import { useNetwork, useWalletClient } from 'wagmi'
-import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import { useAccount, useNetwork, useWalletClient } from 'wagmi'
+import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
-import { useMarketplaceChain } from 'hooks'
+import { useMarketplaceChain, useRKModalPrepareDeeplink } from 'hooks'
 
 type Props = {
   tokenId?: string
@@ -16,6 +21,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
+  openState: ComponentPropsWithoutRef<typeof BuyModal>['openState']
 }
 
 const BuyNow: FC<Props> = ({
@@ -26,6 +32,7 @@ const BuyNow: FC<Props> = ({
   buttonCss,
   buttonProps = {},
   buttonChildren,
+  openState,
 }) => {
   const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
@@ -34,6 +41,7 @@ const BuyNow: FC<Props> = ({
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
+  useRKModalPrepareDeeplink(marketplaceChain.id, openState ? true : false)
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
   )
@@ -72,6 +80,7 @@ const BuyNow: FC<Props> = ({
       tokenId={tokenId}
       collectionId={collectionId}
       orderId={orderId}
+      openState={openState}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
       // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
