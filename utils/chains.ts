@@ -61,6 +61,7 @@ export const base = {
     },
   },
 } as const satisfies Chain
+
 export const arbitrumNova = {
   id: 42170,
   name: 'Arbitrum Nova',
