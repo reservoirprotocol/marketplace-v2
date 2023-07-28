@@ -249,7 +249,7 @@ export default [
     reservoirBaseUrl: 'https://api-linea.reservoir.tools',
     proxyApi: '/api/reservoir/linea',
     routePrefix: 'linea',
-    apiKey: process.env.ETH_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
