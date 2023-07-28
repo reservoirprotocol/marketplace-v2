@@ -212,7 +212,7 @@ export default [
     reservoirBaseUrl: 'https://api-base.reservoir.tools',
     proxyApi: '/api/reservoir/base',
     routePrefix: 'base',
-    apiKey: process.env.BASE_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
