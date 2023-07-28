@@ -39,7 +39,6 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     // Redirect eth and weth currency icons to self-hosted
     // versions without any padding
     endpoint = endpoint.toLowerCase()
-    console.log(endpoint)
     if (
       [
         mainnet.id as number,

@@ -36,11 +36,69 @@ export const zora = {
   },
 } as const satisfies Chain
 
+export const base = {
+  id: 8453,
+  name: 'Base',
+  network: 'base',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+    public: {
+      http: ['https://developer-access-mainnet.base.org'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Basescan',
+      url: 'https://basescan.org',
+    },
+    default: {
+      name: 'BaseScan',
+      url: 'https://basescan.org',
+    },
+  },
+} as const satisfies Chain
+
+export const arbitrumNova = {
+  id: 42170,
+  name: 'Arbitrum Nova',
+  network: 'arbitrum-nova',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    blast: {
+      http: ['https://arbitrum-nova.public.blastapi.io'],
+      webSocket: ['wss://arbitrum-nova.public.blastapi.io'],
+    },
+    default: {
+      http: ['https://nova.arbitrum.io/rpc'],
+    },
+    public: {
+      http: ['https://nova.arbitrum.io/rpc'],
+    },
+  },
+  blockExplorers: {
+    etherscan: { name: 'Arbiscan', url: 'https://nova.arbiscan.io' },
+    blockScout: {
+      name: 'BlockScout',
+      url: 'https://nova-explorer.arbitrum.io/',
+    },
+    default: { name: 'Arbiscan', url: 'https://nova.arbiscan.io' },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 1746963,
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
 
-type ReservoirChain = Chain & {
+export type ReservoirChain = Chain & {
   lightIconUrl: string
   darkIconUrl: string
   reservoirBaseUrl: string
@@ -72,7 +130,7 @@ export const DefaultChain: ReservoirChain = {
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-  apiKey: process.env.ETH_RESERVOIR_API_KEY,
+  apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'ethereum',
@@ -89,7 +147,7 @@ export default [
     reservoirBaseUrl: 'https://api-polygon.reservoir.tools',
     proxyApi: '/api/reservoir/polygon',
     routePrefix: 'polygon',
-    apiKey: process.env.POLYGON_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
@@ -102,10 +160,22 @@ export default [
     reservoirBaseUrl: 'https://api-arbitrum.reservoir.tools',
     proxyApi: '/api/reservoir/arbitrum',
     routePrefix: 'arbitrum',
-    apiKey: process.env.ARBITRUM_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'arbitrum-iou',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+  },
+  {
+    ...arbitrumNova,
+    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
+    reservoirBaseUrl: 'https://api-arbitrum-nova.reservoir.tools',
+    proxyApi: '/api/reservoir/arbitrum-nova',
+    routePrefix: 'arbitrum-nova',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
   },
   {
     ...optimism,
@@ -115,7 +185,7 @@ export default [
     reservoirBaseUrl: 'https://api-optimism.reservoir.tools',
     proxyApi: '/api/reservoir/optimism',
     routePrefix: 'optimism',
-    apiKey: process.env.OPTIMISM_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'optimism',
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
@@ -128,7 +198,7 @@ export default [
     reservoirBaseUrl: 'https://api-zora.reservoir.tools',
     proxyApi: '/api/reservoir/zora',
     routePrefix: 'zora',
-    apiKey: process.env.ZORA_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
   },
   {
@@ -138,7 +208,7 @@ export default [
     reservoirBaseUrl: 'https://api-bsc.reservoir.tools',
     proxyApi: '/api/reservoir/bsc',
     routePrefix: 'bsc',
-    apiKey: process.env.BSC_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
@@ -150,9 +220,21 @@ export default [
     reservoirBaseUrl: 'https://api-avalanche.reservoir.tools',
     proxyApi: '/api/reservoir/avalanche',
     routePrefix: 'avalanche',
-    apiKey: process.env.AVALANCHE_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'avalanche-2',
     collectionSetId: process.env.NEXT_PUBLIC_AVALANCHE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_AVALANCHE_COMMUNITY,
+  },
+  {
+    ...base,
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/base-icon-light.svg',
+    reservoirBaseUrl: 'https://api-base.reservoir.tools',
+    proxyApi: '/api/reservoir/base',
+    routePrefix: 'base',
+    apiKey: process.env.BASE_RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
   },
 ] as ReservoirChain[]

@@ -117,7 +117,7 @@ const Navbar = () => {
               )}
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
+          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
               placeholder="Search collections and addresses"
