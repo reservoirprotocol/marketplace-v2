@@ -69,7 +69,7 @@ export const DefaultChain: ReservoirChain = {
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-  apiKey: process.env.GOERLI_RESERVOIR_API_KEY,
+  apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'goerli-eth',
@@ -86,7 +86,7 @@ export default [
     reservoirBaseUrl: 'https://api-sepolia.reservoir.tools',
     proxyApi: '/api/reservoir/sepolia',
     routePrefix: 'sepolia',
-    apiKey: process.env.SEPOLIA_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
@@ -98,7 +98,7 @@ export default [
     reservoirBaseUrl: 'https://api-mumbai.reservoir.tools',
     proxyApi: '/api/reservoir/mumbai',
     routePrefix: 'mumbai',
-    apiKey: process.env.MUMBAI_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_MUMBAI_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_MUMBAI_COMMUNITY,
@@ -110,7 +110,7 @@ export default [
     reservoirBaseUrl: 'https://api-base-goerli.reservoir.tools',
     proxyApi: '/api/reservoir/base-goerli',
     routePrefix: 'base-goerli',
-    apiKey: process.env.BASE_GOERLI_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_GOERLI_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_GOERLI_COMMUNITY,
@@ -122,7 +122,7 @@ export default [
     reservoirBaseUrl: 'https://api-scroll-alpha.reservoir.tools',
     proxyApi: '/api/reservoir/scroll-alpha',
     routePrefix: 'scroll-alpha',
-    apiKey: process.env.SCROLL_ALPHA_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COMMUNITY,
@@ -135,7 +135,7 @@ export default [
     reservoirBaseUrl: 'https://api-zora-testnet.reservoir.tools',
     proxyApi: '/api/reservoir/zora-testnet',
     routePrefix: 'zora-testnet',
-    apiKey: process.env.ZORA_TESTNET_RESERVOIR_API_KEY,
+    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ZORA_TESTNET_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ZORA_TESTNET_COMMUNITY,
