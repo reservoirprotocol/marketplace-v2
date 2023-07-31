@@ -337,6 +337,19 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle2"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -358,7 +371,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fourTemplateColumns,
+          gridTemplateColumns: fiveTemplateColumns,
         }}
       >
         <CollectionCell
@@ -366,6 +379,16 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           topSellingCollection={topSellingCollection}
           rank={rank}
         />
+        <TableCell>
+          <Text style="subtitle2">
+            <FormatCryptoCurrency
+              // @ts-ignore
+              amount={topSellingCollection.volume}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
         <TableCell>
           {mintData && mintPrice < floorAsk ? (
             mintPrice === 0 ? (
@@ -694,6 +717,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
 
 const anyHeadings = [
   'Collection',
+  'Volume',
   'Floor Price (Including Mints)',
   'Sales',
   'Recent Activity',
@@ -723,7 +747,7 @@ const CollectionTableHeading: FC<CollectionTableHeadingProps> = ({
     case 'any':
     default:
       headings = anyHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
   }
 
