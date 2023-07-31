@@ -680,6 +680,19 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -701,7 +714,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
     <TableRow
       key={topSellingCollection.id}
       css={{
-        gridTemplateColumns: fourTemplateColumns,
+        gridTemplateColumns: fiveTemplateColumns,
       }}
     >
       <CollectionCell
@@ -709,6 +722,16 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
         topSellingCollection={topSellingCollection}
         rank={rank}
       />
+      <TableCell>
+        <Text style="subtitle2">
+          <FormatCryptoCurrency
+            // @ts-ignore
+            amount={topSellingCollection.volume}
+            textStyle="subtitle2"
+            logoHeight={14}
+          />
+        </Text>
+      </TableCell>
       <TableCell>
         {mintData ? (
           mintPrice === 0 ? (
@@ -724,6 +747,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
           '-'
         )}
       </TableCell>
+
       <TableCell>
         <Text style="subtitle2">
           {formatNumber(topSellingCollection.count)}
@@ -745,7 +769,13 @@ const anyHeadings = [
   'Sales',
   'Recent Activity',
 ]
-const mintHeadings = ['Collection', 'Mint Price', 'Sales', 'Recent Activity']
+const mintHeadings = [
+  'Collection',
+  'Volume',
+  'Mint Price',
+  'Sales',
+  'Recent Activity',
+]
 const saleHeadings = [
   'Collection',
   'Volume',
@@ -767,7 +797,7 @@ const CollectionTableHeading: FC<CollectionTableHeadingProps> = ({
   switch (fillType) {
     case 'mint':
       headings = mintHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
     case 'sale':
       headings = saleHeadings
