@@ -343,7 +343,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
                   <FormatCryptoCurrency
                     // @ts-ignore
                     amount={topSellingCollection.volume}
-                    textStyle="subtitle2"
+                    textStyle="subtitle3"
                     logoHeight={14}
                   />
                 </Text>
@@ -511,6 +511,19 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -532,7 +545,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fourTemplateColumns,
+          gridTemplateColumns: fiveTemplateColumns,
         }}
       >
         <CollectionCell
@@ -540,6 +553,16 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
           topSellingCollection={topSellingCollection}
           rank={rank}
         />
+        <TableCell>
+          <Text style="subtitle2">
+            <FormatCryptoCurrency
+              // @ts-ignore
+              amount={topSellingCollection.volume}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
         <TableCell>
           <FormatCryptoCurrency
             amount={collection?.floorAsk?.price?.amount?.decimal}
@@ -723,7 +746,13 @@ const anyHeadings = [
   'Recent Activity',
 ]
 const mintHeadings = ['Collection', 'Mint Price', 'Sales', 'Recent Activity']
-const saleHeadings = ['Collection', 'Floor Price', 'Sales', 'Recent Activity']
+const saleHeadings = [
+  'Collection',
+  'Volume',
+  'Floor Price',
+  'Sales',
+  'Recent Activity',
+]
 
 type CollectionTableHeadingProps = {
   fillType: FillType
@@ -742,7 +771,7 @@ const CollectionTableHeading: FC<CollectionTableHeadingProps> = ({
       break
     case 'sale':
       headings = saleHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
     case 'any':
     default:
