@@ -93,9 +93,12 @@ export const linea = {
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
     default: {
-      http: ['https://linea-mainnet.infura.io/v3'],
+      http: ['https://rpc.linea.build'],
     },
     public: {
+      http: ['https://rpc.linea.build'],
+    },
+    infura: {
       http: ['https://linea-mainnet.infura.io/v3'],
     },
   },
