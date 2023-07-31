@@ -47,7 +47,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const {
     data: topSellingCollectionsData,
     collections: collectionsData,
-    isValidating,
+    isLoading,
   } = useTopSellingCollections(
     {
       startTime,
@@ -74,11 +74,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     )
 
   useEffect(() => {
-    if (!isValidating) {
+    if (!isLoading) {
       setTopSellingCollections(topSellingCollectionsData)
       setCollections(collectionsData)
     }
-  }, [isValidating])
+  }, [isLoading])
 
   return (
     <Layout>
@@ -165,6 +165,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                     <DropdownMenuItem
                       css={{
                         textAlign: 'left',
+                        py: '$2',
                       }}
                       key={id}
                       onClick={() => {
@@ -221,7 +222,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <CollectionTopSellingTable
               topSellingCollections={topSellingCollections?.collections}
               collections={collections}
-              loading={isValidating}
+              loading={isLoading}
               fillType={fillType}
             />
           )}
