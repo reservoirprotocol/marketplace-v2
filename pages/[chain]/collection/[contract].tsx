@@ -541,7 +541,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       gap: '$4',
                       pb: '$6',
                       gridTemplateColumns:
-                        'repeat(auto-fill, minmax(200px, 1fr))',
+                        'repeat(auto-fill, minmax(150px, 1fr))',
                       '@md': {
                         gridTemplateColumns:
                           'repeat(auto-fill, minmax(240px, 1fr))',

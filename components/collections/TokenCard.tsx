@@ -1,4 +1,5 @@
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faBolt, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { useMediaQuery } from 'react-responsive'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
@@ -44,12 +45,13 @@ export default ({
   tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
+  const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
-  const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
+  const isNotOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
 
   const is1155 = token?.token?.kind === 'erc1155'
 
@@ -190,7 +192,7 @@ export default ({
         href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Flex
-          css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
+          css={{ p: '$4', cursor: 'pointer', '@lg': { minHeight: 132 } }}
           direction="column"
         >
           <Flex css={{ mb: '$4' }} align="center" justify="between">
@@ -321,16 +323,21 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {isOwner && token?.market?.floorAsk?.price?.amount ? (
+      {isNotOwner && token?.market?.floorAsk?.price?.amount ? (
         <Flex
           className="token-button-container"
           css={{
             width: '100%',
             transition: 'bottom 0.25s ease-in-out',
-            position: 'absolute',
-            bottom: -44,
-            left: 0,
-            right: 0,
+            '@sm': {
+              position: 'relative'
+            },
+            '@lg': {
+              position: 'absolute',
+              bottom: -44,
+              left: 0,
+              right: 0,
+            },
             gap: 1,
           }}
         >
@@ -345,7 +352,16 @@ export default ({
             buttonProps={{
               corners: 'square',
             }}
-            buttonChildren="Buy Now"
+            buttonChildren={
+              isSmallDevice ? (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <FontAwesomeIcon icon={faBolt} style={{ marginRight: '5px' }} />
+                  <span>Buy</span>
+                </div>
+              ) : (
+                "Buy Now"
+              )
+            }
           />
           {addToCartEnabled ? (
             <AddToCart
