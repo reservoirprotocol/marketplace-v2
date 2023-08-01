@@ -57,9 +57,6 @@ export default function (
     ...topSellingSwr,
     collections: collectionsMap,
     data: topSellingData,
-    isValidating:
-      isValidatingCollections ||
-      (!ids?.length && !collections.length) ||
-      topSellingSwr.isValidating,
+    isValidating: isValidatingCollections || topSellingSwr.isValidating,
   }
 }
