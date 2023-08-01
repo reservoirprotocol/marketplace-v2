@@ -165,6 +165,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                     <DropdownMenuItem
                       css={{
                         textAlign: 'left',
+                        py: '$2',
                       }}
                       key={id}
                       onClick={() => {
@@ -278,7 +279,7 @@ export const getStaticProps: GetStaticProps<{
     )
   })
   const responses = await Promise.allSettled(promises)
-  const topSellingCollections: ChainCollections = {}
+  const topSellingCollections: ChainTopSellingCollections = {}
   responses.forEach((response, i) => {
     if (response.status === 'fulfilled') {
       topSellingCollections[supportedChains[i].id] = response.value.data

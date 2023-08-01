@@ -44,61 +44,60 @@ export const CollectionTopSellingTable: FC<Props> = ({
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  if (!loading && topSellingCollections?.length === 0) {
-    return (
-      <Flex
-        direction="column"
-        align="center"
-        css={{ py: '$6', gap: '$4', width: '100%' }}
-      >
-        <Text css={{ color: '$gray11' }}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-        </Text>
-        <Text css={{ color: '$gray11' }}>No collections found</Text>
-      </Flex>
-    )
-  }
-
   return (
     <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
       {!isSmallDevice ? <CollectionTableHeading fillType={fillType} /> : null}
-      <Flex direction="column" css={{ position: 'relative' }}>
-        {topSellingCollections?.map((collection, i) => {
-          switch (fillType) {
-            case 'sale':
-              return (
-                <SaleTableRow
-                  key={collection.id}
-                  topSellingCollection={collection}
-                  collection={collections[collection.id as string]}
-                  rank={i + 1}
-                  isSmallDevice={isSmallDevice}
-                />
-              )
-            case 'mint':
-              return (
-                <MintTableRow
-                  key={collection.id}
-                  topSellingCollection={collection}
-                  collection={collections[collection.id as string]}
-                  rank={i + 1}
-                  isSmallDevice={isSmallDevice}
-                />
-              )
-            case 'any':
-            default:
-              return (
-                <AllSalesTableRow
-                  key={collection.id}
-                  topSellingCollection={collection}
-                  collection={collections[collection.id as string]}
-                  rank={i + 1}
-                  isSmallDevice={isSmallDevice}
-                />
-              )
-          }
-        })}
-      </Flex>
+
+      {!loading && topSellingCollections?.length === 0 ? (
+        <Flex
+          direction="column"
+          align="center"
+          css={{ py: '$6', gap: '$4', width: '100%' }}
+        >
+          <Text css={{ color: '$gray11' }}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+          </Text>
+          <Text css={{ color: '$gray11' }}>No collections found</Text>
+        </Flex>
+      ) : (
+        <Flex direction="column" css={{ position: 'relative' }}>
+          {topSellingCollections?.map((collection, i) => {
+            switch (fillType) {
+              case 'sale':
+                return (
+                  <SaleTableRow
+                    key={collection.id}
+                    topSellingCollection={collection}
+                    collection={collections[collection.id as string]}
+                    rank={i + 1}
+                    isSmallDevice={isSmallDevice}
+                  />
+                )
+              case 'mint':
+                return (
+                  <MintTableRow
+                    key={collection.id}
+                    topSellingCollection={collection}
+                    collection={collections[collection.id as string]}
+                    rank={i + 1}
+                    isSmallDevice={isSmallDevice}
+                  />
+                )
+              case 'any':
+              default:
+                return (
+                  <AllSalesTableRow
+                    key={collection.id}
+                    topSellingCollection={collection}
+                    collection={collections[collection.id as string]}
+                    rank={i + 1}
+                    isSmallDevice={isSmallDevice}
+                  />
+                )
+            }
+          })}
+        </Flex>
+      )}
     </Flex>
   )
 }
@@ -251,7 +250,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
-  const mintPrice = mintData?.price.amount?.decimal || 0
+  const mintPrice = mintData?.price?.amount?.decimal || 0
   const floorAsk = collection?.floorAsk?.price?.amount?.native || 0
 
   const { routePrefix } = useMarketplaceChain()
@@ -552,7 +551,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
-  const mintPrice = mintData?.price.amount?.decimal || 0
+  const mintPrice = mintData?.price?.amount?.decimal || 0
 
   const collectionImage = useMemo(() => {
     return optimizeImage(
