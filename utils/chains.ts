@@ -86,6 +86,34 @@ export const arbitrumNova = {
   },
 } as const satisfies Chain
 
+export const linea = {
+  id: 59144,
+  name: 'Linea',
+  network: 'linea',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.linea.build'],
+    },
+    public: {
+      http: ['https://rpc.linea.build'],
+    },
+    infura: {
+      http: ['https://linea-mainnet.infura.io/v3'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Linea Explorer',
+      url: 'https://explorer.linea.build',
+    },
+    default: {
+      name: 'Linea Explorer',
+      url: 'https://explorer.linea.build',
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -216,5 +244,17 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
+  },
+  {
+    ...linea,
+    lightIconUrl: '/icons/linea-icon-dark.svg',
+    darkIconUrl: '/icons/linea-icon-light.svg',
+    reservoirBaseUrl: 'https://api-linea.reservoir.tools',
+    proxyApi: '/api/reservoir/linea',
+    routePrefix: 'linea',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
   },
 ] as ReservoirChain[]
