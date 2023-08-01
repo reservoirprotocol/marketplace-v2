@@ -250,7 +250,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
-  const mintPrice = mintData?.price.amount?.decimal || 0
+  const mintPrice = mintData?.price?.amount?.decimal || 0
   const floorAsk = collection?.floorAsk?.price?.amount?.native || 0
 
   const { routePrefix } = useMarketplaceChain()
@@ -551,7 +551,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
-  const mintPrice = mintData?.price.amount?.decimal || 0
+  const mintPrice = mintData?.price?.amount?.decimal || 0
 
   const collectionImage = useMemo(() => {
     return optimizeImage(
