@@ -165,6 +165,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                     <DropdownMenuItem
                       css={{
                         textAlign: 'left',
+                        py: '$2',
                       }}
                       key={id}
                       onClick={() => {
