@@ -47,7 +47,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const {
     data: topSellingCollectionsData,
     collections: collectionsData,
-    isLoading,
+    isValidating,
   } = useTopSellingCollections(
     {
       startTime,
@@ -74,11 +74,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     )
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isValidating) {
       setTopSellingCollections(topSellingCollectionsData)
       setCollections(collectionsData)
     }
-  }, [isLoading])
+  }, [isValidating])
 
   return (
     <Layout>
@@ -217,7 +217,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             <CollectionTopSellingTable
               topSellingCollections={topSellingCollections?.collections}
               collections={collections}
-              loading={isLoading}
+              loading={isValidating}
               fillType={fillType}
             />
           )}
