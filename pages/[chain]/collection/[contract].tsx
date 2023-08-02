@@ -15,7 +15,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
-import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { AttributeFilters } from 'components/collections/filters/AttributeFilters'
@@ -28,11 +27,7 @@ import fetcher from 'utils/fetcher'
 import { useRouter } from 'next/router'
 import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
-import {
-  TabsListAlt as TabsList,
-  TabsTriggerAlt as TabsTrigger,
-  TabsContent,
-} from 'components/primitives/Tab'
+import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
@@ -43,8 +38,6 @@ import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
-  faBroom,
-  faCopy,
   faHand,
   faMagnifyingGlass,
   faSeedling,
@@ -52,14 +45,16 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
-import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
-import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
+import ReactMarkdown from 'react-markdown'
+import { styled } from '../../../stitches.config'
+
+const StyledImage = styled('img', {})
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -71,6 +66,19 @@ type ActivityTypes = Exclude<
 >
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
+
+const ItemGrid = styled(Box, {
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '$4',
+  '@md': {
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
+  '@bp1500': {
+    gridTemplateColumns: 'repeat(5, 1fr)',
+  },
+})
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
@@ -98,6 +106,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
     includeTopBid: true,
+    includeSalesCount: true,
     includeMintStages: true,
   }
 
@@ -157,6 +166,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   } = useDynamicTokens(tokenQuery, {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
+
+  let rareTokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
+    limit: 8,
+    collection: id,
+    includeLastSale: true,
+    sortBy: 'rarity',
+    sortDirection: 'asc',
+  }
+
+  const { data: rareTokens } = useDynamicTokens(rareTokenQuery)
 
   const attributesData = useAttributes(id)
 
@@ -227,32 +246,43 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               px: '$4',
               pt: '$4',
               pb: 0,
-              '@sm': {
+              '@md': {
                 px: '$5',
               },
             }}
           >
-            <Flex justify="between" css={{ mb: '$4', gap: '$2' }}>
+            <Flex
+              justify="between"
+              wrap="wrap"
+              css={{ mb: '$4', gap: '$4' }}
+              align="start"
+            >
               <Flex
                 direction="column"
-                css={{ gap: '$4', minWidth: 0, flex: 1 }}
+                css={{
+                  gap: '$4',
+                  minWidth: 0,
+                  //flex: 1,
+                  width: '100%',
+                  '@lg': { width: 'unset' },
+                }}
               >
                 <Flex css={{ gap: '$4', flex: 1 }} align="center">
                   <Img
                     src={collection.image!}
-                    width={64}
-                    height={64}
+                    width={72}
+                    height={72}
                     style={{
-                      width: 64,
-                      height: 64,
+                      width: 72,
+                      height: 72,
                       borderRadius: 8,
                       objectFit: 'cover',
                     }}
                     alt="Collection Page Image"
                   />
-                  <Box css={{ minWidth: 0, width: 220 }}>
-                    <Flex align="center" css={{ gap: '$2', mb: '$1' }}>
-                      <Text style="h5" as="h6" ellipsify>
+                  <Box css={{ minWidth: 0 }}>
+                    <Flex align="center" css={{ gap: '$1', mb: '$1' }}>
+                      <Text style="h4" as="h6" ellipsify>
                         {collection.name}
                       </Text>
                       <OpenSeaVerified
@@ -286,11 +316,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       {truncateAddress(collection.primaryContract)}
                     </Text>
                   </Box>
-                  <TabsList css={{ ml: '$5' }}>
-                    <TabsTrigger value="items">Items</TabsTrigger>
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="activity">Activity</TabsTrigger>
-                  </TabsList>
                 </Flex>
               </Flex>
               <Flex align="center">
@@ -298,16 +323,20 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   <Sweep
                     collectionId={collection.id}
                     buttonChildren={
-                      <Flex css={{ gap: '$3' }} align="center" justify="center">
+                      <Flex css={{ gap: '$2' }} align="center" justify="center">
                         <Text style="h6" as="h6" css={{ color: '$bg' }}>
                           Collect
                         </Text>
-                        <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                        <Text
+                          style="h6"
+                          as="h6"
+                          css={{ color: '$bg', fontWeight: 900 }}
+                        >
                           {`${collection.floorAsk?.price?.amount?.native} ETH`}
                         </Text>
                       </Flex>
                     }
-                    buttonCss={{ order: 2 }}
+                    buttonCss={{ '@lg': { order: 2 } }}
                     mutate={mutate}
                   />
                   {/* Collection Mint */}
@@ -369,14 +398,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 <Text style="body3">Minting Now</Text>
               </Flex>
             ) : null}
-            <Box
-              css={{
-                width: '100%',
-                height: 0,
-                mb: '$4',
-                borderBottom: '1px solid $gray5',
-              }}
-            />
+
+            <TabsList css={{ mt: 0 }}>
+              <TabsTrigger value="items">Items</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
+            </TabsList>
 
             <TabsContent value="items">
               <Flex
@@ -405,7 +432,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     width: '100%',
                   }}
                 >
-                  <Flex justify="between" css={{ marginBottom: '$4' }}>
+                  <Flex justify="between" css={{ marginBottom: '$3' }}>
                     {attributes && attributes.length > 0 && !isSmallDevice && (
                       <FilterButton
                         open={attributeFiltersOpen}
@@ -439,7 +466,35 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       />
                     </Flex>
                   </Flex>
+
                   {!isSmallDevice && <SelectedAttributes />}
+                  <Flex css={{ gap: '$4', mb: '$3' }}>
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Floor
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {collection.floorAsk?.price?.amount?.native} ETH
+                      </Text>
+                    </Flex>
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Top Bid
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {collection.topBid?.price?.amount?.native} ETH
+                      </Text>
+                    </Flex>
+
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Count
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {collection.tokenCount?.toLocaleString()}
+                      </Text>
+                    </Flex>
+                  </Flex>
                   <Grid
                     css={{
                       gap: '$4',
@@ -513,6 +568,187 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       <Text css={{ color: '$gray11' }}>No items found</Text>
                     </Flex>
                   )}
+                </Box>
+              </Flex>
+            </TabsContent>
+            <TabsContent value="details">
+              <Flex wrap="wrap">
+                <Box css={{ width: '100%', '@lg': { width: 440 }, pb: '$5' }}>
+                  <Box
+                    css={{
+                      borderRadius: 8,
+                      overflow: 'hidden',
+                      background: '$neutralBgSubtle',
+                      $$shadowColor: '$colors$panelShadow',
+                      boxShadow: '0 8px 12px 0px $$shadowColor',
+                      position: 'relative',
+                      '&:hover > a > div > img': {
+                        transform: 'scale(1.1)',
+                      },
+                      '@sm': {
+                        '&:hover .token-button-container': {
+                          bottom: 0,
+                        },
+                      },
+                    }}
+                  >
+                    <StyledImage
+                      src={collection.banner?.replace('w=500', 'w=1500')}
+                      css={{
+                        borderRadius: 8,
+                        borderBottomLeftRadius: 0,
+                        borderBottomRightRadius: 0,
+                        width: '100%',
+                        height: 300,
+                        '@md': {
+                          height: 350,
+                        },
+                        '@lg': {
+                          height: 200,
+                        },
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <Box css={{ p: '$4' }}>
+                      <Text
+                        style="h6"
+                        as="h6"
+                        css={{ mb: '$1', fontWeight: 700 }}
+                      >
+                        About {collection.name}
+                      </Text>
+                      <Text
+                        style="body1"
+                        as="p"
+                        css={{
+                          lineHeight: 1.5,
+                          display: '-webkit-box',
+                          WebkitLineClamp: 4,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        <ReactMarkdown>{collection.description}</ReactMarkdown>
+                      </Text>
+                      <Box css={{ mt: '$4' }}>
+                        <Flex justify="start">
+                          <CollectionActions collection={collection} />
+                        </Flex>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box css={{ mt: '$5' }}>
+                    <Text
+                      css={{ mb: '$2', fontWeight: 700 }}
+                      as="h6"
+                      style="h6"
+                    >
+                      Collection Details
+                    </Text>
+                    {[
+                      {
+                        label: 'Contract',
+                        value: truncateAddress(collection?.primaryContract),
+                      },
+                      { label: 'Token Standard', value: 'ERC-721' },
+                      { label: 'Chain', value: chain },
+                      {
+                        label: 'Creator Earning',
+                        value: creatorRoyalties + '%',
+                      },
+                      { label: 'Total Supply', value: collection.tokenCount },
+                    ].map((data) => (
+                      <Flex
+                        css={{
+                          gap: '$4',
+                          justifyContent: 'space-between',
+                          mb: '$2',
+                        }}
+                      >
+                        <Text style="body1" color="subtle">
+                          {data.label}
+                        </Text>
+                        <Text style="body1" css={{ fontWeight: 600 }}>
+                          {data.value}
+                        </Text>
+                      </Flex>
+                    ))}
+                  </Box>
+                </Box>
+                <Box
+                  css={{
+                    flex: 1,
+                    '@lg': { pl: '$5', ml: '$2', pt: '$2' },
+                  }}
+                >
+                  <Text style="h7" as="h5" css={{ mb: '$3' }}>
+                    Collection Stats
+                  </Text>
+                  <ItemGrid>
+                    {[
+                      {
+                        name: 'Floor',
+                        value:
+                          collection.floorAsk?.price?.amount?.native + ' ETH',
+                      },
+                      {
+                        name: 'Top Bid',
+                        value:
+                          collection.topBid?.price?.amount?.native + ' WETH',
+                      },
+                      {
+                        name: '24h Volume',
+                        value: `${collection.volume?.['1day']?.toFixed(2)} ETH`,
+                      },
+
+                      {
+                        name: '24h Sales',
+                        value: `${collection.salesCount?.['1day'] || 0}`,
+                      },
+                    ].map((stat) => (
+                      <Box
+                        css={{
+                          p: '$4',
+                          borderRadius: 8,
+                          overflow: 'hidden',
+                          background: '$neutralBgSubtle',
+                          $$shadowColor: '$colors$panelShadow',
+                          boxShadow: '0 0px 12px 0px $$shadowColor',
+                          position: 'relative',
+                        }}
+                      >
+                        <Text style="subtitle1" as="p">
+                          {stat.name}
+                        </Text>
+                        <Text style="h5" css={{ fontWeight: 800 }}>
+                          {stat.value}
+                        </Text>
+                      </Box>
+                    ))}
+                  </ItemGrid>
+
+                  <Text style="h7" as="h5" css={{ mb: '$3', mt: '$5' }}>
+                    Rare Tokens
+                  </Text>
+                  {rareTokens.length > 0 ? (
+                    <ItemGrid>
+                      {rareTokens.slice(0, 4).map((token) => (
+                        <TokenCard
+                          showAsk={false}
+                          token={token}
+                          showSource={false}
+                          rarityEnabled={false}
+                        />
+                      ))}
+                    </ItemGrid>
+                  ) : (
+                    <Text>No rare tokens</Text>
+                  )}
+
+                  <Text style="h7" as="h5" css={{ mb: '$3', mt: '$5' }}>
+                    Top Sources
+                  </Text>
                 </Box>
               </Flex>
             </TabsContent>
@@ -594,6 +830,7 @@ export const getStaticProps: GetStaticProps<{
     {
       id,
       includeTopBid: true,
+      includeSalesCount: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 

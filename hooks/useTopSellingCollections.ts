@@ -56,10 +56,14 @@ export default function (
       return map
     }, {} as Record<string, (typeof collections)[0]>)
   }, [collections])
+
   return {
     ...topSellingSwr,
     collections: collectionsMap,
     data: topSellingData,
-    isValidating: isValidatingCollections || topSellingSwr.isValidating,
+    isValidating:
+      isValidatingCollections ||
+      (!ids?.length && !collections.length) ||
+      topSellingSwr.isValidating,
   }
 }

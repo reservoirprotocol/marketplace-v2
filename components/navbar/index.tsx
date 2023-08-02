@@ -96,7 +96,14 @@ const Navbar = () => {
       align="center"
       justify="between"
     >
-      <Box css={{ flex: 1 }}>
+      <Box
+        css={{
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+      >
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
             <Box css={{ cursor: 'pointer' }}>
@@ -108,31 +115,54 @@ const Navbar = () => {
               />
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
-            <GlobalSearch
-              ref={searchRef}
-              placeholder="Search collections and addresses"
-              containerCss={{ width: '100%' }}
-              key={router.asPath}
-            />
-          </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
+          <Flex
+            align="center"
+            css={{
+              gap: '$5',
+              ml: '$5',
+            }}
+          >
             <Link href={`/${routePrefix}/collection-rankings`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
+                Explore
               </NavItem>
             </Link>
-            <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+            <Link href={`/${routePrefix}/collection-rankings`}>
+              <NavItem active={router.pathname.includes('collection-rankings')}>
+                NFTs
+              </NavItem>
             </Link>
+            {false && (
+              <Link href="/swap">
+                <NavItem active={router.pathname == '/swap'}>Swap</NavItem>
+              </Link>
+            )}
             <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
+              <NavItem active={false}>Developers</NavItem>
             </Link>
           </Flex>
         </Flex>
       </Box>
+      <Box css={{ flex: 1, px: '$5' }}>
+        <GlobalSearch
+          ref={searchRef}
+          placeholder="Search collections and addresses"
+          containerCss={{ width: '100%' }}
+          key={router.asPath}
+        />
+      </Box>
 
-      <Flex css={{ gap: '$3' }} justify="end" align="center">
+      <Flex
+        css={{
+          gap: '$3',
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+        justify="end"
+        align="center"
+      >
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (

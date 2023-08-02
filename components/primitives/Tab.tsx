@@ -9,11 +9,6 @@ const TabsList = styled(TabsPrimitive.List, {
   mb: '$4',
 })
 
-const TabsListAlt = styled(TabsPrimitive.List, {
-  display: 'flex',
-  gap: '$5',
-})
-
 const TabsTrigger = styled(TabsPrimitive.Trigger, {
   fontWeight: '700',
   pb: '$3',
@@ -23,15 +18,6 @@ const TabsTrigger = styled(TabsPrimitive.Trigger, {
   },
 })
 
-const TabsTriggerAlt = styled(TabsPrimitive.Trigger, {
-  fontWeight: '700',
-  pb: '$2',
-  '&[data-state="active"]': {
-    boxShadow:
-      'inset 0 -1px 0 0 var(--colors-violet9), 0 1px 0 0 var(--colors-violet9)',
-  },
-})
-
 const TabsContent = styled(TabsPrimitive.Content, {})
 
-export { TabsList, TabsTrigger, TabsContent, TabsListAlt, TabsTriggerAlt }
+export { TabsList, TabsTrigger, TabsContent }
