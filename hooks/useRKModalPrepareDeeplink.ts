@@ -27,12 +27,12 @@ export default (chainId: number, enabled: boolean = false) => {
       return
     }
 
-    if (status === 'connected') {
+    if (status === 'connected' && signer) {
       if (isInTheWrongNetwork) {
         switchNetworkAsync?.(chainId)
       }
     } else {
       openConnectModal?.()
     }
-  }, [status, enabled])
+  }, [status, enabled, signer, isInTheWrongNetwork])
 }
