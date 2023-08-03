@@ -3,15 +3,17 @@ import React, {
   ComponentPropsWithoutRef,
   FC,
   ReactNode,
+  useContext,
 } from 'react'
 import { SWRResponse } from 'swr'
-import { useAccount, useNetwork, useWalletClient } from 'wagmi'
+import { useNetwork, useWalletClient } from 'wagmi'
 import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain, useRKModalPrepareDeeplink } from 'hooks'
+import { ReferralContext } from '../../context/ReferralContextProvider'
 
 type Props = {
   tokenId?: string
@@ -41,6 +43,7 @@ const BuyNow: FC<Props> = ({
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
+  const { feesOnTop } = useContext(ReferralContext)
   useRKModalPrepareDeeplink(marketplaceChain.id, openState ? true : false)
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
@@ -85,6 +88,7 @@ const BuyNow: FC<Props> = ({
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
       // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
       // feesOnTopBps={["0xabc:50"]}
+      feesOnTopUsd={feesOnTop}
       onClose={(data, stepData, currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
       }}

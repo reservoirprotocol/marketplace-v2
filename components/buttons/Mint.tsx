@@ -3,6 +3,7 @@ import React, {
   ComponentPropsWithoutRef,
   FC,
   ReactNode,
+  useContext,
 } from 'react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
@@ -11,6 +12,7 @@ import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
 import { SWRResponse } from 'swr'
+import { ReferralContext } from 'context/ReferralContextProvider'
 
 type Props = {
   collectionId?: string
@@ -38,6 +40,7 @@ const Mint: FC<Props> = ({
   const { switchNetworkAsync } = useSwitchNetwork({
     chainId: marketplaceChain.id,
   })
+  const { feesOnTop } = useContext(ReferralContext)
   useRKModalPrepareDeeplink(marketplaceChain.id, openState ? true : false)
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
@@ -78,6 +81,7 @@ const Mint: FC<Props> = ({
       tokenId={tokenId}
       mode={'mint'}
       openState={openState}
+      feesOnTopUsd={feesOnTop}
       onClose={(data, currentStep) => {
         if (mutate && currentStep == CollectStep.Complete) mutate()
       }}
