@@ -93,6 +93,7 @@ export const TimeFilterToggle: FC<Props> = ({
               onClick={() => {
                 setMinutesFilter(+time.value)
               }}
+              css={{ py: '$2' }}
             >
               {time.display}
             </DropdownMenuItem>

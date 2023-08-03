@@ -83,6 +83,7 @@ export const FillTypeToggle: FC<Props> = ({ fillType, setFillType }) => {
               onClick={() => {
                 setFillType(fillType.value as Props['fillType'])
               }}
+              css={{ py: '$2' }}
             >
               {fillType.display}
             </DropdownMenuItem>
