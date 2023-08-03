@@ -59,7 +59,9 @@ const AnalyticsProvider: FC<Props> = ({ children }) => {
       datadogRum.setUser({
         id: address,
       })
-      posthog.identify(address)
+      if (posthogClientToken) {
+        posthog.identify(address)
+      }
     }
   }, [accountData])
 
