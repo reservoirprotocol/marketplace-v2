@@ -313,7 +313,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       ) : null}
                     </Flex>
                     <Text as="p" style="body2" color="subtle" css={{ mt: -4 }}>
-                      {truncateAddress(collection.primaryContract)}
+                      {truncateAddress(collection?.primaryContract || '')}
                     </Text>
                   </Box>
                 </Flex>
@@ -629,7 +629,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           textOverflow: 'ellipsis',
                         }}
                       >
-                        <ReactMarkdown>{collection.description}</ReactMarkdown>
+                        <ReactMarkdown
+                          children={collection?.description || ''}
+                        />
                       </Text>
                       <Box css={{ mt: '$4' }}>
                         <Flex justify="start">
@@ -649,7 +651,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     {[
                       {
                         label: 'Contract',
-                        value: truncateAddress(collection?.primaryContract),
+                        value: truncateAddress(
+                          collection?.primaryContract || ''
+                        ),
                       },
                       { label: 'Token Standard', value: 'ERC-721' },
                       { label: 'Chain', value: chain },

@@ -174,7 +174,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       )}
       {collection?.discordUrl && (
         <a
-          href={collection.discordUrl}
+          href={collection?.discordUrl}
           target="_blank"
           rel="noopener noreferrer"
         >
