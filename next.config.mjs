@@ -1,7 +1,28 @@
 import { withSentryConfig } from '@sentry/nextjs'
 import * as tsImport from 'ts-import'
+import path from 'path'
 
-const loadTS = (filePath) => tsImport.load(filePath)
+const importFallback = async (relativePath) => {
+  const cwd = process.cwd()
+  const cachePath = path.join(cwd, `.cache`, `ts-import`, cwd.replace('C:', ''))
+  let url = ''
+  let file = relativePath.replace('.ts', '.mjs')
+  if (process.platform === `win32`) {
+    url = `${cachePath}/${file}`
+  } else {
+    url = `${cachePath}/${file}`
+  }
+  return import(url)
+}
+
+const loadTS = (filePath) => {
+  try {
+    throw 'boom'
+    return tsImport.load(filePath)
+  } catch (e) {
+    return importFallback(filePath)
+  }
+}
 
 const { DefaultChain: defaultChain } = await loadTS('./utils/chains.ts')
 
