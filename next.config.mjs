@@ -17,7 +17,6 @@ const importFallback = async (relativePath) => {
 
 const loadTS = (filePath) => {
   try {
-    throw 'boom'
     return tsImport.load(filePath)
   } catch (e) {
     return importFallback(filePath)
