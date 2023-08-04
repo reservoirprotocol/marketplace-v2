@@ -41,7 +41,6 @@ const Mint: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
   const { feesOnTop } = useContext(ReferralContext)
-  console.log(openState, marketplaceChain.id)
   useRKModalPrepareDeeplink(marketplaceChain.id, openState ? true : false)
   const isInTheWrongNetwork = Boolean(
     signer && activeChain?.id !== marketplaceChain.id
