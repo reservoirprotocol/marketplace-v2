@@ -21,6 +21,22 @@ const nextConfig = {
   experimental: {
     transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:chain/asset/:assetId/buy',
+        destination: '/:chain/asset/:assetId',
+      },
+      {
+        source: '/:chain/collection/:contract/sweep',
+        destination: '/:chain/collection/:contract',
+      },
+      {
+        source: '/:chain/collection/:contract/mint',
+        destination: '/:chain/collection/:contract',
+      },
+    ]
+  },
   async redirects() {
     return [
       {
