@@ -336,6 +336,19 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -357,7 +370,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fourTemplateColumns,
+          gridTemplateColumns: fiveTemplateColumns,
         }}
       >
         <CollectionCell
@@ -365,6 +378,16 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           topSellingCollection={topSellingCollection}
           rank={rank}
         />
+        <TableCell>
+          <Text style="subtitle2">
+            <FormatCryptoCurrency
+              // @ts-ignore
+              amount={topSellingCollection.volume}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
         <TableCell>
           {mintData && mintPrice < floorAsk ? (
             mintPrice === 0 ? (
@@ -487,6 +510,19 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -508,7 +544,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fourTemplateColumns,
+          gridTemplateColumns: fiveTemplateColumns,
         }}
       >
         <CollectionCell
@@ -516,6 +552,16 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
           topSellingCollection={topSellingCollection}
           rank={rank}
         />
+        <TableCell>
+          <Text style="subtitle2">
+            <FormatCryptoCurrency
+              // @ts-ignore
+              amount={topSellingCollection.volume}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
         <TableCell>
           <FormatCryptoCurrency
             amount={collection?.floorAsk?.price?.amount?.decimal}
@@ -633,6 +679,19 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -654,7 +713,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
     <TableRow
       key={topSellingCollection.id}
       css={{
-        gridTemplateColumns: fourTemplateColumns,
+        gridTemplateColumns: fiveTemplateColumns,
       }}
     >
       <CollectionCell
@@ -662,6 +721,16 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
         topSellingCollection={topSellingCollection}
         rank={rank}
       />
+      <TableCell>
+        <Text style="subtitle2">
+          <FormatCryptoCurrency
+            // @ts-ignore
+            amount={topSellingCollection.volume}
+            textStyle="subtitle2"
+            logoHeight={14}
+          />
+        </Text>
+      </TableCell>
       <TableCell>
         {mintData ? (
           mintPrice === 0 ? (
@@ -677,6 +746,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
           '-'
         )}
       </TableCell>
+
       <TableCell>
         <Text style="subtitle2">
           {formatNumber(topSellingCollection.count)}
@@ -693,12 +763,25 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
 
 const anyHeadings = [
   'Collection',
+  'Volume',
   'Floor Price (Including Mints)',
   'Sales',
   'Recent Activity',
 ]
-const mintHeadings = ['Collection', 'Mint Price', 'Sales', 'Recent Activity']
-const saleHeadings = ['Collection', 'Floor Price', 'Sales', 'Recent Activity']
+const mintHeadings = [
+  'Collection',
+  'Volume',
+  'Mint Price',
+  'Sales',
+  'Recent Activity',
+]
+const saleHeadings = [
+  'Collection',
+  'Volume',
+  'Floor Price',
+  'Sales',
+  'Recent Activity',
+]
 
 type CollectionTableHeadingProps = {
   fillType: FillType
@@ -713,16 +796,16 @@ const CollectionTableHeading: FC<CollectionTableHeadingProps> = ({
   switch (fillType) {
     case 'mint':
       headings = mintHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
     case 'sale':
       headings = saleHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
     case 'any':
     default:
       headings = anyHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
   }
 
