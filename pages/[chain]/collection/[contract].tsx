@@ -83,6 +83,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   >()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+  const [path, _] = router.asPath.split('?')
+  const routerPath = path.split('/')
+  const isSweepRoute = routerPath[routerPath.length - 1] === 'sweep'
+  const isMintRoute = routerPath[routerPath.length - 1] === 'mint'
+  const sweepOpenState = useState(true)
+  const mintOpenState = useState(true)
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 
@@ -483,6 +489,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           },
                         }}
                         mutate={mutate}
+                        openState={isSweepRoute ? sweepOpenState : undefined}
                       />
                       {/* Collection Mint */}
                       {mintData ? (
@@ -509,6 +516,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             },
                           }}
                           mutate={mutate}
+                          openState={isMintRoute ? mintOpenState : undefined}
                         />
                       ) : null}
                       <CollectionOffer
