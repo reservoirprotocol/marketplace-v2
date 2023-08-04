@@ -62,7 +62,7 @@
     "@types/react": "^18.0",
     "@types/react-dom": "^18.0",
     "next-themes": "^0.2.0",
-    "ts-import": "^5.0.0-beta.0",
+    "ts-import": "^4.0.0-beta.10",
     "typescript": "^4.9.4"
   }
 }
