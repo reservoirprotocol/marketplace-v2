@@ -7,13 +7,26 @@ import { zeroAddress } from 'viem'
 
 // A proxy API endpoint to redirect all requests to `/api/reservoir/*` to
 // MAINNET: https://api.reservoir.tools/{endpoint}/{query-string}
-// RINKEBY: https://api-rinkeby.reservoir.tools/{endpoint}/{query-string}
 // and attach the `x-api-key` header to the request. This way the
 // Reservoir API key is not exposed to the client.
+
+const allowedDomains = process.env.ALLOWED_API_DOMAINS
 
 // https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes
 const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query, body, method, headers: reqHeaders } = req
+
+  if (allowedDomains && allowedDomains.length > 0) {
+    let origin = req.headers.origin || req.headers.referer || ''
+    try {
+      origin = new URL(origin).origin
+    } catch (e) {}
+    if (!origin.length || !allowedDomains.includes(origin)) {
+      res.status(403).json({ error: 'Access forbidden' })
+      return
+    }
+  }
+
   const { slug } = query
   // Isolate the query object
   delete query.slug
