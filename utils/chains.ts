@@ -128,6 +128,7 @@ export type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
+  wssUrl?: string
 }
 
 export const DefaultChain: ReservoirChain = {
@@ -156,6 +157,7 @@ export const DefaultChain: ReservoirChain = {
   coingeckoId: 'ethereum',
   collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  wssUrl: 'wss://ws.reservoir.tools',
 }
 
 export default [
@@ -171,6 +173,7 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    wssUrl: 'wss://ws-polygon.reservoir.tools',
   },
   {
     ...arbitrum,
@@ -184,6 +187,7 @@ export default [
     coingeckoId: 'arbitrum-iou',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+    wssUrl: 'wss://ws-arbitrum.reservoir.tools',
   },
   {
     ...arbitrumNova,
@@ -209,6 +213,7 @@ export default [
     coingeckoId: 'optimism',
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
+    wssUrl: 'wss://ws-optimism.reservoir.tools',
   },
   {
     ...zora,
@@ -232,6 +237,7 @@ export default [
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+    wssUrl: 'wss://ws-bsc.reservoir.tools',
   },
   {
     ...base,

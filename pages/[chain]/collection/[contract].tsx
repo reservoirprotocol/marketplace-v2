@@ -56,6 +56,7 @@ import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
+import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -85,6 +86,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const collectionChain =
+    supportedChains.find(
+      (chain) => router.query?.chain === chain.routePrefix
+    ) || DefaultChain
 
   const scrollToTop = () => {
     let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
@@ -152,6 +157,107 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     hasNextPage,
   } = useDynamicTokens(tokenQuery, {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
+  })
+
+  useTokenUpdateStream(id as string, collectionChain.id, {
+    onMessage: (event) => {
+      if (!event.data || typeof event.data !== 'string') {
+        return
+      }
+      let reservoirEvent: ReservoirWebsocketIncomingEvent | undefined
+      try {
+        reservoirEvent = JSON.parse(event.data)
+      } catch (e) {
+        return
+      }
+      if (!reservoirEvent) {
+        return
+      }
+
+      let hasChange = false
+
+      if (
+        reservoirEvent.changed.includes('market.floorAsk.id') ||
+        reservoirEvent.changed.includes('market.floorAsk.price.gross.amount')
+      ) {
+        const newTokens = [...tokens]
+        const price = NORMALIZE_ROYALTIES
+          ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount
+              ?.decimal
+          : reservoirEvent.data?.market?.floorAsk?.price?.amount?.decimal
+        const tokenIndex = tokens.findIndex(
+          (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
+        )
+        const token = tokenIndex > -1 ? tokens[tokenIndex] : null
+        if (token) {
+          //if the token has dynamic pricing we need to abort, this isn't supported in the websocket
+          if (token?.market?.floorAsk?.dynamicPricing) {
+            return
+          }
+          newTokens.splice(tokenIndex, 1)
+        }
+
+        if (!price) {
+          if (token) {
+            const endOfListingsIndex = tokens.findIndex(
+              (token) => !token.market?.floorAsk?.price?.amount?.decimal
+            )
+            const newTokenIndex =
+              endOfListingsIndex > -1 ? endOfListingsIndex : 0
+            newTokens.splice(newTokenIndex, 0, {
+              ...token,
+              market: {
+                floorAsk: {
+                  id: undefined,
+                  price: undefined,
+                  maker: undefined,
+                  validFrom: undefined,
+                  validUntil: undefined,
+                  source: {},
+                },
+              },
+            })
+            hasChange = true
+          }
+        } else {
+          let updatedToken = token ? token : reservoirEvent.data
+          updatedToken = {
+            ...updatedToken,
+            market: {
+              floorAsk: NORMALIZE_ROYALTIES
+                ? reservoirEvent.data.market.floorAskNormalized
+                : reservoirEvent.data.market.floorAsk,
+            },
+          }
+          if (tokens) {
+            //take into account sorting
+            let updatedTokenPosition = tokens.findIndex((token) =>
+              token.market?.floorAsk?.price?.amount?.decimal
+                ? token.market?.floorAsk?.price?.amount?.decimal >=
+                  updatedToken.market.floorAsk.price.amount.decimal
+                : true
+            )
+            if (updatedTokenPosition === -1) {
+              return
+            }
+
+            newTokens.splice(updatedTokenPosition, 0, updatedToken)
+            hasChange = true
+          }
+        }
+        if ((hasChange = true)) {
+          console.log(
+            reservoirEvent.data.token.tokenId,
+            reservoirEvent.data.market.floorAsk
+          )
+          mutate([
+            {
+              tokens: newTokens,
+            },
+          ])
+        }
+      }
+    },
   })
 
   const attributesData = useAttributes(id)
@@ -677,7 +783,7 @@ export const getStaticProps: GetStaticProps<{
   id: string | undefined
 }> = async ({ params }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey, routePrefix } =
+  const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
