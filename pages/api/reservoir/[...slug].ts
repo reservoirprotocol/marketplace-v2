@@ -11,11 +11,12 @@ import { zeroAddress } from 'viem'
 // Reservoir API key is not exposed to the client.
 
 const allowedDomains = process.env.ALLOWED_API_DOMAINS
+  ? process.env.ALLOWED_API_DOMAINS.split(',')
+  : null
 
 // https://nextjs.org/docs/api-routes/dynamic-api-routes#catch-all-api-routes
 const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
   const { query, body, method, headers: reqHeaders } = req
-
   if (allowedDomains && allowedDomains.length > 0) {
     let origin = req.headers.origin || req.headers.referer || ''
     try {
