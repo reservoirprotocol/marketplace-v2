@@ -168,88 +168,82 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
       let hasChange = false
 
-      if (
-        reservoirEvent.changed.includes('market.floorAsk.id') ||
-        reservoirEvent.changed.includes('market.floorAsk.price.gross.amount')
-      ) {
-        const newTokens = [...tokens]
-        const price = NORMALIZE_ROYALTIES
-          ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount
-              ?.decimal
-          : reservoirEvent.data?.market?.floorAsk?.price?.amount?.decimal
-        const tokenIndex = tokens.findIndex(
-          (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
-        )
-        const token = tokenIndex > -1 ? tokens[tokenIndex] : null
+      const newTokens = [...tokens]
+      const price = NORMALIZE_ROYALTIES
+        ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount
+            ?.decimal
+        : reservoirEvent.data?.market?.floorAsk?.price?.amount?.decimal
+      const tokenIndex = tokens.findIndex(
+        (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
+      )
+      const token = tokenIndex > -1 ? tokens[tokenIndex] : null
+      if (token) {
+        //if the token has dynamic pricing we need to abort, this isn't supported in the websocket
+        if (token?.market?.floorAsk?.dynamicPricing) {
+          return
+        }
+        newTokens.splice(tokenIndex, 1)
+      }
+
+      if (!price) {
         if (token) {
-          //if the token has dynamic pricing we need to abort, this isn't supported in the websocket
-          if (token?.market?.floorAsk?.dynamicPricing) {
+          const endOfListingsIndex = tokens.findIndex(
+            (token) => !token.market?.floorAsk?.price?.amount?.decimal
+          )
+          const newTokenIndex = endOfListingsIndex > -1 ? endOfListingsIndex : 0
+          newTokens.splice(newTokenIndex, 0, {
+            ...token,
+            market: {
+              floorAsk: {
+                id: undefined,
+                price: undefined,
+                maker: undefined,
+                validFrom: undefined,
+                validUntil: undefined,
+                source: {},
+              },
+            },
+          })
+          hasChange = true
+        }
+      } else {
+        let updatedToken = token ? token : reservoirEvent.data
+        updatedToken = {
+          ...updatedToken,
+          market: {
+            floorAsk: NORMALIZE_ROYALTIES
+              ? reservoirEvent.data.market.floorAskNormalized
+              : reservoirEvent.data.market.floorAsk,
+          },
+        }
+        if (tokens) {
+          //take into account sorting
+          let updatedTokenPosition = tokens.findIndex((token) => {
+            let currentTokenPrice =
+              token.market?.floorAsk?.price?.amount?.decimal
+            if (currentTokenPrice) {
+              return sortDirection === 'asc'
+                ? currentTokenPrice >=
+                    updatedToken.market.floorAsk.price.amount.decimal
+                : currentTokenPrice <=
+                    updatedToken.market.floorAsk.price.amount.decimal
+            }
+            return true
+          })
+          if (updatedTokenPosition === -1) {
             return
           }
-          newTokens.splice(tokenIndex, 1)
-        }
 
-        if (!price) {
-          if (token) {
-            const endOfListingsIndex = tokens.findIndex(
-              (token) => !token.market?.floorAsk?.price?.amount?.decimal
-            )
-            const newTokenIndex =
-              endOfListingsIndex > -1 ? endOfListingsIndex : 0
-            newTokens.splice(newTokenIndex, 0, {
-              ...token,
-              market: {
-                floorAsk: {
-                  id: undefined,
-                  price: undefined,
-                  maker: undefined,
-                  validFrom: undefined,
-                  validUntil: undefined,
-                  source: {},
-                },
-              },
-            })
-            hasChange = true
-          }
-        } else {
-          let updatedToken = token ? token : reservoirEvent.data
-          updatedToken = {
-            ...updatedToken,
-            market: {
-              floorAsk: NORMALIZE_ROYALTIES
-                ? reservoirEvent.data.market.floorAskNormalized
-                : reservoirEvent.data.market.floorAsk,
-            },
-          }
-          if (tokens) {
-            //take into account sorting
-            let updatedTokenPosition = tokens.findIndex((token) => {
-              let currentTokenPrice =
-                token.market?.floorAsk?.price?.amount?.decimal
-              if (currentTokenPrice) {
-                return sortDirection === 'asc'
-                  ? currentTokenPrice >=
-                      updatedToken.market.floorAsk.price.amount.decimal
-                  : currentTokenPrice <=
-                      updatedToken.market.floorAsk.price.amount.decimal
-              }
-              return true
-            })
-            if (updatedTokenPosition === -1) {
-              return
-            }
-
-            newTokens.splice(updatedTokenPosition, 0, updatedToken)
-            hasChange = true
-          }
+          newTokens.splice(updatedTokenPosition, 0, updatedToken)
+          hasChange = true
         }
-        if (hasChange) {
-          mutate([
-            {
-              tokens: newTokens,
-            },
-          ])
-        }
+      }
+      if (hasChange) {
+        mutate([
+          {
+            tokens: newTokens,
+          },
+        ])
       }
     },
   })
