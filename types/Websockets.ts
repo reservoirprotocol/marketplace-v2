@@ -27,6 +27,7 @@ type ReservoirWebsocketMessage = {
   type: ReservoirWebsocketEventType
   event: ReservoirWebsocketEvent
   filters?: Partial<Record<ReservoirWebsocketEventFilters, string>>
+  changed?: string
 }
 
 //Event Payload

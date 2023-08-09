@@ -23,6 +23,7 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
       filters: {
         contract,
       },
+      changed: 'market.floorAskNormalized.id',
     }
     const unsubscribeMessage: ReservoirWebsocketMessage = {
       type: 'unsubscribe',
@@ -30,12 +31,53 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
       filters: {
         contract,
       },
+      changed: 'market.floorAskNormalized.id',
     }
     const sendSubscribeMessage = () => {
       websocket.sendJsonMessage(subscribeMessage)
     }
     const sendUnsubscribeMessage = () => {
-      websocket.sendJsonMessage(unsubscribeMessage)
+      websocket.sendJsonMessage(subscribeMessage)
+    }
+    websocketContext?.subscribe(
+      chain.id,
+      subscribeMessage,
+      sendSubscribeMessage,
+      sendUnsubscribeMessage
+    )
+
+    return () => {
+      websocketContext?.subscribe(
+        chain.id,
+        unsubscribeMessage,
+        sendSubscribeMessage,
+        sendUnsubscribeMessage
+      )
+    }
+  }, [contract])
+
+  useEffect(() => {
+    const subscribeMessage: ReservoirWebsocketMessage = {
+      type: 'subscribe',
+      event: 'token.updated',
+      filters: {
+        contract,
+      },
+      changed: 'market.floorAskNormalized.price.gross.amount',
+    }
+    const unsubscribeMessage: ReservoirWebsocketMessage = {
+      type: 'unsubscribe',
+      event: 'token.updated',
+      filters: {
+        contract,
+      },
+      changed: 'market.floorAskNormalized.price.gross.amount',
+    }
+    const sendSubscribeMessage = () => {
+      websocket.sendJsonMessage(subscribeMessage)
+    }
+    const sendUnsubscribeMessage = () => {
+      websocket.sendJsonMessage(subscribeMessage)
     }
     websocketContext?.subscribe(
       chain.id,
