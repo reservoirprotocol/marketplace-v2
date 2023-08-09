@@ -1,7 +1,8 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
-import wrappedContracts from '../utils/wrappedContracts'
+import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
 import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+import usdcContracts from './usdcContracts'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -134,6 +135,20 @@ export type ReservoirChain = Chain & {
   listingCurrencies?: Currency[]
 }
 
+const nativeCurrencyBase = {
+  contract: zeroAddress,
+  symbol: 'ETH',
+  decimals: 18,
+  coinGeckoId: 'ethereum',
+}
+
+const usdcCurrencyBase = {
+  contract: '',
+  symbol: 'USDC',
+  decimals: 6,
+  coinGeckoId: 'usd-coin',
+}
+
 export const DefaultChain: ReservoirChain = {
   ...mainnet,
   // Any url to display the logo of the chain in light mode
@@ -161,22 +176,10 @@ export const DefaultChain: ReservoirChain = {
   collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
   listingCurrencies: [
+    nativeCurrencyBase,
     {
-      contract: zeroAddress,
-      symbol: 'ETH',
-      coinGeckoId: 'ethereum',
-    },
-    {
-      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      symbol: 'USDC',
-      decimals: 6,
-      coinGeckoId: 'usd-coin',
-    },
-    {
-      contract: wrappedContracts[mainnet.id],
-      symbol: 'WETH',
-      decimals: 18,
-      coinGeckoId: 'weth',
+      ...usdcCurrencyBase,
+      contract: usdcContracts[mainnet.id],
     },
   ],
 }
@@ -194,6 +197,22 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    listingCurrencies: [
+      {
+        ...nativeCurrencyBase,
+        symbol: 'MATIC',
+      },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[polygon.id],
+      },
+      {
+        contract: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+    ],
   },
   {
     ...arbitrum,
@@ -207,6 +226,13 @@ export default [
     coingeckoId: 'arbitrum-iou',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[arbitrum.id],
+      },
+    ],
   },
   {
     ...arbitrumNova,
@@ -232,6 +258,13 @@ export default [
     coingeckoId: 'optimism',
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[optimism.id],
+      },
+    ],
   },
   {
     ...zora,
@@ -255,6 +288,13 @@ export default [
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[bsc.id],
+      },
+    ],
   },
   {
     ...base,

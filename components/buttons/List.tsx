@@ -14,13 +14,11 @@ import {
   useAccount,
   useNetwork,
   useWalletClient,
-  mainnet,
   useSwitchNetwork,
 } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { zeroAddress } from 'viem'
 
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal

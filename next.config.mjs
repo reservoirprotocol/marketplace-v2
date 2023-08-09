@@ -1,16 +1,11 @@
+import { DefaultChain } from './.cache/chains.mjs'
 import { withSentryConfig } from '@sentry/nextjs'
-import * as tsImport from 'ts-import'
-
-const loadTS = (filePath) => tsImport.load(filePath)
-await loadTS('./utils/wrappedContracts.ts')
-const { DefaultChain: defaultChain } = await loadTS('./utils/chains.ts')
 
 const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
   project: 'javascript-nextjs',
   silent: true,
 }
-
 /**
  * @type {import('next').NextConfig}
  */
@@ -41,7 +36,7 @@ const nextConfig = {
     return [
       {
         source: '/',
-        destination: `/${defaultChain.routePrefix}`,
+        destination: `/${DefaultChain.routePrefix}`,
         permanent: false,
       },
 
@@ -57,7 +52,7 @@ const nextConfig = {
       },
       {
         source: '/collection-rankings',
-        destination: `/${defaultChain.routePrefix}/collection-rankings`,
+        destination: `/${DefaultChain.routePrefix}/collection-rankings`,
         permanent: true,
       },
     ]
