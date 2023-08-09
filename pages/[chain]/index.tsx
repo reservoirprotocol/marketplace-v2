@@ -250,7 +250,6 @@ export const getServerSideProps: GetServerSideProps<{
       includeRecentSales: true,
     }
 
-  const promises: ReturnType<typeof fetcher>[] = []
   const chainPrefix = params?.chain || ''
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
