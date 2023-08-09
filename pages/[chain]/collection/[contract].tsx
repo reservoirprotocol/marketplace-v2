@@ -57,6 +57,7 @@ import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
+import validateEvent from 'utils/validateEvent'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -161,18 +162,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   useTokenUpdateStream(id as string, collectionChain.id, {
     onMessage: (event) => {
-      if (!event.data || typeof event.data !== 'string') {
-        return
-      }
-      let reservoirEvent: ReservoirWebsocketIncomingEvent | undefined
-      try {
-        reservoirEvent = JSON.parse(event.data)
-      } catch (e) {
-        return
-      }
-      if (!reservoirEvent) {
-        return
-      }
+      const reservoirEvent = validateEvent(event)
+
+      if (!reservoirEvent) return
 
       let hasChange = false
 
