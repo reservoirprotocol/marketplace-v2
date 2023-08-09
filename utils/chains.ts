@@ -1,3 +1,6 @@
+import { Currency } from '@reservoir0x/reservoir-kit-ui'
+import wrappedContracts from '../utils/wrappedContracts'
+import { zeroAddress } from 'viem'
 import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
 
 //Chains that are missing from wagmi:
@@ -128,6 +131,7 @@ export type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
+  listingCurrencies?: Currency[]
 }
 
 export const DefaultChain: ReservoirChain = {
@@ -156,6 +160,25 @@ export const DefaultChain: ReservoirChain = {
   coingeckoId: 'ethereum',
   collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  listingCurrencies: [
+    {
+      contract: zeroAddress,
+      symbol: 'ETH',
+      coinGeckoId: 'ethereum',
+    },
+    {
+      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      symbol: 'USDC',
+      decimals: 6,
+      coinGeckoId: 'usd-coin',
+    },
+    {
+      contract: wrappedContracts[mainnet.id],
+      symbol: 'WETH',
+      decimals: 18,
+      coinGeckoId: 'weth',
+    },
+  ],
 }
 
 export default [

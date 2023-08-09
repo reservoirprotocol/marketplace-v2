@@ -2,7 +2,7 @@ import { withSentryConfig } from '@sentry/nextjs'
 import * as tsImport from 'ts-import'
 
 const loadTS = (filePath) => tsImport.load(filePath)
-
+await loadTS('./utils/wrappedContracts.ts')
 const { DefaultChain: defaultChain } = await loadTS('./utils/chains.ts')
 
 const sentryWebpackPluginOptions = {
