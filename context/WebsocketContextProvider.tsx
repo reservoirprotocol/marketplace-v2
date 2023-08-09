@@ -25,7 +25,6 @@ function websocketStore() {
       onUnsubscribe: () => void
     ) => {
       let subscription = message.event as string
-      debugger
       if (message.filters) {
         Object.keys(message.filters)
           .sort()

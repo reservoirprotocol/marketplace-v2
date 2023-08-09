@@ -231,12 +231,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           }
           if (tokens) {
             //take into account sorting
-            let updatedTokenPosition = tokens.findIndex((token) =>
-              token.market?.floorAsk?.price?.amount?.decimal
-                ? token.market?.floorAsk?.price?.amount?.decimal >=
-                  updatedToken.market.floorAsk.price.amount.decimal
-                : true
-            )
+            let updatedTokenPosition = tokens.findIndex((token) => {
+              let currentTokenPrice =
+                token.market?.floorAsk?.price?.amount?.decimal
+              if (currentTokenPrice) {
+                return sortDirection === 'asc'
+                  ? currentTokenPrice >=
+                      updatedToken.market.floorAsk.price.amount.decimal
+                  : currentTokenPrice <=
+                      updatedToken.market.floorAsk.price.amount.decimal
+              }
+              return true
+            })
             if (updatedTokenPosition === -1) {
               return
             }
