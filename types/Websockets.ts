@@ -1,4 +1,4 @@
-//Subscribe
+// @ts-ignore TypeScript compilation error due to nothing being exported
 type ReservoirWebsocketEventType = 'subscribe' | 'unsubscribe'
 type ReservoirWebsocketEvent =
   | 'ask.created'
