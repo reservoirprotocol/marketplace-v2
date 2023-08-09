@@ -1,9 +1,4 @@
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { Text, Flex, Box } from '../../../components/primitives'
 import {
   useCollections,
@@ -66,7 +61,7 @@ type ActivityTypes = Exclude<
   string
 >
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
@@ -669,21 +664,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
-
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   ssr: {
     collection?: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
   id: string | undefined
-}> = async ({ params }) => {
+}> = async ({ params, res }) => {
   const id = params?.contract?.toString()
   const { reservoirBaseUrl, apiKey, routePrefix } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
@@ -743,9 +731,13 @@ export const getStaticProps: GetStaticProps<{
       (token) => (token?.token?.attributes?.length || 0) > 0
     ) || false
 
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=30, stale-while-revalidate=60'
+  )
+
   return {
     props: { ssr: { collection, tokens, hasAttributes }, id },
-    revalidate: 30,
   }
 }
 

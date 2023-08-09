@@ -53,9 +53,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
-      fallbackData: [
-        ssr.topSellingCollections[marketplaceChain.id].collections,
-      ],
+      fallbackData: ssr.topSellingCollections[marketplaceChain.id]?.collections
+        ? [ssr.topSellingCollections[marketplaceChain.id].collections]
+        : [],
     },
     chain?.id
   )
