@@ -243,11 +243,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             hasChange = true
           }
         }
-        if ((hasChange = true)) {
-          console.log(
-            reservoirEvent.data.token.tokenId,
-            reservoirEvent.data.market.floorAsk
-          )
+        if (hasChange) {
           mutate([
             {
               tokens: newTokens,
