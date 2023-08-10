@@ -1,9 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
+    "dev": "yarn prebuild && next",
+    "build": "yarn prebuild && next build",
+    "prebuild": "node ./scripts/prebuild.js",
+    "start": "yarn prebuild && next start",
     "tsc": "tsc"
   },
   "dependencies": {
@@ -62,7 +63,6 @@
     "@types/react": "^18.0",
     "@types/react-dom": "^18.0",
     "next-themes": "^0.2.0",
-    "ts-import": "^5.0.0-beta.0",
     "typescript": "^4.9.4"
   }
 }
