@@ -166,8 +166,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   })
 
   useTokenUpdateStream(id as string, collectionChain.id, {
-    onOpen: () => setSocketState(1),
-    onClose: () => setSocketState(0),
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
