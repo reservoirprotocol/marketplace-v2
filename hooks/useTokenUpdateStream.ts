@@ -18,7 +18,7 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
   const onMessage = (event: MessageEvent<any>): unknown => {
     if (!validateEvent(event)) return
 
-    return options.onMessage?.call(this, {
+    return options.onMessage?.({
       ...event,
       data: JSON.parse(event.data) as ReservoirWebsocketIncomingEvent,
     })
