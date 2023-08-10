@@ -100,6 +100,12 @@ export const DefaultChain: ReservoirChain = {
       ...usdcCurrencyBase,
       contract: usdcContracts[goerli.id],
     },
+    {
+      symbol: 'WETH',
+      contract: wrappedContracts[goerli.id],
+      decimals: 18,
+      coinGeckoId: 'weth',
+    },
   ],
 }
 
