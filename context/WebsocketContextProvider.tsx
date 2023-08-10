@@ -32,7 +32,7 @@ function websocketStore() {
             .forEach((key) => {
               subscription = `${subscription}-${key}:${
                 message.filters?.[key as ReservoirWebsocketEventFilters]
-              }:${message.changed}`
+              }${message.changed ? `${message.changed}` : ''}`
             })
         }
         if (!store.current.subscriptions[chainId]) {
