@@ -1,4 +1,8 @@
+import { Currency } from '@reservoir0x/reservoir-kit-ui'
+import wrappedContracts from './wrappedContracts'
+import { zeroAddress } from 'viem'
 import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+import usdcContracts from './usdcContracts'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -128,6 +132,21 @@ export type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
+  listingCurrencies?: Currency[]
+}
+
+const nativeCurrencyBase = {
+  contract: zeroAddress,
+  symbol: 'ETH',
+  decimals: 18,
+  coinGeckoId: 'ethereum',
+}
+
+const usdcCurrencyBase = {
+  contract: '',
+  symbol: 'USDC',
+  decimals: 6,
+  coinGeckoId: 'usd-coin',
 }
 
 export const DefaultChain: ReservoirChain = {
@@ -156,6 +175,13 @@ export const DefaultChain: ReservoirChain = {
   coingeckoId: 'ethereum',
   collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  listingCurrencies: [
+    nativeCurrencyBase,
+    {
+      ...usdcCurrencyBase,
+      contract: usdcContracts[mainnet.id],
+    },
+  ],
 }
 
 export default [
@@ -171,6 +197,23 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    listingCurrencies: [
+      {
+        ...nativeCurrencyBase,
+        symbol: 'MATIC',
+        coinGeckoId: 'matic-network',
+      },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[polygon.id],
+      },
+      {
+        contract: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+    ],
   },
   {
     ...arbitrum,
@@ -184,6 +227,13 @@ export default [
     coingeckoId: 'arbitrum-iou',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+    listingCurrencies: [
+      { ...nativeCurrencyBase, coinGeckoId: 'arbitrum-iou' },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[arbitrum.id],
+      },
+    ],
   },
   {
     ...arbitrumNova,
@@ -209,6 +259,13 @@ export default [
     coingeckoId: 'optimism',
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
+    listingCurrencies: [
+      { ...nativeCurrencyBase, coinGeckoId: 'optimism' },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[optimism.id],
+      },
+    ],
   },
   {
     ...zora,
@@ -232,6 +289,13 @@ export default [
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+    listingCurrencies: [
+      { ...nativeCurrencyBase, coinGeckoId: 'binancecoin' },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[bsc.id],
+      },
+    ],
   },
   {
     ...base,
