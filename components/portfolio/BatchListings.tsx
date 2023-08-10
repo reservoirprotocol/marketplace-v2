@@ -30,8 +30,6 @@ import BatchListModal from 'components/portfolio/BatchListModal'
 import { useMediaQuery } from 'react-responsive'
 import { BatchListingsTableHeading } from './BatchListingsTableHeading'
 import { BatchListingsTableRow } from './BatchListingsTableRow'
-import wrappedContracts from 'utils/wrappedContracts'
-import { mainnet } from 'wagmi'
 
 export type BatchListing = {
   token: UserToken
@@ -105,24 +103,7 @@ const BatchListings: FC<Props> = ({
     contract: chainCurrency.address,
     symbol: chainCurrency.symbol,
   }
-  // CONFIGURABLE: Here you can configure which currencies you would like to support for batch listing
-  let currencies: ListingCurrencies = [
-    { ...defaultCurrency },
-    {
-      contract: wrappedContracts[chain.id],
-      decimals: 18,
-      symbol: `W${defaultCurrency.symbol}`,
-    },
-  ]
-
-  if (chain.id === mainnet.id) {
-    currencies.push({
-      contract: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      symbol: 'USDC',
-      decimals: 6,
-      coinGeckoId: 'usd-coin',
-    })
-  }
+  const currencies: ListingCurrencies = chain.listingCurrencies
 
   const [currency, setCurrency] = useState<Currency>(
     currencies && currencies[0] ? currencies[0] : defaultCurrency
