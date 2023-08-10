@@ -83,7 +83,10 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       method,
     }
 
-    const headers = new Headers()
+    const headers = new Headers({
+      Referrer: reqHeaders['referer'] || reqHeaders['origin'] || '',
+      Origin: 'https://explorer-proxy.reservoir.tools',
+    })
 
     if (chain.apiKey) headers.set('x-api-key', chain.apiKey)
 
