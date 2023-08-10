@@ -66,11 +66,9 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
     ]
 
     const sendSubscribeMessages = () => {
-      debugger
       subscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
     }
     const sendUnsubscribeMessages = () => {
-      debugger
       unsubscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
     }
     websocketContext?.subscribe(
