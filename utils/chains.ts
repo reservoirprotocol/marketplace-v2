@@ -201,6 +201,7 @@ export default [
       {
         ...nativeCurrencyBase,
         symbol: 'MATIC',
+        coinGeckoId: 'matic-network',
       },
       {
         ...usdcCurrencyBase,
@@ -227,7 +228,7 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
     listingCurrencies: [
-      nativeCurrencyBase,
+      { ...nativeCurrencyBase, coinGeckoId: 'arbitrum-iou' },
       {
         ...usdcCurrencyBase,
         contract: usdcContracts[arbitrum.id],
@@ -259,7 +260,7 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
     listingCurrencies: [
-      nativeCurrencyBase,
+      { ...nativeCurrencyBase, coinGeckoId: 'optimism' },
       {
         ...usdcCurrencyBase,
         contract: usdcContracts[optimism.id],
@@ -289,7 +290,7 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
     listingCurrencies: [
-      nativeCurrencyBase,
+      { ...nativeCurrencyBase, coinGeckoId: 'binancecoin' },
       {
         ...usdcCurrencyBase,
         contract: usdcContracts[bsc.id],
