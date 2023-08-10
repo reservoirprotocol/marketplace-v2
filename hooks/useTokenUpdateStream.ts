@@ -16,53 +16,76 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
     chains.find((chain) => chain.id === activeChain?.id) || DefaultChain
 
   const onMessage = (event: MessageEvent<any>): unknown => {
-    // Ensure the event is parsable and is a reservoir event
     if (!validateEvent(event)) return
 
-    // If it is then we callback to the original function with the modified 
     return options.onMessage?.call(this, {
       ...event,
       data: JSON.parse(event.data) as ReservoirWebsocketIncomingEvent,
     })
   }
 
-  const websocket = useChainWebsocket(chain.id, { onMessage, ...options })
+  const websocket = useChainWebsocket(chain.id, { ...options, onMessage })
   const websocketContext = useContext(WebsocketContext)
 
   useEffect(() => {
-    const subscribeMessage: ReservoirWebsocketMessage = {
-      type: 'subscribe',
-      event: 'token.updated',
-      filters: {
-        contract,
+    const subscribeMessages: ReservoirWebsocketMessage[] = [
+      {
+        type: 'subscribe',
+        event: 'token.updated',
+        filters: {
+          contract,
+        },
+        changed: 'market.floorAskNormalized.id',
       },
-    }
-    const unsubscribeMessage: ReservoirWebsocketMessage = {
-      type: 'unsubscribe',
-      event: 'token.updated',
-      filters: {
-        contract,
+      {
+        type: 'subscribe',
+        event: 'token.updated',
+        filters: {
+          contract,
+        },
+        changed: 'market.floorAskNormalized.price.gross.amount',
       },
+    ]
+    const unsubscribeMessages: ReservoirWebsocketMessage[] = [
+      {
+        type: 'unsubscribe',
+        event: 'token.updated',
+        filters: {
+          contract,
+        },
+        changed: 'market.floorAskNormalized.id',
+      },
+      {
+        type: 'unsubscribe',
+        event: 'token.updated',
+        filters: {
+          contract,
+        },
+        changed: 'market.floorAskNormalized.price.gross.amount',
+      },
+    ]
+
+    const sendSubscribeMessages = () => {
+      debugger
+      subscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
     }
-    const sendSubscribeMessage = () => {
-      websocket.sendJsonMessage(subscribeMessage)
-    }
-    const sendUnsubscribeMessage = () => {
-      websocket.sendJsonMessage(subscribeMessage)
+    const sendUnsubscribeMessages = () => {
+      debugger
+      unsubscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
     }
     websocketContext?.subscribe(
       chain.id,
-      subscribeMessage,
-      sendSubscribeMessage,
-      sendUnsubscribeMessage
+      subscribeMessages,
+      sendSubscribeMessages,
+      sendUnsubscribeMessages
     )
 
     return () => {
       websocketContext?.subscribe(
         chain.id,
-        unsubscribeMessage,
-        sendSubscribeMessage,
-        sendUnsubscribeMessage
+        unsubscribeMessages,
+        sendSubscribeMessages,
+        sendUnsubscribeMessages
       )
     }
   }, [contract])

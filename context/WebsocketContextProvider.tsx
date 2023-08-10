@@ -20,45 +20,47 @@ function websocketStore() {
   const subscribe = useCallback(
     (
       chainId: number,
-      message: ReservoirWebsocketMessage,
+      messages: ReservoirWebsocketMessage[],
       onSubscribe: () => void,
       onUnsubscribe: () => void
     ) => {
-      let subscription = message.event as string
-      if (message.filters) {
-        Object.keys(message.filters)
-          .sort()
-          .forEach((key) => {
-            subscription = `${subscription}-${key}:${
-              message.filters?.[key as ReservoirWebsocketEventFilters]
-            }:${message.changed}`
-          })
-      }
-      if (!store.current.subscriptions[chainId]) {
-        store.current.subscriptions[chainId] = {}
-      }
+      messages.forEach((message) => {
+        let subscription = message.event as string
+        if (message.filters) {
+          Object.keys(message.filters)
+            .sort()
+            .forEach((key) => {
+              subscription = `${subscription}-${key}:${
+                message.filters?.[key as ReservoirWebsocketEventFilters]
+              }:${message.changed}`
+            })
+        }
+        if (!store.current.subscriptions[chainId]) {
+          store.current.subscriptions[chainId] = {}
+        }
 
-      if (!store.current.subscriptions[chainId][subscription]) {
-        store.current.subscriptions[chainId][subscription] = 0
-      }
-
-      const channelSubscriptions =
-        store.current.subscriptions[chainId][subscription]
-
-      if (message.type === 'unsubscribe') {
-        store.current.subscriptions[chainId][subscription] -= 1
-        if (channelSubscriptions <= 0) {
+        if (!store.current.subscriptions[chainId][subscription]) {
           store.current.subscriptions[chainId][subscription] = 0
-          onUnsubscribe()
         }
-      } else {
-        if (!channelSubscriptions) {
-          store.current.subscriptions[chainId][subscription] = 1
-          onSubscribe()
+
+        const channelSubscriptions =
+          store.current.subscriptions[chainId][subscription]
+
+        if (message.type === 'unsubscribe') {
+          store.current.subscriptions[chainId][subscription] -= 1
+          if (channelSubscriptions <= 0) {
+            store.current.subscriptions[chainId][subscription] = 0
+            onUnsubscribe()
+          }
         } else {
-          store.current.subscriptions[chainId][subscription] += 1
+          if (!channelSubscriptions) {
+            store.current.subscriptions[chainId][subscription] = 1
+            onSubscribe()
+          } else {
+            store.current.subscriptions[chainId][subscription] += 1
+          }
         }
-      }
+      })
     },
     []
   )
