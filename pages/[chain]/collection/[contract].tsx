@@ -58,6 +58,7 @@ import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import validateEvent from 'utils/validateEvent'
+import LiveState from 'components/common/LiveState'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -70,11 +71,14 @@ type ActivityTypes = Exclude<
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
+type SocketState = 0 | 1 | null
+
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
+  const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
@@ -161,6 +165,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   })
 
   useTokenUpdateStream(id as string, collectionChain.id, {
+    onOpen: () => setSocketState(1),
+    onClose: () => setSocketState(0),
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
@@ -516,12 +522,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     scrollToTop={scrollToTop}
                   />
                 ) : (
-                  <AttributeFilters
-                    attributes={attributes}
-                    open={attributeFiltersOpen}
-                    setOpen={setAttributeFiltersOpen}
-                    scrollToTop={scrollToTop}
-                  />
+                  <>
+                    <AttributeFilters
+                      attributes={attributes}
+                      open={attributeFiltersOpen}
+                      setOpen={setAttributeFiltersOpen}
+                      scrollToTop={scrollToTop}
+                    />
+                  </>
                 )}
                 <Box
                   css={{
@@ -529,12 +537,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     width: '100%',
                   }}
                 >
-                  <Flex justify="between" css={{ marginBottom: '$4' }}>
+                  <Flex
+                    justify="between"
+                    align="center"
+                    css={{ marginBottom: '$4', gap: '$4' }}
+                  >
                     {attributes && attributes.length > 0 && !isSmallDevice && (
-                      <FilterButton
-                        open={attributeFiltersOpen}
-                        setOpen={setAttributeFiltersOpen}
-                      />
+                      <>
+                        <FilterButton
+                          open={attributeFiltersOpen}
+                          setOpen={setAttributeFiltersOpen}
+                        />
+                        {socketState !== null && (
+                          <LiveState state={socketState} />
+                        )}
+                      </>
                     )}
                     <Flex
                       justify={'end'}
