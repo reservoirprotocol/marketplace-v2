@@ -10,6 +10,7 @@ export default (chainId: number, options: Options = {}) => {
     `${chain.wssUrl}?api_key=${WEBSOCKET_API_KEY}`,
     {
       share: true,
+      shouldReconnect: () => true,
       ...options,
     },
     chain.wssUrl && WEBSOCKET_API_KEY ? true : false
