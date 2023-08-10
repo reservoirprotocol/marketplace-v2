@@ -161,11 +161,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   })
 
   useTokenUpdateStream(id as string, collectionChain.id, {
-    onMessage: (event) => {
-      const reservoirEvent = validateEvent(event)
-
-      if (!reservoirEvent) return
-
+    onMessage: ({
+      data: reservoirEvent,
+    }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
       let hasChange = false
 
       const newTokens = [...tokens]
