@@ -30,7 +30,10 @@ export const TokenActions: FC<Props> = ({
 }) => {
   const router = useRouter()
   const bidOpenState = useState(true)
-
+  const buyOpenState = useState(true)
+  const [path, _] = router.asPath.split('?')
+  const routerPath = path.split('/')
+  const isBuyRoute = routerPath[routerPath.length - 1] === 'buy'
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
   const is1155 = token?.token?.kind === 'erc1155'
@@ -102,6 +105,7 @@ export const TokenActions: FC<Props> = ({
               buttonProps={{ corners: 'square' }}
               buttonChildren="Buy Now"
               mutate={mutate}
+              openState={!isOwner && isBuyRoute ? buyOpenState : undefined}
             />
             <AddToCart
               token={token}
