@@ -3,6 +3,7 @@ import { WebsocketContext } from 'context/WebsocketContextProvider'
 import useChainWebsocket from 'hooks/useChainWebsocket'
 import { useContext, useEffect } from 'react'
 import { Options } from 'react-use-websocket'
+import { JsonObject } from 'react-use-websocket/dist/lib/types'
 import chains, { DefaultChain } from 'utils/chains'
 import validateEvent from 'utils/validateEvent'
 
@@ -84,12 +85,20 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
       },
     ]
 
-    const sendSubscribeMessages = () => {
-      subscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
+    /**
+     * Keep handlers seperate in case we introduce unique logic
+     * @sendSubscribeMessages - @function
+     * @sendUnsubscribeMessages - @function
+     */
+
+    const sendSubscribeMessages = (message: JsonObject) => {
+      websocket.sendJsonMessage(message)
     }
-    const sendUnsubscribeMessages = () => {
-      unsubscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
+
+    const sendUnsubscribeMessages = (message: JsonObject) => {
+      websocket.sendJsonMessage(message)
     }
+
     websocketContext?.subscribe(
       chain.id,
       subscribeMessages,

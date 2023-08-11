@@ -5,6 +5,7 @@ import React, {
   FC,
   PropsWithChildren,
 } from 'react'
+import { JsonObject } from 'react-use-websocket/dist/lib/types'
 
 type WebsocketStore = {
   subscriptions: Record<number, Record<string, number>>
@@ -21,10 +22,9 @@ function websocketStore() {
     (
       chainId: number,
       messages: ReservoirWebsocketMessage[],
-      onSubscribe: () => void,
-      onUnsubscribe: () => void
+      onSubscribe: (message: JsonObject) => void,
+      onUnsubscribe: (message: JsonObject) => void
     ) => {
-      console.log(store)
       messages.forEach((message) => {
         let subscription = message.event as string
         if (message.filters) {
@@ -33,8 +33,11 @@ function websocketStore() {
             .forEach((key) => {
               subscription = `${subscription}-${key}:${
                 message.filters?.[key as ReservoirWebsocketEventFilters]
-              }:${message.changed}`
+              }`
             })
+        }
+        if (message.changed) {
+          subscription += `:${message.changed}`
         }
         if (!store.current.subscriptions[chainId]) {
           store.current.subscriptions[chainId] = {}
@@ -51,18 +54,17 @@ function websocketStore() {
           store.current.subscriptions[chainId][subscription] -= 1
           if (channelSubscriptions <= 0) {
             store.current.subscriptions[chainId][subscription] = 0
-            onUnsubscribe()
+            onUnsubscribe(message)
           }
         } else {
           if (!channelSubscriptions) {
             store.current.subscriptions[chainId][subscription] = 1
-            onSubscribe()
+            onSubscribe(message)
           } else {
             store.current.subscriptions[chainId][subscription] += 1
           }
         }
       })
-      console.log(store)
     },
     []
   )
