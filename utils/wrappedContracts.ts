@@ -5,6 +5,7 @@ const wrappedContracts: Record<number, string> = {
   56: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', //bnb
   137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //polygon
   42161: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', //arbitrum
+  43114: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7', //avalance
   42170: '0x722e8bdd2ce80a4422e880164f2079488e115365', //arbitrum nova
   59144: '0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f', //linea
   999: '0x8a5027ea12f45a13deb6CB96A07913c6e192BE84', //zoratestnet
