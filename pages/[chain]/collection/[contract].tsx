@@ -71,8 +71,6 @@ type ActivityTypes = Exclude<
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-type SocketState = 0 | 1 | null
-
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
@@ -165,8 +163,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   })
 
   useTokenUpdateStream(id as string, collectionChain.id, {
-    onOpen: () => setSocketState(1),
     onClose: () => setSocketState(0),
+    onOpen: () => setSocketState(1),
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {

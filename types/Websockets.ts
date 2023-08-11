@@ -61,3 +61,5 @@ type ReservoirWebsocketIncomingEvent = {
   data: any
   offset?: string
 }
+
+type SocketState = null | 0 | 1

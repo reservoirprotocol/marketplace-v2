@@ -24,6 +24,7 @@ function websocketStore() {
       onSubscribe: () => void,
       onUnsubscribe: () => void
     ) => {
+      console.log(store)
       messages.forEach((message) => {
         let subscription = message.event as string
         if (message.filters) {
@@ -61,6 +62,7 @@ function websocketStore() {
           }
         }
       })
+      console.log(store)
     },
     []
   )

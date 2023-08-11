@@ -18,13 +18,32 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
   const onMessage = (event: MessageEvent<any>): unknown => {
     if (!validateEvent(event)) return
 
-    return options.onMessage?.call(this, {
-      ...event,
-      data: JSON.parse(event.data) as ReservoirWebsocketIncomingEvent,
-    })
+    if (options.onMessage) {
+      return options.onMessage({
+        ...event,
+        data: JSON.parse(event.data) as ReservoirWebsocketIncomingEvent,
+      })
+    }
   }
 
-  const websocket = useChainWebsocket(chain.id, { ...options, onMessage })
+  const onOpen = (event: Event): unknown => {
+    if (options.onOpen) {
+      return options.onOpen(event)
+    }
+  }
+
+  const onClose = (event: CloseEvent): unknown => {
+    if (options.onClose) {
+      return options.onClose
+    }
+  }
+
+  const websocket = useChainWebsocket(chain.id, {
+    ...options,
+    onMessage,
+    onClose,
+    onOpen,
+  })
   const websocketContext = useContext(WebsocketContext)
 
   useEffect(() => {
@@ -66,11 +85,9 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
     ]
 
     const sendSubscribeMessages = () => {
-      debugger
       subscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
     }
     const sendUnsubscribeMessages = () => {
-      debugger
       unsubscribeMessages.forEach((msg) => websocket.sendJsonMessage(msg))
     }
     websocketContext?.subscribe(
