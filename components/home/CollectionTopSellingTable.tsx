@@ -44,61 +44,60 @@ export const CollectionTopSellingTable: FC<Props> = ({
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  if (!loading && topSellingCollections?.length === 0) {
-    return (
-      <Flex
-        direction="column"
-        align="center"
-        css={{ py: '$6', gap: '$4', width: '100%' }}
-      >
-        <Text css={{ color: '$gray11' }}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-        </Text>
-        <Text css={{ color: '$gray11' }}>No collections found</Text>
-      </Flex>
-    )
-  }
-
   return (
     <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
       {!isSmallDevice ? <CollectionTableHeading fillType={fillType} /> : null}
-      <Flex direction="column" css={{ position: 'relative' }}>
-        {topSellingCollections?.map((collection, i) => {
-          switch (fillType) {
-            case 'sale':
-              return (
-                <SaleTableRow
-                  key={collection.id}
-                  topSellingCollection={collection}
-                  collection={collections[collection.id as string]}
-                  rank={i + 1}
-                  isSmallDevice={isSmallDevice}
-                />
-              )
-            case 'mint':
-              return (
-                <MintTableRow
-                  key={collection.id}
-                  topSellingCollection={collection}
-                  collection={collections[collection.id as string]}
-                  rank={i + 1}
-                  isSmallDevice={isSmallDevice}
-                />
-              )
-            case 'any':
-            default:
-              return (
-                <AllSalesTableRow
-                  key={collection.id}
-                  topSellingCollection={collection}
-                  collection={collections[collection.id as string]}
-                  rank={i + 1}
-                  isSmallDevice={isSmallDevice}
-                />
-              )
-          }
-        })}
-      </Flex>
+
+      {!loading && topSellingCollections?.length === 0 ? (
+        <Flex
+          direction="column"
+          align="center"
+          css={{ py: '$6', gap: '$4', width: '100%' }}
+        >
+          <Text css={{ color: '$gray11' }}>
+            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+          </Text>
+          <Text css={{ color: '$gray11' }}>No collections found</Text>
+        </Flex>
+      ) : (
+        <Flex direction="column" css={{ position: 'relative' }}>
+          {topSellingCollections?.map((collection, i) => {
+            switch (fillType) {
+              case 'sale':
+                return (
+                  <SaleTableRow
+                    key={collection.id}
+                    topSellingCollection={collection}
+                    collection={collections[collection.id as string]}
+                    rank={i + 1}
+                    isSmallDevice={isSmallDevice}
+                  />
+                )
+              case 'mint':
+                return (
+                  <MintTableRow
+                    key={collection.id}
+                    topSellingCollection={collection}
+                    collection={collections[collection.id as string]}
+                    rank={i + 1}
+                    isSmallDevice={isSmallDevice}
+                  />
+                )
+              case 'any':
+              default:
+                return (
+                  <AllSalesTableRow
+                    key={collection.id}
+                    topSellingCollection={collection}
+                    collection={collections[collection.id as string]}
+                    rank={i + 1}
+                    isSmallDevice={isSmallDevice}
+                  />
+                )
+            }
+          })}
+        </Flex>
+      )}
     </Flex>
   )
 }
@@ -251,7 +250,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
-  const mintPrice = mintData?.price.amount?.decimal || 0
+  const mintPrice = mintData?.price?.amount?.decimal || 0
   const floorAsk = collection?.floorAsk?.price?.amount?.native || 0
 
   const { routePrefix } = useMarketplaceChain()
@@ -337,6 +336,19 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -358,7 +370,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fourTemplateColumns,
+          gridTemplateColumns: fiveTemplateColumns,
         }}
       >
         <CollectionCell
@@ -366,6 +378,16 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
           topSellingCollection={topSellingCollection}
           rank={rank}
         />
+        <TableCell>
+          <Text style="subtitle2">
+            <FormatCryptoCurrency
+              // @ts-ignore
+              amount={topSellingCollection.volume}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
         <TableCell>
           {mintData && mintPrice < floorAsk ? (
             mintPrice === 0 ? (
@@ -488,6 +510,19 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -509,7 +544,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
       <TableRow
         key={topSellingCollection.id}
         css={{
-          gridTemplateColumns: fourTemplateColumns,
+          gridTemplateColumns: fiveTemplateColumns,
         }}
       >
         <CollectionCell
@@ -517,6 +552,16 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
           topSellingCollection={topSellingCollection}
           rank={rank}
         />
+        <TableCell>
+          <Text style="subtitle2">
+            <FormatCryptoCurrency
+              // @ts-ignore
+              amount={topSellingCollection.volume}
+              textStyle="subtitle2"
+              logoHeight={14}
+            />
+          </Text>
+        </TableCell>
         <TableCell>
           <FormatCryptoCurrency
             amount={collection?.floorAsk?.price?.amount?.decimal}
@@ -552,7 +597,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
-  const mintPrice = mintData?.price.amount?.decimal || 0
+  const mintPrice = mintData?.price?.amount?.decimal || 0
 
   const collectionImage = useMemo(() => {
     return optimizeImage(
@@ -634,6 +679,19 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
               </Flex>
               <Flex direction="column" css={{ gap: '$2' }}>
                 <Text style="subtitle3" color="subtle">
+                  Volume
+                </Text>
+                <Text style="subtitle3">
+                  <FormatCryptoCurrency
+                    // @ts-ignore
+                    amount={topSellingCollection.volume}
+                    textStyle="subtitle3"
+                    logoHeight={14}
+                  />
+                </Text>
+              </Flex>
+              <Flex direction="column" css={{ gap: '$2' }}>
+                <Text style="subtitle3" color="subtle">
                   Sales
                 </Text>
                 <Text style="subtitle3">
@@ -655,7 +713,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
     <TableRow
       key={topSellingCollection.id}
       css={{
-        gridTemplateColumns: fourTemplateColumns,
+        gridTemplateColumns: fiveTemplateColumns,
       }}
     >
       <CollectionCell
@@ -663,6 +721,16 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
         topSellingCollection={topSellingCollection}
         rank={rank}
       />
+      <TableCell>
+        <Text style="subtitle2">
+          <FormatCryptoCurrency
+            // @ts-ignore
+            amount={topSellingCollection.volume}
+            textStyle="subtitle2"
+            logoHeight={14}
+          />
+        </Text>
+      </TableCell>
       <TableCell>
         {mintData ? (
           mintPrice === 0 ? (
@@ -678,6 +746,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
           '-'
         )}
       </TableCell>
+
       <TableCell>
         <Text style="subtitle2">
           {formatNumber(topSellingCollection.count)}
@@ -694,12 +763,25 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
 
 const anyHeadings = [
   'Collection',
+  'Volume',
   'Floor Price (Including Mints)',
   'Sales',
   'Recent Activity',
 ]
-const mintHeadings = ['Collection', 'Mint Price', 'Sales', 'Recent Activity']
-const saleHeadings = ['Collection', 'Floor Price', 'Sales', 'Recent Activity']
+const mintHeadings = [
+  'Collection',
+  'Volume',
+  'Mint Price',
+  'Sales',
+  'Recent Activity',
+]
+const saleHeadings = [
+  'Collection',
+  'Volume',
+  'Floor Price',
+  'Sales',
+  'Recent Activity',
+]
 
 type CollectionTableHeadingProps = {
   fillType: FillType
@@ -714,16 +796,16 @@ const CollectionTableHeading: FC<CollectionTableHeadingProps> = ({
   switch (fillType) {
     case 'mint':
       headings = mintHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
     case 'sale':
       headings = saleHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
     case 'any':
     default:
       headings = anyHeadings
-      columns = fourTemplateColumns
+      columns = fiveTemplateColumns
       break
   }
 

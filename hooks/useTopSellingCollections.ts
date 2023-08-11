@@ -35,9 +35,12 @@ export default function (
     swrOptions
   )
 
-  const ids = topSellingData?.collections?.map(
-    (collection) => collection.id as string
-  )
+  const ids = topSellingData?.collections?.map((collection) => {
+    if (collection.id?.includes(':')) {
+      return collection.id.split(':')[0] as string
+    }
+    return collection.id as string
+  })
 
   const { data: collections, isValidating: isValidatingCollections } =
     useCollections(
@@ -57,9 +60,6 @@ export default function (
     ...topSellingSwr,
     collections: collectionsMap,
     data: topSellingData,
-    isValidating:
-      isValidatingCollections ||
-      (!ids?.length && !collections.length) ||
-      topSellingSwr.isValidating,
+    isValidating: isValidatingCollections || topSellingSwr.isValidating,
   }
 }

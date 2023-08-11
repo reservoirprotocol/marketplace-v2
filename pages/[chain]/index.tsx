@@ -1,9 +1,4 @@
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
@@ -11,7 +6,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from 'hooks'
-import supportedChains from 'utils/chains'
+import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
@@ -25,7 +20,7 @@ import { FillTypeToggle } from 'components/home/FillTypeToggle'
 import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
 import fetcher from 'utils/fetcher'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
@@ -58,9 +53,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
-      fallbackData: [
-        ssr.topSellingCollections[marketplaceChain.id].collections,
-      ],
+      fallbackData: ssr.topSellingCollections[marketplaceChain.id]?.collections
+        ? [ssr.topSellingCollections[marketplaceChain.id].collections]
+        : [],
     },
     chain?.id
   )
@@ -165,6 +160,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                     <DropdownMenuItem
                       css={{
                         textAlign: 'left',
+                        py: '$2',
                       }}
                       key={id}
                       onClick={() => {
@@ -232,32 +228,21 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
-
 type TopSellingCollectionsSchema =
   paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
 
 type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
 
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   ssr: {
     topSellingCollections: ChainTopSellingCollections
   }
-}> = async () => {
+}> = async ({ params, res }) => {
   const now = new Date()
   const timestamp = Math.floor(now.getTime() / 1000)
   const startTime = timestamp - 1440 * 60 // 24hrs ago
 
-  let topSellingCollectionsQuery: paths['/collections/top-selling/v1']['get']['parameters']['query'] =
+  const topSellingCollectionsQuery: paths['/collections/top-selling/v1']['get']['parameters']['query'] =
     {
       startTime: startTime,
       fillType: 'sale',
@@ -265,29 +250,29 @@ export const getStaticProps: GetStaticProps<{
       includeRecentSales: true,
     }
 
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    const query = { ...topSellingCollectionsQuery }
-
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/top-selling/v1`, query, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-  const responses = await Promise.allSettled(promises)
-  const topSellingCollections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      topSellingCollections[supportedChains[i].id] = response.value.data
+  const chainPrefix = params?.chain || ''
+  const chain =
+    supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
+    DefaultChain
+  const response = await fetcher(
+    `${chain.reservoirBaseUrl}/collections/top-selling/v1`,
+    topSellingCollectionsQuery,
+    {
+      headers: {
+        'x-api-key': chain.apiKey || '',
+      },
     }
-  })
+  )
+  const topSellingCollections: ChainTopSellingCollections = {}
+  topSellingCollections[chain.id] = response.data
+
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=120, stale-while-revalidate=180'
+  )
 
   return {
     props: { ssr: { topSellingCollections } },
-    revalidate: 5,
   }
 }
 

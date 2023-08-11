@@ -83,6 +83,7 @@ export const FillTypeToggle: FC<Props> = ({ fillType, setFillType }) => {
               onClick={() => {
                 setFillType(fillType.value as Props['fillType'])
               }}
+              css={{ py: '$2' }}
             >
               {fillType.display}
             </DropdownMenuItem>
@@ -95,7 +96,10 @@ export const FillTypeToggle: FC<Props> = ({ fillType, setFillType }) => {
     <ToggleGroup
       type="single"
       value={fillType}
-      onValueChange={(value) => setFillType(value as typeof fillType)}
+      onValueChange={(value) => {
+        if (!value) return
+        setFillType(value as typeof fillType)
+      }}
       css={{ flexShrink: 0 }}
     >
       {fillTypesFilters.map((fillType) => (

@@ -1,12 +1,8 @@
-import {
-  arbitrum,
-  mainnet,
-  polygon,
-  optimism,
-  Chain,
-  bsc,
-  avalanche,
-} from 'wagmi/chains'
+import { Currency } from '@reservoir0x/reservoir-kit-ui'
+import wrappedContracts from './wrappedContracts'
+import { zeroAddress } from 'viem'
+import { arbitrum, mainnet, polygon, optimism, Chain, bsc, avalanche } from 'wagmi/chains'
+import usdcContracts from './usdcContracts'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -94,6 +90,34 @@ export const arbitrumNova = {
   },
 } as const satisfies Chain
 
+export const linea = {
+  id: 59144,
+  name: 'Linea',
+  network: 'linea',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.linea.build'],
+    },
+    public: {
+      http: ['https://rpc.linea.build'],
+    },
+    infura: {
+      http: ['https://linea-mainnet.infura.io/v3'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'Linea Explorer',
+      url: 'https://explorer.linea.build',
+    },
+    default: {
+      name: 'Linea Explorer',
+      url: 'https://explorer.linea.build',
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -108,6 +132,21 @@ export type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
+  listingCurrencies?: Currency[]
+}
+
+const nativeCurrencyBase = {
+  contract: zeroAddress,
+  symbol: 'ETH',
+  decimals: 18,
+  coinGeckoId: 'ethereum',
+}
+
+const usdcCurrencyBase = {
+  contract: '',
+  symbol: 'USDC',
+  decimals: 6,
+  coinGeckoId: 'usd-coin',
 }
 
 export const DefaultChain: ReservoirChain = {
@@ -136,6 +175,13 @@ export const DefaultChain: ReservoirChain = {
   coingeckoId: 'ethereum',
   collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+  listingCurrencies: [
+    nativeCurrencyBase,
+    {
+      ...usdcCurrencyBase,
+      contract: usdcContracts[mainnet.id],
+    },
+  ],
 }
 
 export default [
@@ -151,6 +197,23 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    listingCurrencies: [
+      {
+        ...nativeCurrencyBase,
+        symbol: 'MATIC',
+        coinGeckoId: 'matic-network',
+      },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[polygon.id],
+      },
+      {
+        contract: '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+    ],
   },
   {
     ...arbitrum,
@@ -164,6 +227,13 @@ export default [
     coingeckoId: 'arbitrum-iou',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_COMMUNITY,
+    listingCurrencies: [
+      { ...nativeCurrencyBase, coinGeckoId: 'arbitrum-iou' },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[arbitrum.id],
+      },
+    ],
   },
   {
     ...arbitrumNova,
@@ -189,6 +259,13 @@ export default [
     coingeckoId: 'optimism',
     collectionSetId: process.env.NEXT_PUBLIC_OPTIMISM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_OPTIMISM_COMMUNITY,
+    listingCurrencies: [
+      { ...nativeCurrencyBase, coinGeckoId: 'optimism' },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[optimism.id],
+      },
+    ],
   },
   {
     ...zora,
@@ -212,6 +289,13 @@ export default [
     coingeckoId: 'binancecoin',
     collectionSetId: process.env.NEXT_PUBLIC_BSC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BSC_COMMUNITY,
+    listingCurrencies: [
+      { ...nativeCurrencyBase, coinGeckoId: 'binancecoin' },
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[bsc.id],
+      },
+    ],
   },
   {
     ...avalanche,
@@ -236,5 +320,17 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
+  },
+  {
+    ...linea,
+    lightIconUrl: '/icons/linea-icon-dark.svg',
+    darkIconUrl: '/icons/linea-icon-light.svg',
+    reservoirBaseUrl: 'https://api-linea.reservoir.tools',
+    proxyApi: '/api/reservoir/linea',
+    routePrefix: 'linea',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
   },
 ] as ReservoirChain[]

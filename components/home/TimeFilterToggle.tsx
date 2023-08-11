@@ -93,6 +93,7 @@ export const TimeFilterToggle: FC<Props> = ({
               onClick={() => {
                 setMinutesFilter(+time.value)
               }}
+              css={{ py: '$2' }}
             >
               {time.display}
             </DropdownMenuItem>
@@ -106,7 +107,10 @@ export const TimeFilterToggle: FC<Props> = ({
     <ToggleGroup
       type="single"
       value={`${minutesFilter}`}
-      onValueChange={(value) => setMinutesFilter(+value)}
+      onValueChange={(value) => {
+        if (!value) return
+        setMinutesFilter(+value)
+      }}
       css={{ flexShrink: 0 }}
     >
       {filterTimes.map((time) => (
