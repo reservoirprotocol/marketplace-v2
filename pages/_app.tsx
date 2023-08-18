@@ -56,7 +56,7 @@ const { chains, publicClient } = configureChains(supportedChains, [
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir NFT Explorer',
+  appName: 'NFT Canyon',
   projectId: WALLET_CONNECT_PROJECT_ID,
   chains,
 })
@@ -71,8 +71,8 @@ const wagmiClient = createConfig({
 const reservoirKitThemeOverrides = {
   headlineFont: inter.style.fontFamily,
   font: inter.style.fontFamily,
-  primaryColor: '#6E56CB',
-  primaryHoverColor: '#644fc1',
+  primaryColor: '#6e56cf',
+  primaryHoverColor: '#7c66dc',
 }
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
@@ -172,11 +172,9 @@ function MyApp({
             }),
             logLevel: 4,
             source: source,
+            disablePoweredByReservoir: true,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
-            //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
-            // Note that this impacts orders created on your marketplace (offers/listings)
-            // marketplaceFee: 250,
-            // marketplaceFeeRecipient: "0xabc"
+            marketplaceFees: ["0xe0C5123B0FD1A7D94bB8D84bBAF1026B699C6dC6:250"]
           }}
           theme={reservoirKitTheme}
         >
