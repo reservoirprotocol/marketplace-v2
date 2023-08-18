@@ -57,12 +57,20 @@ export default function ({ tokens, enabled, chainId = mainnet.id }: Props) {
       manifoldContract = '0x0385603ab55642cb4dd5de3ae9e306809991804f'
       break
     }
-    case goerli.id: {
-      manifoldContract = '0xe7c9Cb6D966f76f3B5142167088927Bf34966a1f'
-      break
-    }
     case 137: {
       manifoldContract = '0x28EdFcF0Be7E86b07493466e7631a213bDe8eEF2'
+      break
+    }
+    case 80001:
+      manifoldContract = '0x0a01E11887f727D1b1Cd81251eeEE9BEE4262D07'
+      break
+    case goerli.id:
+    case 10:
+    case 8435:
+    case 42161:
+    case 43114:
+    case 56: {
+      manifoldContract = '0xe7c9Cb6D966f76f3B5142167088927Bf34966a1f'
       break
     }
   }
