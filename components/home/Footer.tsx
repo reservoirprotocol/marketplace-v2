@@ -30,37 +30,14 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
   </Anchor>
 )
 
-const developerSectionLinks = [
-  {
-    name: 'Docs',
-    href: 'https://docs.reservoir.tools/docs',
-  },
-  {
-    name: 'API Reference',
-    href: 'https://docs.reservoir.tools/reference/overview',
-  },
-  {
-    name: 'Github',
-    href: 'https://github.com/reservoirprotocol',
-  },
-  {
-    name: 'Testnets',
-    href: 'https://testnets.reservoir.tools',
-  },
-]
-
-const companySectionLinks = [
-  {
-    name: 'Jobs',
-    href: 'https://jobs.ashbyhq.com/reservoir',
-  },
+const sectionLinks = [
   {
     name: 'Terms of Use',
-    href: 'https://reservoir.tools/terms',
+    href: '/terms',
   },
   {
     name: 'Privacy Policy',
-    href: 'https://reservoir.tools/privacy',
+    href: '/privacy',
   },
 ]
 
@@ -82,15 +59,8 @@ export const Footer = () => {
       }}
     >
       <Flex css={{ gap: 80, '@bp600': { gap: 136 } }}>
-        <Flex direction="column">
-          <SectionTitle title="Developers" />
-          {developerSectionLinks.map((props) => (
-            <SectionLink key={props.name} {...props} />
-          ))}
-        </Flex>
-        <Flex direction="column">
-          <SectionTitle title="Company" />
-          {companySectionLinks.map((props) => (
+        <Flex css={{ gap: '$4' }}>
+          {sectionLinks.map((props) => (
             <SectionLink key={props.name} {...props} />
           ))}
         </Flex>
@@ -99,12 +69,12 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join Reservoir Community" />
+        <SectionTitle title="Join NFT Canyon Community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://twitter.com/reservoir0x"
+            href="https://twitter.com/nftcanyonio"
           >
             <Button size="xs" color="gray3">
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />

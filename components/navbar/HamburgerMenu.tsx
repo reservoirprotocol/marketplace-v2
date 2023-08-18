@@ -17,6 +17,7 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver, useMarketplaceChain } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
+import { useTheme } from 'next-themes'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -26,6 +27,7 @@ const HamburgerMenu = () => {
     shortName: shortEnsName,
   } = useENSResolver(address)
   const { disconnect } = useDisconnect()
+  const { theme } = useTheme()
   const { routePrefix } = useMarketplaceChain()
 
   const trigger = (
@@ -60,12 +62,21 @@ const HamburgerMenu = () => {
         >
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <Image
-                src="/reservoirLogo.svg"
-                width={34}
-                height={39}
-                alt="Reservoir"
-              />
+              {theme == 'dark' ? (
+                <Image
+                  src="/logo-alone-light.png"
+                  width={34}
+                  height={39}
+                  alt="NFT Canyon"
+                />
+              ) : (
+                <Image
+                  src="/logo-alone.png"
+                  width={34}
+                  height={39}
+                  alt="NFT Canyon"
+                />
+              )}
             </Box>
           </Link>
           <RadixDialog.Close>
@@ -232,8 +243,7 @@ const HamburgerMenu = () => {
                 </Text>
               </Link>
               <Anchor
-                href="https://docs.reservoir.tools/docs"
-                target="_blank"
+                href="https://blog.nftcanyon.io"
                 css={{
                   borderBottom: '1px solid $gray4',
                   cursor: 'pointer',
@@ -242,7 +252,7 @@ const HamburgerMenu = () => {
                   width: '100%',
                 }}
               >
-                <Text style="subtitle1">Docs</Text>
+                <Text style="subtitle1">Blog</Text>
               </Anchor>
             </Flex>
             <Box>

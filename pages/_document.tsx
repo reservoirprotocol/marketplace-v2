@@ -39,8 +39,8 @@ class MyDocument extends Document {
         />
 
         {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir NFT Explorer" />
-        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+        <meta property="reservoir:title" content="NFT Canyon" />
+        <meta property="reservoir:icon" content="/nftcanyon-source-icon.png" />
         <meta
           property="reservoir:token-url-mainnet"
           content="/ethereum/asset/${contract}:${tokenId}"

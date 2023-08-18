@@ -61,12 +61,21 @@ const Navbar = () => {
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 34, cursor: 'pointer' }}>
-              <Image
-                src="/reservoirLogo.svg"
-                width={34}
-                height={39}
-                alt="Reservoir"
-              />
+              {theme == 'dark' ? (
+                <Image
+                  src="/logo-alone-light.png"
+                  width={34}
+                  height={39}
+                  alt="NFT Canyon"
+                />
+              ) : (
+                <Image
+                  src="/logo-alone.png"
+                  width={34}
+                  height={39}
+                  alt="NFT Canyon"
+                />
+              )}
             </Box>
           </Link>
         </Flex>
@@ -102,17 +111,17 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
+                  src="/logo-dark.png"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="NFT Canyon"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
+                  src="/logo.png"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="NFT Canyon"
                 />
               )}
             </Box>
@@ -134,8 +143,8 @@ const Navbar = () => {
             <Link href="/portfolio">
               <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
             </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
+            <Link href="https://blog.nftcanyon.io">
+              <NavItem>Blog</NavItem>
             </Link>
           </Flex>
         </Flex>

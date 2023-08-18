@@ -192,7 +192,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             color="subtle"
             css={{ mb: 48, textAlign: 'left' }}
           >
-            Multi-Chain Explorer, powered by Reservoir
+            Multi-Chain Explorer, powered by NFT Canyon
           </Text>
         </Flex>
         {!isSmallDevice ? <ChainStats /> : null}
