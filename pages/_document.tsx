@@ -33,9 +33,9 @@ class MyDocument extends Document {
 
         {/* Favicon */}
         <link
-          rel="shortcut icon"
-          type="image/svg"
-          href="https://marketplace.reservoir.tools/reservoir.svg"
+          rel="favicon"
+          type="favicon"
+          href="/favicon.ico"
         />
 
         {/* Reservoir meta tags */}
