@@ -70,7 +70,7 @@ export default function ({ tokens, enabled, chainId = mainnet.id }: Props) {
     case 42161:
     case 43114:
     case 56: {
-      manifoldContract = '0xe7c9Cb6D966f76f3B5142167088927Bf34966a1f'
+      manifoldContract = '0xEF770dFb6D5620977213f55f99bfd781D04BBE15'
       break
     }
   }
