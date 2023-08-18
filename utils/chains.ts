@@ -69,7 +69,7 @@ const usdcCurrencyBase = {
 }
 
 export const DefaultChain: ReservoirChain = {
-  ...goerli,
+  ...sepolia,
   // Any url to display the logo of the chain in light mode
   lightIconUrl: '/icons/goerli-icon-dark.svg',
   // Any url to display the logo of the chain in dark mode
@@ -77,51 +77,51 @@ export const DefaultChain: ReservoirChain = {
   // The base url of the reservoir api, this is used in the app when
   // directly interacting with the reservoir indexer servers (in the api proxy for example)
   // or when prefetching server side rendered data
-  reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
+  reservoirBaseUrl: 'https://api-sepolia.reservoir.tools',
   // Used on the client side portions of the marketplace that need an api key added
   // Prevents the api key from being leaked in the clientside requests
   // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
   // Doing so will omit the api key unless further changes are made
-  proxyApi: '/api/reservoir/goerli',
+  proxyApi: '/api/reservoir/sepolia',
   // A prefix used in the asset specific routes on the app (tokens/collections)
-  routePrefix: 'goerli',
+  routePrefix: 'sepolia',
   // Reservoir API key which you can generate at https://reservoir.tools/
   // This is a protected key and displays as 'undefined' on the browser
   // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
   apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
-  coingeckoId: 'goerli-eth',
-  collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
-  community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-  listingCurrencies: [
-    nativeCurrencyBase,
-    {
-      ...usdcCurrencyBase,
-      contract: usdcContracts[goerli.id],
-    },
-    {
-      symbol: 'WETH',
-      contract: wrappedContracts[goerli.id],
-      decimals: 18,
-      coinGeckoId: 'weth',
-    },
-  ],
+  coingeckoId: 'ethereum',
+  collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
+  community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
 }
 
 export default [
   DefaultChain,
   {
-    ...sepolia,
+    ...goerli,
     lightIconUrl: '/icons/goerli-icon-dark.svg',
     darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-sepolia.reservoir.tools',
-    proxyApi: '/api/reservoir/sepolia',
-    routePrefix: 'sepolia',
+    reservoirBaseUrl: 'https://api-goerli.reservoir.tools',
+    proxyApi: '/api/reservoir/goerli',
+    routePrefix: 'goerli',
     apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
+    coingeckoId: 'goerli-eth',
+    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[goerli.id],
+      },
+      {
+        symbol: 'WETH',
+        contract: wrappedContracts[goerli.id],
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+    ],
   },
   {
     ...polygonMumbai,
