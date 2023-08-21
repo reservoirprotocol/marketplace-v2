@@ -194,6 +194,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           const endOfListingsIndex = tokens.findIndex(
             (token) => !token.market?.floorAsk?.price?.amount?.decimal
           )
+          if (endOfListingsIndex === -1) {
+            delete newTokens[newTokens.length - 1]
+            hasChange = true
+            return
+          }
           const newTokenIndex = endOfListingsIndex > -1 ? endOfListingsIndex : 0
           newTokens.splice(newTokenIndex, 0, {
             ...token,
