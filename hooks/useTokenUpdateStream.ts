@@ -6,6 +6,7 @@ import { Options } from 'react-use-websocket'
 import { JsonObject } from 'react-use-websocket/dist/lib/types'
 import chains, { DefaultChain } from 'utils/chains'
 import validateEvent from 'utils/validateEvent'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 
 export default (contract: string, chainId?: number, options: Options = {}) => {
   const client = useReservoirClient()
@@ -55,7 +56,9 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
         filters: {
           contract,
         },
-        changed: 'market.floorAskNormalized.id',
+        changed: NORMALIZE_ROYALTIES
+          ? 'market.floorAskNormalized.id'
+          : 'market.floorAsk.id',
       },
       {
         type: 'subscribe',
@@ -63,7 +66,9 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
         filters: {
           contract,
         },
-        changed: 'market.floorAskNormalized.price.gross.amount',
+        changed: NORMALIZE_ROYALTIES
+          ? 'market.floorAskNormalized.price.gross.amount'
+          : 'market.floorAsk.price.gross.amount',
       },
     ]
     const unsubscribeMessages: ReservoirWebsocketMessage[] = [
@@ -73,7 +78,9 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
         filters: {
           contract,
         },
-        changed: 'market.floorAskNormalized.id',
+        changed: NORMALIZE_ROYALTIES
+          ? 'market.floorAskNormalized.id'
+          : 'market.floorAsk.id',
       },
       {
         type: 'unsubscribe',
@@ -81,7 +88,9 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
         filters: {
           contract,
         },
-        changed: 'market.floorAskNormalized.price.gross.amount',
+        changed: NORMALIZE_ROYALTIES
+          ? 'market.floorAskNormalized.price.gross.amount'
+          : 'market.floorAsk.price.gross.amount',
       },
     ]
 
