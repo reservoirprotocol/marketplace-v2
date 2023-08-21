@@ -199,7 +199,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             hasChange = true
             return
           }
-          const newTokenIndex = endOfListingsIndex > -1 ? endOfListingsIndex : 0
+          const newTokenIndex =
+            sortBy === 'rarity'
+              ? tokenIndex
+              : endOfListingsIndex > -1
+              ? endOfListingsIndex
+              : 0
           newTokens.splice(newTokenIndex, 0, {
             ...token,
             market: {
@@ -226,8 +231,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           },
         }
         if (tokens) {
-          //take into account sorting
-          let updatedTokenPosition = tokens.findIndex((token) => {
+          let updatedTokenPosition =  sortBy === 'rarity' ? tokenIndex : tokens.findIndex((token) => {
             let currentTokenPrice =
               token.market?.floorAsk?.price?.amount?.decimal
             if (currentTokenPrice) {
