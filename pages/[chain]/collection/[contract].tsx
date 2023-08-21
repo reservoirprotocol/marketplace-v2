@@ -52,7 +52,6 @@ import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
-import validateEvent from 'utils/validateEvent'
 import LiveState from 'components/common/LiveState'
 
 type ActivityTypes = Exclude<
@@ -169,6 +168,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
+      if (attributes.length > 0) return
+
       let hasChange = false
 
       const newTokens = [...tokens]
@@ -547,7 +548,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           open={attributeFiltersOpen}
                           setOpen={setAttributeFiltersOpen}
                         />
-                        {socketState !== null && (
+                        {socketState !== null && attributes.length === 0 && (
                           <LiveState state={socketState} />
                         )}
                       </>
