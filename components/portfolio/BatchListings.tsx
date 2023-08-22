@@ -18,6 +18,7 @@ import {
   SetStateAction,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { Currency, Listings, ListModal } from '@reservoir0x/reservoir-kit-ui'
@@ -30,6 +31,10 @@ import BatchListModal from 'components/portfolio/BatchListModal'
 import { useMediaQuery } from 'react-responsive'
 import { BatchListingsTableHeading } from './BatchListingsTableHeading'
 import { BatchListingsTableRow } from './BatchListingsTableRow'
+import useOnChainRoyalties, {
+  OnChainRoyaltyReturnType,
+} from 'hooks/useOnChainRoyalties'
+import { formatUnits } from 'viem'
 
 export type BatchListing = {
   token: UserToken
@@ -108,6 +113,52 @@ const BatchListings: FC<Props> = ({
   const [currency, setCurrency] = useState<Currency>(
     currencies && currencies[0] ? currencies[0] : defaultCurrency
   )
+  const royaltyQuery: NonNullable<
+    Parameters<typeof useOnChainRoyalties>['0']['tokens']
+  > = useMemo(
+    () =>
+      listings
+        .filter((listing) => listing?.token?.token !== undefined)
+        .map((listing) => ({
+          contract: listing.token.token?.contract as string,
+          tokenId: listing.token.token?.tokenId as string,
+        })),
+    [listings]
+  )
+  const { data: onChainRoyalties } = useOnChainRoyalties({
+    tokens: royaltyQuery,
+    chainId: chain.id,
+    enabled: royaltyQuery.length > 0,
+  })
+
+  const onChainRoyaltiesMap = useMemo(
+    () =>
+      onChainRoyalties?.reduce((royalties, royaltyData, i) => {
+        if (
+          royaltyData.status === 'success' &&
+          (royaltyData.result as any)[0] &&
+          (royaltyData.result as any)[1]
+        ) {
+          const royaltyBpsList = (
+            royaltyData.result as OnChainRoyaltyReturnType
+          )[1]
+          const id = `${royaltyQuery[i].contract}:${royaltyQuery[i].tokenId}`
+          const totalRoyalty = royaltyBpsList
+            ? royaltyBpsList.reduce((total, feeBps) => {
+                total += parseFloat(
+                  formatUnits(feeBps, currency.decimals || 18)
+                )
+                return total
+              }, 0)
+            : 0
+          if (totalRoyalty) {
+            royalties[id] = (totalRoyalty / 1) * 10000
+          }
+        }
+        return royalties
+      }, {} as Record<string, number>) || {},
+    [onChainRoyalties, chainCurrency]
+  )
 
   const displayQuantity = useCallback(() => {
     return listings.some((listing) => listing?.token?.token?.kind === 'erc1155')
@@ -155,11 +206,15 @@ const BatchListings: FC<Props> = ({
           itemId
       )
 
+      const onChainRoyaltyBps = onChainRoyaltiesMap[itemId]
+
       const profits = itemListings.map((listing) => {
         const listingCreatorRoyalties =
           (Number(listing.price) *
             listing.quantity *
-            (listing?.token?.token?.collection?.royaltiesBps || 0)) /
+            (onChainRoyaltyBps ||
+              listing?.token?.token?.collection?.royaltiesBps ||
+              0)) /
           10000
 
         const profit =
@@ -176,7 +231,7 @@ const BatchListings: FC<Props> = ({
     }, 0)
 
     setTotalProfit(maxProfit)
-  }, [listings, selectedMarketplaces, globalPrice])
+  }, [listings, onChainRoyaltiesMap, selectedMarketplaces, globalPrice])
 
   useEffect(() => {
     const hasInvalidPrice = listings.some(
@@ -484,6 +539,11 @@ const BatchListings: FC<Props> = ({
             <BatchListingsTableRow
               listing={listing}
               listings={listings}
+              onChainRoyaltiesBps={
+                onChainRoyaltiesMap[
+                  `${listing.token.token?.contract}:${listing.token.token?.tokenId}`
+                ]
+              }
               setListings={setListings}
               updateListing={updateListing}
               setSelectedItems={setSelectedItems}
@@ -525,6 +585,7 @@ const BatchListings: FC<Props> = ({
               />
               <BatchListModal
                 listings={listings}
+                onChainRoyalties={onChainRoyalties}
                 disabled={listButtonDisabled}
                 currency={currency}
                 selectedMarketplaces={selectedMarketplaces}
