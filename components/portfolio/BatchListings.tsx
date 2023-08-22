@@ -130,7 +130,7 @@ const BatchListings: FC<Props> = ({
     chainId: chain.id,
     enabled: royaltyQuery.length > 0,
   })
-  console.log(onChainRoyalties)
+
   const onChainRoyaltiesMap = useMemo(
     () =>
       onChainRoyalties?.reduce((royalties, royaltyData, i) => {
