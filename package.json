@@ -29,7 +29,7 @@
     "@radix-ui/react-toggle-group": "^1.0.1",
     "@radix-ui/react-tooltip": "^1.0.2",
     "@rainbow-me/rainbowkit": "^1.0.3",
-    "@reservoir0x/reservoir-kit-ui": "1.4.0",
+    "@reservoir0x/reservoir-kit-ui": "1.6.1",
     "@sentry/nextjs": "^7.53.1",
     "@types/uuid": "^9.0.1",
     "dayjs": "^1.11.6",
@@ -63,6 +63,6 @@
     "@types/react": "^18.0",
     "@types/react-dom": "^18.0",
     "next-themes": "^0.2.0",
-    "typescript": "^4.9.4"
+    "typescript": "^5.0.4"
   }
 }
