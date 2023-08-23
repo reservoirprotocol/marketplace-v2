@@ -106,7 +106,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   if (isSmallDevice) {
     return (
       <Link
-        href={`/collection/${routePrefix}/${collection.id}`}
+        href={`/${routePrefix}/collection/${collection.id}`}
         style={{ display: 'inline-block', minWidth: 0, marginBottom: 24 }}
         key={collection.id}
       >
@@ -181,7 +181,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link
-            href={`/collection/${routePrefix}/${collection.id}`}
+            href={`/${routePrefix}/collection/${collection.id}`}
             style={{ display: 'inline-block', width: '100%', minWidth: 0 }}
           >
             <Flex
@@ -291,9 +291,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {volumeKey != 'allTime' && collection?.floorSaleChange && (
-              <PercentChange value={collection?.floorSaleChange[volumeKey]} />
-            )}
           </Flex>
         </TableCell>
         <TableCell>

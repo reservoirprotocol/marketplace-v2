@@ -36,12 +36,7 @@ import { TokenActions } from 'components/token/TokenActions'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -54,7 +49,7 @@ import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -65,7 +60,10 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
+  const assetIdPieces = assetId ? assetId.toString().split(':') : []
+  let collectionId = assetIdPieces[0]
+  const id = assetIdPieces[1]
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -213,8 +211,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   }, [isSmallDevice])
 
   useEffect(() => {
-    router.query.tab = tabValue
-    router.push(router, undefined, { shallow: true })
+    const updatedUrl = new URL(`${window.location.origin}${router.asPath}`)
+    updatedUrl.searchParams.set('tab', tabValue)
+    router.replace(updatedUrl, undefined, {
+      shallow: true,
+    })
   }, [tabValue])
 
   const pageTitle = token?.token?.name
@@ -348,7 +349,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${router.query.chain}/${token?.token?.collection?.id}`}
+                href={`/${router.query.chain}/collection/${token?.token?.collection?.id}`}
                 legacyBehavior={true}
               >
                 <Anchor
@@ -596,23 +597,16 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
-
-export const getStaticProps: GetStaticProps<{
-  id?: string
-  collectionId?: string
+export const getServerSideProps: GetServerSideProps<{
+  assetId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
-}> = async ({ params }) => {
-  let collectionId = params?.contract?.toString()
-  const id = params?.id?.toString()
+}> = async ({ params, res }) => {
+  const assetId = params?.assetId ? params.assetId.toString().split(':') : []
+  let collectionId = assetId[0]
+  const id = assetId[1]
   const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
@@ -662,9 +656,13 @@ export const getStaticProps: GetStaticProps<{
     ? (collectionsResponse.data as Props['ssr']['collection'])
     : {}
 
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=30, stale-while-revalidate=60'
+  )
+
   return {
-    props: { collectionId, id, ssr: { collection, tokens } },
-    revalidate: 20,
+    props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
   }
 }
 

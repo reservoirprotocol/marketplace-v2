@@ -1,6 +1,6 @@
 import fetcher from 'utils/fetcher'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import supportedChains from 'utils/chains'
+import supportedChains, { ReservoirChain } from 'utils/chains'
 import { isAddress as isViemAddress } from 'viem'
 
 const HOST_URL = process.env.NEXT_PUBLIC_HOST_URL
@@ -15,6 +15,7 @@ export type SearchCollection = NonNullable<
   volumeCurrencySymbol: string
   volumeCurrencyDecimals: number
   tokenCount: string
+  chainRoutePrefix: string
 }
 
 type Collection = NonNullable<
@@ -28,6 +29,173 @@ export const config = {
 export default async function handler(req: Request) {
   const { searchParams } = new URL(req.url)
   const query = searchParams.get('query')
+  const searchChain = searchParams.get('searchChain')
+  let searchResults: any[] = []
+  let fallbackResults: any[] = []
+
+  if (!query) {
+    return
+  }
+
+  if (searchChain) {
+    const chain = supportedChains.find(
+      (chain) => chain.routePrefix === searchChain
+    )
+
+    if (chain) {
+      searchResults = await searchSingleChain(chain, query)
+    }
+  }
+
+  if (!searchResults.length) {
+    fallbackResults = await searchAllChains(query)
+  }
+
+  return new Response(
+    JSON.stringify({
+      results: searchResults,
+      fallbackResults: fallbackResults,
+    }),
+    {
+      status: 200,
+      headers: {
+        'content-type': 'application/json',
+        'Cache-Control': 'maxage=0, s-maxage=3600 stale-while-revalidate',
+      },
+    }
+  )
+}
+
+async function searchSingleChain(chain: ReservoirChain, query: string) {
+  const { reservoirBaseUrl, apiKey, collectionSetId, community } = chain
+  const headers = {
+    headers: {
+      'x-api-key': apiKey || '',
+    },
+  }
+
+  let queryParams: paths['/search/collections/v1']['get']['parameters']['query'] =
+    {
+      name: query as string,
+      limit: 6,
+    }
+
+  const queryData = { ...queryParams }
+  if (collectionSetId) {
+    queryData.collectionsSetId = collectionSetId
+  } else if (community) {
+    queryData.community = community
+  }
+
+  const promise = fetcher(
+    `${reservoirBaseUrl}/search/collections/v1`,
+    queryData,
+    headers
+  )
+  promise.catch((e: any) => console.warn('Failed to search', e))
+
+  let isAddress = isViemAddress(query as string)
+  let searchResults = []
+
+  if (isAddress) {
+    const { data } = await fetcher(
+      `${reservoirBaseUrl}/collections/v5?contract=${query}&limit=6`,
+      {},
+      headers
+    )
+    if (data.collections.length > 0) {
+      const processedCollections = data.collections.map(
+        (collection: Collection) => {
+          const processedCollection: SearchCollection = {
+            collectionId: collection.id,
+            contract: collection.primaryContract,
+            image: collection.image,
+            name: collection.name,
+            allTimeVolume: collection.volume?.allTime,
+            floorAskPrice: collection.floorAsk?.price?.amount?.decimal,
+            openseaVerificationStatus: collection.openseaVerificationStatus,
+            chainName: chain.name.toLowerCase(),
+            chainRoutePrefix: chain.routePrefix,
+            chainId: chain.id,
+            lightChainIcon: chain.lightIconUrl,
+            darkChainIcon: chain.darkIconUrl,
+            volumeCurrencySymbol: chain.nativeCurrency.symbol,
+            volumeCurrencyDecimals: chain.nativeCurrency.decimals,
+            tokenCount: collection.tokenCount || '0',
+          }
+          return {
+            type: 'collection',
+            data: processedCollection,
+          }
+        }
+      )
+      searchResults = processedCollections
+    }
+    // if ethereum chain
+    else if (chain.id === 1) {
+      let ensData = await fetch(
+        `https://api.ensideas.com/ens/resolve/${query}`
+      ).then((res) => res.json())
+      searchResults = [
+        {
+          type: 'wallet',
+          data: {
+            ...ensData,
+            address: query,
+          },
+        },
+      ]
+    }
+  }
+  // if ethereum chain
+  else if (
+    chain.id === 1 &&
+    /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(
+      query as string
+    )
+  ) {
+    let ensData = await fetch(
+      `https://api.ensideas.com/ens/resolve/${query}`
+    ).then((res) => res.json())
+
+    if (ensData.address) {
+      searchResults = [
+        {
+          type: 'wallet',
+          data: {
+            ...ensData,
+          },
+        },
+      ]
+    }
+  } else {
+    const searchResponse = await promise
+
+    if (searchResponse.data.collections.length > 0) {
+      const processedSearchResults = searchResponse.data.collections.map(
+        (collection: SearchCollection) => ({
+          type: 'collection',
+          data: {
+            ...collection,
+            chainName: chain.name.toLowerCase(),
+            chainRoutePrefix: chain.routePrefix,
+            chainId: chain.id,
+            lightChainIcon: chain.lightIconUrl,
+            darkChainIcon: chain.darkIconUrl,
+            volumeCurrencySymbol: chain.nativeCurrency.symbol,
+            volumeCurrencyDecimals: chain.nativeCurrency.decimals,
+            tokenCount: collection.tokenCount,
+            allTimeUsdVolume: collection.allTimeVolume,
+          },
+        })
+      )
+      searchResults = processedSearchResults
+    }
+  }
+  return searchResults
+}
+
+async function searchAllChains(query: string) {
   let searchResults: any[] = []
 
   const promises: ReturnType<typeof fetcher>[] = []
@@ -87,6 +255,7 @@ export default async function handler(req: Request) {
           floorAskPrice: collection.floorAsk?.price?.amount?.decimal,
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
+          chainRoutePrefix: chain.routePrefix,
           chainId: chain.id,
           lightChainIcon: chain.lightIconUrl,
           darkChainIcon: chain.darkIconUrl,
@@ -161,6 +330,7 @@ export default async function handler(req: Request) {
           data: {
             ...collection,
             chainName: supportedChains[index].name.toLowerCase(),
+            chainRoutePrefix: supportedChains[index].routePrefix,
             chainId: supportedChains[index].id,
             lightChainIcon: supportedChains[index].lightIconUrl,
             darkChainIcon: supportedChains[index].darkIconUrl,
@@ -187,16 +357,5 @@ export default async function handler(req: Request) {
     }
   }
 
-  return new Response(
-    JSON.stringify({
-      results: searchResults,
-    }),
-    {
-      status: 200,
-      headers: {
-        'content-type': 'application/json',
-        'Cache-Control': 'maxage=0, s-maxage=3600 stale-while-revalidate',
-      },
-    }
-  )
+  return searchResults
 }

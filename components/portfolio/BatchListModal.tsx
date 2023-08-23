@@ -19,7 +19,10 @@ import { UserToken } from 'pages/portfolio/[[...address]]'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { ApprovalCollapsible } from './ApprovalCollapsible'
-import { parseUnits, zeroAddress } from 'viem'
+import { formatUnits, parseUnits, zeroAddress } from 'viem'
+import useOnChainRoyalties, {
+  OnChainRoyaltyReturnType,
+} from 'hooks/useOnChainRoyalties'
 
 enum BatchListStep {
   Approving,
@@ -43,6 +46,7 @@ type Props = {
   disabled: boolean
   currency: Currency
   selectedMarketplaces: Marketplace[]
+  onChainRoyalties: ReturnType<typeof useOnChainRoyalties>['data']
   onCloseComplete?: () => void
 }
 
@@ -51,10 +55,11 @@ const BatchListModal: FC<Props> = ({
   disabled,
   currency,
   selectedMarketplaces,
+  onChainRoyalties,
   onCloseComplete,
 }) => {
   const [open, setOpen] = useState(false)
-  const { data: signer } = useWalletClient()
+  const { data: wallet } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
@@ -62,7 +67,7 @@ const BatchListModal: FC<Props> = ({
     chainId: marketplaceChain.id,
   })
   const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
+    wallet && activeChain?.id !== marketplaceChain.id
   )
   const client = useReservoirClient()
   const [batchListStep, setBatchListStep] = useState<BatchListStep>(
@@ -120,8 +125,8 @@ const BatchListModal: FC<Props> = ({
   }, [stepData])
 
   const listTokens = useCallback(() => {
-    if (!signer) {
-      const error = new Error('Missing a signer')
+    if (!wallet) {
+      const error = new Error('Missing a wallet')
       setTransactionError(error)
       throw error
     }
@@ -136,7 +141,7 @@ const BatchListModal: FC<Props> = ({
 
     const batchListingData: BatchListingData[] = []
 
-    listings.forEach((listing) => {
+    listings.forEach((listing, i) => {
       let expirationTime: string | null = null
 
       if (
@@ -174,6 +179,21 @@ const BatchListModal: FC<Props> = ({
         convertedListing.currency = currency.contract
       }
 
+      const onChainRoyalty =
+        onChainRoyalties && onChainRoyalties[i] ? onChainRoyalties[i] : null
+      if (onChainRoyalty && listing.orderKind?.includes('seaport')) {
+        convertedListing.automatedRoyalties = false
+        const royaltyData = onChainRoyalty.result as OnChainRoyaltyReturnType
+        const royalties = royaltyData[0].map((recipient, i) => {
+          const bps =
+            (parseFloat(formatUnits(royaltyData[1][i], 18)) / 1) * 10000
+          return `${recipient}:${bps}`
+        })
+        if (royalties.length > 0) {
+          convertedListing.fees = [...royalties]
+        }
+      }
+
       batchListingData.push({
         listing: convertedListing,
         token: listing.token,
@@ -185,7 +205,7 @@ const BatchListModal: FC<Props> = ({
     client.actions
       .listToken({
         listings: batchListingData.map((data) => data.listing),
-        signer,
+        wallet,
         onProgress: (steps: Execute['steps']) => {
           const executableSteps = steps.filter(
             (step) => step.items && step.items.length > 0
@@ -241,7 +261,7 @@ const BatchListModal: FC<Props> = ({
         )
         setTransactionError(transactionError)
       })
-  }, [client, listings, signer])
+  }, [client, listings, wallet, onChainRoyalties])
 
   const trigger = (
     <Button disabled={disabled} onClick={listTokens}>
@@ -260,7 +280,7 @@ const BatchListModal: FC<Props> = ({
             }
           }
 
-          if (!signer) {
+          if (!wallet) {
             openConnectModal?.()
           }
         }}

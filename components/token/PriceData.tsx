@@ -1,5 +1,10 @@
 import { useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
+import {
+  Flex,
+  FormatCryptoCurrency,
+  Text,
+  Tooltip,
+} from 'components/primitives'
 import { useMarketplaceChain } from 'hooks'
 import { FC } from 'react'
 import { formatDollar } from 'utils/numbers'
@@ -98,14 +103,37 @@ export const PriceData: FC<Props> = ({ token }) => {
             '@bp400': { flexDirection: 'row', gap: '$2' },
           }}
         >
-          <FormatCryptoCurrency
-            amount={token?.market?.topBid?.price?.amount?.decimal}
-            address={token?.market?.topBid?.price?.currency?.contract}
-            decimals={token?.market?.topBid?.price?.currency?.decimals}
-            textStyle="h4"
-            logoHeight={20}
-            maximumFractionDigits={4}
-          />
+          <Tooltip
+            side="top"
+            open={
+              token?.market?.topBid?.price?.netAmount?.decimal
+                ? undefined
+                : false
+            }
+            content={
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">Net Amount</Text>
+                <FormatCryptoCurrency
+                  amount={token?.market?.topBid?.price?.netAmount?.decimal}
+                  address={token?.market?.topBid?.price?.currency?.contract}
+                  decimals={token?.market?.topBid?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            }
+          >
+            <Flex>
+              <FormatCryptoCurrency
+                amount={token?.market?.topBid?.price?.amount?.decimal}
+                address={token?.market?.topBid?.price?.currency?.contract}
+                decimals={token?.market?.topBid?.price?.currency?.decimals}
+                textStyle="h4"
+                logoHeight={20}
+              />
+            </Flex>
+          </Tooltip>
+
           {token?.market?.topBid?.price?.amount?.usd ? (
             <Text style="body3" css={{ color: '$gray11' }} ellipsify>
               {formatDollar(token?.market?.topBid?.price?.amount?.usd)}

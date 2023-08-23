@@ -6,13 +6,13 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as RadixDialog from '@radix-ui/react-dialog'
-import { FullscreenModal } from 'components/common/FullscreenModal'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { FullscreenModal } from 'components/common/FullscreenModal'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
 import { Anchor, Box, Button, Flex, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
-import { useENSResolver } from 'hooks'
+import { useENSResolver, useMarketplaceChain } from 'hooks'
 import { useTheme } from 'next-themes'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -29,6 +29,7 @@ const HamburgerMenu = () => {
     shortName: shortEnsName,
   } = useENSResolver(address)
   const { disconnect } = useDisconnect()
+  const { routePrefix } = useMarketplaceChain()
 
   const trigger = (
     <Button
@@ -139,7 +140,7 @@ const HamburgerMenu = () => {
                 </Flex>
               </Flex>
             </Link>
-            <Link href="/collection-rankings" legacyBehavior>
+            <Link href={`/${routePrefix}/collection-rankings`} legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{

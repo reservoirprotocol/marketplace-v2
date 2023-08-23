@@ -7,6 +7,7 @@ import {
   ElementRef,
   FC,
   forwardRef,
+  useContext,
   useEffect,
   useMemo,
   useState,
@@ -18,12 +19,15 @@ import { useDebounce } from 'usehooks-ts'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Img from 'components/primitives/Img'
+import { ChainContext } from 'context/ChainContextProvider'
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
 import { SearchCollection } from 'pages/api/globalSearch'
 import Blockies from 'react-blockies'
 import { formatNumber } from 'utils/numbers'
 import optimizeImage from 'utils/optimizeImage'
+import titleCase from 'utils/titleCase'
+import { SearchChainSwitcher } from './SearchChainSwitcher'
 
 type Props = {
   collection: SearchCollection
@@ -44,7 +48,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
 
   return (
     <Link
-      href={`/collection/${collection.chainName}/${collection.collectionId}`}
+      href={`/${collection.chainRoutePrefix}/collection/${collection.collectionId}`}
       style={{ overflow: 'hidden', width: '100%', minWidth: 0 }}
       onClick={() => handleSelectResult(collection)}
     >
@@ -53,6 +57,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
           p: '$2',
           gap: '$3',
           cursor: 'pointer',
+          borderRadius: 4,
           '&:hover': {
             background: '$gray4',
           },
@@ -128,6 +133,7 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
         css={{
           p: '$2',
           gap: '$4',
+          borderRadius: 4,
           '&:hover': {
             background: '$gray4',
           },
@@ -185,13 +191,17 @@ const GlobalSearch = forwardRef<
   ElementRef<typeof Input>,
   ComponentPropsWithoutRef<typeof Input>
 >(({ children, ...props }, forwardedRef) => {
+  const { chain } = useContext(ChainContext)
+
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
+  const [searchChain, setSearchChain] = useState(chain.routePrefix)
   const [results, setResults] = useState([])
+  const [fallbackResults, setFallbackResults] = useState([])
   const [recentResults, setRecentResults] = useState<SearchCollection[]>([])
   const [showSearchBox, setShowSearchBox] = useState(false)
 
-  const hasResults = results.length > 0
+  const hasResults = results.length > 0 || fallbackResults.length > 0
   const hasRecentResults = recentResults.length > 0
 
   const debouncedSearch = useDebounce(search, 500)
@@ -201,11 +211,12 @@ const GlobalSearch = forwardRef<
   useEffect(() => {
     const getSearchResults = async () => {
       setSearching(true)
-      let res = await fetch(`/api/globalSearch?query=${debouncedSearch}`).then(
-        (res) => res.json()
-      )
+      let res = await fetch(
+        `/api/globalSearch?query=${debouncedSearch}&searchChain=${searchChain}`
+      ).then((res) => res.json())
 
       setResults(res.results)
+      setFallbackResults(res.fallbackResults)
       setSearching(false)
     }
     if (debouncedSearch.length >= 2) {
@@ -213,7 +224,7 @@ const GlobalSearch = forwardRef<
     } else {
       setResults([])
     }
-  }, [debouncedSearch])
+  }, [debouncedSearch, searchChain])
 
   useEffect(() => {
     const hideBox = () => setShowSearchBox(false)
@@ -343,18 +354,25 @@ const GlobalSearch = forwardRef<
           <Box
             css={{
               position: 'absolute',
+              display: 'flex',
+              flexDirection: 'column',
               top: '100%',
               left: 0,
               right: 0,
+              p: '$3',
               background: isMobile ? 'transparent' : '$dropdownBg',
               borderRadius: isMobile ? 0 : 8,
               zIndex: 4,
-              mt: '$2',
+              mt: isMobile ? 0 : '$2',
               border: isMobile ? '' : '1px solid $gray7',
               overflow: 'hidden',
               width: '100%',
             }}
           >
+            <SearchChainSwitcher
+              searchChain={searchChain}
+              setSearchChain={setSearchChain}
+            />
             {hasRecentResults && !hasResults && search.length <= 3 && (
               <Flex direction="column" css={{ pt: '$2' }}>
                 <Text css={{ ml: '$2' }} style="subtitle2" color="subtle">
@@ -372,13 +390,39 @@ const GlobalSearch = forwardRef<
             )}
             {results &&
               results
-                .slice(0, 8)
+                .slice(0, 6)
                 .map((result) => (
                   <SearchResult
                     result={result}
                     handleSelectResult={handleSelectResult}
                   />
                 ))}
+
+            {results.length === 0 &&
+            fallbackResults.length > 0 &&
+            !searching ? (
+              <>
+                <Text
+                  style="body2"
+                  color="subtle"
+                  css={{
+                    textAlign: 'center',
+                    py: '$5',
+                    justifySelf: 'center',
+                  }}
+                >
+                  There are no results on{' '}
+                  <Text style="subtitle2">{titleCase(searchChain)}</Text>. Here
+                  are the results on other chains.
+                </Text>
+                {fallbackResults.slice(0, 6).map((result) => (
+                  <SearchResult
+                    result={result}
+                    handleSelectResult={handleSelectResult}
+                  />
+                ))}
+              </>
+            ) : null}
 
             {searching && (
               <Flex align="center" justify="center" css={{ py: '$4' }}>
@@ -387,9 +431,10 @@ const GlobalSearch = forwardRef<
                 />
               </Flex>
             )}
-            {!searching && results.length === 0 && search.length > 3 && (
-              <Box css={{ p: '$4' }}>No Results</Box>
-            )}
+            {!searching &&
+              results.length === 0 &&
+              fallbackResults.length === 0 &&
+              search.length > 3 && <Box css={{ p: '$4' }}>No Results</Box>}
           </Box>
         )}
     </Box>

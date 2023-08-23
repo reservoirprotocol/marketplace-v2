@@ -21,7 +21,7 @@ import Link from 'next/link'
 import { FC, useContext, useEffect, useRef, useState } from 'react'
 import { MutatorCallback } from 'swr'
 import { useIntersectionObserver } from 'usehooks-ts'
-import { formatDollar } from 'utils/numbers'
+import { formatDollar, formatNumber } from 'utils/numbers'
 import { OnlyUserOrdersToggle } from './OnlyUserOrdersToggle'
 import { zeroAddress } from 'viem'
 
@@ -211,7 +211,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               }}
             >
               <Text style="subtitle2" color="subtle">
-                x{listing.quantityRemaining}
+                x{formatNumber(listing.quantityRemaining, 0, true)}
               </Text>
             </Flex>
           ) : null}

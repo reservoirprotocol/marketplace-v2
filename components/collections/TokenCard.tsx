@@ -32,7 +32,6 @@ type TokenCardProps = {
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void
   tokenCount?: string
-  orderQuantity?: number
 }
 
 export default ({
@@ -42,7 +41,6 @@ export default ({
   addToCartEnabled = true,
   mutate,
   onMediaPlayed,
-  orderQuantity,
   tokenCount,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
@@ -52,6 +50,8 @@ export default ({
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
+
+  const is1155 = token?.token?.kind === 'erc1155'
 
   return (
     <Box
@@ -99,7 +99,8 @@ export default ({
           </Text>
         </Flex>
       )}
-      {orderQuantity && orderQuantity > 1 && (
+
+      {is1155 && token?.token?.supply && (
         <Flex
           justify="center"
           align="center"
@@ -123,7 +124,7 @@ export default ({
             }}
             ellipsify
           >
-            x{orderQuantity}
+            x{formatNumber(token?.token?.supply, 0, true)}
           </Text>
         </Flex>
       )}
@@ -151,7 +152,7 @@ export default ({
       </Flex>
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
@@ -164,7 +165,7 @@ export default ({
               borderRadius: 0,
               aspectRatio: '1/1',
             }}
-            preview={showPreview}
+            staticOnly={showPreview}
             audioOptions={{
               onPlay: (e) => {
                 onMediaPlayed?.(e)
@@ -186,7 +187,7 @@ export default ({
         </Box>
       </Link>
       <Link
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
@@ -223,70 +224,85 @@ export default ({
                 </Tooltip>
               )}
             </Flex>
-            <Box
-              css={{
-                px: '$1',
-                py: 2,
-                background: '$gray5',
-                borderRadius: 8,
-                minWidth: 'max-content',
-              }}
-            >
-              {rarityEnabled &&
-                token?.token?.kind !== 'erc1155' &&
-                token?.token?.rarityRank && (
-                  <Flex align="center" css={{ gap: 5 }}>
-                    <img
-                      style={{ width: 13, height: 13 }}
-                      src="/icons/rarity-icon.svg"
-                    />
-                    <Text style="subtitle3" as="p">
-                      {formatNumber(token?.token?.rarityRank)}
-                    </Text>
-                  </Flex>
-                )}
-            </Box>
+            {rarityEnabled && !is1155 && token?.token?.rarityRank && (
+              <Box
+                css={{
+                  px: '$1',
+                  py: 2,
+                  background: '$gray5',
+                  borderRadius: 8,
+                  minWidth: 'max-content',
+                }}
+              >
+                <Flex align="center" css={{ gap: 5 }}>
+                  <img
+                    style={{ width: 13, height: 13 }}
+                    src="/icons/rarity-icon.svg"
+                  />
+                  <Text style="subtitle3" as="p">
+                    {formatNumber(token?.token?.rarityRank)}
+                  </Text>
+                </Flex>
+              </Box>
+            )}
           </Flex>
 
-          <Flex align="center" css={{ gap: '$2' }}>
-            <Box
-              css={{
-                flex: 1,
-                minWidth: 0,
-                width: '100%',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-              }}
-            >
-              {token?.market?.floorAsk?.price && (
-                <FormatCryptoCurrency
-                  logoHeight={18}
-                  amount={token?.market?.floorAsk?.price?.amount?.decimal}
-                  address={token?.market?.floorAsk?.price?.currency?.contract}
-                  textStyle="h6"
-                  css={{
-                    textOverflow: 'ellipsis',
-                    minWidth: 0,
-                    with: '100%',
-                    overflow: 'hidden',
-                  }}
-                  maximumFractionDigits={4}
-                />
-              )}
-            </Box>
+          <Flex align="center" justify="between" css={{ gap: '$2' }}>
+            <Flex align="center" css={{ gap: '$2' }}>
+              <Box
+                css={{
+                  flex: 1,
+                  minWidth: 0,
+                  width: '100%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {token?.market?.floorAsk?.price && (
+                  <FormatCryptoCurrency
+                    logoHeight={18}
+                    amount={token?.market?.floorAsk?.price?.amount?.decimal}
+                    address={token?.market?.floorAsk?.price?.currency?.contract}
+                    textStyle="h6"
+                    css={{
+                      textOverflow: 'ellipsis',
+                      minWidth: 0,
+                      with: '100%',
+                      overflow: 'hidden',
+                    }}
+                    maximumFractionDigits={4}
+                  />
+                )}
+              </Box>
 
-            <>
-              {token?.market?.floorAsk?.source?.name && (
-                <img
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: '50%',
-                  }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
-                />
-              )}
-            </>
+              {is1155 && token?.market?.floorAsk?.quantityRemaining ? (
+                <Text style="subtitle2" ellipsify>
+                  x
+                  {formatNumber(
+                    token?.market?.floorAsk?.quantityRemaining,
+                    0,
+                    true
+                  )}
+                </Text>
+              ) : null}
+            </Flex>
+
+            {token?.market?.floorAsk?.source?.name ? (
+              <img
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  const url = `${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
+                  window.open(url, '_blank')
+                }}
+                src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+              />
+            ) : null}
           </Flex>
           {token?.token?.lastSale?.price?.amount?.decimal ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>

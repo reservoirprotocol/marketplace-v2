@@ -1,3 +1,4 @@
+import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 import {
   Box,
   Button,
@@ -7,7 +8,6 @@ import {
   Text,
 } from 'components/primitives'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
-import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
 import { formatUnits, zeroAddress } from 'viem'
 import { erc20ABI, useAccount, useBalance, useContractReads } from 'wagmi'
@@ -118,7 +118,7 @@ const Wallet = () => {
   const enhancedCurrencies = useMemo(() => {
     const currencyToUsdConversions = usdConversions.reduce((map, data) => {
       map[data.symbol] = data
-      map[data.id] = data
+      map[(data as any).coinGeckoId] = data
       return map
     }, {} as Record<string, (typeof usdConversions)[0]>)
 

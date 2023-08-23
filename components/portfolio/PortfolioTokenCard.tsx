@@ -166,35 +166,7 @@ export default ({
             }}
             ellipsify
           >
-            x{tokenCount}
-          </Text>
-        </Flex>
-      )}
-      {orderQuantity && orderQuantity > 1 && (
-        <Flex
-          justify="center"
-          align="center"
-          css={{
-            borderRadius: 8,
-            px: '$2',
-            py: '$1',
-            mr: '$2',
-            position: 'absolute',
-            left: '$2',
-            top: '$2',
-            zIndex: 1,
-            maxWidth: '50%',
-            backgroundColor: 'rgba(	38, 41, 43, 0.3)',
-            backdropFilter: 'blur(2px)',
-          }}
-        >
-          <Text
-            css={{
-              color: '$whiteA12',
-            }}
-            ellipsify
-          >
-            x{orderQuantity}
+            x{formatNumber(tokenCount, 0, true)}
           </Text>
         </Flex>
       )}
@@ -236,7 +208,7 @@ export default ({
       ) : null}
       <Link
         passHref
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
@@ -249,7 +221,7 @@ export default ({
               borderRadius: 0,
               aspectRatio: '1/1',
             }}
-            preview={showPreview}
+            staticOnly={showPreview}
             audioOptions={{
               onPlay: (e) => {
                 onMediaPlayed?.(e)
@@ -271,7 +243,7 @@ export default ({
         </Box>
       </Link>
       <Link
-        href={`/collection/${routePrefix}/${token?.token?.contract}/${token?.token?.tokenId}`}
+        href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}

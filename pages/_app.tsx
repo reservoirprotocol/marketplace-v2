@@ -7,10 +7,10 @@ initializeAnalytics()
 import localFont from '@next/font/local'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import {
-  darkTheme as rainbowDarkTheme,
-  getDefaultWallets,
-  lightTheme as rainbowLightTheme,
   RainbowKitProvider,
+  getDefaultWallets,
+  darkTheme as rainbowDarkTheme,
+  lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
 import {
@@ -19,17 +19,20 @@ import {
   ReservoirKitTheme,
 } from '@reservoir0x/reservoir-kit-ui'
 import ChainContextProvider from 'context/ChainContextProvider'
+import ReferralContextProvider, {
+  ReferralContext,
+} from 'context/ReferralContextProvider'
 import ToastContextProvider from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { ThemeProvider, useTheme } from 'next-themes'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { LoreCheckout } from 'plugins/lore/LoreCheckout'
-import { FC, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import { darkTheme, globalReset, loreTheme } from 'stitches.config'
 import supportedChains from 'utils/chains'
-import { configureChains, createConfig, WagmiConfig } from 'wagmi'
+import { WagmiConfig, configureChains, createConfig } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
@@ -58,13 +61,17 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
   ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
   : false
 
+const WALLET_CONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+
 const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir Marketplace',
+  appName: 'Reservoir NFT Explorer',
+  projectId: '6345629da20a38f9d80b64bb7a1fd93d',
   chains,
 })
 
@@ -253,7 +260,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         <ChainContextProvider>
           <AnalyticsProvider>
             <ErrorTrackingProvider>
-              <MyApp {...props} />
+              <ReferralContextProvider>
+                <MyApp {...props} />
+              </ReferralContextProvider>
             </ErrorTrackingProvider>
           </AnalyticsProvider>
         </ChainContextProvider>
@@ -298,6 +307,7 @@ function MyApp({
       )
     }
   }, [theme])
+  const { feesOnTop } = useContext(ReferralContext)
 
   const FunctionalComponent = Component as FC
 
@@ -341,7 +351,7 @@ function MyApp({
           }}
           theme={reservoirKitTheme}
         >
-          <CartProvider>
+          <CartProvider feesOnTopUsd={feesOnTop}>
             <Tooltip.Provider>
               <RainbowKitProvider
                 chains={chains}

@@ -22,7 +22,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
     (attributeTokenCount / totalTokens) * 100,
     1
   )
-  const attributeHref = `/collection/${routePrefix}/${collectionId}?attributes[${attribute.key}]=${attribute.value}`
+  const attributeHref = `/${routePrefix}/collection/${collectionId}?attributes[${attribute.key}]=${attribute.value}`
   return (
     <Link href={attributeHref} style={{ minWidth: 0 }}>
       <Flex

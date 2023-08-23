@@ -9,7 +9,7 @@ import { useRef } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 import { useMediaQuery } from 'react-responsive'
 import { useAccount } from 'wagmi'
-import { useMounted } from '../../hooks'
+import { useMarketplaceChain, useMounted } from '../../hooks'
 import { Box, Flex } from '../primitives'
 import CartButton from './CartButton'
 import GlobalSearch from './GlobalSearch'
@@ -26,6 +26,7 @@ const Navbar = () => {
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
   const isMounted = useMounted()
+  const { routePrefix } = useMarketplaceChain()
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -107,7 +108,7 @@ const Navbar = () => {
     >
       <Box css={{ flex: 1 }}>
         <Flex align="center">
-          <Link href="/">
+          <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
@@ -126,7 +127,7 @@ const Navbar = () => {
               )}
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
+          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
             <GlobalSearch
               ref={searchRef}
               placeholder="Search collections and addresses"
@@ -135,8 +136,8 @@ const Navbar = () => {
             />
           </Box>
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            <Link href="/collection-rankings">
-              <NavItem active={router.pathname == '/collection-rankings'}>
+            <Link href={`/${routePrefix}/collection-rankings`}>
+              <NavItem active={router.pathname.includes('collection-rankings')}>
                 Collections
               </NavItem>
             </Link>

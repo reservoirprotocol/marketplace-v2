@@ -26,13 +26,14 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
 import optimizeImage from 'utils/optimizeImage'
+import { formatNumber } from 'utils/numbers'
 
 type Props = {
   address: Address | undefined
   isOwner: boolean
 }
 
-const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
+const desktopTemplateColumns = '1.25fr .75fr repeat(4, 1fr)'
 
 export const OffersTable: FC<Props> = ({ address, isOwner }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -158,8 +159,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
           <Link
             href={
               isCollectionOffer
-                ? `/collection/${routePrefix}/${offer?.contract}${attributeQueryParam}`
-                : `/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`
+                ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+                : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
             }
           >
             <Flex align="center">
@@ -186,20 +187,60 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
                   {criteriaData?.collection?.name}
                 </Text>
-                <Text style="subtitle2" ellipsify>
-                  {isCollectionOffer
-                    ? attributeDisplayText
-                    : `#${criteriaData?.token?.tokenId}`}
-                </Text>
+                <Flex css={{ gap: '$2' }} align="center">
+                  <Text style="subtitle2" ellipsify>
+                    {isCollectionOffer
+                      ? attributeDisplayText
+                      : `#${criteriaData?.token?.tokenId}`}
+                  </Text>
+                  {offer?.quantityRemaining && offer?.quantityRemaining > 1 ? (
+                    <Flex
+                      justify="center"
+                      align="center"
+                      css={{
+                        borderRadius: 4,
+                        px: '$2',
+                        py: '$1',
+                        ml: '$1',
+                        backgroundColor: '$gray2',
+                      }}
+                    >
+                      <Text style="subtitle2" color="subtle">
+                        x{formatNumber(offer.quantityRemaining, 0, true)}
+                      </Text>
+                    </Flex>
+                  ) : null}
+                </Flex>
               </Flex>
             </Flex>
           </Link>
-          <FormatCryptoCurrency
-            amount={offer?.price?.amount?.decimal}
-            address={offer?.price?.currency?.contract}
-            textStyle="subtitle2"
-            logoHeight={14}
-          />
+          <Tooltip
+            side="left"
+            sideOffset="1"
+            open={offer?.price?.netAmount?.decimal ? undefined : false}
+            content={
+              <Flex justify="between" css={{ gap: '$2' }}>
+                <Text style="body3">Net Amount</Text>
+                <FormatCryptoCurrency
+                  amount={offer?.price?.netAmount?.decimal}
+                  address={offer?.price?.currency?.contract}
+                  decimals={offer?.price?.currency?.decimals}
+                  textStyle="subtitle3"
+                  logoHeight={14}
+                />
+              </Flex>
+            }
+          >
+            <Flex>
+              <FormatCryptoCurrency
+                amount={offer?.price?.amount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="subtitle2"
+                logoHeight={14}
+              />
+            </Flex>
+          </Tooltip>
         </Flex>
         <Flex justify="between" align="center" css={{ width: '100%' }}>
           <a href={`https://${offer?.source?.domain}`} target="_blank">
@@ -275,8 +316,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         <Link
           href={
             isCollectionOffer
-              ? `/collection/${routePrefix}/${offer?.contract}${attributeQueryParam}`
-              : `/collection/${routePrefix}/${offer?.contract}/${criteriaData?.token?.tokenId}`
+              ? `/${routePrefix}/collection/${offer?.contract}${attributeQueryParam}`
+              : `/${routePrefix}/asset/${offer?.contract}:${criteriaData?.token?.tokenId}`
           }
         >
           <Flex align="center">
@@ -313,12 +354,38 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
         </Link>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
-          amount={offer?.price?.amount?.decimal}
-          address={offer?.price?.currency?.contract}
-          textStyle="subtitle2"
-          logoHeight={14}
-        />
+        <Tooltip
+          side="left"
+          sideOffset="1"
+          open={offer?.price?.netAmount?.decimal ? undefined : false}
+          content={
+            <Flex justify="between" css={{ gap: '$2' }}>
+              <Text style="body3">Net Amount</Text>
+              <FormatCryptoCurrency
+                amount={offer?.price?.netAmount?.decimal}
+                address={offer?.price?.currency?.contract}
+                decimals={offer?.price?.currency?.decimals}
+                textStyle="subtitle3"
+                logoHeight={14}
+              />
+            </Flex>
+          }
+        >
+          <Flex>
+            <FormatCryptoCurrency
+              amount={offer?.price?.amount?.decimal}
+              address={offer?.price?.currency?.contract}
+              decimals={offer?.price?.currency?.decimals}
+              textStyle="subtitle1"
+              logoHeight={14}
+            />
+          </Flex>
+        </Tooltip>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle2">
+          {formatNumber(offer.quantityRemaining, 0, true)}
+        </Text>
       </TableCell>
       <TableCell>
         <Text style="subtitle2">{expiration}</Text>
@@ -396,7 +463,14 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, isOwner, mutate }) => {
   )
 }
 
-const headings = ['Items', 'Offer Amount', 'Expiration', 'Marketplace', '']
+const headings = [
+  'Items',
+  'Offer Amount',
+  'Quantity',
+  'Expiration',
+  'Marketplace',
+  '',
+]
 
 const TableHeading = () => (
   <HeaderRow
