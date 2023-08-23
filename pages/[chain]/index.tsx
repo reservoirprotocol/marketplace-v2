@@ -52,7 +52,6 @@ const Home: NextPage<any> = ({ ssr }) => {
 
   const { data: topSellingCollectionsData, isValidating } =
     useTrendingCollections(
-      {},
       {
         revalidateOnMount: true,
         refreshInterval: 300000,
