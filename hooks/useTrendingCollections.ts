@@ -21,7 +21,6 @@ export default function (
     chainId !== undefined
       ? client?.chains.find((chain) => chain.id === chainId)
       : client?.currentChain()
-  console.log(chain)
 
   const { routePrefix } = supportedChains.find((c) => c.id === chain?.id) as any
 
