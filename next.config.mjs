@@ -1,5 +1,5 @@
-import { DefaultChain } from './.cache/chains.mjs'
 import { withSentryConfig } from '@sentry/nextjs'
+import { DefaultChain } from './.cache/chains.mjs'
 
 const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
@@ -68,7 +68,7 @@ const nextConfig = {
           },
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN',
           },
         ],
       },
