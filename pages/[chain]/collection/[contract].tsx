@@ -351,6 +351,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
                   <Sweep
                     collectionId={collection.id}
+                    openState={isSweepRoute ? sweepOpenState : undefined}
                     buttonChildren={
                       <Flex css={{ gap: '$2' }} align="center" justify="center">
                         <Text style="h6" as="h6" css={{ color: '$bg' }}>
@@ -372,6 +373,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   {mintData ? (
                     <Mint
                       collectionId={collection.id}
+                      openState={isMintRoute ? mintOpenState : undefined}
                       buttonChildren={
                         <Flex
                           css={{ gap: '$2', px: '$4' }}
