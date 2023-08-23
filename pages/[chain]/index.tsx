@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { NextPage, GetServerSideProps } from 'next'
 import Link from 'next/link'
 import {
   Text,
@@ -71,7 +71,7 @@ const Home: NextPage<any> = ({ ssr }) => {
         .filter((c) => c.id !== chain.id)
         .forEach((c) => {
           preload(
-            `http://localhost:3000/api/${c.routePrefix}/trendingCollections/v1`,
+            `${process.env.NEXT_PUBLIC_HOST_URL}/api/${c.routePrefix}/trendingCollections/v1`,
             fetcher
           )
         }),
@@ -537,7 +537,7 @@ export const getServerSideProps: GetServerSideProps<{
     DefaultChain
 
   const response = await fetcher(
-    `http://localhost:3000/api/${chainPrefix}/trendingCollections/v1`,
+    `${process.env.NEXT_PUBLIC_HOST_URL}/api/${chainPrefix}/trendingCollections/v1`,
     {
       headers: {
         'x-api-key': chain.apiKey || '',
