@@ -1,4 +1,4 @@
-import { NextPage } from 'next'
+import { NextPage, GetServerSideProps } from 'next'
 import Link from 'next/link'
 import {
   Text,
