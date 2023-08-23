@@ -18,7 +18,6 @@ const fetcher = async (
     headers,
     ...data,
   })
-
   const json = await response.json()
 
   return { data: json, response }

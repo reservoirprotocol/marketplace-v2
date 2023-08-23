@@ -19,7 +19,10 @@ const optimizeImage = (imageHref: string | undefined, width: number) => {
         let newImage = imageHref.split('=')
         return `${newImage[0]}=${width}`
       }
-      return `${imageHref}?w=${width}`
+      return `${imageHref.replace(
+        'img.seadn.io/files',
+        'i.seadn.io/gcs/files'
+      )}?w=${width}`
     }
   } catch (e) {
     console.warn('Failed to optimize image', e)
