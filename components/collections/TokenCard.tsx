@@ -50,7 +50,12 @@ export default ({
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
   const showPreview =
-    mediaType === 'other' || mediaType === 'html' || mediaType === null
+    mediaType === 'other' ||
+    mediaType === 'html' ||
+    mediaType === null ||
+    mediaType === 'gif' ||
+    mediaType === 'gltf' ||
+    mediaType === 'glb'
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
@@ -170,6 +175,7 @@ export default ({
               aspectRatio: '1/1',
             }}
             staticOnly={showPreview}
+            imageResolution={'medium'}
             audioOptions={{
               onPlay: (e) => {
                 onMediaPlayed?.(e)

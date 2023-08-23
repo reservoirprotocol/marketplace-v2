@@ -297,6 +297,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <TokenMedia
               token={token?.token}
               videoOptions={{ autoPlay: true, muted: true }}
+              imageResolution={'large'}
               style={{
                 width: '100%',
                 height: 'auto',

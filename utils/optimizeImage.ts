@@ -2,6 +2,17 @@ const optimizeImage = (imageHref: string | undefined, width: number) => {
   try {
     if (!imageHref) return ''
     let url = new URL(imageHref)
+    const existingWidthRegex = /(w|width)=(\d+)/g
+    const existingWidth = imageHref.match(existingWidthRegex)
+    if (
+      existingWidth &&
+      existingWidth[0] &&
+      Number(existingWidth[0]) !== width
+    ) {
+      return imageHref.replace(existingWidthRegex, (match, key, number) => {
+        return `${key}=${width}`
+      })
+    }
     if (url.host === 'lh3.googleusercontent.com') {
       if (imageHref.includes('=s') || imageHref.includes('=w')) {
         let newImage = imageHref.split('=')

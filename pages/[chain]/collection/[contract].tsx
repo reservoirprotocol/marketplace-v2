@@ -49,6 +49,7 @@ import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
 import ReactMarkdown from 'react-markdown'
 import { styled } from '../../../stitches.config'
+import optimizeImage from 'utils/optimizeImage'
 
 const StyledImage = styled('img', {})
 
@@ -276,7 +277,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               >
                 <Flex css={{ gap: '$4', flex: 1 }} align="center">
                   <Img
-                    src={collection.image!}
+                    src={optimizeImage(collection.image!, 250)}
                     width={72}
                     height={72}
                     style={{
@@ -648,23 +649,25 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       },
                     }}
                   >
-                    <StyledImage
-                      src={collection.banner?.replace('w=500', 'w=1500')}
-                      css={{
-                        borderRadius: 8,
-                        borderBottomLeftRadius: 0,
-                        borderBottomRightRadius: 0,
-                        width: '100%',
-                        height: 300,
-                        '@md': {
-                          height: 350,
-                        },
-                        '@lg': {
-                          height: 200,
-                        },
-                        objectFit: 'cover',
-                      }}
-                    />
+                    {collection.banner ? (
+                      <StyledImage
+                        src={optimizeImage(collection.banner, 1000)}
+                        css={{
+                          borderRadius: 8,
+                          borderBottomLeftRadius: 0,
+                          borderBottomRightRadius: 0,
+                          width: '100%',
+                          height: 300,
+                          '@md': {
+                            height: 350,
+                          },
+                          '@lg': {
+                            height: 200,
+                          },
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : null}
                     <Box css={{ p: '$4' }}>
                       <Text
                         style="h6"
