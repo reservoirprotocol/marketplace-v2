@@ -62,6 +62,7 @@ export default function (
       return {
         ...collection,
         ...collectionsMap[collection.id as string],
+        volume: collection.volume,
       }
     })
   }, [collections, topSellingData])
