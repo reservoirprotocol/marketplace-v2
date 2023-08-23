@@ -1,13 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { kv } from '@vercel/kv'
 
 import supportedChains, { DefaultChain } from 'utils/chains'
 
-async function fetchAndCacheTrendingCollections(chainPrefix: string) {
-  const startTime = Math.floor(new Date().getTime() / 1000) - 60 * 6 * 60
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  let chainParam = req.query.chain as string
   try {
+    const startTime = Math.floor(new Date().getTime() / 1000) - 60 * 6 * 60
     const chain =
-      supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
+      supportedChains.find((chain) => chain.routePrefix === chainParam) ||
       DefaultChain
 
     const params = {
@@ -42,36 +45,8 @@ async function fetchAndCacheTrendingCollections(chainPrefix: string) {
         ...collectionsData.collections.find((c: any) => c.id === collection.id),
       }
     })
-
-    // Store the fetched data in Redis with a TTL of 300 seconds (5 minutes)
-    let res = await kv.setex(
-      'trending_collections_' + chainPrefix,
-      300,
-      JSON.stringify(collections)
-    )
-    return collections
-  } catch (error) {
-    // Handle the error appropriately, perhaps by logging it
-    console.error('Error fetching and caching data:', error)
-  }
-}
-
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  let chain = req.query.chain as string
-  try {
-    let data = (await kv.get('trending_collections_' + chain)) as string
-    console.log('data:', data)
-
-    if (data) {
-      fetchAndCacheTrendingCollections(chain)
-      return res.status(200).json({ collections: data })
-    }
-
-    let collections = await fetchAndCacheTrendingCollections(chain)
-
+    res.setHeader('content-type', 'application/json')
+    res.setHeader('Cache-Control', 'maxage=300, stale-while-revalidate=600')
     res.status(200).json({ collections })
   } catch (err) {
     console.log(err)

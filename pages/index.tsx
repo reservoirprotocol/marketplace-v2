@@ -56,7 +56,6 @@ const IndexPage: NextPage<any> = ({ ssr }) => {
     collections: collectionsData,
     isValidating,
   } = useTrendingCollections(
-    {},
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
