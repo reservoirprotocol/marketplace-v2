@@ -252,7 +252,6 @@ export const darkTheme = createTheme({
     //Aliases
 
     //Primary
-    //Aliases
     primary1: '$iris1',
     primary2: '$iris2',
     primary3: '$iris3',
