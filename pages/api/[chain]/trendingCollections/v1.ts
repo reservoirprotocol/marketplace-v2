@@ -49,7 +49,7 @@ export default async function handler(
     res.setHeader('Cache-Control', 'maxage=300, stale-while-revalidate=600')
     res.status(200).json({ collections })
   } catch (err) {
-    console.log(err)
     res.status(500).json({ error: 'failed to load data' })
+    console.log(err)
   }
 }
