@@ -272,7 +272,48 @@ const Navbar = () => {
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
-          <AccountSidebar />
+          <HoverCard.Root openDelay={200}>
+            <HoverCard.Trigger>
+              <AccountSidebar />
+            </HoverCard.Trigger>
+            <HoverCard.Content sideOffset={14} align="end">
+              <Card css={{ p: 24, width: 240 }}>
+                <Flex css={{ gap: '$4' }} direction="column">
+                  <Link href="/portfolio?tab=items" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      My Items
+                    </NavItem>
+                  </Link>
+
+                  <Link href="/portfolio?tab=listings" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Listings
+                    </NavItem>
+                  </Link>
+
+                  <Link href="/portfolio?tab=offers" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Offers Made
+                    </NavItem>
+                  </Link>
+
+                  <Link href="/portfolio?tab=activity" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Activity
+                    </NavItem>
+                  </Link>
+                </Flex>
+              </Card>
+            </HoverCard.Content>
+          </HoverCard.Root>
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />
