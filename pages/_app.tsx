@@ -34,6 +34,7 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
@@ -181,6 +182,8 @@ function MyApp({
           theme={reservoirKitTheme}
         >
           <CartProvider feesOnTopUsd={feesOnTop}>
+                        <WebsocketContextProvider>
+            
             <Tooltip.Provider>
               <RainbowKitProvider
                 chains={chains}
@@ -192,6 +195,8 @@ function MyApp({
                 </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>
+                                      </WebsocketContextProvider>
+
           </CartProvider>
         </ReservoirKitProvider>
       </ThemeProvider>
