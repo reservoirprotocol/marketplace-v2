@@ -54,8 +54,6 @@ import { styled } from '../../../stitches.config'
 import optimizeImage from 'utils/optimizeImage'
 
 const StyledImage = styled('img', {})
-import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
-import LiveState from 'components/common/LiveState'
 
 type ActivityTypes = Exclude<
   NonNullable<
