@@ -26,6 +26,7 @@ import { styled } from 'stitches.config'
 import { useTheme } from 'next-themes'
 import { useLocalStorage } from 'usehooks-ts'
 import ChainToggle from 'components/common/ChainToggle'
+import optimizeImage from 'utils/optimizeImage'
 
 const StyledImage = styled('img', {})
 
@@ -133,10 +134,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                 border: `1px solid $gray5`,
                 backgroundImage:
                   theme === 'light'
-                    ? `url(${topCollection?.banner?.replace(
-                        'w=500',
-                        'w=4500'
-                      )}) `
+                    ? `url(${optimizeImage(topCollection?.banner, 1820)})`
                     : '$gray3',
                 backgroundColor: '$gray5',
               }}
@@ -168,10 +166,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                     }}
                   >
                     <StyledImage
-                      src={
-                        topCollection?.banner?.replace('w=500', 'w=4500') ??
-                        topCollection?.image
-                      }
+                      src={optimizeImage(
+                        topCollection?.banner ?? topCollection?.image,
+                        1820
+                      )}
                       css={{
                         width: '100%',
                         borderRadius: 8,
@@ -201,7 +199,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                           borderRadius: 8,
                           border: '2px solid rgba(255,255,255,0.6)',
                         }}
-                        src={topCollection?.image as string}
+                        src={optimizeImage(topCollection?.image, 200) as string}
                       />
                     </Box>
                   </Box>
@@ -292,9 +290,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                                 >
                                   <img
                                     style={{ borderRadius: 4 }}
-                                    src={
-                                      sale?.token?.image || topCollection.image
-                                    }
+                                    src={optimizeImage(
+                                      sale?.token?.image || topCollection.image,
+                                      250
+                                    )}
                                   />
                                 </Box>
                               ))}
@@ -397,12 +396,12 @@ const Home: NextPage<any> = ({ ssr }) => {
                           {collection?.banner?.length ||
                           collection.recentSales?.[0].token?.image?.length ? (
                             <img
-                              src={
-                                collection?.banner?.replace(
-                                  'w=500',
-                                  'w=1200'
-                                ) ?? collection.recentSales?.[0].token?.image
-                              }
+                              loading="lazy"
+                              src={optimizeImage(
+                                collection?.banner ??
+                                  collection.recentSales?.[0].token?.image,
+                                800
+                              )}
                               style={{
                                 transition: 'transform 300ms ease-in-out',
                                 width: '100%',
@@ -422,7 +421,9 @@ const Home: NextPage<any> = ({ ssr }) => {
                             />
                           )}
                           <Img
-                            src={collection?.image as string}
+                            src={
+                              optimizeImage(collection?.image, 72 * 2) as string
+                            }
                             alt={collection?.name as string}
                             width={72}
                             height={72}
