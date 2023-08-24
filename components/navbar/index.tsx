@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Box, Flex } from '../primitives'
+import { Box, Flex, Card } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -17,13 +17,15 @@ import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
+import * as HoverCard from '@radix-ui/react-hover-card'
+
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
   const { theme } = useTheme()
   const { isConnected } = useAccount()
-  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
+  const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
 
@@ -60,11 +62,11 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
-            <Box css={{ width: 34, cursor: 'pointer' }}>
+            <Box css={{ width: 46, cursor: 'pointer' }}>
               <Image
                 src="/reservoirLogo.svg"
-                width={34}
-                height={39}
+                width={36}
+                height={36}
                 alt="Reservoir"
               />
             </Box>
@@ -82,8 +84,11 @@ const Navbar = () => {
       css={{
         height: NAVBAR_HEIGHT,
         px: '$5',
+        '@xl': {
+          px: '$6',
+        },
         width: '100%',
-        maxWidth: 1920,
+        // maxWidth: 1920,
         mx: 'auto',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
@@ -96,56 +101,219 @@ const Navbar = () => {
       align="center"
       justify="between"
     >
-      <Box css={{ flex: 1 }}>
+      <Box
+        css={{
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+      >
         <Flex align="center">
-          <Link href={`/${routePrefix}`}>
-            <Box css={{ width: 112, cursor: 'pointer' }}>
-              {theme == 'dark' ? (
-                <Image
-                  src="/reservoirMarketLogo.svg"
-                  width={112}
-                  height={36}
-                  alt="Reservoir"
-                />
-              ) : (
-                <Image
-                  src="/reservoirMarketLogoLight.svg"
-                  width={112}
-                  height={36}
-                  alt="Reservoir"
-                />
-              )}
+          <Link href={`/`}>
+            <Box css={{ cursor: 'pointer' }}>
+              <Image
+                src="/reservoirLogo.svg"
+                width={36}
+                height={36}
+                alt="Reservoir"
+              />
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
-            <GlobalSearch
-              ref={searchRef}
-              placeholder="Search collections and addresses"
-              containerCss={{ width: '100%' }}
-              key={router.asPath}
-            />
-          </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            <Link href={`/${routePrefix}/collection-rankings`}>
+          <Flex
+            align="center"
+            css={{
+              gap: '$5',
+              ml: '$5',
+            }}
+          >
+            <Link href={`/`}>
               <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
+                Featured
               </NavItem>
             </Link>
-            <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
-            </Link>
-            <Link href="https://docs.reservoir.tools/docs">
-              <NavItem active={false}>Docs</NavItem>
-            </Link>
+
+            <HoverCard.Root openDelay={200}>
+              <HoverCard.Trigger>
+                <Link href={`/${routePrefix}/collection-rankings`}>
+                  <NavItem
+                    active={router.pathname.includes('collection-rankings')}
+                  >
+                    NFTs
+                  </NavItem>
+                </Link>
+              </HoverCard.Trigger>
+              <HoverCard.Content sideOffset={24} align="start">
+                <Card css={{ p: 24, width: 240 }}>
+                  <Flex css={{ gap: '$4' }} direction="column">
+                    <Link href={`/${routePrefix}/collection-rankings`}>
+                      <NavItem
+                        active={router.pathname.includes('collection-rankings')}
+                      >
+                        Trending Collections
+                      </NavItem>
+                    </Link>
+                    <Link href={`/${routePrefix}/collection-rankings`}>
+                      <NavItem
+                        active={router.pathname.includes('collection-rankings')}
+                      >
+                        Top Collections
+                      </NavItem>
+                    </Link>
+
+                    <Link href={`/${routePrefix}/collection-rankings`}>
+                      <NavItem
+                        active={router.pathname.includes('collection-rankings')}
+                      >
+                        Trending Mints
+                      </NavItem>
+                    </Link>
+                  </Flex>
+                </Card>
+              </HoverCard.Content>
+            </HoverCard.Root>
+
+            {false && (
+              <Link href={`/${routePrefix}/collection-rankings`}>
+                <NavItem
+                  active={router.pathname.includes('collection-rankings')}
+                >
+                  Mints
+                </NavItem>
+              </Link>
+            )}
+            {false && (
+              <Link href="/swap">
+                <NavItem active={router.pathname == '/swap'}>Tokens</NavItem>
+              </Link>
+            )}
           </Flex>
         </Flex>
       </Box>
+      <Box css={{ flex: 1, px: '$5' }}>
+        <GlobalSearch
+          ref={searchRef}
+          placeholder="Search collections and addresses"
+          containerCss={{ width: '100%' }}
+          key={router.asPath}
+        />
+      </Box>
 
-      <Flex css={{ gap: '$3' }} justify="end" align="center">
+      <Flex
+        css={{
+          gap: '$3',
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+        justify="end"
+        align="center"
+      >
+        <Box css={{ mr: '$4' }}>
+          <HoverCard.Root openDelay={200}>
+            <HoverCard.Trigger>
+              <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
+                <NavItem>Developers</NavItem>
+              </a>
+            </HoverCard.Trigger>
+            <HoverCard.Content sideOffset={24} align="start">
+              <Card css={{ p: 24, width: 240 }}>
+                <Flex css={{ gap: '$4' }} direction="column">
+                  <a target="_blank" href={`https://reservoir.tools`}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      About Reservoir
+                    </NavItem>
+                  </a>
+                  <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Docs
+                    </NavItem>
+                  </a>
+
+                  <a
+                    target="_blank"
+                    href={`https://docs.reservoir.tools/reference/overview`}
+                  >
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      API Reference
+                    </NavItem>
+                  </a>
+
+                  <a
+                    target="_blank"
+                    href={`https://github.com/reservoirprotocol`}
+                  >
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Github
+                    </NavItem>
+                  </a>
+
+                  <a href={`https://testnets.reservoir.tools`}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Testnets
+                    </NavItem>
+                  </a>
+                </Flex>
+              </Card>
+            </HoverCard.Content>
+          </HoverCard.Root>
+        </Box>
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
-          <AccountSidebar />
+          <HoverCard.Root openDelay={200}>
+            <HoverCard.Trigger>
+              <AccountSidebar />
+            </HoverCard.Trigger>
+            <HoverCard.Content sideOffset={14} align="end">
+              <Card css={{ p: 24, width: 240 }}>
+                <Flex css={{ gap: '$4' }} direction="column">
+                  <Link href="/portfolio?tab=items" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      My Items
+                    </NavItem>
+                  </Link>
+
+                  <Link href="/portfolio?tab=listings" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Listings
+                    </NavItem>
+                  </Link>
+
+                  <Link href="/portfolio?tab=offers" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Offers Made
+                    </NavItem>
+                  </Link>
+
+                  <Link href="/portfolio?tab=activity" replace={true}>
+                    <NavItem
+                      active={router.pathname.includes('collection-rankings')}
+                    >
+                      Activity
+                    </NavItem>
+                  </Link>
+                </Flex>
+              </Card>
+            </HoverCard.Content>
+          </HoverCard.Root>
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />

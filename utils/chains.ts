@@ -1,7 +1,7 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
-import { arbitrum, mainnet, polygon, optimism, Chain, bsc } from 'wagmi/chains'
+import { arbitrum, mainnet, polygon, optimism, Chain, bsc, avalanche } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
 //Chains that are missing from wagmi:
@@ -305,6 +305,18 @@ export default [
     ],
   },
   {
+    ...avalanche,
+    lightIconUrl: '/icons/avalanche-icon-dark.svg',
+    darkIconUrl: '/icons/avalanche-icon-light.svg',
+    reservoirBaseUrl: 'https://api-avalanche.reservoir.tools',
+    proxyApi: '/api/reservoir/avalanche',
+    routePrefix: 'avalanche',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'avalanche-2',
+    collectionSetId: process.env.NEXT_PUBLIC_AVALANCHE_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_AVALANCHE_COMMUNITY,
+  },
+  {
     ...base,
     lightIconUrl: '/icons/base-icon-dark.svg',
     darkIconUrl: '/icons/base-icon-light.svg',
@@ -322,6 +334,7 @@ export default [
     darkIconUrl: '/icons/linea-icon-light.svg',
     reservoirBaseUrl: 'https://api-linea.reservoir.tools',
     proxyApi: '/api/reservoir/linea',
+
     routePrefix: 'linea',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',

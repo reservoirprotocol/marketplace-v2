@@ -28,6 +28,7 @@ const BatchActionsFooter: FC<Props> = ({
 
   const listItemSubject = selectedItems.length === 1 ? 'item' : 'items'
   const sellItemSubject = sellableItems.length === 1 ? 'item' : 'items'
+  const anySelected = selectedItems.length > 0
 
   return (
     <Flex
@@ -36,6 +37,8 @@ const BatchActionsFooter: FC<Props> = ({
       css={{
         position: 'fixed',
         bottom: 0,
+        transform: `translateY(${anySelected ? 0 : 100}%)`,
+        transition: 'transform 300ms ease-in-out',
         left: 0,
         right: 0,
         px: '$5',

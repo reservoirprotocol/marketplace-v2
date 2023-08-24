@@ -340,8 +340,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
                 </Text>
                 <Text style="subtitle3">
                   <FormatCryptoCurrency
-                    // @ts-ignore
-                    amount={topSellingCollection.volume}
+                    amount={(topSellingCollection?.volume || 0) as number}
                     textStyle="subtitle3"
                     logoHeight={14}
                   />
@@ -381,8 +380,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
         <TableCell>
           <Text style="subtitle2">
             <FormatCryptoCurrency
-              // @ts-ignore
-              amount={topSellingCollection.volume}
+              amount={(topSellingCollection?.volume || 0) as number}
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -454,7 +452,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
             style={{ display: 'inline-block', minWidth: 0 }}
             key={topSellingCollection.id}
           >
-            <Flex justify="between" css={{ gap: '$3' }}>
+            <Flex justify="between" css={{ gap: '$5' }}>
               <Flex
                 align="center"
                 css={{ cursor: 'pointer', width: '100%', overflow: 'hidden' }}
@@ -514,8 +512,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
                 </Text>
                 <Text style="subtitle3">
                   <FormatCryptoCurrency
-                    // @ts-ignore
-                    amount={topSellingCollection.volume}
+                    amount={(topSellingCollection?.volume || 0) as number}
                     textStyle="subtitle3"
                     logoHeight={14}
                   />
@@ -555,8 +552,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
         <TableCell>
           <Text style="subtitle2">
             <FormatCryptoCurrency
-              // @ts-ignore
-              amount={topSellingCollection.volume}
+              amount={(topSellingCollection?.volume || 0) as number}
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -683,8 +679,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
                 </Text>
                 <Text style="subtitle3">
                   <FormatCryptoCurrency
-                    // @ts-ignore
-                    amount={topSellingCollection.volume}
+                    amount={(topSellingCollection?.volume || 0) as number}
                     textStyle="subtitle3"
                     logoHeight={14}
                   />
@@ -724,8 +719,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
       <TableCell>
         <Text style="subtitle2">
           <FormatCryptoCurrency
-            // @ts-ignore
-            amount={topSellingCollection.volume}
+            amount={(topSellingCollection?.volume || 0) as number}
             textStyle="subtitle2"
             logoHeight={14}
           />

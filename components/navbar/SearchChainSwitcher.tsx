@@ -60,7 +60,7 @@ export const SearchChainSwitcher: FC<Props> = ({
                 borderBottom: '1px solid $gray5',
                 '&[data-state=on]': {
                   backgroundColor: 'transparent',
-                  borderBottom: '1px solid $primary11',
+                  borderBottom: '2px solid $primary9',
                 },
               }}
             >
