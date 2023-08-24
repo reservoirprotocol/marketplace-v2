@@ -1,9 +1,4 @@
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import {
@@ -19,7 +14,7 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../../_app'
-import supportedChains from 'utils/chains'
+import supportedChains, { DefaultChain } from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from 'components/common/LoadingSpinner'
@@ -31,7 +26,7 @@ import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { useRouter } from 'next/router'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
   const router = useRouter()
@@ -73,7 +68,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
     collectionQuery,
     {
-      fallbackData: [ssr.collections[marketplaceChain.id]],
+      fallbackData: [ssr.collection],
     }
   )
 
@@ -113,17 +108,22 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           p: 24,
           height: '100%',
           '@bp800': {
-            p: '$6',
+            p: '$5',
+          },
+
+          '@xl': {
+            px: '$6',
           },
         }}
       >
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+        <Flex direction="column">
           <Flex
             justify="between"
             align="start"
             css={{
               flexDirection: 'column',
               gap: 24,
+              mb: '$4',
               '@bp800': {
                 alignItems: 'center',
                 flexDirection: 'row',
@@ -168,22 +168,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
-
 type CollectionSchema =
   paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
 
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collections: ChainCollections
+    collection: CollectionSchema
   }
-}> = async () => {
+}> = async ({ res, params }) => {
   const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
@@ -191,34 +183,33 @@ export const getStaticProps: GetStaticProps<{
       limit: 20,
       includeTopBid: true,
     }
+  const chainPrefix = params?.chain || ''
+  const chain =
+    supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
+    DefaultChain
+  const query = { ...collectionQuery }
+  if (chain.collectionSetId) {
+    query.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    query.community = chain.community
+  }
+  const response = await fetcher(
+    `${chain.reservoirBaseUrl}/collections/v5`,
+    query,
+    {
+      headers: {
+        'x-api-key': chain.apiKey || '',
+      },
+    }
+  )
 
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    const query = { ...collectionQuery }
-    if (chain.collectionSetId) {
-      query.collectionsSetId = chain.collectionSetId
-    } else if (chain.community) {
-      query.community = chain.community
-    }
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, query, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-  const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
-    }
-  })
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=30, stale-while-revalidate=60'
+  )
 
   return {
-    props: { ssr: { collections } },
-    revalidate: 5,
+    props: { ssr: { collection: response.data } },
   }
 }
 

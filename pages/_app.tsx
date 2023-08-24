@@ -28,12 +28,16 @@ import {
   ReservoirKitTheme,
   CartProvider,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC, useEffect, useState } from 'react'
+import { FC, useContext, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
+import ReferralContextProvider, {
+  ReferralContext,
+} from 'context/ReferralContextProvider'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -76,7 +80,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="light"
       value={{
         dark: darkTheme.className,
         light: 'light',
@@ -86,7 +90,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         <ChainContextProvider>
           <AnalyticsProvider>
             <ErrorTrackingProvider>
-              <MyApp {...props} />
+              <ReferralContextProvider>
+                <MyApp {...props} />
+              </ReferralContextProvider>
             </ErrorTrackingProvider>
           </AnalyticsProvider>
         </ChainContextProvider>
@@ -131,6 +137,7 @@ function MyApp({
       )
     }
   }, [theme])
+  const { feesOnTop } = useContext(ReferralContext)
 
   const FunctionalComponent = Component as FC
 
@@ -174,7 +181,9 @@ function MyApp({
           }}
           theme={reservoirKitTheme}
         >
-          <CartProvider>
+          <CartProvider feesOnTopUsd={feesOnTop}>
+                        <WebsocketContextProvider>
+            
             <Tooltip.Provider>
               <RainbowKitProvider
                 chains={chains}
@@ -186,6 +195,8 @@ function MyApp({
                 </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>
+                                      </WebsocketContextProvider>
+
           </CartProvider>
         </ReservoirKitProvider>
       </ThemeProvider>

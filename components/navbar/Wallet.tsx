@@ -9,9 +9,9 @@ import {
 } from 'components/primitives'
 import { mainnet, polygon, optimism } from 'wagmi/chains'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
-import useCoinConversion from 'hooks/useCoinConversion'
 import { useMemo, useState } from 'react'
 import { zeroAddress, formatUnits } from 'viem'
+import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -118,7 +118,7 @@ const Wallet = () => {
   const enhancedCurrencies = useMemo(() => {
     const currencyToUsdConversions = usdConversions.reduce((map, data) => {
       map[data.symbol] = data
-      map[data.id] = data
+      map[(data as any).coinGeckoId] = data
       return map
     }, {} as Record<string, (typeof usdConversions)[0]>)
 

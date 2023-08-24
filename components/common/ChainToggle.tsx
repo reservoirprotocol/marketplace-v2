@@ -23,7 +23,7 @@ import {
   DropdownMenuItem,
 } from 'components/primitives/Dropdown'
 
-const ChainToggle: FC = () => {
+const ChainToggle: FC = ({ onChangeChain }: any) => {
   const router = useRouter()
   const { chain, switchCurrentChain } = useContext(ChainContext)
   const isMounted = useMounted()
@@ -98,8 +98,9 @@ const ChainToggle: FC = () => {
                   chain.routePrefix,
                   supportedChain.routePrefix
                 )
-                switchCurrentChain(supportedChain.id)
+
                 router.replace(newUrl, undefined, { scroll: false })
+                switchCurrentChain(supportedChain.id)
               }}
             >
               <Flex css={{ width: 30 }} justify="center" align="center">

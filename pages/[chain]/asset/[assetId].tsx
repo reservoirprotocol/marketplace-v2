@@ -33,12 +33,7 @@ import { TokenActivityTable } from 'components/token/ActivityTable'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
-import {
-  GetStaticPaths,
-  GetStaticProps,
-  InferGetStaticPropsType,
-  NextPage,
-} from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -55,7 +50,7 @@ import { Head } from 'components/Head'
 import { OffersTable } from 'components/token/OffersTable'
 import { ListingsTable } from 'components/token/ListingsTable'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -238,7 +233,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       <Flex
         justify="center"
         css={{
-          maxWidth: 1175,
+          maxWidth: 1320,
           mt: 10,
           pb: 100,
           marginLeft: 'auto',
@@ -266,6 +261,8 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             flex: 1,
             width: '100%',
             '@md': { maxWidth: 445 },
+            '@lg': { maxWidth: 520 },
+            '@xl': { maxWidth: 620 },
             position: 'relative',
             '@sm': {
               '>button': {
@@ -300,6 +297,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <TokenMedia
               token={token?.token}
               videoOptions={{ autoPlay: true, muted: true }}
+              imageResolution={'large'}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -596,20 +594,13 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  return {
-    paths: [],
-    fallback: 'blocking',
-  }
-}
-
-export const getStaticProps: GetStaticProps<{
+export const getServerSideProps: GetServerSideProps<{
   assetId?: string
   ssr: {
     collection: paths['/collections/v5']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
-}> = async ({ params }) => {
+}> = async ({ params, res }) => {
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
   const id = assetId[1]
@@ -662,9 +653,13 @@ export const getStaticProps: GetStaticProps<{
     ? (collectionsResponse.data as Props['ssr']['collection'])
     : {}
 
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=30, stale-while-revalidate=60'
+  )
+
   return {
     props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
-    revalidate: 20,
   }
 }
 

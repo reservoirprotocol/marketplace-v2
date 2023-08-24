@@ -1,16 +1,11 @@
+import { DefaultChain } from './.cache/chains.mjs'
 import { withSentryConfig } from '@sentry/nextjs'
-import * as tsImport from 'ts-import'
-
-const loadTS = (filePath) => tsImport.load(filePath)
-
-const { DefaultChain: defaultChain } = await loadTS('./utils/chains.ts')
 
 const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
   project: 'javascript-nextjs',
   silent: true,
 }
-
 /**
  * @type {import('next').NextConfig}
  */
@@ -21,14 +16,29 @@ const nextConfig = {
   experimental: {
     transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/:chain/asset/:assetId/buy',
+        destination: '/:chain/asset/:assetId',
+      },
+      {
+        source: '/:chain/collection/:contract/sweep',
+        destination: '/:chain/collection/:contract',
+      },
+      {
+        source: '/:chain/collection/:contract/mint',
+        destination: '/:chain/collection/:contract',
+      },
+    ]
+  },
   async redirects() {
     return [
       {
         source: '/',
-        destination: `/${defaultChain.routePrefix}`,
+        destination: `/${DefaultChain.routePrefix}`,
         permanent: false,
       },
-
       {
         source: '/collection/:chain/:collection',
         destination: '/:chain/collection/:collection',
@@ -41,7 +51,7 @@ const nextConfig = {
       },
       {
         source: '/collection-rankings',
-        destination: `/${defaultChain.routePrefix}/collection-rankings`,
+        destination: `/${DefaultChain.routePrefix}/collection-rankings`,
         permanent: true,
       },
     ]

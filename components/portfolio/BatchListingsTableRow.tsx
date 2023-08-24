@@ -33,6 +33,7 @@ import optimizeImage from 'utils/optimizeImage'
 type BatchListingsTableRowProps = {
   listing: BatchListing
   listings: BatchListing[]
+  onChainRoyaltiesBps: number
   displayQuantity: boolean
   gridTemplateColumns: string
   setListings: Dispatch<SetStateAction<BatchListing[]>>
@@ -52,6 +53,7 @@ const MINIMUM_AMOUNT = 0.000001
 export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   listing,
   listings,
+  onChainRoyaltiesBps,
   setListings,
   updateListing,
   selectedItems,
@@ -158,7 +160,9 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   }, [openseaFees, price, quantity, marketplace])
 
   const creatorRoyalties =
-    (listing?.token?.token?.collection?.royaltiesBps || 0) / 10000
+    (onChainRoyaltiesBps ||
+      listing?.token?.token?.collection?.royaltiesBps ||
+      0) / 10000
 
   const profit =
     Number(price) * listing.quantity -
@@ -431,7 +435,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
             }}
           />
           <Text style="body1" color="subtle" ellipsify>
-            ({creatorRoyalties * 100})%
+            ({creatorRoyalties * 100}%)
           </Text>
         </Flex>
       </TableCell>
@@ -443,7 +447,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
             textStyle="body1"
           />
           <Text style="body1" color="subtle" ellipsify>
-            ({marketplaceFeePercent || 0})%
+            ({marketplaceFeePercent || 0}%)
           </Text>
         </Flex>
       </TableCell>

@@ -53,11 +53,13 @@ const SelectedAttributes: FC = () => {
           onClick={() => {
             removeParam(router, `attributes[${key}]`, value)
           }}
-          color="gray4"
-          css={{ mr: '$4', mb: '24px' }}
+          color="gray3"
+          css={{ mr: '$3', mb: '24px' }}
           size="small"
         >
-          <Text css={{ color: '$primary11' }}>{key}:</Text>
+          <Text style="body1" css={{ color: '$gray12' }}>
+            {key}:
+          </Text>
           <Text style="subtitle1">{value}</Text>
           <Text css={{ color: '$gray9' }}>
             <FontAwesomeIcon icon={faClose} width="16" height="16" />
@@ -71,9 +73,24 @@ const SelectedAttributes: FC = () => {
             clearAllAttributes(router)
           }}
           color="ghost"
-          css={{ color: '$primary11', fontWeight: 500, mb: '24px' }}
+          css={{
+            color: '$primary11',
+            fontWeight: 500,
+            mb: '24px',
+            px: '$4',
+          }}
         >
           Clear all
+        </Button>
+      )}
+
+      {filters.length && (
+        <Button
+          onClick={() => {}}
+          color="ghost"
+          css={{ color: '$primary11', fontWeight: 500, mb: '24px', px: '$4' }}
+        >
+          Bid on {filters.length} {filters.length > 1 ? 'Traits' : 'Trait'}
         </Button>
       )}
     </Flex>

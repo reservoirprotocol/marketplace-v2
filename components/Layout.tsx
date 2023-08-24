@@ -17,7 +17,7 @@ const Layout: FC<Props> = ({ children }) => {
           pt: 80,
         }}
       >
-        <Box css={{ maxWidth: 1920, mx: 'auto' }}>
+        <Box css={{ maxWidth: 4500, mx: 'auto' }}>
           <Navbar />
           <main>{children}</main>
         </Box>
