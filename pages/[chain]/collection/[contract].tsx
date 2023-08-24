@@ -1190,4 +1190,3 @@ export const getServerSideProps: GetServerSideProps<{
 }
 
 export default CollectionPage
-
