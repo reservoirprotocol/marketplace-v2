@@ -247,18 +247,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           },
         }
         if (tokens) {
-          let updatedTokenPosition =  sortBy === 'rarity' ? tokenIndex : tokens.findIndex((token) => {
-            let currentTokenPrice =
-              token.market?.floorAsk?.price?.amount?.decimal
-            if (currentTokenPrice) {
-              return sortDirection === 'asc'
-                ? currentTokenPrice >=
-                    updatedToken.market.floorAsk.price.amount.decimal
-                : currentTokenPrice <=
-                    updatedToken.market.floorAsk.price.amount.decimal
-            }
-            return true
-          })
+          let updatedTokenPosition =
+            sortBy === 'rarity'
+              ? tokenIndex
+              : tokens.findIndex((token) => {
+                  let currentTokenPrice =
+                    token.market?.floorAsk?.price?.amount?.decimal
+                  if (currentTokenPrice) {
+                    return sortDirection === 'asc'
+                      ? currentTokenPrice >=
+                          updatedToken.market.floorAsk.price.amount.decimal
+                      : currentTokenPrice <=
+                          updatedToken.market.floorAsk.price.amount.decimal
+                  }
+                  return true
+                })
           if (updatedTokenPosition === -1) {
             return
           }
@@ -291,7 +294,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
-      if (attributes.length > 0) return
+      if (Object.keys(router.query).some((key) => key.includes('attribute')))
+        return
 
       let hasChange = false
 
@@ -689,18 +693,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     width: '100%',
                   }}
                 >
-                  <Flex justify="between" css={{ marginBottom: '$3' }}>
+                  <Flex
+                    justify="between"
+                    css={{ marginBottom: '$3', gap: '$3' }}
+                  >
                     {attributes && attributes.length > 0 && !isSmallDevice && (
                       <>
                         <FilterButton
                           open={attributeFiltersOpen}
                           setOpen={setAttributeFiltersOpen}
                         />
-                        {socketState !== null && attributes.length === 0 && (
-                          <LiveState state={socketState} />
-                        )}
                       </>
                     )}
+                    {socketState !== null && <LiveState />}
                     <Flex
                       justify={'end'}
                       css={{
