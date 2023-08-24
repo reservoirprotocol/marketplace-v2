@@ -47,6 +47,8 @@ import titleCase from 'utils/titleCase'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
+import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
+import LiveState from 'components/common/LiveState'
 import ReactMarkdown from 'react-markdown'
 import { styled } from '../../../stitches.config'
 import optimizeImage from 'utils/optimizeImage'
@@ -178,6 +180,104 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
+  useTokenUpdateStream(id as string, collectionChain.id, {
+    onClose: () => setSocketState(0),
+    onOpen: () => setSocketState(1),
+    onMessage: ({
+      data: reservoirEvent,
+    }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
+      if (attributes.length > 0) return
+
+      let hasChange = false
+
+      const newTokens = [...tokens]
+      const price = NORMALIZE_ROYALTIES
+        ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount
+            ?.decimal
+        : reservoirEvent.data?.market?.floorAsk?.price?.amount?.decimal
+      const tokenIndex = tokens.findIndex(
+        (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
+      )
+      const token = tokenIndex > -1 ? tokens[tokenIndex] : null
+      if (token) {
+        //if the token has dynamic pricing we need to abort, this isn't supported in the websocket
+        if (token?.market?.floorAsk?.dynamicPricing) {
+          return
+        }
+        newTokens.splice(tokenIndex, 1)
+      }
+
+      if (!price) {
+        if (token) {
+          const endOfListingsIndex = tokens.findIndex(
+            (token) => !token.market?.floorAsk?.price?.amount?.decimal
+          )
+          if (endOfListingsIndex === -1) {
+            delete newTokens[newTokens.length - 1]
+            hasChange = true
+            return
+          }
+          const newTokenIndex =
+            sortBy === 'rarity'
+              ? tokenIndex
+              : endOfListingsIndex > -1
+              ? endOfListingsIndex
+              : 0
+          newTokens.splice(newTokenIndex, 0, {
+            ...token,
+            market: {
+              floorAsk: {
+                id: undefined,
+                price: undefined,
+                maker: undefined,
+                validFrom: undefined,
+                validUntil: undefined,
+                source: {},
+              },
+            },
+          })
+          hasChange = true
+        }
+      } else {
+        let updatedToken = token ? token : reservoirEvent.data
+        updatedToken = {
+          ...updatedToken,
+          market: {
+            floorAsk: NORMALIZE_ROYALTIES
+              ? reservoirEvent.data.market.floorAskNormalized
+              : reservoirEvent.data.market.floorAsk,
+          },
+        }
+        if (tokens) {
+          let updatedTokenPosition =  sortBy === 'rarity' ? tokenIndex : tokens.findIndex((token) => {
+            let currentTokenPrice =
+              token.market?.floorAsk?.price?.amount?.decimal
+            if (currentTokenPrice) {
+              return sortDirection === 'asc'
+                ? currentTokenPrice >=
+                    updatedToken.market.floorAsk.price.amount.decimal
+                : currentTokenPrice <=
+                    updatedToken.market.floorAsk.price.amount.decimal
+            }
+            return true
+          })
+          if (updatedTokenPosition === -1) {
+            return
+          }
+
+          newTokens.splice(updatedTokenPosition, 0, updatedToken)
+          hasChange = true
+        }
+      }
+      if (hasChange) {
+        mutate([
+          {
+            tokens: newTokens,
+          },
+        ])
+      }
+    },
+  })
   let rareTokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 8,
     collection: id,
@@ -385,7 +485,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               >
                 <Flex css={{ gap: '$4', flex: 1 }} align="center">
                   <Img
-                    src={optimizeImage(collection.image!, 250)}
+                    src={optimizeImage(collection.image!, 72 * 2)}
                     width={72}
                     height={72}
                     style={{
