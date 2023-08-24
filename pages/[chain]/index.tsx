@@ -9,7 +9,7 @@ import {
 } from 'components/primitives'
 import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useContext, useEffect, useMemo, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMarketplaceChain, useMounted } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
@@ -22,22 +22,15 @@ import useTrendingCollections from 'hooks/useTrendingCollections'
 import ReactMarkdown from 'react-markdown'
 import { basicFetcher as fetcher } from 'utils/fetcher'
 import { styled } from 'stitches.config'
-
 import { useTheme } from 'next-themes'
-import { useLocalStorage } from 'usehooks-ts'
 import ChainToggle from 'components/common/ChainToggle'
+import { MarkdownLink } from 'components/primitives/MarkdownLink'
 
 const StyledImage = styled('img', {})
-
-const mintStartTime = Math.floor(new Date().getTime() / 1000) - 60 * 6 * 60
 
 const Home: NextPage<any> = ({ ssr }) => {
   const isMounted = useMounted()
   const marketplaceChain = useMarketplaceChain()
-  const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('sale')
-  const [minutesFilter, setMinutesFilter] = useState<number>(1440)
-
-  const [showBlogPost, setShowBlogPost] = useLocalStorage('showBlogPost1', true)
 
   // not sure if there is a better way to fix this
   const { theme: nextTheme } = useTheme()
@@ -48,7 +41,7 @@ const Home: NextPage<any> = ({ ssr }) => {
     }
   }, [nextTheme])
 
-  const { chain, switchCurrentChain } = useContext(ChainContext)
+  const { chain } = useContext(ChainContext)
 
   const { data: topSellingCollectionsData, isValidating } =
     useTrendingCollections(
@@ -128,7 +121,6 @@ const Home: NextPage<any> = ({ ssr }) => {
                 maxWidth: 1820,
                 mx: 'auto',
                 borderRadius: 16,
-                //background: '$gray3',
                 backgroundSize: 'cover',
                 border: `1px solid $gray5`,
                 backgroundImage:
@@ -229,6 +221,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                         >
                           <ReactMarkdown
                             children={topCollection?.description || ''}
+                            components={{
+                              a: MarkdownLink,
+                              p: Text as any,
+                            }}
                           />
                         </Box>
 
@@ -467,9 +463,15 @@ const Home: NextPage<any> = ({ ssr }) => {
                             },
                           }}
                         >
-                          <ReactMarkdown
-                            children={collection?.description || ''}
-                          />
+                          {isMounted && (
+                            <ReactMarkdown
+                              children={collection?.description || ''}
+                              components={{
+                                a: MarkdownLink,
+                                p: Text as any,
+                              }}
+                            />
+                          )}
                         </Box>
 
                         <Flex css={{ mt: '$4' }}>
