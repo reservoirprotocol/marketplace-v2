@@ -157,14 +157,6 @@ const Navbar = () => {
                       <NavItem
                         active={router.pathname.includes('collection-rankings')}
                       >
-                        Top Collections
-                      </NavItem>
-                    </Link>
-
-                    <Link href={`/${routePrefix}/collection-rankings`}>
-                      <NavItem
-                        active={router.pathname.includes('collection-rankings')}
-                      >
                         Trending Mints
                       </NavItem>
                     </Link>
@@ -261,7 +253,7 @@ const Navbar = () => {
                     <NavItem
                       active={router.pathname.includes('collection-rankings')}
                     >
-                      Testnets
+                      Testnet Explorer
                     </NavItem>
                   </a>
                 </Flex>
