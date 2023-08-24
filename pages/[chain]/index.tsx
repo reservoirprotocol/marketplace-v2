@@ -11,7 +11,7 @@ import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useContext, useEffect, useState } from 'react'
 import { Footer } from 'components/home/Footer'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMarketplaceChain } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
@@ -29,7 +29,6 @@ import { MarkdownLink } from 'components/primitives/MarkdownLink'
 const StyledImage = styled('img', {})
 
 const Home: NextPage<any> = ({ ssr }) => {
-  const isMounted = useMounted()
   const marketplaceChain = useMarketplaceChain()
 
   // not sure if there is a better way to fix this
@@ -43,18 +42,16 @@ const Home: NextPage<any> = ({ ssr }) => {
 
   const { chain } = useContext(ChainContext)
 
-  const { data: topSellingCollectionsData, isValidating } =
-    useTrendingCollections(
-      {
-        revalidateOnMount: true,
-        refreshInterval: 300000,
-        fallbackData: ssr.topSellingCollections[marketplaceChain.id]
-          ?.collections
-          ? ssr.topSellingCollections[marketplaceChain.id]
-          : null,
-      },
-      chain?.id
-    )
+  const { data: topSellingCollectionsData } = useTrendingCollections(
+    {
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+      fallbackData: ssr.topSellingCollections[marketplaceChain.id]?.collections
+        ? ssr.topSellingCollections[marketplaceChain.id]
+        : null,
+    },
+    chain?.id
+  )
 
   const topCollection = topSellingCollectionsData?.collections?.[0]
 
@@ -463,15 +460,13 @@ const Home: NextPage<any> = ({ ssr }) => {
                             },
                           }}
                         >
-                          {isMounted && (
-                            <ReactMarkdown
-                              children={collection?.description || ''}
-                              components={{
-                                a: MarkdownLink,
-                                p: Text as any,
-                              }}
-                            />
-                          )}
+                          <ReactMarkdown
+                            children={collection?.description || ''}
+                            components={{
+                              a: MarkdownLink,
+                              p: Text as any,
+                            }}
+                          />
                         </Box>
 
                         <Flex css={{ mt: '$4' }}>
