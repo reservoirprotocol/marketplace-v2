@@ -168,7 +168,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
-      if (attributes.length > 0) return
+      if (Object.keys(router.query).some((key) => key.includes('attribute')))
+        return
 
       let hasChange = false
 
@@ -231,18 +232,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           },
         }
         if (tokens) {
-          let updatedTokenPosition =  sortBy === 'rarity' ? tokenIndex : tokens.findIndex((token) => {
-            let currentTokenPrice =
-              token.market?.floorAsk?.price?.amount?.decimal
-            if (currentTokenPrice) {
-              return sortDirection === 'asc'
-                ? currentTokenPrice >=
-                    updatedToken.market.floorAsk.price.amount.decimal
-                : currentTokenPrice <=
-                    updatedToken.market.floorAsk.price.amount.decimal
-            }
-            return true
-          })
+          let updatedTokenPosition =
+            sortBy === 'rarity'
+              ? tokenIndex
+              : tokens.findIndex((token) => {
+                  let currentTokenPrice =
+                    token.market?.floorAsk?.price?.amount?.decimal
+                  if (currentTokenPrice) {
+                    return sortDirection === 'asc'
+                      ? currentTokenPrice >=
+                          updatedToken.market.floorAsk.price.amount.decimal
+                      : currentTokenPrice <=
+                          updatedToken.market.floorAsk.price.amount.decimal
+                  }
+                  return true
+                })
           if (updatedTokenPosition === -1) {
             return
           }
@@ -557,9 +561,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           open={attributeFiltersOpen}
                           setOpen={setAttributeFiltersOpen}
                         />
-                        {socketState !== null && attributes.length === 0 && (
-                          <LiveState state={socketState} />
-                        )}
+                        {socketState !== null && <LiveState />}
                       </>
                     )}
                     <Flex
