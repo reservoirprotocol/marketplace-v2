@@ -183,7 +183,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       )
       const token = tokenIndex > -1 ? tokens[tokenIndex] : null
       if (token) {
-        //if the token has dynamic pricing we need to abort, this isn't supported in the websocket
         if (token?.market?.floorAsk?.dynamicPricing) {
           return
         }
@@ -239,10 +238,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   let currentTokenPrice =
                     token.market?.floorAsk?.price?.amount?.decimal
                   if (currentTokenPrice) {
-                    return sortDirection === 'asc'
-                      ? currentTokenPrice >=
+                    return sortDirection === 'desc'
+                      ? currentTokenPrice <=
                           updatedToken.market.floorAsk.price.amount.decimal
-                      : currentTokenPrice <=
+                      : currentTokenPrice >=
                           updatedToken.market.floorAsk.price.amount.decimal
                   }
                   return true
@@ -256,11 +255,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         }
       }
       if (hasChange) {
-        mutate([
+        mutate(
+          [
+            {
+              tokens: newTokens,
+            },
+          ],
           {
-            tokens: newTokens,
-          },
-        ])
+            revalidate: false,
+            optimisticData: [
+              {
+                tokens: newTokens,
+              },
+            ],
+          }
+        )
       }
     },
   })
