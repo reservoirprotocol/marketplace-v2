@@ -26,7 +26,20 @@ type Props = {
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
-const desktopTemplateColumns = '1.5fr 1.7fr repeat(3, 0.6fr)'
+const gridColumns = {
+  gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
+  '@md': {
+    gridTemplateColumns: '420px 1fr 1fr 1fr',
+  },
+
+  '@lg': {
+    gridTemplateColumns: '360px repeat(6, 0.5fr) 250px',
+  },
+
+  '@xl': {
+    gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
+  },
+}
 
 export const CollectionRankingsTable: FC<Props> = ({
   collections,
@@ -176,7 +189,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
       <TableRow
         key={collection.id}
         css={{
-          gridTemplateColumns: desktopTemplateColumns,
+          ...gridColumns,
         }}
       >
         <TableCell css={{ minWidth: 0 }}>
@@ -201,13 +214,13 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 src={collectionImage}
                 css={{
                   borderRadius: 8,
-                  width: 72,
-                  height: 72,
+                  width: 52,
+                  height: 52,
                   objectFit: 'cover',
                 }}
                 alt="Collection Image"
-                width={72}
-                height={72}
+                width={52}
+                height={52}
                 unoptimized
               />
 
@@ -233,55 +246,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
         </TableCell>
         <TableCell>
           <Flex
-            css={{
-              gap: '$2',
-              minWidth: 0,
-            }}
-          >
-            {collection?.sampleImages?.map((image, i) => {
-              if (image) {
-                return (
-                  <img
-                    key={image + i}
-                    src={optimizeImage(image, 250)}
-                    loading="lazy"
-                    style={{
-                      borderRadius: 8,
-                      width: 72,
-                      height: 72,
-                      objectFit: 'cover',
-                    }}
-                    onError={(
-                      e: React.SyntheticEvent<HTMLImageElement, Event>
-                    ) => {
-                      e.currentTarget.style.visibility = 'hidden'
-                    }}
-                  />
-                )
-              }
-              return null
-            })}
-          </Flex>
-        </TableCell>
-        <TableCell>
-          <Flex
-            direction="column"
-            align="start"
-            justify="start"
-            css={{ height: '100%' }}
-          >
-            <FormatCryptoCurrency
-              amount={collection?.volume?.[volumeKey]}
-              textStyle="subtitle1"
-              logoHeight={14}
-            />
-            {volumeKey != 'allTime' && collection?.volumeChange && (
-              <PercentChange value={collection?.volumeChange[volumeKey]} />
-            )}
-          </Flex>
-        </TableCell>
-        <TableCell>
-          <Flex
             direction="column"
             align="start"
             justify="start"
@@ -296,8 +260,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             />
           </Flex>
         </TableCell>
-        <TableCell css={{ textAlign: 'right' }}>
-          <Flex justify="end">
+        <TableCell>
+          <Flex>
             <FormatCryptoCurrency
               amount={collection?.topBid?.price?.amount?.decimal}
               textStyle="subtitle1"
@@ -306,19 +270,96 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             />
           </Flex>
         </TableCell>
+        <TableCell>
+          <Flex
+            direction="column"
+            align="start"
+            justify="start"
+            css={{ height: '100%' }}
+          >
+            <FormatCryptoCurrency
+              amount={collection?.volume?.[volumeKey]}
+              textStyle="subtitle1"
+              logoHeight={14}
+            />
+          </Flex>
+        </TableCell>
+
+        <TableCell desktopOnly>
+          <PercentChange
+            style="subtitle1"
+            value={collection?.volumeChange?.['1day'] ?? 0}
+          />
+        </TableCell>
+
+        <TableCell desktopOnly>
+          <PercentChange
+            style="subtitle1"
+            value={collection?.volumeChange?.['7day'] ?? 0}
+          />
+        </TableCell>
+
+        <TableCell desktopOnly>
+          <Text style="subtitle1">
+            {Number(collection?.tokenCount)?.toLocaleString()}
+          </Text>
+        </TableCell>
+
+        <TableCell desktopOnly>
+          <Flex
+            css={{
+              gap: '$2',
+              minWidth: 0,
+            }}
+            justify={'end'}
+          >
+            {collection?.sampleImages?.map((image, i) => {
+              if (image) {
+                return (
+                  <img
+                    key={image + i}
+                    src={optimizeImage(image, 104)}
+                    loading="lazy"
+                    style={{
+                      borderRadius: 8,
+                      width: 52,
+                      height: 52,
+                      objectFit: 'cover',
+                    }}
+                    onError={(
+                      e: React.SyntheticEvent<HTMLImageElement, Event>
+                    ) => {
+                      e.currentTarget.style.visibility = 'hidden'
+                    }}
+                  />
+                )
+              }
+              return null
+            })}
+          </Flex>
+        </TableCell>
       </TableRow>
     )
   }
 }
 
-const headings = ['Collection', '', 'Volume', 'Floor Price', 'Top Offer']
+const headings = [
+  'Collection',
+  'Floor Price',
+  'Top Offer',
+  'Volume',
+  '1D Change',
+  '7D Change',
+  'Supply',
+  'Sample Tokens',
+]
 
 const TableHeading = () => (
   <HeaderRow
     css={{
       display: 'none',
-      '@md': { display: 'grid' },
-      gridTemplateColumns: desktopTemplateColumns,
+      ...gridColumns,
+      '@md': { display: 'grid', ...gridColumns['@md'] },
       position: 'sticky',
       top: NAVBAR_HEIGHT,
       backgroundColor: '$neutralBg',
@@ -327,6 +368,7 @@ const TableHeading = () => (
   >
     {headings.map((heading, i) => (
       <TableCell
+        desktopOnly={i > 3}
         key={heading}
         css={{ textAlign: i === headings.length - 1 ? 'right' : 'left' }}
       >

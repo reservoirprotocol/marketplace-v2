@@ -13,7 +13,7 @@ import { useMarketplaceChain, useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../../_app'
+import { NORMALIZE_ROYALTIES } from '../../../_app'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -131,7 +131,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" as="h4">
-              Collection Rankings
+              Trending Collections
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
               <CollectionsTimeDropdown

@@ -24,6 +24,7 @@ import { basicFetcher as fetcher } from 'utils/fetcher'
 import { styled } from 'stitches.config'
 import { useTheme } from 'next-themes'
 import ChainToggle from 'components/common/ChainToggle'
+import optimizeImage from 'utils/optimizeImage'
 import { MarkdownLink } from 'components/primitives/MarkdownLink'
 
 const StyledImage = styled('img', {})
@@ -128,10 +129,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                 border: `1px solid $gray5`,
                 backgroundImage:
                   theme === 'light'
-                    ? `url(${topCollection?.banner?.replace(
-                        'w=500',
-                        'w=4500'
-                      )}) `
+                    ? `url(${optimizeImage(topCollection?.banner, 1820)})`
                     : '$gray3',
                 backgroundColor: '$gray5',
               }}
@@ -163,10 +161,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                     }}
                   >
                     <StyledImage
-                      src={
-                        topCollection?.banner?.replace('w=500', 'w=4500') ??
-                        topCollection?.image
-                      }
+                      src={optimizeImage(
+                        topCollection?.banner ?? topCollection?.image,
+                        1820
+                      )}
                       css={{
                         width: '100%',
                         borderRadius: 8,
@@ -196,7 +194,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                           borderRadius: 8,
                           border: '2px solid rgba(255,255,255,0.6)',
                         }}
-                        src={topCollection?.image as string}
+                        src={optimizeImage(topCollection?.image, 200) as string}
                       />
                     </Box>
                   </Box>
@@ -236,19 +234,20 @@ const Home: NextPage<any> = ({ ssr }) => {
                             <Text style="subtitle2" color="subtle">
                               FLOOR
                             </Text>
-                            <FormatCryptoCurrency
-                              css={{ mt: '$1' }}
-                              amount={
-                                topCollection?.floorAsk?.price?.amount
-                                  ?.native ?? 0
-                              }
-                              textStyle={'h4'}
-                              logoHeight={24}
-                              address={
-                                topCollection?.floorAsk?.price?.currency
-                                  ?.contract
-                              }
-                            />
+                            <Box css={{ mt: 2 }}>
+                              <FormatCryptoCurrency
+                                amount={
+                                  topCollection?.floorAsk?.price?.amount
+                                    ?.native ?? 0
+                                }
+                                textStyle={'h4'}
+                                logoHeight={20}
+                                address={
+                                  topCollection?.floorAsk?.price?.currency
+                                    ?.contract
+                                }
+                              />
+                            </Box>
                           </Box>
 
                           <Box css={{ mr: '$4' }}>
@@ -291,9 +290,11 @@ const Home: NextPage<any> = ({ ssr }) => {
                                 >
                                   <img
                                     style={{ borderRadius: 4 }}
-                                    src={
-                                      sale?.token?.image || topCollection?.image
-                                    }
+                                    src={optimizeImage(
+                                      sale?.token?.image ||
+                                        topCollection?.image,
+                                      250
+                                    )}
                                   />
                                 </Box>
                               ))}
@@ -396,12 +397,12 @@ const Home: NextPage<any> = ({ ssr }) => {
                           {collection?.banner?.length ||
                           collection.recentSales?.[0]?.token?.image?.length ? (
                             <img
-                              src={
-                                collection?.banner?.replace(
-                                  'w=500',
-                                  'w=1200'
-                                ) ?? collection.recentSales?.[0]?.token?.image
-                              }
+                              loading="lazy"
+                              src={optimizeImage(
+                                collection?.banner ??
+                                  collection.recentSales?.[0]?.token?.image,
+                                800
+                              )}
                               style={{
                                 transition: 'transform 300ms ease-in-out',
                                 width: '100%',
@@ -421,7 +422,9 @@ const Home: NextPage<any> = ({ ssr }) => {
                             />
                           )}
                           <Img
-                            src={collection?.image as string}
+                            src={
+                              optimizeImage(collection?.image, 72 * 2) as string
+                            }
                             alt={collection?.name as string}
                             width={72}
                             height={72}
@@ -451,6 +454,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                             maxWidth: 720,
                             lineHeight: 1.5,
                             fontSize: 16,
+                            flex: 1,
                             fontWeight: 400,
                             display: '-webkit-box',
                             color: '$gray12',
@@ -477,16 +481,20 @@ const Home: NextPage<any> = ({ ssr }) => {
 
                         <Flex css={{ mt: '$4' }}>
                           <Box css={{ mr: '$5' }}>
-                            <Text style="subtitle2" color="subtle">
+                            <Text
+                              style="subtitle2"
+                              color="subtle"
+                              as="p"
+                              css={{ mb: 2 }}
+                            >
                               FLOOR
                             </Text>
                             <FormatCryptoCurrency
-                              css={{ mt: '$1' }}
                               amount={
                                 collection?.floorAsk?.price?.amount?.native ?? 0
                               }
                               textStyle={'h6'}
-                              logoHeight={20}
+                              logoHeight={12}
                               address={
                                 collection?.floorAsk?.price?.currency?.contract
                               }
@@ -494,7 +502,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                           </Box>
 
                           <Box css={{ mr: '$4' }}>
-                            <Text style="subtitle2" color="subtle">
+                            <Text style="subtitle2" color="subtle" as="p">
                               24H SALES
                             </Text>
                             <Text style="h6" as="h4" css={{ mt: 2 }}>
@@ -509,7 +517,7 @@ const Home: NextPage<any> = ({ ssr }) => {
               })}
         </Box>
         <Box css={{ my: '$5' }}>
-          <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
+          <Link href={`/${marketplaceChain.routePrefix}/collections/trending`}>
             <Button>See More</Button>
           </Link>
         </Box>

@@ -277,7 +277,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               >
                 <Flex css={{ gap: '$4', flex: 1 }} align="center">
                   <Img
-                    src={optimizeImage(collection.image!, 250)}
+                    src={optimizeImage(collection.image!, 72 * 2)}
                     width={72}
                     height={72}
                     style={{

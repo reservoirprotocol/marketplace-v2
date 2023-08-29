@@ -99,10 +99,11 @@ export const TokenFilters: FC<Props> = ({
                       objectFit: 'cover',
                       aspectRatio: '1/1',
                     }}
+                    loading="lazy"
                     loader={({ src }) => src}
                     src={optimizeImage(
                       collection?.collection?.image as string,
-                      250
+                      84
                     )}
                     alt={collection?.collection?.name as string}
                     width={42}

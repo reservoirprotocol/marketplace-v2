@@ -54,6 +54,12 @@ const nextConfig = {
         destination: `/${DefaultChain.routePrefix}/collection-rankings`,
         permanent: true,
       },
+
+      {
+        source: '/:chain/collection-rankings',
+        destination: `/:chain/collections/trending`,
+        permanent: false,
+      },
     ]
   },
   async headers() {
