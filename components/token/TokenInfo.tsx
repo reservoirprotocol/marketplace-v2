@@ -50,7 +50,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const collectionImage = useMemo(() => {
     return optimizeImage(
       token?.token?.collection?.image || collection?.image,
-      250
+      50
     )
   }, [token?.token?.collection?.image, collection?.image])
 
