@@ -66,7 +66,7 @@ const Home: NextPage<any> = ({ ssr }) => {
         .filter((c) => c.id !== chain.id)
         .forEach((c) => {
           preload(
-            `${process.env.NEXT_PUBLIC_HOST_URL}/api/${c.routePrefix}/trendingCollections/v1`,
+            `${c.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
             fetcher
           )
         }),
@@ -544,7 +544,7 @@ export const getServerSideProps: GetServerSideProps<{
     DefaultChain
 
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/trendingCollections/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
+    `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
     {
       headers: {
         'x-api-key': chain.apiKey || '',
