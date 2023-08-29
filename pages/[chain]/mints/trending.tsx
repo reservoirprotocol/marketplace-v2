@@ -1,201 +1,156 @@
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box } from 'components/primitives'
-import Layout from 'components/Layout'
+import { NextPage, GetServerSideProps } from 'next'
+import Link from 'next/link'
 import {
-  ComponentPropsWithoutRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
-import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
+  Text,
+  Flex,
+  Box,
+  Button,
+  FormatCryptoCurrency,
+} from 'components/primitives'
+import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../../_app'
+import { useContext, useEffect, useState } from 'react'
+import { Footer } from 'components/home/Footer'
+import { useMarketplaceChain } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
-import { useIntersectionObserver } from 'usehooks-ts'
-import LoadingSpinner from 'components/common/LoadingSpinner'
-import CollectionsTimeDropdown, {
-  CollectionsSortingOption,
-} from 'components/common/CollectionsTimeDropdown'
-import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
-import { useRouter } from 'next/router'
+import { preload } from 'swr'
 
-type Props = InferGetServerSidePropsType<typeof getServerSideProps>
+import Img from 'components/primitives/Img'
+import useTopSellingCollections from 'hooks/useTopSellingCollections'
+import ReactMarkdown from 'react-markdown'
+import { basicFetcher as fetcher } from 'utils/fetcher'
+import { styled } from 'stitches.config'
+import { useTheme } from 'next-themes'
+import ChainToggle from 'components/common/ChainToggle'
+import optimizeImage from 'utils/optimizeImage'
+import { MarkdownLink } from 'components/primitives/MarkdownLink'
 
-const IndexPage: NextPage<Props> = ({ ssr }) => {
-  const router = useRouter()
-  const isSSR = typeof window === 'undefined'
-  const isMounted = useMounted()
-  const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
+const StyledImage = styled('img', {})
+
+const Home: NextPage<any> = ({ ssr }) => {
   const marketplaceChain = useMarketplaceChain()
 
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 20,
-    sortBy: sortByTime,
-    includeTopBid: true,
-  }
-
-  const { chain, switchCurrentChain } = useContext(ChainContext)
-
+  // not sure if there is a better way to fix this
+  const { theme: nextTheme } = useTheme()
+  const [theme, setTheme] = useState<string | null>(null)
   useEffect(() => {
-    if (router.query.chain) {
-      let chainIndex: number | undefined
-      for (let i = 0; i < supportedChains.length; i++) {
-        if (supportedChains[i].routePrefix == router.query.chain) {
-          chainIndex = supportedChains[i].id
-        }
-      }
-      if (chainIndex !== -1 && chainIndex) {
-        switchCurrentChain(chainIndex)
-      }
+    if (nextTheme) {
+      setTheme(nextTheme)
     }
-  }, [router.query])
+  }, [nextTheme])
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
+  const { chain } = useContext(ChainContext)
 
-  const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
-    collectionQuery,
+  const { data: topSellingCollectionsData } = useTopSellingCollections(
     {
-      fallbackData: [ssr.collection],
-    }
+      period: '1h',
+      includeRecentSales: true,
+      limit: 40,
+      fillType: 'mint',
+    },
+    {
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+      fallbackData: ssr.topSellingCollections[marketplaceChain.id]?.collections
+        ? ssr.topSellingCollections[marketplaceChain.id]
+        : null,
+    },
+    chain?.id
   )
 
-  let collections = data || []
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting])
-
-  let volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
-
-  switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
-      break
-    case '7DayVolume':
-      volumeKey = '7day'
-      break
-    case '30DayVolume':
-      volumeKey = '30day'
-      break
-  }
+  useEffect(
+    () =>
+      supportedChains
+        .filter((c) => c.id !== chain.id)
+        .forEach((c) => {
+          preload(
+            `${c.reservoirBaseUrl}/collections/top-selling/v2?period=1h&includeRecentSales=true&limit=40&fillType=mint`,
+            fetcher
+          )
+        }),
+    []
+  )
 
   return (
     <Layout>
       <Head />
       <Box
         css={{
-          p: 24,
+          p: '$5',
           height: '100%',
           '@bp800': {
-            p: '$5',
+            px: '$5',
           },
-
           '@xl': {
             px: '$6',
           },
         }}
       >
-        <Flex direction="column">
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              flexDirection: 'column',
-              gap: 24,
-              mb: '$4',
-              '@bp800': {
-                alignItems: 'center',
-                flexDirection: 'row',
-              },
-            }}
-          >
-            <Text style="h4" as="h4">
-              Trending Collections
-            </Text>
-            <Flex align="center" css={{ gap: '$4' }}>
-              <CollectionsTimeDropdown
-                compact={compactToggleNames && isMounted}
-                option={sortByTime}
-                onOptionSelected={(option) => {
-                  setSortByTime(option)
-                }}
-              />
-              <ChainToggle />
-            </Flex>
-          </Flex>
-          {isSSR || !isMounted ? null : (
-            <CollectionRankingsTable
-              collections={collections}
-              volumeKey={volumeKey}
-              loading={isValidating}
-            />
-          )}
-          <Box
-            ref={loadMoreRef}
-            css={{
-              display: isFetchingPage ? 'none' : 'block',
-            }}
-          ></Box>
+        <Flex
+          justify="between"
+          align="center"
+          css={{ flexWrap: 'wrap', mb: '$4', gap: '$3' }}
+        >
+          <Text style="h4" as="h4">
+            Trending Mints
+          </Text>
+          <ChainToggle />
         </Flex>
-        {(isFetchingPage || isValidating) && (
-          <Flex align="center" justify="center" css={{ py: '$4' }}>
-            <LoadingSpinner />
-          </Flex>
-        )}
+        <Box
+          css={{
+            pt: '$2',
+            mb: '$4',
+            display: 'grid',
+            gap: '$4',
+            gridTemplateColumns: 'repeat(1, 1fr)',
+            '@sm': {
+              gridTemplateColumns: 'repeat(2, 1fr)',
+            },
+
+            '@lg': {
+              gridTemplateColumns: 'repeat(4, 1fr)',
+            },
+          }}
+        >
+          {topSellingCollectionsData?.collections &&
+            topSellingCollectionsData.collections.length &&
+            topSellingCollectionsData.collections.map((collection) => {
+              console.log(collection)
+              return (
+                <Link
+                  key={collection.id}
+                  href={`/${marketplaceChain.routePrefix}/collection/${collection.id}`}
+                  style={{ display: 'grid' }}
+                ></Link>
+              )
+            })}
+        </Box>
       </Box>
+
+      <Footer />
     </Layout>
   )
 }
 
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
+type TopSellingCollectionsSchema =
+  paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
+
+type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection: CollectionSchema
+    topSellingCollections: ChainTopSellingCollections
   }
-}> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 20,
-      includeTopBid: true,
-    }
+}> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
-  const query = { ...collectionQuery }
-  if (chain.collectionSetId) {
-    query.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    query.community = chain.community
-  }
+
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v5`,
-    query,
+    `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
     {
       headers: {
         'x-api-key': chain.apiKey || '',
@@ -203,14 +158,17 @@ export const getServerSideProps: GetServerSideProps<{
     }
   )
 
+  const topSellingCollections: ChainTopSellingCollections = {}
+  topSellingCollections[chain.id] = response.data
+
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=30, stale-while-revalidate=60'
+    'public, s-maxage=120, stale-while-revalidate=180'
   )
 
   return {
-    props: { ssr: { collection: response.data } },
+    props: { ssr: { topSellingCollections } },
   }
 }
 
-export default IndexPage
+export default Home
