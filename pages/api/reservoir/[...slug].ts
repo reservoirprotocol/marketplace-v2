@@ -117,6 +117,11 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const contentType = response.headers.get('content-type')
 
+    const cacheControl = response.headers.get('cache-control')
+    if (cacheControl) {
+      headers.set('cache-control', cacheControl)
+    }
+
     if (contentType?.includes('application/json')) {
       data = await response.json()
     } else {
