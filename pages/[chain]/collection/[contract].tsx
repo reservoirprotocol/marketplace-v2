@@ -907,7 +907,7 @@ export const getServerSideProps: GetServerSideProps<{
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey, routePrefix } =
+  const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {

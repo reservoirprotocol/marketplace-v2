@@ -18,7 +18,7 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { preload } from 'swr'
 
 import Img from 'components/primitives/Img'
-import useTrendingCollections from 'hooks/useTrendingCollections'
+import useTopSellingCollections from 'hooks/useTopSellingCollections'
 import ReactMarkdown from 'react-markdown'
 import { basicFetcher as fetcher } from 'utils/fetcher'
 import { styled } from 'stitches.config'
@@ -42,7 +42,13 @@ const Home: NextPage<any> = ({ ssr }) => {
 
   const { chain } = useContext(ChainContext)
 
-  const { data: topSellingCollectionsData } = useTrendingCollections(
+  const { data: topSellingCollectionsData } = useTopSellingCollections(
+    {
+      period: '24h',
+      includeRecentSales: true,
+      limit: 9,
+      fillType: 'sale',
+    },
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
@@ -52,8 +58,6 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain?.id
   )
-
-  const topCollection = topSellingCollectionsData?.collections?.[0]
 
   useEffect(
     () =>
@@ -67,6 +71,8 @@ const Home: NextPage<any> = ({ ssr }) => {
         }),
     []
   )
+
+  const topCollection = topSellingCollectionsData?.collections?.[0]
 
   return (
     <Layout>
@@ -144,7 +150,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                 }}
               />
 
-              {topCollection && (
+              {topSellingCollectionsData && (
                 <>
                   <Box
                     css={{
@@ -198,7 +204,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                     <Flex direction="column" css={{ height: '100%' }}>
                       <Box css={{ flex: 1 }}>
                         <Text style="h3" css={{ mt: '$3', mb: '$2' }} as="h3">
-                          {topCollection.name}
+                          {topCollection?.name}
                         </Text>
 
                         <Box
@@ -250,7 +256,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                               24H SALES
                             </Text>
                             <Text style="h4" as="h4" css={{ mt: 2 }}>
-                              {topCollection.count?.toLocaleString()}
+                              {topCollection?.count?.toLocaleString()}
                             </Text>
                           </Box>
                         </Flex>
@@ -286,7 +292,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                                   <img
                                     style={{ borderRadius: 4 }}
                                     src={
-                                      sale?.token?.image || topCollection.image
+                                      sale?.token?.image || topCollection?.image
                                     }
                                   />
                                 </Box>
@@ -344,7 +350,7 @@ const Home: NextPage<any> = ({ ssr }) => {
             topSellingCollectionsData.collections.length &&
             topSellingCollectionsData.collections
               .slice(1, 9)
-              .map((collection: any) => {
+              .map((collection) => {
                 return (
                   <Link
                     key={collection.id}
@@ -388,13 +394,13 @@ const Home: NextPage<any> = ({ ssr }) => {
                           }}
                         >
                           {collection?.banner?.length ||
-                          collection.recentSales?.[0].token?.image?.length ? (
+                          collection.recentSales?.[0]?.token?.image?.length ? (
                             <img
                               src={
                                 collection?.banner?.replace(
                                   'w=500',
                                   'w=1200'
-                                ) ?? collection.recentSales?.[0].token?.image
+                                ) ?? collection.recentSales?.[0]?.token?.image
                               }
                               style={{
                                 transition: 'transform 300ms ease-in-out',
@@ -517,10 +523,6 @@ const Home: NextPage<any> = ({ ssr }) => {
 type TopSellingCollectionsSchema =
   paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
 
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
 type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
 
 export const getServerSideProps: GetServerSideProps<{
@@ -534,7 +536,7 @@ export const getServerSideProps: GetServerSideProps<{
     DefaultChain
 
   const response = await fetcher(
-    `${process.env.NEXT_PUBLIC_HOST_URL}/api/${chainPrefix}/trendingCollections/v1`,
+    `${chain.reservoirBaseUrl}/trendingCollections/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
     {
       headers: {
         'x-api-key': chain.apiKey || '',
