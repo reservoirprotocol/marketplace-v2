@@ -175,9 +175,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
       const newTokens = [...tokens]
       const price = NORMALIZE_ROYALTIES
-        ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount
-            ?.decimal
-        : reservoirEvent.data?.market?.floorAsk?.price?.amount?.decimal
+        ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount?.native
+        : reservoirEvent.data?.market?.floorAsk?.price?.amount?.native
       const tokenIndex = tokens.findIndex(
         (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
       )
@@ -192,7 +191,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       if (!price) {
         if (token) {
           const endOfListingsIndex = tokens.findIndex(
-            (token) => !token.market?.floorAsk?.price?.amount?.decimal
+            (token) => !token.market?.floorAsk?.price?.amount?.native
           )
           if (endOfListingsIndex === -1) {
             delete newTokens[newTokens.length - 1]
@@ -236,13 +235,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               ? tokenIndex
               : tokens.findIndex((token) => {
                   let currentTokenPrice =
-                    token.market?.floorAsk?.price?.amount?.decimal
+                    token.market?.floorAsk?.price?.amount?.native
                   if (currentTokenPrice) {
                     return sortDirection === 'desc'
                       ? currentTokenPrice <=
-                          updatedToken.market.floorAsk.price.amount.decimal
+                          updatedToken.market.floorAsk.price.amount.native
                       : currentTokenPrice >=
-                          updatedToken.market.floorAsk.price.amount.decimal
+                          updatedToken.market.floorAsk.price.amount.native
                   }
                   return true
                 })
