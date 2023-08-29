@@ -168,6 +168,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
+      debugger
       if (Object.keys(router.query).some((key) => key.includes('attribute')))
         return
 
@@ -194,30 +195,29 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             (token) => !token.market?.floorAsk?.price?.amount?.native
           )
           if (endOfListingsIndex === -1) {
-            delete newTokens[newTokens.length - 1]
             hasChange = true
-            return
-          }
-          const newTokenIndex =
-            sortBy === 'rarity'
-              ? tokenIndex
-              : endOfListingsIndex > -1
-              ? endOfListingsIndex
-              : 0
-          newTokens.splice(newTokenIndex, 0, {
-            ...token,
-            market: {
-              floorAsk: {
-                id: undefined,
-                price: undefined,
-                maker: undefined,
-                validFrom: undefined,
-                validUntil: undefined,
-                source: {},
+          } else {
+            const newTokenIndex =
+              sortBy === 'rarity'
+                ? tokenIndex
+                : endOfListingsIndex > -1
+                ? endOfListingsIndex
+                : 0
+            newTokens.splice(newTokenIndex, 0, {
+              ...token,
+              market: {
+                floorAsk: {
+                  id: undefined,
+                  price: undefined,
+                  maker: undefined,
+                  validFrom: undefined,
+                  validUntil: undefined,
+                  source: {},
+                },
               },
-            },
-          })
-          hasChange = true
+            })
+            hasChange = true
+          }
         }
       } else {
         let updatedToken = token ? token : reservoirEvent.data
