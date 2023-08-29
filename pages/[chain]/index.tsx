@@ -26,10 +26,12 @@ import { useTheme } from 'next-themes'
 import ChainToggle from 'components/common/ChainToggle'
 import optimizeImage from 'utils/optimizeImage'
 import { MarkdownLink } from 'components/primitives/MarkdownLink'
+import { useRouter } from 'next/router'
 
 const StyledImage = styled('img', {})
 
 const Home: NextPage<any> = ({ ssr }) => {
+  const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
 
   // not sure if there is a better way to fix this
@@ -287,6 +289,13 @@ const Home: NextPage<any> = ({ ssr }) => {
                                 <Box
                                   css={{ flex: 1, aspectRatio: '1/1' }}
                                   key={sale.token.id + sale.contract}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    e.preventDefault()
+                                    router.push(
+                                      `/${chain.routePrefix}/asset/${topCollection.primaryContract}:${sale.token.id}`
+                                    )
+                                  }}
                                 >
                                   <img
                                     style={{ borderRadius: 4 }}

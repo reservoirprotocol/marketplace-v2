@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
@@ -35,7 +35,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('1DayVolume')
-  const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 20,
