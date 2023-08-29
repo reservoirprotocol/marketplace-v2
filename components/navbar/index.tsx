@@ -146,14 +146,14 @@ const Navbar = () => {
               <HoverCard.Content sideOffset={24} align="start">
                 <Card css={{ p: 24, width: 240 }}>
                   <Flex css={{ gap: '$4' }} direction="column">
-                    <Link href={`/${routePrefix}/collection-rankings`}>
+                    <Link href={`/${routePrefix}/collections/trending`}>
                       <NavItem
                         active={router.pathname.includes('collection-rankings')}
                       >
                         Trending Collections
                       </NavItem>
                     </Link>
-                    <Link href={`/${routePrefix}/collection-rankings`}>
+                    <Link href={`/${routePrefix}/mints/trending`}>
                       <NavItem
                         active={router.pathname.includes('collection-rankings')}
                       >
