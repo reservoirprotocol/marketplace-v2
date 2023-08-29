@@ -74,12 +74,6 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
       },
     ]
 
-    /**
-     * Keep handlers seperate in case we introduce unique logic
-     * @sendSubscribeMessages - @function
-     * @sendUnsubscribeMessages - @function
-     */
-
     const sendSubscribeMessages = (message: JsonObject) => {
       websocket.sendJsonMessage(message)
     }
