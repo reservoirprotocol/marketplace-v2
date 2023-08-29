@@ -23,7 +23,7 @@ function formatNumber(
     return '-'
   }
   if (Number(amount) >= 1000000000) {
-    return '>1B'
+    return '1B'
   }
   return format(+amount)
 }
