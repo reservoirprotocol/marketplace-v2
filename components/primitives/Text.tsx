@@ -32,7 +32,7 @@ export default styled('span', {
         fontSize: 18,
       },
       subtitle1: {
-        fontWeight: 500,
+        fontWeight: 700,
         fontSize: 16,
       },
       subtitle2: {

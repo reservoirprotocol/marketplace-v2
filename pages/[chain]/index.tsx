@@ -228,19 +228,20 @@ const Home: NextPage<any> = ({ ssr }) => {
                             <Text style="subtitle2" color="subtle">
                               FLOOR
                             </Text>
-                            <FormatCryptoCurrency
-                              css={{ mt: '$1' }}
-                              amount={
-                                topCollection?.floorAsk?.price?.amount
-                                  ?.native ?? 0
-                              }
-                              textStyle={'h4'}
-                              logoHeight={24}
-                              address={
-                                topCollection?.floorAsk?.price?.currency
-                                  ?.contract
-                              }
-                            />
+                            <Box css={{ mt: 2 }}>
+                              <FormatCryptoCurrency
+                                amount={
+                                  topCollection?.floorAsk?.price?.amount
+                                    ?.native ?? 0
+                                }
+                                textStyle={'h4'}
+                                logoHeight={20}
+                                address={
+                                  topCollection?.floorAsk?.price?.currency
+                                    ?.contract
+                                }
+                              />
+                            </Box>
                           </Box>
 
                           <Box css={{ mr: '$4' }}>
@@ -446,6 +447,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                             maxWidth: 720,
                             lineHeight: 1.5,
                             fontSize: 16,
+                            flex: 1,
                             fontWeight: 400,
                             display: '-webkit-box',
                             color: '$gray12',
@@ -472,16 +474,20 @@ const Home: NextPage<any> = ({ ssr }) => {
 
                         <Flex css={{ mt: '$4' }}>
                           <Box css={{ mr: '$5' }}>
-                            <Text style="subtitle2" color="subtle">
+                            <Text
+                              style="subtitle2"
+                              color="subtle"
+                              as="p"
+                              css={{ mb: 2 }}
+                            >
                               FLOOR
                             </Text>
                             <FormatCryptoCurrency
-                              css={{ mt: '$1' }}
                               amount={
                                 collection?.floorAsk?.price?.amount?.native ?? 0
                               }
                               textStyle={'h6'}
-                              logoHeight={20}
+                              logoHeight={12}
                               address={
                                 collection?.floorAsk?.price?.currency?.contract
                               }
@@ -489,7 +495,7 @@ const Home: NextPage<any> = ({ ssr }) => {
                           </Box>
 
                           <Box css={{ mr: '$4' }}>
-                            <Text style="subtitle2" color="subtle">
+                            <Text style="subtitle2" color="subtle" as="p">
                               24H SALES
                             </Text>
                             <Text style="h6" as="h4" css={{ mt: 2 }}>
@@ -504,7 +510,7 @@ const Home: NextPage<any> = ({ ssr }) => {
               })}
         </Box>
         <Box css={{ my: '$5' }}>
-          <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
+          <Link href={`/${marketplaceChain.routePrefix}/collections/trending`}>
             <Button>See More</Button>
           </Link>
         </Box>
