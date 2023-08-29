@@ -34,6 +34,7 @@ import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
   faCog,
+  faCopy,
   faHand,
   faMagnifyingGlass,
   faSeedling,
@@ -50,6 +51,7 @@ import Mint from 'components/buttons/Mint'
 import ReactMarkdown from 'react-markdown'
 import { styled } from '../../../stitches.config'
 import optimizeImage from 'utils/optimizeImage'
+import CopyText from 'components/common/CopyText'
 
 const StyledImage = styled('img', {})
 
@@ -341,9 +343,23 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         <Text style="body3">{contractKind}</Text>
                       </Flex>
                     </Flex>
-                    <Text as="p" style="body2" color="subtle" css={{ mt: -4 }}>
-                      {truncateAddress(collection?.primaryContract || '')}
-                    </Text>
+                    <CopyText
+                      text={collection.id as string}
+                      css={{
+                        width: 'max-content',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '$2',
+                        mt: -4,
+                      }}
+                    >
+                      <Text as="p" style="body2" color="subtle">
+                        {truncateAddress(collection?.primaryContract || '')}
+                      </Text>
+                      <Box css={{ color: '$gray10' }}>
+                        <FontAwesomeIcon icon={faCopy} width={16} height={16} />
+                      </Box>
+                    </CopyText>
                   </Box>
                 </Flex>
               </Flex>
