@@ -47,7 +47,7 @@ const Home: NextPage<any> = ({ ssr }) => {
     {
       period: '1h',
       includeRecentSales: true,
-      limit: 40,
+      limit: 25,
       fillType: 'mint',
     },
     {
@@ -66,7 +66,7 @@ const Home: NextPage<any> = ({ ssr }) => {
         .filter((c) => c.id !== chain.id)
         .forEach((c) => {
           preload(
-            `${c.reservoirBaseUrl}/collections/top-selling/v2?period=1h&includeRecentSales=true&limit=40&fillType=mint`,
+            `${c.reservoirBaseUrl}/collections/top-selling/v2?period=1h&includeRecentSales=true&limit=25&fillType=mint`,
             fetcher
           )
         }),
@@ -80,6 +80,8 @@ const Home: NextPage<any> = ({ ssr }) => {
         css={{
           p: '$5',
           height: '100%',
+          maxWidth: 1200,
+          mx: 'auto',
           '@bp800': {
             px: '$5',
           },
@@ -91,7 +93,7 @@ const Home: NextPage<any> = ({ ssr }) => {
         <Flex
           justify="between"
           align="center"
-          css={{ flexWrap: 'wrap', mb: '$4', gap: '$3' }}
+          css={{ flexWrap: 'wrap', mb: '$5', gap: '$3' }}
         >
           <Text style="h4" as="h4">
             Trending Mints
@@ -102,28 +104,142 @@ const Home: NextPage<any> = ({ ssr }) => {
           css={{
             pt: '$2',
             mb: '$4',
-            display: 'grid',
-            gap: '$4',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            '@sm': {
-              gridTemplateColumns: 'repeat(2, 1fr)',
-            },
-
-            '@lg': {
-              gridTemplateColumns: 'repeat(4, 1fr)',
-            },
           }}
         >
           {topSellingCollectionsData?.collections &&
             topSellingCollectionsData.collections.length &&
-            topSellingCollectionsData.collections.map((collection) => {
-              console.log(collection)
+            topSellingCollectionsData.collections.map((collection, i) => {
+              let collectionImage =
+                collection.image ||
+                collection?.recentSales?.filter((sale) => sale?.token?.image)[0]
+                  ?.token?.image
               return (
                 <Link
                   key={collection.id}
                   href={`/${marketplaceChain.routePrefix}/collection/${collection.id}`}
                   style={{ display: 'grid' }}
-                ></Link>
+                >
+                  <Box css={{ mb: '$5', borderBottom: '1px solid $gray5' }}>
+                    <Flex css={{ gap: '$5' }}>
+                      <Text css={{ minWidth: 30 }} style="h4" color="subtle">
+                        {i + 1}
+                      </Text>
+                      <Box
+                        css={{
+                          flex: 1,
+                          pb: '$5',
+                        }}
+                      >
+                        <Flex
+                          css={{
+                            gap: '$3',
+                            '& > img': {
+                              border: '1px solid $gray5',
+                            },
+                          }}
+                          align="center"
+                        >
+                          <img
+                            src={collectionImage}
+                            style={{ width: 42, height: 42, borderRadius: 6 }}
+                          />
+                          <Box>
+                            <Text as="h5" style="h5">
+                              {collection.name}
+                            </Text>
+                          </Box>
+                        </Flex>
+
+                        {collection?.description && (
+                          <Box
+                            css={{
+                              maxWidth: 720,
+                              lineHeight: 1.5,
+                              fontSize: 16,
+                              flex: 1,
+                              mt: '$4',
+                              fontWeight: 400,
+                              display: '-webkit-box',
+                              color: '$gray12',
+                              fontFamily: '$body',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              '& a': {
+                                fontWeight: 500,
+                                cursor: 'pointer',
+                                textDecoration: 'underline',
+                              },
+                            }}
+                          >
+                            <ReactMarkdown
+                              children={collection?.description || ''}
+                              components={{
+                                a: MarkdownLink,
+                                p: Text as any,
+                              }}
+                            />
+                          </Box>
+                        )}
+                        <Flex css={{ gap: '$3', my: '$4' }}>
+                          {collection.recentSales?.slice(0, 7).map((sale) => (
+                            <Box
+                              css={{
+                                flex: 1,
+                                '& > img': {
+                                  border: '1px solid $gray5',
+                                },
+                              }}
+                            >
+                              {sale?.token?.image || collection.image ? (
+                                <img
+                                  src={sale?.token?.image || collection.image}
+                                  style={{
+                                    width: '100%',
+                                    aspectRatio: '1/1',
+
+                                    borderRadius: 8,
+                                  }}
+                                />
+                              ) : (
+                                <Box
+                                  css={{
+                                    width: '100%',
+                                    aspectRatio: '1/1',
+                                    borderRadius: 8,
+
+                                    backgroundColor: '$gray3',
+                                  }}
+                                />
+                              )}
+                              <Flex
+                                css={{
+                                  maxWidth: 140,
+                                  overflow: 'hidden',
+                                  mt: '$1',
+                                }}
+                              >
+                                <Text style="body3" ellipsify css={{ flex: 1 }}>
+                                  {sale.token.name || `#${sale.token.id}`}
+                                </Text>
+                              </Flex>
+                            </Box>
+                          ))}
+                        </Flex>
+                        <Text style="subtitle1" as="p" css={{ mb: '$5' }}>
+                          {collection.count}{' '}
+                          <span style={{ fontWeight: 400 }}>
+                            mints last hour
+                          </span>
+                        </Text>
+                        <Button color="primary" size="large">
+                          Mint
+                        </Button>
+                      </Box>
+                    </Flex>
+                  </Box>
+                </Link>
               )
             })}
         </Box>
