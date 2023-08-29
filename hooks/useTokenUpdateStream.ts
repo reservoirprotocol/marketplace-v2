@@ -60,16 +60,6 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
           ? 'market.floorAskNormalized.id'
           : 'market.floorAsk.id',
       },
-      {
-        type: 'subscribe',
-        event: 'token.updated',
-        filters: {
-          contract,
-        },
-        changed: NORMALIZE_ROYALTIES
-          ? 'market.floorAskNormalized.price.gross.amount'
-          : 'market.floorAsk.price.gross.amount',
-      },
     ]
     const unsubscribeMessages: ReservoirWebsocketMessage[] = [
       {
@@ -81,16 +71,6 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
         changed: NORMALIZE_ROYALTIES
           ? 'market.floorAskNormalized.id'
           : 'market.floorAsk.id',
-      },
-      {
-        type: 'unsubscribe',
-        event: 'token.updated',
-        filters: {
-          contract,
-        },
-        changed: NORMALIZE_ROYALTIES
-          ? 'market.floorAskNormalized.price.gross.amount'
-          : 'market.floorAsk.price.gross.amount',
       },
     ]
 
