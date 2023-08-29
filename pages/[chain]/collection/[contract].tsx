@@ -569,9 +569,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           open={attributeFiltersOpen}
                           setOpen={setAttributeFiltersOpen}
                         />
-                        {socketState !== null && <LiveState />}
                       </>
                     )}
+                    {socketState !== null && <LiveState />}
                     <Flex
                       justify={'end'}
                       css={{
