@@ -1,7 +1,7 @@
 import { ElementRef, forwardRef, ComponentPropsWithoutRef } from 'react'
 import { styled } from 'stitches.config'
 
-export const AnchorStyle = {
+export const StyledAnchor = styled('a', {
   cursor: 'pointer',
   fontFamily: '$body',
   fontSize: 16,
@@ -43,8 +43,7 @@ export const AnchorStyle = {
     color: 'gray',
     weight: 'heavy',
   },
-}
-export const StyledAnchor = styled('a', AnchorStyle)
+})
 
 export const Anchor = forwardRef<
   ElementRef<typeof StyledAnchor>,

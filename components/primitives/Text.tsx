@@ -8,15 +8,15 @@ export default styled('span', {
   variants: {
     style: {
       h2: {
-        fontWeight: 800,
+        fontWeight: 700,
         fontSize: 48,
       },
       h3: {
-        fontWeight: 800,
+        fontWeight: 700,
         fontSize: 32,
       },
       h4: {
-        fontWeight: 800,
+        fontWeight: 700,
         fontSize: 24,
       },
       h5: {
@@ -26,10 +26,6 @@ export default styled('span', {
       h6: {
         fontWeight: 700,
         fontSize: 16,
-      },
-      h7: {
-        fontWeight: 700,
-        fontSize: 18,
       },
       subtitle1: {
         fontWeight: 500,

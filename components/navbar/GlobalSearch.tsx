@@ -1,4 +1,12 @@
-import { Box, Text, Flex, Input, Button, FormatCrypto } from '../primitives'
+import {
+  Box,
+  Text,
+  Flex,
+  Input,
+  Button,
+  FormatCurrency,
+  FormatCrypto,
+} from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -31,15 +39,10 @@ import titleCase from 'utils/titleCase'
 
 type Props = {
   collection: SearchCollection
-  largestVolume?: number
   handleSelectResult: (result: SearchCollection) => void
 }
 
-const CollectionItem: FC<Props> = ({
-  collection,
-  largestVolume,
-  handleSelectResult,
-}) => {
+const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
   const { theme } = useTheme()
 
   const tokenCount = useMemo(
@@ -103,49 +106,19 @@ const CollectionItem: FC<Props> = ({
                 {tokenCount} items
               </Text>
             )}
-            {collection.floorAskPrice && tokenCount ? (
-              <Text style="subtitle3" color="subtle">
-                ⸱
-              </Text>
-            ) : null}
-            {collection.floorAskPrice !== undefined && (
-              <Flex css={{ flexShrink: 0, gap: '$1', color: '$gray11' }}>
-                <FormatCrypto
-                  textStyle="subtitle3"
-                  amount={collection.floorAskPrice}
-                  decimals={collection.floorAskCurrencyDecimals}
-                  maximumFractionDigits={2}
-                  css={{ color: '$gray11' }}
-                />
-                <Text style="subtitle3" color="subtle">
-                  {collection.floorAskCurrencySymbol}
-                </Text>
-              </Flex>
-            )}
           </Flex>
         </Flex>
-        {largestVolume !== undefined &&
-        collection.allTimeUsdVolume !== undefined ? (
-          <Box
-            css={{
-              background: '$gray7',
-              borderRadius: 4,
-              width: 70,
-              height: 4,
-              ml: 'auto',
-              overflow: 'hidden',
-              flexShrink: 0,
-            }}
-          >
-            <Box
-              css={{
-                background: '$primary9',
-                width: (collection.allTimeUsdVolume / largestVolume) * 100,
-                height: '100%',
-              }}
-            ></Box>
-          </Box>
-        ) : null}
+        {collection.volumeCurrencySymbol && (
+          <Flex css={{ ml: 'auto', flexShrink: 0, gap: '$1' }}>
+            <FormatCrypto
+              textStyle="subtitle2"
+              amount={collection.allTimeVolume}
+              decimals={collection.volumeCurrencyDecimals}
+              maximumFractionDigits={2}
+            />
+            {collection.volumeCurrencySymbol}
+          </Flex>
+        )}
       </Flex>
     </Link>
   )
@@ -197,13 +170,11 @@ type SearchResultProps = {
     type: 'collection' | 'wallet'
     data: any
   }
-  largestVolume?: number
   handleSelectResult: (result: SearchCollection) => void
 }
 
 const SearchResult: FC<SearchResultProps> = ({
   result,
-  largestVolume,
   handleSelectResult,
 }) => {
   if (result.type == 'collection') {
@@ -211,7 +182,6 @@ const SearchResult: FC<SearchResultProps> = ({
       <CollectionItem
         collection={result.data}
         handleSelectResult={handleSelectResult}
-        largestVolume={largestVolume}
       />
     )
   } else {
@@ -239,15 +209,6 @@ const GlobalSearch = forwardRef<
   const debouncedSearch = useDebounce(search, 500)
 
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
-  const largestVolume = useMemo(() => {
-    let volume = 0
-    results.forEach((result: SearchResultProps['result']) => {
-      if (result.data && result.data.allTimeUsdVolume >= volume) {
-        volume = result.data.allTimeUsdVolume
-      }
-    })
-    return volume
-  }, [results])
 
   useEffect(() => {
     const getSearchResults = async () => {
@@ -436,7 +397,6 @@ const GlobalSearch = forwardRef<
                   <SearchResult
                     result={result}
                     handleSelectResult={handleSelectResult}
-                    largestVolume={largestVolume}
                   />
                 ))}
 

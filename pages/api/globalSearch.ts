@@ -14,10 +14,7 @@ export type SearchCollection = NonNullable<
   darkChainIcon: string
   volumeCurrencySymbol: string
   volumeCurrencyDecimals: number
-  floorAskCurrencySymbol?: string
-  floorAskCurrencyDecimals?: number
   tokenCount: string
-  allTimeUsdVolume?: number
   chainRoutePrefix: string
 }
 
@@ -255,9 +252,7 @@ async function searchAllChains(query: string) {
           image: collection.image,
           name: collection.name,
           allTimeVolume: collection.volume?.allTime,
-          floorAskPrice: collection.floorAsk?.price?.amount?.native,
-          floorAskCurrencySymbol: chain.nativeCurrency.symbol,
-          floorAskCurrencyDecimals: chain.nativeCurrency.decimals,
+          floorAskPrice: collection.floorAsk?.price?.amount?.decimal,
           openseaVerificationStatus: collection.openseaVerificationStatus,
           chainName: chain.name.toLowerCase(),
           chainRoutePrefix: chain.routePrefix,
@@ -348,10 +343,6 @@ async function searchAllChains(query: string) {
                 collection.allTimeVolume *
                   usdCoinPrices?.prices?.[index]?.current_price) ||
               0,
-            floorAskCurrencySymbol:
-              supportedChains[index].nativeCurrency.symbol,
-            floorAskCurrencyDecimals:
-              supportedChains[index].nativeCurrency.decimals,
           },
         })
       )

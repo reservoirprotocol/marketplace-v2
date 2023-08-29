@@ -1,73 +1,79 @@
-import { NextPage, GetServerSideProps } from 'next'
-import Link from 'next/link'
-import {
-  Text,
-  Flex,
-  Box,
-  Button,
-  FormatCryptoCurrency,
-} from 'components/primitives'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
+import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Footer } from 'components/home/Footer'
-import { useMarketplaceChain } from 'hooks'
+import { useMediaQuery } from 'react-responsive'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
-import { preload } from 'swr'
+import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useRouter } from 'next/router'
+import { ChainStats } from 'components/home/ChainStats'
+import useTopSellingCollections from 'hooks/useTopSellingCollections'
+import { CollectionTopSellingTable } from 'components/home/CollectionTopSellingTable'
+import { FillTypeToggle } from 'components/home/FillTypeToggle'
+import { TimeFilterToggle } from 'components/home/TimeFilterToggle'
+import fetcher from 'utils/fetcher'
 
-import Img from 'components/primitives/Img'
-import useTrendingCollections from 'hooks/useTrendingCollections'
-import ReactMarkdown from 'react-markdown'
-import { basicFetcher as fetcher } from 'utils/fetcher'
-import { styled } from 'stitches.config'
-import { useTheme } from 'next-themes'
-import ChainToggle from 'components/common/ChainToggle'
-import optimizeImage from 'utils/optimizeImage'
-import { MarkdownLink } from 'components/primitives/MarkdownLink'
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
-const StyledImage = styled('img', {})
-
-const Home: NextPage<any> = ({ ssr }) => {
+const IndexPage: NextPage<Props> = ({ ssr }) => {
+  const isSSR = typeof window === 'undefined'
+  const isMounted = useMounted()
+  const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
   const marketplaceChain = useMarketplaceChain()
+  const router = useRouter()
+  const [fillType, setFillType] = useState<'mint' | 'sale' | 'any'>('sale')
+  const [minutesFilter, setMinutesFilter] = useState<number>(1440)
 
-  // not sure if there is a better way to fix this
-  const { theme: nextTheme } = useTheme()
-  const [theme, setTheme] = useState<string | null>(null)
-  useEffect(() => {
-    if (nextTheme) {
-      setTheme(nextTheme)
-    }
-  }, [nextTheme])
+  const { chain, switchCurrentChain } = useContext(ChainContext)
 
-  const { chain } = useContext(ChainContext)
+  const startTime = useMemo(() => {
+    const now = new Date()
+    const timestamp = Math.floor(now.getTime() / 1000)
+    return timestamp - minutesFilter * 60
+  }, [minutesFilter])
 
-  const { data: topSellingCollectionsData } = useTrendingCollections(
+  const {
+    data: topSellingCollectionsData,
+    collections: collectionsData,
+    isValidating,
+  } = useTopSellingCollections(
+    {
+      startTime,
+      fillType,
+      limit: 20,
+      includeRecentSales: true,
+    },
     {
       revalidateOnMount: true,
       refreshInterval: 300000,
       fallbackData: ssr.topSellingCollections[marketplaceChain.id]?.collections
-        ? ssr.topSellingCollections[marketplaceChain.id]
-        : null,
+        ? [ssr.topSellingCollections[marketplaceChain.id].collections]
+        : [],
     },
     chain?.id
   )
 
-  const topCollection = topSellingCollectionsData?.collections?.[0]
+  const [topSellingCollections, setTopSellingCollections] = useState<
+    ReturnType<typeof useTopSellingCollections>['data']
+  >(ssr.topSellingCollections[marketplaceChain.id])
+  const [collections, setCollections] =
+    useState<ReturnType<typeof useTopSellingCollections>['collections']>(
+      collectionsData
+    )
 
-  useEffect(
-    () =>
-      supportedChains
-        .filter((c) => c.id !== chain.id)
-        .forEach((c) => {
-          preload(
-            `${process.env.NEXT_PUBLIC_HOST_URL}/api/${c.routePrefix}/trendingCollections/v1`,
-            fetcher
-          )
-        }),
-    []
-  )
+  useEffect(() => {
+    if (!isValidating) {
+      setTopSellingCollections(topSellingCollectionsData)
+      setCollections(collectionsData)
+    }
+  }, [isValidating])
 
   return (
     <Layout>
@@ -77,450 +83,153 @@ const Home: NextPage<any> = ({ ssr }) => {
           p: 24,
           height: '100%',
           '@bp800': {
-            px: '$5',
-          },
-          '@xl': {
-            px: '$6',
+            p: '$6',
           },
         }}
       >
-        <Link href={`/${chain.routePrefix}/collection/${topCollection?.id}`}>
-          <Flex>
-            <Flex
-              css={{
-                '&:hover button': {
-                  background: theme == 'light' ? '$primary11' : '$gray2',
-                },
-                minHeight: 540,
-                flex: 1,
-                overflow: 'hidden',
-                position: 'relative',
-                gap: '$5',
-                p: '$4',
-                display: 'none',
-                '@md': {
-                  p: '$5',
-                  gap: '$4',
-                  flexDirection: 'column',
-                  display: 'flex',
-                },
-                '@lg': {
-                  flexDirection: 'row',
-                  p: '$5',
-                  gap: '$5',
-                  mt: '$4',
-                },
-                '@xl': {
-                  p: '$6',
-                  gap: '$6',
-                },
-
-                mb: '$6',
-                maxWidth: 1820,
-                mx: 'auto',
-                borderRadius: 16,
-                backgroundSize: 'cover',
-                border: `1px solid $gray5`,
-                backgroundImage:
-                  theme === 'light'
-                    ? `url(${optimizeImage(topCollection?.banner, 1820)})`
-                    : '$gray3',
-                backgroundColor: '$gray5',
-              }}
-            >
-              <Box
-                css={{
-                  position: 'absolute',
-                  top: 0,
-                  display: theme === 'light' ? 'block' : 'none',
-                  zIndex: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  backdropFilter: 'blur(20px)',
-                  background: 'rgba(255, 255, 255, 0.9)',
-                }}
-              />
-
-              {topCollection && (
-                <>
-                  <Box
-                    css={{
-                      flex: 2,
-                      position: 'relative',
-                      zIndex: 5,
-                      '@xl': {
-                        flex: 3,
-                      },
-                    }}
-                  >
-                    <StyledImage
-                      src={optimizeImage(
-                        topCollection?.banner ?? topCollection?.image,
-                        1820
-                      )}
-                      css={{
-                        width: '100%',
-                        borderRadius: 8,
-                        height: 320,
-                        '@lg': {
-                          height: 540,
-                        },
-                        objectFit: 'cover',
-                      }}
-                    />
-                    <Box
-                      css={{
-                        position: 'absolute',
-                        left: '$4',
-                        '@lg': {
-                          top: '$4',
-                        },
-                        bottom: '$4',
-                      }}
-                    >
-                      <Img
-                        alt="collection image"
-                        width={100}
-                        height={100}
-                        style={{
-                          display: 'block',
-                          borderRadius: 8,
-                          border: '2px solid rgba(255,255,255,0.6)',
-                        }}
-                        src={optimizeImage(topCollection?.image, 200) as string}
-                      />
-                    </Box>
-                  </Box>
-                  <Box css={{ flex: 2, zIndex: 4 }}>
-                    <Flex direction="column" css={{ height: '100%' }}>
-                      <Box css={{ flex: 1 }}>
-                        <Text style="h3" css={{ mt: '$3', mb: '$2' }} as="h3">
-                          {topCollection.name}
-                        </Text>
-
-                        <Box
-                          css={{
-                            maxWidth: 720,
-                            lineHeight: 1.5,
-                            fontSize: 16,
-                            fontWeight: 400,
-                            display: '-webkit-box',
-                            color: '$gray12',
-                            fontFamily: '$body',
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                          }}
-                        >
-                          <ReactMarkdown
-                            children={topCollection?.description || ''}
-                            components={{
-                              a: MarkdownLink,
-                              p: Text as any,
-                            }}
-                          />
-                        </Box>
-
-                        <Flex css={{ mt: '$4' }}>
-                          <Box css={{ mr: '$5' }}>
-                            <Text style="subtitle2" color="subtle">
-                              FLOOR
-                            </Text>
-                            <FormatCryptoCurrency
-                              css={{ mt: '$1' }}
-                              amount={
-                                topCollection?.floorAsk?.price?.amount
-                                  ?.native ?? 0
-                              }
-                              textStyle={'h4'}
-                              logoHeight={24}
-                              address={
-                                topCollection?.floorAsk?.price?.currency
-                                  ?.contract
-                              }
-                            />
-                          </Box>
-
-                          <Box css={{ mr: '$4' }}>
-                            <Text style="subtitle2" color="subtle">
-                              24H SALES
-                            </Text>
-                            <Text style="h4" as="h4" css={{ mt: 2 }}>
-                              {topCollection.count?.toLocaleString()}
-                            </Text>
-                          </Box>
-                        </Flex>
-                        <Box
-                          css={{
-                            display: 'none',
-                            '@lg': {
-                              display: 'block',
-                            },
-                          }}
-                        >
-                          <Text
-                            style="subtitle2"
-                            color="subtle"
-                            as="p"
-                            css={{ mt: '$4' }}
-                          >
-                            RECENT SALES
-                          </Text>
-                          <Flex
-                            css={{
-                              mt: '$2',
-                              gap: '$3',
-                            }}
-                          >
-                            {topCollection?.recentSales
-                              ?.slice(0, 3)
-                              ?.map((sale: any) => (
-                                <Box
-                                  css={{ flex: 1, aspectRatio: '1/1' }}
-                                  key={sale.token.id + sale.contract}
-                                >
-                                  <img
-                                    style={{ borderRadius: 4 }}
-                                    src={optimizeImage(
-                                      sale?.token?.image || topCollection.image,
-                                      250
-                                    )}
-                                  />
-                                </Box>
-                              ))}
-                            <Box css={{ flex: 1 }} />
-                            <Box css={{ flex: 1 }} />
-                          </Flex>
-                        </Box>
-                      </Box>
-                      <Flex css={{ gap: '$4', mt: '$5' }}>
-                        {theme == 'light' ? (
-                          <Button as="button" color="primary" size="large">
-                            Explore Collection
-                          </Button>
-                        ) : (
-                          <Button as="button" color="gray4" size="large">
-                            Explore Collection
-                          </Button>
-                        )}
-                      </Flex>
-                    </Flex>
-                  </Box>
-                </>
-              )}
-            </Flex>
-          </Flex>
-        </Link>
         <Flex
-          justify="between"
-          align="center"
-          css={{ flexWrap: 'wrap', mb: '$4', gap: '$3' }}
-        >
-          <Text style="h4" as="h4">
-            Trending Collections
-          </Text>
-          <ChainToggle />
-        </Flex>
-        <Box
+          direction="column"
           css={{
-            pt: '$2',
-            mb: '$4',
-            display: 'grid',
-            gap: '$4',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            '@sm': {
-              gridTemplateColumns: 'repeat(2, 1fr)',
-            },
-
-            '@lg': {
-              gridTemplateColumns: 'repeat(4, 1fr)',
-            },
+            mx: 'auto',
+            maxWidth: 728,
+            pt: '$5',
+            textAlign: 'center',
+            alignItems: 'flex-start',
+            '@bp600': { alignItems: 'center' },
           }}
         >
-          {topSellingCollectionsData?.collections &&
-            topSellingCollectionsData.collections.length &&
-            topSellingCollectionsData.collections
-              .slice(1, 9)
-              .map((collection: any) => {
-                return (
-                  <Link
-                    key={collection.id}
-                    href={`/${marketplaceChain.routePrefix}/collection/${collection.id}`}
-                    style={{ display: 'grid' }}
+          <Flex
+            css={{
+              mb: '$4',
+              gap: '$3',
+              flexDirection: 'column',
+              alignItems: 'flex-start',
+              maxWidth: '100%',
+              '@bp600': {
+                flexDirection: 'row',
+                alignItems: 'center',
+              },
+            }}
+          >
+            <Text style="h3" css={{ flexShrink: 0 }}>
+              Explore NFTs
+            </Text>{' '}
+            <Flex css={{ gap: '$3', maxWidth: '100%' }}>
+              <Text style="h3" color="subtle">
+                on
+              </Text>
+              <Dropdown
+                contentProps={{
+                  sideOffset: 8,
+                  asChild: true,
+                  style: {
+                    margin: 0,
+                  },
+                }}
+                trigger={
+                  <Flex
+                    css={{
+                      gap: '$3',
+                      alignItems: 'center',
+                      cursor: 'pointer',
+                      minWidth: 0,
+                    }}
                   >
-                    <Flex
-                      direction="column"
+                    <img
+                      src={`/home/logos/${marketplaceChain.routePrefix}-logo.png`}
+                      alt={`${marketplaceChain.name} Logo`}
+                      style={{ width: 40, height: 40 }}
+                    />
+                    <Text style="h3" ellipsify>
+                      {' ' + marketplaceChain.name}
+                    </Text>
+                    <Box
                       css={{
-                        flex: 1,
-                        width: '100%',
-                        borderRadius: 12,
-                        cursor: 'pointer',
-                        height: '100%',
-                        background: '$neutralBgSubtle',
-                        $$shadowColor: '$colors$panelShadow',
-                        boxShadow: '0 0px 12px 0px $$shadowColor',
-
-                        overflow: 'hidden',
-                        position: 'relative',
-                        p: '$3',
-                        '&:hover > div > div> img:nth-child(1)': {
-                          transform: 'scale(1.075)',
-                        },
+                        color: '$gray10',
+                        transition: 'transform',
+                        '[data-state=open] &': { transform: 'rotate(180deg)' },
                       }}
                     >
-                      <Flex
-                        direction="column"
-                        css={{
-                          zIndex: 2,
-                          position: 'relative',
-                          flex: 1,
-                          width: '100%',
-                        }}
+                      <FontAwesomeIcon icon={faChevronDown} width={16} />
+                    </Box>
+                  </Flex>
+                }
+              >
+                <Flex direction="column" css={{ minWidth: 150 }}>
+                  {supportedChains.map(({ name, id, routePrefix }) => (
+                    <DropdownMenuItem
+                      css={{
+                        textAlign: 'left',
+                        py: '$2',
+                      }}
+                      key={id}
+                      onClick={() => {
+                        switchCurrentChain(id)
+
+                        router.replace(routePrefix, undefined, {
+                          scroll: false,
+                          shallow: true,
+                        })
+                      }}
+                    >
+                      <Text
+                        style="h6"
+                        color={
+                          id === marketplaceChain.id ? undefined : 'subtle'
+                        }
+                        css={{ cursor: 'pointer' }}
                       >
-                        <Box
-                          css={{
-                            position: 'relative',
-                            overflow: 'hidden',
-                            borderRadius: 8,
-                          }}
-                        >
-                          {collection?.banner?.length ||
-                          collection.recentSales?.[0].token?.image?.length ? (
-                            <img
-                              loading="lazy"
-                              src={optimizeImage(
-                                collection?.banner ??
-                                  collection.recentSales?.[0].token?.image,
-                                800
-                              )}
-                              style={{
-                                transition: 'transform 300ms ease-in-out',
-                                width: '100%',
-                                borderRadius: 8,
-                                height: 250,
-                                objectFit: 'cover',
-                              }}
-                            />
-                          ) : (
-                            <Box
-                              css={{
-                                width: '100%',
-                                borderRadius: 8,
-                                height: 250,
-                                background: '$gray3',
-                              }}
-                            />
-                          )}
-                          <Img
-                            src={
-                              optimizeImage(collection?.image, 72 * 2) as string
-                            }
-                            alt={collection?.name as string}
-                            width={72}
-                            height={72}
-                            css={{
-                              width: 72,
-                              height: 72,
-                              border: '2px solid rgba(255,255,255,0.6)',
-                              position: 'absolute',
-                              bottom: '$3',
-                              left: '$3',
-                              borderRadius: 8,
-                            }}
-                          />
-                        </Box>
-                        <Flex
-                          css={{ my: '$4', mb: '$2' }}
-                          justify="between"
-                          align="center"
-                        >
-                          <Text style="h5" as="h5" ellipsify css={{ flex: 1 }}>
-                            {collection?.name}
-                          </Text>
-                        </Flex>
-
-                        <Box
-                          css={{
-                            maxWidth: 720,
-                            lineHeight: 1.5,
-                            fontSize: 16,
-                            fontWeight: 400,
-                            display: '-webkit-box',
-                            color: '$gray12',
-                            fontFamily: '$body',
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            '& a': {
-                              fontWeight: 500,
-                              cursor: 'pointer',
-                              textDecoration: 'underline',
-                            },
-                          }}
-                        >
-                          <ReactMarkdown
-                            children={collection?.description || ''}
-                            components={{
-                              a: MarkdownLink,
-                              p: Text as any,
-                            }}
-                          />
-                        </Box>
-
-                        <Flex css={{ mt: '$4' }}>
-                          <Box css={{ mr: '$5' }}>
-                            <Text style="subtitle2" color="subtle">
-                              FLOOR
-                            </Text>
-                            <FormatCryptoCurrency
-                              css={{ mt: '$1' }}
-                              amount={
-                                collection?.floorAsk?.price?.amount?.native ?? 0
-                              }
-                              textStyle={'h6'}
-                              logoHeight={20}
-                              address={
-                                collection?.floorAsk?.price?.currency?.contract
-                              }
-                            />
-                          </Box>
-
-                          <Box css={{ mr: '$4' }}>
-                            <Text style="subtitle2" color="subtle">
-                              24H SALES
-                            </Text>
-                            <Text style="h6" as="h4" css={{ mt: 2 }}>
-                              {collection.count?.toLocaleString()}
-                            </Text>
-                          </Box>
-                        </Flex>
-                      </Flex>
-                    </Flex>
-                  </Link>
-                )
-              })}
-        </Box>
-        <Box css={{ my: '$5' }}>
-          <Link href={`/${marketplaceChain.routePrefix}/collection-rankings`}>
-            <Button>See More</Button>
-          </Link>
-        </Box>
+                        {name}
+                      </Text>
+                    </DropdownMenuItem>
+                  ))}
+                </Flex>
+              </Dropdown>
+            </Flex>
+          </Flex>
+          <Text
+            style="body1"
+            color="subtle"
+            css={{ mb: 48, textAlign: 'left' }}
+          >
+            Multi-Chain Explorer, powered by Reservoir
+          </Text>
+        </Flex>
+        {!isSmallDevice ? <ChainStats /> : null}
+        <Flex
+          css={{ mb: '$6', '@sm': { my: '$6' }, gap: 32 }}
+          direction="column"
+        >
+          <Flex
+            justify="between"
+            align="center"
+            css={{
+              gap: '$2',
+            }}
+          >
+            <FillTypeToggle fillType={fillType} setFillType={setFillType} />
+            <TimeFilterToggle
+              minutesFilter={minutesFilter}
+              setMinutesFilter={setMinutesFilter}
+            />
+          </Flex>
+          {isSSR || !isMounted ? null : (
+            <CollectionTopSellingTable
+              topSellingCollections={topSellingCollections?.collections}
+              collections={collections}
+              loading={isValidating}
+              fillType={fillType}
+            />
+          )}
+        </Flex>
+        <Footer />
       </Box>
-
-      <Footer />
     </Layout>
   )
 }
 
 type TopSellingCollectionsSchema =
   paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
-
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
 
 type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
 
@@ -529,20 +238,31 @@ export const getServerSideProps: GetServerSideProps<{
     topSellingCollections: ChainTopSellingCollections
   }
 }> = async ({ params, res }) => {
+  const now = new Date()
+  const timestamp = Math.floor(now.getTime() / 1000)
+  const startTime = timestamp - 1440 * 60 // 24hrs ago
+
+  const topSellingCollectionsQuery: paths['/collections/top-selling/v1']['get']['parameters']['query'] =
+    {
+      startTime: startTime,
+      fillType: 'sale',
+      limit: 20,
+      includeRecentSales: true,
+    }
+
   const chainPrefix = params?.chain || ''
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
-
   const response = await fetcher(
-    `${process.env.NEXT_PUBLIC_HOST_URL}/api/${chainPrefix}/trendingCollections/v1`,
+    `${chain.reservoirBaseUrl}/collections/top-selling/v1`,
+    topSellingCollectionsQuery,
     {
       headers: {
         'x-api-key': chain.apiKey || '',
       },
     }
   )
-
   const topSellingCollections: ChainTopSellingCollections = {}
   topSellingCollections[chain.id] = response.data
 
@@ -556,4 +276,4 @@ export const getServerSideProps: GetServerSideProps<{
   }
 }
 
-export default Home
+export default IndexPage

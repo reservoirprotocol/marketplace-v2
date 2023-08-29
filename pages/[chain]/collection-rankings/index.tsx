@@ -108,22 +108,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           p: 24,
           height: '100%',
           '@bp800': {
-            p: '$5',
-          },
-
-          '@xl': {
-            px: '$6',
+            p: '$6',
           },
         }}
       >
-        <Flex direction="column">
+        <Flex css={{ my: '$6', gap: 65 }} direction="column">
           <Flex
             justify="between"
             align="start"
             css={{
               flexDirection: 'column',
               gap: 24,
-              mb: '$4',
               '@bp800': {
                 alignItems: 'center',
                 flexDirection: 'row',

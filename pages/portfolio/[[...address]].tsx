@@ -179,10 +179,6 @@ const IndexPage: NextPage = () => {
             '@sm': {
               px: '$5',
             },
-
-            '@xl': {
-              px: '$6',
-            },
           }}
         >
           {!isOwner || isConnected ? (

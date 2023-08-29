@@ -24,11 +24,9 @@ import { Address } from 'wagmi'
 
 type TokenCardProps = {
   token: ReturnType<typeof useDynamicTokens>['data'][0]
-  address?: Address
+  address: Address
   rarityEnabled: boolean
   addToCartEnabled?: boolean
-  showSource?: boolean
-  showAsk?: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
@@ -41,21 +39,14 @@ export default ({
   address,
   rarityEnabled = true,
   addToCartEnabled = true,
-  showAsk = true,
   mutate,
   onMediaPlayed,
   tokenCount,
-  showSource = true,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
   const showPreview =
-    mediaType === 'other' ||
-    mediaType === 'html' ||
-    mediaType === null ||
-    mediaType === 'gif' ||
-    mediaType === 'gltf' ||
-    mediaType === 'glb'
+    mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
@@ -175,7 +166,6 @@ export default ({
               aspectRatio: '1/1',
             }}
             staticOnly={showPreview}
-            imageResolution={'medium'}
             audioOptions={{
               onPlay: (e) => {
                 onMediaPlayed?.(e)
@@ -200,17 +190,16 @@ export default ({
         href={`/${routePrefix}/asset/${token?.token?.contract}:${token?.token?.tokenId}`}
       >
         <Flex
-          css={{ p: '$4', minHeight: showAsk ? 132 : 0, cursor: 'pointer' }}
+          css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
           direction="column"
         >
-          <Flex css={{ mb: '$2' }} align="center" justify="between">
+          <Flex css={{ mb: '$4' }} align="center" justify="between">
             <Flex align="center" css={{ gap: '$1', minWidth: 0 }}>
               <Text
                 style="subtitle1"
                 as="p"
                 ellipsify
                 css={{
-                  fontWeight: 600,
                   pr: '$1',
                   flex: 1,
                 }}
@@ -240,7 +229,7 @@ export default ({
                 css={{
                   px: '$1',
                   py: 2,
-                  background: '$gray3',
+                  background: '$gray5',
                   borderRadius: 8,
                   minWidth: 'max-content',
                 }}
@@ -258,68 +247,63 @@ export default ({
             )}
           </Flex>
 
-          {showAsk && (
-            <Flex align="center" justify="between" css={{ gap: '$2' }}>
-              <Flex align="center" css={{ gap: '$2' }}>
-                <Box
-                  css={{
-                    flex: 1,
-                    minWidth: 0,
-                    width: '100%',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {token?.market?.floorAsk?.price && (
-                    <FormatCryptoCurrency
-                      logoHeight={18}
-                      amount={token?.market?.floorAsk?.price?.amount?.decimal}
-                      address={
-                        token?.market?.floorAsk?.price?.currency?.contract
-                      }
-                      textStyle="h6"
-                      css={{
-                        textOverflow: 'ellipsis',
-                        minWidth: 0,
-                        with: '100%',
-                        overflow: 'hidden',
-                        fontSize: 18,
-                      }}
-                      maximumFractionDigits={4}
-                    />
+          <Flex align="center" justify="between" css={{ gap: '$2' }}>
+            <Flex align="center" css={{ gap: '$2' }}>
+              <Box
+                css={{
+                  flex: 1,
+                  minWidth: 0,
+                  width: '100%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {token?.market?.floorAsk?.price && (
+                  <FormatCryptoCurrency
+                    logoHeight={18}
+                    amount={token?.market?.floorAsk?.price?.amount?.decimal}
+                    address={token?.market?.floorAsk?.price?.currency?.contract}
+                    textStyle="h6"
+                    css={{
+                      textOverflow: 'ellipsis',
+                      minWidth: 0,
+                      with: '100%',
+                      overflow: 'hidden',
+                    }}
+                    maximumFractionDigits={4}
+                  />
+                )}
+              </Box>
+
+              {is1155 && token?.market?.floorAsk?.quantityRemaining ? (
+                <Text style="subtitle2" ellipsify>
+                  x
+                  {formatNumber(
+                    token?.market?.floorAsk?.quantityRemaining,
+                    0,
+                    true
                   )}
-                </Box>
-
-                {is1155 && token?.market?.floorAsk?.quantityRemaining ? (
-                  <Text style="subtitle2" ellipsify>
-                    x
-                    {formatNumber(
-                      token?.market?.floorAsk?.quantityRemaining,
-                      0,
-                      true
-                    )}
-                  </Text>
-                ) : null}
-              </Flex>
-
-              {showSource && token?.market?.floorAsk?.source?.name ? (
-                <img
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: '50%',
-                  }}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    const url = `${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
-                    window.open(url, '_blank')
-                  }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
-                />
+                </Text>
               ) : null}
             </Flex>
-          )}
+
+            {token?.market?.floorAsk?.source?.name ? (
+              <img
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  const url = `${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
+                  window.open(url, '_blank')
+                }}
+                src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+              />
+            ) : null}
+          </Flex>
           {token?.token?.lastSale?.price?.amount?.decimal ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
@@ -337,7 +321,7 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {showAsk && isOwner && token?.market?.floorAsk?.price?.amount ? (
+      {isOwner && token?.market?.floorAsk?.price?.amount ? (
         <Flex
           className="token-button-container"
           css={{

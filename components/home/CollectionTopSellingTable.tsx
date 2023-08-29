@@ -340,7 +340,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
                 </Text>
                 <Text style="subtitle3">
                   <FormatCryptoCurrency
-                    amount={(topSellingCollection?.volume || 0) as number}
+                    amount={topSellingCollection.volume}
                     textStyle="subtitle3"
                     logoHeight={14}
                   />
@@ -380,7 +380,7 @@ const AllSalesTableRow: FC<CollectionTableRowProps> = ({
         <TableCell>
           <Text style="subtitle2">
             <FormatCryptoCurrency
-              amount={(topSellingCollection?.volume || 0) as number}
+              amount={topSellingCollection.volume}
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -512,7 +512,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
                 </Text>
                 <Text style="subtitle3">
                   <FormatCryptoCurrency
-                    amount={(topSellingCollection?.volume || 0) as number}
+                    amount={topSellingCollection.volume}
                     textStyle="subtitle3"
                     logoHeight={14}
                   />
@@ -552,7 +552,7 @@ const SaleTableRow: FC<CollectionTableRowProps> = ({
         <TableCell>
           <Text style="subtitle2">
             <FormatCryptoCurrency
-              amount={(topSellingCollection?.volume || 0) as number}
+              amount={topSellingCollection.volume}
               textStyle="subtitle2"
               logoHeight={14}
             />
@@ -679,7 +679,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
                 </Text>
                 <Text style="subtitle3">
                   <FormatCryptoCurrency
-                    amount={(topSellingCollection?.volume || 0) as number}
+                    amount={topSellingCollection.volume}
                     textStyle="subtitle3"
                     logoHeight={14}
                   />
@@ -719,7 +719,7 @@ const MintTableRow: FC<CollectionTableRowProps> = ({
       <TableCell>
         <Text style="subtitle2">
           <FormatCryptoCurrency
-            amount={(topSellingCollection?.volume || 0) as number}
+            amount={topSellingCollection.volume}
             textStyle="subtitle2"
             logoHeight={14}
           />

@@ -378,17 +378,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 loader={({ src }) => src}
                 src={imageSrc}
                 alt="Activity Token Image"
-                width={52}
-                height={52}
+                width={48}
+                height={48}
               />
             )}
             <Flex
               align="start"
               direction="column"
-              css={{ ml: '$3' }}
+              css={{ ml: '$2' }}
               style={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}
             >
-              <Text style="subtitle1" ellipsify css={{ fontSize: '14px' }}>
+              <Text ellipsify css={{ fontSize: '14px' }}>
                 {activity.token?.tokenName ||
                   activity.token?.tokenId ||
                   activity.collection?.collectionName}
@@ -410,8 +410,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               amount={activity.price.amount?.decimal}
               address={activity.price.currency?.contract}
               logoHeight={16}
-              textStyle="h6"
-              css={{ mr: '$2', fontSize: '16px' }}
+              textStyle="subtitle1"
+              css={{ mr: '$2', fontSize: '14px' }}
             />
           </Flex>
         ) : (

@@ -24,9 +24,9 @@ type CollectionActionsProps = {
 
 const CollectionAction = styled(Flex, {
   px: '$4',
-  py: '$4',
+  py: '$3',
   color: '$gray12',
-  background: '$gray2',
+  background: '$panelBg',
   cursor: 'pointer',
   transition: 'background 0.25s ease-in',
   height: 48,
@@ -81,8 +81,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const containerCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
     borderRadius: 8,
     overflow: 'hidden',
-    gap: 0,
-    bg: '$panelBg',
+    gap: 1,
+    flexShrink: 0,
+    mb: 'auto',
   }
 
   const dropdownContentProps: ComponentPropsWithoutRef<
@@ -160,6 +161,63 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
     </CollectionActionDropdownItem>
   )
 
+  if (isMobile) {
+    return (
+      <Flex css={containerCss}>
+        <Dropdown
+          trigger={collectionActionOverflowTrigger}
+          contentProps={dropdownContentProps}
+        >
+          <Flex direction="column">
+            <a
+              href={blockExplorerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <CollectionActionDropdownItem>
+                {etherscanImage}
+                Etherscan
+              </CollectionActionDropdownItem>
+            </a>
+            {collection?.externalUrl && (
+              <a
+                href={collection.externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <CollectionActionDropdownItem>
+                  <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
+                  Website
+                </CollectionActionDropdownItem>
+              </a>
+            )}
+            {collection?.discordUrl && (
+              <a
+                href={collection.discordUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <CollectionActionDropdownItem>
+                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} />{' '}
+                  Discord
+                </CollectionActionDropdownItem>
+              </a>
+            )}
+            {twitterLink && (
+              <a href={twitterLink} target="_blank" rel="noopener noreferrer">
+                <CollectionActionDropdownItem>
+                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} />{' '}
+                  Twitter
+                </CollectionActionDropdownItem>
+              </a>
+            )}
+            {refreshMetadataItem}
+          </Flex>
+        </Dropdown>
+      </Flex>
+    )
+  }
+
   return (
     <Flex css={containerCss}>
       <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
@@ -174,7 +232,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       )}
       {collection?.discordUrl && (
         <a
-          href={collection?.discordUrl}
+          href={collection.discordUrl}
           target="_blank"
           rel="noopener noreferrer"
         >

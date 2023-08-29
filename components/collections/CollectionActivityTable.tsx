@@ -11,13 +11,7 @@ type Props = {
 
 export const CollectionActivityTable: FC<Props> = ({ id, activityTypes }) => {
   const data = useCollectionActivity(
-    {
-      collection: id,
-      types: activityTypes,
-      limit: 20,
-      //@ts-ignore - until we add the types
-      es: 1,
-    },
+    { collection: id, types: activityTypes, limit: 20 },
     {
       revalidateOnMount: true,
       fallbackData: [],

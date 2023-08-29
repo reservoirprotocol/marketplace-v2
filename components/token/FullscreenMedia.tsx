@@ -1,12 +1,8 @@
 import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Button, Flex } from 'components/primitives'
-import { FC, useState } from 'react'
-import {
-  AnimatedContent,
-  AnimatedOverlay,
-  Content,
-} from 'components/primitives/Dialog'
+import { FC } from 'react'
+import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
 import {
   Root as DialogRoot,
   DialogTrigger,
@@ -18,7 +14,7 @@ import {
   useTokens,
   extractMediaType,
 } from '@reservoir0x/reservoir-kit-ui'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 type Props = {
   token?: ReturnType<typeof useTokens>['data'][0]
@@ -26,7 +22,6 @@ type Props = {
 
 const FullscreenMedia: FC<Props> = ({ token }) => {
   const mediaType = extractMediaType(token?.token)
-  const [open, setOpen] = useState(false)
 
   const trigger = (
     <Button
@@ -50,84 +45,79 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
     mediaType === undefined
   )
     return (
-      <DialogRoot modal={true} open={open} onOpenChange={setOpen}>
+      <DialogRoot modal={true}>
         <DialogTrigger asChild>{trigger}</DialogTrigger>
-        <AnimatePresence>
-          {open ? (
-            <DialogPortal forceMount>
-              <AnimatedOverlay
-                style={{
-                  position: 'fixed',
-                  zIndex: 1000,
-                  inset: 0,
-                  width: '100vw',
-                  height: '100vh',
-                  backgroundColor: 'rgba(0, 0, 0, 0.6)',
-                  backdropFilter: '20px',
-                  opacity: 1,
+        <DialogPortal>
+          <AnimatedOverlay
+            style={{
+              position: 'fixed',
+              zIndex: 1000,
+              inset: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              backdropFilter: '20px',
+            }}
+          >
+            <DialogClose>
+              <Button
+                color="gray3"
+                corners="circle"
+                css={{ position: 'absolute', right: 12, top: 12 }}
+              >
+                <FontAwesomeIcon icon={faCompress} width={16} height={16} />
+              </Button>
+            </DialogClose>
+          </AnimatedOverlay>
+          <Content
+            css={{
+              zIndex: 2000,
+              top: '50%',
+              border: 'none',
+              borderRadius: 0,
+              background: 'none',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <motion.div
+              transition={{ type: 'spring', duration: 1 }}
+              initial={{
+                opacity: 0,
+                top: '0%',
+              }}
+              animate={{
+                opacity: 1,
+                top: '50%',
+              }}
+              exit={{
+                opacity: 0,
+                top: '0%',
+              }}
+            >
+              <Flex
+                direction="column"
+                align="center"
+                justify="center"
+                css={{
+                  flexDirection: 'column',
+                  height: '100%',
+                  width: '100%',
+                  maxWidth: '100%',
                 }}
               >
-                <DialogClose>
-                  <Button
-                    color="gray3"
-                    corners="circle"
-                    css={{ position: 'absolute', right: 12, top: 12 }}
-                  >
-                    <FontAwesomeIcon icon={faCompress} width={16} height={16} />
-                  </Button>
-                </DialogClose>
-              </AnimatedOverlay>
-              <AnimatedContent
-                style={{
-                  zIndex: 2000,
-                  top: '50%',
-                  border: 'none',
-                  borderRadius: 0,
-                  background: 'none',
-                }}
-                forceMount={true}
-              >
-                <motion.div
-                  transition={{ type: 'spring', duration: 1 }}
-                  initial={{
-                    opacity: 0,
-                    top: '0%',
+                <TokenMedia
+                  token={token?.token}
+                  style={{
+                    borderRadius: 0,
+                    width: '100vw',
+                    height: 'auto',
+                    padding: '4px',
                   }}
-                  animate={{
-                    opacity: 1,
-                    top: '50%',
-                  }}
-                  exit={{
-                    opacity: 0,
-                    top: '0%',
-                  }}
-                >
-                  <Flex
-                    direction="column"
-                    align="center"
-                    justify="center"
-                    css={{
-                      flexDirection: 'column',
-                      height: '100%',
-                      width: '100%',
-                      maxWidth: '100%',
-                    }}
-                  >
-                    <TokenMedia
-                      token={token?.token}
-                      style={{
-                        borderRadius: 0,
-                        width: '100vw',
-                        height: 'auto',
-                        padding: '4px',
-                      }}
-                    />
-                  </Flex>
-                </motion.div>
-              </AnimatedContent>
-            </DialogPortal>
-          ) : null}
-        </AnimatePresence>
+                />
+              </Flex>
+            </motion.div>
+          </Content>
+        </DialogPortal>
       </DialogRoot>
     )
   else {

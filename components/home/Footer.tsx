@@ -71,10 +71,7 @@ export const Footer = () => {
       css={{
         borderTop: '1px solid $gray7',
         borderStyle: 'solid',
-        p: '$5',
-        '@lg': {
-          p: '$6',
-        },
+        pt: '$5',
         flexDirection: 'column',
         alignItems: 'flex-start',
         gap: 36,
