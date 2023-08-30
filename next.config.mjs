@@ -13,9 +13,6 @@ const nextConfig = {
   sentry: {
     hideSourceMaps: false,
   },
-  experimental: {
-    transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
-  },
   async rewrites() {
     return [
       {
