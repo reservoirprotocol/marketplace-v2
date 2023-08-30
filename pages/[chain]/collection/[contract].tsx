@@ -343,7 +343,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           as="h6"
                           css={{ color: '$bg', fontWeight: 900 }}
                         >
-                          {`${collection.floorAsk?.price?.amount?.native} ETH`}
+                          {`${collection.floorAsk?.price?.amount?.native} ${collection.floorAsk?.price?.currency?.symbol}`}
                         </Text>
                       </Flex>
                     }
