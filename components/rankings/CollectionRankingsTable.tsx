@@ -224,7 +224,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 unoptimized
               />
 
-              <Flex css={{ gap: '$1' }} align="center">
+              <Flex css={{ gap: '$1', minWidth: 0 }} align="center">
                 <Text
                   css={{
                     display: 'inline-block',
