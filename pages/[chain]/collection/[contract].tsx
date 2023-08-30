@@ -10,7 +10,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
-import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { AttributeFilters } from 'components/collections/filters/AttributeFilters'
 import { FilterButton } from 'components/common/FilterButton'
@@ -44,17 +43,12 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
-import titleCase from 'utils/titleCase'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
-import ReactMarkdown from 'react-markdown'
-import { styled } from '../../../stitches.config'
 import optimizeImage from 'utils/optimizeImage'
 import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
-
-const StyledImage = styled('img', {})
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -66,19 +60,6 @@ type ActivityTypes = Exclude<
 >
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
-
-const ItemGrid = styled(Box, {
-  width: '100%',
-  display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
-  gap: '$4',
-  '@md': {
-    gridTemplateColumns: 'repeat(4, 1fr)',
-  },
-  '@bp1500': {
-    gridTemplateColumns: 'repeat(5, 1fr)',
-  },
-})
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
