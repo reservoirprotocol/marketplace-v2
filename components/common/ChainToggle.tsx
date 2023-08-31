@@ -23,7 +23,7 @@ import {
   DropdownMenuItem,
 } from 'components/primitives/Dropdown'
 
-const ChainToggle: FC = ({ onChangeChain }: any) => {
+const ChainToggle: FC = () => {
   const router = useRouter()
   const { chain, switchCurrentChain } = useContext(ChainContext)
   const isMounted = useMounted()
@@ -89,6 +89,8 @@ const ChainToggle: FC = ({ onChangeChain }: any) => {
             mt: '$2',
             zIndex: 1000,
             width: 'auto',
+            maxHeight: 300,
+            overflow: 'auto',
             minWidth: 'max-content',
             '@md': {
               minWidth: 'max-content',
