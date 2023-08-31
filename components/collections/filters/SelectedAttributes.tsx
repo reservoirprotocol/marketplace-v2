@@ -46,7 +46,7 @@ const SelectedAttributes: FC = () => {
   if (filters.length === 0) return null
 
   return (
-    <Flex wrap="wrap" align="center">
+    <Flex wrap="wrap" align="center" css={{ mb: '$4' }}>
       {filters.map(({ key, value }) => (
         <Button
           key={key + value}
@@ -54,7 +54,7 @@ const SelectedAttributes: FC = () => {
             removeParam(router, `attributes[${key}]`, value)
           }}
           color="gray3"
-          css={{ mr: '$3', mb: '24px' }}
+          css={{ mr: '$3' }}
           size="small"
         >
           <Text style="body1" css={{ color: '$gray12' }}>
@@ -76,7 +76,7 @@ const SelectedAttributes: FC = () => {
           css={{
             color: '$primary11',
             fontWeight: 500,
-            mb: '24px',
+
             px: '$4',
           }}
         >
@@ -88,7 +88,7 @@ const SelectedAttributes: FC = () => {
         <Button
           onClick={() => {}}
           color="ghost"
-          css={{ color: '$primary11', fontWeight: 500, mb: '24px', px: '$4' }}
+          css={{ color: '$primary11', fontWeight: 500, px: '$4' }}
         >
           Bid on {filters.length} {filters.length > 1 ? 'Traits' : 'Trait'}
         </Button>

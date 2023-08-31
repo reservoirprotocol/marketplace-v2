@@ -1,5 +1,5 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box } from '../../../components/primitives'
+import { Text, Flex, Box, Input } from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -23,6 +23,8 @@ import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
+import { useDebounce } from 'usehooks-ts'
+
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/common/ActivityFilters'
@@ -34,6 +36,7 @@ import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
   faCog,
   faCopy,
+  faCube,
   faHand,
   faMagnifyingGlass,
   faSeedling,
@@ -49,6 +52,7 @@ import Mint from 'components/buttons/Mint'
 import optimizeImage from 'utils/optimizeImage'
 import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
+import { set } from 'lodash'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -66,6 +70,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
+  const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
+  const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
@@ -120,6 +126,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     sortDirection: 'asc',
     includeQuantity: true,
     includeLastSale: true,
+    ...(debouncedSearch.length > 0 && {
+      tokenName: debouncedSearch,
+    }),
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
@@ -247,16 +256,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     src={optimizeImage(collection.image!, 72 * 2)}
                     width={72}
                     height={72}
-                    style={{
+                    css={{
                       width: 72,
                       height: 72,
                       borderRadius: 8,
                       objectFit: 'cover',
+                      border: '1px solid $gray5',
                     }}
                     alt="Collection Page Image"
                   />
                   <Box css={{ minWidth: 0 }}>
-                    <Flex align="center" css={{ gap: '$1', mb: '$1' }}>
+                    <Flex align="center" css={{ gap: '$1', mb: 0 }}>
                       <Text style="h4" as="h6" ellipsify>
                         {collection.name}
                       </Text>
@@ -265,16 +275,45 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           collection?.openseaVerificationStatus
                         }
                       />
-                      {mintData && !isSmallDevice ? (
+                    </Flex>
+                    <Flex css={{ gap: '$3' }} align="center">
+                      <CopyText
+                        text={collection.id as string}
+                        css={{
+                          width: 'max-content',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '$1',
+                        }}
+                      >
+                        <Box css={{ color: '$gray9' }}>
+                          <FontAwesomeIcon icon={faCube} size="xs" />
+                        </Box>
+                        <Text as="p" style="body3">
+                          {truncateAddress(collection?.primaryContract || '')}
+                        </Text>
+                      </CopyText>
+                      <Flex
+                        align="center"
+                        css={{
+                          gap: '$1',
+                        }}
+                      >
+                        <Flex
+                          css={{
+                            color: '$gray9',
+                          }}
+                        >
+                          <FontAwesomeIcon size="xs" icon={faCog} />
+                        </Flex>
+                        <Text style="body3">{contractKind}</Text>
+                      </Flex>
+
+                      {mintData && (
                         <Flex
                           align="center"
                           css={{
-                            ml: '$3',
-                            borderRadius: 4,
-                            px: '$3',
-                            py: 7,
-                            backgroundColor: '$gray3',
-                            gap: '$3',
+                            gap: '$1',
                           }}
                         >
                           <Flex
@@ -282,49 +321,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               color: '$green9',
                             }}
                           >
-                            <FontAwesomeIcon icon={faSeedling} />
+                            <FontAwesomeIcon size="xs" icon={faSeedling} />
                           </Flex>
                           <Text style="body3">Minting Now</Text>
                         </Flex>
-                      ) : null}
-                      <Flex
-                        align="center"
-                        css={{
-                          ml: '$3',
-                          borderRadius: 4,
-                          px: '$3',
-                          py: 7,
-                          backgroundColor: '$gray3',
-                          gap: '$3',
-                        }}
-                      >
-                        <Flex
-                          css={{
-                            color: '$primary9',
-                          }}
-                        >
-                          <FontAwesomeIcon icon={faCog} />
-                        </Flex>
-                        <Text style="body3">{contractKind}</Text>
-                      </Flex>
+                      )}
                     </Flex>
-                    <CopyText
-                      text={collection.id as string}
-                      css={{
-                        width: 'max-content',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '$2',
-                        mt: -4,
-                      }}
-                    >
-                      <Text as="p" style="body2" color="subtle">
-                        {truncateAddress(collection?.primaryContract || '')}
-                      </Text>
-                      <Box css={{ color: '$gray10' }}>
-                        <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                      </Box>
-                    </CopyText>
                   </Box>
                 </Flex>
               </Flex>
@@ -405,29 +407,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Flex>
               </Flex>
             </Flex>
-            {mintData && isSmallDevice ? (
-              <Flex
-                align="center"
-                css={{
-                  borderRadius: 4,
-                  px: '$3',
-                  py: 7,
-                  backgroundColor: '$gray3',
-                  gap: '$3',
-                  mb: '$4',
-                  width: 'max-content',
-                }}
-              >
-                <Flex
-                  css={{
-                    color: '$green9',
-                  }}
-                >
-                  <FontAwesomeIcon icon={faSeedling} />
-                </Flex>
-                <Text style="body3">Minting Now</Text>
-              </Flex>
-            ) : null}
 
             <TabsList css={{ mt: 0 }}>
               <TabsTrigger value="items">Items</TabsTrigger>
@@ -462,17 +441,46 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     width: '100%',
                   }}
                 >
-                  <Flex justify="between" css={{ marginBottom: '$3' }}>
-                    {attributes && attributes.length > 0 && !isSmallDevice && (
-                      <FilterButton
-                        open={attributeFiltersOpen}
-                        setOpen={setAttributeFiltersOpen}
-                      />
-                    )}
+                  <Flex css={{ marginBottom: '$4', gap: '$3' }} align="center">
+                    <Flex align="center" css={{ gap: '$3', flex: 1 }}>
+                      {attributes &&
+                        attributes.length > 0 &&
+                        !isSmallDevice && (
+                          <FilterButton
+                            open={attributeFiltersOpen}
+                            setOpen={setAttributeFiltersOpen}
+                          />
+                        )}
+                      {!isSmallDevice && (
+                        <Box
+                          css={{ position: 'relative', flex: 1, maxWidth: 420 }}
+                        >
+                          <Box
+                            css={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '$4',
+                              zIndex: 2,
+                              transform: 'translate(0, -50%)',
+                              color: '$gray11',
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                          </Box>
+                          <Input
+                            css={{ pl: 42 }}
+                            placeholder="Search by token name"
+                            onChange={(e) => {
+                              setTokenSearchQuery(e.target.value)
+                            }}
+                            value={tokenSearchQuery}
+                          />
+                        </Box>
+                      )}
+                    </Flex>
                     <Flex
                       justify={'end'}
                       css={{
-                        ml: 'auto',
                         width: '100%',
                         gap: '$2',
                         '@md': {
@@ -489,6 +497,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           '@md': {
                             order: 1,
                             width: '220px',
+                            height: '48px',
                             minWidth: 'max-content',
                             px: '$5',
                           },
