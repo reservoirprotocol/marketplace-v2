@@ -40,7 +40,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 20,
     sortBy: sortByTime,
-    includeTopBid: true,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -164,19 +163,18 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 }
 
 type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
+  paths['/collections/v6']['get']['responses']['200']['schema']
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
     collection: CollectionSchema
   }
 }> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  const collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 20,
-      includeTopBid: true,
     }
   const chainPrefix = params?.chain || ''
   const chain =
@@ -189,7 +187,7 @@ export const getServerSideProps: GetServerSideProps<{
     query.community = chain.community
   }
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v5`,
+    `${chain.reservoirBaseUrl}/collections/v6`,
     query,
     {
       headers: {
