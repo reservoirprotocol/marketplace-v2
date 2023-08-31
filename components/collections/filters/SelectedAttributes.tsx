@@ -102,6 +102,7 @@ const SelectedAttributes: FC<Props> = ({ collection, mutate }) => {
           buttonProps={{
             css: { color: '$primary11', fontWeight: 500, px: '$4' },
             color: 'ghost',
+            disabled: false,
           }}
           buttonCss={{ px: '$4' }}
           mutate={mutate}
