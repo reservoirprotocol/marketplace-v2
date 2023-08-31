@@ -97,7 +97,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
-    includeTopBid: true,
     includeSalesCount: true,
     includeMintStages: true,
   }
@@ -186,7 +185,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  //@ts-ignore: Ignore until we regenerate the types
   const contractKind = collection?.contractKind?.toUpperCase()
 
   useEffect(() => {
@@ -678,7 +676,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection?: paths['/collections/v5']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v6']['get']['responses']['200']['schema']
     tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
@@ -694,16 +692,15 @@ export const getServerSideProps: GetServerSideProps<{
     },
   }
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
     {
       id,
-      includeTopBid: true,
       includeSalesCount: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
+    `${reservoirBaseUrl}/collections/v6`,
     collectionQuery,
     headers
   )

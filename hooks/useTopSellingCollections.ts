@@ -3,25 +3,14 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import useSWR, { SWRConfiguration } from 'swr'
 import { setParams } from '@reservoir0x/reservoir-sdk'
 
-//Temporary workaround until types are returned
-type CollectionMetadata = Pick<
-  NonNullable<
-    paths['/collections/v6']['get']['responses']['200']['schema']['collections']
-  >[0],
-  'floorAsk' | 'description' | 'banner'
->
-
 export type TopSellingCollectionv2Data = {
-  collections: Array<
-    NonNullable<
-      paths['/collections/top-selling/v1']['get']['responses']['200']['schema']['collections']
-    >[0] &
-      CollectionMetadata
+  collections: NonNullable<
+    paths['/collections/top-selling/v2']['get']['responses']['200']['schema']['collections']
   >
 }
 
 export default function (
-  options?: any, //Todo: update type
+  options?: any,
   swrOptions: SWRConfiguration = {},
   chainId?: number
 ) {

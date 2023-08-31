@@ -19,7 +19,7 @@ export type SearchCollection = NonNullable<
 }
 
 type Collection = NonNullable<
-  paths['/collections/v5']['get']['responses']['200']['schema']['collections']
+  paths['/collections/v6']['get']['responses']['200']['schema']['collections']
 >[0]
 
 export const config = {
@@ -99,7 +99,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
 
   if (isAddress) {
     const { data } = await fetcher(
-      `${reservoirBaseUrl}/collections/v5?contract=${query}&limit=6`,
+      `${reservoirBaseUrl}/collections/v6?contract=${query}&limit=6`,
       {},
       headers
     )
@@ -241,7 +241,7 @@ async function searchAllChains(query: string) {
         },
       }
       const { data } = await fetcher(
-        `${reservoirBaseUrl}/collections/v5?contract=${query}&limit=6`,
+        `${reservoirBaseUrl}/collections/v6?contract=${query}&limit=6`,
         {},
         headers
       )
