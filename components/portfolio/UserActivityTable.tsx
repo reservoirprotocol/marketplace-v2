@@ -14,9 +14,11 @@ type Props = {
 }
 
 export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
-  let activityQuery: Parameters<typeof useUsersActivity>['1'] = {
+  let activityQuery: ActivityQuery = {
     limit: 20,
     types: activityTypes,
+    //@ts-ignore - until we add the types
+    es: 1,
   }
 
   const { chain } = useContext(ChainContext)

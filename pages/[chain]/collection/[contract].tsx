@@ -10,7 +10,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
-import StatHeader from 'components/collections/StatHeader'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { AttributeFilters } from 'components/collections/filters/AttributeFilters'
@@ -34,8 +33,7 @@ import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
-  faBroom,
-  faCopy,
+  faCog,
   faHand,
   faMagnifyingGlass,
   faSeedling,
@@ -43,16 +41,19 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
-import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
 import titleCase from 'utils/titleCase'
-import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
+import ReactMarkdown from 'react-markdown'
+import { styled } from '../../../stitches.config'
+import optimizeImage from 'utils/optimizeImage'
+
+const StyledImage = styled('img', {})
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -65,10 +66,24 @@ type ActivityTypes = Exclude<
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
+const ItemGrid = styled(Box, {
+  width: '100%',
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  gap: '$4',
+  '@md': {
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
+  '@bp1500': {
+    gridTemplateColumns: 'repeat(5, 1fr)',
+  },
+})
+
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
@@ -102,6 +117,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
     includeTopBid: true,
+    includeSalesCount: true,
     includeMintStages: true,
   }
 
@@ -325,48 +341,97 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
       />
+      <Tabs.Root
+        defaultValue="items"
+        onValueChange={(value) => {
+          if (value === 'items') {
+            resetCache()
+            setSize(1)
+            mutate()
+          }
+        }}
+      >
+        {collection ? (
+          <Flex
+            direction="column"
+            css={{
+              px: '$4',
+              pt: '$4',
+              pb: 0,
+              '@md': {
+                px: '$5',
+              },
 
-      {collection ? (
-        <Flex
-          direction="column"
-          css={{
-            px: '$4',
-            pt: '$5',
-            pb: 0,
-            '@sm': {
-              px: '$5',
-            },
-          }}
-        >
-          <Flex justify="between" css={{ mb: '$4', gap: '$2' }}>
-            <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
-              <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <Img
-                  src={collection.image!}
-                  width={64}
-                  height={64}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: 8,
-                    objectFit: 'cover',
-                  }}
-                  alt="Collection Page Image"
-                />
-                <Box css={{ minWidth: 0 }}>
-                  <Flex align="center" css={{ gap: '$2', mb: '$1' }}>
-                    <Text style="h5" as="h6" ellipsify>
-                      {collection.name}
-                    </Text>
-                    <OpenSeaVerified
-                      openseaVerificationStatus={
-                        collection?.openseaVerificationStatus
-                      }
-                    />
-                    {mintData && !isSmallDevice ? (
+              '@xl': {
+                px: '$6',
+              },
+            }}
+          >
+            <Flex
+              justify="between"
+              wrap="wrap"
+              css={{ mb: '$4', gap: '$4' }}
+              align="start"
+            >
+              <Flex
+                direction="column"
+                css={{
+                  gap: '$4',
+                  minWidth: 0,
+                  //flex: 1,
+                  width: '100%',
+                  '@lg': { width: 'unset' },
+                }}
+              >
+                <Flex css={{ gap: '$4', flex: 1 }} align="center">
+                  <Img
+                    src={optimizeImage(collection.image!, 72 * 2)}
+                    width={72}
+                    height={72}
+                    style={{
+                      width: 72,
+                      height: 72,
+                      borderRadius: 8,
+                      objectFit: 'cover',
+                    }}
+                    alt="Collection Page Image"
+                  />
+                  <Box css={{ minWidth: 0 }}>
+                    <Flex align="center" css={{ gap: '$1', mb: '$1' }}>
+                      <Text style="h4" as="h6" ellipsify>
+                        {collection.name}
+                      </Text>
+                      <OpenSeaVerified
+                        openseaVerificationStatus={
+                          collection?.openseaVerificationStatus
+                        }
+                      />
+                      {mintData && !isSmallDevice ? (
+                        <Flex
+                          align="center"
+                          css={{
+                            ml: '$3',
+                            borderRadius: 4,
+                            px: '$3',
+                            py: 7,
+                            backgroundColor: '$gray3',
+                            gap: '$3',
+                          }}
+                        >
+                          <Flex
+                            css={{
+                              color: '$green9',
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faSeedling} />
+                          </Flex>
+                          <Text style="body3">Minting Now</Text>
+                        </Flex>
+                      ) : null}
                       <Flex
                         align="center"
                         css={{
+                          ml: '$3',
                           borderRadius: 4,
                           px: '$3',
                           py: 7,
@@ -376,156 +441,124 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       >
                         <Flex
                           css={{
-                            color: '$green9',
+                            color: '$primary9',
                           }}
                         >
-                          <FontAwesomeIcon icon={faSeedling} />
+                          <FontAwesomeIcon icon={faCog} />
                         </Flex>
-                        <Text style="body3">Minting Now</Text>
+                        <Text style="body3">{contractKind}</Text>
                       </Flex>
-                    ) : null}
-                  </Flex>
+                    </Flex>
+                    <Text as="p" style="body2" color="subtle" css={{ mt: -4 }}>
+                      {truncateAddress(collection?.primaryContract || '')}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Flex>
+              <Flex align="center">
+                <Flex css={{ alignItems: 'center', gap: '$3' }}>
+                  <Sweep
+                    collectionId={collection.id}
+                    openState={isSweepRoute ? sweepOpenState : undefined}
+                    buttonChildren={
+                      <Flex css={{ gap: '$2' }} align="center" justify="center">
+                        <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                          Collect
+                        </Text>
+                        <Text
+                          style="h6"
+                          as="h6"
+                          css={{ color: '$bg', fontWeight: 900 }}
+                        >
+                          {`${collection.floorAsk?.price?.amount?.native} ETH`}
+                        </Text>
+                      </Flex>
+                    }
+                    buttonCss={{ '@lg': { order: 2 } }}
+                    mutate={mutate}
+                  />
+                  {/* Collection Mint */}
+                  {mintData ? (
+                    <Mint
+                      collectionId={collection.id}
+                      openState={isMintRoute ? mintOpenState : undefined}
+                      buttonChildren={
+                        <Flex
+                          css={{ gap: '$2', px: '$4' }}
+                          align="center"
+                          justify="center"
+                        >
+                          {isSmallDevice && (
+                            <FontAwesomeIcon icon={faSeedling} />
+                          )}
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                            {isSmallDevice ? 'Mint' : 'Mint for'}
+                          </Text>
 
-                  {!smallSubtitle && (
-                    <Flex align="end" css={{ gap: 24 }}>
-                      <CopyText
-                        text={collection.id as string}
-                        css={{ width: 'max-content' }}
-                      >
-                        <Flex css={{ gap: '$2', width: 'max-content' }}>
                           {!isSmallDevice && (
-                            <Text style="body1" color="subtle">
-                              Collection
+                            <Text
+                              style="h6"
+                              as="h6"
+                              css={{ color: '$bg', fontWeight: 900 }}
+                            >
+                              {`${mintPrice}`}
                             </Text>
                           )}
-                          <Text
-                            style="body1"
-                            color={isSmallDevice ? 'subtle' : undefined}
-                            as="p"
-                          >
-                            {truncateAddress(collection.id as string)}
-                          </Text>
-                          <Box css={{ color: '$gray10' }}>
-                            <FontAwesomeIcon
-                              icon={faCopy}
-                              width={16}
-                              height={16}
-                            />
-                          </Box>
                         </Flex>
-                      </CopyText>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Token Standard{' '}
-                        </Text>
-                        <Text style="body1">{contractKind}</Text>
-                      </Box>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Chain{' '}
-                        </Text>
-                        <Link
-                          href={`/${router.query.chain}/collection-rankings`}
-                        >
-                          <Text style="body1">{chain}</Text>
-                        </Link>
-                      </Box>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Creator Earnings
-                        </Text>
-                        <Text style="body1"> {creatorRoyalties}%</Text>
-                      </Box>
-                    </Flex>
-                  )}
-                </Box>
+                      }
+                      buttonCss={{
+                        minWidth: 'max-content',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                        flexGrow: 1,
+                        justifyContent: 'center',
+                        px: '$2',
+                        maxWidth: '220px',
+                        '@md': {
+                          order: 1,
+                          px: '$5',
+                        },
+                      }}
+                      mutate={mutate}
+                    />
+                  ) : null}
+                  <CollectionOffer
+                    collection={collection}
+                    buttonChildren={<FontAwesomeIcon icon={faHand} />}
+                    buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
+                    buttonCss={{ px: '$4' }}
+                    mutate={mutate}
+                  />
+                </Flex>
               </Flex>
             </Flex>
-            <CollectionActions collection={collection} />
-          </Flex>
-          {mintData && isSmallDevice ? (
-            <Flex
-              align="center"
-              css={{
-                borderRadius: 4,
-                px: '$3',
-                py: 7,
-                backgroundColor: '$gray3',
-                gap: '$3',
-                mb: '$4',
-                width: 'max-content',
-              }}
-            >
+            {mintData && isSmallDevice ? (
               <Flex
+                align="center"
                 css={{
-                  color: '$green9',
+                  borderRadius: 4,
+                  px: '$3',
+                  py: 7,
+                  backgroundColor: '$gray3',
+                  gap: '$3',
+                  mb: '$4',
+                  width: 'max-content',
                 }}
               >
-                <FontAwesomeIcon icon={faSeedling} />
-              </Flex>
-              <Text style="body3">Minting Now</Text>
-            </Flex>
-          ) : null}
-          {smallSubtitle && (
-            <Grid
-              css={{
-                gap: 12,
-                mb: 24,
-                gridTemplateColumns: '1fr 1fr',
-                maxWidth: 550,
-              }}
-            >
-              <CopyText
-                text={collection.id as string}
-                css={{ width: 'max-content' }}
-              >
-                <Flex css={{ width: 'max-content' }} direction="column">
-                  <Text style="body1" color="subtle">
-                    Collection
-                  </Text>
-                  <Flex css={{ gap: '$2' }}>
-                    <Text style="body1" as="p">
-                      {truncateAddress(collection.id as string)}
-                    </Text>
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                    </Box>
-                  </Flex>
+                <Flex
+                  css={{
+                    color: '$green9',
+                  }}
+                >
+                  <FontAwesomeIcon icon={faSeedling} />
                 </Flex>
-              </CopyText>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Token Standard{' '}
-                </Text>
-                <Text style="body1">{contractKind}</Text>
+                <Text style="body3">Minting Now</Text>
               </Flex>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Chain{' '}
-                </Text>
-                <Text style="body1">{chain}</Text>
-              </Flex>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Creator Earnings
-                </Text>
-                <Text style="body1"> {creatorRoyalties}%</Text>
-              </Flex>
-            </Grid>
-          )}
-          <StatHeader collection={collection} />
-          <Tabs.Root
-            defaultValue="items"
-            onValueChange={(value) => {
-              if (value === 'items') {
-                resetCache()
-                setSize(1)
-                mutate()
-              }
-            }}
-          >
-            <TabsList>
+            ) : null}
+
+            <TabsList css={{ mt: 0 }}>
               <TabsTrigger value="items">Items</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
 
@@ -561,7 +594,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   <Flex
                     justify="between"
                     align="center"
-                    css={{ marginBottom: '$4', gap: '$4' }}
+                    css={{ marginBottom: '$3', gap: '$3' }}
                   >
                     {attributes && attributes.length > 0 && !isSmallDevice && (
                       <>
@@ -597,75 +630,47 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           },
                         }}
                       />
-                      <Sweep
-                        collectionId={collection.id}
-                        buttonChildren={<FontAwesomeIcon icon={faBroom} />}
-                        buttonCss={{
-                          minWidth: 48,
-                          minHeight: 48,
-                          justifyContent: 'center',
-                          padding: 0,
-                          order: 2,
-                          '@md': {
-                            order: 2,
-                          },
-                        }}
-                        mutate={mutate}
-                        openState={isSweepRoute ? sweepOpenState : undefined}
-                      />
-                      {/* Collection Mint */}
-                      {mintData ? (
-                        <Mint
-                          collectionId={collection.id}
-                          buttonChildren={
-                            <>
-                              <FontAwesomeIcon icon={faSeedling} />
-                              {isSmallDevice ? 'Mint' : `Mint for ${mintPrice}`}
-                            </>
-                          }
-                          buttonCss={{
-                            minWidth: 'max-content',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                            flexGrow: 1,
-                            justifyContent: 'center',
-                            order: 3,
-                            px: '$2',
-                            maxWidth: '220px',
-                            '@md': {
-                              order: 2,
-                              px: '$5',
-                            },
-                          }}
-                          mutate={mutate}
-                          openState={isMintRoute ? mintOpenState : undefined}
-                        />
-                      ) : null}
-                      <CollectionOffer
-                        collection={collection}
-                        buttonChildren={
-                          mintData ? <FontAwesomeIcon icon={faHand} /> : null
-                        }
-                        buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
-                        buttonCss={{
-                          width: mintData ? 48 : '100%',
-                          height: mintData ? 48 : '100%',
-                          padding: mintData ? 0 : '',
-                          // width: '100%',
-                          justifyContent: 'center',
-                          order: 1,
-                          '@md': {
-                            order: 1,
-                          },
-                          '@sm': {
-                            maxWidth: '220px',
-                          },
-                        }}
-                        mutate={mutate}
-                      />
                     </Flex>
                   </Flex>
+
                   {!isSmallDevice && <SelectedAttributes />}
+                  <Flex
+                    css={{
+                      gap: '$4',
+                      mb: '$3',
+                      flexWrap: 'wrap',
+                      '@bp800': {
+                        display: 'flex',
+                      },
+                      display: 'flex',
+                    }}
+                  >
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Floor
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {collection.floorAsk?.price?.amount?.native} ETH
+                      </Text>
+                    </Flex>
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Top Bid
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {collection.topBid?.price?.amount?.native || 0} WETH
+                      </Text>
+                    </Flex>
+
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Count
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {Number(collection?.tokenCount)?.toLocaleString()}
+                      </Text>
+                    </Flex>
+                  </Flex>
                   <Grid
                     css={{
                       gap: '$4',
@@ -742,6 +747,225 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </TabsContent>
+            <TabsContent value="details">
+              <Flex wrap="wrap">
+                <Box css={{ width: '100%', '@lg': { width: 440 }, pb: '$5' }}>
+                  <Box
+                    css={{
+                      borderRadius: 8,
+                      overflow: 'hidden',
+                      background: '$neutralBgSubtle',
+                      $$shadowColor: '$colors$panelShadow',
+                      boxShadow: '0 8px 12px 0px $$shadowColor',
+                      position: 'relative',
+                      '&:hover > a > div > img': {
+                        transform: 'scale(1.1)',
+                      },
+                      '@sm': {
+                        '&:hover .token-button-container': {
+                          bottom: 0,
+                        },
+                      },
+                    }}
+                  >
+                    {collection.banner ? (
+                      <StyledImage
+                        src={optimizeImage(collection.banner, 1000)}
+                        css={{
+                          borderRadius: 8,
+                          borderBottomLeftRadius: 0,
+                          borderBottomRightRadius: 0,
+                          width: '100%',
+                          height: 300,
+                          '@md': {
+                            height: 350,
+                          },
+                          '@lg': {
+                            height: 200,
+                          },
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : null}
+                    <Box css={{ p: '$4' }}>
+                      <Text
+                        style="h6"
+                        as="h6"
+                        css={{ mb: '$1', fontWeight: 700 }}
+                      >
+                        About {collection.name}
+                      </Text>
+                      <Text
+                        style="body1"
+                        as="p"
+                        css={{
+                          lineHeight: 1.5,
+                          display: '-webkit-box',
+                          WebkitLineClamp: descriptionExpanded ? 'reset' : 4,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        <ReactMarkdown
+                          children={collection?.description || ''}
+                        />
+                      </Text>
+                      {(collection?.description?.length || 0) > 140 && (
+                        <Text
+                          onClick={() =>
+                            setDescriptionExpanded(!descriptionExpanded)
+                          }
+                          style="body1"
+                          as="p"
+                          css={{
+                            cursor: 'pointer',
+                            mt: '$2',
+                            fontWeight: 600,
+                            textDecoration: 'underline',
+                          }}
+                        >
+                          {descriptionExpanded ? 'Close' : 'Expand'}
+                        </Text>
+                      )}
+                      <Box css={{ mt: '$4' }}>
+                        <Flex justify="start">
+                          <CollectionActions collection={collection} />
+                        </Flex>
+                      </Box>
+                    </Box>
+                  </Box>
+                  <Box css={{ mt: '$5' }}>
+                    <Text
+                      css={{ mb: '$2', fontWeight: 700 }}
+                      as="h6"
+                      style="h6"
+                    >
+                      Collection Details
+                    </Text>
+                    {[
+                      {
+                        label: 'Contract',
+                        value: truncateAddress(
+                          collection?.primaryContract || ''
+                        ),
+                      },
+                      { label: 'Token Standard', value: contractKind },
+                      { label: 'Chain', value: chain },
+                      {
+                        label: 'Creator Earning',
+                        value: creatorRoyalties + '%',
+                      },
+                      { label: 'Total Supply', value: collection.tokenCount },
+                    ].map((data) => (
+                      <Flex
+                        css={{
+                          gap: '$4',
+                          justifyContent: 'space-between',
+                          mb: '$2',
+                        }}
+                      >
+                        <Text style="body1" color="subtle">
+                          {data.label}
+                        </Text>
+                        <Text style="body1" css={{ fontWeight: 600 }}>
+                          {data.value}
+                        </Text>
+                      </Flex>
+                    ))}
+                  </Box>
+                </Box>
+                <Box
+                  css={{
+                    flex: 1,
+                    '@lg': { pl: '$5', ml: '$2', pt: '$2', pb: '$6' },
+                  }}
+                >
+                  <Text style="h7" as="h5" css={{ mb: '$3' }}>
+                    Collection Stats
+                  </Text>
+                  <ItemGrid>
+                    {[
+                      {
+                        name: 'Floor',
+                        value:
+                          collection.floorAsk?.price?.amount?.native + ' ETH',
+                      },
+                      {
+                        name: 'Top Bid',
+                        value:
+                          collection.topBid?.price?.amount?.native + ' WETH',
+                      },
+                      {
+                        name: '24h Volume',
+                        value: `${collection.volume?.['1day']?.toFixed(2)} ETH`,
+                      },
+
+                      {
+                        name: '24h Sales',
+                        value: `${collection.salesCount?.['1day'] || 0}`,
+                      },
+                    ].map((stat) => (
+                      <Box
+                        css={{
+                          p: '$4',
+                          borderRadius: 8,
+                          overflow: 'hidden',
+                          background: '$neutralBgSubtle',
+                          $$shadowColor: '$colors$panelShadow',
+                          boxShadow: '0 0px 12px 0px $$shadowColor',
+                          position: 'relative',
+                        }}
+                      >
+                        <Text style="subtitle1" as="p">
+                          {stat.name}
+                        </Text>
+                        <Text style="h5" css={{ fontWeight: 800 }}>
+                          {stat.value}
+                        </Text>
+                      </Box>
+                    ))}
+                  </ItemGrid>
+
+                  <Text style="h7" as="h5" css={{ mb: '$3', mt: '$5' }}>
+                    Rare Tokens
+                  </Text>
+                  {rareTokens.length > 0 ? (
+                    <ItemGrid>
+                      {rareTokens.slice(0, 4).map((token) => (
+                        <TokenCard
+                          showAsk={false}
+                          token={token}
+                          showSource={false}
+                          rarityEnabled={false}
+                        />
+                      ))}
+                    </ItemGrid>
+                  ) : (
+                    <Text>No rare tokens</Text>
+                  )}
+
+                  <Text style="h7" as="h5" css={{ mb: '$3', mt: '$5' }}>
+                    Floor Tokens
+                  </Text>
+
+                  {rareTokens.length > 0 ? (
+                    <ItemGrid>
+                      {tokens.slice(0, 4).map((token) => (
+                        <TokenCard
+                          showAsk={false}
+                          token={token}
+                          showSource={false}
+                          rarityEnabled={false}
+                        />
+                      ))}
+                    </ItemGrid>
+                  ) : (
+                    <Text>No Tokens</Text>
+                  )}
+                </Box>
+              </Flex>
+            </TabsContent>
             <TabsContent value="activity">
               <Flex
                 css={{
@@ -782,11 +1006,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </TabsContent>
-          </Tabs.Root>
-        </Flex>
-      ) : (
-        <Box />
-      )}
+          </Flex>
+        ) : (
+          <Box />
+        )}
+      </Tabs.Root>
     </Layout>
   )
 }
@@ -813,6 +1037,7 @@ export const getServerSideProps: GetServerSideProps<{
     {
       id,
       includeTopBid: true,
+      includeSalesCount: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 

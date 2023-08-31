@@ -11,12 +11,20 @@ let ids = supportedChains.map((chain) => chain.coingeckoId).join(',')
 export default async function handler() {
   let prices
   let cacheSettings = 'maxage=0, s-maxage=86400 stale-while-revalidate' // Default cache settings
+  let cfRay = ''
   try {
     const response = await fetchWithTimeout(
       `https://api.coingecko.com/api/v3/coins/markets?vs_currency=USD&ids=${ids}`,
-      {},
+      {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+        },
+      },
       5000 // Timeout in milliseconds (5 seconds)
     )
+
+    cfRay = response.headers.get('CF-RAY') || ''
 
     prices = await response.json()
   } catch (error) {
