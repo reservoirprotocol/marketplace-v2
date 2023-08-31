@@ -4,8 +4,10 @@ import { useRouter } from 'next/router'
 import {
   ComponentProps,
   ComponentPropsWithoutRef,
+  Dispatch,
   FC,
   ReactNode,
+  SetStateAction,
   useContext,
   useEffect,
   useState,

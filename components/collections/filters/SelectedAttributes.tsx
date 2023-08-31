@@ -4,13 +4,20 @@ import { FC, useEffect, useState } from 'react'
 import { Button, Flex, Text } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose } from '@fortawesome/free-solid-svg-icons'
+import { CollectionOffer } from 'components/buttons'
+import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 
 type Attribute = {
   key: string
   value: string
 }[]
 
-const SelectedAttributes: FC = () => {
+type Props = {
+  collection: ReturnType<typeof useCollections>['data'][0]
+  mutate: ReturnType<typeof useCollections>['mutate']
+}
+
+const SelectedAttributes: FC<Props> = ({ collection, mutate }) => {
   const router = useRouter()
 
   const [filters, setFilters] = useState<Attribute>([])
@@ -84,14 +91,21 @@ const SelectedAttributes: FC = () => {
         </Button>
       )}
 
-      {filters.length && (
-        <Button
-          onClick={() => {}}
-          color="ghost"
-          css={{ color: '$primary11', fontWeight: 500, px: '$4' }}
-        >
-          Bid on {filters.length} {filters.length > 1 ? 'Traits' : 'Trait'}
-        </Button>
+      {filters.length === 1 && (
+        <CollectionOffer
+          collection={collection}
+          buttonChildren={
+            <>
+              Bid on {filters.length} {filters.length > 1 ? 'Traits' : 'Trait'}
+            </>
+          }
+          buttonProps={{
+            css: { color: '$primary11', fontWeight: 500, px: '$4' },
+            color: 'ghost',
+          }}
+          buttonCss={{ px: '$4' }}
+          mutate={mutate}
+        />
       )}
     </Flex>
   )

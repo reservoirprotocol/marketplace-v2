@@ -173,7 +173,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     onMessage: ({
       data: reservoirEvent,
     }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
-      debugger
       if (Object.keys(router.query).some((key) => key.includes('attribute')))
         return
 
@@ -624,7 +623,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     </Flex>
                   </Flex>
 
-                  {!isSmallDevice && <SelectedAttributes />}
+                  {!isSmallDevice && (
+                    <SelectedAttributes
+                      collection={collection}
+                      mutate={mutate}
+                    />
+                  )}
                   <Flex
                     css={{
                       gap: '$4',

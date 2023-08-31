@@ -128,12 +128,13 @@ const Navbar = () => {
             }}
           >
             <Link href={`/`}>
-              <NavItem active={router.pathname.includes('collection-rankings')}>
-                Featured
-              </NavItem>
+              <NavItem>Featured</NavItem>
+            </Link>
+            <Link href={`/${routePrefix}/collection-rankings`}>
+              <NavItem>NFTs</NavItem>
             </Link>
 
-            <HoverCard.Root openDelay={200}>
+            {/* <HoverCard.Root openDelay={200}>
               <HoverCard.Trigger>
                 <Link href={`/${routePrefix}/collection-rankings`}>
                   <NavItem
@@ -163,20 +164,16 @@ const Navbar = () => {
                   </Flex>
                 </Card>
               </HoverCard.Content>
-            </HoverCard.Root>
+            </HoverCard.Root> */}
 
             {false && (
               <Link href={`/${routePrefix}/collection-rankings`}>
-                <NavItem
-                  active={router.pathname.includes('collection-rankings')}
-                >
-                  Mints
-                </NavItem>
+                <NavItem>Mints</NavItem>
               </Link>
             )}
             {false && (
               <Link href="/swap">
-                <NavItem active={router.pathname == '/swap'}>Tokens</NavItem>
+                <NavItem>Tokens</NavItem>
               </Link>
             )}
           </Flex>
@@ -213,48 +210,28 @@ const Navbar = () => {
               <Card css={{ p: 24, width: 240 }}>
                 <Flex css={{ gap: '$4' }} direction="column">
                   <a target="_blank" href={`https://reservoir.tools`}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      About Reservoir
-                    </NavItem>
+                    <NavItem>About Reservoir</NavItem>
                   </a>
                   <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      Docs
-                    </NavItem>
+                    <NavItem>Docs</NavItem>
                   </a>
 
                   <a
                     target="_blank"
                     href={`https://docs.reservoir.tools/reference/overview`}
                   >
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      API Reference
-                    </NavItem>
+                    <NavItem>API Reference</NavItem>
                   </a>
 
                   <a
                     target="_blank"
                     href={`https://github.com/reservoirprotocol`}
                   >
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      Github
-                    </NavItem>
+                    <NavItem>Github</NavItem>
                   </a>
 
                   <a href={`https://testnets.reservoir.tools`}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      Testnet Explorer
-                    </NavItem>
+                    <NavItem>Testnet Explorer</NavItem>
                   </a>
                 </Flex>
               </Card>
@@ -272,35 +249,19 @@ const Navbar = () => {
               <Card css={{ p: 24, width: 240 }}>
                 <Flex css={{ gap: '$4' }} direction="column">
                   <Link href="/portfolio?tab=items" replace={true}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      My Items
-                    </NavItem>
+                    <NavItem>My Items</NavItem>
                   </Link>
 
                   <Link href="/portfolio?tab=listings" replace={true}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      Listings
-                    </NavItem>
+                    <NavItem>Listings</NavItem>
                   </Link>
 
                   <Link href="/portfolio?tab=offers" replace={true}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      Offers Made
-                    </NavItem>
+                    <NavItem>Offers Made</NavItem>
                   </Link>
 
                   <Link href="/portfolio?tab=activity" replace={true}>
-                    <NavItem
-                      active={router.pathname.includes('collection-rankings')}
-                    >
-                      Activity
-                    </NavItem>
+                    <NavItem>Activity</NavItem>
                   </Link>
                 </Flex>
               </Card>
