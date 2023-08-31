@@ -233,7 +233,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       <Flex
         justify="center"
         css={{
-          maxWidth: 1175,
+          maxWidth: 1320,
           mt: 10,
           pb: 100,
           marginLeft: 'auto',
@@ -261,6 +261,8 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             flex: 1,
             width: '100%',
             '@md': { maxWidth: 445 },
+            '@lg': { maxWidth: 520 },
+            '@xl': { maxWidth: 620 },
             position: 'relative',
             '@sm': {
               '>button': {
@@ -295,6 +297,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <TokenMedia
               token={token?.token}
               videoOptions={{ autoPlay: true, muted: true }}
+              imageResolution={'large'}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -594,7 +597,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
 export const getServerSideProps: GetServerSideProps<{
   assetId?: string
   ssr: {
-    collection: paths['/collections/v5']['get']['responses']['200']['schema']
+    collection: paths['/collections/v6']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
 }> = async ({ params, res }) => {
@@ -632,15 +635,14 @@ export const getServerSideProps: GetServerSideProps<{
     ? (tokensResponse.data as Props['ssr']['tokens'])
     : {}
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
     {
       id: tokens?.tokens?.[0]?.token?.collection?.id,
-      includeTopBid: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
+    `${reservoirBaseUrl}/collections/v6`,
     collectionQuery,
     headers
   )

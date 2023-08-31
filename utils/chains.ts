@@ -334,6 +334,7 @@ export default [
     darkIconUrl: '/icons/linea-icon-light.svg',
     reservoirBaseUrl: 'https://api-linea.reservoir.tools',
     proxyApi: '/api/reservoir/linea',
+
     routePrefix: 'linea',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
