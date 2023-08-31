@@ -52,7 +52,8 @@ import Mint from 'components/buttons/Mint'
 import optimizeImage from 'utils/optimizeImage'
 import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
-import { set } from 'lodash'
+import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
+import LiveState from 'components/common/LiveState'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -72,6 +73,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
+  const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
@@ -89,6 +91,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const mintOpenState = useState(true)
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const collectionChain =
+    supportedChains.find(
+      (chain) => router.query?.chain === chain.routePrefix
+    ) || DefaultChain
 
   const scrollToTop = () => {
     let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
@@ -159,6 +165,117 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     hasNextPage,
   } = useDynamicTokens(tokenQuery, {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
+  })
+
+  useTokenUpdateStream(id as string, collectionChain.id, {
+    onClose: () => setSocketState(0),
+    onOpen: () => setSocketState(1),
+    onMessage: ({
+      data: reservoirEvent,
+    }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
+      debugger
+      if (Object.keys(router.query).some((key) => key.includes('attribute')))
+        return
+
+      let hasChange = false
+
+      const newTokens = [...tokens]
+      const price = NORMALIZE_ROYALTIES
+        ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount?.native
+        : reservoirEvent.data?.market?.floorAsk?.price?.amount?.native
+      const tokenIndex = tokens.findIndex(
+        (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
+      )
+      const token = tokenIndex > -1 ? tokens[tokenIndex] : null
+      if (token) {
+        if (token?.market?.floorAsk?.dynamicPricing) {
+          return
+        }
+        newTokens.splice(tokenIndex, 1)
+      }
+
+      if (!price) {
+        if (token) {
+          const endOfListingsIndex = tokens.findIndex(
+            (token) => !token.market?.floorAsk?.price?.amount?.native
+          )
+          if (endOfListingsIndex === -1) {
+            hasChange = true
+          } else {
+            const newTokenIndex =
+              sortBy === 'rarity'
+                ? tokenIndex
+                : endOfListingsIndex > -1
+                ? endOfListingsIndex
+                : 0
+            newTokens.splice(newTokenIndex, 0, {
+              ...token,
+              market: {
+                floorAsk: {
+                  id: undefined,
+                  price: undefined,
+                  maker: undefined,
+                  validFrom: undefined,
+                  validUntil: undefined,
+                  source: {},
+                },
+              },
+            })
+            hasChange = true
+          }
+        }
+      } else {
+        let updatedToken = token ? token : reservoirEvent.data
+        updatedToken = {
+          ...updatedToken,
+          market: {
+            floorAsk: NORMALIZE_ROYALTIES
+              ? reservoirEvent.data.market.floorAskNormalized
+              : reservoirEvent.data.market.floorAsk,
+          },
+        }
+        if (tokens) {
+          let updatedTokenPosition =
+            sortBy === 'rarity'
+              ? tokenIndex
+              : tokens.findIndex((token) => {
+                  let currentTokenPrice =
+                    token.market?.floorAsk?.price?.amount?.native
+                  if (currentTokenPrice) {
+                    return sortDirection === 'desc'
+                      ? currentTokenPrice <=
+                          updatedToken.market.floorAsk.price.amount.native
+                      : currentTokenPrice >=
+                          updatedToken.market.floorAsk.price.amount.native
+                  }
+                  return true
+                })
+          if (updatedTokenPosition === -1) {
+            return
+          }
+
+          newTokens.splice(updatedTokenPosition, 0, updatedToken)
+          hasChange = true
+        }
+      }
+      if (hasChange) {
+        mutate(
+          [
+            {
+              tokens: newTokens,
+            },
+          ],
+          {
+            revalidate: false,
+            optimisticData: [
+              {
+                tokens: newTokens,
+              },
+            ],
+          }
+        )
+      }
+    },
   })
 
   const attributesData = useAttributes(id)
@@ -426,12 +543,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     scrollToTop={scrollToTop}
                   />
                 ) : (
-                  <AttributeFilters
-                    attributes={attributes}
-                    open={attributeFiltersOpen}
-                    setOpen={setAttributeFiltersOpen}
-                    scrollToTop={scrollToTop}
-                  />
+                  <>
+                    <AttributeFilters
+                      attributes={attributes}
+                      open={attributeFiltersOpen}
+                      setOpen={setAttributeFiltersOpen}
+                      scrollToTop={scrollToTop}
+                    />
+                  </>
                 )}
                 <Box
                   css={{
@@ -476,6 +595,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         </Box>
                       )}
                     </Flex>
+                    {socketState !== null && <LiveState />}
                     <Flex
                       justify={'end'}
                       css={{
