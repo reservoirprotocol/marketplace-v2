@@ -200,7 +200,7 @@ const Navbar = () => {
         align="center"
       >
         <Box css={{ mr: '$4' }}>
-          <HoverCard.Root openDelay={200}>
+          <HoverCard.Root openDelay={100} closeDelay={100}>
             <HoverCard.Trigger>
               <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
                 <NavItem>Developers</NavItem>
@@ -241,7 +241,7 @@ const Navbar = () => {
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
-          <HoverCard.Root openDelay={200}>
+          <HoverCard.Root openDelay={100} closeDelay={100}>
             <HoverCard.Trigger>
               <AccountSidebar />
             </HoverCard.Trigger>
