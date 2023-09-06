@@ -181,6 +181,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       if (Object.keys(router.query).some((key) => key.includes('attribute')))
         return
 
+      const tokenName = reservoirEvent.data.token.name || ''
+      if (
+        tokenSearchQuery &&
+        tokenSearchQuery.length > 0 &&
+        !tokenName.includes(tokenSearchQuery)
+      ) {
+        return
+      }
+
       let hasChange = false
 
       const newTokens = [...tokens]
