@@ -63,7 +63,7 @@ const IndexPage: NextPage = () => {
 
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
-  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
+  const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
     undefined
   )
@@ -215,23 +215,23 @@ const IndexPage: NextPage = () => {
                         />
                       )}
                       <Flex direction="column" css={{ ml: '$4' }}>
-                        <Text style="h5">
+                        <Text style="h5" as="h5">
                           {resolvedEnsName ? resolvedEnsName : shortAddress}
                         </Text>
                         <CopyText text={address as string}>
                           <Flex align="center" css={{ cursor: 'pointer' }}>
                             <Text
-                              style="subtitle1"
+                              style="subtitle2"
                               color="subtle"
-                              css={{ mr: '$3' }}
+                              css={{ mr: '$1' }}
                             >
                               {shortAddress}
                             </Text>
                             <Box css={{ color: '$gray10' }}>
                               <FontAwesomeIcon
                                 icon={faCopy}
-                                width={16}
-                                height={16}
+                                width={12}
+                                height={12}
                               />
                             </Box>
                           </Flex>

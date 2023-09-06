@@ -32,7 +32,8 @@ const Navbar = () => {
   let searchRef = useRef<HTMLInputElement>(null)
 
   const router = useRouter()
-  useHotkeys('meta+k', () => {
+  useHotkeys('meta+k', (e) => {
+    e.preventDefault()
     if (searchRef?.current) {
       searchRef?.current?.focus()
     }
@@ -110,7 +111,7 @@ const Navbar = () => {
         }}
       >
         <Flex align="center">
-          <Link href={`/`}>
+          <Link href={`/${routePrefix}`}>
             <Box css={{ cursor: 'pointer' }}>
               <Image
                 src="/reservoirLogo.svg"
@@ -127,10 +128,10 @@ const Navbar = () => {
               ml: '$5',
             }}
           >
-            <Link href={`/`}>
+            <Link href={`/${routePrefix}`}>
               <NavItem>Featured</NavItem>
             </Link>
-            <Link href={`/${routePrefix}/collection-rankings`}>
+            <Link href={`/${routePrefix}/collections/trending`}>
               <NavItem>NFTs</NavItem>
             </Link>
 
@@ -167,7 +168,7 @@ const Navbar = () => {
             </HoverCard.Root> */}
 
             {false && (
-              <Link href={`/${routePrefix}/collection-rankings`}>
+              <Link href={`/${routePrefix}/collections/minting`}>
                 <NavItem>Mints</NavItem>
               </Link>
             )}
@@ -199,79 +200,66 @@ const Navbar = () => {
         justify="end"
         align="center"
       >
-        <Box css={{ mr: '$4' }}>
-          <HoverCard.Root openDelay={100} closeDelay={100}>
-            <HoverCard.Trigger>
-              <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
-                <NavItem>Developers</NavItem>
-              </a>
-            </HoverCard.Trigger>
-            <HoverCard.Content sideOffset={24} align="start">
-              <Card css={{ p: 24, width: 240 }}>
-                <Flex css={{ gap: '$4' }} direction="column">
-                  <a target="_blank" href={`https://reservoir.tools`}>
-                    <NavItem>About Reservoir</NavItem>
-                  </a>
-                  <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
-                    <NavItem>Docs</NavItem>
-                  </a>
+        <Flex css={{ gap: '$5', mr: 12 }}>
+          <Box>
+            <HoverCard.Root openDelay={120}>
+              <HoverCard.Trigger>
+                <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
+                  <NavItem>Developers</NavItem>
+                </a>
+              </HoverCard.Trigger>
+              <HoverCard.Content sideOffset={24} align="start">
+                <Card css={{ p: 24, width: 240 }}>
+                  <Flex css={{ gap: '$4' }} direction="column">
+                    <a target="_blank" href={`https://reservoir.tools`}>
+                      <NavItem>About Reservoir</NavItem>
+                    </a>
+                    <a
+                      target="_blank"
+                      href={`https://docs.reservoir.tools/docs`}
+                    >
+                      <NavItem>Docs</NavItem>
+                    </a>
 
-                  <a
-                    target="_blank"
-                    href={`https://docs.reservoir.tools/reference/overview`}
-                  >
-                    <NavItem>API Reference</NavItem>
-                  </a>
+                    <a
+                      target="_blank"
+                      href={`https://docs.reservoir.tools/reference/overview`}
+                    >
+                      <NavItem>API Reference</NavItem>
+                    </a>
 
-                  <a
-                    target="_blank"
-                    href={`https://github.com/reservoirprotocol`}
-                  >
-                    <NavItem>Github</NavItem>
-                  </a>
+                    <a
+                      target="_blank"
+                      href={`https://github.com/reservoirprotocol`}
+                    >
+                      <NavItem>Github</NavItem>
+                    </a>
 
-                  <a href={`https://testnets.reservoir.tools`}>
-                    <NavItem>Testnet Explorer</NavItem>
-                  </a>
-                </Flex>
-              </Card>
-            </HoverCard.Content>
-          </HoverCard.Root>
-        </Box>
-        <ThemeSwitcher />
-        <CartButton />
+                    <a href={`https://testnets.reservoir.tools`}>
+                      <NavItem>Testnet Explorer</NavItem>
+                    </a>
+                  </Flex>
+                </Card>
+              </HoverCard.Content>
+            </HoverCard.Root>
+          </Box>
+          {isConnected && (
+            <Link href={`/portfolio`}>
+              <Box css={{ mr: '$2' }}>
+                <NavItem>Portfolio</NavItem>
+              </Box>
+            </Link>
+          )}
+        </Flex>
+
         {isConnected ? (
-          <HoverCard.Root openDelay={100} closeDelay={100}>
-            <HoverCard.Trigger>
-              <AccountSidebar />
-            </HoverCard.Trigger>
-            <HoverCard.Content sideOffset={14} align="end">
-              <Card css={{ p: 24, width: 240 }}>
-                <Flex css={{ gap: '$4' }} direction="column">
-                  <Link href="/portfolio?tab=items" replace={true}>
-                    <NavItem>My Items</NavItem>
-                  </Link>
-
-                  <Link href="/portfolio?tab=listings" replace={true}>
-                    <NavItem>Listings</NavItem>
-                  </Link>
-
-                  <Link href="/portfolio?tab=offers" replace={true}>
-                    <NavItem>Offers Made</NavItem>
-                  </Link>
-
-                  <Link href="/portfolio?tab=activity" replace={true}>
-                    <NavItem>Activity</NavItem>
-                  </Link>
-                </Flex>
-              </Card>
-            </HoverCard.Content>
-          </HoverCard.Root>
+          <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <ConnectWalletButton />
           </Box>
         )}
+        <CartButton />
       </Flex>
     </Flex>
   )
