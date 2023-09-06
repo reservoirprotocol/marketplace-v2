@@ -283,42 +283,41 @@ const Home: NextPage<any> = ({ ssr }) => {
                               gap: '$3',
                             }}
                           >
-                            {topCollection?.recentSales?.slice(0, 4)?.map(
-                              (sale: any, i) =>
-                                console.log(sale) || (
-                                  <Box
-                                    css={{
-                                      aspectRatio: '1/1',
-                                      maxWidth: 120,
-                                    }}
-                                    key={sale.token.id + sale.contract + i}
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      e.preventDefault()
-                                      router.push(
-                                        `/${chain.routePrefix}/asset/${topCollection.primaryContract}:${sale.token.id}`
-                                      )
-                                    }}
-                                  >
-                                    <img
-                                      style={{ borderRadius: 4 }}
-                                      src={optimizeImage(
-                                        sale?.token?.image ||
-                                          topCollection?.image,
-                                        250
-                                      )}
+                            {topCollection?.recentSales
+                              ?.slice(0, 4)
+                              ?.map((sale: any, i) => (
+                                <Box
+                                  css={{
+                                    aspectRatio: '1/1',
+                                    maxWidth: 120,
+                                  }}
+                                  key={sale.token.id + sale.contract + i}
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    e.preventDefault()
+                                    router.push(
+                                      `/${chain.routePrefix}/asset/${topCollection.primaryContract}:${sale.token.id}`
+                                    )
+                                  }}
+                                >
+                                  <img
+                                    style={{ borderRadius: 4 }}
+                                    src={optimizeImage(
+                                      sale?.token?.image ||
+                                        topCollection?.image,
+                                      250
+                                    )}
+                                  />
+                                  <Box css={{ mt: '$1' }}>
+                                    <FormatCryptoCurrency
+                                      amount={sale.price.amount.decimal ?? 0}
+                                      textStyle={'h6'}
+                                      logoHeight={16}
+                                      address={sale.price.currency?.contract}
                                     />
-                                    <Box css={{ mt: '$1' }}>
-                                      <FormatCryptoCurrency
-                                        amount={sale.price.amount.decimal ?? 0}
-                                        textStyle={'h6'}
-                                        logoHeight={16}
-                                        address={sale.price.currency?.contract}
-                                      />
-                                    </Box>
                                   </Box>
-                                )
-                            )}
+                                </Box>
+                              ))}
                             <Box css={{ flex: 1 }} />
                             <Box css={{ flex: 1 }} />
                           </Flex>

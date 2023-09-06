@@ -30,13 +30,15 @@ import { CollectionActivityTable } from 'components/collections/CollectionActivi
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
+import titleCase from 'utils/titleCase'
 import LoadingCard from 'components/common/LoadingCard'
 import { useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
+  faChain,
   faCog,
-  faCopy,
   faCube,
+  faGlobe,
   faHand,
   faMagnifyingGlass,
   faSeedling,
@@ -54,6 +56,7 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
+import { chain } from 'lodash'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -100,6 +103,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
     window.scrollTo({ top: top })
   }
+
+  let chain = titleCase(router.query.chain as string)
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
@@ -421,6 +426,22 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <FontAwesomeIcon size="xs" icon={faCog} />
                         </Flex>
                         <Text style="body3">{contractKind}</Text>
+                      </Flex>
+
+                      <Flex
+                        align="center"
+                        css={{
+                          gap: '$1',
+                        }}
+                      >
+                        <Flex
+                          css={{
+                            color: '$gray9',
+                          }}
+                        >
+                          <FontAwesomeIcon size="xs" icon={faGlobe} />
+                        </Flex>
+                        <Text style="body3">{chain}</Text>
                       </Flex>
 
                       {mintData && (
