@@ -2,8 +2,9 @@ import { useCollections, useDynamicTokens } from '@reservoir0x/reservoir-kit-ui'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { Box, Flex, Text } from 'components/primitives'
+import { useChainCurrency, useMarketplaceChain } from 'hooks'
 import { useRouter } from 'next/router'
-import { FC, useState } from 'react'
+import { FC, useState, useRef, useEffect } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { styled } from 'stitches.config'
 import optimizeImage from 'utils/optimizeImage'
@@ -38,6 +39,9 @@ export const CollectionDetails: FC<Props> = ({
 }) => {
   const router = useRouter()
   const [descriptionExpanded, setDescriptionExpanded] = useState(false)
+  const chainCurrency = useChainCurrency()
+
+  const descriptionRef = useRef(null as any)
   const contractKind = collection?.contractKind?.toUpperCase()
   let creatorRoyalties = collection?.royalties?.bps
     ? collection?.royalties?.bps * 0.01
@@ -51,6 +55,10 @@ export const CollectionDetails: FC<Props> = ({
     sortBy: 'rarity',
     sortDirection: 'asc',
   }
+
+  const isOverflowed =
+    descriptionRef?.current?.scrollHeight >
+    descriptionRef?.current?.clientHeight
 
   const { data: rareTokens } = useDynamicTokens(rareTokenQuery)
 
@@ -101,6 +109,10 @@ export const CollectionDetails: FC<Props> = ({
             <Text
               style="body1"
               as="p"
+              ref={(ref) => {
+                if (!ref) return
+                descriptionRef.current = ref
+              }}
               css={{
                 lineHeight: 1.5,
                 display: '-webkit-box',
@@ -112,7 +124,7 @@ export const CollectionDetails: FC<Props> = ({
             >
               <ReactMarkdown children={collection?.description || ''} />
             </Text>
-            {(collection?.description?.length || 0) > 140 && (
+            {isOverflowed && (
               <Text
                 onClick={() => setDescriptionExpanded(!descriptionExpanded)}
                 style="body1"
@@ -181,20 +193,30 @@ export const CollectionDetails: FC<Props> = ({
           {[
             {
               name: 'Floor',
-              value: collection?.floorAsk?.price?.amount?.native + ' ETH',
+              value: collection?.floorAsk?.price?.amount?.decimal
+                ? `${collection?.floorAsk?.price?.amount?.decimal} ${collection?.floorAsk?.price?.currency?.symbol}`
+                : '-',
             },
             {
               name: 'Top Bid',
-              value: collection?.topBid?.price?.amount?.native + ' WETH',
+              value: collection?.topBid?.price?.amount?.decimal
+                ? `${collection?.topBid?.price?.amount?.decimal || 0} ${
+                    collection?.topBid?.price?.currency?.symbol
+                  }`
+                : '-',
             },
             {
               name: '24h Volume',
-              value: `${collection?.volume?.['1day']?.toFixed(2)} ETH`,
+              value: `${Number(
+                collection?.volume?.['1day']?.toFixed(2)
+              ).toLocaleString()} ${chainCurrency.symbol}`,
             },
 
             {
               name: '24h Sales',
-              value: `${collection?.salesCount?.['1day'] || 0}`,
+              value: Number(
+                `${collection?.salesCount?.['1day'] || 0}`
+              ).toLocaleString(),
             },
           ].map((stat) => (
             <Box

@@ -32,7 +32,7 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import titleCase from 'utils/titleCase'
 import LoadingCard from 'components/common/LoadingCard'
-import { useMounted } from 'hooks'
+import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
   faChain,
@@ -75,6 +75,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
+  const chainCurrency = useChainCurrency()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
@@ -104,6 +105,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
+  console.log(collectionChain)
   let chain = titleCase(router.query.chain as string)
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
@@ -489,7 +491,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           as="h6"
                           css={{ color: '$bg', fontWeight: 900 }}
                         >
-                          {`${collection.floorAsk?.price?.amount?.native} ${collection.floorAsk?.price?.currency?.symbol}`}
+                          {`${collection.floorAsk?.price?.amount?.native?.toFixed(
+                            2
+                          )} ${chainCurrency.symbol}`}
                         </Text>
                       </Flex>
                     }
@@ -511,7 +515,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
                           <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                            {isSmallDevice ? 'Mint' : 'Mint for'}
+                            Mint
                           </Text>
 
                           {!isSmallDevice && (
@@ -675,7 +679,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {collection.floorAsk?.price?.amount?.native} ETH
+                        {collection.floorAsk?.price?.amount?.native?.toFixed(2)}{' '}
+                        {chainCurrency.symbol}
                       </Text>
                     </Flex>
                     <Flex css={{ gap: '$1' }}>
@@ -683,7 +688,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Top Bid
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {collection.topBid?.price?.amount?.native || 0} WETH
+                        {collection.topBid?.price?.amount?.native?.toFixed(2) ||
+                          0}{' '}
+                        {chainCurrency.symbol}
                       </Text>
                     </Flex>
 
