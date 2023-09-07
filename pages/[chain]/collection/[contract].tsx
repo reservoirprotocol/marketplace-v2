@@ -105,7 +105,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  console.log(collectionChain)
   let chain = titleCase(router.query.chain as string)
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
@@ -332,6 +331,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
+  let nativePrice = collection.floorAsk?.price?.amount?.native
+  let topBidPrice = collection.topBid?.price?.amount?.native
+
   return (
     <Layout>
       <Head
@@ -478,28 +480,34 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  <Sweep
-                    collectionId={collection.id}
-                    openState={isSweepRoute ? sweepOpenState : undefined}
-                    buttonChildren={
-                      <Flex css={{ gap: '$2' }} align="center" justify="center">
-                        <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                          Collect
-                        </Text>
-                        <Text
-                          style="h6"
-                          as="h6"
-                          css={{ color: '$bg', fontWeight: 900 }}
+                  {nativePrice && (
+                    <Sweep
+                      collectionId={collection.id}
+                      openState={isSweepRoute ? sweepOpenState : undefined}
+                      buttonChildren={
+                        <Flex
+                          css={{ gap: '$2' }}
+                          align="center"
+                          justify="center"
                         >
-                          {`${collection.floorAsk?.price?.amount?.native?.toFixed(
-                            2
-                          )} ${chainCurrency.symbol}`}
-                        </Text>
-                      </Flex>
-                    }
-                    buttonCss={{ '@lg': { order: 2 } }}
-                    mutate={mutate}
-                  />
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                            Collect
+                          </Text>
+                          <Text
+                            style="h6"
+                            as="h6"
+                            css={{ color: '$bg', fontWeight: 900 }}
+                          >
+                            {`${nativePrice?.toFixed(2)} ${
+                              chainCurrency.symbol
+                            }`}
+                          </Text>
+                        </Flex>
+                      }
+                      buttonCss={{ '@lg': { order: 2 } }}
+                      mutate={mutate}
+                    />
+                  )}
                   {/* Collection Mint */}
                   {mintData ? (
                     <Mint
@@ -679,8 +687,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {collection.floorAsk?.price?.amount?.native?.toFixed(2)}{' '}
-                        {chainCurrency.symbol}
+                        {nativePrice
+                          ? `${nativePrice?.toFixed(2)} ${chainCurrency.symbol}`
+                          : '-'}
                       </Text>
                     </Flex>
                     <Flex css={{ gap: '$1' }}>
@@ -688,12 +697,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Top Bid
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {collection.topBid?.price?.amount?.native?.toFixed(2) ||
-                          0}{' '}
-                        {chainCurrency.symbol}
+                        {topBidPrice
+                          ? `${topBidPrice?.toFixed(2) || 0} ${
+                              chainCurrency.symbol
+                            }`
+                          : '-'}
                       </Text>
                     </Flex>
-
                     <Flex css={{ gap: '$1' }}>
                       <Text style="body1" as="p" color="subtle">
                         Count
