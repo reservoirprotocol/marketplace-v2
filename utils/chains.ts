@@ -12,6 +12,7 @@ import {
   zkSync,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
+import wrappedContracts from 'utils/wrappedContracts'
 
 //Chains that are missing from wagmi:
 export const zora = {
