@@ -89,6 +89,8 @@ const ChainToggle: FC = () => {
             mt: '$2',
             zIndex: 1000,
             width: 'auto',
+            maxHeight: 300,
+            overflow: 'auto',
             minWidth: 'max-content',
             '@md': {
               minWidth: 'max-content',
@@ -104,8 +106,9 @@ const ChainToggle: FC = () => {
                   chain.routePrefix,
                   supportedChain.routePrefix
                 )
-                switchCurrentChain(supportedChain.id)
+
                 router.replace(newUrl, undefined, { scroll: false })
+                switchCurrentChain(supportedChain.id)
               }}
             >
               <Flex css={{ width: 30 }} justify="center" align="center">

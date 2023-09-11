@@ -117,10 +117,32 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
 
     const contentType = response.headers.get('content-type')
 
+    const cacheControl = response.headers.get('cache-control')
+    if (cacheControl) {
+      headers.set('cache-control', cacheControl)
+    }
+
     if (contentType?.includes('application/json')) {
       data = await response.json()
     } else {
       data = await response.text()
+    }
+
+    if (endpoint.includes('supported-marketplaces')) {
+      if (chain.id == 1 || chain.id == 137) {
+        data = {
+          marketplaces: data.marketplaces.map((marketplace: any) => {
+            if (marketplace.name === 'Reservoir') {
+              return {
+                ...marketplace,
+                orderKind: 'payment-processor',
+              }
+            }
+
+            return marketplace
+          }),
+        }
+      }
     }
 
     if (!response.ok) throw data

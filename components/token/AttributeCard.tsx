@@ -42,13 +42,13 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           {attribute.key}
         </Text>
         <Flex justify="between" css={{ gap: '$2' }}>
-          <Text style="subtitle2" ellipsify>
+          <Text style="subtitle1" ellipsify>
             {attribute.value}
           </Text>
           <FormatCryptoCurrency
             amount={attribute.floorAskPrice}
-            logoHeight={16}
-            textStyle="subtitle2"
+            logoHeight={14}
+            textStyle="subtitle1"
             maximumFractionDigits={2}
           />
         </Flex>
