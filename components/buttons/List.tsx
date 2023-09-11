@@ -20,6 +20,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
+const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
+
 type ListingCurrencies = ComponentPropsWithoutRef<
   typeof ListModal
 >['currencies']
@@ -66,6 +68,8 @@ const List: FC<Props> = ({
     </Button>
   )
 
+  const orderFees = orderFee ? [orderFee] : []
+
   if (isDisconnected || isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
@@ -85,10 +89,12 @@ const List: FC<Props> = ({
     return (
       <ListModal
         trigger={trigger}
+        nativeOnly={true}
         collectionId={contract}
         tokenId={tokenId}
-        currencies={listingCurrencies}
+        feesBps={orderFees}
         enableOnChainRoyalties={true}
+        currencies={listingCurrencies}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == ListStep.Complete) mutate()
         }}

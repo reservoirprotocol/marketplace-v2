@@ -213,14 +213,14 @@ const Wallet = () => {
       align="center"
       css={{
         background: '$gray2',
+        border: '1px solid $gray3',
         borderRadius: 8,
         mt: '$3',
       }}
     >
-      <Text css={{ p: '$3' }}>Wallet</Text>
       <Box css={{ width: '100%', height: 1, background: '$gray1' }}></Box>
       <Flex direction="column" align="center" css={{ p: '$4', width: '100%' }}>
-        <Text style="body2" color="subtle" css={{ mb: '$2' }}>
+        <Text style="body2" color="subtle" css={{ mb: '$2', mt: '$2' }}>
           Total Balance
         </Text>
         <FormatCurrency

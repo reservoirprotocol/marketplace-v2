@@ -25,7 +25,7 @@ export const PercentChange: FC<Props> = ({ value, decimals = 2, ...props }) => {
       }}
       {...props}
     >
-      {round(percentage, decimals)}%
+      {percentage > 500 ? '>500' : round(percentage, decimals)}%
     </Text>
   )
 }

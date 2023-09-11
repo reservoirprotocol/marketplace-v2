@@ -50,6 +50,9 @@ type Props = {
   onCloseComplete?: () => void
 }
 
+const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
+const orderFees = orderFee ? [orderFee] : []
+
 const BatchListModal: FC<Props> = ({
   listings,
   disabled,
@@ -169,6 +172,10 @@ const BatchListModal: FC<Props> = ({
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
         quantity: listing.quantity,
+      }
+
+      if (listing.orderbook === 'reservoir') {
+        convertedListing.fees = orderFees
       }
 
       if (expirationTime) {

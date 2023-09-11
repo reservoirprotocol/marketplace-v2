@@ -20,4 +20,14 @@ export const TableRow = styled(Row, {
 
 export const TableCell = styled('div', {
   p: '$3',
+  variants: {
+    desktopOnly: {
+      true: {
+        display: 'none',
+        '@lg': {
+          display: 'block',
+        },
+      },
+    },
+  },
 })

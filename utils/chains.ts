@@ -51,6 +51,7 @@ export type ReservoirChain = Chain & {
   coingeckoId?: string
   collectionSetId?: string
   community?: string
+  wssUrl?: string
   listingCurrencies?: Currency[]
 }
 
@@ -94,6 +95,7 @@ export const DefaultChain: ReservoirChain = {
   coingeckoId: 'ethereum',
   collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
+  wssUrl: 'wss://ws-sepolia.reservoir.tools',
 }
 
 export default [
@@ -134,6 +136,7 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_MUMBAI_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_MUMBAI_COMMUNITY,
+    wssUrl: 'wss://ws-mumbai.reservoir.tools',
     listingCurrencies: [
       { ...nativeCurrencyBase, coinGeckoId: 'matic-network' },
       {
