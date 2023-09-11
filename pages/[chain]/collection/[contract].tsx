@@ -32,7 +32,7 @@ import { MobileAttributeFilters } from 'components/collections/filters/MobileAtt
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import titleCase from 'utils/titleCase'
 import LoadingCard from 'components/common/LoadingCard'
-import { useMounted } from 'hooks'
+import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
   faChain,
@@ -75,6 +75,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
+  const chainCurrency = useChainCurrency()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
@@ -330,6 +331,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
+  let nativePrice = collection.floorAsk?.price?.amount?.native
+  let topBidPrice = collection.topBid?.price?.amount?.native
+
   return (
     <Layout>
       <Head
@@ -476,26 +480,34 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  <Sweep
-                    collectionId={collection.id}
-                    openState={isSweepRoute ? sweepOpenState : undefined}
-                    buttonChildren={
-                      <Flex css={{ gap: '$2' }} align="center" justify="center">
-                        <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                          Collect
-                        </Text>
-                        <Text
-                          style="h6"
-                          as="h6"
-                          css={{ color: '$bg', fontWeight: 900 }}
+                  {nativePrice && (
+                    <Sweep
+                      collectionId={collection.id}
+                      openState={isSweepRoute ? sweepOpenState : undefined}
+                      buttonChildren={
+                        <Flex
+                          css={{ gap: '$2' }}
+                          align="center"
+                          justify="center"
                         >
-                          {`${collection.floorAsk?.price?.amount?.native} ${collection.floorAsk?.price?.currency?.symbol}`}
-                        </Text>
-                      </Flex>
-                    }
-                    buttonCss={{ '@lg': { order: 2 } }}
-                    mutate={mutate}
-                  />
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                            Collect
+                          </Text>
+                          <Text
+                            style="h6"
+                            as="h6"
+                            css={{ color: '$bg', fontWeight: 900 }}
+                          >
+                            {`${nativePrice?.toFixed(2)} ${
+                              chainCurrency.symbol
+                            }`}
+                          </Text>
+                        </Flex>
+                      }
+                      buttonCss={{ '@lg': { order: 2 } }}
+                      mutate={mutate}
+                    />
+                  )}
                   {/* Collection Mint */}
                   {mintData ? (
                     <Mint
@@ -511,7 +523,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
                           <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                            {isSmallDevice ? 'Mint' : 'Mint for'}
+                            Mint
                           </Text>
 
                           {!isSmallDevice && (
@@ -675,7 +687,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {collection.floorAsk?.price?.amount?.native} ETH
+                        {nativePrice
+                          ? `${nativePrice?.toFixed(2)} ${chainCurrency.symbol}`
+                          : '-'}
                       </Text>
                     </Flex>
                     <Flex css={{ gap: '$1' }}>
@@ -683,10 +697,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Top Bid
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {collection.topBid?.price?.amount?.native || 0} WETH
+                        {topBidPrice
+                          ? `${topBidPrice?.toFixed(2) || 0} ${
+                              chainCurrency.symbol
+                            }`
+                          : '-'}
                       </Text>
                     </Flex>
-
                     <Flex css={{ gap: '$1' }}>
                       <Text style="body1" as="p" color="subtle">
                         Count

@@ -36,6 +36,9 @@ type Props = {
 
 type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
 
+const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
+const orderFees = orderFee ? [orderFee] : []
+
 const CollectionOffer: FC<Props> = ({
   collection,
   mutate,
@@ -150,6 +153,7 @@ const CollectionOffer: FC<Props> = ({
             collectionId={collection?.id}
             trigger={trigger}
             attribute={attribute}
+            feesBps={orderFees}
             currencies={bidCurrencies}
             onClose={(data, stepData, currentStep) => {
               if (mutate && currentStep == BidStep.Complete) mutate()
