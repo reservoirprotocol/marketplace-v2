@@ -132,6 +132,7 @@ const CollectionOffer: FC<Props> = ({
             attribute={attribute}
             feesBps={orderFees}
             currencies={bidCurrencies}
+            oracleEnabled={true}
             chainId={marketplaceChain.id}
             onClose={(data, stepData, currentStep) => {
               if (mutate && currentStep == BidStep.Complete) mutate()
