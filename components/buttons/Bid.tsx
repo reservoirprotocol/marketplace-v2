@@ -107,6 +107,7 @@ const Bid: FC<Props> = ({
         openState={openState}
         feesBps={orderFees}
         currencies={bidCurrencies}
+        oracleEnabled={true}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}
