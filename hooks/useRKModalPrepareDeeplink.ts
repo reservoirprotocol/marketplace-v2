@@ -1,22 +1,11 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { useEffect } from 'react'
-import {
-  useAccount,
-  useNetwork,
-  useSwitchNetwork,
-  useWalletClient,
-} from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 
-export default (chainId: number, enabled: boolean = false) => {
+export default (enabled: boolean = false) => {
   const { status } = useAccount()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId,
-  })
-  const { chain: activeChain } = useNetwork()
   const { openConnectModal } = useConnectModal()
   const { data: signer } = useWalletClient()
-
-  const isInTheWrongNetwork = Boolean(signer && activeChain?.id !== chainId)
 
   useEffect(() => {
     if (!enabled) {
@@ -27,12 +16,8 @@ export default (chainId: number, enabled: boolean = false) => {
       return
     }
 
-    if (status === 'connected' && signer) {
-      if (isInTheWrongNetwork) {
-        switchNetworkAsync?.(chainId)
-      }
-    } else {
+    if (status !== 'connected' || !signer) {
       openConnectModal?.()
     }
-  }, [status, enabled, signer, isInTheWrongNetwork])
+  }, [status, enabled, signer])
 }
