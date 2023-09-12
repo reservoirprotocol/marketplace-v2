@@ -125,9 +125,20 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       data: tokens,
       fetchNextPage,
       mutate,
+      setSize,
       isFetchingPage,
       isValidating,
-    } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
+    } = useUserTokens(address, tokenQuery, {
+      revalidateOnMount: true,
+      fallbackData: [],
+    })
+
+    useEffect(() => {
+      mutate()
+      return () => {
+        setSize(1)
+      }
+    }, [])
 
     useEffect(() => {
       const isVisible = !!loadMoreObserver?.isIntersecting
