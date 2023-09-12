@@ -847,7 +847,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection?: paths['/collections/v6']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v7']['get']['responses']['200']['schema']
     tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
@@ -863,7 +863,7 @@ export const getServerSideProps: GetServerSideProps<{
     },
   }
 
-  let collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
     {
       id,
       includeSalesCount: true,
@@ -871,7 +871,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v6`,
+    `${reservoirBaseUrl}/collections/v7`,
     collectionQuery,
     headers
   )

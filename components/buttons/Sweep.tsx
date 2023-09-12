@@ -8,7 +8,7 @@ import React, {
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
 import { useMarketplaceChain, useRKModalPrepareDeeplink } from 'hooks'
-import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
 import { SWRResponse } from 'swr'
@@ -35,23 +35,16 @@ const Sweep: FC<Props> = ({
 }) => {
   const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
-  const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
   const { feesOnTop } = useContext(ReferralContext)
-  useRKModalPrepareDeeplink(marketplaceChain.id, openState ? true : false)
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
-  )
+  useRKModalPrepareDeeplink(openState ? true : false)
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
       {buttonChildren}
     </Button>
   )
-  const canSweep = signer && collectionId && !isInTheWrongNetwork
+  const canSweep = signer && collectionId
 
   return !canSweep ? (
     <Button
@@ -59,13 +52,6 @@ const Sweep: FC<Props> = ({
       aria-haspopup="dialog"
       color="primary"
       onClick={async () => {
-        if (isInTheWrongNetwork && switchNetworkAsync) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -86,6 +72,7 @@ const Sweep: FC<Props> = ({
       // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
       // feesOnTopBps={["0xabc:50"]}
       feesOnTopUsd={feesOnTop}
+      chainId={marketplaceChain.id}
       onClose={(data, currentStep) => {
         if (mutate && currentStep == CollectStep.Complete) mutate()
       }}
