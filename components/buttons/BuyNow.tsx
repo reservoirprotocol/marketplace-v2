@@ -6,9 +6,8 @@ import React, {
   useContext,
 } from 'react'
 import { SWRResponse } from 'swr'
-import { useNetwork, useWalletClient } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
-import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
@@ -38,23 +37,16 @@ const BuyNow: FC<Props> = ({
 }) => {
   const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
-  const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
   const { feesOnTop } = useContext(ReferralContext)
-  useRKModalPrepareDeeplink(marketplaceChain.id, openState ? true : false)
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
-  )
+  useRKModalPrepareDeeplink(openState ? true : false)
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
       {buttonChildren}
     </Button>
   )
-  const canBuy = signer && tokenId && collectionId && !isInTheWrongNetwork
+  const canBuy = signer && tokenId && collectionId
 
   return !canBuy ? (
     <Button
@@ -62,13 +54,6 @@ const BuyNow: FC<Props> = ({
       aria-haspopup="dialog"
       color="primary"
       onClick={async () => {
-        if (isInTheWrongNetwork && switchNetworkAsync) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -89,6 +74,7 @@ const BuyNow: FC<Props> = ({
       // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
       // feesOnTopBps={["0xabc:50"]}
       feesOnTopUsd={feesOnTop}
+      chainId={marketplaceChain.id}
       onClose={(data, stepData, currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
       }}

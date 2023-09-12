@@ -167,14 +167,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 }
 
 type CollectionSchema =
-  paths['/collections/v6']['get']['responses']['200']['schema']
+  paths['/collections/v7']['get']['responses']['200']['schema']
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
     collection: CollectionSchema
   }
 }> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
+  const collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
@@ -191,7 +191,7 @@ export const getServerSideProps: GetServerSideProps<{
     query.community = chain.community
   }
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v6`,
+    `${chain.reservoirBaseUrl}/collections/v7`,
     query,
     {
       headers: {
