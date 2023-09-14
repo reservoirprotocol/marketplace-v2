@@ -53,6 +53,7 @@ export type ReservoirChain = Chain & {
   community?: string
   wssUrl?: string
   listingCurrencies?: Currency[]
+  oracleBidsEnabled?: boolean
 }
 
 const nativeCurrencyBase = {
@@ -124,6 +125,7 @@ export default [
         coinGeckoId: 'weth',
       },
     ],
+    oracleBidsEnabled: true,
   },
   {
     ...polygonMumbai,
