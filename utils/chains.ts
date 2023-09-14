@@ -1,7 +1,15 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
-import { arbitrum, mainnet, polygon, optimism, Chain, bsc, avalanche } from 'wagmi/chains'
+import {
+  arbitrum,
+  mainnet,
+  polygon,
+  optimism,
+  Chain,
+  bsc,
+  avalanche,
+} from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
 //Chains that are missing from wagmi:
@@ -134,6 +142,7 @@ export type ReservoirChain = Chain & {
   community?: string
   wssUrl?: string
   listingCurrencies?: Currency[]
+  oracleBidsEnabled?: boolean
 }
 
 const nativeCurrencyBase = {
@@ -184,6 +193,7 @@ export const DefaultChain: ReservoirChain = {
       contract: usdcContracts[mainnet.id],
     },
   ],
+  oracleBidsEnabled: true,
 }
 
 export default [
@@ -218,6 +228,7 @@ export default [
         coinGeckoId: 'weth',
       },
     ],
+    oracleBidsEnabled: true,
   },
   {
     ...arbitrum,
