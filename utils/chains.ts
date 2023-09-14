@@ -144,6 +144,7 @@ export type ReservoirChain = Chain & {
   community?: string
   wssUrl?: string
   listingCurrencies?: Currency[]
+  oracleBidsEnabled?: boolean
 }
 
 const nativeCurrencyBase = {
@@ -194,6 +195,7 @@ export const DefaultChain: ReservoirChain = {
       contract: usdcContracts[mainnet.id],
     },
   ],
+  oracleBidsEnabled: true,
 }
 
 export default [
@@ -228,6 +230,7 @@ export default [
         coinGeckoId: 'weth',
       },
     ],
+    oracleBidsEnabled: true,
   },
   {
     ...arbitrum,
@@ -374,6 +377,7 @@ export default [
         coinGeckoId: 'weth',
       },
     ],
+    oracleBidsEnabled: true,
   },
   {
     ...zkSync,

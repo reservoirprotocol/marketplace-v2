@@ -597,7 +597,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
 export const getServerSideProps: GetServerSideProps<{
   assetId?: string
   ssr: {
-    collection: paths['/collections/v6']['get']['responses']['200']['schema']
+    collection: paths['/collections/v7']['get']['responses']['200']['schema']
     tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
   }
 }> = async ({ params, res }) => {
@@ -635,14 +635,14 @@ export const getServerSideProps: GetServerSideProps<{
     ? (tokensResponse.data as Props['ssr']['tokens'])
     : {}
 
-  let collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
     {
       id: tokens?.tokens?.[0]?.token?.collection?.id,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v6`,
+    `${reservoirBaseUrl}/collections/v7`,
     collectionQuery,
     headers
   )
