@@ -112,7 +112,6 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     options.headers = headers
 
     const response = await fetch(url.href, options)
-
     let data: any
 
     const contentType = response.headers.get('content-type')
@@ -126,23 +125,6 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       data = await response.json()
     } else {
       data = await response.text()
-    }
-
-    if (endpoint.includes('supported-marketplaces')) {
-      if (chain.id == 1 || chain.id == 137) {
-        data = {
-          marketplaces: data.marketplaces.map((marketplace: any) => {
-            if (marketplace.name === 'Reservoir') {
-              return {
-                ...marketplace,
-                orderKind: 'payment-processor',
-              }
-            }
-
-            return marketplace
-          }),
-        }
-      }
     }
 
     if (!response.ok) throw data
