@@ -146,6 +146,7 @@ export default [
         contract: usdcContracts[polygonMumbai.id],
       },
     ],
+    oracleBidsEnabled: true,
   },
   {
     ...baseGoerli,
