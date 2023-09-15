@@ -35,7 +35,6 @@ import LoadingCard from 'components/common/LoadingCard'
 import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
-  faChain,
   faCog,
   faCube,
   faGlobe,
@@ -56,7 +55,6 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
-import { chain } from 'lodash'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -255,16 +253,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               : tokens.findIndex((token) => {
                   let currentTokenPrice =
                     token.market?.floorAsk?.price?.amount?.native
-                  if (currentTokenPrice) {
+                  if (currentTokenPrice !== undefined) {
                     return sortDirection === 'desc'
-                      ? currentTokenPrice <=
-                          updatedToken.market.floorAsk.price.amount.native
-                      : currentTokenPrice >=
-                          updatedToken.market.floorAsk.price.amount.native
+                      ? updatedToken.market.floorAsk.price.amount.native >=
+                          currentTokenPrice
+                      : updatedToken.market.floorAsk.price.amount.native <=
+                          currentTokenPrice
                   }
                   return true
                 })
-          if (updatedTokenPosition === -1) {
+          if (updatedTokenPosition <= -1) {
             return
           }
 
