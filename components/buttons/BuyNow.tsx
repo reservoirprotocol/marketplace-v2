@@ -6,7 +6,6 @@ import React, {
   useContext,
 } from 'react'
 import { SWRResponse } from 'swr'
-import { useWalletClient } from 'wagmi'
 import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
@@ -35,40 +34,25 @@ const BuyNow: FC<Props> = ({
   buttonChildren,
   openState,
 }) => {
-  const { data: signer } = useWalletClient()
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
   useRKModalPrepareDeeplink(openState ? true : false)
 
-  const trigger = (
-    <Button css={buttonCss} color="primary" {...buttonProps}>
-      {buttonChildren}
-    </Button>
-  )
-  const canBuy = signer && tokenId && collectionId
-
-  return !canBuy ? (
-    <Button
-      css={buttonCss}
-      aria-haspopup="dialog"
-      color="primary"
-      onClick={async () => {
-        if (!signer) {
-          openConnectModal?.()
-        }
-      }}
-      {...buttonProps}
-    >
-      {buttonChildren}
-    </Button>
-  ) : (
+  return (
     <BuyModal
-      trigger={trigger}
+      trigger={
+        <Button css={buttonCss} color="primary" {...buttonProps}>
+          {buttonChildren}
+        </Button>
+      }
       tokenId={tokenId}
       collectionId={collectionId}
       orderId={orderId}
       openState={openState}
+      onConnectWallet={() => {
+        openConnectModal?.()
+      }}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
       // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1
