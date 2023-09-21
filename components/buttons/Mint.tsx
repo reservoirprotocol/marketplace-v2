@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
-import { useMarketplaceChain, useRKModalPrepareDeeplink } from 'hooks'
+import { useMarketplaceChain } from 'hooks'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
 import { SWRResponse } from 'swr'
@@ -35,7 +35,6 @@ const Mint: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
-  useRKModalPrepareDeeplink(openState ? true : false)
 
   return (
     <CollectModal

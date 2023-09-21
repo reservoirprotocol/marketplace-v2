@@ -10,7 +10,7 @@ import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
-import { useMarketplaceChain, useRKModalPrepareDeeplink } from 'hooks'
+import { useMarketplaceChain } from 'hooks'
 import { ReferralContext } from '../../context/ReferralContextProvider'
 
 type Props = {
@@ -37,7 +37,6 @@ const BuyNow: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
-  useRKModalPrepareDeeplink(openState ? true : false)
 
   return (
     <BuyModal
