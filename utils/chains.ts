@@ -1,5 +1,4 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
-import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
 import {
   arbitrum,
@@ -9,6 +8,7 @@ import {
   Chain,
   bsc,
   avalanche,
+  polygonZkEvm,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
@@ -351,5 +351,31 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
+  },
+  {
+    ...linea,
+    lightIconUrl: '/icons/linea-icon-dark.svg',
+    darkIconUrl: '/icons/linea-icon-light.svg',
+    reservoirBaseUrl: 'https://api-linea.reservoir.tools',
+    proxyApi: '/api/reservoir/linea',
+
+    routePrefix: 'linea',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
+  },
+  {
+    ...polygonZkEvm,
+    lightIconUrl: '/icons/polygon-zkevm-icon-dark.svg',
+    darkIconUrl: '/icons/polygon-zkevm-icon-light.svg',
+    reservoirBaseUrl: 'https://api-polygon-zkevm.reservoir.tools',
+    proxyApi: '/api/reservoir/polygon-zkevm',
+
+    routePrefix: 'polygon-zkevm',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
   },
 ] as ReservoirChain[]
