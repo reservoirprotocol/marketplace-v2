@@ -45,7 +45,7 @@ export type ReservoirChain = Chain & {
   lightIconUrl: string
   darkIconUrl: string
   reservoirBaseUrl: string
-  proxyApi: string
+  proxyApi?: string
   routePrefix: string
   apiKey?: string
   coingeckoId?: string
