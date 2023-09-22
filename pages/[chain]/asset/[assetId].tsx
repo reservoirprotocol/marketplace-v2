@@ -595,8 +595,10 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
 }
 
 type SSRProps = {
-  collection?: paths['/collections/v7']['get']['responses']['200']['schema']
-  tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
+  collection?:
+    | paths['/collections/v7']['get']['responses']['200']['schema']
+    | null
+  tokens?: paths['/tokens/v6']['get']['responses']['200']['schema'] | null
 }
 
 export const getServerSideProps: GetServerSideProps<{
@@ -626,8 +628,8 @@ export const getServerSideProps: GetServerSideProps<{
     includeDynamicPricing: true,
   }
 
-  let tokens: SSRProps['tokens']
-  let collection: SSRProps['collection']
+  let tokens: SSRProps['tokens'] = null
+  let collection: SSRProps['collection'] = null
 
   try {
     const tokensPromise = fetcher(
