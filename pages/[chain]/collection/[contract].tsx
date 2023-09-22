@@ -478,7 +478,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  {nativePrice && (
+                  {nativePrice ? (
                     <Sweep
                       collectionId={collection.id}
                       openState={isSweepRoute ? sweepOpenState : undefined}
@@ -505,7 +505,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       buttonCss={{ '@lg': { order: 2 } }}
                       mutate={mutate}
                     />
-                  )}
+                  ) : null}
                   {/* Collection Mint */}
                   {mintData ? (
                     <Mint

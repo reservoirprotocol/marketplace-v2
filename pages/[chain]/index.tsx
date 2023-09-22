@@ -15,7 +15,6 @@ import { useMarketplaceChain } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
-import { preload } from 'swr'
 
 import Img from 'components/primitives/Img'
 import useTopSellingCollections from 'hooks/useTopSellingCollections'
@@ -60,19 +59,6 @@ const Home: NextPage<any> = ({ ssr }) => {
         : null,
     },
     chain?.id
-  )
-
-  useEffect(
-    () =>
-      supportedChains
-        .filter((c) => c.id !== chain.id)
-        .forEach((c) => {
-          preload(
-            `${c.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
-            fetcher
-          )
-        }),
-    []
   )
 
   const topCollection = topSellingCollectionsData?.collections?.[0]
