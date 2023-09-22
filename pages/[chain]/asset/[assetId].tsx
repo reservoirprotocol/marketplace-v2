@@ -88,7 +88,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       includeQuantity: true,
     },
     {
-      fallbackData: [ssr.tokens],
+      fallbackData: [ssr.tokens ? ssr.tokens : {}],
     }
   )
 
@@ -100,7 +100,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       id: token?.token?.collection?.id,
     },
     {
-      fallbackData: [ssr.collection],
+      fallbackData: [ssr.collection ? ssr.collection : {}],
     }
   )
   const collection = collections && collections[0] ? collections[0] : null
@@ -667,7 +667,10 @@ export const getServerSideProps: GetServerSideProps<{
   } catch (e) {}
 
   return {
-    props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
+    props: {
+      assetId: params?.assetId as string,
+      ssr: { collection, tokens },
+    },
   }
 }
 
