@@ -594,12 +594,14 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   )
 }
 
+type SSRProps = {
+  collection?: paths['/collections/v7']['get']['responses']['200']['schema']
+  tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
+}
+
 export const getServerSideProps: GetServerSideProps<{
   assetId?: string
-  ssr: {
-    collection: paths['/collections/v7']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
-  }
+  ssr: SSRProps
 }> = async ({ params, res }) => {
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
@@ -624,38 +626,43 @@ export const getServerSideProps: GetServerSideProps<{
     includeDynamicPricing: true,
   }
 
-  const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v6`,
-    tokensQuery,
-    headers
-  )
+  let tokens: SSRProps['tokens']
+  let collection: SSRProps['collection']
 
-  const tokensResponse = await tokensPromise
-  const tokens = tokensResponse.data
-    ? (tokensResponse.data as Props['ssr']['tokens'])
-    : {}
+  try {
+    const tokensPromise = fetcher(
+      `${reservoirBaseUrl}/tokens/v6`,
+      tokensQuery,
+      headers
+    )
 
-  let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
-    {
-      id: tokens?.tokens?.[0]?.token?.collection?.id,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
+    const tokensResponse = await tokensPromise
+    tokens = tokensResponse.data
+      ? (tokensResponse.data as Props['ssr']['tokens'])
+      : {}
 
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v7`,
-    collectionQuery,
-    headers
-  )
+    let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
+      {
+        id: tokens?.tokens?.[0]?.token?.collection?.id,
+        normalizeRoyalties: NORMALIZE_ROYALTIES,
+      }
 
-  const collectionsResponse = await collectionsPromise
-  const collection = collectionsResponse.data
-    ? (collectionsResponse.data as Props['ssr']['collection'])
-    : {}
+    const collectionsPromise = fetcher(
+      `${reservoirBaseUrl}/collections/v7`,
+      collectionQuery,
+      headers
+    )
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=30, stale-while-revalidate=60'
-  )
+    const collectionsResponse = await collectionsPromise
+    collection = collectionsResponse.data
+      ? (collectionsResponse.data as Props['ssr']['collection'])
+      : {}
+
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=30, stale-while-revalidate=60'
+    )
+  } catch (e) {}
 
   return {
     props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
