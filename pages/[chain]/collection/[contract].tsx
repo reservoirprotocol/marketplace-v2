@@ -55,6 +55,7 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
+import { formatBN } from 'utils/numbers'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -496,9 +497,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             as="h6"
                             css={{ color: '$bg', fontWeight: 900 }}
                           >
-                            {`${nativePrice?.toFixed(2)} ${
-                              chainCurrency.symbol
-                            }`}
+                            {formatBN(nativePrice, 4)} {chainCurrency.symbol}
                           </Text>
                         </Flex>
                       }
