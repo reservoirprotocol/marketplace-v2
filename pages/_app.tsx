@@ -164,10 +164,10 @@ function MyApp({
           options={{
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
-            chains: supportedChains.map(({ proxyApi, id }) => {
+            chains: supportedChains.map(({ reservoirBaseUrl, id }) => {
               return {
                 id,
-                baseApiUrl: `${baseUrl}${proxyApi}`,
+                baseApiUrl: reservoirBaseUrl,
                 active: marketplaceChain.id === id,
               }
             }),
@@ -182,21 +182,19 @@ function MyApp({
           theme={reservoirKitTheme}
         >
           <CartProvider feesOnTopUsd={feesOnTop}>
-                        <WebsocketContextProvider>
-            
-            <Tooltip.Provider>
-              <RainbowKitProvider
-                chains={chains}
-                theme={rainbowKitTheme}
-                modalSize="compact"
-              >
-                <ToastContextProvider>
-                  <FunctionalComponent {...pageProps} />
-                </ToastContextProvider>
-              </RainbowKitProvider>
-            </Tooltip.Provider>
-                                      </WebsocketContextProvider>
-
+            <WebsocketContextProvider>
+              <Tooltip.Provider>
+                <RainbowKitProvider
+                  chains={chains}
+                  theme={rainbowKitTheme}
+                  modalSize="compact"
+                >
+                  <ToastContextProvider>
+                    <FunctionalComponent {...pageProps} />
+                  </ToastContextProvider>
+                </RainbowKitProvider>
+              </Tooltip.Provider>
+            </WebsocketContextProvider>
           </CartProvider>
         </ReservoirKitProvider>
       </ThemeProvider>
