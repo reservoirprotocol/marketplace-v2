@@ -329,8 +329,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
-  let nativePrice = collection.floorAsk?.price?.amount?.native
-  let topBidPrice = collection.topBid?.price?.amount?.native
+  let nativePrice = collection?.floorAsk?.price?.amount?.native
+  let topBidPrice = collection?.topBid?.price?.amount?.native
 
   return (
     <Layout>
