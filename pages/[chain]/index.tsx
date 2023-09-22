@@ -549,22 +549,25 @@ export const getServerSideProps: GetServerSideProps<{
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
-  const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
-    {
-      headers: {
-        'x-api-key': chain.apiKey || '',
-      },
-    }
-  )
-
   const topSellingCollections: ChainTopSellingCollections = {}
-  topSellingCollections[chain.id] = response.data
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=120, stale-while-revalidate=180'
-  )
+  try {
+    const response = await fetcher(
+      `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
+      {
+        headers: {
+          'x-api-key': chain.apiKey || '',
+        },
+      }
+    )
+
+    topSellingCollections[chain.id] = response.data
+
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=120, stale-while-revalidate=180'
+    )
+  } catch (e) {}
 
   return {
     props: { ssr: { topSellingCollections } },
