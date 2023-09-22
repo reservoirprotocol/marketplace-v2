@@ -561,7 +561,6 @@ export const getServerSideProps: GetServerSideProps<{
       }
     )
 
-    const topSellingCollections: ChainTopSellingCollections = {}
     topSellingCollections[chain.id] = response.data
 
     res.setHeader(

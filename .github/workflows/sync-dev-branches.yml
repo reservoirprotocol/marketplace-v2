@@ -15,7 +15,7 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-      - name: Sync testnet with main
+      - name: Sync vpn with dev
         run: |
           git fetch --unshallow
           git checkout vpn
