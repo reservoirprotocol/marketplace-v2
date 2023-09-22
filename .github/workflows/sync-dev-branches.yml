@@ -20,7 +20,7 @@ jobs:
           git fetch --unshallow
           git checkout vpn
           git pull
-          git merge --no-ff main -m "Auto-merge dev into vpn"
+          git merge --no-ff dev -m "Auto-merge dev into vpn"
           git push
       - name: Report Status
         uses: ravsamhq/notify-slack-action@v1
