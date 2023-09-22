@@ -2,7 +2,7 @@ import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { zeroAddress } from 'viem'
 import { Chain, goerli } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
-import wrappedContracts from 'utils/wrappedContracts'
+import wrappedContracts from './wrappedContracts'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
