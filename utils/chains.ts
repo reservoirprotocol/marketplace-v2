@@ -8,11 +8,9 @@ import {
   Chain,
   bsc,
   avalanche,
-  goerli,
   zkSync,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
-import wrappedContracts from './wrappedContracts'
 
 //Chains that are missing from wagmi:
 export const zora = {
@@ -352,32 +350,6 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
-  },
-  {
-    ...goerli,
-    lightIconUrl: '/icons/goerli-icon-dark.svg',
-    darkIconUrl: '/icons/goerli-icon-light.svg',
-    reservoirBaseUrl: 'https://api-goerli.dev.reservoir.tools',
-    proxyApi: '/api/reservoir/goerli',
-    routePrefix: 'goerli',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'goerli-eth',
-    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
-    listingCurrencies: [
-      nativeCurrencyBase,
-      {
-        ...usdcCurrencyBase,
-        contract: usdcContracts[goerli.id],
-      },
-      {
-        symbol: 'WETH',
-        contract: wrappedContracts[goerli.id],
-        decimals: 18,
-        coinGeckoId: 'weth',
-      },
-    ],
-    oracleBidsEnabled: true,
   },
   {
     ...zkSync,
