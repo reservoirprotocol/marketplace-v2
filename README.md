@@ -1,4 +1,4 @@
-<h3 align="center">Reservoir Market v2</h3>
+<h3 align="center">Rarebox</h3>
   <p align="center">
 An open source NFT marketplace built on Reservoir.
 
@@ -6,7 +6,7 @@ An open source NFT marketplace built on Reservoir.
 
 ## About The Project
 
-Reservoir Market v2 is an open source marketplace built with Reservoir APIs that enables access to instant liquidity aggregated from major marketplace. We encourage developers to use this project as a reference for their own implementation or even fork the project and make their own meaningful changes. The project is lightly configurable refer to the configuration variables below. If you're looking for a no-code solution check out our [v1 marketplace](https://github.com/reservoirprotocol/marketplace-v1).
+Rarebox is an open source marketplace built with Reservoir APIs that enables access to instant liquidity aggregated from major marketplace. We encourage developers to use this project as a reference for their own implementation or even fork the project and make their own meaningful changes. The project is lightly configurable refer to the configuration variables below. If you're looking for a no-code solution check out our (https://github.com/reservoirprotocol/marketplace-v1).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -48,7 +48,7 @@ $ npm install
 
 ### Configuration
 
-Reservoir Market v2 is lightly configurable with the configurations below. You can either add these to a `.env.production` and `.env.development` or add env variables to a deployment platform like [vercel](https://vercel.com/).
+Rarebox is lightly configurable with the configurations below. You can either add these to a `.env.production` and `.env.development` or add env variables to a deployment platform like [vercel](https://vercel.com/).
 
 **Environment Variables**
 | Environment Variable | Required | Description | Example |
