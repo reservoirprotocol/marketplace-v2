@@ -6,7 +6,7 @@ An open source NFT marketplace built on RareBox.
 
 ## About The Project
 
-RareBox Market  is an open source marketplace built with RareBox APIs that enables access to instant liquidity aggregated from major marketplace. We encourage developers to use this project as a reference for their own implementation or even fork the project and make their own meaningful changes. The project is lightly configurable refer to the configuration variables below. If you're looking for a no-code solution check out our [v1 marketplace](https://github.com/RareBoxprotocol/marketplace-v1).
+RareBox Market  is an open source marketplace built with RareBox APIs that enables access to instant liquidity aggregated from major marketplace. We encourage developers to use this project as a reference for their own implementation or even fork the project and make their own meaningful changes. The project is lightly configurable refer to the configuration variables below. If you're looking for a no-code solution check out our (https://github.com/RareBoxprotocol/marketplace-v1).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
