@@ -49,13 +49,12 @@ export default ({
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   const mediaType = extractMediaType(token?.token)
-  const showPreview =
-    mediaType === 'other' ||
-    mediaType === 'html' ||
-    mediaType === null ||
-    mediaType === 'gif' ||
-    mediaType === 'gltf' ||
-    mediaType === 'glb'
+  const showMedia =
+    mediaType === 'mp4' ||
+    mediaType === 'mp3' ||
+    mediaType === 'm4a' ||
+    mediaType === 'wav' ||
+    mediaType === 'mov'
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
@@ -174,7 +173,7 @@ export default ({
               borderRadius: 0,
               aspectRatio: '1/1',
             }}
-            staticOnly={showPreview}
+            staticOnly={!showMedia}
             imageResolution={'medium'}
             audioOptions={{
               onPlay: (e) => {
