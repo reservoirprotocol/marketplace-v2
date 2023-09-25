@@ -9,6 +9,7 @@ import {
   bsc,
   avalanche,
   polygonZkEvm,
+  zkSync,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
@@ -345,7 +346,6 @@ export default [
     darkIconUrl: '/icons/linea-icon-light.svg',
     reservoirBaseUrl: 'https://api-linea.reservoir.tools',
     proxyApi: '/api/reservoir/linea',
-
     routePrefix: 'linea',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
@@ -377,5 +377,18 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
+  },
+  {
+    ...zkSync,
+    name: 'zkSync',
+    lightIconUrl: '/icons/zksync-icon-dark.svg',
+    darkIconUrl: '/icons/zksync-icon-light.svg',
+    reservoirBaseUrl: 'https://api-zksync.reservoir.tools',
+    proxyApi: '/api/reservoir/zksync',
+    routePrefix: 'zksync',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ZKSYNC_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ZKSYNC_COMMUNITY,
   },
 ] as ReservoirChain[]
