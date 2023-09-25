@@ -9,7 +9,8 @@ const usdcContracts: Record<number, string> = {
   42170: '0x750ba8b76187092B0D1E87E28daaf484d1b5273b', // arbitrum nova
   59144: '0x176211869cA2b568f2A7D4EE941E073a821EE1ff', // linea
   80001: '0x0fa8781a83e46826621b3bc094ea2a0212e71b23', // mumbai
-  84531: '0xf175520c52418dfe19c8098071a252da48cd1c19', //base goerli
+  8453: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', // base
+  84531: '0xf175520c52418dfe19c8098071a252da48cd1c19', // base goerli
   534353: '0xA0D71B9877f44C744546D649147E3F1e70a93760', // scroll testnet
 }
 
