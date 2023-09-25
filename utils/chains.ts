@@ -104,8 +104,6 @@ export default [
     // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
     // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
     coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
   },
   DefaultChain,
 ] as ReservoirChain[]
