@@ -1,5 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box, Input } from '../../../components/primitives'
+import {
+  Text,
+  Flex,
+  Box,
+  Input,
+  FormatCrypto,
+} from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -497,7 +503,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             as="h6"
                             css={{ color: '$bg', fontWeight: 900 }}
                           >
-                            {formatBN(nativePrice, 4)} {chainCurrency.symbol}
+                            <Flex
+                              css={{
+                                gap: '$1',
+                              }}
+                            >
+                              <FormatCrypto
+                                amount={nativePrice}
+                                textStyle="h6"
+                                css={{ fontWeight: 900 }}
+                                decimals={4}
+                              />
+                              {chainCurrency.symbol}
+                            </Flex>
                           </Text>
                         </Flex>
                       }
