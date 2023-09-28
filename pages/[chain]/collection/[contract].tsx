@@ -76,7 +76,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const chainCurrency = useChainCurrency()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([
+    'sale',
+    'mint',
+  ])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
