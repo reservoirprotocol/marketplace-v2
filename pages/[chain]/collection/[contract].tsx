@@ -513,7 +513,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               <FormatCrypto
                                 amount={nativePrice}
                                 textStyle="h6"
-                                css={{ fontWeight: 900 }}
+                                css={{ color: '$bg', fontWeight: 900 }}
                                 decimals={4}
                               />
                               {chainCurrency.symbol}
