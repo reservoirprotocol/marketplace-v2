@@ -16,6 +16,7 @@ const wrappedContracts: Record<number, string> = {
   534353: '0xa1EA0B2354F5A344110af2b6AD68e75545009a03', //scrolltestnet
   7777777: '0x4200000000000000000000000000000000000006', //zora
   11155111: '0x7b79995e5f793a07bc00c21412e50ecae098e7f9', //sepolia
+  2863311531: '0x4200000000000000000000000000000000000006', //ancient8testnet
 }
 
 export default wrappedContracts
