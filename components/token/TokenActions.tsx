@@ -107,15 +107,17 @@ export const TokenActions: FC<Props> = ({
               mutate={mutate}
               openState={!isOwner && isBuyRoute ? buyOpenState : undefined}
             />
-            <AddToCart
-              token={token}
-              buttonCss={{
-                width: 52,
-                p: 0,
-                justifyContent: 'center',
-              }}
-              buttonProps={{ corners: 'square' }}
-            />
+            {!is1155 && (
+              <AddToCart
+                token={token}
+                buttonCss={{
+                  width: 52,
+                  p: 0,
+                  justifyContent: 'center',
+                }}
+                buttonProps={{ corners: 'square' }}
+              />
+            )}
           </Flex>
         )}
       {showAcceptOffer && (
