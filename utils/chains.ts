@@ -4,6 +4,33 @@ import { Chain, goerli, sepolia } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 import wrappedContracts from './wrappedContracts'
 
+export const ancient8Testnet = {
+  id: 2863311531,
+  name: 'Ancient8 Testnet',
+  network: 'ancient8',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+    public: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+    default: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
