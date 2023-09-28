@@ -381,8 +381,8 @@ export default [
   },
   {
     ...ancient8Testnet,
-    lightIconUrl: '',
-    darkIconUrl: '',
+    lightIconUrl: '/icons/ancient8-icon-dark.svg',
+    darkIconUrl: '/icons/ancient8-icon-light.svg',
     reservoirBaseUrl: 'https://api-ancient8-testnet.reservoir.tools',
     proxyApi: '/api/reservoir/ancient8Testnet',
     routePrefix: 'ancient8Testnet',
