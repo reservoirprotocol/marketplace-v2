@@ -750,6 +750,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                                 setPlayingElement(element)
                               }
                             }}
+                            addToCartEnabled={
+                              token.market?.floorAsk?.maker?.toLowerCase() !==
+                              address?.toLowerCase()
+                            }
                           />
                         ))}
                     <Box
