@@ -126,7 +126,7 @@ export const linea = {
   },
 } as const satisfies Chain
 
-export const ancient8 = {
+export const ancient8Testnet = {
   id: 2863311531,
   name: 'Ancient8 Testnet',
   network: 'ancient8',
@@ -380,15 +380,15 @@ export default [
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
   },
   {
-    ...ancient8,
+    ...ancient8Testnet,
     lightIconUrl: '',
     darkIconUrl: '',
-    reservoirBaseUrl: 'https://api-ancient8.reservoir.tools',
-    proxyApi: '/api/reservoir/ancient8',
-    routePrefix: 'ancient8',
+    reservoirBaseUrl: 'https://api-ancient8-testnet.reservoir.tools',
+    proxyApi: '/api/reservoir/ancient8Testnet',
+    routePrefix: 'ancient8Testnet',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_ANCIENT8_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_ANCIENT8_COMMUNITY,
+    collectionSetId: process.env.NEXT_PUBLIC_ANCIENT8TESTNET_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_NCIENT8TESTNET_COMMUNITY,
   },
 ] as ReservoirChain[]
