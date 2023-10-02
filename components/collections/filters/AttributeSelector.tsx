@@ -3,8 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
-import { FC, useState } from 'react'
+import { CSSProperties, FC, useMemo, useState } from 'react'
 import { addParam, hasParam, removeParam } from 'utils/router'
+import { FixedSizeList as List } from 'react-window'
 
 type Props = {
   attribute: NonNullable<ReturnType<typeof useAttributes>['data']>[0]
@@ -14,6 +15,95 @@ type Props = {
 export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
+
+  const sortedAttributes = useMemo(() => {
+    return attribute?.values?.sort((a, b) => {
+      if (!a.count || !b.count) {
+        return 0
+      } else {
+        return b.count - a.count
+      }
+    })
+  }, [attribute])
+
+  const AttributeRow: FC<{ index: number; style: CSSProperties }> = ({
+    index,
+    style,
+  }) => {
+    const currentAttribute = attribute?.values?.[index]
+
+    return (
+      <Flex
+        key={index}
+        style={style}
+        css={{ gap: '$3' }}
+        align="center"
+        onClick={() => {
+          if (
+            hasParam(
+              router,
+              `attributes[${attribute.key}]`,
+              currentAttribute?.value
+            )
+          ) {
+            removeParam(
+              router,
+              `attributes[${attribute.key}]`,
+              currentAttribute?.value
+            )
+          } else {
+            addParam(
+              router,
+              `attributes[${attribute.key}]`,
+              currentAttribute?.value || ''
+            )
+          }
+        }}
+      >
+        <Text
+          style="body1"
+          css={{
+            color: '$gray11',
+            flex: 1,
+            whiteSpace: 'pre',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+          }}
+        >
+          {currentAttribute?.value}
+        </Text>
+
+        <Text style="body3" css={{ color: '$gray11' }}>
+          {currentAttribute?.count}
+        </Text>
+        <Flex align="center">
+          <Switch
+            checked={hasParam(
+              router,
+              `attributes[${attribute.key}]`,
+              currentAttribute?.value
+            )}
+            onCheckedChange={(checked) => {
+              if (checked) {
+                addParam(
+                  router,
+                  `attributes[${attribute.key}]`,
+                  currentAttribute?.value || ''
+                )
+              } else {
+                removeParam(
+                  router,
+                  `attributes[${attribute.key}]`,
+                  currentAttribute?.value
+                )
+              }
+              scrollToTop()
+            }}
+          />
+        </Flex>
+      </Flex>
+    )
+  }
 
   return (
     <Box
@@ -44,94 +134,26 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
           height={16}
         />
       </Flex>
-      <Box
-        css={{
-          transition: 'max-height .3s ease-in-out',
-          maxHeight: open ? 300 : 0,
-          overflow: 'auto',
-          pb: open ? '$2' : '',
-        }}
-      >
-        {attribute.values &&
-          attribute.values
-            .sort((a, b) => {
-              if (!a.count || !b.count) {
-                return 0
-              } else {
-                return b.count - a.count
-              }
-            })
-            .map((value) => (
-              <Flex
-                key={value.value}
-                css={{ mb: '$3', gap: '$3' }}
-                align="center"
-                onClick={() => {
-                  if (
-                    hasParam(
-                      router,
-                      `attributes[${attribute.key}]`,
-                      value.value
-                    )
-                  ) {
-                    removeParam(
-                      router,
-                      `attributes[${attribute.key}]`,
-                      value.value
-                    )
-                  } else {
-                    addParam(
-                      router,
-                      `attributes[${attribute.key}]`,
-                      value.value
-                    )
-                  }
-                }}
-              >
-                <Text
-                  style="body1"
-                  css={{
-                    color: '$gray11',
-                    flex: 1,
-                    whiteSpace: 'pre',
-                    textOverflow: 'ellipsis',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {value.value}
-                </Text>
-
-                <Text style="body3" css={{ color: '$gray11' }}>
-                  {value.count}
-                </Text>
-                <Flex align="center">
-                  <Switch
-                    checked={hasParam(
-                      router,
-                      `attributes[${attribute.key}]`,
-                      value.value
-                    )}
-                    onCheckedChange={(checked) => {
-                      if (checked) {
-                        addParam(
-                          router,
-                          `attributes[${attribute.key}]`,
-                          value.value
-                        )
-                      } else {
-                        removeParam(
-                          router,
-                          `attributes[${attribute.key}]`,
-                          value.value
-                        )
-                      }
-                      scrollToTop()
-                    }}
-                  />
-                </Flex>
-              </Flex>
-            ))}
-      </Box>
+      <Flex css={{ paddingBottom: open ? 8 : 0 }}>
+        <List
+          height={
+            open
+              ? sortedAttributes && sortedAttributes?.length >= 7
+                ? 300
+                : (sortedAttributes?.length ?? 1) * 36
+              : 0
+          }
+          itemCount={sortedAttributes?.length ?? 1}
+          itemSize={36}
+          width={'100%'}
+          style={{
+            overflow: 'auto',
+            transition: 'max-height .3s ease-in-out',
+          }}
+        >
+          {AttributeRow}
+        </List>
+      </Flex>
     </Box>
   )
 }
