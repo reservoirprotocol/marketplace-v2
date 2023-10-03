@@ -5,7 +5,7 @@ const usdcContracts: Record<number, string> = {
   56: '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d', // bnb
   137: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // polygon
   42161: '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // arbitrum
-  43114: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', // avalance
+  43114: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', // avalanche
   42170: '0x750ba8b76187092B0D1E87E28daaf484d1b5273b', // arbitrum nova
   59144: '0x176211869cA2b568f2A7D4EE941E073a821EE1ff', // linea
   80001: '0x0fa8781a83e46826621b3bc094ea2a0212e71b23', // mumbai
