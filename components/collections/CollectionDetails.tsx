@@ -39,6 +39,8 @@ export const CollectionDetails: FC<Props> = ({
 }) => {
   const router = useRouter()
   const [descriptionExpanded, setDescriptionExpanded] = useState(false)
+  const [isOverflowed, setIsOverflowed] = useState(false)
+
   const chainCurrency = useChainCurrency()
 
   const descriptionRef = useRef(null as any)
@@ -56,9 +58,12 @@ export const CollectionDetails: FC<Props> = ({
     sortDirection: 'asc',
   }
 
-  const isOverflowed =
-    descriptionRef?.current?.scrollHeight >
-    descriptionRef?.current?.clientHeight
+  useEffect(() => {
+    setIsOverflowed(
+      descriptionRef?.current?.scrollHeight >
+        descriptionRef?.current?.clientHeight
+    )
+  }, [isOverflowed, descriptionRef])
 
   const { data: rareTokens } = useDynamicTokens(rareTokenQuery)
 
