@@ -116,7 +116,7 @@ export default [
     // The base url of the reservoir api, this is used in the app when
     // directly interacting with the reservoir indexer servers (in the api proxy for example)
     // or when prefetching server side rendered data
-    reservoirBaseUrl: 'https://api-sepolia-dev.reservoir.tools',
+    reservoirBaseUrl: 'https://api-sepolia.dev.reservoir.tools',
     // Used on the client side portions of the marketplace that need an api key added
     // Prevents the api key from being leaked in the clientside requests
     // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
