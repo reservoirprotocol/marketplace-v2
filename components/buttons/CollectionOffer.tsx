@@ -10,13 +10,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import {
-  mainnet,
-  useAccount,
-  useNetwork,
-  useWalletClient,
-  useSwitchNetwork,
-} from 'wagmi'
+import { mainnet, useAccount, useWalletClient } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
@@ -34,6 +28,9 @@ type Props = {
 
 type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
 
+const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
+const orderFees = orderFee ? [orderFee] : []
+
 const CollectionOffer: FC<Props> = ({
   collection,
   mutate,
@@ -45,13 +42,9 @@ const CollectionOffer: FC<Props> = ({
   const marketplaceChain = useMarketplaceChain()
   const [attribute, setAttribute] = useState<Trait>(undefined)
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   useEffect(() => {
     const keys = Object.keys(router.query)
@@ -81,9 +74,6 @@ const CollectionOffer: FC<Props> = ({
   }, [router.query])
 
   const isSupported = !!collection?.collectionBidSupported
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
-  )
   const isAttributeModal = !!attribute
 
   // CONFIGURABLE: Here you can configure which currencies you would like to support for bidding
@@ -114,19 +104,11 @@ const CollectionOffer: FC<Props> = ({
     </Button>
   )
 
-  if (isDisconnected || isInTheWrongNetwork) {
+  if (isDisconnected) {
     return (
       <Button
         css={buttonCss}
-        disabled={isInTheWrongNetwork && !switchNetworkAsync}
         onClick={async () => {
-          if (isInTheWrongNetwork && switchNetworkAsync) {
-            const chain = await switchNetworkAsync(marketplaceChain.id)
-            if (chain.id !== marketplaceChain.id) {
-              return false
-            }
-          }
-
           if (!signer) {
             openConnectModal?.()
           }
@@ -148,7 +130,10 @@ const CollectionOffer: FC<Props> = ({
             collectionId={collection?.id}
             trigger={trigger}
             attribute={attribute}
+            feesBps={orderFees}
             currencies={bidCurrencies}
+            oracleEnabled={marketplaceChain.oracleBidsEnabled}
+            chainId={marketplaceChain.id}
             onClose={(data, stepData, currentStep) => {
               if (mutate && currentStep == BidStep.Complete) mutate()
             }}

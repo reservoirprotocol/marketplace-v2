@@ -125,9 +125,20 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       data: tokens,
       fetchNextPage,
       mutate,
+      setSize,
       isFetchingPage,
       isValidating,
-    } = useUserTokens(address, tokenQuery, { revalidateIfStale: true })
+    } = useUserTokens(address, tokenQuery, {
+      revalidateOnMount: true,
+      fallbackData: [],
+    })
+
+    useEffect(() => {
+      mutate()
+      return () => {
+        setSize(1)
+      }
+    }, [])
 
     useEffect(() => {
       const isVisible = !!loadMoreObserver?.isIntersecting
@@ -371,7 +382,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 {token?.token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{token?.token?.tokenId}
+                {token?.token?.name || `#${token?.token?.tokenId}`}
               </Text>
             </Flex>
           </Flex>
@@ -707,7 +718,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                   />
                 </Flex>
                 <Text style="subtitle2" ellipsify>
-                  #{token?.token?.tokenId}
+                  {token?.token?.name || `#${token?.token?.tokenId}`}
                 </Text>
               </Flex>
             </Flex>

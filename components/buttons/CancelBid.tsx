@@ -2,7 +2,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CancelBidModal, CancelBidStep } from '@reservoir0x/reservoir-kit-ui'
 import { FC, ReactElement, cloneElement, useContext } from 'react'
 import { SWRResponse } from 'swr'
-import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -17,27 +17,12 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
   const { addToast } = useContext(ToastContext)
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
 
-  const isInTheWrongNetwork = Boolean(
-    signer && marketplaceChain.id !== activeChain?.id
-  )
-
-  if (isInTheWrongNetwork) {
+  if (!signer) {
     return cloneElement(trigger, {
       onClick: async () => {
-        if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -50,6 +35,7 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
       bidId={bidId}
       trigger={trigger}
       openState={openState}
+      chainId={marketplaceChain.id}
       onCancelComplete={(data: any) => {
         addToast?.({
           title: 'User canceled bid',

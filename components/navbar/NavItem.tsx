@@ -2,20 +2,20 @@ import { Text } from 'components/primitives'
 import { ComponentPropsWithoutRef, forwardRef, ReactNode } from 'react'
 
 type NavItemProps = {
-  active?: boolean
   children: ReactNode
 }
 
 const NavItem = forwardRef<
   HTMLParagraphElement,
   ComponentPropsWithoutRef<typeof Text> & NavItemProps
->(({ children, active, ...props }, forwardedRef) => (
+>(({ children, ...props }, forwardedRef) => (
   <Text
     {...props}
     ref={forwardedRef}
     css={{
-      color: active ? '$gray12' : '$gray10',
+      color: '$gray12',
       cursor: 'pointer',
+      fontWeight: 700,
       '&:hover': {
         color: '$gray11',
       },

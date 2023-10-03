@@ -13,9 +13,6 @@ const nextConfig = {
   sentry: {
     hideSourceMaps: false,
   },
-  experimental: {
-    transpilePackages: ['@reservoir0x/reservoir-kit-ui'],
-  },
   async rewrites() {
     return [
       {
@@ -39,7 +36,6 @@ const nextConfig = {
         destination: `/${DefaultChain.routePrefix}`,
         permanent: false,
       },
-
       {
         source: '/collection/:chain/:collection',
         destination: '/:chain/collection/:collection',
@@ -54,6 +50,12 @@ const nextConfig = {
         source: '/collection-rankings',
         destination: `/${DefaultChain.routePrefix}/collection-rankings`,
         permanent: true,
+      },
+
+      {
+        source: '/:chain/collection-rankings',
+        destination: `/:chain/collections/trending`,
+        permanent: false,
       },
     ]
   },

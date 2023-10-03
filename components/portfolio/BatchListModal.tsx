@@ -19,7 +19,10 @@ import { UserToken } from 'pages/portfolio/[[...address]]'
 import { FC, useCallback, useEffect, useState } from 'react'
 import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
 import { ApprovalCollapsible } from './ApprovalCollapsible'
-import { parseUnits, zeroAddress } from 'viem'
+import { formatUnits, parseUnits, zeroAddress } from 'viem'
+import useOnChainRoyalties, {
+  OnChainRoyaltyReturnType,
+} from 'hooks/useOnChainRoyalties'
 
 enum BatchListStep {
   Approving,
@@ -43,14 +46,19 @@ type Props = {
   disabled: boolean
   currency: Currency
   selectedMarketplaces: Marketplace[]
+  onChainRoyalties: ReturnType<typeof useOnChainRoyalties>['data']
   onCloseComplete?: () => void
 }
+
+const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
+const orderFees = orderFee ? [orderFee] : []
 
 const BatchListModal: FC<Props> = ({
   listings,
   disabled,
   currency,
   selectedMarketplaces,
+  onChainRoyalties,
   onCloseComplete,
 }) => {
   const [open, setOpen] = useState(false)
@@ -136,7 +144,7 @@ const BatchListModal: FC<Props> = ({
 
     const batchListingData: BatchListingData[] = []
 
-    listings.forEach((listing) => {
+    listings.forEach((listing, i) => {
       let expirationTime: string | null = null
 
       if (
@@ -166,12 +174,31 @@ const BatchListModal: FC<Props> = ({
         quantity: listing.quantity,
       }
 
+      if (listing.orderbook === 'reservoir') {
+        convertedListing.fees = orderFees
+      }
+
       if (expirationTime) {
         convertedListing.expirationTime = expirationTime
       }
 
       if (currency && currency.contract != zeroAddress) {
         convertedListing.currency = currency.contract
+      }
+
+      const onChainRoyalty =
+        onChainRoyalties && onChainRoyalties[i] ? onChainRoyalties[i] : null
+      if (onChainRoyalty && listing.orderKind?.includes('seaport')) {
+        convertedListing.automatedRoyalties = false
+        const royaltyData = onChainRoyalty.result as OnChainRoyaltyReturnType
+        const royalties = royaltyData[0].map((recipient, i) => {
+          const bps =
+            (parseFloat(formatUnits(royaltyData[1][i], 18)) / 1) * 10000
+          return `${recipient}:${bps}`
+        })
+        if (royalties.length > 0) {
+          convertedListing.fees = [...royalties]
+        }
       }
 
       batchListingData.push({
@@ -241,7 +268,7 @@ const BatchListModal: FC<Props> = ({
         )
         setTransactionError(transactionError)
       })
-  }, [client, listings, wallet])
+  }, [client, listings, wallet, onChainRoyalties])
 
   const trigger = (
     <Button disabled={disabled} onClick={listTokens}>

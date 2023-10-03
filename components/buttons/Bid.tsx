@@ -9,13 +9,7 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import {
-  useAccount,
-  useNetwork,
-  useWalletClient,
-  mainnet,
-  useSwitchNetwork,
-} from 'wagmi'
+import { useAccount, useWalletClient, mainnet } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
@@ -32,6 +26,9 @@ type Props = {
 
 type BiddingCurrencies = ComponentPropsWithoutRef<typeof BidModal>['currencies']
 
+const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
+const orderFees = orderFee ? [orderFee] : []
+
 const Bid: FC<Props> = ({
   tokenId,
   collectionId,
@@ -45,16 +42,8 @@ const Bid: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
-
-  const isInTheWrongNetwork = Boolean(
-    signer && marketplaceChain.id !== activeChain?.id
-  )
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
@@ -80,16 +69,9 @@ const Bid: FC<Props> = ({
     ]
   }
 
-  if (isDisconnected || isInTheWrongNetwork) {
+  if (isDisconnected) {
     return cloneElement(trigger, {
       onClick: async () => {
-        if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -102,7 +84,10 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
+        feesBps={orderFees}
         currencies={bidCurrencies}
+        oracleEnabled={marketplaceChain.oracleBidsEnabled}
+        chainId={marketplaceChain.id}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}

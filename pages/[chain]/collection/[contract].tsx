@@ -1,5 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box } from '../../../components/primitives'
+import {
+  Text,
+  Flex,
+  Box,
+  Input,
+  FormatCrypto,
+} from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -10,8 +16,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
-import StatHeader from 'components/collections/StatHeader'
-import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
 import { AttributeFilters } from 'components/collections/filters/AttributeFilters'
 import { FilterButton } from 'components/common/FilterButton'
@@ -25,17 +29,21 @@ import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
+import { useDebounce } from 'usehooks-ts'
+
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
+import titleCase from 'utils/titleCase'
 import LoadingCard from 'components/common/LoadingCard'
-import { useMounted } from 'hooks'
+import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
-  faBroom,
-  faCopy,
+  faCog,
+  faCube,
+  faGlobe,
   faHand,
   faMagnifyingGlass,
   faSeedling,
@@ -43,14 +51,16 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
-import CopyText from 'components/common/CopyText'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { Address, useAccount } from 'wagmi'
-import titleCase from 'utils/titleCase'
-import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
+import optimizeImage from 'utils/optimizeImage'
+import CopyText from 'components/common/CopyText'
+import { CollectionDetails } from 'components/collections/CollectionDetails'
+import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
+import LiveState from 'components/common/LiveState'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -68,11 +78,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
+  const chainCurrency = useChainCurrency()
+  const debouncedSearch = useDebounce(tokenSearchQuery, 500)
+  const [socketState, setSocketState] = useState<SocketState>(null)
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([
+    'sale',
+    'mint',
+  ])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
-  const smallSubtitle = useMediaQuery({ maxWidth: 1150 }) && isMounted
   const [playingElement, setPlayingElement] = useState<
     HTMLAudioElement | HTMLVideoElement | null
   >()
@@ -86,15 +102,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const mintOpenState = useState(true)
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
+  const collectionChain =
+    supportedChains.find(
+      (chain) => router.query?.chain === chain.routePrefix
+    ) || DefaultChain
 
   const scrollToTop = () => {
     let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
     window.scrollTo({ top: top })
   }
 
+  let chain = titleCase(router.query.chain as string)
+
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
-    includeTopBid: true,
+    includeSalesCount: true,
     includeMintStages: true,
   }
 
@@ -122,6 +144,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     sortDirection: 'asc',
     includeQuantity: true,
     includeLastSale: true,
+    ...(debouncedSearch.length > 0 && {
+      tokenName: debouncedSearch,
+    }),
   }
 
   const sortDirection = router.query['sortDirection']?.toString()
@@ -155,6 +180,125 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     fallbackData: initialTokenFallbackData ? [ssr.tokens] : undefined,
   })
 
+  useTokenUpdateStream(id as string, collectionChain.id, {
+    onClose: () => setSocketState(0),
+    onOpen: () => setSocketState(1),
+    onMessage: ({
+      data: reservoirEvent,
+    }: MessageEvent<ReservoirWebsocketIncomingEvent>) => {
+      if (Object.keys(router.query).some((key) => key.includes('attribute')))
+        return
+
+      const tokenName = reservoirEvent.data.token.name || ''
+      if (
+        tokenSearchQuery &&
+        tokenSearchQuery.length > 0 &&
+        !tokenName.includes(tokenSearchQuery)
+      ) {
+        return
+      }
+
+      let hasChange = false
+
+      const newTokens = [...tokens]
+      const price = NORMALIZE_ROYALTIES
+        ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount?.native
+        : reservoirEvent.data?.market?.floorAsk?.price?.amount?.native
+      const tokenIndex = tokens.findIndex(
+        (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
+      )
+      const token = tokenIndex > -1 ? tokens[tokenIndex] : null
+      if (token) {
+        if (token?.market?.floorAsk?.dynamicPricing) {
+          return
+        }
+        newTokens.splice(tokenIndex, 1)
+      }
+
+      if (!price) {
+        if (token) {
+          const endOfListingsIndex = tokens.findIndex(
+            (token) => !token.market?.floorAsk?.price?.amount?.native
+          )
+          if (endOfListingsIndex === -1) {
+            hasChange = true
+          } else {
+            const newTokenIndex =
+              sortBy === 'rarity'
+                ? tokenIndex
+                : endOfListingsIndex > -1
+                ? endOfListingsIndex
+                : 0
+            newTokens.splice(newTokenIndex, 0, {
+              ...token,
+              market: {
+                floorAsk: {
+                  id: undefined,
+                  price: undefined,
+                  maker: undefined,
+                  validFrom: undefined,
+                  validUntil: undefined,
+                  source: {},
+                },
+              },
+            })
+            hasChange = true
+          }
+        }
+      } else {
+        let updatedToken = token ? token : reservoirEvent.data
+        updatedToken = {
+          ...updatedToken,
+          market: {
+            floorAsk: NORMALIZE_ROYALTIES
+              ? reservoirEvent.data.market.floorAskNormalized
+              : reservoirEvent.data.market.floorAsk,
+          },
+        }
+        if (tokens) {
+          let updatedTokenPosition =
+            sortBy === 'rarity'
+              ? tokenIndex
+              : tokens.findIndex((token) => {
+                  let currentTokenPrice =
+                    token.market?.floorAsk?.price?.amount?.native
+                  if (currentTokenPrice !== undefined) {
+                    return sortDirection === 'desc'
+                      ? updatedToken.market.floorAsk.price.amount.native >=
+                          currentTokenPrice
+                      : updatedToken.market.floorAsk.price.amount.native <=
+                          currentTokenPrice
+                  }
+                  return true
+                })
+          if (updatedTokenPosition <= -1) {
+            return
+          }
+
+          newTokens.splice(updatedTokenPosition, 0, updatedToken)
+          hasChange = true
+        }
+      }
+      if (hasChange) {
+        mutate(
+          [
+            {
+              tokens: newTokens,
+            },
+          ],
+          {
+            revalidate: false,
+            optimisticData: [
+              {
+                tokens: newTokens,
+              },
+            ],
+          }
+        )
+      }
+    },
+  })
+
   const attributesData = useAttributes(id)
 
   const attributes = useMemo(() => {
@@ -172,11 +316,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     setAttributeFiltersOpen(false)
   }
 
-  let creatorRoyalties = collection?.royalties?.bps
-    ? collection?.royalties?.bps * 0.01
-    : 0
-  let chain = titleCase(router.query.chain as string)
-
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
       +collection.tokenCount >= 2 &&
@@ -184,7 +323,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  //@ts-ignore: Ignore until we regenerate the types
   const contractKind = collection?.contractKind?.toUpperCase()
 
   useEffect(() => {
@@ -200,6 +338,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
+  let nativePrice = collection?.floorAsk?.price?.amount?.native
+  let topBidPrice = collection?.topBid?.price?.amount?.native
+
   return (
     <Layout>
       <Head
@@ -207,207 +348,242 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
       />
+      <Tabs.Root
+        defaultValue="items"
+        onValueChange={(value) => {
+          if (value === 'items') {
+            resetCache()
+            setSize(1)
+            mutate()
+          }
+        }}
+      >
+        {collection ? (
+          <Flex
+            direction="column"
+            css={{
+              px: '$4',
+              pt: '$4',
+              pb: 0,
+              '@md': {
+                px: '$5',
+              },
 
-      {collection ? (
-        <Flex
-          direction="column"
-          css={{
-            px: '$4',
-            pt: '$5',
-            pb: 0,
-            '@sm': {
-              px: '$5',
-            },
-          }}
-        >
-          <Flex justify="between" css={{ mb: '$4', gap: '$2' }}>
-            <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
-              <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <Img
-                  src={collection.image!}
-                  width={64}
-                  height={64}
-                  style={{
-                    width: 64,
-                    height: 64,
-                    borderRadius: 8,
-                    objectFit: 'cover',
-                  }}
-                  alt="Collection Page Image"
-                />
-                <Box css={{ minWidth: 0 }}>
-                  <Flex align="center" css={{ gap: '$2', mb: '$1' }}>
-                    <Text style="h5" as="h6" ellipsify>
-                      {collection.name}
-                    </Text>
-                    <OpenSeaVerified
-                      openseaVerificationStatus={
-                        collection?.openseaVerificationStatus
-                      }
-                    />
-                    {mintData && !isSmallDevice ? (
+              '@xl': {
+                px: '$6',
+              },
+            }}
+          >
+            <Flex
+              justify="between"
+              wrap="wrap"
+              css={{ mb: '$4', gap: '$4' }}
+              align="start"
+            >
+              <Flex
+                direction="column"
+                css={{
+                  gap: '$4',
+                  minWidth: 0,
+                  //flex: 1,
+                  width: '100%',
+                  '@lg': { width: 'unset' },
+                }}
+              >
+                <Flex css={{ gap: '$4', flex: 1 }} align="center">
+                  <Img
+                    src={optimizeImage(collection.image!, 72 * 2)}
+                    width={72}
+                    height={72}
+                    css={{
+                      width: 72,
+                      height: 72,
+                      borderRadius: 8,
+                      objectFit: 'cover',
+                      border: '1px solid $gray5',
+                    }}
+                    alt="Collection Page Image"
+                  />
+                  <Box css={{ minWidth: 0 }}>
+                    <Flex align="center" css={{ gap: '$1', mb: 0 }}>
+                      <Text style="h4" as="h6" ellipsify>
+                        {collection.name}
+                      </Text>
+                      <OpenSeaVerified
+                        openseaVerificationStatus={
+                          collection?.openseaVerificationStatus
+                        }
+                      />
+                    </Flex>
+                    <Flex css={{ gap: '$3' }} align="center">
+                      <CopyText
+                        text={collection.id as string}
+                        css={{
+                          width: 'max-content',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '$1',
+                        }}
+                      >
+                        <Box css={{ color: '$gray9' }}>
+                          <FontAwesomeIcon icon={faCube} size="xs" />
+                        </Box>
+                        <Text as="p" style="body3">
+                          {truncateAddress(collection?.primaryContract || '')}
+                        </Text>
+                      </CopyText>
                       <Flex
                         align="center"
                         css={{
-                          borderRadius: 4,
-                          px: '$3',
-                          py: 7,
-                          backgroundColor: '$gray3',
-                          gap: '$3',
+                          gap: '$1',
                         }}
                       >
                         <Flex
                           css={{
-                            color: '$green9',
+                            color: '$gray9',
                           }}
                         >
-                          <FontAwesomeIcon icon={faSeedling} />
+                          <FontAwesomeIcon size="xs" icon={faCog} />
                         </Flex>
-                        <Text style="body3">Minting Now</Text>
+                        <Text style="body3">{contractKind}</Text>
                       </Flex>
-                    ) : null}
-                  </Flex>
 
-                  {!smallSubtitle && (
-                    <Flex align="end" css={{ gap: 24 }}>
-                      <CopyText
-                        text={collection.id as string}
-                        css={{ width: 'max-content' }}
+                      <Flex
+                        align="center"
+                        css={{
+                          gap: '$1',
+                        }}
                       >
-                        <Flex css={{ gap: '$2', width: 'max-content' }}>
+                        <Flex
+                          css={{
+                            color: '$gray9',
+                          }}
+                        >
+                          <FontAwesomeIcon size="xs" icon={faGlobe} />
+                        </Flex>
+                        <Text style="body3">{chain}</Text>
+                      </Flex>
+
+                      {mintData && (
+                        <Flex
+                          align="center"
+                          css={{
+                            gap: '$1',
+                          }}
+                        >
+                          <Flex
+                            css={{
+                              color: '$green9',
+                            }}
+                          >
+                            <FontAwesomeIcon size="xs" icon={faSeedling} />
+                          </Flex>
+                          <Text style="body3">Minting Now</Text>
+                        </Flex>
+                      )}
+                    </Flex>
+                  </Box>
+                </Flex>
+              </Flex>
+              <Flex align="center">
+                <Flex css={{ alignItems: 'center', gap: '$3' }}>
+                  {nativePrice ? (
+                    <Sweep
+                      collectionId={collection.id}
+                      openState={isSweepRoute ? sweepOpenState : undefined}
+                      buttonChildren={
+                        <Flex
+                          css={{ gap: '$2' }}
+                          align="center"
+                          justify="center"
+                        >
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                            Collect
+                          </Text>
+                          <Text
+                            style="h6"
+                            as="h6"
+                            css={{ color: '$bg', fontWeight: 900 }}
+                          >
+                            <Flex
+                              css={{
+                                gap: '$1',
+                              }}
+                            >
+                              <FormatCrypto
+                                amount={nativePrice}
+                                textStyle="h6"
+                                css={{ color: '$bg', fontWeight: 900 }}
+                                decimals={4}
+                              />
+                              {chainCurrency.symbol}
+                            </Flex>
+                          </Text>
+                        </Flex>
+                      }
+                      buttonCss={{ '@lg': { order: 2 } }}
+                      mutate={mutate}
+                    />
+                  ) : null}
+                  {/* Collection Mint */}
+                  {mintData ? (
+                    <Mint
+                      collectionId={collection.id}
+                      openState={isMintRoute ? mintOpenState : undefined}
+                      buttonChildren={
+                        <Flex
+                          css={{ gap: '$2', px: '$4' }}
+                          align="center"
+                          justify="center"
+                        >
+                          {isSmallDevice && (
+                            <FontAwesomeIcon icon={faSeedling} />
+                          )}
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                            Mint
+                          </Text>
+
                           {!isSmallDevice && (
-                            <Text style="body1" color="subtle">
-                              Collection
+                            <Text
+                              style="h6"
+                              as="h6"
+                              css={{ color: '$bg', fontWeight: 900 }}
+                            >
+                              {`${mintPrice}`}
                             </Text>
                           )}
-                          <Text
-                            style="body1"
-                            color={isSmallDevice ? 'subtle' : undefined}
-                            as="p"
-                          >
-                            {truncateAddress(collection.id as string)}
-                          </Text>
-                          <Box css={{ color: '$gray10' }}>
-                            <FontAwesomeIcon
-                              icon={faCopy}
-                              width={16}
-                              height={16}
-                            />
-                          </Box>
                         </Flex>
-                      </CopyText>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Token Standard{' '}
-                        </Text>
-                        <Text style="body1">{contractKind}</Text>
-                      </Box>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Chain{' '}
-                        </Text>
-                        <Link
-                          href={`/${router.query.chain}/collection-rankings`}
-                        >
-                          <Text style="body1">{chain}</Text>
-                        </Link>
-                      </Box>
-                      <Box>
-                        <Text style="body1" color="subtle">
-                          Creator Earnings
-                        </Text>
-                        <Text style="body1"> {creatorRoyalties}%</Text>
-                      </Box>
-                    </Flex>
-                  )}
-                </Box>
-              </Flex>
-            </Flex>
-            <CollectionActions collection={collection} />
-          </Flex>
-          {mintData && isSmallDevice ? (
-            <Flex
-              align="center"
-              css={{
-                borderRadius: 4,
-                px: '$3',
-                py: 7,
-                backgroundColor: '$gray3',
-                gap: '$3',
-                mb: '$4',
-                width: 'max-content',
-              }}
-            >
-              <Flex
-                css={{
-                  color: '$green9',
-                }}
-              >
-                <FontAwesomeIcon icon={faSeedling} />
-              </Flex>
-              <Text style="body3">Minting Now</Text>
-            </Flex>
-          ) : null}
-          {smallSubtitle && (
-            <Grid
-              css={{
-                gap: 12,
-                mb: 24,
-                gridTemplateColumns: '1fr 1fr',
-                maxWidth: 550,
-              }}
-            >
-              <CopyText
-                text={collection.id as string}
-                css={{ width: 'max-content' }}
-              >
-                <Flex css={{ width: 'max-content' }} direction="column">
-                  <Text style="body1" color="subtle">
-                    Collection
-                  </Text>
-                  <Flex css={{ gap: '$2' }}>
-                    <Text style="body1" as="p">
-                      {truncateAddress(collection.id as string)}
-                    </Text>
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon icon={faCopy} width={16} height={16} />
-                    </Box>
-                  </Flex>
+                      }
+                      buttonCss={{
+                        minWidth: 'max-content',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                        flexGrow: 1,
+                        justifyContent: 'center',
+                        px: '$2',
+                        maxWidth: '220px',
+                        '@md': {
+                          order: 1,
+                          px: '$5',
+                        },
+                      }}
+                      mutate={mutate}
+                    />
+                  ) : null}
+                  <CollectionOffer
+                    collection={collection}
+                    buttonChildren={<FontAwesomeIcon icon={faHand} />}
+                    buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
+                    buttonCss={{ px: '$4' }}
+                    mutate={mutate}
+                  />
                 </Flex>
-              </CopyText>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Token Standard{' '}
-                </Text>
-                <Text style="body1">{contractKind}</Text>
               </Flex>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Chain{' '}
-                </Text>
-                <Text style="body1">{chain}</Text>
-              </Flex>
-              <Flex direction="column">
-                <Text style="body1" color="subtle">
-                  Creator Earnings
-                </Text>
-                <Text style="body1"> {creatorRoyalties}%</Text>
-              </Flex>
-            </Grid>
-          )}
-          <StatHeader collection={collection} />
-          <Tabs.Root
-            defaultValue="items"
-            onValueChange={(value) => {
-              if (value === 'items') {
-                resetCache()
-                setSize(1)
-                mutate()
-              }
-            }}
-          >
-            <TabsList>
+            </Flex>
+
+            <TabsList css={{ mt: 0 }}>
               <TabsTrigger value="items">Items</TabsTrigger>
+              <TabsTrigger value="details">Details</TabsTrigger>
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
 
@@ -425,12 +601,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     scrollToTop={scrollToTop}
                   />
                 ) : (
-                  <AttributeFilters
-                    attributes={attributes}
-                    open={attributeFiltersOpen}
-                    setOpen={setAttributeFiltersOpen}
-                    scrollToTop={scrollToTop}
-                  />
+                  <>
+                    <AttributeFilters
+                      attributes={attributes}
+                      open={attributeFiltersOpen}
+                      setOpen={setAttributeFiltersOpen}
+                      scrollToTop={scrollToTop}
+                    />
+                  </>
                 )}
                 <Box
                   css={{
@@ -438,17 +616,47 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     width: '100%',
                   }}
                 >
-                  <Flex justify="between" css={{ marginBottom: '$4' }}>
-                    {attributes && attributes.length > 0 && !isSmallDevice && (
-                      <FilterButton
-                        open={attributeFiltersOpen}
-                        setOpen={setAttributeFiltersOpen}
-                      />
-                    )}
+                  <Flex css={{ marginBottom: '$4', gap: '$3' }} align="center">
+                    <Flex align="center" css={{ gap: '$3', flex: 1 }}>
+                      {attributes &&
+                        attributes.length > 0 &&
+                        !isSmallDevice && (
+                          <FilterButton
+                            open={attributeFiltersOpen}
+                            setOpen={setAttributeFiltersOpen}
+                          />
+                        )}
+                      {!isSmallDevice && (
+                        <Box
+                          css={{ position: 'relative', flex: 1, maxWidth: 420 }}
+                        >
+                          <Box
+                            css={{
+                              position: 'absolute',
+                              top: '50%',
+                              left: '$4',
+                              zIndex: 2,
+                              transform: 'translate(0, -50%)',
+                              color: '$gray11',
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faMagnifyingGlass} />
+                          </Box>
+                          <Input
+                            css={{ pl: 42 }}
+                            placeholder="Search by token name"
+                            onChange={(e) => {
+                              setTokenSearchQuery(e.target.value)
+                            }}
+                            value={tokenSearchQuery}
+                          />
+                        </Box>
+                      )}
+                    </Flex>
+                    {socketState !== null && <LiveState />}
                     <Flex
                       justify={'end'}
                       css={{
-                        ml: 'auto',
                         width: '100%',
                         gap: '$2',
                         '@md': {
@@ -465,80 +673,63 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           '@md': {
                             order: 1,
                             width: '220px',
+                            height: '48px',
                             minWidth: 'max-content',
                             px: '$5',
                           },
                         }}
                       />
-                      <Sweep
-                        collectionId={collection.id}
-                        buttonChildren={<FontAwesomeIcon icon={faBroom} />}
-                        buttonCss={{
-                          minWidth: 48,
-                          minHeight: 48,
-                          justifyContent: 'center',
-                          padding: 0,
-                          order: 2,
-                          '@md': {
-                            order: 2,
-                          },
-                        }}
-                        mutate={mutate}
-                        openState={isSweepRoute ? sweepOpenState : undefined}
-                      />
-                      {/* Collection Mint */}
-                      {mintData ? (
-                        <Mint
-                          collectionId={collection.id}
-                          buttonChildren={
-                            <>
-                              <FontAwesomeIcon icon={faSeedling} />
-                              {isSmallDevice ? 'Mint' : `Mint for ${mintPrice}`}
-                            </>
-                          }
-                          buttonCss={{
-                            minWidth: 'max-content',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                            flexGrow: 1,
-                            justifyContent: 'center',
-                            order: 3,
-                            px: '$2',
-                            maxWidth: '220px',
-                            '@md': {
-                              order: 2,
-                              px: '$5',
-                            },
-                          }}
-                          mutate={mutate}
-                          openState={isMintRoute ? mintOpenState : undefined}
-                        />
-                      ) : null}
-                      <CollectionOffer
-                        collection={collection}
-                        buttonChildren={
-                          mintData ? <FontAwesomeIcon icon={faHand} /> : null
-                        }
-                        buttonProps={{ color: mintData ? 'gray3' : 'primary' }}
-                        buttonCss={{
-                          width: mintData ? 48 : '100%',
-                          height: mintData ? 48 : '100%',
-                          padding: mintData ? 0 : '',
-                          // width: '100%',
-                          justifyContent: 'center',
-                          order: 1,
-                          '@md': {
-                            order: 1,
-                          },
-                          '@sm': {
-                            maxWidth: '220px',
-                          },
-                        }}
-                        mutate={mutate}
-                      />
                     </Flex>
                   </Flex>
-                  {!isSmallDevice && <SelectedAttributes />}
+
+                  {!isSmallDevice && (
+                    <SelectedAttributes
+                      collection={collection}
+                      mutate={mutate}
+                    />
+                  )}
+                  <Flex
+                    css={{
+                      gap: '$4',
+                      mb: '$3',
+                      flexWrap: 'wrap',
+                      '@bp800': {
+                        display: 'flex',
+                      },
+                      display: 'flex',
+                    }}
+                  >
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Floor
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {nativePrice
+                          ? `${nativePrice?.toFixed(2)} ${chainCurrency.symbol}`
+                          : '-'}
+                      </Text>
+                    </Flex>
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Top Bid
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {topBidPrice
+                          ? `${topBidPrice?.toFixed(2) || 0} ${
+                              chainCurrency.symbol
+                            }`
+                          : '-'}
+                      </Text>
+                    </Flex>
+                    <Flex css={{ gap: '$1' }}>
+                      <Text style="body1" as="p" color="subtle">
+                        Count
+                      </Text>
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
+                        {Number(collection?.tokenCount)?.toLocaleString()}
+                      </Text>
+                    </Flex>
+                  </Flex>
                   <Grid
                     css={{
                       gap: '$4',
@@ -578,6 +769,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                                 setPlayingElement(element)
                               }
                             }}
+                            addToCartEnabled={
+                              token.market?.floorAsk?.maker?.toLowerCase() !==
+                              address?.toLowerCase()
+                            }
                           />
                         ))}
                     <Box
@@ -614,6 +809,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   )}
                 </Box>
               </Flex>
+            </TabsContent>
+            <TabsContent value="details">
+              <CollectionDetails
+                collection={collection}
+                collectionId={id}
+                tokens={tokens}
+              />
             </TabsContent>
             <TabsContent value="activity">
               <Flex
@@ -655,25 +857,25 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </TabsContent>
-          </Tabs.Root>
-        </Flex>
-      ) : (
-        <Box />
-      )}
+          </Flex>
+        ) : (
+          <Box />
+        )}
+      </Tabs.Root>
     </Layout>
   )
 }
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection?: paths['/collections/v5']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v7']['get']['responses']['200']['schema']
     tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey, routePrefix } =
+  const { reservoirBaseUrl, apiKey } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
@@ -682,15 +884,15 @@ export const getServerSideProps: GetServerSideProps<{
     },
   }
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
     {
       id,
-      includeTopBid: true,
+      includeSalesCount: true,
       normalizeRoyalties: NORMALIZE_ROYALTIES,
     }
 
   const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
+    `${reservoirBaseUrl}/collections/v7`,
     collectionQuery,
     headers
   )

@@ -4,7 +4,7 @@ import { Tooltip, Text } from 'components/primitives'
 
 type Props = {
   openseaVerificationStatus: NonNullable<
-    paths['/collections/v5']['get']['responses']['200']['schema']['collections']
+    paths['/collections/v7']['get']['responses']['200']['schema']['collections']
   >['0']['openseaVerificationStatus']
 }
 

@@ -88,7 +88,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       includeQuantity: true,
     },
     {
-      fallbackData: [ssr.tokens],
+      fallbackData: [ssr.tokens ? ssr.tokens : {}],
     }
   )
 
@@ -100,7 +100,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       id: token?.token?.collection?.id,
     },
     {
-      fallbackData: [ssr.collection],
+      fallbackData: [ssr.collection ? ssr.collection : {}],
     }
   )
   const collection = collections && collections[0] ? collections[0] : null
@@ -233,7 +233,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       <Flex
         justify="center"
         css={{
-          maxWidth: 1175,
+          maxWidth: 1320,
           mt: 10,
           pb: 100,
           marginLeft: 'auto',
@@ -261,6 +261,8 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             flex: 1,
             width: '100%',
             '@md': { maxWidth: 445 },
+            '@lg': { maxWidth: 520 },
+            '@xl': { maxWidth: 620 },
             position: 'relative',
             '@sm': {
               '>button': {
@@ -295,6 +297,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <TokenMedia
               token={token?.token}
               videoOptions={{ autoPlay: true, muted: true }}
+              imageResolution={'large'}
               style={{
                 width: '100%',
                 height: 'auto',
@@ -591,12 +594,16 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   )
 }
 
+type SSRProps = {
+  collection?:
+    | paths['/collections/v7']['get']['responses']['200']['schema']
+    | null
+  tokens?: paths['/tokens/v6']['get']['responses']['200']['schema'] | null
+}
+
 export const getServerSideProps: GetServerSideProps<{
   assetId?: string
-  ssr: {
-    collection: paths['/collections/v5']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
-  }
+  ssr: SSRProps
 }> = async ({ params, res }) => {
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
@@ -621,42 +628,49 @@ export const getServerSideProps: GetServerSideProps<{
     includeDynamicPricing: true,
   }
 
-  const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v6`,
-    tokensQuery,
-    headers
-  )
+  let tokens: SSRProps['tokens'] = null
+  let collection: SSRProps['collection'] = null
 
-  const tokensResponse = await tokensPromise
-  const tokens = tokensResponse.data
-    ? (tokensResponse.data as Props['ssr']['tokens'])
-    : {}
+  try {
+    const tokensPromise = fetcher(
+      `${reservoirBaseUrl}/tokens/v6`,
+      tokensQuery,
+      headers
+    )
 
-  let collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      id: tokens?.tokens?.[0]?.token?.collection?.id,
-      includeTopBid: true,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
+    const tokensResponse = await tokensPromise
+    tokens = tokensResponse.data
+      ? (tokensResponse.data as Props['ssr']['tokens'])
+      : {}
 
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v5`,
-    collectionQuery,
-    headers
-  )
+    let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
+      {
+        id: tokens?.tokens?.[0]?.token?.collection?.id,
+        normalizeRoyalties: NORMALIZE_ROYALTIES,
+      }
 
-  const collectionsResponse = await collectionsPromise
-  const collection = collectionsResponse.data
-    ? (collectionsResponse.data as Props['ssr']['collection'])
-    : {}
+    const collectionsPromise = fetcher(
+      `${reservoirBaseUrl}/collections/v7`,
+      collectionQuery,
+      headers
+    )
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=30, stale-while-revalidate=60'
-  )
+    const collectionsResponse = await collectionsPromise
+    collection = collectionsResponse.data
+      ? (collectionsResponse.data as Props['ssr']['collection'])
+      : {}
+
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=30, stale-while-revalidate=60'
+    )
+  } catch (e) {}
 
   return {
-    props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
+    props: {
+      assetId: params?.assetId as string,
+      ssr: { collection, tokens },
+    },
   }
 }
 

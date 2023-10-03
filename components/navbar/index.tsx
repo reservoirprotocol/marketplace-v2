@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Box, Flex } from '../primitives'
+import { Box, Flex, Card } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -17,20 +17,23 @@ import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
+import * as HoverCard from '@radix-ui/react-hover-card'
+
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
   const { theme } = useTheme()
   const { isConnected } = useAccount()
-  const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
+  const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
 
   let searchRef = useRef<HTMLInputElement>(null)
 
   const router = useRouter()
-  useHotkeys('meta+k', () => {
+  useHotkeys('meta+k', (e) => {
+    e.preventDefault()
     if (searchRef?.current) {
       searchRef?.current?.focus()
     }
@@ -91,8 +94,11 @@ const Navbar = () => {
       css={{
         height: NAVBAR_HEIGHT,
         px: '$5',
+        '@xl': {
+          px: '$6',
+        },
         width: '100%',
-        maxWidth: 1920,
+        // maxWidth: 1920,
         mx: 'auto',
         borderBottom: '1px solid $gray4',
         zIndex: 999,
@@ -105,7 +111,14 @@ const Navbar = () => {
       align="center"
       justify="between"
     >
-      <Box css={{ flex: 1 }}>
+      <Box
+        css={{
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+      >
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 112, cursor: 'pointer' }}>
@@ -126,22 +139,18 @@ const Navbar = () => {
               )}
             </Box>
           </Link>
-          <Box css={{ flex: 1, px: '$5', maxWidth: 600 }}>
-            <GlobalSearch
-              ref={searchRef}
-              placeholder="Search collections and addresses"
-              containerCss={{ width: '100%' }}
-              key={router.asPath}
-            />
-          </Box>
-          <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
-            <Link href={`/${routePrefix}/collection-rankings`}>
-              <NavItem active={router.pathname.includes('collection-rankings')}>
-                Collections
-              </NavItem>
+          <Flex
+            align="center"
+            css={{
+              gap: '$5',
+              ml: '$5',
+            }}
+          >
+            <Link href={`/${routePrefix}`}>
+              <NavItem>Featured</NavItem>
             </Link>
-            <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+            <Link href={`/${routePrefix}/collections/trending`}>
+              <NavItem>NFTs</NavItem>
             </Link>
             <Link href="https://blog.nftcanyon.io">
               <NavItem>Blog</NavItem>
@@ -149,10 +158,78 @@ const Navbar = () => {
           </Flex>
         </Flex>
       </Box>
+      <Box css={{ flex: 1, px: '$5' }}>
+        <GlobalSearch
+          ref={searchRef}
+          placeholder="Search collections and addresses"
+          containerCss={{ width: '100%' }}
+          key={router.asPath}
+        />
+      </Box>
 
-      <Flex css={{ gap: '$3' }} justify="end" align="center">
-        <ThemeSwitcher />
-        <CartButton />
+      <Flex
+        css={{
+          gap: '$3',
+          flex: 'unset',
+          '@bp1300': {
+            flex: 1,
+          },
+        }}
+        justify="end"
+        align="center"
+      >
+        <Flex css={{ gap: '$5', mr: 12 }}>
+          <Box>
+            <HoverCard.Root openDelay={120}>
+              <HoverCard.Trigger>
+                <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
+                  <NavItem>Developers</NavItem>
+                </a>
+              </HoverCard.Trigger>
+              <HoverCard.Content sideOffset={24} align="start">
+                <Card css={{ p: 24, width: 240 }}>
+                  <Flex css={{ gap: '$4' }} direction="column">
+                    <a target="_blank" href={`https://reservoir.tools`}>
+                      <NavItem>About Reservoir</NavItem>
+                    </a>
+                    <a
+                      target="_blank"
+                      href={`https://docs.reservoir.tools/docs`}
+                    >
+                      <NavItem>Docs</NavItem>
+                    </a>
+
+                    <a
+                      target="_blank"
+                      href={`https://docs.reservoir.tools/reference/overview`}
+                    >
+                      <NavItem>API Reference</NavItem>
+                    </a>
+
+                    <a
+                      target="_blank"
+                      href={`https://github.com/reservoirprotocol`}
+                    >
+                      <NavItem>Github</NavItem>
+                    </a>
+
+                    <a href={`https://testnets.reservoir.tools`}>
+                      <NavItem>Testnet Explorer</NavItem>
+                    </a>
+                  </Flex>
+                </Card>
+              </HoverCard.Content>
+            </HoverCard.Root>
+          </Box>
+          {isConnected && (
+            <Link href={`/portfolio`}>
+              <Box css={{ mr: '$2' }}>
+                <NavItem>Portfolio</NavItem>
+              </Box>
+            </Link>
+          )}
+        </Flex>
+
         {isConnected ? (
           <AccountSidebar />
         ) : (
@@ -160,6 +237,7 @@ const Navbar = () => {
             <ConnectWalletButton />
           </Box>
         )}
+        <CartButton />
       </Flex>
     </Flex>
   )

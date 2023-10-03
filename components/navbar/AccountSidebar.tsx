@@ -4,6 +4,7 @@ import { useAccount, useDisconnect } from 'wagmi'
 import { useENSResolver } from 'hooks'
 import { Box, Button, Flex, Grid, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
+import ThemeSwitcher from './ThemeSwitcher'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { jsNumberForAddress } from 'react-jazzicon'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
@@ -102,7 +103,7 @@ export const AccountSidebar: FC = () => {
                   right: '-100%',
                 }}
               >
-                <Flex direction="column" css={{ py: 42, px: '$4' }}>
+                <Flex direction="column" css={{ py: '$4', px: '$4' }}>
                   <Button
                     color="ghost"
                     css={{ color: '$gray10', ml: 'auto', mr: 10 }}
@@ -110,14 +111,14 @@ export const AccountSidebar: FC = () => {
                       setOpen(false)
                     }}
                   >
-                    <FontAwesomeIcon icon={faClose} height={16} width={16} />
+                    <FontAwesomeIcon icon={faClose} height={18} width={18} />
                   </Button>
                   <Flex align="center" css={{ gap: '$3', ml: '$3' }}>
                     {ensAvatar ? (
-                      <Avatar size="medium" src={ensAvatar} />
+                      <Avatar size="large" src={ensAvatar} />
                     ) : (
                       <Jazzicon
-                        diameter={44}
+                        diameter={52}
                         seed={jsNumberForAddress(address as string)}
                       />
                     )}
@@ -129,7 +130,7 @@ export const AccountSidebar: FC = () => {
                         <Flex
                           align="center"
                           css={{
-                            gap: 10,
+                            gap: 8,
                             color: '$gray11',
                             cursor: 'pointer',
                           }}
@@ -140,8 +141,8 @@ export const AccountSidebar: FC = () => {
                           {!shortEnsName ? (
                             <FontAwesomeIcon
                               icon={faCopy}
-                              width={16}
-                              height={16}
+                              width={12}
+                              height={14}
                             />
                           ) : null}
                         </Flex>
@@ -149,7 +150,7 @@ export const AccountSidebar: FC = () => {
                           <Flex
                             align="center"
                             css={{
-                              gap: 10,
+                              gap: 8,
                               color: '$gray11',
                               cursor: 'pointer',
                             }}
@@ -159,8 +160,8 @@ export const AccountSidebar: FC = () => {
                             </Text>
                             <FontAwesomeIcon
                               icon={faCopy}
-                              width={16}
-                              height={16}
+                              width={12}
+                              height={12}
                             />
                           </Flex>
                         ) : null}
@@ -226,25 +227,25 @@ export const AccountSidebar: FC = () => {
                     </Link>
                   </Grid>
                   <Wallet />
+
                   <Flex
+                    css={{ m: '$4', mt: '$5' }}
                     justify="between"
                     align="center"
-                    css={{
-                      cursor: 'pointer',
-                      px: '$4',
-                      my: '$3',
-                    }}
+                  >
+                    <Text style="body1" css={{ mb: '$2', flex: 1 }} as="p">
+                      Theme
+                    </Text>
+                    <ThemeSwitcher />
+                  </Flex>
+                  <Button
+                    size="large"
+                    css={{ my: '$4', justifyContent: 'center' }}
+                    color="gray3"
                     onClick={() => disconnect()}
                   >
-                    <Text style="body1">Logout</Text>
-                    <Box css={{ color: '$gray10' }}>
-                      <FontAwesomeIcon
-                        icon={faRightFromBracket}
-                        width={16}
-                        height={16}
-                      />
-                    </Box>
-                  </Flex>
+                    Disconnect Wallet
+                  </Button>
                 </Flex>
               </motion.div>
             </Content>

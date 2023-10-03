@@ -34,6 +34,7 @@ import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
+import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
@@ -79,7 +80,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
+      defaultTheme="light"
       value={{
         dark: darkTheme.className,
         light: 'light',
@@ -163,13 +164,17 @@ function MyApp({
           options={{
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
-            chains: supportedChains.map(({ proxyApi, id }) => {
-              return {
-                id,
-                baseApiUrl: `${baseUrl}${proxyApi}`,
-                active: marketplaceChain.id === id,
+            chains: supportedChains.map(
+              ({ reservoirBaseUrl, proxyApi, id }) => {
+                return {
+                  id,
+                  baseApiUrl: proxyApi
+                    ? `${baseUrl}${proxyApi}`
+                    : reservoirBaseUrl,
+                  active: marketplaceChain.id === id,
+                }
               }
-            }),
+            ),
             logLevel: 4,
             source: source,
             disablePoweredByReservoir: true,
@@ -179,17 +184,19 @@ function MyApp({
           theme={reservoirKitTheme}
         >
           <CartProvider feesOnTopUsd={feesOnTop}>
-            <Tooltip.Provider>
-              <RainbowKitProvider
-                chains={chains}
-                theme={rainbowKitTheme}
-                modalSize="compact"
-              >
-                <ToastContextProvider>
-                  <FunctionalComponent {...pageProps} />
-                </ToastContextProvider>
-              </RainbowKitProvider>
-            </Tooltip.Provider>
+            <WebsocketContextProvider>
+              <Tooltip.Provider>
+                <RainbowKitProvider
+                  chains={chains}
+                  theme={rainbowKitTheme}
+                  modalSize="compact"
+                >
+                  <ToastContextProvider>
+                    <FunctionalComponent {...pageProps} />
+                  </ToastContextProvider>
+                </RainbowKitProvider>
+              </Tooltip.Provider>
+            </WebsocketContextProvider>
           </CartProvider>
         </ReservoirKitProvider>
       </ThemeProvider>

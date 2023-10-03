@@ -9,11 +9,11 @@ import {
   useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../../_app'
+import { NORMALIZE_ROYALTIES } from '../../../_app'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -35,12 +35,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('1DayVolume')
-  const marketplaceChain = useMarketplaceChain()
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 20,
     sortBy: sortByTime,
-    includeTopBid: true,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -108,17 +106,22 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           p: 24,
           height: '100%',
           '@bp800': {
-            p: '$6',
+            p: '$5',
+          },
+
+          '@xl': {
+            px: '$6',
           },
         }}
       >
-        <Flex css={{ my: '$6', gap: 65 }} direction="column">
+        <Flex direction="column">
           <Flex
             justify="between"
             align="start"
             css={{
               flexDirection: 'column',
               gap: 24,
+              mb: '$4',
               '@bp800': {
                 alignItems: 'center',
                 flexDirection: 'row',
@@ -126,7 +129,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" as="h4">
-              Collection Rankings
+              Trending Collections
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
               <CollectionsTimeDropdown
@@ -164,19 +167,18 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 }
 
 type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
+  paths['/collections/v7']['get']['responses']['200']['schema']
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
     collection: CollectionSchema
   }
 }> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
+  const collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
     {
       sortBy: '1DayVolume',
       normalizeRoyalties: NORMALIZE_ROYALTIES,
       limit: 20,
-      includeTopBid: true,
     }
   const chainPrefix = params?.chain || ''
   const chain =
@@ -189,7 +191,7 @@ export const getServerSideProps: GetServerSideProps<{
     query.community = chain.community
   }
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v5`,
+    `${chain.reservoirBaseUrl}/collections/v7`,
     query,
     {
       headers: {
