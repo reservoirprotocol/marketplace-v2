@@ -178,7 +178,7 @@ const Navbar = () => {
         justify="end"
         align="center"
       >
-        <Flex css={{ gap: '$5', mr: 12 }}>
+        {/* <Flex css={{ gap: '$5', mr: 12 }}>
           <Box>
             <HoverCard.Root openDelay={120}>
               <HoverCard.Trigger>
@@ -228,7 +228,7 @@ const Navbar = () => {
               </Box>
             </Link>
           )}
-        </Flex>
+        </Flex> */}
 
         {isConnected ? (
           <AccountSidebar />
