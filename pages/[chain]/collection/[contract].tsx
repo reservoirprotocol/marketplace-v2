@@ -875,12 +875,12 @@ export const getServerSideProps: GetServerSideProps<{
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 

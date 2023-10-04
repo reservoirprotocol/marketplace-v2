@@ -195,7 +195,7 @@ export const getServerSideProps: GetServerSideProps<{
     query,
     {
       headers: {
-        'x-api-key': chain.apiKey || '',
+        'x-api-key': process.env.RESERVOIR_API_KEY || '',
       },
     }
   )
