@@ -550,13 +550,12 @@ export const getServerSideProps: GetServerSideProps<{
     DefaultChain
 
   const topSellingCollections: ChainTopSellingCollections = {}
-
   try {
     const response = await fetcher(
       `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
       {
         headers: {
-          'x-api-key': chain.apiKey || '',
+          'x-api-key': process.env.RESERVOIR_API_KEY || '',
         },
       }
     )
