@@ -88,7 +88,8 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       Origin: 'https://explorer-proxy.reservoir.tools',
     })
 
-    if (chain.apiKey) headers.set('x-api-key', chain.apiKey)
+    if (process.env.RESERVOIR_API_KEY)
+      headers.set('x-api-key', process.env.RESERVOIR_API_KEY)
 
     if (typeof body === 'object') {
       headers.set('Content-Type', 'application/json')
