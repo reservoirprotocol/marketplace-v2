@@ -608,7 +608,7 @@ export const getServerSideProps: GetServerSideProps<{
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
   const id = assetId[1]
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
 
@@ -616,7 +616,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   const headers = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 

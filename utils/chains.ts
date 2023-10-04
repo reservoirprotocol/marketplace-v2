@@ -1,8 +1,8 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
+import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
 import { Chain, goerli, sepolia } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
-import wrappedContracts from './wrappedContracts'
 
 export const ancient8Testnet = {
   id: 2863311531,
@@ -81,10 +81,6 @@ export const DefaultChain: ReservoirChain = {
   proxyApi: '',
   // A prefix used in the asset specific routes on the app (tokens/collections)
   routePrefix: 'goerli',
-  // Reservoir API key which you can generate at https://reservoir.tools/
-  // This is a protected key and displays as 'undefined' on the browser
-  // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-  apiKey: process.env.RESERVOIR_API_KEY,
   // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
   // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
   coingeckoId: 'goerli-eth',
@@ -124,10 +120,6 @@ export default [
     proxyApi: '',
     // A prefix used in the asset specific routes on the app (tokens/collections)
     routePrefix: 'sepolia',
-    // Reservoir API key which you can generate at https://reservoir.tools/
-    // This is a protected key and displays as 'undefined' on the browser
-    // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
-    apiKey: process.env.RESERVOIR_API_KEY,
     // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
     // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
     coingeckoId: 'ethereum',
