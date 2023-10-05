@@ -109,6 +109,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     is1155 ? account.address : undefined,
     {
       tokens: [`${contract}:${id}`],
+      limit: 20,
     }
   )
 
