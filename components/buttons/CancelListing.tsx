@@ -5,7 +5,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, ReactElement, useContext, cloneElement } from 'react'
 import { SWRResponse } from 'swr'
-import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
+import { useWalletClient } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -25,27 +25,12 @@ const CancelListing: FC<Props> = ({
   const { addToast } = useContext(ToastContext)
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
 
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain && activeChain.id !== marketplaceChain.id
-  )
-
-  if (isInTheWrongNetwork) {
+  if (!signer) {
     return cloneElement(trigger, {
       onClick: async () => {
-        if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -58,6 +43,7 @@ const CancelListing: FC<Props> = ({
       listingId={listingId}
       openState={openState}
       trigger={trigger}
+      chainId={marketplaceChain.id}
       onCancelComplete={(data: any) => {
         addToast?.({
           title: 'User canceled listing',

@@ -1,5 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box, Input } from '../../../components/primitives'
+import {
+  Text,
+  Flex,
+  Box,
+  Input,
+  FormatCrypto,
+} from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -35,7 +41,6 @@ import LoadingCard from 'components/common/LoadingCard'
 import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import {
-  faChain,
   faCog,
   faCube,
   faGlobe,
@@ -56,7 +61,6 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
-import { chain } from 'lodash'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -78,7 +82,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const chainCurrency = useChainCurrency()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([
+    'sale',
+    'mint',
+  ])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
@@ -255,16 +262,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               : tokens.findIndex((token) => {
                   let currentTokenPrice =
                     token.market?.floorAsk?.price?.amount?.native
-                  if (currentTokenPrice) {
+                  if (currentTokenPrice !== undefined) {
                     return sortDirection === 'desc'
-                      ? currentTokenPrice <=
-                          updatedToken.market.floorAsk.price.amount.native
-                      : currentTokenPrice >=
-                          updatedToken.market.floorAsk.price.amount.native
+                      ? updatedToken.market.floorAsk.price.amount.native >=
+                          currentTokenPrice
+                      : updatedToken.market.floorAsk.price.amount.native <=
+                          currentTokenPrice
                   }
                   return true
                 })
-          if (updatedTokenPosition === -1) {
+          if (updatedTokenPosition <= -1) {
             return
           }
 
@@ -331,8 +338,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
-  let nativePrice = collection.floorAsk?.price?.amount?.native
-  let topBidPrice = collection.topBid?.price?.amount?.native
+  let nativePrice = collection?.floorAsk?.price?.amount?.native
+  let topBidPrice = collection?.topBid?.price?.amount?.native
 
   return (
     <Layout>
@@ -480,7 +487,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  {nativePrice && (
+                  {nativePrice ? (
                     <Sweep
                       collectionId={collection.id}
                       openState={isSweepRoute ? sweepOpenState : undefined}
@@ -498,16 +505,26 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             as="h6"
                             css={{ color: '$bg', fontWeight: 900 }}
                           >
-                            {`${nativePrice?.toFixed(2)} ${
-                              chainCurrency.symbol
-                            }`}
+                            <Flex
+                              css={{
+                                gap: '$1',
+                              }}
+                            >
+                              <FormatCrypto
+                                amount={nativePrice}
+                                textStyle="h6"
+                                css={{ color: '$bg', fontWeight: 900 }}
+                                decimals={4}
+                              />
+                              {chainCurrency.symbol}
+                            </Flex>
                           </Text>
                         </Flex>
                       }
                       buttonCss={{ '@lg': { order: 2 } }}
                       mutate={mutate}
                     />
-                  )}
+                  ) : null}
                   {/* Collection Mint */}
                   {mintData ? (
                     <Mint
@@ -752,6 +769,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                                 setPlayingElement(element)
                               }
                             }}
+                            addToCartEnabled={
+                              token.market?.floorAsk?.maker?.toLowerCase() !==
+                              address?.toLowerCase()
+                            }
                           />
                         ))}
                     <Box
@@ -847,23 +868,23 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection?: paths['/collections/v6']['get']['responses']['200']['schema']
+    collection?: paths['/collections/v7']['get']['responses']['200']['schema']
     tokens?: paths['/tokens/v6']['get']['responses']['200']['schema']
     hasAttributes: boolean
   }
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 
-  let collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
     {
       id,
       includeSalesCount: true,
@@ -871,7 +892,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v6`,
+    `${reservoirBaseUrl}/collections/v7`,
     collectionQuery,
     headers
   )

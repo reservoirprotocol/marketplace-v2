@@ -10,12 +10,7 @@ import {
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { Button } from 'components/primitives'
-import {
-  useAccount,
-  useNetwork,
-  useWalletClient,
-  useSwitchNetwork,
-} from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
@@ -48,16 +43,8 @@ const AcceptBid: FC<Props> = ({
   const { addToast } = useContext(ToastContext)
 
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
-
-  const isInTheWrongNetwork = Boolean(
-    signer && marketplaceChain.id !== activeChain?.id
-  )
 
   const trigger = (
     <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
@@ -77,16 +64,9 @@ const AcceptBid: FC<Props> = ({
       : []
   }, [collectionId, tokenId, bidId])
 
-  if (isDisconnected || isInTheWrongNetwork) {
+  if (isDisconnected) {
     return cloneElement(trigger, {
       onClick: async () => {
-        if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -98,6 +78,7 @@ const AcceptBid: FC<Props> = ({
         trigger={trigger}
         openState={openState}
         tokens={tokens}
+        chainId={marketplaceChain.id}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == AcceptBidStep.Complete) {
             mutate()

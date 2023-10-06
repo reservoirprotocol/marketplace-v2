@@ -3,12 +3,7 @@ import { Button } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
-import {
-  useAccount,
-  useNetwork,
-  useWalletClient,
-  useSwitchNetwork,
-} from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import {
@@ -43,16 +38,8 @@ const EditListing: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
-
-  const isInTheWrongNetwork = Boolean(
-    signer && marketplaceChain.id !== activeChain?.id
-  )
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
@@ -60,16 +47,9 @@ const EditListing: FC<Props> = ({
     </Button>
   )
 
-  if (isDisconnected || isInTheWrongNetwork) {
+  if (isDisconnected) {
     return cloneElement(trigger, {
       onClick: async () => {
-        if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -83,6 +63,7 @@ const EditListing: FC<Props> = ({
         listingId={listingId}
         tokenId={tokenId}
         collectionId={collectionId}
+        chainId={marketplaceChain.id}
         onClose={(data, currentStep) => {
           if (mutate && currentStep == EditListingStep.Complete) mutate()
         }}

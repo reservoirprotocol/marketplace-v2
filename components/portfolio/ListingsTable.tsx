@@ -181,7 +181,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
                 listing?.quantityRemaining > 1 ? (
                   <Flex css={{ gap: '$2' }} align="center">
                     <Text style="subtitle2" ellipsify>
-                      #{criteriaData?.token?.tokenId}
+                      {criteriaData?.token?.name ||
+                        `#${criteriaData?.token?.tokenId}`}
                     </Text>
                     <Flex
                       justify="center"
@@ -319,7 +320,8 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
                 {criteriaData?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{criteriaData?.token?.tokenId}
+                {criteriaData?.token?.name ||
+                  `#${criteriaData?.token?.tokenId}`}
               </Text>
             </Flex>
           </Flex>

@@ -1,9 +1,9 @@
-name: Sync branches with main
+name: Sync dev branches
 
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   sync-branches:
@@ -15,12 +15,12 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
-      - name: Sync testnet with main
+      - name: Sync vpn with dev
         run: |
           git fetch --unshallow
-          git checkout testnets
+          git checkout vpn
           git pull
-          git merge --no-ff main -m "Auto-merge main into testnet"
+          git merge --no-ff dev -m "Auto-merge dev into vpn"
           git push
       - name: Report Status
         uses: ravsamhq/notify-slack-action@v1
@@ -28,7 +28,7 @@ jobs:
         with:
           status: ${{ job.status }}
           notify_when: 'failure'
-          notification_title: 'Syncing Explorer Branches failed'
+          notification_title: 'Syncing Explorer Dev Branches failed'
           message_format: '{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>'
           footer: 'Linked to Repo <{repo_url}|{repo}>'
         env:

@@ -15,7 +15,6 @@ import { useMarketplaceChain } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
-import { preload } from 'swr'
 
 import Img from 'components/primitives/Img'
 import useTopSellingCollections from 'hooks/useTopSellingCollections'
@@ -60,19 +59,6 @@ const Home: NextPage<any> = ({ ssr }) => {
         : null,
     },
     chain?.id
-  )
-
-  useEffect(
-    () =>
-      supportedChains
-        .filter((c) => c.id !== chain.id)
-        .forEach((c) => {
-          preload(
-            `${c.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
-            fetcher
-          )
-        }),
-    []
   )
 
   const topCollection = topSellingCollectionsData?.collections?.[0]
@@ -563,22 +549,24 @@ export const getServerSideProps: GetServerSideProps<{
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
-  const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
-    {
-      headers: {
-        'x-api-key': chain.apiKey || '',
-      },
-    }
-  )
-
   const topSellingCollections: ChainTopSellingCollections = {}
-  topSellingCollections[chain.id] = response.data
+  try {
+    const response = await fetcher(
+      `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
+      {
+        headers: {
+          'x-api-key': process.env.RESERVOIR_API_KEY || '',
+        },
+      }
+    )
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=120, stale-while-revalidate=180'
-  )
+    topSellingCollections[chain.id] = response.data
+
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=120, stale-while-revalidate=180'
+    )
+  } catch (e) {}
 
   return {
     props: { ssr: { topSellingCollections } },

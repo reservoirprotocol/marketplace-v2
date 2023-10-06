@@ -76,6 +76,10 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     res.redirect(url.href)
     return
+  } else if (endpoint.match(/\/users\/(\w+)\/tokens\/v7/g)) {
+    if (url.searchParams.get('limit') === '200') {
+      res.status(403).json({ error: 'Access forbidden' })
+    }
   }
 
   try {
@@ -88,7 +92,8 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       Origin: 'https://explorer-proxy.reservoir.tools',
     })
 
-    if (chain.apiKey) headers.set('x-api-key', chain.apiKey)
+    if (process.env.RESERVOIR_API_KEY)
+      headers.set('x-api-key', process.env.RESERVOIR_API_KEY)
 
     if (typeof body === 'object') {
       headers.set('Content-Type', 'application/json')
@@ -112,7 +117,6 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     options.headers = headers
 
     const response = await fetch(url.href, options)
-
     let data: any
 
     const contentType = response.headers.get('content-type')
@@ -126,23 +130,6 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       data = await response.json()
     } else {
       data = await response.text()
-    }
-
-    if (endpoint.includes('supported-marketplaces')) {
-      if (chain.id == 1 || chain.id == 137) {
-        data = {
-          marketplaces: data.marketplaces.map((marketplace: any) => {
-            if (marketplace.name === 'Reservoir') {
-              return {
-                ...marketplace,
-                orderKind: 'payment-processor',
-              }
-            }
-
-            return marketplace
-          }),
-        }
-      }
     }
 
     if (!response.ok) throw data

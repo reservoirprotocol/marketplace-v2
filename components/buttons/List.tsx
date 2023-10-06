@@ -10,12 +10,7 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import {
-  useAccount,
-  useNetwork,
-  useWalletClient,
-  useSwitchNetwork,
-} from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
@@ -46,16 +41,8 @@ const List: FC<Props> = ({
   const { addToast } = useContext(ToastContext)
 
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
 
   const { data: signer } = useWalletClient()
-  const { chain: activeChain } = useNetwork()
-
-  const isInTheWrongNetwork = Boolean(
-    signer && marketplaceChain.id !== activeChain?.id
-  )
 
   const listingCurrencies: ListingCurrencies =
     marketplaceChain.listingCurrencies
@@ -70,16 +57,9 @@ const List: FC<Props> = ({
 
   const orderFees = orderFee ? [orderFee] : []
 
-  if (isDisconnected || isInTheWrongNetwork) {
+  if (isDisconnected) {
     return cloneElement(trigger, {
       onClick: async () => {
-        if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
-            return false
-          }
-        }
-
         if (!signer) {
           openConnectModal?.()
         }
@@ -95,6 +75,7 @@ const List: FC<Props> = ({
         feesBps={orderFees}
         enableOnChainRoyalties={true}
         currencies={listingCurrencies}
+        chainId={marketplaceChain.id}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == ListStep.Complete) mutate()
         }}

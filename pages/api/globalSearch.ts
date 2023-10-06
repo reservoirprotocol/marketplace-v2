@@ -19,7 +19,7 @@ export type SearchCollection = NonNullable<
 }
 
 type Collection = NonNullable<
-  paths['/collections/v6']['get']['responses']['200']['schema']['collections']
+  paths['/collections/v7']['get']['responses']['200']['schema']['collections']
 >[0]
 
 export const config = {
@@ -67,10 +67,10 @@ export default async function handler(req: Request) {
 }
 
 async function searchSingleChain(chain: ReservoirChain, query: string) {
-  const { reservoirBaseUrl, apiKey, collectionSetId, community } = chain
+  const { reservoirBaseUrl, collectionSetId, community } = chain
   const headers = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 
@@ -99,7 +99,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
 
   if (isAddress) {
     const { data } = await fetcher(
-      `${reservoirBaseUrl}/collections/v6?contract=${query}&limit=6`,
+      `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
       {},
       headers
     )
@@ -207,10 +207,10 @@ async function searchAllChains(query: string) {
     }
 
   supportedChains.forEach(async (chain) => {
-    const { reservoirBaseUrl, apiKey, collectionSetId, community } = chain
+    const { reservoirBaseUrl, collectionSetId, community } = chain
     const headers = {
       headers: {
-        'x-api-key': apiKey || '',
+        'x-api-key': process.env.RESERVOIR_API_KEY || '',
       },
     }
 
@@ -234,14 +234,14 @@ async function searchAllChains(query: string) {
 
   if (isAddress) {
     const promises = supportedChains.map(async (chain) => {
-      const { reservoirBaseUrl, apiKey } = chain
+      const { reservoirBaseUrl } = chain
       const headers = {
         headers: {
-          'x-api-key': apiKey || '',
+          'x-api-key': process.env.RESERVOIR_API_KEY || '',
         },
       }
       const { data } = await fetcher(
-        `${reservoirBaseUrl}/collections/v6?contract=${query}&limit=6`,
+        `${reservoirBaseUrl}collections/v7?contract=${query}&limit=6`,
         {},
         headers
       )

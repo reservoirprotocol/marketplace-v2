@@ -88,7 +88,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       includeQuantity: true,
     },
     {
-      fallbackData: [ssr.tokens],
+      fallbackData: [ssr.tokens ? ssr.tokens : {}],
     }
   )
 
@@ -100,7 +100,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
       id: token?.token?.collection?.id,
     },
     {
-      fallbackData: [ssr.collection],
+      fallbackData: [ssr.collection ? ssr.collection : {}],
     }
   )
   const collection = collections && collections[0] ? collections[0] : null
@@ -109,6 +109,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     is1155 ? account.address : undefined,
     {
       tokens: [`${contract}:${id}`],
+      limit: 20,
     }
   )
 
@@ -594,17 +595,21 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   )
 }
 
+type SSRProps = {
+  collection?:
+    | paths['/collections/v7']['get']['responses']['200']['schema']
+    | null
+  tokens?: paths['/tokens/v6']['get']['responses']['200']['schema'] | null
+}
+
 export const getServerSideProps: GetServerSideProps<{
   assetId?: string
-  ssr: {
-    collection: paths['/collections/v6']['get']['responses']['200']['schema']
-    tokens: paths['/tokens/v6']['get']['responses']['200']['schema']
-  }
+  ssr: SSRProps
 }> = async ({ params, res }) => {
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
   const id = assetId[1]
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
 
@@ -612,7 +617,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   const headers = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 
@@ -624,41 +629,49 @@ export const getServerSideProps: GetServerSideProps<{
     includeDynamicPricing: true,
   }
 
-  const tokensPromise = fetcher(
-    `${reservoirBaseUrl}/tokens/v6`,
-    tokensQuery,
-    headers
-  )
+  let tokens: SSRProps['tokens'] = null
+  let collection: SSRProps['collection'] = null
 
-  const tokensResponse = await tokensPromise
-  const tokens = tokensResponse.data
-    ? (tokensResponse.data as Props['ssr']['tokens'])
-    : {}
+  try {
+    const tokensPromise = fetcher(
+      `${reservoirBaseUrl}/tokens/v6`,
+      tokensQuery,
+      headers
+    )
 
-  let collectionQuery: paths['/collections/v6']['get']['parameters']['query'] =
-    {
-      id: tokens?.tokens?.[0]?.token?.collection?.id,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-    }
+    const tokensResponse = await tokensPromise
+    tokens = tokensResponse.data
+      ? (tokensResponse.data as Props['ssr']['tokens'])
+      : {}
 
-  const collectionsPromise = fetcher(
-    `${reservoirBaseUrl}/collections/v6`,
-    collectionQuery,
-    headers
-  )
+    let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
+      {
+        id: tokens?.tokens?.[0]?.token?.collection?.id,
+        normalizeRoyalties: NORMALIZE_ROYALTIES,
+      }
 
-  const collectionsResponse = await collectionsPromise
-  const collection = collectionsResponse.data
-    ? (collectionsResponse.data as Props['ssr']['collection'])
-    : {}
+    const collectionsPromise = fetcher(
+      `${reservoirBaseUrl}/collections/v7`,
+      collectionQuery,
+      headers
+    )
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=30, stale-while-revalidate=60'
-  )
+    const collectionsResponse = await collectionsPromise
+    collection = collectionsResponse.data
+      ? (collectionsResponse.data as Props['ssr']['collection'])
+      : {}
+
+    res.setHeader(
+      'Cache-Control',
+      'public, s-maxage=30, stale-while-revalidate=60'
+    )
+  } catch (e) {}
 
   return {
-    props: { assetId: params?.assetId as string, ssr: { collection, tokens } },
+    props: {
+      assetId: params?.assetId as string,
+      ssr: { collection, tokens },
+    },
   }
 }
 
