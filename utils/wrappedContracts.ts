@@ -4,6 +4,8 @@ const wrappedContracts: Record<number, string> = {
   10: '0x4200000000000000000000000000000000000006', //optimism
   56: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', //bnb
   137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //polygon
+  324: '0x5aea5775959fbc2557cc8789bc1bf90a239d9a91', //zksync
+  1101: '0x4f9a0e7fd2bf6067db6994cf12e4495df938e6e9', // zkEVM
   42161: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', //arbitrum
   43114: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7', //avalance
   42170: '0x722e8bdd2ce80a4422e880164f2079488e115365', //arbitrum nova
