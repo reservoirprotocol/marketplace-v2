@@ -76,6 +76,10 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     res.redirect(url.href)
     return
+  } else if (endpoint.match(/\/users\/(\w+)\/tokens\/v7/g)) {
+    if (url.searchParams.get('limit') === '200') {
+      res.status(403).json({ error: 'Access forbidden' })
+    }
   }
 
   try {
