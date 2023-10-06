@@ -1,5 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box, Input } from '../../../components/primitives'
+import {
+  Text,
+  Flex,
+  Box,
+  Input,
+  FormatCrypto,
+} from '../../../components/primitives'
 import {
   useCollections,
   useCollectionActivity,
@@ -76,7 +82,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const chainCurrency = useChainCurrency()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([
+    'sale',
+    'mint',
+  ])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
@@ -496,9 +505,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             as="h6"
                             css={{ color: '$bg', fontWeight: 900 }}
                           >
-                            {`${nativePrice?.toFixed(2)} ${
-                              chainCurrency.symbol
-                            }`}
+                            <Flex
+                              css={{
+                                gap: '$1',
+                              }}
+                            >
+                              <FormatCrypto
+                                amount={nativePrice}
+                                textStyle="h6"
+                                css={{ color: '$bg', fontWeight: 900 }}
+                                decimals={4}
+                              />
+                              {chainCurrency.symbol}
+                            </Flex>
                           </Text>
                         </Flex>
                       }
@@ -750,6 +769,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                                 setPlayingElement(element)
                               }
                             }}
+                            addToCartEnabled={
+                              token.market?.floorAsk?.maker?.toLowerCase() !==
+                              address?.toLowerCase()
+                            }
                           />
                         ))}
                     <Box
@@ -852,12 +875,12 @@ export const getServerSideProps: GetServerSideProps<{
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 

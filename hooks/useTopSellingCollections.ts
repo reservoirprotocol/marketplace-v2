@@ -27,7 +27,7 @@ export default function (
   }
 
   return useSWR<TopSellingCollectionv2Data>(
-    path.href ? [path.href, chain?.apiKey, client?.version] : null,
+    path.href ? [path.href, client?.apiKey, client?.version] : null,
     null,
     swrOptions
   )
