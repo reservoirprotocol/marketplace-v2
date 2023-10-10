@@ -130,12 +130,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     (stage) => stage.kind === 'public'
   )
 
-  const mintPrice =
-    mintData?.price?.amount?.decimal === 0
+  const mintPrice = mintData?.price?.amount?.decimal
+    ? mintData?.price?.amount?.decimal === 0
       ? 'Free'
       : `${
           mintData?.price?.amount?.decimal
         } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
+    : undefined
 
   let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 20,
@@ -526,7 +527,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     />
                   ) : null}
                   {/* Collection Mint */}
-                  {mintData ? (
+                  {mintData && mintPrice ? (
                     <Mint
                       collectionId={collection.id}
                       openState={isMintRoute ? mintOpenState : undefined}
