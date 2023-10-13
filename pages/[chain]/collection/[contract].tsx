@@ -118,6 +118,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     id,
     includeSalesCount: true,
     includeMintStages: true,
+    includeSecurityConfigs: true,
   }
 
   const { data: collections } = useCollections(collectionQuery, {
@@ -125,6 +126,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   })
 
   let collection = collections && collections[0]
+  const hasSecurityConfig = collection?.securityConfig
+  const collectionName = `${collection.name}${hasSecurityConfig && 'C'}`
 
   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
@@ -408,7 +411,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   <Box css={{ minWidth: 0 }}>
                     <Flex align="center" css={{ gap: '$1', mb: 0 }}>
                       <Text style="h4" as="h6" ellipsify>
-                        {collection.name}
+                        {collectionName}
                       </Text>
                       <OpenSeaVerified
                         openseaVerificationStatus={
