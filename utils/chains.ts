@@ -125,6 +125,20 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        symbol: 'WETH',
+        contract: wrappedContracts[sepolia.id],
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+      {
+        symbol: 'TTKOj',
+        contract: '0x75F94f04d2144cB6056CCd0CFF1771573d838974',
+        decimals: 18,
+      },
+    ],
   },
   DefaultChain,
 ] as ReservoirChain[]
