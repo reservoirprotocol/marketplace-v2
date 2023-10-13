@@ -44,7 +44,8 @@ export const CollectionDetails: FC<Props> = ({
   const chainCurrency = useChainCurrency()
 
   const descriptionRef = useRef(null as any)
-  const contractKind = collection?.contractKind?.toUpperCase()
+
+  const contractKind = `${collection?.contractKind?.toUpperCase()}${collection?.securityConfig && 'C'}`
   let creatorRoyalties = collection?.royalties?.bps
     ? collection?.royalties?.bps * 0.01
     : 0
