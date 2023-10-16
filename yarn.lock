@@ -951,6 +951,20 @@
     "@radix-ui/react-use-callback-ref" "1.0.1"
     "@radix-ui/react-use-escape-keydown" "1.0.3"
 
+"@radix-ui/react-dropdown-menu@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-dropdown-menu/-/react-dropdown-menu-2.0.5.tgz#19bf4de8ffa348b4eb6a86842f14eff93d741170"
+  integrity sha512-xdOrZzOTocqqkCkYo8yRPCib5OkTkqN7lqNCdxwPOdE466DOaNl4N8PkUIlsXthQvW5Wwkd+aEmWpfWlBoDPEw==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.1"
+    "@radix-ui/react-compose-refs" "1.0.1"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-id" "1.0.1"
+    "@radix-ui/react-menu" "2.0.5"
+    "@radix-ui/react-primitive" "1.0.3"
+    "@radix-ui/react-use-controllable-state" "1.0.1"
+
 "@radix-ui/react-dropdown-menu@^2.0.1":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-dropdown-menu/-/react-dropdown-menu-2.0.1.tgz#dbc90676df7fb313d6b1eb204fdb434dbb724d15"
@@ -1053,6 +1067,31 @@
     "@radix-ui/react-roving-focus" "1.0.1"
     "@radix-ui/react-slot" "1.0.1"
     "@radix-ui/react-use-callback-ref" "1.0.0"
+    aria-hidden "^1.1.1"
+    react-remove-scroll "2.5.5"
+
+"@radix-ui/react-menu@2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-menu/-/react-menu-2.0.5.tgz#a7d78b0808c4d38269240bf5d5c7ffea3e225e16"
+  integrity sha512-Gw4f9pwdH+w5w+49k0gLjN0PfRDHvxmAgG16AbyJZ7zhwZ6PBHKtWohvnSwfusfnK3L68dpBREHpVkj8wEM7ZA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.1"
+    "@radix-ui/react-collection" "1.0.3"
+    "@radix-ui/react-compose-refs" "1.0.1"
+    "@radix-ui/react-context" "1.0.1"
+    "@radix-ui/react-direction" "1.0.1"
+    "@radix-ui/react-dismissable-layer" "1.0.4"
+    "@radix-ui/react-focus-guards" "1.0.1"
+    "@radix-ui/react-focus-scope" "1.0.3"
+    "@radix-ui/react-id" "1.0.1"
+    "@radix-ui/react-popper" "1.1.2"
+    "@radix-ui/react-portal" "1.0.3"
+    "@radix-ui/react-presence" "1.0.1"
+    "@radix-ui/react-primitive" "1.0.3"
+    "@radix-ui/react-roving-focus" "1.0.4"
+    "@radix-ui/react-slot" "1.0.2"
+    "@radix-ui/react-use-callback-ref" "1.0.1"
     aria-hidden "^1.1.1"
     react-remove-scroll "2.5.5"
 
@@ -1591,10 +1630,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@1.11.2":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-1.11.2.tgz#50e9d9fe9227963fa677afd1a3c72e2d48189497"
-  integrity sha512-WTO0mBgNbDz4F2f+JGsKAG609RJ5YhuZkYZ2tALvwj0t3NtgWOhQcic/Kwq04v3yreKskOijPNhMfYZqTj1eaA==
+"@reservoir0x/reservoir-kit-ui@1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-1.12.0.tgz#b2414ca9f056ca06a54f3d2ee34d6cacbca2d9d7"
+  integrity sha512-7Vxmx81e8smtB3CtMw25auh5D5o8eZf2axtDnxq+BY/pruYOcutYYwHloALaayY73x3jm0uhamGKOU39JOT1Lw==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
@@ -1602,6 +1641,7 @@
     "@radix-ui/colors" "^0.1.8"
     "@radix-ui/react-collapsible" "1.0.3"
     "@radix-ui/react-dialog" "1.0.4"
+    "@radix-ui/react-dropdown-menu" "2.0.5"
     "@radix-ui/react-popover" "1.0.6"
     "@radix-ui/react-scroll-area" "1.0.4"
     "@radix-ui/react-select" "1.2.2"
@@ -1609,7 +1649,7 @@
     "@radix-ui/react-toggle-group" "1.0.4"
     "@radix-ui/react-tooltip" "1.0.6"
     "@react-hookz/web" "^19.2.0"
-    "@reservoir0x/reservoir-sdk" "1.5.1"
+    "@reservoir0x/reservoir-sdk" "1.5.2"
     "@stitches/react" "1.3.1-1"
     dayjs "^1.11.4"
     flatpickr "^4.6.13"
@@ -1617,10 +1657,10 @@
     react-flatpickr "^3.10.13"
     swr "2.0.1"
 
-"@reservoir0x/reservoir-sdk@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-1.5.1.tgz#891cc85d4226088c19726e139db39713d3531155"
-  integrity sha512-MccQgmSsYuIBLlZW4LqrUIv32xYWTaltEGymxgeHf2akuv55KBGvneTLwtdW7S+HsH4CE8Ll0E6Ud1U/4dXZbg==
+"@reservoir0x/reservoir-sdk@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-1.5.2.tgz#389a8d102b53c661c45c463a4db9db35dee131f9"
+  integrity sha512-xfDAHWoVwoAgv7EqF8ncqOgiMrTIK6kFV+mYkSkSZmKhonlTbc25PgswBOyBPeqf5329lkISty0VTZJfLU/Hvw==
   dependencies:
     axios "^0.27.2"
 
