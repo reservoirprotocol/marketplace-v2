@@ -325,7 +325,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  const contractKind = collection?.contractKind?.toUpperCase()
+  const hasSecurityConfig =
+    collection?.securityConfig &&
+    Object.values(collection.securityConfig).some(Boolean)
+  const contractKind = `${collection?.contractKind?.toUpperCase()}${
+    hasSecurityConfig ? 'c' : ''
+  }`
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting

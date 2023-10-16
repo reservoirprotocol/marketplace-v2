@@ -45,7 +45,13 @@ export const CollectionDetails: FC<Props> = ({
 
   const descriptionRef = useRef(null as any)
 
-  const contractKind = `${collection?.contractKind?.toUpperCase()}${collection?.securityConfig && 'C'}`
+  const hasSecurityConfig =
+    collection?.securityConfig &&
+    Object.values(collection.securityConfig).some(Boolean)
+  const contractKind = `${collection?.contractKind?.toUpperCase()}${
+    hasSecurityConfig ? 'c' : ''
+  }`
+
   let creatorRoyalties = collection?.royalties?.bps
     ? collection?.royalties?.bps * 0.01
     : 0
