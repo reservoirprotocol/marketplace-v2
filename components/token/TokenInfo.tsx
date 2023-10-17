@@ -33,6 +33,12 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
 
   let chain = titleCase(router.query.chain as string)
 
+  const hasSecurityConfig =
+    collection?.securityConfig &&
+    Object.values(collection.securityConfig).some(Boolean)
+
+  const tokenStandard = `${token?.token?.kind}${hasSecurityConfig ? 'c' : ''}`
+
   const CollectionAction = styled(Flex, {
     px: '$4',
     py: '$3',
@@ -243,7 +249,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               Token Standard
             </Text>
             <Text style="subtitle1" css={{ textTransform: 'uppercase' }}>
-              {token?.token?.kind}
+              {tokenStandard}
             </Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
