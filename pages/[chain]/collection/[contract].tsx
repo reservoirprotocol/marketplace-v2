@@ -329,7 +329,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     collection?.securityConfig &&
     Object.values(collection.securityConfig).some(Boolean)
   const contractKind = `${collection?.contractKind?.toUpperCase()}${
-    hasSecurityConfig ? 'c' : ''
+    hasSecurityConfig ? '-C' : ''
   }`
 
   useEffect(() => {
