@@ -49,7 +49,7 @@ export const CollectionDetails: FC<Props> = ({
     collection?.securityConfig &&
     Object.values(collection.securityConfig).some(Boolean)
   const contractKind = `${collection?.contractKind?.toUpperCase()}${
-    hasSecurityConfig ? '-C' : ''
+    hasSecurityConfig ? 'C' : ''
   }`
 
   let creatorRoyalties = collection?.royalties?.bps

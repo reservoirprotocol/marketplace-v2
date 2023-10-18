@@ -37,7 +37,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
     collection?.securityConfig &&
     Object.values(collection.securityConfig).some(Boolean)
 
-  const tokenStandard = `${token?.token?.kind}${hasSecurityConfig ? '-C' : ''}`
+  const tokenStandard = `${token?.token?.kind}${hasSecurityConfig ? 'C' : ''}`
 
   const CollectionAction = styled(Flex, {
     px: '$4',
