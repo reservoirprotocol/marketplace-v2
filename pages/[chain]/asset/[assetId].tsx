@@ -97,6 +97,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
 
   const { data: collections } = useCollections(
     {
+      includeSecurityConfigs: true,
       id: token?.token?.collection?.id,
     },
     {

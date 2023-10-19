@@ -118,6 +118,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     id,
     includeSalesCount: true,
     includeMintStages: true,
+    includeSecurityConfigs: true,
   }
 
   const { data: collections } = useCollections(collectionQuery, {
@@ -324,7 +325,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  const contractKind = collection?.contractKind?.toUpperCase()
+  const hasSecurityConfig =
+    collection?.securityConfig &&
+    Object.values(collection.securityConfig).some(Boolean)
+  const contractKind = `${collection?.contractKind?.toUpperCase()}${
+    hasSecurityConfig ? 'C' : ''
+  }`
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
