@@ -15,16 +15,15 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Github Actions"
+          git fetch --unshallow
       - name: Sync testnet with main
         run: |
-          git fetch --unshallow
           git checkout testnets
           git pull
           git merge --no-ff main -m "Auto-merge main into testnet"
           git push
       - name: Sync default with main
         run: |
-          git fetch --unshallow
           git checkout default
           git pull
           git merge --no-ff main -m "Auto-merge main into default"
