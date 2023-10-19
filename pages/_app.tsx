@@ -39,7 +39,7 @@ import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
 
-//CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
+//CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization/
 const inter = Inter({
   subsets: ['latin'],
 })
