@@ -292,8 +292,8 @@ export default [
   {
     ...scroll,
     name: 'Scroll',
-    lightIconUrl: '/icons/scroll-testnet-dark.svg',
-    darkIconUrl: '/icons/scroll-testnet-light.svg',
+    lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
+    darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
     reservoirBaseUrl: 'https://api-scroll.reservoir.tools',
     proxyApi: '/api/reservoir/scroll',
     routePrefix: 'scroll',
