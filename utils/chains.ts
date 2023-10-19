@@ -107,8 +107,8 @@ export default [
         coinGeckoId: 'weth',
       },
       {
-        symbol: 'TTKOj',
-        contract: '0x75F94f04d2144cB6056CCd0CFF1771573d838974',
+        symbol: 'MTA',
+        contract: '0x570E40a09f77F0A098DC7A7bA803Adf1D04Dd8ec',
         decimals: 18,
       },
     ],
