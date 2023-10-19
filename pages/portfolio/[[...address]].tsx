@@ -97,7 +97,7 @@ const IndexPage: NextPage = () => {
     data: collections,
     isLoading: collectionsLoading,
     fetchNextPage,
-  } = useUserCollections(address as string, collectionQuery)
+  } = useUserCollections(isMounted ? (address as string) : '', collectionQuery)
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
