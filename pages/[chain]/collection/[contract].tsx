@@ -118,6 +118,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     id,
     includeSalesCount: true,
     includeMintStages: true,
+    includeSecurityConfigs: true,
   }
 
   const { data: collections } = useCollections(collectionQuery, {
@@ -130,12 +131,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     (stage) => stage.kind === 'public'
   )
 
-  const mintPrice =
-    mintData?.price?.amount?.decimal === 0
+  const mintPrice = mintData?.price?.amount?.decimal
+    ? mintData?.price?.amount?.decimal === 0
       ? 'Free'
       : `${
           mintData?.price?.amount?.decimal
         } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
+    : undefined
 
   let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 20,
@@ -323,7 +325,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  const contractKind = collection?.contractKind?.toUpperCase()
+  const hasSecurityConfig =
+    collection?.securityConfig &&
+    Object.values(collection.securityConfig).some(Boolean)
+  const contractKind = `${collection?.contractKind?.toUpperCase()}${
+    hasSecurityConfig ? 'C' : ''
+  }`
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -526,7 +533,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     />
                   ) : null}
                   {/* Collection Mint */}
-                  {mintData ? (
+                  {mintData && mintPrice ? (
                     <Mint
                       collectionId={collection.id}
                       openState={isMintRoute ? mintOpenState : undefined}

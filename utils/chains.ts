@@ -46,6 +46,39 @@ export const ancient8Testnet = {
   },
 } as const satisfies Chain
 
+export const scroll = {
+  id: 534352,
+  name: 'Scroll',
+  network: 'scroll',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.scroll.io'],
+      webSocket: ['wss://wss-rpc.scroll.io/ws'],
+    },
+    public: {
+      http: ['https://rpc.scroll.io'],
+      webSocket: ['wss://wss-rpc.scroll.io/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Scrollscan',
+      url: 'https://scrollscan.com',
+    },
+    blockscout: {
+      name: 'Blockscout',
+      url: 'https://blockscout.scroll.io',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 14,
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -294,5 +327,18 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ANCIENT8TESTNET_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_NCIENT8TESTNET_COMMUNITY,
+  },
+  {
+    ...scroll,
+    name: 'Scroll',
+    lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
+    darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
+    reservoirBaseUrl: 'https://api-scroll.reservoir.tools',
+    proxyApi: '/api/reservoir/scroll',
+    routePrefix: 'scroll',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_SCROLL_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
   },
 ] as ReservoirChain[]
