@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useWalletClient, mainnet } from 'wagmi'
+import { useAccount, useWalletClient, mainnet, sepolia } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
@@ -65,6 +65,20 @@ const Bid: FC<Props> = ({
         symbol: 'USDC',
         decimals: 6,
         coinGeckoId: 'usd-coin',
+      },
+    ]
+  }
+  if (marketplaceChain.id === sepolia.id) {
+    bidCurrencies = [
+      {
+        symbol: 'MTA',
+        contract: '0x570E40a09f77F0A098DC7A7bA803Adf1D04Dd8ec',
+        decimals: 18,
+      },
+      {
+        contract: '0x7b79995e5f793a07bc00c21412e50ecae098e7f9',
+        symbol: 'WETH',
+        coinGeckoId: 'ethereum',
       },
     ]
   }
