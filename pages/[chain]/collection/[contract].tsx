@@ -131,13 +131,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     (stage) => stage.kind === 'public'
   )
 
-  const mintPrice = mintData?.price?.amount?.decimal
-    ? mintData?.price?.amount?.decimal === 0
-      ? 'Free'
-      : `${
-          mintData?.price?.amount?.decimal
-        } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
-    : undefined
+  const mintPrice =
+    typeof mintData?.price?.amount?.decimal === 'number' &&
+    mintData?.price?.amount?.decimal !== null &&
+    mintData?.price?.amount?.decimal !== undefined
+      ? mintData?.price?.amount?.decimal === 0
+        ? 'Free'
+        : `${
+            mintData?.price?.amount?.decimal
+          } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
+      : undefined
 
   let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 20,
