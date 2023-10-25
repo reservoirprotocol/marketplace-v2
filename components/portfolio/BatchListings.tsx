@@ -21,7 +21,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { Currency, Listing, ListModal } from '@reservoir0x/reservoir-kit-ui'
+import { Currency, Listings, ListModal } from '@reservoir0x/reservoir-kit-ui'
 import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { UserToken } from 'pages/portfolio/[[...address]]'
@@ -41,8 +41,8 @@ export type BatchListing = {
   price: string
   quantity: number
   expirationOption: ExpirationOption
-  orderbook: Listing['orderbook']
-  orderKind: Listing['orderKind']
+  orderbook: Listings[0]['orderbook']
+  orderKind: Listings[0]['orderKind']
   marketplaceFee?: number
 }
 
