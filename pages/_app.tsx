@@ -162,12 +162,17 @@ function MyApp({
       >
         <ReservoirKitProvider
           options={{
+            // Reservoir API key which you can generate at https://reservoir.tools/
+            // This is a protected key and displays as 'undefined' on the browser
+            // DO NOT add NEXT_PUBLIC to the key or you'll risk leaking it on the browser
+            apiKey: process.env.RESERVOIR_API_KEY,
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
             chains: supportedChains.map(
-              ({ reservoirBaseUrl, proxyApi, id }) => {
+              ({ reservoirBaseUrl, proxyApi, id, name }) => {
                 return {
                   id,
+                  name,
                   baseApiUrl: proxyApi
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,

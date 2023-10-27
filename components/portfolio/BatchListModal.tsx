@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import {
   Currency,
-  Listings,
+  Listing,
   useReservoirClient,
 } from '@reservoir0x/reservoir-kit-ui'
 import { Execute } from '@reservoir0x/reservoir-sdk'
@@ -30,7 +30,7 @@ enum BatchListStep {
 }
 
 export type BatchListingData = {
-  listing: Listings[0]
+  listing: Listing
   token: UserToken
 }
 
@@ -163,7 +163,7 @@ const BatchListModal: FC<Props> = ({
 
       const token = `${listing.token.token?.contract}:${listing.token.token?.tokenId}`
 
-      const convertedListing: Listings[0] = {
+      const convertedListing: Listing = {
         token: token,
         weiPrice: (
           parseUnits(`${+listing.price}`, currency.decimals || 18) *

@@ -11,7 +11,7 @@ export default () => {
   const path = `${chain?.reservoirBaseUrl}/chain/stats/v1`
 
   return useSWR<paths['/chain/stats/v1']['get']['responses']['200']['schema']>(
-    path ? [path, chain?.apiKey, client?.version] : null,
+    path ? [path, client?.apiKey, client?.version] : null,
     null,
     {}
   )

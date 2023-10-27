@@ -76,6 +76,10 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
     }
     res.redirect(url.href)
     return
+  } else if (endpoint.match(/\/users\/(\w+)\/tokens\/v7/g)) {
+    if (url.searchParams.get('limit') === '200') {
+      res.status(403).json({ error: 'Access forbidden' })
+    }
   }
 
   try {
@@ -88,7 +92,8 @@ const proxy = async (req: NextApiRequest, res: NextApiResponse) => {
       Origin: 'https://explorer-proxy.reservoir.tools',
     })
 
-    if (chain.apiKey) headers.set('x-api-key', chain.apiKey)
+    if (process.env.RESERVOIR_API_KEY)
+      headers.set('x-api-key', process.env.RESERVOIR_API_KEY)
 
     if (typeof body === 'object') {
       headers.set('Content-Type', 'application/json')

@@ -16,7 +16,7 @@ export default (collectionId?: string) => {
 
   const { data } = useSWR<
     paths['/collections/{collection}/supported-marketplaces/v1']['get']['responses']['200']['schema']
-  >(path ? [path.href, chain?.apiKey, client?.version] : null, null, {})
+  >(path ? [path.href, client?.apiKey, client?.version] : null, null, {})
 
   let openseaFees
 

@@ -118,6 +118,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     id,
     includeSalesCount: true,
     includeMintStages: true,
+    includeSecurityConfigs: true,
   }
 
   const { data: collections } = useCollections(collectionQuery, {
@@ -131,11 +132,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   )
 
   const mintPrice =
-    mintData?.price?.amount?.decimal === 0
-      ? 'Free'
-      : `${
-          mintData?.price?.amount?.decimal
-        } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
+    typeof mintData?.price?.amount?.decimal === 'number' &&
+    mintData?.price?.amount?.decimal !== null &&
+    mintData?.price?.amount?.decimal !== undefined
+      ? mintData?.price?.amount?.decimal === 0
+        ? 'Free'
+        : `${
+            mintData?.price?.amount?.decimal
+          } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
+      : undefined
 
   let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 20,
@@ -323,7 +328,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       attributes?.length >= 2
   )
 
-  const contractKind = collection?.contractKind?.toUpperCase()
+  const hasSecurityConfig =
+    collection?.securityConfig &&
+    Object.values(collection.securityConfig).some(Boolean)
+  const contractKind = `${collection?.contractKind?.toUpperCase()}${
+    hasSecurityConfig ? 'C' : ''
+  }`
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -526,7 +536,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     />
                   ) : null}
                   {/* Collection Mint */}
-                  {mintData ? (
+                  {mintData && mintPrice ? (
                     <Mint
                       collectionId={collection.id}
                       openState={isMintRoute ? mintOpenState : undefined}
@@ -875,12 +885,12 @@ export const getServerSideProps: GetServerSideProps<{
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { reservoirBaseUrl, apiKey } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
     headers: {
-      'x-api-key': apiKey || '',
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
     },
   }
 
