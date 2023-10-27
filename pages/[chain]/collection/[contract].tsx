@@ -61,7 +61,6 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
-import * as _ from 'lodash'
 
 type ActivityTypes = Exclude<
   NonNullable<
