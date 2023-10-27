@@ -159,7 +159,6 @@ export const TokenActions: FC<Props> = ({
               </Text>
             </Flex>
           }
-          // buttonCss={{ flex: 1, justifyContent: 'center' }}
           buttonCss={{
             minWidth: 'max-content',
             whiteSpace: 'nowrap',
