@@ -112,7 +112,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  let chain = titleCase(router.query.chain as string)
+  let chainName = collectionChain?.name
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
@@ -471,7 +471,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         >
                           <FontAwesomeIcon size="xs" icon={faGlobe} />
                         </Flex>
-                        <Text style="body3">{chain}</Text>
+                        <Text style="body3">{chainName}</Text>
                       </Flex>
 
                       {mintData && (
