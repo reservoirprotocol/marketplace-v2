@@ -115,6 +115,9 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       includeAttributes: true,
     }
 
+    // @ts-ignore - Remove on RK update. TS complains when added above.
+    tokenQuery.filterSpam = true
+
     const { chain } = useContext(ChainContext)
 
     if (chain.collectionSetId) {
@@ -722,11 +725,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                     }
                   />
                 </Flex>
-                <Text
-                  style="subtitle2"
-                  ellipsify
-                  color={token?.token?.isSpam ? 'error' : 'subtle'}
-                >
+                <Text style="subtitle2" ellipsify>
                   {token?.token?.name || `#${token?.token?.tokenId}`}
                 </Text>
               </Flex>
