@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction, useRef, useMemo } from 'react'
 import * as RadixDialog from '@radix-ui/react-dialog'
-import { Button, Flex, Text } from 'components/primitives'
+import { Button, Flex, Switch, Text } from 'components/primitives'
 import Image from 'next/image'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,6 +17,8 @@ type Collections =
   | ReturnType<typeof useUserCollections>['data']
 
 type Props = {
+  hideSpam: boolean
+  setHideSpam: Dispatch<SetStateAction<boolean>>
   collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
@@ -28,6 +30,8 @@ export const MobileTokenFilters: FC<Props> = ({
   filterCollection,
   setFilterCollection,
   loadMoreCollections,
+  hideSpam,
+  setHideSpam,
 }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -136,9 +140,20 @@ export const MobileTokenFilters: FC<Props> = ({
             pb: '$5',
           }}
         >
-          <Text style="subtitle1" css={{ mb: '$2', pl: '$4' }}>
-            Collections
-          </Text>
+          <Flex align="center" justify="between" css={{ mb: '$2', px: '$4' }}>
+            <Text style="subtitle1">Collections</Text>
+            <Flex
+              css={{
+                gap: '$2',
+              }}
+            >
+              <Text style="subtitle2">Hide Spam</Text>
+              <Switch
+                checked={hideSpam}
+                onCheckedChange={(checked) => setHideSpam(checked)}
+              />
+            </Flex>
+          </Flex>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
             return (

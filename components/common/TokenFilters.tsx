@@ -1,6 +1,7 @@
 import {
   Flex,
   FormatCryptoCurrency,
+  Switch,
   Text,
   Tooltip,
 } from 'components/primitives'
@@ -20,7 +21,9 @@ type Collections = ReturnType<typeof useUserCollections>['data']
 
 type Props = {
   open: boolean
+  hideSpam: boolean
   setOpen: (open: boolean) => void
+  setHideSpam: Dispatch<SetStateAction<boolean>>
   collections: Collections
   filterCollection: string | undefined
   setFilterCollection: Dispatch<SetStateAction<string | undefined>>
@@ -40,6 +43,8 @@ export const TokenFilters: FC<Props> = ({
   isOwner,
   scrollToTop,
   loadMoreCollections,
+  hideSpam,
+  setHideSpam,
 }) => {
   if (collections?.length === 0 || collections == null || isLoading) {
     return null
@@ -64,6 +69,13 @@ export const TokenFilters: FC<Props> = ({
         }}
       >
         <Flex direction="column">
+          <Flex css={{ mt: '$2', ml: '$3', gap: '$2' }}>
+            <Text style="subtitle2">Hide Spam</Text>
+            <Switch
+              checked={hideSpam}
+              onCheckedChange={(checked) => setHideSpam(checked)}
+            />
+          </Flex>
           <Text style="subtitle1" css={{ mb: '$2', ml: '$3' }}></Text>
           {collections?.map((collection) => {
             let selected = collection?.collection?.id == filterCollection
