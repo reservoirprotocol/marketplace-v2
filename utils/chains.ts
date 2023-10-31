@@ -12,12 +12,72 @@ import {
   polygonZkEvm,
   zkSync,
   linea,
-  zora,
   base,
+  zora,
   arbitrumNova,
   scroll,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
+
+export const ancient8Testnet = {
+  id: 2863311531,
+  name: 'Ancient8 Testnet',
+  network: 'ancient8',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+    public: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+    default: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+  },
+} as const satisfies Chain
+
+export const scroll = {
+  id: 534352,
+  name: 'Scroll',
+  network: 'scroll',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.scroll.io'],
+      webSocket: ['wss://wss-rpc.scroll.io/ws'],
+    },
+    public: {
+      http: ['https://rpc.scroll.io'],
+      webSocket: ['wss://wss-rpc.scroll.io/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Scrollscan',
+      url: 'https://scrollscan.com',
+    },
+    blockscout: {
+      name: 'Blockscout',
+      url: 'https://blockscout.scroll.io',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xca11bde05977b3631167028862be2a173976ca11',
+      blockCreated: 14,
+    },
+  },
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
