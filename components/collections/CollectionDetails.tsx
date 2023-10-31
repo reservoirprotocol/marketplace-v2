@@ -10,6 +10,7 @@ import { styled } from 'stitches.config'
 import optimizeImage from 'utils/optimizeImage'
 import titleCase from 'utils/titleCase'
 import { truncateAddress } from 'utils/truncate'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 const StyledImage = styled('img', {})
 
@@ -52,10 +53,15 @@ export const CollectionDetails: FC<Props> = ({
     hasSecurityConfig ? 'C' : ''
   }`
 
+  const collectionChain =
+    supportedChains.find(
+      (chain) => router.query?.chain === chain.routePrefix
+    ) || DefaultChain
+
   let creatorRoyalties = collection?.royalties?.bps
     ? collection?.royalties?.bps * 0.01
     : 0
-  let chain = titleCase(router.query.chain as string)
+  let chainName = collectionChain?.name
 
   let rareTokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
     limit: 8,
@@ -168,7 +174,7 @@ export const CollectionDetails: FC<Props> = ({
               value: truncateAddress(collection?.primaryContract || ''),
             },
             { label: 'Token Standard', value: contractKind },
-            { label: 'Chain', value: chain },
+            { label: 'Chain', value: chainName },
             {
               label: 'Creator Earning',
               value: creatorRoyalties + '%',
