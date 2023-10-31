@@ -115,9 +115,6 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       includeAttributes: true,
     }
 
-    // @ts-ignore - Remove on RK update. TS complains when added above.
-    tokenQuery.filterSpam = true
-
     const { chain } = useContext(ChainContext)
 
     if (chain.collectionSetId) {
