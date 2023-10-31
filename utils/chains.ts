@@ -13,8 +13,8 @@ import {
   polygonZkEvm,
   zkSync,
   linea,
-  base,
   zora,
+  base,
   arbitrumNova,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
