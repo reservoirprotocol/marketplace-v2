@@ -1,6 +1,5 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains } from '@reservoir0x/reservoir-sdk'
-import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
 import {
   arbitrum,
@@ -16,6 +15,7 @@ import {
   zora,
   base,
   arbitrumNova,
+  scroll,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
@@ -255,5 +255,18 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ZKSYNC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ZKSYNC_COMMUNITY,
+  },
+  {
+    ...scroll,
+    name: 'Scroll',
+    lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
+    darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
+    reservoirBaseUrl: 'https://api-scroll.reservoir.tools',
+    proxyApi: '/api/reservoir/scroll',
+    routePrefix: 'scroll',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_SCROLL_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
   },
 ] as ReservoirChain[]
