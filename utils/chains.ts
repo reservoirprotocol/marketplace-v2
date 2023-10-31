@@ -11,6 +11,7 @@ import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import usdcContracts from './usdcContracts'
+import wrappedContracts from './wrappedContracts'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
