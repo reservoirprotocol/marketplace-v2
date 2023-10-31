@@ -69,6 +69,7 @@ type Props = {
   filterCollection: string | undefined
   sortBy: PortfolioSortingOption
   isLoading?: boolean
+  hideSpam: boolean
   selectedItems: UserToken[]
   isOwner: boolean
   itemView: ItemView
@@ -92,6 +93,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       isOwner,
       itemView,
       setSelectedItems,
+      hideSpam,
     },
     ref
   ) => {
@@ -123,6 +125,9 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
     } else if (chain.community) {
       tokenQuery.community = chain.community
     }
+
+    // @ts-ignore
+    tokenQuery.excludeSpam = hideSpam
 
     const {
       data: tokens,
