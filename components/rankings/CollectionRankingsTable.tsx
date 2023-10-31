@@ -121,6 +121,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
     (stage) => stage.kind === 'public'
   )
 
+  const mintPriceDecimal = mintData?.price?.amount?.decimal
+  const hasMintPriceDecimal = typeof mintPriceDecimal === 'number'
+
   if (isSmallDevice) {
     return (
       <Link
@@ -156,7 +159,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   collection?.openseaVerificationStatus
                 }
               />
-              {mintData ? <ActiveMintTooltip /> : null}
+              {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
@@ -246,7 +249,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                     collection?.openseaVerificationStatus
                   }
                 />
-                {mintData ? <ActiveMintTooltip /> : null}
+                {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
               </Flex>
             </Flex>
           </Link>
