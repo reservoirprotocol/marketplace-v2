@@ -39,6 +39,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     limit: 20,
     sortBy: sortByTime,
+    includeMintStages: true,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
