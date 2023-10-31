@@ -857,7 +857,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       {isOwner && (
         <TableCell>
           <Flex justify="end" css={{ gap: '$3' }}>
-            {token?.token?.topBid?.price?.amount?.decimal && (
+            {token?.token?.topBid?.price?.amount?.decimal ? (
               <AcceptBid
                 openState={[
                   acceptBidModalOpen,
@@ -886,7 +886,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
                 }
                 mutate={mutate}
               />
-            )}
+            ) : null}
 
             <List
               token={token as ReturnType<typeof useTokens>['data'][0]}
