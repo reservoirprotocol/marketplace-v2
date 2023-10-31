@@ -17,6 +17,7 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import titleCase from 'utils/titleCase'
 import { useRouter } from 'next/router'
 import optimizeImage from 'utils/optimizeImage'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0] | null
@@ -31,7 +32,12 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   const isMounted = useMounted()
   const router = useRouter()
 
-  let chain = titleCase(router.query.chain as string)
+  const collectionChain =
+    supportedChains.find(
+      (chain) => router.query?.chain === chain.routePrefix
+    ) || DefaultChain
+
+  let chainName = collectionChain?.name
 
   const hasSecurityConfig =
     collection?.securityConfig &&
@@ -223,7 +229,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
             >
               Chain
             </Text>
-            <Text style="subtitle1">{chain}</Text>
+            <Text style="subtitle1">{chainName}</Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
             <Text
