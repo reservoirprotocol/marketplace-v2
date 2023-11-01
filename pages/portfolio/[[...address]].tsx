@@ -94,6 +94,9 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = chain.community
   }
 
+  // @ts-ignore
+  collectionQuery.excludeSpam = hideSpam
+
   const {
     data: collections,
     isLoading: collectionsLoading,

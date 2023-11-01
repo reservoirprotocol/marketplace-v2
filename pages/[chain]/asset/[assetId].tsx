@@ -98,6 +98,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   const { data: collections } = useCollections(
     {
       includeSecurityConfigs: true,
+      includeMintStages: true,
       id: token?.token?.collection?.id,
     },
     {
@@ -488,6 +489,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               {isMounted && (
                 <TokenActions
                   token={token}
+                  collection={collection}
                   offer={offer}
                   listing={listing}
                   isOwner={isOwner}
