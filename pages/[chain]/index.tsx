@@ -11,7 +11,7 @@ import Layout from 'components/Layout'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useContext, useEffect, useState } from 'react'
 import { Footer } from 'components/home/Footer'
-import { useMarketplaceChain } from 'hooks'
+import { useMarketplaceChain, useMounted } from 'hooks'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
@@ -32,6 +32,7 @@ const StyledImage = styled('img', {})
 const Home: NextPage<any> = ({ ssr }) => {
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
+  const isMounted = useMounted()
 
   // not sure if there is a better way to fix this
   const { theme: nextTheme } = useTheme()
@@ -58,7 +59,7 @@ const Home: NextPage<any> = ({ ssr }) => {
         ? ssr.topSellingCollections[marketplaceChain.id]
         : null,
     },
-    chain?.id
+    isMounted ? chain?.id : undefined,
   )
 
   const topCollection = topSellingCollectionsData?.collections?.[0]
