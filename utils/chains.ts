@@ -19,6 +19,33 @@ import {
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
+export const ancient8Testnet = {
+  id: 2863311531,
+  name: 'Ancient8 Testnet',
+  network: 'ancient8',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+    public: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+    default: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+  },
+} as const satisfies Chain
+
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -268,5 +295,17 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_SCROLL_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
+  },
+  {
+    ...ancient8Testnet,
+    lightIconUrl: '',
+    darkIconUrl: '',
+    reservoirBaseUrl: 'https://api-ancient8-testnet.reservoir.tools',
+    proxyApi: '/api/reservoir/ancient8Testnet',
+    routePrefix: 'ancient8Testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ANCIENT8TESTNET_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_NCIENT8TESTNET_COMMUNITY,
   },
 ] as ReservoirChain[]
