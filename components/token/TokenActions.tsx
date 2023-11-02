@@ -269,6 +269,7 @@ export const TokenActions: FC<Props> = ({
                 >
                   <Button
                     css={{
+                      ...buttonCss,
                       color: '$red11',
                       minWidth: '150px',
                     }}
@@ -286,6 +287,7 @@ export const TokenActions: FC<Props> = ({
               ) : (
                 <Button
                   css={{
+                    ...buttonCss,
                     color: '$red11',
                     minWidth: '150px',
                     justifyContent: 'center',
