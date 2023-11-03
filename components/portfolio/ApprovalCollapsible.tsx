@@ -175,7 +175,7 @@ export const ApprovalCollapsible: FC<Props> = ({
             </Text>
           </Flex>
           <Flex>
-            {item.txHash && item.status == 'incomplete' ? (
+            {item.txHashes && item.status == 'incomplete' ? (
               <LoadingSpinner
                 css={{
                   width: 18,
