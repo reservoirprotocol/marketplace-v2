@@ -69,6 +69,7 @@ type Props = {
   filterCollection: string | undefined
   sortBy: PortfolioSortingOption
   isLoading?: boolean
+  hideSpam: boolean
   selectedItems: UserToken[]
   isOwner: boolean
   itemView: ItemView
@@ -92,6 +93,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       isOwner,
       itemView,
       setSelectedItems,
+      hideSpam,
     },
     ref
   ) => {
@@ -111,6 +113,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       includeTopBid: true,
       includeRawData: true,
       includeAttributes: true,
+      excludeSpam: hideSpam,
     }
 
     const { chain } = useContext(ChainContext)
