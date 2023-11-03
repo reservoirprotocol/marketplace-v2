@@ -131,22 +131,24 @@ const ToastContextProvider: FC<any> = ({ children }) => {
               status: failedPurchases ? 'error' : 'success',
               action: (
                 <Flex direction="column" css={{ gap: '$1' }}>
-                  {currentStep.items?.map((item) => {
-                    const txHash = item.txHash
-                      ? `${item.txHash.slice(0, 4)}...${item.txHash.slice(-4)}`
-                      : ''
-                    return (
-                      <Anchor
-                        href={`${blockExplorerBaseUrl}/tx/${item?.txHash}`}
-                        color="primary"
-                        weight="medium"
-                        target="_blank"
-                        css={{ fontSize: 12 }}
-                      >
-                        View transaction: {txHash}
-                      </Anchor>
-                    )
-                  })}
+                  {currentStep.items?.map((item) =>
+                    item.txHashes?.map((txHash) => {
+                      const formattedTxHash = txHash
+                        ? `${txHash.slice(0, 4)}...${txHash.slice(-4)}`
+                        : ''
+                      return (
+                        <Anchor
+                          href={`${blockExplorerBaseUrl}/tx/${txHash}`}
+                          color="primary"
+                          weight="medium"
+                          target="_blank"
+                          css={{ fontSize: 12 }}
+                        >
+                          View transaction: {formattedTxHash}
+                        </Anchor>
+                      )
+                    })
+                  )}
                 </Flex>
               ),
             })
