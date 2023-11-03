@@ -113,6 +113,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       includeTopBid: true,
       includeRawData: true,
       includeAttributes: true,
+      excludeSpam: hideSpam,
     }
 
     const { chain } = useContext(ChainContext)
@@ -122,9 +123,6 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
     } else if (chain.community) {
       tokenQuery.community = chain.community
     }
-
-    // @ts-ignore
-    tokenQuery.excludeSpam = hideSpam
 
     const {
       data: tokens,

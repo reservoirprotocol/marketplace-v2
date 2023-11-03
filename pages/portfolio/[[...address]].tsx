@@ -84,6 +84,7 @@ const IndexPage: NextPage = () => {
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
+    excludeSpam: hideSpam,
   }
 
   const { chain } = useContext(ChainContext)
@@ -93,9 +94,6 @@ const IndexPage: NextPage = () => {
   } else if (chain.community) {
     collectionQuery.community = chain.community
   }
-
-  // @ts-ignore
-  collectionQuery.excludeSpam = hideSpam
 
   const {
     data: collections,
