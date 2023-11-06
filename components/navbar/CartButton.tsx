@@ -1,17 +1,17 @@
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { CartPopover, useCart } from '@reservoir0x/reservoir-kit-ui'
 import { Flex, Button, Text } from 'components/primitives'
 
 const CartButton = () => {
   const { data: cartItems } = useCart((cart) => cart.items)
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
 
   return (
     <CartPopover
       onConnectWallet={() => {
-        openConnectModal?.()
+        login?.()
       }}
       trigger={
         <Button

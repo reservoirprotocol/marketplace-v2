@@ -11,7 +11,7 @@ import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAccount, useDisconnect } from 'wagmi'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { PrivyConnectButton } from 'components/PrivyConnectButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver, useMarketplaceChain } from 'hooks'
@@ -260,7 +260,7 @@ const HamburgerMenu = () => {
               </Anchor>
             </Flex>
             <Box>
-              <ConnectWalletButton />
+              <PrivyConnectButton />
             </Box>
           </Flex>
         )}

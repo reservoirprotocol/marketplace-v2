@@ -1,6 +1,6 @@
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import {
   Currency,
   Listing,
@@ -63,7 +63,7 @@ const BatchListModal: FC<Props> = ({
 }) => {
   const [open, setOpen] = useState(false)
   const { data: wallet } = useWalletClient()
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const { chain: activeChain } = useNetwork()
   const marketplaceChain = useMarketplaceChain()
   const { switchNetworkAsync } = useSwitchNetwork({
@@ -288,7 +288,7 @@ const BatchListModal: FC<Props> = ({
           }
 
           if (!wallet) {
-            openConnectModal?.()
+            login?.()
           }
         }}
       >

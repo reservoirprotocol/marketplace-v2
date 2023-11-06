@@ -1,4 +1,4 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { Button } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
@@ -32,7 +32,7 @@ const EditBid: FC<Props> = ({
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const { addToast } = useContext(ToastContext)
   const marketplaceChain = useMarketplaceChain()
 
@@ -48,7 +48,7 @@ const EditBid: FC<Props> = ({
     return cloneElement(trigger, {
       onClick: async () => {
         if (!signer) {
-          openConnectModal?.()
+          login?.()
         }
       },
     })

@@ -11,7 +11,7 @@ import {
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
 import { useAccount, useWalletClient } from 'wagmi'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -37,7 +37,7 @@ const List: FC<Props> = ({
   mutate,
 }) => {
   const { isDisconnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const { addToast } = useContext(ToastContext)
 
   const marketplaceChain = useMarketplaceChain()
@@ -61,7 +61,7 @@ const List: FC<Props> = ({
     return cloneElement(trigger, {
       onClick: async () => {
         if (!signer) {
-          openConnectModal?.()
+          login?.()
         }
       },
     })

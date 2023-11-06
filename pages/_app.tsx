@@ -9,14 +9,9 @@ import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
-import '@rainbow-me/rainbowkit/styles.css'
-import {
-  RainbowKitProvider,
-  getDefaultWallets,
-  darkTheme as rainbowDarkTheme,
-  lightTheme as rainbowLightTheme,
-} from '@rainbow-me/rainbowkit'
-import { WagmiConfig, createConfig, configureChains } from 'wagmi'
+import { configureChains, mainnet } from 'wagmi'
+import { PrivyProvider } from '@privy-io/react-auth'
+import { PrivyWagmiConnector } from '@privy-io/wagmi-connector'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -38,6 +33,8 @@ import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
+import { goerli } from 'viem/chains'
+import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -50,23 +47,19 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 
-const { chains, publicClient } = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
-  publicProvider(),
-])
-
-const { connectors } = getDefaultWallets({
-  appName: 'Reservoir NFT Explorer',
-  projectId: WALLET_CONNECT_PROJECT_ID,
-  chains,
-})
-
-const wagmiClient = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-})
+// const configureChainsConfig = configureChains(supportedChains, [
+//   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
+//   publicProvider(),
+// ])
+const configureChainsConfig = configureChains(
+  [mainnet, goerli],
+  [
+    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
+    publicProvider(),
+  ]
+)
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
 const reservoirKitThemeOverrides = {
@@ -86,17 +79,31 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         light: 'light',
       }}
     >
-      <WagmiConfig config={wagmiClient}>
-        <ChainContextProvider>
-          <AnalyticsProvider>
-            <ErrorTrackingProvider>
-              <ReferralContextProvider>
-                <MyApp {...props} />
-              </ReferralContextProvider>
-            </ErrorTrackingProvider>
-          </AnalyticsProvider>
-        </ChainContextProvider>
-      </WagmiConfig>
+      <PrivyProvider
+        appId={PRIVY_APP_ID}
+        config={{
+          embeddedWallets: {
+            createOnLogin: 'all-users',
+            requireUserPasswordOnCreate: false,
+          },
+          // supportedChains: [...configureChainsConfig.chains],
+          // appearance: {
+          //   theme: 'dark',
+          // },
+        }}
+      >
+        <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}>
+          <ChainContextProvider>
+            <AnalyticsProvider>
+              <ErrorTrackingProvider>
+                <ReferralContextProvider>
+                  <MyApp {...props} />
+                </ReferralContextProvider>
+              </ErrorTrackingProvider>
+            </AnalyticsProvider>
+          </ChainContextProvider>
+        </PrivyWagmiConnector>
+      </PrivyProvider>
     </ThemeProvider>
   )
 }
@@ -114,27 +121,20 @@ function MyApp({
     ReservoirKitTheme | undefined
   >()
 
-  const [rainbowKitTheme, setRainbowKitTheme] = useState<
-    | ReturnType<typeof rainbowDarkTheme>
-    | ReturnType<typeof rainbowLightTheme>
-    | undefined
-  >()
+  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi()
+
+  console.log(activeWallet)
+  useEffect(() => {
+    if (activeWallet) {
+      setActiveWallet(activeWallet)
+    }
+  }, [activeWallet])
 
   useEffect(() => {
     if (theme == 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
-      setRainbowKitTheme(
-        rainbowDarkTheme({
-          borderRadius: 'small',
-        })
-      )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
-      setRainbowKitTheme(
-        rainbowLightTheme({
-          borderRadius: 'small',
-        })
-      )
     }
   }, [theme])
   const { feesOnTop } = useContext(ReferralContext)
@@ -193,15 +193,9 @@ function MyApp({
           <CartProvider feesOnTopUsd={feesOnTop}>
             <WebsocketContextProvider>
               <Tooltip.Provider>
-                <RainbowKitProvider
-                  chains={chains}
-                  theme={rainbowKitTheme}
-                  modalSize="compact"
-                >
-                  <ToastContextProvider>
-                    <FunctionalComponent {...pageProps} />
-                  </ToastContextProvider>
-                </RainbowKitProvider>
+                <ToastContextProvider>
+                  <FunctionalComponent {...pageProps} />
+                </ToastContextProvider>
               </Tooltip.Provider>
             </WebsocketContextProvider>
           </CartProvider>

@@ -2,7 +2,7 @@ import React, { ComponentProps, FC, useContext, useState } from 'react'
 import { useAccount } from 'wagmi'
 import { useCart } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -27,7 +27,7 @@ const AddToCart: FC<Props> = ({
   const { data: items, add, remove, clear } = useCart((cart) => cart.items)
   const { data: cartChain } = useCart((cart) => cart.chain)
   const { isConnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
 
@@ -43,7 +43,7 @@ const AddToCart: FC<Props> = ({
           color="primary"
           onClick={async () => {
             if (!isConnected) {
-              openConnectModal?.()
+              login?.()
             }
 
             if (orderIsInCart) {
@@ -111,7 +111,7 @@ const AddToCart: FC<Props> = ({
         color="primary"
         onClick={async () => {
           if (!isConnected) {
-            openConnectModal?.()
+            login?.()
           }
 
           if (isInCart) {

@@ -1,4 +1,4 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { CancelBidModal, CancelBidStep } from '@reservoir0x/reservoir-kit-ui'
 import { FC, ReactElement, cloneElement, useContext } from 'react'
 import { SWRResponse } from 'swr'
@@ -15,7 +15,7 @@ type Props = {
 
 const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
   const { addToast } = useContext(ToastContext)
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
 
   const { data: signer } = useWalletClient()
@@ -24,7 +24,7 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
     return cloneElement(trigger, {
       onClick: async () => {
         if (!signer) {
-          openConnectModal?.()
+          login?.()
         }
       },
     })

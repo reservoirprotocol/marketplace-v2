@@ -8,7 +8,7 @@ import React, {
 import { SWRResponse } from 'swr'
 import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { ReferralContext } from '../../context/ReferralContextProvider'
@@ -34,7 +34,7 @@ const BuyNow: FC<Props> = ({
   buttonChildren,
   openState,
 }) => {
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
 
@@ -50,7 +50,7 @@ const BuyNow: FC<Props> = ({
       orderId={orderId}
       openState={openState}
       onConnectWallet={() => {
-        openConnectModal?.()
+        login?.()
       }}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)

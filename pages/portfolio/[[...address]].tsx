@@ -14,7 +14,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { useENSResolver, useMounted } from '../../hooks'
 import { TokenTable, TokenTableRef } from 'components/portfolio/TokenTable'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { PrivyConnectButton } from 'components/PrivyConnectButton'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import { TokenFilters } from 'components/common/TokenFilters'
 import { FilterButton } from 'components/common/FilterButton'
@@ -437,7 +437,7 @@ const IndexPage: NextPage = () => {
                 Connect wallet to instant sell your token across all major
                 marketplaces.
               </Text>
-              <ConnectWalletButton />
+              <PrivyConnectButton />
             </Flex>
           )}
         </Flex>

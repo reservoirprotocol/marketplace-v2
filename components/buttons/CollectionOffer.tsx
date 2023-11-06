@@ -14,7 +14,7 @@ import { mainnet, useAccount, useWalletClient } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 
@@ -43,7 +43,7 @@ const CollectionOffer: FC<Props> = ({
   const [attribute, setAttribute] = useState<Trait>(undefined)
   const { data: signer } = useWalletClient()
   const { isDisconnected } = useAccount()
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const { addToast } = useContext(ToastContext)
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const CollectionOffer: FC<Props> = ({
         css={buttonCss}
         onClick={async () => {
           if (!signer) {
-            openConnectModal?.()
+            login?.()
           }
         }}
         {...buttonProps}

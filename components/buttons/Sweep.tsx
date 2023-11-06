@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useContext,
 } from 'react'
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
 import { useMarketplaceChain } from 'hooks'
 import { CSS } from '@stitches/react'
@@ -32,7 +32,7 @@ const Sweep: FC<Props> = ({
   mutate,
   openState,
 }) => {
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
 
@@ -54,7 +54,7 @@ const Sweep: FC<Props> = ({
       feesOnTopUsd={feesOnTop}
       chainId={marketplaceChain.id}
       onConnectWallet={() => {
-        openConnectModal?.()
+        login?.()
       }}
       onClose={(data, currentStep) => {
         if (mutate && currentStep == CollectStep.Complete) mutate()

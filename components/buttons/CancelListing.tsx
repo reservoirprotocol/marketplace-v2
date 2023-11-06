@@ -1,4 +1,4 @@
-import { useConnectModal } from '@rainbow-me/rainbowkit'
+import { usePrivy } from '@privy-io/react-auth'
 import {
   CancelListingModal,
   CancelListingStep,
@@ -23,7 +23,7 @@ const CancelListing: FC<Props> = ({
   mutate,
 }) => {
   const { addToast } = useContext(ToastContext)
-  const { openConnectModal } = useConnectModal()
+  const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
 
   const { data: signer } = useWalletClient()
@@ -32,7 +32,7 @@ const CancelListing: FC<Props> = ({
     return cloneElement(trigger, {
       onClick: async () => {
         if (!signer) {
-          openConnectModal?.()
+          login?.()
         }
       },
     })

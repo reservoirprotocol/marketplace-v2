@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ConnectWalletButton } from 'components/ConnectWalletButton'
+import { PrivyConnectButton } from 'components/PrivyConnectButton'
 import NavItem from './NavItem'
 import ThemeSwitcher from './ThemeSwitcher'
 import HamburgerMenu from './HamburgerMenu'
@@ -24,7 +24,8 @@ export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
   const { theme } = useTheme()
-  const { isConnected } = useAccount()
+  const { isConnected, isConnecting, address } = useAccount({})
+  console.log(isConnected, isConnecting, address)
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
@@ -256,7 +257,7 @@ const Navbar = () => {
           <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
-            <ConnectWalletButton />
+            <PrivyConnectButton />
           </Box>
         )}
         <CartButton />
