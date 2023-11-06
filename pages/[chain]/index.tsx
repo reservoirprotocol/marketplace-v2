@@ -59,7 +59,7 @@ const Home: NextPage<any> = ({ ssr }) => {
         ? ssr.topSellingCollections[marketplaceChain.id]
         : null,
     },
-    isMounted ? chain?.id : undefined,
+    isMounted ? chain?.id : undefined
   )
 
   const topCollection = topSellingCollectionsData?.collections?.[0]
@@ -272,19 +272,24 @@ const Home: NextPage<any> = ({ ssr }) => {
                           >
                             {topCollection?.recentSales
                               ?.slice(0, 4)
-                              ?.map((sale: any, i) => (
+                              ?.map((sale, i) => (
                                 <Box
                                   css={{
                                     aspectRatio: '1/1',
                                     maxWidth: 120,
                                   }}
-                                  key={sale.token.id + sale.contract + i}
+                                  key={i}
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     e.preventDefault()
-                                    router.push(
-                                      `/${chain.routePrefix}/asset/${topCollection.primaryContract}:${sale.token.id}`
-                                    )
+                                    if (
+                                      sale?.collection?.id &&
+                                      sale?.token?.id
+                                    ) {
+                                      router.push(
+                                        `/${chain.routePrefix}/asset/${sale?.collection?.id}:${sale?.token?.id}`
+                                      )
+                                    }
                                   }}
                                 >
                                   <img
@@ -297,10 +302,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                                   />
                                   <Box css={{ mt: '$1' }}>
                                     <FormatCryptoCurrency
-                                      amount={sale.price.amount.decimal ?? 0}
+                                      amount={sale?.price?.amount?.decimal ?? 0}
                                       textStyle={'h6'}
                                       logoHeight={16}
-                                      address={sale.price.currency?.contract}
+                                      address={sale?.price?.currency?.contract}
                                     />
                                   </Box>
                                 </Box>
