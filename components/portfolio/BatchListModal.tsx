@@ -192,8 +192,16 @@ const BatchListModal: FC<Props> = ({
         convertedListing.automatedRoyalties = false
         const royaltyData = onChainRoyalty.result as OnChainRoyaltyReturnType
         const royalties = royaltyData[0].map((recipient, i) => {
-          const bps =
-            (parseFloat(formatUnits(royaltyData[1][i], 18)) / 1) * 10000
+          const bps = Math.floor(
+            (parseFloat(
+              formatUnits(
+                royaltyData[1][i],
+                marketplaceChain?.nativeCurrency.decimals || 18
+              )
+            ) /
+              1) *
+              10000
+          )
           return `${recipient}:${bps}`
         })
         if (royalties.length > 0) {
