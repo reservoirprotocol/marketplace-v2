@@ -129,10 +129,10 @@ const Navbar = () => {
             }}
           >
             <Link href={`/${routePrefix}`}>
-              <NavItem>Featured</NavItem>
+              <NavItem>Explore</NavItem>
             </Link>
             <Link href={`/${routePrefix}/collections/trending`}>
-              <NavItem>NFTs</NavItem>
+              <NavItem>Trending</NavItem>
             </Link>
 
             {/* <HoverCard.Root openDelay={200}>
