@@ -30,6 +30,7 @@ export type ReservoirChain = Chain & {
   wssUrl?: string
   listingCurrencies?: Currency[]
   oracleBidsEnabled?: boolean
+  checkPollingInterval?: number
 }
 
 const nativeCurrencyBase = {
@@ -69,6 +70,7 @@ export const DefaultChain: ReservoirChain = {
   collectionSetId: process.env.NEXT_PUBLIC_SEPOLIA_COLLECTION_SET_ID,
   community: process.env.NEXT_PUBLIC_SEPOLIA_COMMUNITY,
   wssUrl: 'wss://ws-sepolia.reservoir.tools',
+  checkPollingInterval: reservoirChains.sepolia.checkPollingInterval,
 }
 
 export default [
@@ -97,6 +99,7 @@ export default [
       },
     ],
     oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.goerli.checkPollingInterval,
   },
   {
     ...polygonMumbai,
@@ -117,6 +120,7 @@ export default [
       },
     ],
     oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.mumbai.checkPollingInterval,
   },
   {
     ...baseGoerli,
@@ -128,6 +132,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_GOERLI_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_GOERLI_COMMUNITY,
+    checkPollingInterval: reservoirChains.baseGoerli.checkPollingInterval,
   },
   {
     ...scrollTestnet,
@@ -140,6 +145,7 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COMMUNITY,
     name: 'Scroll Alpha',
+    checkPollingInterval: reservoirChains.scrollTestnet.checkPollingInterval,
   },
   {
     ...zoraTestnet,
@@ -151,5 +157,6 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ZORA_TESTNET_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ZORA_TESTNET_COMMUNITY,
+    checkPollingInterval: reservoirChains.zoraTestnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
