@@ -178,7 +178,7 @@ function MyApp({
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,
                   active: marketplaceChain.id === id,
-                  paymentTokens: [],
+                  paymentTokens: chainPaymentTokensMap[id],
                 }
               }
             ),
