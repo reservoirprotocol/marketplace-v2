@@ -24,7 +24,7 @@ export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
   const { theme } = useTheme()
-  const { isConnected } = useAccount()
+  const { isConnected, address } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
@@ -244,7 +244,7 @@ const Navbar = () => {
             </HoverCard.Root>
           </Box>
           {isConnected && (
-            <Link href={`/portfolio`}>
+            <Link href={`/portfolio/${address}`}>
               <Box css={{ mr: '$2' }}>
                 <NavItem>Portfolio</NavItem>
               </Box>

@@ -161,7 +161,7 @@ const HamburgerMenu = () => {
             >
               <Text style="subtitle1">Developers</Text>
             </Anchor>
-            <Link href="/portfolio" legacyBehavior>
+            <Link href={`/portfolio/${address}`} legacyBehavior>
               <Flex
                 direction="column"
                 css={{
@@ -231,7 +231,7 @@ const HamburgerMenu = () => {
                   Explore
                 </Text>
               </Link>
-              <Link href="/portfolio" legacyBehavior>
+              <Link href={`/portfolio/${address}`} legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{

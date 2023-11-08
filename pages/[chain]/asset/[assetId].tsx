@@ -453,7 +453,10 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                   <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
                     You own {countOwned}
                   </Text>
-                  <Link href={`/portfolio`} legacyBehavior={true}>
+                  <Link
+                    href={`/portfolio${account.address}`}
+                    legacyBehavior={true}
+                  >
                     <Anchor
                       color="primary"
                       weight="normal"
