@@ -30,6 +30,7 @@ export type ReservoirChain = Chain & {
   wssUrl?: string
   listingCurrencies?: Currency[]
   oracleBidsEnabled?: boolean
+  checkPollingInterval?: number
 }
 
 const nativeCurrencyBase = {
@@ -97,6 +98,7 @@ export default [
       },
     ],
     oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.polygon.checkPollingInterval,
   },
   {
     ...polygonMumbai,
