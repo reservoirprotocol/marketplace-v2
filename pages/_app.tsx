@@ -38,6 +38,7 @@ import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
+import { chainPaymentTokensMap } from 'utils/paymentTokens'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -177,6 +178,7 @@ function MyApp({
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,
                   active: marketplaceChain.id === id,
+                  paymentTokens: chainPaymentTokensMap[id],
                 }
               }
             ),
