@@ -286,6 +286,13 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
     {
+      chainId: 10,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
       chainId: 8453,
       address: '0x4200000000000000000000000000000000000006',
       symbol: 'WETH',
