@@ -267,16 +267,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               ? tokenIndex
               : tokens.findIndex((token) => {
                 let currentTokenPrice =
-                token.market?.floorAsk?.price?.amount?.native
-              if (currentTokenPrice !== undefined) {
-                return sortDirection === 'desc'
-                  ? updatedToken.market.floorAsk.price.amount.native >=
-                      currentTokenPrice
-                  : updatedToken.market.floorAsk.price.amount.native <=
-                      currentTokenPrice
-              }
-              return true
-            })
+                 token.market?.floorAsk?.price?.amount?.native
+               if (currentTokenPrice !== undefined) {
+                 return sortDirection === 'desc'
+                   ? updatedToken.market.floorAsk.price.amount.native >=
+                       currentTokenPrice
+                   : updatedToken.market.floorAsk.price.amount.native <=
+                       currentTokenPrice
+               }
+               return true
+             })
           if (updatedTokenPosition <= -1) {
             return
           }
