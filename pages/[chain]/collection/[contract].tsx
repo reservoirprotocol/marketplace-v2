@@ -136,8 +136,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   const mintPrice =
     typeof mintPriceDecimal === 'number' &&
-      mintPriceDecimal !== null &&
-      mintPriceDecimal !== undefined
+    mintPriceDecimal !== null &&
+    mintPriceDecimal !== undefined
       ? mintPriceDecimal === 0
         ? 'Free'
         : `${mintPriceDecimal} ${mintCurrency}`
@@ -231,10 +231,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           } else {
             const newTokenIndex =
               sortBy === 'rarity'
-                ? tokenIndex
-                : endOfListingsIndex > -1
-                  ? endOfListingsIndex
-                  : 0
+              ? tokenIndex
+              : endOfListingsIndex > -1
+                ? endOfListingsIndex
+                : 0
             newTokens.splice(newTokenIndex, 0, {
               ...token,
               market: {
@@ -267,16 +267,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               ? tokenIndex
               : tokens.findIndex((token) => {
                 let currentTokenPrice =
-                  token.market?.floorAsk?.price?.amount?.native
-                if (currentTokenPrice !== undefined) {
-                  return sortDirection === 'desc'
-                    ? updatedToken.market.floorAsk.price.amount.native >=
-                    currentTokenPrice
-                    : updatedToken.market.floorAsk.price.amount.native <=
-                    currentTokenPrice
-                }
-                return true
-              })
+                token.market?.floorAsk?.price?.amount?.native
+              if (currentTokenPrice !== undefined) {
+                return sortDirection === 'desc'
+                  ? updatedToken.market.floorAsk.price.amount.native >=
+                      currentTokenPrice
+                  : updatedToken.market.floorAsk.price.amount.native <=
+                      currentTokenPrice
+              }
+              return true
+            })
           if (updatedTokenPosition <= -1) {
             return
           }
@@ -324,9 +324,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
 
   const rarityEnabledCollection = Boolean(
     collection?.tokenCount &&
-    +collection.tokenCount >= 2 &&
-    attributes &&
-    attributes?.length >= 2
+      +collection.tokenCount >= 2 &&
+      attributes &&
+      attributes?.length >= 2
   )
 
   const hasSecurityConfig =
@@ -334,7 +334,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     Object.values(collection.securityConfig).some(Boolean)
   const contractKind = `${collection?.contractKind?.toUpperCase()}${
     hasSecurityConfig ? 'C' : ''
-    }`
+   }`
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
