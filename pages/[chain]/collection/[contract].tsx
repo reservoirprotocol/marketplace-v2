@@ -231,8 +231,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           } else {
             const newTokenIndex =
               sortBy === 'rarity'
-              ? tokenIndex
-              : endOfListingsIndex > -1
+                ? tokenIndex
+                : endOfListingsIndex > -1
                 ? endOfListingsIndex
                 : 0
             newTokens.splice(newTokenIndex, 0, {
@@ -266,17 +266,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             sortBy === 'rarity'
               ? tokenIndex
               : tokens.findIndex((token) => {
-                let currentTokenPrice =
-                 token.market?.floorAsk?.price?.amount?.native
-               if (currentTokenPrice !== undefined) {
-                 return sortDirection === 'desc'
-                   ? updatedToken.market.floorAsk.price.amount.native >=
-                       currentTokenPrice
-                   : updatedToken.market.floorAsk.price.amount.native <=
-                       currentTokenPrice
-               }
-               return true
-             })
+                  let currentTokenPrice =
+                    token.market?.floorAsk?.price?.amount?.native
+                  if (currentTokenPrice !== undefined) {
+                    return sortDirection === 'desc'
+                      ? updatedToken.market.floorAsk.price.amount.native >=
+                          currentTokenPrice
+                      : updatedToken.market.floorAsk.price.amount.native <=
+                          currentTokenPrice
+                  }
+                  return true
+                })
           if (updatedTokenPosition <= -1) {
             return
           }
@@ -334,7 +334,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     Object.values(collection.securityConfig).some(Boolean)
   const contractKind = `${collection?.contractKind?.toUpperCase()}${
     hasSecurityConfig ? 'C' : ''
-   }`
+  }`
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -546,16 +546,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       openState={isMintRoute ? mintOpenState : undefined}
                       buttonChildren={
                         <Flex
-                          css={{ gap: '$2', px: '$2' }}
+                          css={{ gap: '$2', px: '$4' }}
                           align="center"
                           justify="center"
                         >
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
-                          {!isSmallDevice && <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
                             Mint
-                          </Text>}
+                          </Text>
 
                           {!isSmallDevice && (
                             <Text
@@ -578,6 +578,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         maxWidth: '220px',
                         '@md': {
                           order: 1,
+                          px: '$5',
                         },
                       }}
                       mutate={mutate}
@@ -728,8 +729,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
                         {topBidPrice
-                          ? `${topBidPrice?.toFixed(2) || 0} ${chainCurrency.symbol
-                          }`
+                          ? `${topBidPrice?.toFixed(2) || 0} ${
+                              chainCurrency.symbol
+                            }`
                           : '-'}
                       </Text>
                     </Flex>
@@ -756,37 +758,37 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   >
                     {isFetchingInitialData
                       ? Array(10)
-                        .fill(null)
-                        .map((_, index) => (
-                          <LoadingCard key={`loading-card-${index}`} />
-                        ))
+                          .fill(null)
+                          .map((_, index) => (
+                            <LoadingCard key={`loading-card-${index}`} />
+                          ))
                       : tokens.map((token, i) => (
-                        <TokenCard
-                          key={i}
-                          token={token}
-                          address={address as Address}
-                          mutate={mutate}
-                          rarityEnabled={rarityEnabledCollection}
-                          onMediaPlayed={(e) => {
-                            if (
-                              playingElement &&
-                              playingElement !== e.nativeEvent.target
-                            ) {
-                              playingElement.pause()
+                          <TokenCard
+                            key={i}
+                            token={token}
+                            address={address as Address}
+                            mutate={mutate}
+                            rarityEnabled={rarityEnabledCollection}
+                            onMediaPlayed={(e) => {
+                              if (
+                                playingElement &&
+                                playingElement !== e.nativeEvent.target
+                              ) {
+                                playingElement.pause()
+                              }
+                              const element =
+                                (e.nativeEvent.target as HTMLAudioElement) ||
+                                (e.nativeEvent.target as HTMLVideoElement)
+                              if (element) {
+                                setPlayingElement(element)
+                              }
+                            }}
+                            addToCartEnabled={
+                              token.market?.floorAsk?.maker?.toLowerCase() !==
+                              address?.toLowerCase()
                             }
-                            const element =
-                              (e.nativeEvent.target as HTMLAudioElement) ||
-                              (e.nativeEvent.target as HTMLVideoElement)
-                            if (element) {
-                              setPlayingElement(element)
-                            }
-                          }}
-                          addToCartEnabled={
-                            token.market?.floorAsk?.maker?.toLowerCase() !==
-                            address?.toLowerCase()
-                          }
-                        />
-                      ))}
+                          />
+                        ))}
                     <Box
                       ref={loadMoreRef}
                       css={{
@@ -897,11 +899,11 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
-  {
-    id,
-    includeSalesCount: true,
-    normalizeRoyalties: NORMALIZE_ROYALTIES,
-  }
+    {
+      id,
+      includeSalesCount: true,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
+    }
 
   const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v7`,
