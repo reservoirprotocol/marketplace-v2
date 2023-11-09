@@ -147,8 +147,9 @@ export default ({
           position: 'absolute',
           right: '$2',
           zIndex: 1,
-          transition: `visibility 0s linear ${tokenIsInCart ? '' : '250ms'
-            }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
+          transition: `visibility 0s linear ${
+            tokenIsInCart ? '' : '250ms'
+          }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
           opacity: tokenIsInCart ? 1 : 0,
           top: tokenIsInCart ? '$2' : 50,
           visibility: tokenIsInCart ? 'visible' : 'hidden',
