@@ -54,10 +54,14 @@ export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
   const router = useRouter()
+
+
   const { address: accountAddress, isConnected } = useAccount()
   const address = router.query.address
     ? (router.query.address[0] as `0x${string}`)
     : accountAddress
+
+
   const [tabValue, setTabValue] = useState('items')
   const [itemView, setItemView] = useState<ItemView>('list')
 
@@ -164,6 +168,16 @@ const IndexPage: NextPage = () => {
     router.query.tab = tabValue
     router.push(router, undefined, { shallow: true })
   }, [tabValue])
+
+  useEffect(() => {
+    if (!router.asPath.includes('0x') && isConnected && address) {
+      const newUrl = `${address}${tabValue && `?tab=${tabValue}`}`
+      router.replace(newUrl, undefined, { shallow: true })
+    }
+  }, [router.asPath, isConnected, address, tabValue])
+
+
+
 
   if (!isMounted) {
     return null
