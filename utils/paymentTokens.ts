@@ -97,6 +97,20 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
     {
+      chainId: 42161,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7777777,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Zora ETH',
+      decimals: 18,
+    },
+    {
       chainId: 10,
       address: '0x4200000000000000000000000000000000000006',
       symbol: 'WETH',
@@ -176,6 +190,20 @@ export const chainPaymentTokensMap = {
       address: zeroAddress,
       symbol: 'ETH',
       name: 'Arbitrum ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 10,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7777777,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Zora ETH',
       decimals: 18,
     },
     {
@@ -290,6 +318,20 @@ export const chainPaymentTokensMap = {
       address: zeroAddress,
       symbol: 'ETH',
       name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42161,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7777777,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Zora ETH',
       decimals: 18,
     },
     {
@@ -446,6 +488,20 @@ export const chainPaymentTokensMap = {
       address: zeroAddress,
       symbol: 'ETH',
       name: 'Zora ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 10,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42161,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum ETH',
       decimals: 18,
     },
     {
