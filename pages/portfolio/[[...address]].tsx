@@ -58,8 +58,6 @@ const IndexPage: NextPage = () => {
   const address = router.query.address
     ? (router.query.address[0] as `0x${string}`)
     : accountAddress
-
-
   const [tabValue, setTabValue] = useState('items')
   const [itemView, setItemView] = useState<ItemView>('list')
 
@@ -173,9 +171,6 @@ const IndexPage: NextPage = () => {
       router.replace(newUrl, undefined, { shallow: true })
     }
   }, [router.asPath, isConnected, address, tabValue])
-
-
-
 
   if (!isMounted) {
     return null
