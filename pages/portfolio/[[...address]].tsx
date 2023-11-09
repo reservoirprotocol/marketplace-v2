@@ -54,8 +54,6 @@ export type UserToken = ReturnType<typeof useUserTokens>['data'][0]
 
 const IndexPage: NextPage = () => {
   const router = useRouter()
-
-
   const { address: accountAddress, isConnected } = useAccount()
   const address = router.query.address
     ? (router.query.address[0] as `0x${string}`)
