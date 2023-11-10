@@ -144,7 +144,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                NFTs
+                Trending
               </Text>
             </Link>
 
