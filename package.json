@@ -30,7 +30,7 @@
     "@radix-ui/react-toggle-group": "^1.0.1",
     "@radix-ui/react-tooltip": "1.0.6",
     "@rainbow-me/rainbowkit": "^1.1.3",
-    "@reservoir0x/reservoir-kit-ui": "1.18.3",
+    "@reservoir0x/reservoir-kit-ui": "1.18.4",
     "@sentry/nextjs": "^7.53.1",
     "@types/uuid": "^9.0.1",
     "dayjs": "^1.11.6",
