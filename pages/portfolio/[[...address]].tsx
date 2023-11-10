@@ -84,6 +84,7 @@ const IndexPage: NextPage = () => {
 
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
+    excludeSpam: hideSpam,
   }
 
   const { chain } = useContext(ChainContext)
@@ -94,14 +95,11 @@ const IndexPage: NextPage = () => {
     collectionQuery.community = chain.community
   }
 
-  // @ts-ignore
-  collectionQuery.excludeSpam = hideSpam
-
   const {
     data: collections,
     isLoading: collectionsLoading,
     fetchNextPage,
-  } = useUserCollections(address as string, collectionQuery)
+  } = useUserCollections(isMounted ? (address as string) : '', collectionQuery)
 
   // Batch listing logic
   const [showListingPage, setShowListingPage] = useState(false)
