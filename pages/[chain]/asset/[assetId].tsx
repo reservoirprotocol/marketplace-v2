@@ -416,8 +416,8 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                       title: 'Refresh token failed',
                       description: ratelimit
                         ? `This token was recently refreshed. The next available refresh is ${timeTill(
-                            ratelimit
-                          )}.`
+                          ratelimit
+                        )}.`
                         : `This token was recently refreshed. Please try again later.`,
                     })
 
@@ -453,7 +453,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                   <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
                     You own {countOwned}
                   </Text>
-                  <Link href={`/portfolio`} legacyBehavior={true}>
+                  <Link href={`/portfolio/${account.address || ''}`} legacyBehavior={true}>
                     <Anchor
                       color="primary"
                       weight="normal"
@@ -600,8 +600,8 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
 
 type SSRProps = {
   collection?:
-    | paths['/collections/v7']['get']['responses']['200']['schema']
-    | null
+  | paths['/collections/v7']['get']['responses']['200']['schema']
+  | null
   tokens?: paths['/tokens/v6']['get']['responses']['200']['schema'] | null
 }
 
@@ -648,10 +648,10 @@ export const getServerSideProps: GetServerSideProps<{
       : {}
 
     let collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
-      {
-        id: tokens?.tokens?.[0]?.token?.collection?.id,
-        normalizeRoyalties: NORMALIZE_ROYALTIES,
-      }
+    {
+      id: tokens?.tokens?.[0]?.token?.collection?.id,
+      normalizeRoyalties: NORMALIZE_ROYALTIES,
+    }
 
     const collectionsPromise = fetcher(
       `${reservoirBaseUrl}/collections/v7`,
