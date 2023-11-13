@@ -553,7 +553,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
-                          {isSmallDevice && (                         
+                          {!isSmallDevice && (                         
                           <Text style="h6" as="h6" css={{ color: '$bg' }}>
                             Mint
                           </Text>)}
