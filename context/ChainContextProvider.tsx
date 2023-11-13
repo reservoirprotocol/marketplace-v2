@@ -48,6 +48,9 @@ const ChainContextProvider: FC<any> = ({ children }) => {
 
       setGlobalChainId(+chainId)
 
+      router.query.chain = supportedChainsMap[+chainId].routePrefix
+      router.push(router, undefined, { shallow: true })
+
       if (typeof window !== 'undefined') {
         localStorage.setItem('reservoir.chainId', `${chainId}`)
       }
