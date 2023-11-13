@@ -169,7 +169,7 @@ export const AccountSidebar: FC = () => {
                     </CopyText>
                   </Flex>
                   <Grid css={{ gridTemplateColumns: '1fr 1fr', mt: 32 }}>
-                    <Link href={`/portfolio?${address || ''}tab=items`} replace={true}>
+                    <Link href={`/portfolio/${address || ''}?tab=items`} replace={true}>
                       <Flex
                         align="center"
                         css={{
