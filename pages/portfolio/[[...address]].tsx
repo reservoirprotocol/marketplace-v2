@@ -165,13 +165,6 @@ const IndexPage: NextPage = () => {
     router.push(router, undefined, { shallow: true })
   }, [tabValue])
 
-  useEffect(() => {
-    if (!router.asPath.includes('0x') && isConnected && address) {
-      const newUrl = `${address}${tabValue && `?tab=${tabValue}`}`
-      router.replace(newUrl, undefined, { shallow: true })
-    }
-  }, [router.asPath, isConnected, address, tabValue])
-
   if (!isMounted) {
     return null
   }
