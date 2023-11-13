@@ -40,6 +40,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
 import CopyText from 'components/common/CopyText'
+import supportedChains from 'utils/chains'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -87,7 +88,8 @@ const IndexPage: NextPage = () => {
     excludeSpam: hideSpam,
   }
 
-  const { chain } = useContext(ChainContext)
+  const { chain, switchCurrentChain } = useContext(ChainContext)
+  const [chainValue, setChainValue] = useState(chain.name)
 
   if (chain.collectionSetId) {
     collectionQuery.collectionsSetId = chain.collectionSetId
@@ -121,6 +123,7 @@ const IndexPage: NextPage = () => {
 
   useEffect(() => {
     setSelectedItems([])
+    setChainValue(chain.name)
   }, [chain])
 
   useEffect(() => {
@@ -133,9 +136,12 @@ const IndexPage: NextPage = () => {
     let tab = tabValue
 
     let deeplinkTab: string | null = null
+    let deeplinkChain: string | null = null
+
     if (typeof window !== 'undefined') {
       const params = new URL(window.location.href).searchParams
       deeplinkTab = params.get('tab')
+      deeplinkChain = params.get('chain')
     }
 
     if (deeplinkTab) {
@@ -157,6 +163,18 @@ const IndexPage: NextPage = () => {
           break
       }
     }
+
+    if (deeplinkChain) {
+      const chainId =
+        supportedChains[
+          supportedChains.findIndex((chain) => {
+            return chain.name === deeplinkChain
+          })
+        ].id
+
+      switchCurrentChain(chainId)
+    }
+
     setTabValue(tab)
   }, [isSmallDevice, router.asPath])
 
@@ -164,6 +182,12 @@ const IndexPage: NextPage = () => {
     router.query.tab = tabValue
     router.push(router, undefined, { shallow: true })
   }, [tabValue])
+
+  useEffect(() => {
+    console.log('chain value', chainValue)
+    router.query.chain = chainValue
+    router.push(router, undefined, { shallow: true })
+  }, [chainValue])
 
   if (!isMounted) {
     return null
