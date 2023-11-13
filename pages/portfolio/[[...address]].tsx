@@ -133,12 +133,10 @@ const IndexPage: NextPage = () => {
     let tab = tabValue
 
     let deeplinkTab: string | null = null
-    let deeplinkChain: string | null = null
 
     if (typeof window !== 'undefined') {
       const params = new URL(window.location.href).searchParams
       deeplinkTab = params.get('tab')
-      deeplinkChain = params.get('chain')
     }
 
     if (deeplinkTab) {
@@ -160,7 +158,6 @@ const IndexPage: NextPage = () => {
           break
       }
     }
-
     setTabValue(tab)
   }, [isSmallDevice, router.asPath])
 
