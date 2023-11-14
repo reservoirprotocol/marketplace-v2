@@ -11,7 +11,7 @@ import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
 import { configureChains, mainnet } from 'wagmi'
 import { PrivyProvider } from '@privy-io/react-auth'
-import { PrivyWagmiConnector } from '@privy-io/wagmi-connector'
+import { PrivyWagmiConnector, usePrivyWagmi } from '@privy-io/wagmi-connector'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
@@ -111,6 +111,14 @@ function MyApp({
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
+
+  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi()
+
+  useEffect(() => {
+    if (activeWallet) {
+      setActiveWallet(activeWallet)
+    }
+  }, [activeWallet])
 
   useEffect(() => {
     if (theme == 'dark') {
