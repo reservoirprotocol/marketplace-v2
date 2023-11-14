@@ -33,8 +33,6 @@ import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
-import { goerli } from 'viem/chains'
-import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -49,17 +47,10 @@ const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 
-// const configureChainsConfig = configureChains(supportedChains, [
-//   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
-//   publicProvider(),
-// ])
-const configureChainsConfig = configureChains(
-  [mainnet, goerli],
-  [
-    // alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
-    publicProvider(),
-  ]
-)
+const configureChainsConfig = configureChains(supportedChains, [
+  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
+  publicProvider(),
+])
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
 const reservoirKitThemeOverrides = {
@@ -86,10 +77,10 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
             createOnLogin: 'all-users',
             requireUserPasswordOnCreate: false,
           },
-          // supportedChains: [...configureChainsConfig.chains],
-          // appearance: {
-          //   theme: 'dark',
-          // },
+          supportedChains: [...configureChainsConfig.chains],
+          appearance: {
+            theme: 'dark',
+          },
         }}
       >
         <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}>
@@ -120,15 +111,6 @@ function MyApp({
   const [reservoirKitTheme, setReservoirKitTheme] = useState<
     ReservoirKitTheme | undefined
   >()
-
-  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi()
-
-  console.log(activeWallet)
-  useEffect(() => {
-    if (activeWallet) {
-      setActiveWallet(activeWallet)
-    }
-  }, [activeWallet])
 
   useEffect(() => {
     if (theme == 'dark') {
