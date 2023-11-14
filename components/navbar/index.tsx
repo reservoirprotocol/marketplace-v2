@@ -134,18 +134,12 @@ const Navbar = () => {
 
             <HoverCard.Root openDelay={200}>
               <HoverCard.Trigger>
-                <Link
-                  href={`/${routePrefix}/collection/trending?type=collections`}
-                >
                   <NavItem>Trending</NavItem>
-                </Link>
               </HoverCard.Trigger>
               <HoverCard.Content sideOffset={24} align="start">
                 <Card css={{ p: 24, width: 240, border: '1px solid $gray4' }}>
                   <Flex css={{ gap: '$4' }} direction="column">
-                    <Link
-                      href={`/${routePrefix}/collections/trending?type=collections`}
-                    >
+                    <Link href={`/${routePrefix}/collections/trending`}>
                       <NavItem
                         css={{
                           fontWeight: 'normal',
@@ -154,9 +148,7 @@ const Navbar = () => {
                         Collections
                       </NavItem>
                     </Link>
-                    <Link
-                      href={`/${routePrefix}/collections/trending?type=mints`}
-                    >
+                    <Link href={`/${routePrefix}/mints/trending`}>
                       <NavItem
                         css={{
                           fontWeight: 'normal',

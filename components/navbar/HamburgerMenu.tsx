@@ -134,7 +134,7 @@ const HamburgerMenu = () => {
                 Explore
               </Text>
             </Link>
-            <Link href="/ethereum/collections/trending?type=collections" legacyBehavior>
+            <Link href="/ethereum/collections/trending" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -148,7 +148,7 @@ const HamburgerMenu = () => {
               </Text>
             </Link>
 
-            <Link href="/ethereum/collections/trending?type=mints" legacyBehavior>
+            <Link href="/ethereum/mints/trending" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
