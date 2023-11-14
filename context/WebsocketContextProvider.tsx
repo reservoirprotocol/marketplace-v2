@@ -5,7 +5,6 @@ import React, {
   FC,
   PropsWithChildren,
 } from 'react'
-import { JsonObject } from 'react-use-websocket/dist/lib/types'
 
 type WebsocketStore = {
   subscriptions: Record<number, Record<string, number>>
@@ -22,8 +21,8 @@ function websocketStore() {
     (
       chainId: number,
       messages: ReservoirWebsocketMessage[],
-      onSubscribe: (message: JsonObject) => void,
-      onUnsubscribe: (message: JsonObject) => void
+      onSubscribe: (message: Record<any, unknown>) => void,
+      onUnsubscribe: (message: Record<any, unknown>) => void
     ) => {
       messages.forEach((message) => {
         let subscription = message.event as string
