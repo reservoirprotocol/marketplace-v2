@@ -83,6 +83,13 @@ export const chainPaymentTokensMap = {
   // Optimism
   10: [
     {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
       chainId: 8453,
       address: zeroAddress,
       symbol: 'ETH',
@@ -179,6 +186,13 @@ export const chainPaymentTokensMap = {
   // Arbitrum
   42161: [
     {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
       chainId: 8453,
       address: zeroAddress,
       symbol: 'ETH',
@@ -224,6 +238,13 @@ export const chainPaymentTokensMap = {
 
   // Arbitrum Nova
   42170: [
+    {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
     {
       chainId: 8453,
       address: zeroAddress,
@@ -306,6 +327,13 @@ export const chainPaymentTokensMap = {
 
   // Base
   8453: [
+    {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
     {
       chainId: 8453,
       address: zeroAddress,
@@ -476,6 +504,13 @@ export const chainPaymentTokensMap = {
 
   // Zora
   7777777: [
+    {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
     {
       chainId: 8453,
       address: zeroAddress,
