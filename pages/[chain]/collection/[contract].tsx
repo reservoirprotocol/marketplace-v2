@@ -112,7 +112,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  let chain = titleCase(router.query.chain as string)
+  let chainName = collectionChain?.name
 
   let collectionQuery: Parameters<typeof useCollections>['0'] = {
     id,
@@ -131,15 +131,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     (stage) => stage.kind === 'public'
   )
 
+  const mintPriceDecimal = mintData?.price?.amount?.decimal
+  const mintCurrency = mintData?.price?.currency?.symbol?.toUpperCase()
+
   const mintPrice =
-    typeof mintData?.price?.amount?.decimal === 'number' &&
-    mintData?.price?.amount?.decimal !== null &&
-    mintData?.price?.amount?.decimal !== undefined
-      ? mintData?.price?.amount?.decimal === 0
+    typeof mintPriceDecimal === 'number' &&
+    mintPriceDecimal !== null &&
+    mintPriceDecimal !== undefined
+      ? mintPriceDecimal === 0
         ? 'Free'
-        : `${
-            mintData?.price?.amount?.decimal
-          } ${mintData?.price?.currency?.symbol?.toUpperCase()}`
+        : `${mintPriceDecimal} ${mintCurrency}`
       : undefined
 
   let tokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
@@ -425,7 +426,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                    <Flex css={{ gap: '$3' }} align="center">
+                    <Flex css={{
+                      gap: '$3',
+                      ...(isSmallDevice && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
+                    }} align="center">
                       <CopyText
                         text={collection.id as string}
                         css={{
@@ -471,7 +475,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         >
                           <FontAwesomeIcon size="xs" icon={faGlobe} />
                         </Flex>
-                        <Text style="body3">{chain}</Text>
+                        <Text style="body3">{chainName}</Text>
                       </Flex>
 
                       {mintData && (
@@ -542,16 +546,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       openState={isMintRoute ? mintOpenState : undefined}
                       buttonChildren={
                         <Flex
-                          css={{ gap: '$2', px: '$4' }}
+                          css={{ gap: '$2', px: '$2' }}
                           align="center"
                           justify="center"
                         >
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
+                          {!isSmallDevice && (                         
                           <Text style="h6" as="h6" css={{ color: '$bg' }}>
                             Mint
-                          </Text>
+                          </Text>)}
 
                           {!isSmallDevice && (
                             <Text
@@ -574,7 +579,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         maxWidth: '220px',
                         '@md': {
                           order: 1,
-                          px: '$5',
                         },
                       }}
                       mutate={mutate}

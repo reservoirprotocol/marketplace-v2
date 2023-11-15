@@ -1,10 +1,16 @@
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useBids, useListings, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useBids,
+  useCollections,
+  useListings,
+  useTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
+import Mint from 'components/buttons/Mint'
 import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
@@ -13,6 +19,7 @@ import { useAccount } from 'wagmi'
 
 type Props = {
   token: ReturnType<typeof useTokens>['data'][0]
+  collection: ReturnType<typeof useCollections>['data'][0] | null
   offer?: ReturnType<typeof useBids>['data'][0]
   listing?: ReturnType<typeof useListings>['data'][0]
   isOwner: boolean
@@ -22,6 +29,7 @@ type Props = {
 
 export const TokenActions: FC<Props> = ({
   token,
+  collection,
   offer,
   listing,
   isOwner,
@@ -56,6 +64,22 @@ export const TokenActions: FC<Props> = ({
   const offerIsOracleOrder = offer?.isNativeOffChainCancellable
 
   const listingIsOracleOrder = listing?.isNativeOffChainCancellable
+
+  const mintData = collection?.mintStages?.find(
+    (stage) => stage.tokenId === token?.token?.tokenId
+  )
+
+  const mintPriceDecimal = mintData?.price?.amount?.decimal
+  const mintCurrency = mintData?.price?.currency?.symbol?.toUpperCase()
+
+  const mintPrice =
+    typeof mintPriceDecimal === 'number' &&
+    mintPriceDecimal !== null &&
+    mintPriceDecimal !== undefined
+      ? mintPriceDecimal === 0
+        ? 'Free'
+        : `${mintPriceDecimal} ${mintCurrency}`
+      : undefined
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
@@ -120,6 +144,32 @@ export const TokenActions: FC<Props> = ({
             )}
           </Flex>
         )}
+      {mintData && mintPrice ? (
+        <Mint
+          collectionId={collection?.id}
+          tokenId={token?.token?.tokenId}
+          buttonChildren={
+            <Flex css={{ gap: '$2', px: '$4' }} align="center" justify="center">
+              <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                Mint
+              </Text>
+
+              <Text style="h6" as="h6" css={{ color: '$bg', fontWeight: 900 }}>
+                {`${mintPrice}`}
+              </Text>
+            </Flex>
+          }
+          buttonCss={{
+            minWidth: 'max-content',
+            whiteSpace: 'nowrap',
+            flexShrink: 0,
+            flexGrow: 1,
+            justifyContent: 'center',
+            ...buttonCss,
+          }}
+          mutate={mutate}
+        />
+      ) : null}
       {showAcceptOffer && (
         <AcceptBid
           tokenId={token.token?.tokenId}
@@ -219,6 +269,7 @@ export const TokenActions: FC<Props> = ({
                 >
                   <Button
                     css={{
+                      ...buttonCss,
                       color: '$red11',
                       minWidth: '150px',
                     }}
@@ -236,6 +287,7 @@ export const TokenActions: FC<Props> = ({
               ) : (
                 <Button
                   css={{
+                    ...buttonCss,
                     color: '$red11',
                     minWidth: '150px',
                     justifyContent: 'center',
