@@ -464,7 +464,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                   </Link>
                 </Flex>
               )}
-              {!is1155 && (
+              {!is1155 && owner && (
                 <Flex align="center" css={{ mt: '$2' }}>
                   <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
                     Owner
