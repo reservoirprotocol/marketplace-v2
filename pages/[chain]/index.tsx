@@ -151,9 +151,9 @@ const Home: NextPage<any> = ({ ssr }) => {
                   >
                     <StyledImage
                       src={optimizeImage(
-                        topCollection?.banner ??
-                          topCollection?.image ??
-                          topCollection?.recentSales?.[0]?.collection?.image ??
+                        topCollection?.banner ||
+                          topCollection?.image ||
+                          topCollection?.recentSales?.[0]?.collection?.image ||
                           topCollection?.recentSales?.[0]?.token?.image,
                         1820
                       )}
