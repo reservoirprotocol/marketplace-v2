@@ -247,7 +247,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 <Flex align="center">
                   {imageSrc && (
                     <Image
-                      style={{ borderRadius: '4px', objectFit: 'cover' }}
+                      style={{
+                        borderRadius: '4px',
+                        objectFit: 'cover',
+                        aspectRatio: '1/1',
+                      }}
                       loader={({ src }) => src}
                       src={imageSrc}
                       alt={`${activity.token?.tokenName} Token Image`}
@@ -374,7 +378,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           <Flex align="center">
             {imageSrc && (
               <Img
-                style={{ borderRadius: '4px', objectFit: 'cover' }}
+                style={{
+                  borderRadius: '4px',
+                  objectFit: 'cover',
+                  aspectRatio: '1/1',
+                }}
                 loader={({ src }) => src}
                 src={imageSrc}
                 alt="Activity Token Image"
@@ -388,7 +396,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               css={{ ml: '$3' }}
               style={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}
             >
-              <Text style="subtitle1" ellipsify css={{ fontSize: '14px' }}>
+              <Text
+                style="subtitle1"
+                ellipsify
+                css={{ fontSize: '14px', maxWidth: '100%' }}
+              >
                 {activity.token?.tokenName ||
                   activity.token?.tokenId ||
                   activity.collection?.collectionName}

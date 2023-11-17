@@ -28,6 +28,12 @@ jobs:
           git pull
           git merge --no-ff main -m "Auto-merge main into default"
           git push
+      - name: Sync privy with main
+        run: |
+          git checkout privy
+          git pull
+          git merge --no-ff main -m "Auto-merge main into privy"
+          git push
       - name: Report Status
         uses: ravsamhq/notify-slack-action@v1
         if: always()
