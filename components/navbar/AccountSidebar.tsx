@@ -184,7 +184,7 @@ export const AccountSidebar: FC = () => {
                       </Flex>
                     </Link>
                     <Link href={`/portfolio/${address || ''}?tab=listings`} replace={true}>
-                      < Flex
+                      <Flex
                         align="center"
                         css={{
                           gap: 6,
