@@ -1,17 +1,11 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
-import {
-  ComponentPropsWithoutRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useCollections, useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../../../_app'
 import supportedChains, { DefaultChain } from 'utils/chains'
@@ -25,6 +19,13 @@ import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { useRouter } from 'next/router'
+import MintTypeSelector, {
+  MintTypeOption,
+} from 'components/common/MintTypeSelector'
+import MintsPeriodDropdown, {
+  MintsSortingOption,
+} from 'components/common/MintsPeriodDropdown'
+import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
@@ -33,13 +34,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
+  const isSmallDevice = useMediaQuery({ maxWidth: 600 })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>('1DayVolume')
 
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 20,
-    sortBy: sortByTime,
-    includeMintStages: true,
+  const [mintType, setMintType] = useState<MintTypeOption>('any')
+  const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
+
+  let mintQuery: Parameters<typeof useTrendingMints>['0'] = {
+    limit: 50,
+    period: sortByPeriod,
+    type: mintType,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -58,46 +63,14 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     }
   }, [router.query])
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
+  const { data, isValidating } = useTrendingMints(mintQuery, chain.id, {
+    fallbackData: [ssr.mint],
+  })
 
-  const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
-    collectionQuery,
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
-
-  let collections = data || []
+  let mints = data || []
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
-    }
-  }, [loadMoreObserver?.isIntersecting])
-
-  let volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
-
-  switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
-      break
-    case '7DayVolume':
-      volumeKey = '7day'
-      break
-    case '30DayVolume':
-      volumeKey = '30day'
-      break
-  }
 
   return (
     <Layout>
@@ -133,31 +106,37 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
               Trending Mints
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
-              <CollectionsTimeDropdown
+              {!isSmallDevice && (
+                <MintTypeSelector
+                  option={mintType}
+                  onOptionSelected={setMintType}
+                />
+              )}
+              <MintsPeriodDropdown
                 compact={compactToggleNames && isMounted}
-                option={sortByTime}
+                option={sortByPeriod}
                 onOptionSelected={(option) => {
-                  setSortByTime(option)
+                  setSortByPeriod(option)
                 }}
               />
               <ChainToggle />
             </Flex>
+            {isSmallDevice && (
+              <MintTypeSelector
+                option={mintType}
+                onOptionSelected={setMintType}
+              />
+            )}
           </Flex>
           {isSSR || !isMounted ? null : (
-            <CollectionRankingsTable
-              collections={collections}
-              volumeKey={volumeKey}
+            <MintRankingsTable
+              mints={mints}
               loading={isValidating}
+              volumeKey="1day"
             />
           )}
-          <Box
-            ref={loadMoreRef}
-            css={{
-              display: isFetchingPage ? 'none' : 'block',
-            }}
-          ></Box>
         </Flex>
-        {(isFetchingPage || isValidating) && (
+        {isValidating && (
           <Flex align="center" justify="center" css={{ py: '$4' }}>
             <LoadingSpinner />
           </Flex>
@@ -170,27 +149,25 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 type CollectionSchema =
   paths['/collections/v7']['get']['responses']['200']['schema']
 
+type MintsSchema =
+  paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
+
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection: CollectionSchema
+    mint: MintsSchema
   }
 }> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
+  const mintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
     {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 20,
+      period: '24h',
+      limit: 50,
     }
   const chainPrefix = params?.chain || ''
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
-  const query = { ...collectionQuery }
-  if (chain.collectionSetId) {
-    query.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    query.community = chain.community
-  }
+  const query = { ...mintsQuery }
+
   const response = await fetcher(
     `${chain.reservoirBaseUrl}/collections/v7`,
     query,
@@ -207,7 +184,7 @@ export const getServerSideProps: GetServerSideProps<{
   )
 
   return {
-    props: { ssr: { collection: response.data } },
+    props: { ssr: { mint: response.data } },
   }
 }
 
