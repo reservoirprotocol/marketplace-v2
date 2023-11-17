@@ -725,13 +725,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       <Text style="body1" as="p" color="subtle">
                         Floor
                       </Text>
-                      <Text
-                        style="body1"
-                        as="p"
-                        css={{ fontWeight: '700', display: 'flex', gap: '$1' }}
-                      >
+                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
                         {nativePrice ? (
-                          <>
+                          <Flex
+                            css={{
+                              gap: '$2',
+                            }}
+                          >
                             <FormatCryptoCurrency
                               amount={nativePrice}
                               logoHeight={14}
@@ -739,7 +739,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               maximumFractionDigits={4}
                             />
                             {chainCurrency.symbol}
-                          </>
+                          </Flex>
                         ) : (
                           '-'
                         )}
