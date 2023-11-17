@@ -5,6 +5,7 @@ import {
   Box,
   Input,
   FormatCrypto,
+  FormatCryptoCurrency,
 } from '../../../components/primitives'
 import {
   useCollections,
@@ -426,10 +427,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                    <Flex css={{
-                      gap: '$3',
-                      ...(isSmallDevice && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
-                    }} align="center">
+                    <Flex
+                      css={{
+                        gap: '$3',
+                        ...(isSmallDevice && {
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                        }),
+                      }}
+                      align="center"
+                    >
                       <CopyText
                         text={collection.id as string}
                         css={{
@@ -553,10 +560,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
-                          {!isSmallDevice && (                         
-                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                            Mint
-                          </Text>)}
+                          {!isSmallDevice && (
+                            <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                              Mint
+                            </Text>
+                          )}
 
                           {!isSmallDevice && (
                             <Text
@@ -717,10 +725,24 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       <Text style="body1" as="p" color="subtle">
                         Floor
                       </Text>
-                      <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {nativePrice
-                          ? `${nativePrice?.toFixed(2)} ${chainCurrency.symbol}`
-                          : '-'}
+                      <Text
+                        style="body1"
+                        as="p"
+                        css={{ fontWeight: '700', display: 'flex', gap: '$1' }}
+                      >
+                        {nativePrice ? (
+                          <>
+                            <FormatCryptoCurrency
+                              amount={nativePrice}
+                              logoHeight={14}
+                              textStyle="subtitle1"
+                              maximumFractionDigits={4}
+                            />
+                            {chainCurrency.symbol}
+                          </>
+                        ) : (
+                          '-'
+                        )}
                       </Text>
                     </Flex>
                     <Flex css={{ gap: '$1' }}>
