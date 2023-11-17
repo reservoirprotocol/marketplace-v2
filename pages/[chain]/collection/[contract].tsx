@@ -427,16 +427,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                    <Flex
-                      css={{
-                        gap: '$3',
-                        ...(isSmallDevice && {
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                        }),
-                      }}
-                      align="center"
-                    >
+                     <Flex css={{
+                      gap: '$3',
+                      ...(isSmallDevice && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
+                    }} align="center">
                       <CopyText
                         text={collection.id as string}
                         css={{
@@ -560,11 +554,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
-                          {!isSmallDevice && (
-                            <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                              Mint
-                            </Text>
-                          )}
+                          {!isSmallDevice && (                         
+                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                            Mint
+                          </Text>)}
 
                           {!isSmallDevice && (
                             <Text
