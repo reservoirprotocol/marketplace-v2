@@ -414,8 +414,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                             <img
                               loading="lazy"
                               src={optimizeImage(
-                                collection?.banner ??
-                                  collection.recentSales?.[0]?.token?.image,
+                                collection?.banner ||
+                                  collection.recentSales?.[0]?.token?.image ||
+                                  collection.recentSales?.[0]?.collection
+                                    ?.image,
                                 800
                               )}
                               style={{
