@@ -1,31 +1,27 @@
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box } from 'components/primitives'
-import Layout from 'components/Layout'
-import { useContext, useEffect, useRef, useState } from 'react'
-import { useMediaQuery } from 'react-responsive'
-import { useMounted } from 'hooks'
+import { useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections, useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../../../_app'
-import supportedChains, { DefaultChain } from 'utils/chains'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
-import { useIntersectionObserver } from 'usehooks-ts'
-import LoadingSpinner from 'components/common/LoadingSpinner'
-import CollectionsTimeDropdown, {
-  CollectionsSortingOption,
-} from 'components/common/CollectionsTimeDropdown'
-import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
-import { ChainContext } from 'context/ChainContextProvider'
-import { useRouter } from 'next/router'
+import Layout from 'components/Layout'
+import ChainToggle from 'components/common/ChainToggle'
+import { CollectionsSortingOption } from 'components/common/CollectionsTimeDropdown'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 import MintTypeSelector, {
   MintTypeOption,
 } from 'components/common/MintTypeSelector'
 import MintsPeriodDropdown, {
   MintsSortingOption,
 } from 'components/common/MintsPeriodDropdown'
+import { Box, Flex, Text } from 'components/primitives'
 import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
+import { ChainContext } from 'context/ChainContextProvider'
+import { useMounted } from 'hooks'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
+import { useRouter } from 'next/router'
+import { useContext, useEffect, useRef, useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
+import { useIntersectionObserver } from 'usehooks-ts'
+import supportedChains, { DefaultChain } from 'utils/chains'
+import fetcher from 'utils/fetcher'
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 

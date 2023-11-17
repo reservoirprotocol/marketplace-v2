@@ -1,4 +1,4 @@
-import { ToggleGroupRoot, ToggleGroupItem } from 'components/primitives'
+import { ToggleGroupItem, ToggleGroupRoot } from 'components/primitives'
 import { FC } from 'react'
 
 export const MintTypeOptions = ['any', 'free', 'paid'] as const

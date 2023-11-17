@@ -1,13 +1,13 @@
-import { useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
-import { Text, Button, Box } from '../primitives'
-import {
-  DropdownMenuItem,
-  DropdownMenuContent,
-} from 'components/primitives/Dropdown'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { FC } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from 'components/primitives/Dropdown'
+import { FC } from 'react'
+import { Box, Button, Text } from '../primitives'
 
 export type MintsSortingOption = NonNullable<
   Exclude<Parameters<typeof useTrendingMints>[0], false | undefined>['period']

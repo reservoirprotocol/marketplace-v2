@@ -1,8 +1,7 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useCollections, useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
+import { useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { ActiveMintTooltip } from 'components/home/ActiveMintTooltip'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import {
   Box,
@@ -69,7 +68,7 @@ export const MintRankingsTable: FC<Props> = ({ mints, loading, volumeKey }) => {
                 Collection
               </Text>
               <Text style="subtitle3" color="subtle">
-                Volume
+                Total Mints
               </Text>
             </Flex>
           ) : (
@@ -96,11 +95,7 @@ type RankingsTableRowProps = {
   volumeKey: ComponentPropsWithoutRef<typeof MintRankingsTable>['volumeKey']
 }
 
-const RankingsTableRow: FC<RankingsTableRowProps> = ({
-  mint,
-  rank,
-  volumeKey,
-}) => {
+const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
@@ -109,8 +104,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   }, [mint.image])
 
   const mintData = mint?.mintStages?.find((stage) => stage.kind === 'public')
-
-  console.log(mint.mintCount, mint.maxSupply, rank)
 
   let mintPercentage: string | null = null
   if (mint.mintCount && mint.maxSupply) {
@@ -153,14 +146,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               >
                 {mint?.name}
               </Text>
-              {/**
-               *               <OpenSeaVerified
-                openseaVerificationStatus={
-                  mint?.openseaVerificationStatus
-                }
-              />
-               */}
-              {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
+              <OpenSeaVerified openseaVerificationStatus={'verified'} />
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body3"></Text>
@@ -174,20 +160,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               />
             </Flex>
           </Box>
-
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            <FormatCryptoCurrency
-              amount={mint?.volume}
-              maximumFractionDigits={1}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
-            {volumeKey !== 'allTime' && (
-              <PercentChange
-                value={mint?.volumeChange?.[volumeKey]}
-                decimals={1}
-              />
-            )}
+            <Text style="subtitle1">{mint?.mintCount}</Text>
           </Flex>
         </Flex>
       </Link>
@@ -243,14 +217,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 >
                   {mint?.name}
                 </Text>
-                {/**
-                 *                 <OpenSeaVerified
-                  openseaVerificationStatus={
-                    collection?.openseaVerificationStatus
-                  }
-                />
-                 */}
-                {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
+                <OpenSeaVerified openseaVerificationStatus={'verified'} />
               </Flex>
             </Flex>
           </Link>
