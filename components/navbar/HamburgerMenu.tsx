@@ -97,7 +97,7 @@ const HamburgerMenu = () => {
               px: '$4',
             }}
           >
-            <Link href={`/portfolio/${address}`} legacyBehavior>
+            <Link href={`/portfolio/${address || ''}`} legacyBehavior>
               <Flex
                 css={{
                   justifyContent: 'space-between',
@@ -231,7 +231,7 @@ const HamburgerMenu = () => {
                   Explore
                 </Text>
               </Link>
-              <Link href="/portfolio" legacyBehavior>
+              <Link href={`/portfolio/${address || ''}`} legacyBehavior>
                 <Text
                   style="subtitle1"
                   css={{
