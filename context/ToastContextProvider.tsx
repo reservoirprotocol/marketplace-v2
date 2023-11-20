@@ -14,6 +14,8 @@ import { Anchor, Flex } from 'components/primitives'
 import { v4 as uuidv4 } from 'uuid'
 import { Execute } from '@reservoir0x/reservoir-sdk'
 import { useNetwork } from 'wagmi'
+import * as allChains from 'wagmi/chains'
+import { customChains } from '@reservoir0x/reservoir-sdk'
 
 type ToastType = {
   id?: string
@@ -37,8 +39,6 @@ export const ToastContext = createContext<{
 
 const ToastContextProvider: FC<any> = ({ children }) => {
   const [toasts, setToasts] = useState<Array<ToastType>>([])
-
-  const { chains } = useNetwork()
 
   const addToast = (toast: ToastType) => {
     toast.id = uuidv4()
@@ -76,11 +76,6 @@ const ToastContextProvider: FC<any> = ({ children }) => {
 
           case 'purchase_complete':
           case 'accept_offer_complete':
-            const chain = chains.find((chain) => chain.id === chainId)
-
-            const blockExplorerBaseUrl =
-              chain?.blockExplorers?.default?.url || 'https://etherscan.io'
-
             const executableSteps: Execute['steps'] = event?.data?.steps.filter(
               (step: Step) => step.items && step.items.length > 0
             )
@@ -131,8 +126,18 @@ const ToastContextProvider: FC<any> = ({ children }) => {
               status: failedPurchases ? 'error' : 'success',
               action: (
                 <Flex direction="column" css={{ gap: '$1' }}>
-                  {currentStep.items?.map((item) =>
-                    item.txHashes?.map((txHash) => {
+                  {currentStep.items?.map((item) => {
+                    const chains: allChains.Chain[] | undefined = Object.values(
+                      {
+                        ...allChains,
+                        ...customChains,
+                      }
+                    )
+                    return item.txHashes?.map(({ txHash, chainId }) => {
+                      const chain = chains?.find(({ id }) => id === chainId)
+                      const blockExplorerBaseUrl =
+                        chain?.blockExplorers?.default?.url ||
+                        'https://etherscan.io'
                       const formattedTxHash = txHash
                         ? `${txHash.slice(0, 4)}...${txHash.slice(-4)}`
                         : ''
@@ -148,7 +153,7 @@ const ToastContextProvider: FC<any> = ({ children }) => {
                         </Anchor>
                       )
                     })
-                  )}
+                  })}
                 </Flex>
               ),
             })
