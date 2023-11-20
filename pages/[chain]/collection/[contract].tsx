@@ -5,6 +5,7 @@ import {
   Box,
   Input,
   FormatCrypto,
+  FormatCryptoCurrency,
 } from '../../../components/primitives'
 import {
   useCollections,
@@ -426,7 +427,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                    <Flex css={{
+                     <Flex css={{
                       gap: '$3',
                       ...(isSmallDevice && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
                     }} align="center">
@@ -718,9 +719,23 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {nativePrice
-                          ? `${nativePrice?.toFixed(2)} ${chainCurrency.symbol}`
-                          : '-'}
+                        {nativePrice ? (
+                          <Flex
+                            css={{
+                              gap: '$2',
+                            }}
+                          >
+                            <FormatCryptoCurrency
+                              amount={nativePrice}
+                              logoHeight={14}
+                              textStyle="subtitle1"
+                              maximumFractionDigits={4}
+                            />
+                            {chainCurrency.symbol}
+                          </Flex>
+                        ) : (
+                          '-'
+                        )}
                       </Text>
                     </Flex>
                     <Flex css={{ gap: '$1' }}>
