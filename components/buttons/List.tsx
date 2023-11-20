@@ -47,7 +47,7 @@ const List: FC<Props> = ({
   const listingCurrencies: ListingCurrencies =
     marketplaceChain.listingCurrencies
   const tokenId = token?.token?.tokenId
-  const contract = token?.token?.contract
+  const contract = token?.token?.collection?.id
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
