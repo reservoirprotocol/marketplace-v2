@@ -75,7 +75,7 @@ export const DefaultChain: ReservoirChain = {
     },
   ],
   oracleBidsEnabled: true,
-  checkPollingInterval: reservoirChains.mainnet.checkPollingInterval,
+  checkPollingInterval: reservoirChains.goerli.checkPollingInterval,
 }
 
 export default [
@@ -115,7 +115,7 @@ export default [
         decimals: 18,
       },
     ],
-    checkPollingInterval: reservoirChains.arbitrum.checkPollingInterval,
+    checkPollingInterval: reservoirChains.sepolia.checkPollingInterval,
   },
   DefaultChain,
 ] as ReservoirChain[]
