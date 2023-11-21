@@ -37,7 +37,6 @@ import { CollectionActivityTable } from 'components/collections/CollectionActivi
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import titleCase from 'utils/titleCase'
 import LoadingCard from 'components/common/LoadingCard'
 import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -62,6 +61,7 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
+import { formatUnits } from 'viem'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -350,7 +350,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
-  let nativePrice = collection?.floorAsk?.price?.amount?.native
+  let sweepPrice = collection?.floorAsk?.price?.amount?.raw
+    ? Number(
+        formatUnits(
+          BigInt(collection?.floorAsk?.price?.amount?.raw ?? '0'),
+          collection?.floorAsk?.price?.currency?.decimals ?? 18
+        )
+      )
+    : undefined
+  let sweepSymbol = collection?.floorAsk?.price?.currency?.symbol
   let topBidPrice = collection?.topBid?.price?.amount?.native
 
   return (
@@ -427,10 +435,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                     <Flex css={{
-                      gap: '$3',
-                      ...(isSmallDevice && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
-                    }} align="center">
+                    <Flex
+                      css={{
+                        gap: '$3',
+                        ...(isSmallDevice && {
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                        }),
+                      }}
+                      align="center"
+                    >
                       <CopyText
                         text={collection.id as string}
                         css={{
@@ -502,7 +516,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  {nativePrice ? (
+                  {sweepPrice && sweepSymbol ? (
                     <Sweep
                       collectionId={collection.id}
                       openState={isSweepRoute ? sweepOpenState : undefined}
@@ -526,12 +540,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               }}
                             >
                               <FormatCrypto
-                                amount={nativePrice}
+                                amount={sweepPrice}
                                 textStyle="h6"
                                 css={{ color: '$bg', fontWeight: 900 }}
                                 decimals={4}
                               />
-                              {chainCurrency.symbol}
+                              {sweepSymbol}
                             </Flex>
                           </Text>
                         </Flex>
@@ -554,10 +568,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
-                          {!isSmallDevice && (                         
-                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                            Mint
-                          </Text>)}
+                          {!isSmallDevice && (
+                            <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                              Mint
+                            </Text>
+                          )}
 
                           {!isSmallDevice && (
                             <Text
@@ -719,19 +734,19 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {nativePrice ? (
+                        {sweepPrice && sweepSymbol ? (
                           <Flex
                             css={{
                               gap: '$2',
                             }}
                           >
                             <FormatCryptoCurrency
-                              amount={nativePrice}
+                              amount={sweepPrice}
                               logoHeight={14}
                               textStyle="subtitle1"
                               maximumFractionDigits={4}
                             />
-                            {chainCurrency.symbol}
+                            {sweepSymbol}
                           </Flex>
                         ) : (
                           '-'

@@ -1,4 +1,4 @@
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
@@ -7,19 +7,14 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
-import {
-  Box,
-  Flex,
-  FormatCryptoCurrency,
-  Text,
-  Tooltip,
-} from 'components/primitives'
+import { Box, Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
+import { formatUnits } from 'viem'
 import { Address } from 'wagmi'
 
 type TokenCardProps = {
@@ -60,6 +55,15 @@ export default ({
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
 
   const is1155 = token?.token?.kind === 'erc1155'
+
+  const price = token?.market?.floorAsk?.price?.amount?.raw
+    ? Number(
+        formatUnits(
+          BigInt(token?.market?.floorAsk?.price?.amount?.raw ?? '0'),
+          token?.market?.floorAsk?.price?.currency?.decimals ?? 18
+        )
+      )
+    : undefined
 
   return (
     <Box
@@ -255,11 +259,11 @@ export default ({
                   {token?.market?.floorAsk?.price && (
                     <FormatCryptoCurrency
                       logoHeight={18}
-                      amount={token?.market?.floorAsk?.price?.amount?.decimal}
+                      amount={price}
                       address={
                         token?.market?.floorAsk?.price?.currency?.contract
                       }
-                      borderRadius='100%'
+                      borderRadius="100%"
                       textStyle="h6"
                       css={{
                         textOverflow: 'ellipsis',
