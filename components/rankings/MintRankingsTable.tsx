@@ -270,8 +270,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             }}
             justify={'end'}
           >
-            {/**
-             *             {mint?.sampleImages?.map((image, i) => {
+            {Array.apply(null, Array(5)).map((image: any, i) => {
               if (image) {
                 return (
                   <img
@@ -294,7 +293,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
               }
               return null
             })}
-             */}
           </Flex>
         </TableCell>
       </TableRow>
