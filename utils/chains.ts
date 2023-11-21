@@ -1,4 +1,5 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
+import { reservoirChains } from '@reservoir0x/reservoir-sdk'
 import wrappedContracts from './wrappedContracts'
 import { zeroAddress } from 'viem'
 import { Chain, goerli, sepolia } from 'wagmi/chains'
@@ -21,6 +22,7 @@ export type ReservoirChain = Chain & {
   wssUrl?: string
   listingCurrencies?: Currency[]
   oracleBidsEnabled?: boolean
+  checkPollingInterval?: number
 }
 
 const nativeCurrencyBase = {
@@ -73,6 +75,7 @@ export const DefaultChain: ReservoirChain = {
     },
   ],
   oracleBidsEnabled: true,
+  checkPollingInterval: reservoirChains.mainnet.checkPollingInterval,
 }
 
 export default [
@@ -112,6 +115,7 @@ export default [
         decimals: 18,
       },
     ],
+    checkPollingInterval: reservoirChains.arbitrum.checkPollingInterval,
   },
   DefaultChain,
 ] as ReservoirChain[]
