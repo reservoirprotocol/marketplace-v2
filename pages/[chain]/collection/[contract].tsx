@@ -350,14 +350,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
-  let sweepPrice = collection?.floorAsk?.price?.amount?.raw
-    ? Number(
-        formatUnits(
-          BigInt(collection?.floorAsk?.price?.amount?.raw ?? '0'),
-          collection?.floorAsk?.price?.currency?.decimals ?? 18
-        )
-      )
-    : undefined
   let sweepSymbol = collection?.floorAsk?.price?.currency?.symbol
   let topBidPrice = collection?.topBid?.price?.amount?.native
 
@@ -516,7 +508,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  {sweepPrice && sweepSymbol ? (
+                  {collection?.floorAsk?.price?.amount?.raw && sweepSymbol ? (
                     <Sweep
                       collectionId={collection.id}
                       openState={isSweepRoute ? sweepOpenState : undefined}
@@ -540,10 +532,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               }}
                             >
                               <FormatCrypto
-                                amount={sweepPrice}
+                                amount={
+                                  collection?.floorAsk?.price?.amount?.raw
+                                }
+                                decimals={
+                                  collection?.floorAsk?.price?.currency
+                                    ?.decimals
+                                }
                                 textStyle="h6"
                                 css={{ color: '$bg', fontWeight: 900 }}
-                                decimals={4}
+                                maximumFractionDigits={4}
                               />
                               {sweepSymbol}
                             </Flex>
@@ -734,14 +732,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {sweepPrice && sweepSymbol ? (
+                        {collection?.floorAsk?.price?.amount?.raw &&
+                        sweepSymbol ? (
                           <Flex
                             css={{
                               gap: '$2',
                             }}
                           >
                             <FormatCryptoCurrency
-                              amount={sweepPrice}
+                              amount={collection?.floorAsk?.price?.amount?.raw}
+                              decimals={
+                                collection?.floorAsk?.price?.currency?.decimals
+                              }
                               logoHeight={14}
                               textStyle="subtitle1"
                               maximumFractionDigits={4}
