@@ -254,6 +254,9 @@ export default ({
                       address={
                         token?.market?.floorAsk?.price?.currency?.contract
                       }
+                      decimals={
+                        token?.market?.floorAsk?.price?.currency?.decimals
+                      }
                       borderRadius="100%"
                       textStyle="h6"
                       css={{
