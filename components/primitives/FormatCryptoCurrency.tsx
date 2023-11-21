@@ -5,6 +5,7 @@ import { zeroAddress } from 'viem'
 
 type FormatCryptoCurrencyProps = {
   logoHeight?: number
+  borderRadius?: string;
   address?: string
 }
 
@@ -14,6 +15,7 @@ const FormatCryptoCurrency: FC<Props> = ({
   amount,
   address = zeroAddress,
   maximumFractionDigits,
+  borderRadius = '0%',
   logoHeight = 8,
   textStyle,
   css,
@@ -27,7 +29,7 @@ const FormatCryptoCurrency: FC<Props> = ({
       maximumFractionDigits={maximumFractionDigits}
       decimals={decimals}
     >
-      <CryptoCurrencyIcon css={{ height: logoHeight }} address={address} />
+      <CryptoCurrencyIcon css={{ height: logoHeight, borderRadius: borderRadius }} address={address} />
     </FormatCrypto>
   )
 }
