@@ -56,15 +56,6 @@ export default ({
 
   const is1155 = token?.token?.kind === 'erc1155'
 
-  const price = token?.market?.floorAsk?.price?.amount?.raw
-    ? Number(
-        formatUnits(
-          BigInt(token?.market?.floorAsk?.price?.amount?.raw ?? '0'),
-          token?.market?.floorAsk?.price?.currency?.decimals ?? 18
-        )
-      )
-    : undefined
-
   return (
     <Box
       css={{
@@ -259,7 +250,7 @@ export default ({
                   {token?.market?.floorAsk?.price && (
                     <FormatCryptoCurrency
                       logoHeight={18}
-                      amount={price}
+                      amount={token?.market?.floorAsk?.price?.amount?.raw}
                       address={
                         token?.market?.floorAsk?.price?.currency?.contract
                       }
