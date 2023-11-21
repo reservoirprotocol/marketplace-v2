@@ -23,7 +23,6 @@ import optimizeImage from 'utils/optimizeImage'
 type Props = {
   mints: NonNullable<ReturnType<typeof useTrendingMints>['data']>
   loading?: boolean
-  volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
 
 const gridColumns = {
@@ -41,7 +40,7 @@ const gridColumns = {
   },
 }
 
-export const MintRankingsTable: FC<Props> = ({ mints, loading, volumeKey }) => {
+export const MintRankingsTable: FC<Props> = ({ mints, loading }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   return (
@@ -76,11 +75,7 @@ export const MintRankingsTable: FC<Props> = ({ mints, loading, volumeKey }) => {
           )}
           <Flex direction="column" css={{ position: 'relative' }}>
             {mints?.map((mint, i) => (
-              <RankingsTableRow
-                mint={mint}
-                rank={(i += 1)}
-                volumeKey={volumeKey}
-              />
+              <RankingsTableRow mint={mint} rank={(i += 1)} />
             ))}
           </Flex>
         </Flex>
@@ -92,7 +87,6 @@ export const MintRankingsTable: FC<Props> = ({ mints, loading, volumeKey }) => {
 type RankingsTableRowProps = {
   mint: NonNullable<ReturnType<typeof useTrendingMints>['data']>[0]
   rank: number
-  volumeKey: ComponentPropsWithoutRef<typeof MintRankingsTable>['volumeKey']
 }
 
 const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
@@ -229,7 +223,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             justify="start"
             css={{ height: '100%' }}
           >
-            {mint.mintPrice}
             <FormatCryptoCurrency
               amount={mint?.mintPrice}
               textStyle="subtitle1"
@@ -259,19 +252,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
           </Flex>
         </TableCell>
 
-        <TableCell desktopOnly>
-          <PercentChange
-            style="subtitle1"
-            value={mint?.volumeChange?.['1day'] ?? 0}
-          />
-        </TableCell>
+        <TableCell desktopOnly>0</TableCell>
 
-        <TableCell desktopOnly>
-          <PercentChange
-            style="subtitle1"
-            value={mint?.volumeChange?.['7day'] ?? 0}
-          />
-        </TableCell>
+        <TableCell desktopOnly>0</TableCell>
 
         <TableCell desktopOnly>
           <Text style="subtitle1">

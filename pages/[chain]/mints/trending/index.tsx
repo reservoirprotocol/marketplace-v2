@@ -125,11 +125,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             )}
           </Flex>
           {isSSR || !isMounted ? null : (
-            <MintRankingsTable
-              mints={mints}
-              loading={isValidating}
-              volumeKey="1day"
-            />
+            <MintRankingsTable mints={mints} loading={isValidating} />
           )}
         </Flex>
         {isValidating && (
