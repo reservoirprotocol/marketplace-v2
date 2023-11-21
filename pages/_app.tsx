@@ -38,6 +38,7 @@ import { WebsocketContextProvider } from 'context/WebsocketContextProvider'
 import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
+import { chainPaymentTokensMap } from 'utils/paymentTokens'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -169,7 +170,13 @@ function MyApp({
             //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
             // Note that you should at the very least configure the source with your own domain
             chains: supportedChains.map(
-              ({ reservoirBaseUrl, proxyApi, id, name }) => {
+              ({
+                reservoirBaseUrl,
+                proxyApi,
+                id,
+                name,
+                checkPollingInterval,
+              }) => {
                 return {
                   id,
                   name,
@@ -177,6 +184,8 @@ function MyApp({
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,
                   active: marketplaceChain.id === id,
+                  checkPollingInterval: checkPollingInterval,
+                  paymentTokens: chainPaymentTokensMap[id],
                 }
               }
             ),

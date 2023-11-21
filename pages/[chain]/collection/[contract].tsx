@@ -426,7 +426,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                    <Flex css={{ gap: '$3' }} align="center">
+                    <Flex css={{
+                      gap: '$3',
+                      ...(isSmallDevice && { display: 'grid', gridTemplateColumns: '1fr 1fr' }),
+                    }} align="center">
                       <CopyText
                         text={collection.id as string}
                         css={{
@@ -543,16 +546,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       openState={isMintRoute ? mintOpenState : undefined}
                       buttonChildren={
                         <Flex
-                          css={{ gap: '$2', px: '$4' }}
+                          css={{ gap: '$2', px: '$2' }}
                           align="center"
                           justify="center"
                         >
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
+                          {!isSmallDevice && (                         
                           <Text style="h6" as="h6" css={{ color: '$bg' }}>
                             Mint
-                          </Text>
+                          </Text>)}
 
                           {!isSmallDevice && (
                             <Text
@@ -575,7 +579,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         maxWidth: '220px',
                         '@md': {
                           order: 1,
-                          px: '$5',
                         },
                       }}
                       mutate={mutate}

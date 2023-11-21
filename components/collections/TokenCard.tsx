@@ -216,23 +216,6 @@ export default ({
               >
                 {token?.token?.name || '#' + token?.token?.tokenId}{' '}
               </Text>
-              {token?.token?.isFlagged && (
-                <Tooltip
-                  content={
-                    <Text style="body3" as="p">
-                      Not tradeable on OpenSea
-                    </Text>
-                  }
-                >
-                  <Text css={{ color: '$red10' }}>
-                    <FontAwesomeIcon
-                      icon={faCircleExclamation}
-                      width={16}
-                      height={16}
-                    />
-                  </Text>
-                </Tooltip>
-              )}
             </Flex>
             {rarityEnabled && !is1155 && token?.token?.rarityRank && (
               <Box
@@ -276,6 +259,7 @@ export default ({
                       address={
                         token?.market?.floorAsk?.price?.currency?.contract
                       }
+                      borderRadius='100%'
                       textStyle="h6"
                       css={{
                         textOverflow: 'ellipsis',
