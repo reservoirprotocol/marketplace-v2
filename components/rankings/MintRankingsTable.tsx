@@ -270,29 +270,31 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             }}
             justify={'end'}
           >
-            {Array.apply(null, Array(5)).map((image: any, i) => {
-              if (image) {
-                return (
-                  <img
-                    key={image + i}
-                    src={optimizeImage(image, 104)}
-                    loading="lazy"
-                    style={{
-                      borderRadius: 8,
-                      width: 52,
-                      height: 52,
-                      objectFit: 'cover',
-                    }}
-                    onError={(
-                      e: React.SyntheticEvent<HTMLImageElement, Event>
-                    ) => {
-                      e.currentTarget.style.visibility = 'hidden'
-                    }}
-                  />
-                )
-              }
-              return null
-            })}
+            {Array(4)
+              .fill(collectionImage)
+              .map((image: string, i) => {
+                if (image) {
+                  return (
+                    <img
+                      key={image + i}
+                      src={optimizeImage(image, 104)}
+                      loading="lazy"
+                      style={{
+                        borderRadius: 8,
+                        width: 52,
+                        height: 52,
+                        objectFit: 'cover',
+                      }}
+                      onError={(
+                        e: React.SyntheticEvent<HTMLImageElement, Event>
+                      ) => {
+                        e.currentTarget.style.visibility = 'hidden'
+                      }}
+                    />
+                  )
+                }
+                return null
+              })}
           </Flex>
         </TableCell>
       </TableRow>
