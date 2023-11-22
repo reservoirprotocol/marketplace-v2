@@ -107,8 +107,16 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
         : null
   }
 
+  const mintPrice = mint.mintPrice?.toString()
   const mintPriceDecimal = mintData?.price?.amount?.decimal
   const hasMintPriceDecimal = typeof mintPriceDecimal === 'number'
+
+  // @ts-ignore
+  const sampleImages: string[] = mint?.sampleImages
+  // @ts-ignore
+  const sixHourCount: number = mint?.sixHourCount
+  // @ts-ignore
+  const oneHourCount: number = mint?.oneHourCount
 
   if (isSmallDevice) {
     return (
@@ -223,11 +231,15 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             justify="start"
             css={{ height: '100%' }}
           >
-            <FormatCryptoCurrency
-              amount={mint?.mintPrice}
-              textStyle="subtitle1"
-              logoHeight={14}
-            />
+            {mintPrice !== '0' ? (
+              <FormatCryptoCurrency
+                amount={mintPrice}
+                textStyle="subtitle1"
+                logoHeight={14}
+              />
+            ) : (
+              '-'
+            )}
           </Flex>
         </TableCell>
         <TableCell>
@@ -252,9 +264,13 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
           </Flex>
         </TableCell>
 
-        <TableCell desktopOnly>0</TableCell>
+        <TableCell desktopOnly>
+          <Text style="subtitle1">{oneHourCount}</Text>
+        </TableCell>
 
-        <TableCell desktopOnly>0</TableCell>
+        <TableCell desktopOnly>
+          <Text style="subtitle1">{sixHourCount}</Text>
+        </TableCell>
 
         <TableCell desktopOnly>
           <Text style="subtitle1">
@@ -270,31 +286,30 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             }}
             justify={'end'}
           >
-            {Array(4)
-              .fill(collectionImage)
-              .map((image: string, i) => {
-                if (image) {
-                  return (
-                    <img
-                      key={image + i}
-                      src={optimizeImage(image, 104)}
-                      loading="lazy"
-                      style={{
-                        borderRadius: 8,
-                        width: 52,
-                        height: 52,
-                        objectFit: 'cover',
-                      }}
-                      onError={(
-                        e: React.SyntheticEvent<HTMLImageElement, Event>
-                      ) => {
-                        e.currentTarget.style.visibility = 'hidden'
-                      }}
-                    />
-                  )
-                }
-                return null
-              })}
+            {/** */}
+            {sampleImages.map((image: string, i) => {
+              if (image) {
+                return (
+                  <img
+                    key={image + i}
+                    src={optimizeImage(image, 104)}
+                    loading="lazy"
+                    style={{
+                      borderRadius: 8,
+                      width: 52,
+                      height: 52,
+                      objectFit: 'cover',
+                    }}
+                    onError={(
+                      e: React.SyntheticEvent<HTMLImageElement, Event>
+                    ) => {
+                      e.currentTarget.style.visibility = 'hidden'
+                    }}
+                  />
+                )
+              }
+              return null
+            })}
           </Flex>
         </TableCell>
       </TableRow>
