@@ -1,4 +1,4 @@
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   extractMediaType,
@@ -7,19 +7,14 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
-import {
-  Box,
-  Flex,
-  FormatCryptoCurrency,
-  Text,
-  Tooltip,
-} from 'components/primitives'
+import { Box, Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
+import { formatUnits } from 'viem'
 import { Address } from 'wagmi'
 
 type TokenCardProps = {
@@ -255,11 +250,14 @@ export default ({
                   {token?.market?.floorAsk?.price && (
                     <FormatCryptoCurrency
                       logoHeight={18}
-                      amount={token?.market?.floorAsk?.price?.amount?.decimal}
+                      amount={token?.market?.floorAsk?.price?.amount?.raw}
                       address={
                         token?.market?.floorAsk?.price?.currency?.contract
                       }
-                      borderRadius='100%'
+                      decimals={
+                        token?.market?.floorAsk?.price?.currency?.decimals
+                      }
+                      borderRadius="100%"
                       textStyle="h6"
                       css={{
                         textOverflow: 'ellipsis',

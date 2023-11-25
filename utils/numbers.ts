@@ -19,7 +19,7 @@ function formatNumber(
     maximumFractionDigits: maximumFractionDigits,
     notation: compact ? 'compact' : 'standard',
   })
-  if (!amount) {
+  if (amount === null || amount === undefined) {
     return '-'
   }
   if (Number(amount) >= 1000000000) {
