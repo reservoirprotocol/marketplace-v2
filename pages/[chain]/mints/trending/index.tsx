@@ -35,7 +35,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
   let mintQuery: Parameters<typeof useTrendingMints>['0'] = {
-    limit: 50,
+    limit: 20,
     period: sortByPeriod,
     type: mintType,
   }
@@ -155,7 +155,7 @@ export const getServerSideProps: GetServerSideProps<{
   const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
 
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v7`,
+    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
     query,
     {
       headers: {
