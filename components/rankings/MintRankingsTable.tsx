@@ -206,7 +206,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
                 >
                   {mint?.name}
                 </Text>
-                <OpenSeaVerified openseaVerificationStatus={'verified'} />
+                <OpenSeaVerified
+                  openseaVerificationStatus={openseaVerificationStatus}
+                />
               </Flex>
             </Flex>
           </Link>
