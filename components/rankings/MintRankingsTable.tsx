@@ -13,10 +13,9 @@ import {
   Text,
 } from 'components/primitives'
 import Img from 'components/primitives/Img'
-import { PercentChange } from 'components/primitives/PercentChange'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
-import { ComponentPropsWithoutRef, FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import optimizeImage from 'utils/optimizeImage'
 
@@ -26,17 +25,17 @@ type Props = {
 }
 
 const gridColumns = {
-  gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
+  gridTemplateColumns: '520px repeat(3, 0.5fr) 250px',
   '@md': {
     gridTemplateColumns: '420px 1fr 1fr 1fr',
   },
 
   '@lg': {
-    gridTemplateColumns: '360px repeat(6, 0.5fr) 250px',
+    gridTemplateColumns: '360px repeat(3, 0.5fr) 250px',
   },
 
   '@xl': {
-    gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
+    gridTemplateColumns: '520px repeat(3, 0.5fr) 250px',
   },
 }
 
@@ -97,18 +96,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
     return optimizeImage(mint.image as string, 250)
   }, [mint.image])
 
-  const mintData = mint?.mintStages?.find((stage) => stage.kind === 'public')
+  const mintPrice = mint.mintPrice?.toString()
 
-  let mintPercentage: string | null = null
-  if (mint.mintCount && mint.maxSupply) {
-    mintPercentage =
-      mint.mintCount <= mint.maxSupply
-        ? ((mint.mintCount / mint.maxSupply) * 100).toFixed(0)
-        : null
-  }
-
-  const mintPriceDecimal = mintData?.price?.amount?.decimal
-  const hasMintPriceDecimal = typeof mintPriceDecimal === 'number'
+  // @ts-ignore
+  const sampleImages: string[] = mint?.sampleImages
+  // @ts-ignore
+  const openseaVerificationStatus = mint?.openseaVerificationStatus
 
   if (isSmallDevice) {
     return (
@@ -140,7 +133,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
               >
                 {mint?.name}
               </Text>
-              <OpenSeaVerified openseaVerificationStatus={'verified'} />
+              <OpenSeaVerified
+                openseaVerificationStatus={openseaVerificationStatus}
+              />
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body3"></Text>
@@ -211,7 +206,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
                 >
                   {mint?.name}
                 </Text>
-                <OpenSeaVerified openseaVerificationStatus={'verified'} />
+                <OpenSeaVerified
+                  openseaVerificationStatus={openseaVerificationStatus}
+                />
               </Flex>
             </Flex>
           </Link>
@@ -223,11 +220,15 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             justify="start"
             css={{ height: '100%' }}
           >
-            <FormatCryptoCurrency
-              amount={mint?.mintPrice}
-              textStyle="subtitle1"
-              logoHeight={14}
-            />
+            {mintPrice !== '0' ? (
+              <FormatCryptoCurrency
+                amount={mintPrice}
+                textStyle="subtitle1"
+                logoHeight={14}
+              />
+            ) : (
+              '-'
+            )}
           </Flex>
         </TableCell>
         <TableCell>
@@ -252,16 +253,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
           </Flex>
         </TableCell>
 
-        <TableCell desktopOnly>0</TableCell>
-
-        <TableCell desktopOnly>0</TableCell>
-
-        <TableCell desktopOnly>
-          <Text style="subtitle1">
-            {mintPercentage ? `${mintPercentage}%` : '-'}
-          </Text>
-        </TableCell>
-
         <TableCell desktopOnly>
           <Flex
             css={{
@@ -270,31 +261,30 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             }}
             justify={'end'}
           >
-            {Array(4)
-              .fill(collectionImage)
-              .map((image: string, i) => {
-                if (image) {
-                  return (
-                    <img
-                      key={image + i}
-                      src={optimizeImage(image, 104)}
-                      loading="lazy"
-                      style={{
-                        borderRadius: 8,
-                        width: 52,
-                        height: 52,
-                        objectFit: 'cover',
-                      }}
-                      onError={(
-                        e: React.SyntheticEvent<HTMLImageElement, Event>
-                      ) => {
-                        e.currentTarget.style.visibility = 'hidden'
-                      }}
-                    />
-                  )
-                }
-                return null
-              })}
+            {/** */}
+            {sampleImages.map((image: string, i) => {
+              if (image) {
+                return (
+                  <img
+                    key={image + i}
+                    src={optimizeImage(image, 104)}
+                    loading="lazy"
+                    style={{
+                      borderRadius: 8,
+                      width: 52,
+                      height: 52,
+                      objectFit: 'cover',
+                    }}
+                    onError={(
+                      e: React.SyntheticEvent<HTMLImageElement, Event>
+                    ) => {
+                      e.currentTarget.style.visibility = 'hidden'
+                    }}
+                  />
+                )
+              }
+              return null
+            })}
           </Flex>
         </TableCell>
       </TableRow>
@@ -307,9 +297,6 @@ const headings = [
   'Mint Price',
   'Floor Price',
   'Total Mints',
-  '1H Mints',
-  '6h Mints',
-  'Minted',
   'Recent Mints',
 ]
 

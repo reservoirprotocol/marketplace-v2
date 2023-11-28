@@ -3,7 +3,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import { Head } from 'components/Head'
 import Layout from 'components/Layout'
 import ChainToggle from 'components/common/ChainToggle'
-import { CollectionsSortingOption } from 'components/common/CollectionsTimeDropdown'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import MintTypeSelector, {
   MintTypeOption,
@@ -17,9 +16,9 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { useMounted } from 'hooks'
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useIntersectionObserver } from 'usehooks-ts'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 
@@ -31,14 +30,12 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const isSmallDevice = useMediaQuery({ maxWidth: 600 })
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
 
   const [mintType, setMintType] = useState<MintTypeOption>('any')
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
   let mintQuery: Parameters<typeof useTrendingMints>['0'] = {
-    limit: 50,
+    limit: 20,
     period: sortByPeriod,
     type: mintType,
   }
@@ -60,13 +57,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   }, [router.query])
 
   const { data, isValidating } = useTrendingMints(mintQuery, chain.id, {
-    fallbackData: [ssr.mint],
+    fallbackData: [ssr.mints],
   })
 
   let mints = data || []
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   return (
     <Layout>
@@ -138,15 +132,12 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
-type CollectionSchema =
-  paths['/collections/v7']['get']['responses']['200']['schema']
-
 type MintsSchema =
   paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    mint: MintsSchema
+    mints: MintsSchema
   }
 }> = async ({ res, params }) => {
   const mintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
@@ -154,14 +145,17 @@ export const getServerSideProps: GetServerSideProps<{
       period: '24h',
       limit: 50,
     }
+
   const chainPrefix = params?.chain || ''
+
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
-  const query = { ...mintsQuery }
+
+  const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
 
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v7`,
+    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
     query,
     {
       headers: {
@@ -176,7 +170,7 @@ export const getServerSideProps: GetServerSideProps<{
   )
 
   return {
-    props: { ssr: { mint: response.data } },
+    props: { ssr: { mints: response.data } },
   }
 }
 

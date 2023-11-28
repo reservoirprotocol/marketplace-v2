@@ -16,7 +16,6 @@ export type MintsSortingOption = NonNullable<
 const sortingOptions: MintsSortingOption[] = [
   '24h',
   '6h',
-  '2h',
   '1h',
   '30m',
   '10m',
@@ -29,8 +28,6 @@ const nameForSortingOption = (option: MintsSortingOption, compact: boolean) => {
       return compact ? '24h' : '24 hours'
     case '6h':
       return compact ? '6h' : '6 hours'
-    case '2h':
-      return compact ? '2h' : '2 hours'
     case '1h':
       return compact ? '1h' : '1 hour'
     case '30m':

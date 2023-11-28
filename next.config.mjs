@@ -3,7 +3,7 @@ import { withSentryConfig } from '@sentry/nextjs'
 
 const sentryWebpackPluginOptions = {
   org: process.env.SENTRY_ORG,
-  project: 'javascript-nextjs',
+  project: 'explorer',
   silent: true,
 }
 /**
