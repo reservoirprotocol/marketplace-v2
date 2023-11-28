@@ -1,35 +1,40 @@
-import { NextPage, GetServerSideProps } from 'next'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import { Head } from 'components/Head'
+import Layout from 'components/Layout'
+import { Footer } from 'components/home/Footer'
+import { Box, Button, Flex, Text } from 'components/primitives'
+import { ChainContext } from 'context/ChainContextProvider'
+import { useMarketplaceChain, useMounted } from 'hooks'
+import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 import {
-  Text,
-  Flex,
-  Box,
-  Button,
-  FormatCryptoCurrency,
-} from 'components/primitives'
-import Layout from 'components/Layout'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import { useContext, useEffect, useState } from 'react'
-import { Footer } from 'components/home/Footer'
-import { useMarketplaceChain, useMounted } from 'hooks'
+  ComponentPropsWithoutRef,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import { Head } from 'components/Head'
-import { ChainContext } from 'context/ChainContextProvider'
 
-import Img from 'components/primitives/Img'
-import useTopSellingCollections from 'hooks/useTopSellingCollections'
-import ReactMarkdown from 'react-markdown'
-import { basicFetcher as fetcher } from 'utils/fetcher'
-import { styled } from 'stitches.config'
-import { useTheme } from 'next-themes'
+import * as Tabs from '@radix-ui/react-tabs'
+import { useCollections, useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
 import ChainToggle from 'components/common/ChainToggle'
-import optimizeImage from 'utils/optimizeImage'
-import { MarkdownLink } from 'components/primitives/MarkdownLink'
+import CollectionsTimeDropdown, {
+  CollectionsSortingOption,
+} from 'components/common/CollectionsTimeDropdown'
+import LoadingSpinner from 'components/common/LoadingSpinner'
+import { MintTypeOption } from 'components/common/MintTypeSelector'
+import MintsPeriodDropdown, {
+  MintsSortingOption,
+} from 'components/common/MintsPeriodDropdown'
+import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
+import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
+import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
-import { FeaturedCards } from 'components/home/FeaturedCards'
-import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useMediaQuery } from 'react-responsive'
+import { basicFetcher as fetcher } from 'utils/fetcher'
 
-const StyledImage = styled('img', {})
+type TabValue = 'collections' | 'mints'
 
 const Home: NextPage<any> = ({ ssr }) => {
   const router = useRouter()
@@ -45,31 +50,80 @@ const Home: NextPage<any> = ({ ssr }) => {
     }
   }, [nextTheme])
 
-  const { chain } = useContext(ChainContext)
+  const isSSR = typeof window === 'undefined'
+  const isSmallDevice = useMediaQuery({ query: '(max-width: 800px)' })
 
-  const { data: topSellingCollectionsData } = useTopSellingCollections(
-    {
-      period: '24h',
-      includeRecentSales: true,
-      limit: 9,
-      fillType: 'sale',
-    },
-    {
-      revalidateOnMount: true,
-      refreshInterval: 300000,
-      fallbackData: ssr.topSellingCollections[marketplaceChain.id]?.collections
-        ? ssr.topSellingCollections[marketplaceChain.id]
-        : null,
-    },
-    isMounted ? chain?.id : undefined
-  )
+  const [tab, setTab] = useState<TabValue>('collections')
+  const [sortByTime, setSortByTime] =
+    useState<CollectionsSortingOption>('1DayVolume')
+  const [mintType, setMintType] = useState<MintTypeOption>('any')
+  const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
-  const { data: trendingCollectionsData } = useTrendingCollections({
-    period: '24h',
-    limit: 4,
+  let mintsQuery: Parameters<typeof useTrendingMints>['0'] = {
+    limit: 50,
+    period: sortByPeriod,
+    type: mintType,
+  }
+
+  let collectionQuery: Parameters<typeof useCollections>['0'] = {
+    limit: 20,
+    sortBy: sortByTime,
+    includeMintStages: true,
+  }
+
+  const { chain, switchCurrentChain } = useContext(ChainContext)
+
+  useEffect(() => {
+    if (router.query.chain) {
+      let chainIndex: number | undefined
+      for (let i = 0; i < supportedChains.length; i++) {
+        if (supportedChains[i].routePrefix == router.query.chain) {
+          chainIndex = supportedChains[i].id
+        }
+      }
+      if (chainIndex !== -1 && chainIndex) {
+        switchCurrentChain(chainIndex)
+      }
+    }
+  }, [router.query])
+
+  if (chain.collectionSetId) {
+    collectionQuery.collectionsSetId = chain.collectionSetId
+  } else if (chain.community) {
+    collectionQuery.community = chain.community
+  }
+
+  const {
+    data: trendingCollections,
+    isFetchingPage,
+    isValidating: isCollectionsValidating,
+  } = useCollections(collectionQuery, {
+    fallbackData: [ssr.collection],
   })
 
-  const topCollection = topSellingCollectionsData?.collections?.[0]
+  const { data: trendingMints, isValidating: isMintsValidating } =
+    useTrendingMints({ ...mintsQuery }, chain.id, {
+      fallbackData: [],
+    })
+
+  let collections = trendingCollections || []
+  let mints = trendingMints || []
+
+  let volumeKey: ComponentPropsWithoutRef<
+    typeof CollectionRankingsTable
+  >['volumeKey'] = 'allTime'
+
+  switch (sortByTime) {
+    case '1DayVolume':
+      volumeKey = '1day'
+      break
+    case '7DayVolume':
+      volumeKey = '7day'
+      break
+    case '30DayVolume':
+      volumeKey = '30day'
+      break
+  }
 
   return (
     <Layout>
@@ -86,206 +140,156 @@ const Home: NextPage<any> = ({ ssr }) => {
           },
         }}
       >
-        <FeaturedCards collections={trendingCollectionsData} />
-        <Flex
-          justify="between"
-          align="center"
-          css={{ flexWrap: 'wrap', mb: '$4', gap: '$3' }}
-        >
-          <Text style="h4" as="h4">
-            Trending Collections
-          </Text>
-          <ChainToggle />
-        </Flex>
         <Box
           css={{
-            pt: '$2',
-            mb: '$4',
-            display: 'grid',
-            gap: '$4',
-            gridTemplateColumns: 'repeat(1, 1fr)',
-            '@sm': {
-              gridTemplateColumns: 'repeat(2, 1fr)',
-            },
-
-            '@lg': {
-              gridTemplateColumns: 'repeat(4, 1fr)',
-            },
+            mb: 64,
           }}
         >
-          {topSellingCollectionsData?.collections &&
-            topSellingCollectionsData.collections.length &&
-            topSellingCollectionsData.collections
-              .slice(1, 9)
-              .map((collection) => {
-                return (
-                  <Link
-                    key={collection.id}
-                    href={`/${marketplaceChain.routePrefix}/collection/${collection.id}`}
-                    style={{ display: 'grid' }}
-                  >
-                    <Flex
-                      direction="column"
-                      css={{
-                        flex: 1,
-                        width: '100%',
-                        borderRadius: 12,
-                        cursor: 'pointer',
-                        height: '100%',
-                        background: '$neutralBgSubtle',
-                        $$shadowColor: '$colors$panelShadow',
-                        boxShadow: '0 0px 12px 0px $$shadowColor',
-
-                        overflow: 'hidden',
-                        position: 'relative',
-                        p: '$3',
-                        '&:hover > div > div> img:nth-child(1)': {
-                          transform: 'scale(1.075)',
-                        },
-                      }}
-                    >
-                      <Flex
-                        direction="column"
-                        css={{
-                          zIndex: 2,
-                          position: 'relative',
-                          flex: 1,
-                          width: '100%',
-                        }}
-                      >
-                        <Box
-                          css={{
-                            position: 'relative',
-                            overflow: 'hidden',
-                            borderRadius: 8,
-                          }}
-                        >
-                          {collection?.banner?.length ||
-                          collection.recentSales?.[0]?.token?.image?.length ? (
-                            <img
-                              loading="lazy"
-                              src={optimizeImage(
-                                collection?.banner ||
-                                  collection.recentSales?.[0]?.token?.image ||
-                                  collection.recentSales?.[0]?.collection
-                                    ?.image,
-                                800
-                              )}
-                              style={{
-                                transition: 'transform 300ms ease-in-out',
-                                width: '100%',
-                                borderRadius: 8,
-                                height: 250,
-                                objectFit: 'cover',
-                              }}
-                            />
-                          ) : (
-                            <Box
-                              css={{
-                                width: '100%',
-                                borderRadius: 8,
-                                height: 250,
-                                background: '$gray3',
-                              }}
-                            />
-                          )}
-                          <Img
-                            src={
-                              optimizeImage(collection?.image, 72 * 2) as string
-                            }
-                            alt={collection?.name as string}
-                            width={72}
-                            height={72}
-                            css={{
-                              width: 72,
-                              height: 72,
-                              border: '2px solid rgba(255,255,255,0.6)',
-                              position: 'absolute',
-                              bottom: '$3',
-                              left: '$3',
-                              borderRadius: 8,
-                            }}
-                          />
-                        </Box>
-                        <Flex
-                          css={{ my: '$4', mb: '$2' }}
-                          justify="between"
-                          align="center"
-                        >
-                          <Text style="h5" as="h5" ellipsify css={{ flex: 1 }}>
-                            {collection?.name}
-                          </Text>
-                        </Flex>
-
-                        <Box
-                          css={{
-                            maxWidth: 720,
-                            lineHeight: 1.5,
-                            fontSize: 16,
-                            flex: 1,
-                            fontWeight: 400,
-                            display: '-webkit-box',
-                            color: '$gray12',
-                            fontFamily: '$body',
-                            WebkitLineClamp: 3,
-                            WebkitBoxOrient: 'vertical',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            '& a': {
-                              fontWeight: 500,
-                              cursor: 'pointer',
-                              textDecoration: 'underline',
-                            },
-                          }}
-                        >
-                          <ReactMarkdown
-                            children={collection?.description || ''}
-                            components={{
-                              a: MarkdownLink,
-                              p: Text as any,
-                            }}
-                          />
-                        </Box>
-
-                        <Flex css={{ mt: '$4' }}>
-                          <Box css={{ mr: '$5' }}>
-                            <Text
-                              style="subtitle2"
-                              color="subtle"
-                              as="p"
-                              css={{ mb: 2 }}
-                            >
-                              FLOOR
-                            </Text>
-                            <FormatCryptoCurrency
-                              amount={
-                                collection?.floorAsk?.price?.amount?.native ?? 0
-                              }
-                              textStyle={'h6'}
-                              logoHeight={12}
-                              address={
-                                collection?.floorAsk?.price?.currency?.contract
-                              }
-                            />
-                          </Box>
-
-                          <Box css={{ mr: '$4' }}>
-                            <Text style="subtitle2" color="subtle" as="p">
-                              24H SALES
-                            </Text>
-                            <Text style="h6" as="h4" css={{ mt: 2 }}>
-                              {collection.count?.toLocaleString()}
-                            </Text>
-                          </Box>
-                        </Flex>
-                      </Flex>
-                    </Flex>
-                  </Link>
-                )
-              })}
+          <Flex
+            justify="between"
+            align="start"
+            css={{
+              gap: 24,
+              mb: '$4',
+            }}
+          >
+            <Text style="h4" as="h4">
+              Featured
+            </Text>
+            <ChainToggle />
+          </Flex>
+          Cards
         </Box>
+
+        <Tabs.Root
+          onValueChange={(tab) => setTab(tab as TabValue)}
+          defaultValue="collections"
+        >
+          <Flex
+            justify="between"
+            align="start"
+            css={{
+              gap: 24,
+              mb: '$4',
+            }}
+          >
+            <Text style="h4" as="h4">
+              Trending
+            </Text>
+            {!isSmallDevice && (
+              <Flex
+                align="center"
+                css={{
+                  gap: '$4',
+                  display: 'none',
+                  '@bp800': {
+                    display: 'flex',
+                  },
+                }}
+              >
+                {tab === 'collections' ? (
+                  <CollectionsTimeDropdown
+                    compact={isSmallDevice && isMounted}
+                    option={sortByTime}
+                    onOptionSelected={(option) => {
+                      setSortByTime(option)
+                    }}
+                  />
+                ) : (
+                  <MintsPeriodDropdown
+                    option={sortByPeriod}
+                    onOptionSelected={setSortByPeriod}
+                  />
+                )}
+                <ChainToggle />
+              </Flex>
+            )}
+          </Flex>
+          <TabsList css={{ mb: 16, mt: 0, borderBottom: 'none' }}>
+            <TabsTrigger value="collections">Collections</TabsTrigger>
+            <TabsTrigger value="mints">Mints</TabsTrigger>
+          </TabsList>
+          {isSmallDevice && (
+            <Flex
+              justify="between"
+              align="center"
+              css={{
+                gap: 24,
+                mb: '$4',
+                '@bp800': {
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                },
+              }}
+            >
+              <Flex align="center" css={{ gap: '$4' }}>
+                <CollectionsTimeDropdown
+                  compact={isSmallDevice && isMounted}
+                  option={sortByTime}
+                  onOptionSelected={(option) => {
+                    setSortByTime(option)
+                  }}
+                />
+                <ChainToggle />
+              </Flex>
+            </Flex>
+          )}
+          <TabsContent value="collections">
+            <Box
+              css={{
+                height: '100%',
+              }}
+            >
+              <Flex direction="column">
+                {isSSR || !isMounted ? null : (
+                  <CollectionRankingsTable
+                    collections={collections}
+                    volumeKey={volumeKey}
+                    loading={isCollectionsValidating}
+                  />
+                )}
+                <Box
+                  css={{
+                    display: isFetchingPage ? 'none' : 'block',
+                  }}
+                ></Box>
+              </Flex>
+              {(isFetchingPage || isCollectionsValidating) && (
+                <Flex align="center" justify="center" css={{ py: '$4' }}>
+                  <LoadingSpinner />
+                </Flex>
+              )}
+            </Box>
+          </TabsContent>
+          <TabsContent value="mints">
+            <Box
+              css={{
+                height: '100%',
+              }}
+            >
+              <Flex direction="column">
+                {isSSR || !isMounted ? null : (
+                  <MintRankingsTable
+                    mints={mints}
+                    loading={isMintsValidating}
+                  />
+                )}
+                <Box
+                  css={{
+                    display: isFetchingPage ? 'none' : 'block',
+                  }}
+                ></Box>
+              </Flex>
+              {isMintsValidating && (
+                <Flex align="center" justify="center" css={{ py: '$4' }}>
+                  <LoadingSpinner />
+                </Flex>
+              )}
+            </Box>
+          </TabsContent>
+        </Tabs.Root>
         <Box css={{ my: '$5' }}>
-          <Link href={`/${marketplaceChain.routePrefix}/collections/trending`}>
+          <Link href={`/${marketplaceChain.routePrefix}/${tab}/trending`}>
             <Button>See More</Button>
           </Link>
         </Box>
