@@ -3,7 +3,6 @@ import { paths } from '@reservoir0x/reservoir-sdk'
 import { Head } from 'components/Head'
 import Layout from 'components/Layout'
 import ChainToggle from 'components/common/ChainToggle'
-import { CollectionsSortingOption } from 'components/common/CollectionsTimeDropdown'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import MintTypeSelector, {
   MintTypeOption,
@@ -20,7 +19,6 @@ import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useIntersectionObserver } from 'usehooks-ts'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 
@@ -133,9 +131,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     </Layout>
   )
 }
-
-type CollectionSchema =
-  paths['/collections/v7']['get']['responses']['200']['schema']
 
 type MintsSchema =
   paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
