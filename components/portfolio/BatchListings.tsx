@@ -70,13 +70,7 @@ const marketplaces = [
     name: 'Reservoir',
     imageUrl: 'https://api.reservoir.tools/redirect/sources/reservoir/logo/v2',
     orderbook: 'reservoir',
-    orderKind: 'seaport-v1.4',
-  },
-  {
-    name: 'OpenSea',
-    imageUrl: 'https://api.reservoir.tools/redirect/sources/opensea/logo/v2',
-    orderbook: 'opensea',
-    orderKind: 'seaport-v1.4',
+    orderKind: 'seaport-v1.5',
   },
 ]
 
@@ -243,75 +237,6 @@ const BatchListings: FC<Props> = ({
     setListButtonDisabled(hasInvalidPrice)
   }, [listings])
 
-  const removeMarketplaceListings = useCallback(
-    (orderbook: string) => {
-      let updatedListings = listings.filter(
-        (listing) => listing.orderbook === orderbook
-      )
-      setListings(updatedListings)
-    },
-    [listings]
-  )
-
-  const addMarketplaceListings = useCallback(
-    (orderbook: string, orderKind: string) => {
-      setListings((prevListings) => {
-        const updatedListings = [...prevListings]
-
-        selectedItems.forEach((item) => {
-          const existingListingIndex = updatedListings.findIndex(
-            (listing) =>
-              listing.token === item && listing.orderbook === orderbook
-          )
-
-          if (existingListingIndex === -1) {
-            const newListing: BatchListing = {
-              token: item,
-              quantity: 1,
-              price: globalPrice || '0',
-              expirationOption: globalExpirationOption,
-              //@ts-ignore
-              orderbook: orderbook,
-              //@ts-ignore
-              orderKind: orderKind,
-            }
-            updatedListings.push(newListing)
-          }
-        })
-
-        return updatedListings
-      })
-    },
-    [selectedItems, globalPrice, globalExpirationOption]
-  )
-
-  const handleMarketplaceSelection = useCallback(
-    (marketplace: Marketplace) => {
-      const isSelected = selectedMarketplaces.some(
-        (selected) => selected.orderbook === marketplace.orderbook
-      )
-
-      if (isSelected) {
-        setSelectedMarketplaces((prevSelected) =>
-          prevSelected.filter(
-            (selected) => selected.orderbook !== marketplace.orderbook
-          )
-        )
-        removeMarketplaceListings(marketplace.orderbook as string)
-      } else {
-        setSelectedMarketplaces((prevSelected) => [
-          ...prevSelected,
-          marketplace,
-        ])
-        addMarketplaceListings(
-          marketplace.orderbook as string,
-          marketplace.orderKind as string
-        )
-      }
-    },
-    [selectedMarketplaces, addMarketplaceListings, removeMarketplaceListings]
-  )
-
   const updateListing = useCallback((updatedListing: BatchListing) => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
@@ -383,40 +308,6 @@ const BatchListings: FC<Props> = ({
         justify="between"
         css={{ border: '1px solid $gray6', borderRadius: 8, p: 24 }}
       >
-        <Flex direction="column" css={{ gap: '$3' }}>
-          <Text style="h6">Select Marketplaces</Text>
-          <Flex align="center" css={{ gap: '$3' }}>
-            {marketplaces.map((marketplace) => {
-              const isSelected = selectedMarketplaces.some(
-                (selected) => selected.orderbook === marketplace.orderbook
-              )
-
-              return (
-                <Flex
-                  key={marketplace.name}
-                  align="center"
-                  css={{
-                    border: isSelected
-                      ? '1px solid $primary7'
-                      : '1px solid $gray6',
-                    borderRadius: 8,
-                    gap: '$2',
-                    p: '$3',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => handleMarketplaceSelection(marketplace)}
-                >
-                  <img
-                    src={marketplace.imageUrl}
-                    alt={marketplace.name}
-                    style={{ width: 32, height: 32 }}
-                  />
-                  <Text style="subtitle2">{marketplace.name}</Text>
-                </Flex>
-              )
-            })}
-          </Flex>
-        </Flex>
         <Flex direction="column" css={{ gap: '$3' }}>
           <Text style="h6">Apply to All</Text>
           <Flex align="center" css={{ gap: '$5' }}>

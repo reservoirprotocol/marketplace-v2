@@ -237,17 +237,6 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
       <TableCell css={{ overflow: 'hidden', minWidth: 0 }}>
         <Flex align="center" css={{ gap: '$3' }}>
           <img
-            src={marketplace?.imageUrl}
-            alt={marketplace?.name}
-            style={{
-              width: 32,
-              height: 32,
-              borderRadius: 4,
-              aspectRatio: '1/1',
-              visibility: marketplace?.imageUrl ? 'visible' : 'hidden',
-            }}
-          />
-          <img
             src={tokenImage}
             style={{
               width: 48,

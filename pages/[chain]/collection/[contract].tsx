@@ -5,6 +5,7 @@ import {
   Box,
   Input,
   FormatCrypto,
+  FormatCryptoCurrency,
 } from '../../../components/primitives'
 import {
   useCollections,
@@ -36,7 +37,6 @@ import { CollectionActivityTable } from 'components/collections/CollectionActivi
 import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import titleCase from 'utils/titleCase'
 import LoadingCard from 'components/common/LoadingCard'
 import { useChainCurrency, useMounted } from 'hooks'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -61,6 +61,7 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
+import { formatUnits } from 'viem'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -349,7 +350,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   }, [router.query])
 
-  let nativePrice = collection?.floorAsk?.price?.amount?.native
+  let sweepSymbol = collection?.floorAsk?.price?.currency?.symbol
   let topBidPrice = collection?.topBid?.price?.amount?.native
 
   return (
@@ -426,7 +427,16 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         }
                       />
                     </Flex>
-                    <Flex css={{ gap: '$3' }} align="center">
+                    <Flex
+                      css={{
+                        gap: '$3',
+                        ...(isSmallDevice && {
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                        }),
+                      }}
+                      align="center"
+                    >
                       <CopyText
                         text={collection.id as string}
                         css={{
@@ -498,7 +508,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
               <Flex align="center">
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
-                  {nativePrice ? (
+                  {collection?.floorAsk?.price?.amount?.raw && sweepSymbol ? (
                     <Sweep
                       collectionId={collection.id}
                       openState={isSweepRoute ? sweepOpenState : undefined}
@@ -522,12 +532,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                               }}
                             >
                               <FormatCrypto
-                                amount={nativePrice}
+                                amount={
+                                  collection?.floorAsk?.price?.amount?.raw
+                                }
+                                decimals={
+                                  collection?.floorAsk?.price?.currency
+                                    ?.decimals
+                                }
                                 textStyle="h6"
                                 css={{ color: '$bg', fontWeight: 900 }}
-                                decimals={4}
+                                maximumFractionDigits={4}
                               />
-                              {chainCurrency.symbol}
+                              {sweepSymbol}
                             </Flex>
                           </Text>
                         </Flex>
@@ -543,16 +559,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       openState={isMintRoute ? mintOpenState : undefined}
                       buttonChildren={
                         <Flex
-                          css={{ gap: '$2', px: '$4' }}
+                          css={{ gap: '$2', px: '$2' }}
                           align="center"
                           justify="center"
                         >
                           {isSmallDevice && (
                             <FontAwesomeIcon icon={faSeedling} />
                           )}
-                          <Text style="h6" as="h6" css={{ color: '$bg' }}>
-                            Mint
-                          </Text>
+                          {!isSmallDevice && (
+                            <Text style="h6" as="h6" css={{ color: '$bg' }}>
+                              Mint
+                            </Text>
+                          )}
 
                           {!isSmallDevice && (
                             <Text
@@ -575,7 +593,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         maxWidth: '220px',
                         '@md': {
                           order: 1,
-                          px: '$5',
                         },
                       }}
                       mutate={mutate}
@@ -715,9 +732,27 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         Floor
                       </Text>
                       <Text style="body1" as="p" css={{ fontWeight: '700' }}>
-                        {nativePrice
-                          ? `${nativePrice?.toFixed(2)} ${chainCurrency.symbol}`
-                          : '-'}
+                        {collection?.floorAsk?.price?.amount?.raw &&
+                        sweepSymbol ? (
+                          <Flex
+                            css={{
+                              gap: '$2',
+                            }}
+                          >
+                            <FormatCryptoCurrency
+                              amount={collection?.floorAsk?.price?.amount?.raw}
+                              decimals={
+                                collection?.floorAsk?.price?.currency?.decimals
+                              }
+                              logoHeight={14}
+                              textStyle="subtitle1"
+                              maximumFractionDigits={4}
+                            />
+                            {sweepSymbol}
+                          </Flex>
+                        ) : (
+                          '-'
+                        )}
                       </Text>
                     </Flex>
                     <Flex css={{ gap: '$1' }}>

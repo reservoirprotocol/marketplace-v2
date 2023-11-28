@@ -161,8 +161,10 @@ const IndexPage: NextPage = () => {
   }, [isSmallDevice, router.asPath])
 
   useEffect(() => {
-    router.query.tab = tabValue
-    router.push(router, undefined, { shallow: true })
+    if (router.query.tab != tabValue) {
+      router.query.tab = tabValue
+      router.push(router, undefined, { shallow: true })
+    }
   }, [tabValue])
 
   if (!isMounted) {
