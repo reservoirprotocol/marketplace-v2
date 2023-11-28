@@ -16,7 +16,11 @@ import {
 import supportedChains, { DefaultChain } from 'utils/chains'
 
 import * as Tabs from '@radix-ui/react-tabs'
-import { useCollections, useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
+import {
+  useCollections,
+  useTrendingCollections,
+  useTrendingMints,
+} from '@reservoir0x/reservoir-kit-ui'
 import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
@@ -26,8 +30,9 @@ import { MintTypeOption } from 'components/common/MintTypeSelector'
 import MintsPeriodDropdown, {
   MintsSortingOption,
 } from 'components/common/MintsPeriodDropdown'
+import { FeaturedCards } from 'components/home/FeaturedCards'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTableV2'
 import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
@@ -54,21 +59,14 @@ const Home: NextPage<any> = ({ ssr }) => {
   const isSmallDevice = useMediaQuery({ query: '(max-width: 800px)' })
 
   const [tab, setTab] = useState<TabValue>('collections')
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
+  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
   const [mintType, setMintType] = useState<MintTypeOption>('any')
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
   let mintsQuery: Parameters<typeof useTrendingMints>['0'] = {
-    limit: 50,
+    limit: 20,
     period: sortByPeriod,
     type: mintType,
-  }
-
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 20,
-    sortBy: sortByTime,
-    includeMintStages: true,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -87,26 +85,44 @@ const Home: NextPage<any> = ({ ssr }) => {
     }
   }, [router.query])
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
-
   const {
     data: trendingCollections,
-    isFetchingPage,
-    isValidating: isCollectionsValidating,
-  } = useCollections(collectionQuery, {
-    fallbackData: [ssr.collection],
-  })
+    isValidating: isTrendingCollectionsValidating,
+  } = useTrendingCollections(
+    {
+      limit: 20,
+      sortBy: 'volume',
+      period: sortByTime,
+    },
+    chain.id,
+    {
+      fallbackData: [ssr.collection],
+    }
+  )
 
-  const { data: trendingMints, isValidating: isMintsValidating } =
+  const {
+    data: featuredCollections,
+    isValidating: isFeaturedCollectionsValidating,
+  } = useTrendingCollections(
+    {
+      limit: 20,
+      sortBy: 'sales',
+      period: '24h',
+    },
+    chain.id,
+    {
+      fallbackData: [ssr.collection],
+    }
+  )
+
+  const { data: trendingMints, isValidating: isTrendingMintsValidating } =
     useTrendingMints({ ...mintsQuery }, chain.id, {
       fallbackData: [],
     })
 
-  let collections = trendingCollections || []
+  let collectionSetOne = trendingCollections || []
+  let collectionSetTwo = featuredCollections || []
+
   let mints = trendingMints || []
 
   let volumeKey: ComponentPropsWithoutRef<
@@ -114,14 +130,14 @@ const Home: NextPage<any> = ({ ssr }) => {
   >['volumeKey'] = 'allTime'
 
   switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
+    case '30d':
+      volumeKey = '30day'
       break
-    case '7DayVolume':
+    case '7d':
       volumeKey = '7day'
       break
-    case '30DayVolume':
-      volumeKey = '30day'
+    case '1d':
+      volumeKey = '1day'
       break
   }
 
@@ -158,21 +174,20 @@ const Home: NextPage<any> = ({ ssr }) => {
             </Text>
             <ChainToggle />
           </Flex>
-          Cards
+          <Box
+            css={{
+              height: '100%',
+            }}
+          >
+            <FeaturedCards collections={featuredCollections} />
+          </Box>
         </Box>
 
         <Tabs.Root
           onValueChange={(tab) => setTab(tab as TabValue)}
           defaultValue="collections"
         >
-          <Flex
-            justify="between"
-            align="start"
-            css={{
-              gap: 24,
-              mb: '$4',
-            }}
-          >
+          <Flex justify="between" align="start" css={{ mb: '$3' }}>
             <Text style="h4" as="h4">
               Trending
             </Text>
@@ -181,10 +196,6 @@ const Home: NextPage<any> = ({ ssr }) => {
                 align="center"
                 css={{
                   gap: '$4',
-                  display: 'none',
-                  '@bp800': {
-                    display: 'flex',
-                  },
                 }}
               >
                 {tab === 'collections' ? (
@@ -205,7 +216,7 @@ const Home: NextPage<any> = ({ ssr }) => {
               </Flex>
             )}
           </Flex>
-          <TabsList css={{ mb: 16, mt: 0, borderBottom: 'none' }}>
+          <TabsList css={{ mb: 24, mt: 0, borderBottom: 'none' }}>
             <TabsTrigger value="collections">Collections</TabsTrigger>
             <TabsTrigger value="mints">Mints</TabsTrigger>
           </TabsList>
@@ -216,10 +227,6 @@ const Home: NextPage<any> = ({ ssr }) => {
               css={{
                 gap: 24,
                 mb: '$4',
-                '@bp800': {
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                },
               }}
             >
               <Flex align="center" css={{ gap: '$4' }}>
@@ -243,18 +250,18 @@ const Home: NextPage<any> = ({ ssr }) => {
               <Flex direction="column">
                 {isSSR || !isMounted ? null : (
                   <CollectionRankingsTable
-                    collections={collections}
+                    collections={collectionSetOne}
                     volumeKey={volumeKey}
-                    loading={isCollectionsValidating}
+                    loading={isTrendingCollectionsValidating}
                   />
                 )}
                 <Box
                   css={{
-                    display: isFetchingPage ? 'none' : 'block',
+                    display: isTrendingCollectionsValidating ? 'none' : 'block',
                   }}
                 ></Box>
               </Flex>
-              {(isFetchingPage || isCollectionsValidating) && (
+              {isTrendingCollectionsValidating && (
                 <Flex align="center" justify="center" css={{ py: '$4' }}>
                   <LoadingSpinner />
                 </Flex>
@@ -271,16 +278,16 @@ const Home: NextPage<any> = ({ ssr }) => {
                 {isSSR || !isMounted ? null : (
                   <MintRankingsTable
                     mints={mints}
-                    loading={isMintsValidating}
+                    loading={isTrendingMintsValidating}
                   />
                 )}
                 <Box
                   css={{
-                    display: isFetchingPage ? 'none' : 'block',
+                    display: isTrendingCollectionsValidating ? 'none' : 'block',
                   }}
                 ></Box>
               </Flex>
-              {isMintsValidating && (
+              {isTrendingMintsValidating && (
                 <Flex align="center" justify="center" css={{ py: '$4' }}>
                   <LoadingSpinner />
                 </Flex>
