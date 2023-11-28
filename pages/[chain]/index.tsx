@@ -151,7 +151,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                   >
                     <StyledImage
                       src={optimizeImage(
-                        topCollection?.banner ?? topCollection?.image,
+                        topCollection?.banner ||
+                          topCollection?.image ||
+                          topCollection?.recentSales?.[0]?.collection?.image ||
+                          topCollection?.recentSales?.[0]?.token?.image,
                         1820
                       )}
                       css={{
@@ -411,8 +414,10 @@ const Home: NextPage<any> = ({ ssr }) => {
                             <img
                               loading="lazy"
                               src={optimizeImage(
-                                collection?.banner ??
-                                  collection.recentSales?.[0]?.token?.image,
+                                collection?.banner ||
+                                  collection.recentSales?.[0]?.token?.image ||
+                                  collection.recentSales?.[0]?.collection
+                                    ?.image,
                                 800
                               )}
                               style={{
