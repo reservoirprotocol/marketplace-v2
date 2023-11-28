@@ -35,6 +35,7 @@ import useOnChainRoyalties, {
   OnChainRoyaltyReturnType,
 } from 'hooks/useOnChainRoyalties'
 import { formatUnits } from 'viem'
+import useMultiMarketplaceConfigs from 'hooks/useMultiMarketplaceConfigs'
 
 export type BatchListing = {
   token: UserToken
@@ -81,21 +82,18 @@ const BatchListings: FC<Props> = ({
 }) => {
   const [listings, setListings] = useState<BatchListing[]>([])
 
-  const [selectedMarketplaces, setSelectedMarketplaces] = useState<
-    Marketplace[]
-  >([marketplaces[0]])
-
   const [globalPrice, setGlobalPrice] = useState<string>('')
   const [globalExpirationOption, setGlobalExpirationOption] =
     useState<ExpirationOption>(expirationOptions[5])
 
   const [totalProfit, setTotalProfit] = useState<number>(0)
 
-  const [listButtonDisabled, setListButtonDisabled] = useState<boolean>(true)
-
   const isLargeDevice = useMediaQuery({ minWidth: 1400 })
 
   const chain = useMarketplaceChain()
+  const marketplaces = useMultiMarketplaceConfigs(
+    selectedItems.map((item) => item.token?.collection?.id as string)
+  )
 
   const chainCurrency = useChainCurrency()
   const defaultCurrency = {
@@ -166,30 +164,18 @@ const BatchListings: FC<Props> = ({
     ? '1.1fr 2.7fr 1fr repeat(2, .7fr) .5fr .3fr'
     : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
 
-  const generateListings = useCallback(() => {
-    const listings = selectedItems.flatMap((item) => {
-      return selectedMarketplaces.map((marketplace) => {
-        const listing: BatchListing = {
-          token: item,
-          quantity: 1,
-          price: globalPrice || '0',
-          expirationOption: globalExpirationOption,
-          //@ts-ignore
-          orderbook: marketplace.orderbook,
-          //@ts-ignore
-          orderKind: marketplace.orderKind,
-        }
-
-        return listing
-      })
-    })
-
-    return listings
-  }, [selectedItems, selectedMarketplaces])
-
   useEffect(() => {
-    setListings(generateListings())
-  }, [selectedItems, selectedMarketplaces, generateListings])
+    const newListings: BatchListing[] = selectedItems.map((item) => ({
+      token: item,
+      quantity: 1,
+      price: globalPrice || '0',
+      expirationOption: globalExpirationOption,
+      orderbook: 'reservoir',
+      //@ts-ignore
+      orderKind: collectionExchanges[item.token?.collection],
+    }))
+    setListings(newListings)
+  }, [selectedItems, collectionExchanges])
 
   useEffect(() => {
     const maxProfit = selectedItems.reduce((total, item) => {
@@ -225,16 +211,16 @@ const BatchListings: FC<Props> = ({
     }, 0)
 
     setTotalProfit(maxProfit)
-  }, [listings, onChainRoyaltiesMap, selectedMarketplaces, globalPrice])
+  }, [listings, onChainRoyaltiesMap, globalPrice])
 
-  useEffect(() => {
+  const listButtonDisabled = useMemo(() => {
     const hasInvalidPrice = listings.some(
       (listing) =>
         listing.price === undefined ||
         listing.price === '' ||
         Number(listing.price) < MINIMUM_AMOUNT
     )
-    setListButtonDisabled(hasInvalidPrice)
+    return hasInvalidPrice
   }, [listings])
 
   const updateListing = useCallback((updatedListing: BatchListing) => {
