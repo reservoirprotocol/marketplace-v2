@@ -100,10 +100,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
 
   // @ts-ignore
   const sampleImages: string[] = mint?.sampleImages
-  // @ts-ignore
-  const sixHourCount: number = mint?.sixHourCount
-  // @ts-ignore
-  const oneHourCount: number = mint?.oneHourCount
 
   if (isSmallDevice) {
     return (
