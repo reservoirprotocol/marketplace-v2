@@ -27,7 +27,7 @@ type Props = {
 const gridColumns = {
   gridTemplateColumns: '520px repeat(3, 0.5fr) 250px',
   '@md': {
-    gridTemplateColumns: '420px 1fr 1fr',
+    gridTemplateColumns: '420px 1fr 1fr 1fr',
   },
 
   '@lg': {
