@@ -91,7 +91,7 @@ const BatchListings: FC<Props> = ({
   const isLargeDevice = useMediaQuery({ minWidth: 1400 })
 
   const chain = useMarketplaceChain()
-  const marketplaces = useMultiMarketplaceConfigs(
+  const { collectionExchanges } = useMultiMarketplaceConfigs(
     selectedItems.map((item) => item.token?.collection?.id as string)
   )
 
@@ -165,6 +165,7 @@ const BatchListings: FC<Props> = ({
     : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
 
   useEffect(() => {
+    debugger
     const newListings: BatchListing[] = selectedItems.map((item) => ({
       token: item,
       quantity: 1,
@@ -172,7 +173,7 @@ const BatchListings: FC<Props> = ({
       expirationOption: globalExpirationOption,
       orderbook: 'reservoir',
       //@ts-ignore
-      orderKind: collectionExchanges[item.token?.collection],
+      orderKind: collectionExchanges[item.token?.collection?.id],
     }))
     setListings(newListings)
   }, [selectedItems, collectionExchanges])
@@ -432,7 +433,8 @@ const BatchListings: FC<Props> = ({
               globalPrice={globalPrice}
               currency={currency}
               defaultCurrency={defaultCurrency}
-              selectedMarketplaces={selectedMarketplaces}
+              // selectedMarketplaces={selectedMarketplaces}
+              selectedMarketplaces={[]}
               key={`${listing.token.token?.collection?.id}:${listing.token.token?.tokenId}:${listing.orderbook}`}
             />
           ))}
@@ -465,7 +467,8 @@ const BatchListings: FC<Props> = ({
                 onChainRoyalties={onChainRoyalties}
                 disabled={listButtonDisabled}
                 currency={currency}
-                selectedMarketplaces={selectedMarketplaces}
+                // selectedMarketplaces={selectedMarketplaces}
+                selectedMarketplaces={[]}
                 onCloseComplete={() => {
                   setShowListingPage(false)
                   setSelectedItems([])
