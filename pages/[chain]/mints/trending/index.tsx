@@ -17,6 +17,7 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { useMounted } from 'hooks'
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { useRouter } from 'next/router'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -31,8 +32,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const isSmallDevice = useMediaQuery({ maxWidth: 600 })
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
 
   const [mintType, setMintType] = useState<MintTypeOption>('any')
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
@@ -60,13 +59,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   }, [router.query])
 
   const { data, isValidating } = useTrendingMints(mintQuery, chain.id, {
-    fallbackData: [ssr.mint],
+    fallbackData: [ssr.mints],
   })
 
   let mints = data || []
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   return (
     <Layout>
@@ -146,7 +142,7 @@ type MintsSchema =
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    mint: MintsSchema
+    mints: MintsSchema
   }
 }> = async ({ res, params }) => {
   const mintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
@@ -154,11 +150,14 @@ export const getServerSideProps: GetServerSideProps<{
       period: '24h',
       limit: 50,
     }
+
   const chainPrefix = params?.chain || ''
+
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
-  const query = { ...mintsQuery }
+
+  const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
 
   const response = await fetcher(
     `${chain.reservoirBaseUrl}/collections/v7`,
@@ -176,7 +175,7 @@ export const getServerSideProps: GetServerSideProps<{
   )
 
   return {
-    props: { ssr: { mint: response.data } },
+    props: { ssr: { mints: response.data } },
   }
 }
 
