@@ -100,6 +100,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
 
   // @ts-ignore
   const sampleImages: string[] = mint?.sampleImages
+  // @ts-ignore
+  const openseaVerificationStatus = mint?.openseaVerificationStatus
 
   if (isSmallDevice) {
     return (
@@ -131,7 +133,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
               >
                 {mint?.name}
               </Text>
-              <OpenSeaVerified openseaVerificationStatus={'verified'} />
+              <OpenSeaVerified
+                openseaVerificationStatus={openseaVerificationStatus}
+              />
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body3"></Text>
