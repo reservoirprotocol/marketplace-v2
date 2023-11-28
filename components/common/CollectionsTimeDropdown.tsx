@@ -1,7 +1,4 @@
-import {
-  useCollections,
-  useTrendingCollections,
-} from '@reservoir0x/reservoir-kit-ui'
+import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { Text, Button, Box } from '../primitives'
 import {
   DropdownMenuItem,
@@ -13,21 +10,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 
 export type CollectionsSortingOption = NonNullable<
-  Exclude<
-    Parameters<typeof useTrendingCollections>[0],
-    false | undefined
-  >['period']
+  Exclude<Parameters<typeof useCollections>[0], false | undefined>['sortBy']
 >
 
 const sortingOptions: CollectionsSortingOption[] = [
-  '10m',
-  '1d',
-  '1h',
-  '30d',
-  '30m',
-  '5m',
-  '6h',
-  '7d',
+  '1DayVolume',
+  '7DayVolume',
+  '30DayVolume',
+  'allTimeVolume',
 ]
 
 const nameForSortingOption = (
@@ -35,22 +25,14 @@ const nameForSortingOption = (
   compact: boolean
 ) => {
   switch (option) {
-    case '30d':
-      return compact ? '30d' : '30 days'
-    case '7d':
-      return compact ? '7d' : '7 days'
-    case '1d':
+    case '1DayVolume':
       return compact ? '24h' : '24 hours'
-    case '6h':
-      return compact ? '6h' : '6 hours'
-    case '1h':
-      return compact ? '1h' : '1 hour'
-    case '30m':
-      return compact ? '30m' : '30 minutes'
-    case '10m':
-      return compact ? '10m' : '10 minutes'
-    case '5m':
-      return compact ? '5m' : '5 minutes'
+    case '7DayVolume':
+      return compact ? '7d' : '7 days'
+    case '30DayVolume':
+      return compact ? '30d' : '30 days'
+    case 'allTimeVolume':
+      return compact ? 'All' : 'All Time'
   }
 }
 

@@ -1,8 +1,16 @@
 import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
-import { Box, Flex, FormatCryptoCurrency, Text } from 'components/primitives'
+import {
+  Box,
+  Flex,
+  FormatCryptoCurrency,
+  MarkdownLink,
+  Text,
+} from 'components/primitives'
 import Img from 'components/primitives/Img'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
+import optimizeImage from 'utils/optimizeImage'
 
 type TrendingCollections = ReturnType<typeof useTrendingCollections>['data']
 
@@ -24,11 +32,8 @@ export const FeaturedCards = ({
   return (
     <Flex
       direction="row"
-      align="center"
       style={{
-        width: '100%',
-        overflowY: 'scroll',
-        gap: '12px',
+        gap: '10px',
       }}
     >
       {collections.map((collection) => {
@@ -36,63 +41,40 @@ export const FeaturedCards = ({
           <Link
             key={collection.id}
             href={`/${marketplaceChain.routePrefix}/collection/${collection.id}`}
+            style={{ display: 'grid' }}
           >
             <Flex
               direction="column"
               css={{
                 flex: 1,
-
-                width: '330px',
+                width: '100%',
                 borderRadius: 12,
                 cursor: 'pointer',
-                height: '290px',
-                overflowX: 'scroll',
+                height: '100%',
                 background: '$neutralBgSubtle',
                 $$shadowColor: '$colors$panelShadow',
                 boxShadow: '0 0px 12px 0px $$shadowColor',
 
                 overflow: 'hidden',
                 position: 'relative',
-                p: '16px',
-                '&:hover > div > div > Img > Img:nth-child(1)': {
+                p: '$3',
+                '&:hover > div > div> img:nth-child(1)': {
                   transform: 'scale(1.075)',
                 },
               }}
             >
               <Flex
-                css={{
-                  mb: 24,
-                  width: 'fit',
-                  height: 'fit',
-                  position: 'relative',
+                style={{
+                  height: '10px',
+                  width: '300px',
                 }}
               >
                 <Img
-                  src={collection.image as string}
+                  src={optimizeImage(collection?.image, 72 * 2) as string}
                   alt={collection?.name as string}
-                  height={150}
-                  width={300}
-                  style={{
-                    objectFit: 'cover',
-                    height: '150px',
-                    width: '300px',
-                    borderRadius: 8,
-                  }}
-                />
-                <Img
-                  src={collection.banner as string}
-                  alt={collection?.name as string}
-                  height={50}
-                  width={50}
+                  fill
                   css={{
-                    position: 'absolute',
-                    top: '95px',
-                    left: '5px',
-                    right: '5px',
-                    objectFit: 'cover',
-                    height: '50px',
-                    width: '50px',
-                    border: '2px solid white',
+                    border: '2px solid rgba(255,255,255,0.6)',
                     borderRadius: 8,
                   }}
                 />
@@ -107,6 +89,68 @@ export const FeaturedCards = ({
               >
                 <Box
                   css={{
+                    overflow: 'hidden',
+                    borderRadius: 8,
+                  }}
+                >
+                  {/**
+                     *                   {collection?.banner?.length ||
+                  collection.recentSales?.[0]?.token?.image?.length ? (
+                    <img
+                      loading="lazy"
+                      src={optimizeImage(
+                        collection?.banner ||
+                          collection.recentSales?.[0]?.token?.image ||
+                          collection.recentSales?.[0]?.collection?.image,
+                        800
+                      )}
+                      style={{
+                        transition: 'transform 300ms ease-in-out',
+                        width: '100%',
+                        borderRadius: 8,
+                        height: 250,
+                        objectFit: 'cover',
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      css={{
+                        width: '100%',
+                        borderRadius: 8,
+                        height: 250,
+                        background: '$gray3',
+                      }}
+                    />
+                  )}
+                     */}
+                  <Img
+                    src={optimizeImage(collection?.image, 72 * 2) as string}
+                    alt={collection?.name as string}
+                    width={72}
+                    height={72}
+                    css={{
+                      width: 72,
+                      height: 72,
+                      border: '2px solid rgba(255,255,255,0.6)',
+                      position: 'absolute',
+                      bottom: '$3',
+                      left: '$3',
+                      borderRadius: 8,
+                    }}
+                  />
+                </Box>
+                <Flex
+                  css={{ my: '$4', mb: '$2' }}
+                  justify="between"
+                  align="center"
+                >
+                  <Text style="h5" as="h5" ellipsify css={{ flex: 1 }}>
+                    {collection?.name}
+                  </Text>
+                </Flex>
+
+                <Box
+                  css={{
                     maxWidth: 720,
                     lineHeight: 1.5,
                     fontSize: 16,
@@ -117,7 +161,6 @@ export const FeaturedCards = ({
                     fontFamily: '$body',
                     WebkitLineClamp: 3,
                     WebkitBoxOrient: 'vertical',
-                    gap: 16,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     '& a': {
@@ -126,42 +169,35 @@ export const FeaturedCards = ({
                       textDecoration: 'underline',
                     },
                   }}
-                >
-                  <Text style="h6" as="h6" ellipsify css={{ flex: 1 }}>
-                    {collection?.name}
-                  </Text>
-                  <Flex>
-                    <Box css={{ mr: '$5' }}>
-                      <Text
-                        style="subtitle2"
-                        color="subtle"
-                        as="p"
-                        css={{ mb: 2 }}
-                      >
-                        Mint Price
-                      </Text>
-                      <FormatCryptoCurrency
-                        amount={
-                          collection?.floorAsk?.price?.amount?.native ?? 0
-                        }
-                        textStyle={'h6'}
-                        logoHeight={12}
-                        address={
-                          collection?.floorAsk?.price?.currency?.contract
-                        }
-                      />
-                    </Box>
+                ></Box>
 
-                    <Box css={{ mr: '$4' }}>
-                      <Text style="subtitle2" color="subtle" as="p">
-                        6H SALES
-                      </Text>
-                      <Text style="h6" as="h4" css={{ mt: 2 }}>
-                        {collection.count?.toLocaleString()}
-                      </Text>
-                    </Box>
-                  </Flex>
-                </Box>
+                <Flex css={{ mt: '$4' }}>
+                  <Box css={{ mr: '$5' }}>
+                    <Text
+                      style="subtitle2"
+                      color="subtle"
+                      as="p"
+                      css={{ mb: 2 }}
+                    >
+                      FLOOR
+                    </Text>
+                    <FormatCryptoCurrency
+                      amount={collection?.floorAsk?.price?.amount?.native ?? 0}
+                      textStyle={'h6'}
+                      logoHeight={12}
+                      address={collection?.floorAsk?.price?.currency?.contract}
+                    />
+                  </Box>
+
+                  <Box css={{ mr: '$4' }}>
+                    <Text style="subtitle2" color="subtle" as="p">
+                      24H SALES
+                    </Text>
+                    <Text style="h6" as="h4" css={{ mt: 2 }}>
+                      {collection.count?.toLocaleString()}
+                    </Text>
+                  </Box>
+                </Flex>
               </Flex>
             </Flex>
           </Link>
