@@ -19,6 +19,7 @@ const NavItem = forwardRef<
       '&:hover': {
         color: '$gray11',
       },
+      ...props.css,
     }}
     as="p"
     style="subtitle1"
