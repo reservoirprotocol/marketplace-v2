@@ -37,12 +37,8 @@ const ChainContextProvider: FC<any> = ({ children }) => {
     }
 
     if (!router.query.chain && selectedChain) {
-      router.replace({
-        query: {
-          ...router.query,
-          chain: selectedChain.routePrefix,
-        },
-      })
+      router.query.chain = selectedChain.routePrefix
+      router.push(router, undefined, { shallow: true })
     }
 
     const id = selectedChain?.id || DefaultChain.id
@@ -57,12 +53,6 @@ const ChainContextProvider: FC<any> = ({ children }) => {
       }
 
       setGlobalChainId(+chainId)
-      router.replace({
-        query: {
-          ...router.query,
-          chain: supportedChainsMap[+chainId].routePrefix,
-        },
-      })
 
       if (typeof window !== 'undefined') {
         localStorage.setItem('reservoir.chainId', `${chainId}`)
