@@ -3,9 +3,14 @@ import useMarketplaceChain from 'hooks/useMarketplaceChain'
 import { useMemo } from 'react'
 import useSWR from 'swr/immutable'
 
-// type MarketplaceConfigurationsResponse =
-//   paths['/collections/{collection}/marketplace-configurations/v1']['get']['responses']['200']['schema']
-type MarketplaceConfigurationsResponse = any
+type MarketplaceConfigurationsResponse =
+  paths['/collections/{collection}/marketplace-configurations/v1']['get']['responses']['200']['schema']
+export type Marketplace = NonNullable<
+  NonNullable<MarketplaceConfigurationsResponse['marketplaces']>[0]
+>
+export type Exchange = NonNullable<
+  NonNullable<Marketplace['exchanges']>['string']
+>
 
 const fetcher = async (urls: string[]) => {
   const fetches = urls.map((url) =>
@@ -39,24 +44,30 @@ export default function (
   const collectionExchanges = useMemo(() => {
     return (
       data?.reduce((exchanges, data, i) => {
-        const reservoirMarketplace = data.marketplaces.find(
-          //@ts-ignore
+        const reservoirMarketplace = data?.marketplaces?.find(
           (marketplace) => marketplace.orderbook === 'reservoir'
         )
 
-        //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
-        // Note that this impacts orders created on your marketplace (offers/listings)
-        reservoirMarketplace.fee.bps = 250
+        if (reservoirMarketplace) {
+          //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
+          // Note that this impacts orders created on your marketplace (offers/listings)
+          reservoirMarketplace.fee = {
+            bps: 250,
+          }
 
-        exchanges[collectionIds[i]] = {
-          exchange: Object.values(
-            reservoirMarketplace.exchanges
-            //@ts-ignore
-          ).find((exchange) => exchange?.enabled),
-          marketplace: reservoirMarketplace,
+          const key = collectionIds[i]
+
+          exchanges[key] = {
+            exchange: Object.values(reservoirMarketplace?.exchanges || {}).find(
+              (exchange) => exchange?.enabled
+            ) as Exchange,
+            marketplace: reservoirMarketplace,
+          }
         }
+
         return exchanges
-      }, {}) || {}
+      }, {} as Record<string, { exchange: Exchange; marketplace: Marketplace }>) ||
+      {}
     )
   }, [data])
 
