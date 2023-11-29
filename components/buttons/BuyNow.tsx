@@ -61,6 +61,16 @@ const BuyNow: FC<Props> = ({
       onClose={(data, stepData, currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
       }}
+      onPointerDownOutside={(e) => {
+        const privyLayer = document.getElementById('privy-dialog')
+
+        const clickedInsidePrivyLayer =
+          privyLayer && e.target ? privyLayer.contains(e.target as Node) : false
+
+        if (clickedInsidePrivyLayer) {
+          e.preventDefault()
+        }
+      }}
     />
   )
 }

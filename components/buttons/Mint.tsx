@@ -55,6 +55,16 @@ const Mint: FC<Props> = ({
       onClose={(data, currentStep) => {
         if (mutate && currentStep == CollectStep.Complete) mutate()
       }}
+      onPointerDownOutside={(e) => {
+        const privyLayer = document.getElementById('privy-dialog')
+
+        const clickedInsidePrivyLayer =
+          privyLayer && e.target ? privyLayer.contains(e.target as Node) : false
+
+        if (clickedInsidePrivyLayer) {
+          e.preventDefault()
+        }
+      }}
     />
   )
 }
