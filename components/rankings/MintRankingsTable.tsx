@@ -25,17 +25,17 @@ type Props = {
 }
 
 const gridColumns = {
-  gridTemplateColumns: '520px repeat(3, 0.5fr) 250px',
+  gridTemplateColumns: '520px repeat(5, 0.5fr) 250px',
   '@md': {
     gridTemplateColumns: '420px 1fr 1fr 1fr',
   },
 
   '@lg': {
-    gridTemplateColumns: '360px repeat(3, 0.5fr) 250px',
+    gridTemplateColumns: '360px repeat(5, 0.5fr) 250px',
   },
 
   '@xl': {
-    gridTemplateColumns: '520px repeat(3, 0.5fr) 250px',
+    gridTemplateColumns: '520px repeat(5, 0.5fr) 250px',
   },
 }
 
@@ -99,9 +99,15 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
   const mintPrice = mint.mintPrice?.toString()
 
   // @ts-ignore
-  const sampleImages: string[] = mint?.sampleImages
+  const sampleImages: string[] = mint?.sampleImages || []
   // @ts-ignore
   const openseaVerificationStatus = mint?.openseaVerificationStatus
+
+  // @ts-ignore
+  const oneHourCount = mint?.oneHourCount
+
+  // @ts-ignore
+  const sixHourCount = mint?.sixHourCount
 
   if (isSmallDevice) {
     return (
@@ -254,6 +260,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
         </TableCell>
 
         <TableCell desktopOnly>
+          <Text style="subtitle1">{oneHourCount}</Text>
+        </TableCell>
+
+        <TableCell desktopOnly>
+          <Text style="subtitle1">{sixHourCount}</Text>
+        </TableCell>
+
+        <TableCell desktopOnly>
           <Flex
             css={{
               gap: '$2',
@@ -297,6 +311,8 @@ const headings = [
   'Mint Price',
   'Floor Price',
   'Total Mints',
+  '1H Mints',
+  '6h Mints',
   'Recent Mints',
 ]
 
