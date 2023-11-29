@@ -15,7 +15,6 @@ import {
   FC,
   SetStateAction,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
@@ -25,9 +24,7 @@ import expirationOptions from 'utils/defaultExpirationOptions'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { UserToken } from 'pages/portfolio/[[...address]]'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
-import useMarketplaceFees from 'hooks/useOpenseaFees'
-import { ToastContext } from 'context/ToastContextProvider'
-import { BatchListing, Marketplace } from './BatchListings'
+import { BatchListing } from './BatchListings'
 import optimizeImage from 'utils/optimizeImage'
 
 type BatchListingsTableRowProps = {
@@ -36,16 +33,14 @@ type BatchListingsTableRowProps = {
   onChainRoyaltiesBps: number
   displayQuantity: boolean
   gridTemplateColumns: string
-  setListings: Dispatch<SetStateAction<BatchListing[]>>
-  updateListing: (updatedListing: BatchListing) => void
   globalExpirationOption: ExpirationOption
   globalPrice: string
-  currency: Currency
-  defaultCurrency: Currency
   isLargeDevice: boolean
   selectedItems: UserToken[]
+  currencies: Currency[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
-  selectedMarketplaces: Marketplace[]
+  setListings: Dispatch<SetStateAction<BatchListing[]>>
+  updateListing: (updatedListing: BatchListing) => void
 }
 
 const MINIMUM_AMOUNT = 0.000001
@@ -54,18 +49,16 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   listing,
   listings,
   onChainRoyaltiesBps,
-  setListings,
-  updateListing,
   selectedItems,
   displayQuantity,
   gridTemplateColumns,
   isLargeDevice,
-  setSelectedItems,
   globalExpirationOption,
   globalPrice,
-  currency,
-  defaultCurrency,
-  selectedMarketplaces,
+  currencies,
+  setListings,
+  updateListing,
+  setSelectedItems,
 }) => {
   const [expirationOption, setExpirationOption] = useState<ExpirationOption>(
     globalExpirationOption
@@ -74,27 +67,10 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   const [price, setPrice] = useState<string>(listing.price)
 
   const [quantity, setQuantity] = useState<number | undefined>(1)
-  const [marketplaceFee, setMarketplaceFee] = useState<number>(0)
-  const [marketplaceFeePercent, setMarketplaceFeePercent] = useState<number>(0)
 
   const tokenImage = useMemo(() => {
     return optimizeImage(listing.token.token?.image, 250)
   }, [listing.token.token?.image])
-
-  const { addToast } = useContext(ToastContext)
-
-  const marketplace = selectedMarketplaces.find(
-    (m) => m.orderbook === listing.orderbook
-  )
-
-  const handleMarketplaceFeeChange = useCallback(
-    (marketplaceFee: number) => {
-      setMarketplaceFee(marketplaceFee)
-      const updatedListing = { ...listing, marketplaceFee: marketplaceFee }
-      updateListing(updatedListing)
-    },
-    [listing, updateListing]
-  )
 
   const removeListing = useCallback(
     (token: string, orderbook: string) => {
@@ -127,46 +103,16 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
     [listings]
   )
 
-  let openseaFees = useMarketplaceFees(
-    listing.orderbook == 'opensea'
-      ? (listing.token.token?.collection?.id as string)
-      : undefined
-  )
-
-  useEffect(() => {
-    if (
-      openseaFees &&
-      openseaFees.fee &&
-      openseaFees.fee.bps &&
-      listing.orderbook == 'opensea'
-    ) {
-      // Remove listing and emit toast if listing not enabled
-      if (!openseaFees.listingEnabled) {
-        addToast?.({
-          title: 'Listing not enabled',
-          description: `Cannnot list ${listing.token.token?.name} on OpenSea`,
-        })
-        removeListing(
-          `${listing.token.token?.contract}:${listing.token.token?.tokenId}`,
-          listing.orderbook as string
-        )
-      }
-
-      setMarketplaceFeePercent(openseaFees.fee.bps / 100 || 0)
-      handleMarketplaceFeeChange(
-        (openseaFees.fee.bps / 10000) * Number(price) * listing.quantity || 0
-      )
-    }
-  }, [openseaFees, price, quantity, marketplace])
-
   const creatorRoyalties =
     (onChainRoyaltiesBps ||
       listing?.token?.token?.collection?.royaltiesBps ||
       0) / 10000
 
+  const marketplaceFee = (listing.marketplace?.fee?.bps || 0) / 10000
+
   const profit =
     Number(price) * listing.quantity -
-    marketplaceFee -
+    marketplaceFee * Number(price) * listing.quantity -
     creatorRoyalties * Number(price) * listing.quantity
 
   const topTraitPrice = useMemo(() => {
@@ -223,6 +169,19 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
     },
     [listing, updateListing]
   )
+
+  const handleCurrencyChange = useCallback(
+    (currency: Currency) => {
+      const updatedListing = { ...listing, currency }
+      updateListing(updatedListing)
+    },
+    [listing, updateListing]
+  )
+
+  const restrictCurrency =
+    listing?.exchange?.paymentTokens &&
+    listing.exchange.paymentTokens.length > 0
+
   return (
     <TableRow
       css={{
@@ -309,15 +268,15 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                   css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
                   disabled={
                     !listing.token?.token?.collection?.floorAskPrice?.amount
-                      ?.native
+                      ?.decimal
                   }
                   onClick={() => {
                     if (
                       listing.token?.token?.collection?.floorAskPrice?.amount
-                        ?.native
+                        ?.decimal
                     ) {
                       handlePriceChange(
-                        listing.token?.token?.collection?.floorAskPrice?.amount?.native?.toString()
+                        listing.token?.token?.collection?.floorAskPrice?.amount?.decimal?.toString()
                       )
                     }
                   }}
@@ -325,9 +284,9 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                   Floor
                 </Button>
                 {listing.token?.token?.collection?.floorAskPrice?.amount
-                  ?.native ? (
+                  ?.decimal ? (
                   <Text style="subtitle3" color="subtle">
-                    {`${listing.token?.token?.collection?.floorAskPrice?.amount?.native} ${defaultCurrency.symbol}`}
+                    {`${listing.token?.token?.collection?.floorAskPrice?.amount?.decimal} ${listing.token?.token?.collection?.floorAskPrice?.currency?.symbol}`}
                   </Text>
                 ) : null}
               </Flex>
@@ -346,7 +305,11 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                 </Button>
                 {topTraitPrice && topTraitPrice > 0 ? (
                   <Text style="subtitle3" color="subtle">
-                    {topTraitPrice} {defaultCurrency.symbol}
+                    {topTraitPrice}{' '}
+                    {
+                      listing.token?.token?.collection?.floorAskPrice?.currency
+                        ?.symbol
+                    }
                   </Text>
                 ) : null}
               </Flex>
@@ -354,15 +317,69 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
           ) : null}
 
           <Flex align="start" css={{ gap: '$3' }}>
-            <Flex align="center" css={{ mt: 12 }}>
-              <CryptoCurrencyIcon
-                address={currency.contract}
-                css={{ height: 18 }}
-              />
-              <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
-                {currency.symbol}
-              </Text>
-            </Flex>
+            {restrictCurrency ? (
+              <Flex align="center" css={{ width: 130, px: '$4', py: '$3' }}>
+                <CryptoCurrencyIcon
+                  address={listing.currency.contract}
+                  css={{ height: 18 }}
+                />
+                <Text style="subtitle1" color="subtle" css={{ ml: '$1' }}>
+                  {listing.currency.symbol}
+                </Text>
+              </Flex>
+            ) : (
+              <Select
+                trigger={
+                  <Select.Trigger
+                    css={{
+                      width: 130,
+                    }}
+                  >
+                    <Select.Value asChild>
+                      <Flex align="center" justify="center">
+                        <CryptoCurrencyIcon
+                          address={listing.currency.contract}
+                          css={{ height: 18 }}
+                        />
+                        <Text
+                          style="subtitle1"
+                          color="subtle"
+                          css={{ ml: '$1' }}
+                        >
+                          {listing.currency.symbol}
+                        </Text>
+                        {currencies && currencies?.length > 1 ? (
+                          <Select.DownIcon style={{ marginLeft: 6 }} />
+                        ) : null}
+                      </Flex>
+                    </Select.Value>
+                  </Select.Trigger>
+                }
+                value={listing.currency.contract}
+                onValueChange={(value: string) => {
+                  const option = currencies?.find(
+                    (option) => option.contract == value
+                  )
+                  if (option) {
+                    handleCurrencyChange(option)
+                  }
+                }}
+              >
+                {currencies?.map((option) => (
+                  <Select.Item key={option.contract} value={option.contract}>
+                    <Select.ItemText>
+                      <Flex align="center" css={{ gap: '$1' }}>
+                        <CryptoCurrencyIcon
+                          address={option.contract}
+                          css={{ height: 18 }}
+                        />
+                        {option.symbol}
+                      </Flex>
+                    </Select.ItemText>
+                  </Select.Item>
+                ))}
+              </Select>
+            )}
             <Flex direction="column" align="center" css={{ gap: '$2' }}>
               <Input
                 placeholder="Price"
@@ -417,6 +434,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
         >
           <FormatCryptoCurrency
             amount={creatorRoyalties * Number(price)}
+            address={listing.currency.contract}
             logoHeight={14}
             textStyle="body1"
             css={{
@@ -432,17 +450,19 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
         <Flex align="center" css={{ gap: '$2', mt: '$3' }}>
           <FormatCryptoCurrency
             amount={marketplaceFee}
+            address={listing.currency.contract}
             logoHeight={14}
             textStyle="body1"
           />
           <Text style="body1" color="subtle" ellipsify>
-            ({marketplaceFeePercent || 0}%)
+            ({(marketplaceFee || 0) * 100}%)
           </Text>
         </Flex>
       </TableCell>
       <TableCell css={{ minWidth: 0, overflow: 'hidden' }}>
         <Flex css={{ mt: '$3' }}>
           <FormatCryptoCurrency
+            address={listing.currency.contract}
             amount={profit}
             logoHeight={14}
             textStyle="body1"
