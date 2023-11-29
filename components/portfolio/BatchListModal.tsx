@@ -172,18 +172,15 @@ const BatchListModal: FC<Props> = ({
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
         quantity: listing.quantity,
+        fees: orderFees,
       }
 
-      if (listing.orderbook === 'reservoir') {
-        convertedListing.fees = orderFees
+      if (listing.currency) {
+        convertedListing.currency = listing.currency.contract
       }
 
       if (expirationTime) {
         convertedListing.expirationTime = expirationTime
-      }
-
-      if (currency && currency.contract != zeroAddress) {
-        convertedListing.currency = currency.contract
       }
 
       const onChainRoyalty =

@@ -45,6 +45,9 @@ export type BatchListing = {
   orderbook: Listing['orderbook']
   orderKind: Listing['orderKind']
   marketplaceFee?: number
+  currency?: Currency
+  exchange: any //todo fix the type
+  marketplace: any //todo fix the type
 }
 
 type ListingCurrencies = ComponentPropsWithoutRef<
@@ -65,15 +68,6 @@ type Props = {
 }
 
 const MINIMUM_AMOUNT = 0.000001
-
-const marketplaces = [
-  {
-    name: 'Reservoir',
-    imageUrl: 'https://api.reservoir.tools/redirect/sources/reservoir/logo/v2',
-    orderbook: 'reservoir',
-    orderKind: 'seaport-v1.5',
-  },
-]
 
 const BatchListings: FC<Props> = ({
   selectedItems,
@@ -99,6 +93,7 @@ const BatchListings: FC<Props> = ({
   const defaultCurrency = {
     contract: chainCurrency.address,
     symbol: chainCurrency.symbol,
+    decimals: chainCurrency.decimals,
   }
   const currencies: ListingCurrencies = chain.listingCurrencies
 
@@ -152,11 +147,12 @@ const BatchListings: FC<Props> = ({
     [onChainRoyalties, chainCurrency]
   )
 
-  const displayQuantity = useCallback(() => {
-    return listings.some((listing) => listing?.token?.token?.kind === 'erc1155')
-  }, [listings])
+  const displayQuantity = useMemo(
+    () => listings.some((listing) => listing?.token?.token?.kind === 'erc1155'),
+    [listings]
+  )
 
-  let gridTemplateColumns = displayQuantity()
+  let gridTemplateColumns = displayQuantity
     ? isLargeDevice
       ? '1.1fr .5fr 2.6fr .8fr repeat(2, .7fr) .5fr .3fr'
       : '1.3fr .6fr 1.6fr 1fr repeat(2, .9fr) .6fr .3fr'
@@ -165,16 +161,34 @@ const BatchListings: FC<Props> = ({
     : '1.3fr 1.8fr 1.2fr repeat(2, .9fr) .6fr .3fr'
 
   useEffect(() => {
-    debugger
-    const newListings: BatchListing[] = selectedItems.map((item) => ({
-      token: item,
-      quantity: 1,
-      price: globalPrice || '0',
-      expirationOption: globalExpirationOption,
-      orderbook: 'reservoir',
-      //@ts-ignore
-      orderKind: collectionExchanges[item.token?.collection?.id],
-    }))
+    const newListings: BatchListing[] = selectedItems
+      .filter(
+        (item) =>
+          collectionExchanges[item.token?.collection?.id as string] !==
+          undefined
+      )
+      .map((item) => {
+        const { exchange, marketplace } =
+          collectionExchanges[item.token?.collection?.id as string]
+        return {
+          token: item,
+          quantity: 1,
+          price: globalPrice || '0',
+          expirationOption: globalExpirationOption,
+          currency: exchange.paymentTokens
+            ? {
+                contract: exchange.paymentTokens[0].address,
+                symbol: exchange.paymentTokens[0].symbol,
+                decimals: exchange.paymentTokens[0].decimals,
+              }
+            : defaultCurrency,
+          orderbook: 'reservoir',
+          //@ts-ignore
+          orderKind: exchange.orderKind,
+          marketplace: marketplace,
+          exchange: exchange,
+        }
+      })
     setListings(newListings)
   }, [selectedItems, collectionExchanges])
 
@@ -200,7 +214,7 @@ const BatchListings: FC<Props> = ({
 
         const profit =
           Number(listing.price) * listing.quantity -
-          (listing.marketplaceFee || 0) -
+          (listing.marketplace?.fee?.bps || 0) -
           listingCreatorRoyalties
 
         return profit
@@ -241,23 +255,25 @@ const BatchListings: FC<Props> = ({
   const applyFloorPrice = useCallback(() => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
-        if (listing.token.token?.collection?.floorAskPrice?.amount?.native) {
+        if (listing.token.token?.collection?.floorAskPrice?.amount?.decimal) {
           return {
             ...listing,
             price:
-              listing.token.token?.collection?.floorAskPrice?.amount?.native.toString(),
+              listing.token.token?.collection?.floorAskPrice?.amount?.decimal.toString(),
           }
         }
         return listing
       })
     })
-    setCurrency(defaultCurrency)
   }, [listings])
 
   const applyTopTraitPrice = useCallback(() => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
-        if (listing.token.token?.attributes) {
+        if (
+          listing.token.token?.attributes &&
+          !listing.exchange?.paymentTokens?.length
+        ) {
           // Find the highest floor price
           let topTraitPrice = Math.max(
             ...listing.token.token.attributes.map(
@@ -275,8 +291,11 @@ const BatchListings: FC<Props> = ({
         return listing
       })
     })
-    setCurrency(defaultCurrency)
   }, [listings])
+
+  const globalPriceEnabled = !listings.some(
+    (listing) => listing.exchange.paymentTokens.length > 0
+  )
 
   return (
     <Flex direction="column" css={{ gap: '$5', width: '100%' }}>
@@ -354,7 +373,14 @@ const BatchListings: FC<Props> = ({
                     (option) => option.contract == value
                   )
                   if (option) {
-                    setCurrency(option)
+                    listings.map((listing) => {
+                      return !listing.exchange?.paymentTokens?.length
+                        ? {
+                            ...listing,
+                            currency: option,
+                          }
+                        : listing
+                    })
                   }
                 }}
               >
@@ -372,14 +398,16 @@ const BatchListings: FC<Props> = ({
                   </Select.Item>
                 ))}
               </Select>
-              <Input
-                placeholder="Set Price for All"
-                type="number"
-                value={globalPrice}
-                onChange={(e) => {
-                  setGlobalPrice(e.target.value)
-                }}
-              />
+              {globalPriceEnabled ? (
+                <Input
+                  placeholder="Set Price for All"
+                  type="number"
+                  value={globalPrice}
+                  onChange={(e) => {
+                    setGlobalPrice(e.target.value)
+                  }}
+                />
+              ) : null}
             </Flex>
             <Flex align="center" css={{ gap: '$3' }}>
               <Select
@@ -410,7 +438,7 @@ const BatchListings: FC<Props> = ({
       {listings.length > 0 ? (
         <Flex direction="column" css={{ width: '100%', pb: 37 }}>
           <BatchListingsTableHeading
-            displayQuantity={displayQuantity()}
+            displayQuantity={displayQuantity}
             gridTemplateColumns={gridTemplateColumns}
           />
           {listings.map((listing, i) => (
@@ -426,15 +454,12 @@ const BatchListings: FC<Props> = ({
               updateListing={updateListing}
               setSelectedItems={setSelectedItems}
               selectedItems={selectedItems}
-              displayQuantity={displayQuantity()}
+              displayQuantity={displayQuantity}
               gridTemplateColumns={gridTemplateColumns}
               isLargeDevice={isLargeDevice}
               globalExpirationOption={globalExpirationOption}
               globalPrice={globalPrice}
               currency={currency}
-              defaultCurrency={defaultCurrency}
-              // selectedMarketplaces={selectedMarketplaces}
-              selectedMarketplaces={[]}
               key={`${listing.token.token?.collection?.id}:${listing.token.token?.tokenId}:${listing.orderbook}`}
             />
           ))}

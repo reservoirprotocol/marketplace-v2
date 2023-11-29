@@ -43,10 +43,18 @@ export default function (
           //@ts-ignore
           (marketplace) => marketplace.orderbook === 'reservoir'
         )
-        exchanges[collectionIds[i]] = Object.values(
-          reservoirMarketplace.exchanges
-          //@ts-ignore
-        ).find((exchange) => exchange?.enabled)
+
+        //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
+        // Note that this impacts orders created on your marketplace (offers/listings)
+        reservoirMarketplace.fee.bps = 250
+
+        exchanges[collectionIds[i]] = {
+          exchange: Object.values(
+            reservoirMarketplace.exchanges
+            //@ts-ignore
+          ).find((exchange) => exchange?.enabled),
+          marketplace: reservoirMarketplace,
+        }
         return exchanges
       }, {}) || {}
     )
