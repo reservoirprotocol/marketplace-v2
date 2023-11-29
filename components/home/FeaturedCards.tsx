@@ -17,9 +17,7 @@ export const FeaturedCards = ({
 
   const isMinting = false
 
-  if (!collections) {
-    return <Flex>Empty State</Flex>
-  }
+  if (!collections) return <></>
 
   return (
     <Flex
@@ -32,6 +30,18 @@ export const FeaturedCards = ({
       }}
     >
       {collections.map((collection) => {
+        const bannerImage =
+          collection?.banner ||
+          collection?.image ||
+          // @ts-ignore
+          collection.sampleImages?.[0]
+
+        const collectionImage =
+          collection?.image ||
+          collection?.banner ||
+          // @ts-ignore
+          collection.sampleImages?.[0]
+
         return (
           <Link
             key={collection.id}
@@ -41,34 +51,26 @@ export const FeaturedCards = ({
               direction="column"
               css={{
                 flex: 1,
-
                 width: '330px',
+                height: '290px',
                 borderRadius: 12,
                 cursor: 'pointer',
-                height: '290px',
-                overflowX: 'scroll',
                 background: '$neutralBgSubtle',
                 $$shadowColor: '$colors$panelShadow',
                 boxShadow: '0 0px 12px 0px $$shadowColor',
-
-                overflow: 'hidden',
-                position: 'relative',
                 p: '16px',
-                '&:hover > div > div > Img > Img:nth-child(1)': {
-                  transform: 'scale(1.075)',
-                },
               }}
             >
               <Flex
                 css={{
                   mb: 24,
-                  width: 'fit',
-                  height: 'fit',
+                  width: '100%',
+                  height: '100%',
                   position: 'relative',
                 }}
               >
                 <Img
-                  src={collection.image as string}
+                  src={bannerImage}
                   alt={collection?.name as string}
                   height={150}
                   width={300}
@@ -80,8 +82,8 @@ export const FeaturedCards = ({
                   }}
                 />
                 <Img
-                  src={collection.banner as string}
-                  alt={collection?.name as string}
+                  src={collectionImage}
+                  alt={collection.name as string}
                   height={50}
                   width={50}
                   css={{
@@ -100,8 +102,6 @@ export const FeaturedCards = ({
               <Flex
                 direction="column"
                 css={{
-                  zIndex: 2,
-                  flex: 1,
                   width: '100%',
                 }}
               >
