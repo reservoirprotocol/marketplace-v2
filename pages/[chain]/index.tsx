@@ -180,6 +180,11 @@ const Home: NextPage<any> = ({ ssr }) => {
             }}
           >
             <FeaturedCards collections={featuredCollections} />
+            {isFeaturedCollectionsValidating && (
+              <Flex align="center" justify="center" css={{ py: '$4' }}>
+                <LoadingSpinner />
+              </Flex>
+            )}
           </Box>
         </Box>
 
