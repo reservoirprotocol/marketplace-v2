@@ -1,6 +1,6 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { ActiveMintTooltip } from 'components/home/ActiveMintTooltip'
 import { NAVBAR_HEIGHT } from 'components/navbar'
@@ -21,12 +21,16 @@ import { ComponentPropsWithoutRef, FC, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import optimizeImage from 'utils/optimizeImage'
 
-type Props = {
-  collections: ReturnType<typeof useCollections>['data']
-  loading?: boolean
-  volumeKey: '1day' | '7day' | '30day' | 'allTime'
-}
+type TrendingCollections = NonNullable<
+  ReturnType<typeof useTrendingCollections>['data']
+>
 
+type Props = {
+  collections: TrendingCollections
+  loading?: boolean
+  offset?: number
+  volumeKey: keyof NonNullable<TrendingCollections[0]['collectionVolume']>
+}
 const gridColumns = {
   gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
   '@md': {
@@ -45,10 +49,12 @@ const gridColumns = {
 export const CollectionRankingsTable: FC<Props> = ({
   collections,
   loading,
+  offset,
   volumeKey,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
+  if (!collections) return null
   return (
     <>
       {!loading && collections.length === 0 ? (
@@ -80,7 +86,8 @@ export const CollectionRankingsTable: FC<Props> = ({
             <TableHeading />
           )}
           <Flex direction="column" css={{ position: 'relative' }}>
-            {collections.map((collection, i) => {
+            {collections.splice(0, offset).map((collection, i) => {
+              console.log(i)
               return (
                 <RankingsTableRow
                   key={collection.id}
@@ -98,7 +105,7 @@ export const CollectionRankingsTable: FC<Props> = ({
 }
 
 type RankingsTableRowProps = {
-  collection: ReturnType<typeof useCollections>['data'][0]
+  collection: TrendingCollections[0]
   rank: number
   volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
@@ -117,9 +124,15 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
     return optimizeImage(collection.image as string, 250)
   }, [collection.image])
 
-  const mintData = collection?.mintStages?.find(
+  /**
+   *   const mintData = collection?.mintStages?.find(
     (stage) => stage.kind === 'public'
   )
+   */
+  const mintData = {} as any
+
+  // @ts-ignore
+  const openseaVerificationStatus = collection?.openseaVerificationStatus
 
   const mintPriceDecimal = mintData?.price?.amount?.decimal
   const hasMintPriceDecimal = typeof mintPriceDecimal === 'number'
@@ -155,9 +168,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 {collection?.name}
               </Text>
               <OpenSeaVerified
-                openseaVerificationStatus={
-                  collection?.openseaVerificationStatus
-                }
+                openseaVerificationStatus={openseaVerificationStatus}
               />
               {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
             </Flex>
@@ -178,14 +189,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
 
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
             <FormatCryptoCurrency
-              amount={collection?.volume?.[volumeKey]}
+              amount={collection?.collectionVolume?.[volumeKey]}
               maximumFractionDigits={1}
               logoHeight={16}
               textStyle="subtitle1"
             />
             {volumeKey !== 'allTime' && (
               <PercentChange
-                value={collection?.volumeChange?.[volumeKey]}
+                value={collection?.collectionVolume?.[volumeKey]}
                 decimals={1}
               />
             )}
@@ -245,9 +256,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   {collection?.name}
                 </Text>
                 <OpenSeaVerified
-                  openseaVerificationStatus={
-                    collection?.openseaVerificationStatus
-                  }
+                  openseaVerificationStatus={openseaVerificationStatus}
                 />
                 {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
               </Flex>
@@ -272,12 +281,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
         </TableCell>
         <TableCell>
           <Flex>
-            <FormatCryptoCurrency
+            {/**
+             *             <FormatCryptoCurrency
               amount={collection?.topBid?.price?.amount?.decimal}
               textStyle="subtitle1"
               logoHeight={14}
               address={collection?.topBid?.price?.currency?.contract}
             />
+             */}
           </Flex>
         </TableCell>
         <TableCell>
@@ -288,7 +299,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             css={{ height: '100%' }}
           >
             <FormatCryptoCurrency
-              amount={collection?.volume?.[volumeKey]}
+              amount={collection?.collectionVolume?.[volumeKey]}
               textStyle="subtitle1"
               logoHeight={14}
             />
@@ -323,7 +334,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             }}
             justify={'end'}
           >
-            {collection?.sampleImages?.map((image, i) => {
+            {/** collection.sampleImages */}
+            {[]?.map((image, i) => {
               if (image) {
                 return (
                   <img

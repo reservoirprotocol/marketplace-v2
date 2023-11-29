@@ -17,7 +17,6 @@ import supportedChains, { DefaultChain } from 'utils/chains'
 
 import * as Tabs from '@radix-ui/react-tabs'
 import {
-  useCollections,
   useTrendingCollections,
   useTrendingMints,
 } from '@reservoir0x/reservoir-kit-ui'
@@ -32,7 +31,7 @@ import MintsPeriodDropdown, {
 } from 'components/common/MintsPeriodDropdown'
 import { FeaturedCards } from 'components/home/FeaturedCards'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTableV2'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'

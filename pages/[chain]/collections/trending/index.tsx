@@ -1,6 +1,18 @@
-import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
-import { Text, Flex, Box } from 'components/primitives'
+import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
+import { paths } from '@reservoir0x/reservoir-sdk'
+import { Head } from 'components/Head'
 import Layout from 'components/Layout'
+import ChainToggle from 'components/common/ChainToggle'
+import CollectionsTimeDropdown, {
+  CollectionsSortingOption,
+} from 'components/common/CollectionsTimeDropdown'
+import LoadingSpinner from 'components/common/LoadingSpinner'
+import { Box, Flex, Text } from 'components/primitives'
+import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
+import { ChainContext } from 'context/ChainContextProvider'
+import { useMounted } from 'hooks'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
+import { useRouter } from 'next/router'
 import {
   ComponentPropsWithoutRef,
   useContext,
@@ -9,22 +21,10 @@ import {
   useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useMounted } from 'hooks'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useIntersectionObserver } from 'usehooks-ts'
+import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../../../_app'
-import supportedChains, { DefaultChain } from 'utils/chains'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
-import { useIntersectionObserver } from 'usehooks-ts'
-import LoadingSpinner from 'components/common/LoadingSpinner'
-import CollectionsTimeDropdown, {
-  CollectionsSortingOption,
-} from 'components/common/CollectionsTimeDropdown'
-import ChainToggle from 'components/common/ChainToggle'
-import { Head } from 'components/Head'
-import { ChainContext } from 'context/ChainContextProvider'
-import { useRouter } from 'next/router'
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
@@ -33,13 +33,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
-  const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
+  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
+  const [offset, setOffset] = useState<number>(20)
+  const [isOffsetting, setIsOffsetting] = useState<boolean>(false)
 
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 20,
-    sortBy: sortByTime,
-    includeMintStages: true,
+  let collectionQuery: Parameters<typeof useTrendingCollections>['0'] = {
+    limit: 1000,
+    period: sortByTime,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -58,46 +58,45 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     }
   }, [router.query])
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, fetchNextPage, isFetchingPage, isValidating } = useCollections(
+  const { data, isValidating } = useTrendingCollections(
     collectionQuery,
+    chain.id,
     {
       fallbackData: [ssr.collection],
     }
   )
 
-  let collections = data || []
-
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
   useEffect(() => {
     let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible) {
-      fetchNextPage()
+    if (isVisible && (!isValidating || !isOffsetting)) {
+      setIsOffsetting(true)
+      setTimeout(() => {
+        setOffset(offset + 20)
+        setIsOffsetting(false)
+      }, 500)
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [loadMoreObserver?.isIntersecting, isValidating])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
   >['volumeKey'] = 'allTime'
 
   switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
-      break
-    case '7DayVolume':
-      volumeKey = '7day'
-      break
-    case '30DayVolume':
+    case '30d':
       volumeKey = '30day'
       break
+    case '7d':
+      volumeKey = '7day'
+      break
+    case '1d':
+      volumeKey = '1day'
+      break
   }
+
+  const collections = data || []
 
   return (
     <Layout>
@@ -145,6 +144,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           </Flex>
           {isSSR || !isMounted ? null : (
             <CollectionRankingsTable
+              offset={offset}
               collections={collections}
               volumeKey={volumeKey}
               loading={isValidating}
@@ -153,11 +153,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           <Box
             ref={loadMoreRef}
             css={{
-              display: isFetchingPage ? 'none' : 'block',
+              display: isValidating && !isOffsetting ? 'none' : 'block',
             }}
           ></Box>
         </Flex>
-        {(isFetchingPage || isValidating) && (
+        {(isValidating || isOffsetting) && (
           <Flex align="center" justify="center" css={{ py: '$4' }}>
             <LoadingSpinner />
           </Flex>
