@@ -80,6 +80,18 @@ const EditListing: FC<Props> = ({
             description: 'The transaction was not completed.',
           })
         }}
+        onPointerDownOutside={(e) => {
+          const privyLayer = document.getElementById('privy-dialog')
+
+          const clickedInsidePrivyLayer =
+            privyLayer && e.target
+              ? privyLayer.contains(e.target as Node)
+              : false
+
+          if (clickedInsidePrivyLayer) {
+            e.preventDefault()
+          }
+        }}
       />
     )
 }
