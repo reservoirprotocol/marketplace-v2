@@ -71,6 +71,7 @@ type Props = {
 }
 
 const MINIMUM_AMOUNT = 0.000001
+const MAXIMUM_AMOUNT = Infinity
 
 const BatchListings: FC<Props> = ({
   selectedItems,
@@ -227,12 +228,31 @@ const BatchListings: FC<Props> = ({
   }, [listings, onChainRoyaltiesMap, globalPrice])
 
   const listButtonDisabled = useMemo(() => {
-    const hasInvalidPrice = listings.some(
-      (listing) =>
-        listing.price === undefined ||
-        listing.price === '' ||
-        Number(listing.price) < MINIMUM_AMOUNT
-    )
+    const hasInvalidPrice = listings.some((listing) => {
+      const minimumAmount = listing.exchange?.minPriceRaw
+        ? Number(
+            formatUnits(
+              BigInt(listing.exchange.minPriceRaw),
+              listing.currency?.decimals || 18
+            )
+          )
+        : MINIMUM_AMOUNT
+      const maximumAmount = listing.exchange?.maxPriceRaw
+        ? Number(
+            formatUnits(
+              BigInt(listing.exchange.maxPriceRaw),
+              listing.currency?.decimals || 18
+            )
+          )
+        : MAXIMUM_AMOUNT
+
+      const withinPricingBounds =
+        listing.price &&
+        Number(listing.price) !== 0 &&
+        Number(listing.price) <= maximumAmount &&
+        Number(listing.price) >= minimumAmount
+      return !withinPricingBounds
+    })
     return hasInvalidPrice
   }, [listings])
 

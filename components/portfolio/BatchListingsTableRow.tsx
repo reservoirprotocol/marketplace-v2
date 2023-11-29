@@ -26,6 +26,8 @@ import { UserToken } from 'pages/portfolio/[[...address]]'
 import CryptoCurrencyIcon from 'components/primitives/CryptoCurrencyIcon'
 import { BatchListing } from './BatchListings'
 import optimizeImage from 'utils/optimizeImage'
+import { formatUnits } from 'viem'
+import { formatNumber } from 'utils/numbers'
 
 type BatchListingsTableRowProps = {
   listing: BatchListing
@@ -44,6 +46,7 @@ type BatchListingsTableRowProps = {
 }
 
 const MINIMUM_AMOUNT = 0.000001
+const MAXIMUM_AMOUNT = Infinity
 
 export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   listing,
@@ -179,8 +182,30 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   )
 
   const restrictCurrency =
-    listing?.exchange?.paymentTokens &&
-    listing.exchange.paymentTokens.length > 0
+    listing.exchange?.paymentTokens && listing.exchange.paymentTokens.length > 0
+
+  const minimumAmount = listing.exchange?.minPriceRaw
+    ? Number(
+        formatUnits(
+          BigInt(listing.exchange.minPriceRaw),
+          listing.currency?.decimals || 18
+        )
+      )
+    : MINIMUM_AMOUNT
+  const maximumAmount = listing.exchange?.maxPriceRaw
+    ? Number(
+        formatUnits(
+          BigInt(listing.exchange.maxPriceRaw),
+          listing.currency?.decimals || 18
+        )
+      )
+    : MAXIMUM_AMOUNT
+
+  const withinPricingBounds =
+    price &&
+    Number(price) !== 0 &&
+    Number(price) <= maximumAmount &&
+    Number(price) >= minimumAmount
 
   return (
     <TableRow
@@ -380,7 +405,10 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                 ))}
               </Select>
             )}
-            <Flex direction="column" align="center" css={{ gap: '$2' }}>
+            <Flex
+              direction="column"
+              css={{ gap: '$2', width: 100, '@bp1500': { width: 150 } }}
+            >
               <Input
                 placeholder="Price"
                 type="number"
@@ -388,14 +416,19 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                 onChange={(e) => {
                   handlePriceChange(e.target.value)
                 }}
-                css={{ width: 100, '@bp1500': { width: 150 } }}
               />
               {price !== undefined &&
                 price !== '' &&
                 Number(price) !== 0 &&
-                Number(price) < MINIMUM_AMOUNT && (
+                !withinPricingBounds && (
                   <Text style="subtitle3" color="error">
-                    Must exceed {MINIMUM_AMOUNT}
+                    {maximumAmount !== Infinity
+                      ? `Amount must be between ${formatNumber(
+                          minimumAmount
+                        )} - ${formatNumber(maximumAmount)}`
+                      : `Amount must be higher than ${formatNumber(
+                          minimumAmount
+                        )}`}
                   </Text>
                 )}
             </Flex>
