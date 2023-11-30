@@ -102,12 +102,9 @@ const ChainToggle: FC = () => {
               key={supportedChain.id}
               css={{ py: '$3', px: '$1', display: 'flex', gap: '$2' }}
               onClick={() => {
-                const newUrl = router.asPath.replace(
-                  chain.routePrefix,
-                  supportedChain.routePrefix
-                )
+                router.query.chain = supportedChain.routePrefix
+                router.push(router, undefined, { shallow: true })
 
-                router.replace(newUrl, undefined, { scroll: false })
                 switchCurrentChain(supportedChain.id)
               }}
             >
@@ -139,12 +136,10 @@ const ChainToggle: FC = () => {
               value={chainOption.name}
               disabled={chainOption.name === chain.name}
               onClick={() => {
-                const newUrl = router.asPath.replace(
-                  chain.routePrefix,
-                  chainOption.routePrefix
-                )
+                router.query.chain = chainOption.routePrefix
+                router.push(router, undefined, { shallow: true })
+
                 switchCurrentChain(chainOption.id)
-                router.replace(newUrl, undefined, { scroll: false })
               }}
             >
               <Box
