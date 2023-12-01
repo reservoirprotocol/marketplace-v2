@@ -93,7 +93,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(mint.image as string, 250)
+    return optimizeImage(mint?.image || mint?.sampleImages?.[0], 250)
   }, [mint.image])
 
   const mintPrice = mint.mintPrice?.toString()
