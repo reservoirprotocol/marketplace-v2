@@ -113,14 +113,6 @@ function MyApp({
     ReservoirKitTheme | undefined
   >()
 
-  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi()
-
-  useEffect(() => {
-    if (activeWallet) {
-      setActiveWallet(activeWallet)
-    }
-  }, [activeWallet])
-
   useEffect(() => {
     if (theme == 'dark') {
       setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))

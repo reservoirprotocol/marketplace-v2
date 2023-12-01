@@ -20,7 +20,6 @@ export const adaptPrivyWallet = (wallet: WalletClient): ReservoirWallet => {
     handleSignMessageStep: async (stepItem) => {
       const privyLayer = document.getElementById('privy-dialog')
       if (privyLayer && document.body.style) {
-        console.log('setting to auto')
         document.body.style.pointerEvents = 'auto'
       }
 
@@ -58,10 +57,14 @@ export const adaptPrivyWallet = (wallet: WalletClient): ReservoirWallet => {
       return signature
     },
     handleSendTransactionStep: async (chainId, stepItem) => {
-      const privyLayer = document.getElementById('privy-dialog')
-      if (privyLayer && document.body.style) {
-        console.log('setting to auto')
-        document.body.style.pointerEvents = 'auto'
+      try {
+        const privyLayer = document.getElementById('privy-dialog')
+        if (privyLayer && document.body.style) {
+          console.log('setting to auto')
+          document.body.style.pointerEvents = 'auto'
+        }
+      } catch (e) {
+        console.log(e)
       }
 
       let viemChain: allChains.Chain

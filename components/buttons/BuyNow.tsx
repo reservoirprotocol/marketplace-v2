@@ -8,13 +8,10 @@ import React, {
 import { SWRResponse } from 'swr'
 import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
-import { usePrivy, useWallets } from '@privy-io/react-auth'
+import { usePrivy } from '@privy-io/react-auth'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { ReferralContext } from '../../context/ReferralContextProvider'
-import { WalletClient, useWalletClient } from 'wagmi'
-import { adaptPrivyWallet } from 'utils/privyWalletAdapter'
-import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 
 type Props = {
   tokenId?: string
@@ -40,23 +37,6 @@ const BuyNow: FC<Props> = ({
   const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
-
-  const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi()
-  const { wallets: connectedWallets } = useWallets()
-
-  const { data: wallet } = useWalletClient({
-    chainId: 5,
-  })
-
-  const privyWallet = wallet ? adaptPrivyWallet(wallet) : undefined
-
-  console.log('connectedWallets: ', connectedWallets)
-
-  console.log(activeWallet)
-
-  console.log(wallet)
-
-  console.log('privy: ', privyWallet)
 
   return (
     <BuyModal
@@ -91,7 +71,6 @@ const BuyNow: FC<Props> = ({
           e.preventDefault()
         }
       }}
-      walletClient={privyWallet}
     />
   )
 }
