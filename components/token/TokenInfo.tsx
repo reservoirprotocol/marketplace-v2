@@ -40,8 +40,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   let chainName = collectionChain?.name
 
   const hasSecurityConfig =
-    collection?.securityConfig &&
-    Object.values(collection.securityConfig).some(Boolean)
+    typeof collection?.securityConfig?.transferSecurityLevel === 'number'
 
   const tokenStandard = `${token?.token?.kind}${hasSecurityConfig ? 'C' : ''}`
 
