@@ -93,21 +93,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(mint.image as string, 250)
+    return optimizeImage(mint?.image || mint?.sampleImages?.[0], 250)
   }, [mint.image])
 
   const mintPrice = mint.mintPrice?.toString()
 
-  // @ts-ignore
   const sampleImages: string[] = mint?.sampleImages || []
-  // @ts-ignore
-  const openseaVerificationStatus = mint?.openseaVerificationStatus
-
-  // @ts-ignore
-  const oneHourCount = mint?.oneHourCount
-
-  // @ts-ignore
-  const sixHourCount = mint?.sixHourCount
 
   if (isSmallDevice) {
     return (
@@ -140,7 +131,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
                 {mint?.name}
               </Text>
               <OpenSeaVerified
-                openseaVerificationStatus={openseaVerificationStatus}
+                openseaVerificationStatus={mint?.openseaVerificationStatus}
               />
             </Flex>
             <Flex align="center">
@@ -213,7 +204,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
                   {mint?.name}
                 </Text>
                 <OpenSeaVerified
-                  openseaVerificationStatus={openseaVerificationStatus}
+                  openseaVerificationStatus={mint?.openseaVerificationStatus}
                 />
               </Flex>
             </Flex>
@@ -260,11 +251,11 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
         </TableCell>
 
         <TableCell desktopOnly>
-          <Text style="subtitle1">{oneHourCount}</Text>
+          <Text style="subtitle1">{mint?.oneHourCount}</Text>
         </TableCell>
 
         <TableCell desktopOnly>
-          <Text style="subtitle1">{sixHourCount}</Text>
+          <Text style="subtitle1">{mint?.sixHourCount}</Text>
         </TableCell>
 
         <TableCell desktopOnly>
