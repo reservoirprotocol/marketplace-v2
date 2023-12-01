@@ -99,8 +99,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
   const mintPrice = mint.mintPrice?.toString()
 
   const sampleImages: string[] = mint?.sampleImages || []
-  const oneHourCount = mint?.oneHourCount
-  const sixHourCount = mint?.sixHourCount
 
   if (isSmallDevice) {
     return (
