@@ -14,12 +14,12 @@ export type MintsSortingOption = NonNullable<
 >
 
 const sortingOptions: MintsSortingOption[] = [
-  '24h',
-  '6h',
-  '1h',
-  '30m',
-  '10m',
   '5m',
+  '10m',
+  '30m',
+  '1h',
+  '6h',
+  '24h',
 ]
 
 const nameForSortingOption = (option: MintsSortingOption, compact: boolean) => {
