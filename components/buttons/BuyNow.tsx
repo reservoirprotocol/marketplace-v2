@@ -4,6 +4,7 @@ import React, {
   FC,
   ReactNode,
   useContext,
+  useMemo,
 } from 'react'
 import { SWRResponse } from 'swr'
 import { BuyModal, BuyStep } from '@reservoir0x/reservoir-kit-ui'
@@ -12,6 +13,8 @@ import { usePrivy } from '@privy-io/react-auth'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { ReferralContext } from '../../context/ReferralContextProvider'
+import { useWalletClient } from 'wagmi'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   tokenId?: string
@@ -37,6 +40,12 @@ const BuyNow: FC<Props> = ({
   const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
+
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
 
   return (
     <BuyModal
@@ -71,6 +80,8 @@ const BuyNow: FC<Props> = ({
           e.preventDefault()
         }
       }}
+      onPurchaseError={(e) => console.log(e)}
+      walletClient={privyWallet}
     />
   )
 }
