@@ -98,15 +98,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
 
   const mintPrice = mint.mintPrice?.toString()
 
-  // @ts-ignore
   const sampleImages: string[] = mint?.sampleImages || []
-  // @ts-ignore
-  const openseaVerificationStatus = mint?.openseaVerificationStatus
-
-  // @ts-ignore
   const oneHourCount = mint?.oneHourCount
-
-  // @ts-ignore
   const sixHourCount = mint?.sixHourCount
 
   if (isSmallDevice) {
@@ -140,7 +133,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
                 {mint?.name}
               </Text>
               <OpenSeaVerified
-                openseaVerificationStatus={openseaVerificationStatus}
+                openseaVerificationStatus={mint?.openseaVerificationStatus}
               />
             </Flex>
             <Flex align="center">
@@ -213,7 +206,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
                   {mint?.name}
                 </Text>
                 <OpenSeaVerified
-                  openseaVerificationStatus={openseaVerificationStatus}
+                  openseaVerificationStatus={mint?.openseaVerificationStatus}
                 />
               </Flex>
             </Flex>
@@ -260,11 +253,11 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
         </TableCell>
 
         <TableCell desktopOnly>
-          <Text style="subtitle1">{oneHourCount}</Text>
+          <Text style="subtitle1">{mint?.oneHourCount}</Text>
         </TableCell>
 
         <TableCell desktopOnly>
-          <Text style="subtitle1">{sixHourCount}</Text>
+          <Text style="subtitle1">{mint?.sixHourCount}</Text>
         </TableCell>
 
         <TableCell desktopOnly>
