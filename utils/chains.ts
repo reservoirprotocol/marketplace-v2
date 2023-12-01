@@ -16,6 +16,7 @@ import {
   base,
   arbitrumNova,
   scroll,
+  goerli,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
@@ -282,5 +283,25 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_SCROLL_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
     checkPollingInterval: reservoirChains.scroll.checkPollingInterval,
+  },
+  {
+    ...goerli,
+    lightIconUrl: '/icons/goerli-icon-dark.svg',
+    darkIconUrl: '/icons/goerli-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.goerli.baseApiUrl,
+    proxyApi: '/api/reservoir/goerli',
+    routePrefix: 'goerli',
+    coingeckoId: 'goerli-eth',
+    collectionSetId: process.env.NEXT_PUBLIC_GOERLI_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_GOERLI_COMMUNITY,
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[goerli.id],
+      },
+    ],
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.goerli.checkPollingInterval,
   },
 ] as ReservoirChain[]

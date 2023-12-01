@@ -115,11 +115,11 @@ function MyApp({
 
   const { wallet: activeWallet, setActiveWallet } = usePrivyWagmi()
 
-  useEffect(() => {
-    if (activeWallet) {
-      setActiveWallet(activeWallet)
-    }
-  }, [activeWallet])
+  // useEffect(() => {
+  //   if (activeWallet) {
+  //     setActiveWallet(activeWallet)
+  //   }
+  // }, [activeWallet])
 
   useEffect(() => {
     if (theme == 'dark') {
