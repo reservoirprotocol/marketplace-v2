@@ -1,10 +1,11 @@
 import { usePrivy } from '@privy-io/react-auth'
 import { CancelBidModal, CancelBidStep } from '@reservoir0x/reservoir-kit-ui'
-import { FC, ReactElement, cloneElement, useContext } from 'react'
+import { FC, ReactElement, cloneElement, useContext, useMemo } from 'react'
 import { SWRResponse } from 'swr'
 import { useWalletClient } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   bidId: string
@@ -19,6 +20,12 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
   const marketplaceChain = useMarketplaceChain()
 
   const { data: signer } = useWalletClient()
+
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
 
   if (!signer) {
     return cloneElement(trigger, {
@@ -36,6 +43,7 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
       trigger={trigger}
       openState={openState}
       chainId={marketplaceChain.id}
+      walletClient={privyWallet}
       onCancelComplete={(data: any) => {
         addToast?.({
           title: 'User canceled bid',

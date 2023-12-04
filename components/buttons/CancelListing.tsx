@@ -3,11 +3,12 @@ import {
   CancelListingModal,
   CancelListingStep,
 } from '@reservoir0x/reservoir-kit-ui'
-import { FC, ReactElement, useContext, cloneElement } from 'react'
+import { FC, ReactElement, useContext, cloneElement, useMemo } from 'react'
 import { SWRResponse } from 'swr'
 import { useWalletClient } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   listingId: string
@@ -28,6 +29,12 @@ const CancelListing: FC<Props> = ({
 
   const { data: signer } = useWalletClient()
 
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
+
   if (!signer) {
     return cloneElement(trigger, {
       onClick: async () => {
@@ -44,6 +51,7 @@ const CancelListing: FC<Props> = ({
       openState={openState}
       trigger={trigger}
       chainId={marketplaceChain.id}
+      walletClient={privyWallet}
       onCancelComplete={(data: any) => {
         addToast?.({
           title: 'User canceled listing',

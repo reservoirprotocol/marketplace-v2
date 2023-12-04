@@ -8,6 +8,7 @@ import {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react'
 import { mainnet, useAccount, useWalletClient } from 'wagmi'
@@ -17,6 +18,7 @@ import { CSS } from '@stitches/react'
 import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
@@ -45,6 +47,12 @@ const CollectionOffer: FC<Props> = ({
   const { isDisconnected } = useAccount()
   const { login } = usePrivy()
   const { addToast } = useContext(ToastContext)
+
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
 
   useEffect(() => {
     const keys = Object.keys(router.query)
@@ -133,6 +141,7 @@ const CollectionOffer: FC<Props> = ({
             feesBps={orderFees}
             currencies={bidCurrencies}
             oracleEnabled={marketplaceChain.oracleBidsEnabled}
+            walletClient={privyWallet}
             chainId={marketplaceChain.id}
             onClose={(data, stepData, currentStep) => {
               if (mutate && currentStep == BidStep.Complete) mutate()

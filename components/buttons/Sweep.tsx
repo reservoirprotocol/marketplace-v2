@@ -4,6 +4,7 @@ import React, {
   FC,
   ReactNode,
   useContext,
+  useMemo,
 } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
 import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
@@ -12,6 +13,8 @@ import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
 import { SWRResponse } from 'swr'
 import { ReferralContext } from 'context/ReferralContextProvider'
+import { useWalletClient } from 'wagmi'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   collectionId?: string
@@ -36,6 +39,12 @@ const Sweep: FC<Props> = ({
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
 
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
+
   return (
     <CollectModal
       trigger={
@@ -47,6 +56,7 @@ const Sweep: FC<Props> = ({
       tokenId={tokenId}
       mode={'trade'}
       openState={openState}
+      walletClient={privyWallet}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
       // Refer to our docs for more info: https://docs.reservoir.tools/reference/sweepmodal-1

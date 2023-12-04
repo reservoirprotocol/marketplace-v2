@@ -2,7 +2,14 @@ import { usePrivy } from '@privy-io/react-auth'
 import { Button } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
+import {
+  cloneElement,
+  ComponentProps,
+  FC,
+  ReactNode,
+  useContext,
+  useMemo,
+} from 'react'
 import { useAccount, useWalletClient } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -10,6 +17,7 @@ import {
   EditListingModal,
   EditListingStep,
 } from '@reservoir0x/reservoir-kit-ui'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   listingId?: string
@@ -41,6 +49,12 @@ const EditListing: FC<Props> = ({
 
   const { data: signer } = useWalletClient()
 
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
+
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
       {buttonChildren}
@@ -64,6 +78,7 @@ const EditListing: FC<Props> = ({
         tokenId={tokenId}
         collectionId={collectionId}
         chainId={marketplaceChain.id}
+        walletClient={privyWallet}
         onClose={(data, currentStep) => {
           if (mutate && currentStep == EditListingStep.Complete) mutate()
         }}

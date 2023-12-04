@@ -7,6 +7,7 @@ import {
   FC,
   ReactNode,
   useContext,
+  useMemo,
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -14,6 +15,7 @@ import { useAccount, useWalletClient } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 const orderFee = process.env.NEXT_PUBLIC_MARKETPLACE_FEE
 
@@ -44,6 +46,12 @@ const List: FC<Props> = ({
 
   const { data: signer } = useWalletClient()
 
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
+
   const listingCurrencies: ListingCurrencies =
     marketplaceChain.listingCurrencies
   const tokenId = token?.token?.tokenId
@@ -71,6 +79,7 @@ const List: FC<Props> = ({
         trigger={trigger}
         collectionId={collectionId}
         tokenId={tokenId}
+        walletClient={privyWallet}
         feesBps={orderFees}
         enableOnChainRoyalties={true}
         currencies={listingCurrencies}

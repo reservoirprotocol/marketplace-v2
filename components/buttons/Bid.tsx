@@ -6,6 +6,7 @@ import {
   ComponentPropsWithoutRef,
   FC,
   useContext,
+  useMemo,
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -13,6 +14,7 @@ import { useAccount, useWalletClient, mainnet } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   tokenId?: string | undefined
@@ -44,6 +46,12 @@ const Bid: FC<Props> = ({
   const marketplaceChain = useMarketplaceChain()
 
   const { data: signer } = useWalletClient()
+
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
@@ -84,6 +92,7 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
+        walletClient={privyWallet}
         feesBps={orderFees}
         currencies={bidCurrencies}
         oracleEnabled={marketplaceChain.oracleBidsEnabled}

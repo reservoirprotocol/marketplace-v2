@@ -14,6 +14,7 @@ import { useAccount, useWalletClient } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { adaptPrivyWallet } from 'utils/privyAdapter'
 
 type Props = {
   tokenId?: string
@@ -45,6 +46,12 @@ const AcceptBid: FC<Props> = ({
   const marketplaceChain = useMarketplaceChain()
 
   const { data: signer } = useWalletClient()
+
+  const { data: wallet } = useWalletClient()
+
+  const privyWallet = useMemo(() => {
+    return wallet ? adaptPrivyWallet(wallet) : undefined
+  }, [wallet, adaptPrivyWallet])
 
   const trigger = (
     <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
@@ -79,6 +86,7 @@ const AcceptBid: FC<Props> = ({
         openState={openState}
         tokens={tokens}
         chainId={marketplaceChain.id}
+        walletClient={privyWallet}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == AcceptBidStep.Complete) {
             mutate()
