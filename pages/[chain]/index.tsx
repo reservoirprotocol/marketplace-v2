@@ -59,13 +59,13 @@ const Home: NextPage<any> = ({ ssr }) => {
 
   const [tab, setTab] = useState<TabValue>('collections')
   const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
-  const [mintType, setMintType] = useState<MintTypeOption>('any')
+
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
   let mintsQuery: Parameters<typeof useTrendingMints>['0'] = {
     limit: 20,
     period: sortByPeriod,
-    type: mintType,
+    type: 'any',
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -306,14 +306,18 @@ const Home: NextPage<any> = ({ ssr }) => {
   )
 }
 
-type TopSellingCollectionsSchema =
-  paths['/collections/top-selling/v1']['get']['responses']['200']['schema']
+type trendingCollectionsSchema =
+  paths['/collections/trending/v1']['get']['responses']['200']['schema']
+type trendingMintsSchema =
+  paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
 
-type ChainTopSellingCollections = Record<string, TopSellingCollectionsSchema>
+type ChainTrendingMints = Record<string, trendingMintsSchema>
+type ChainTrendingCollections = Record<string, trendingCollectionsSchema>
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    topSellingCollections: ChainTopSellingCollections
+    trendingMints: ChainTrendingMints
+    trendingCollections: ChainTrendingCollections
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
@@ -321,9 +325,11 @@ export const getServerSideProps: GetServerSideProps<{
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
-  const topSellingCollections: ChainTopSellingCollections = {}
+  const trendingCollections: ChainTrendingCollections = {}
+  const trendingMints: ChainTrendingMints = {}
+
   try {
-    const response = await fetcher(
+    const { data: trendingCollectionsData } = await fetcher(
       `${chain.reservoirBaseUrl}/collections/trending/v1?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
       {
         headers: {
@@ -332,7 +338,18 @@ export const getServerSideProps: GetServerSideProps<{
       }
     )
 
-    topSellingCollections[chain.id] = response.data
+    trendingCollections[chain.id] = trendingCollectionsData
+
+    const { data: trendingMintsData } = await fetcher(
+      `${chain.reservoirBaseUrl}/collections/trending-mints/v1?period=24h&limit=25`,
+      {
+        headers: {
+          'x-api-key': process.env.RESERVOIR_API_KEY || '',
+        },
+      }
+    )
+
+    trendingCollections[chain.id] = trendingMintsData
 
     res.setHeader(
       'Cache-Control',
@@ -341,7 +358,7 @@ export const getServerSideProps: GetServerSideProps<{
   } catch (e) {}
 
   return {
-    props: { ssr: { topSellingCollections } },
+    props: { ssr: { trendingCollections, trendingMints } },
   }
 }
 
