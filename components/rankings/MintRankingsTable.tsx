@@ -147,7 +147,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             </Flex>
           </Box>
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            <Text style="subtitle1">{mint?.mintCount}</Text>
+            <Text style="subtitle1">{mint?.mintCount?.toLocaleString()}</Text>
           </Flex>
         </Flex>
       </Link>
@@ -246,16 +246,16 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             justify="start"
             css={{ height: '100%' }}
           >
-            <Text style="subtitle1">{mint?.mintCount}</Text>
+            <Text style="subtitle1">{mint?.mintCount?.toLocaleString()}</Text>
           </Flex>
         </TableCell>
 
         <TableCell desktopOnly>
-          <Text style="subtitle1">{mint?.oneHourCount}</Text>
+          <Text style="subtitle1">{mint?.oneHourCount?.toLocaleString()}</Text>
         </TableCell>
 
         <TableCell desktopOnly>
-          <Text style="subtitle1">{mint?.sixHourCount}</Text>
+          <Text style="subtitle1">{mint?.sixHourCount?.toLocaleString()}</Text>
         </TableCell>
 
         <TableCell desktopOnly>
