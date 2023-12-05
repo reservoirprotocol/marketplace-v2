@@ -134,7 +134,7 @@ const HamburgerMenu = () => {
                 Explore
               </Text>
             </Link>
-            <Link href="/ethereum/collection-rankings" legacyBehavior>
+            <Link href="/ethereum/collections/trending" legacyBehavior>
               <Text
                 style="subtitle1"
                 css={{
@@ -144,9 +144,24 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Trending
+                Trending Collections
               </Text>
             </Link>
+
+            <Link href="/ethereum/mints/trending" legacyBehavior>
+              <Text
+                style="subtitle1"
+                css={{
+                  borderBottom: '1px solid $gray4',
+                  cursor: 'pointer',
+                  pb: '$4',
+                  pt: '24px',
+                }}
+              >
+                Trending Mints
+              </Text>
+            </Link>
+
 
             <Anchor
               href="https://docs.reservoir.tools/docs"
