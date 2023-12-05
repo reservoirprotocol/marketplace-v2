@@ -2,7 +2,6 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { ActiveMintTooltip } from 'components/home/ActiveMintTooltip'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import {
   Box,
@@ -28,7 +27,6 @@ type TrendingCollections = NonNullable<
 type Props = {
   collections: TrendingCollections
   loading?: boolean
-  offset?: number
   volumeKey: keyof NonNullable<TrendingCollections[0]['collectionVolume']>
 }
 const gridColumns = {
@@ -49,11 +47,9 @@ const gridColumns = {
 export const CollectionRankingsTable: FC<Props> = ({
   collections,
   loading,
-  offset,
   volumeKey,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-
   if (!collections) return null
   return (
     <>
@@ -86,8 +82,7 @@ export const CollectionRankingsTable: FC<Props> = ({
             <TableHeading />
           )}
           <Flex direction="column" css={{ position: 'relative' }}>
-            {collections.splice(0, offset).map((collection, i) => {
-              console.log(i)
+            {collections.map((collection, i) => {
               return (
                 <RankingsTableRow
                   key={collection.id}
@@ -124,19 +119,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
     return optimizeImage(collection.image as string, 250)
   }, [collection.image])
 
-  /**
-   *   const mintData = collection?.mintStages?.find(
-    (stage) => stage.kind === 'public'
-  )
-   */
-  const mintData = {} as any
-
-  // @ts-ignore
-  const openseaVerificationStatus = collection?.openseaVerificationStatus
-
-  const mintPriceDecimal = mintData?.price?.amount?.decimal
-  const hasMintPriceDecimal = typeof mintPriceDecimal === 'number'
-
   if (isSmallDevice) {
     return (
       <Link
@@ -168,9 +150,10 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 {collection?.name}
               </Text>
               <OpenSeaVerified
-                openseaVerificationStatus={openseaVerificationStatus}
+                openseaVerificationStatus={
+                  collection?.openseaVerificationStatus
+                }
               />
-              {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
@@ -256,9 +239,10 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   {collection?.name}
                 </Text>
                 <OpenSeaVerified
-                  openseaVerificationStatus={openseaVerificationStatus}
+                  openseaVerificationStatus={
+                    collection?.openseaVerificationStatus
+                  }
                 />
-                {mintData && hasMintPriceDecimal ? <ActiveMintTooltip /> : null}
               </Flex>
             </Flex>
           </Link>
@@ -283,12 +267,13 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           <Flex>
             {/**
              *             <FormatCryptoCurrency
-              amount={collection?.topBid?.price?.amount?.decimal}
+              amount={collection?.price?.amount?.decimal}
               textStyle="subtitle1"
               logoHeight={14}
               address={collection?.topBid?.price?.currency?.contract}
             />
              */}
+            0
           </Flex>
         </TableCell>
         <TableCell>
@@ -334,8 +319,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             }}
             justify={'end'}
           >
-            {/** collection.sampleImages */}
-            {[]?.map((image, i) => {
+            {collection?.sampleImages?.map((image, i) => {
               if (image) {
                 return (
                   <img

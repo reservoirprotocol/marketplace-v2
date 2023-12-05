@@ -38,7 +38,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
         <Flex
           direction="row"
           align="center"
-          style={{
+          css={{
             width: '100%',
             overflowY: 'scroll',
             gap: '12px',
@@ -48,13 +48,11 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
             const bannerImage =
               collection?.banner ||
               collection?.image ||
-              // @ts-ignore
               collection.sampleImages?.[0]
 
             const collectionImage =
               collection?.image ||
               collection?.banner ||
-              // @ts-ignore
               collection.sampleImages?.[0]
 
             return (
@@ -85,7 +83,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
                     }}
                   >
                     <Img
-                      src={bannerImage}
+                      src={bannerImage as string}
                       alt={collection.name as string}
                       height={150}
                       width={300}
@@ -97,7 +95,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
                       }}
                     />
                     <Img
-                      src={collectionImage}
+                      src={collectionImage as string}
                       alt={collection.name as string}
                       height={50}
                       width={50}

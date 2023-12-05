@@ -119,11 +119,6 @@ const Home: NextPage<any> = ({ ssr }) => {
       fallbackData: [],
     })
 
-  let collectionSetOne = trendingCollections || []
-  let collectionSetTwo = featuredCollections || []
-
-  let mints = trendingMints || []
-
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
   >['volumeKey'] = 'allTime'
@@ -254,7 +249,7 @@ const Home: NextPage<any> = ({ ssr }) => {
               <Flex direction="column">
                 {isSSR || !isMounted ? null : (
                   <CollectionRankingsTable
-                    collections={collectionSetOne}
+                    collections={trendingCollections || []}
                     volumeKey={volumeKey}
                     loading={isTrendingCollectionsValidating}
                   />
@@ -281,7 +276,7 @@ const Home: NextPage<any> = ({ ssr }) => {
               <Flex direction="column">
                 {isSSR || !isMounted ? null : (
                   <MintRankingsTable
-                    mints={mints}
+                    mints={trendingMints || []}
                     loading={isTrendingMintsValidating}
                   />
                 )}
@@ -329,7 +324,7 @@ export const getServerSideProps: GetServerSideProps<{
   const topSellingCollections: ChainTopSellingCollections = {}
   try {
     const response = await fetcher(
-      `${chain.reservoirBaseUrl}/collections/top-selling/v2?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
+      `${chain.reservoirBaseUrl}/collections/trending/v1?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
       {
         headers: {
           'x-api-key': process.env.RESERVOIR_API_KEY || '',
