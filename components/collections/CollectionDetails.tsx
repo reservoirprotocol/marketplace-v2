@@ -47,8 +47,8 @@ export const CollectionDetails: FC<Props> = ({
   const descriptionRef = useRef(null as any)
 
   const hasSecurityConfig =
-    collection?.securityConfig &&
-    Object.values(collection.securityConfig).some(Boolean)
+    typeof collection?.securityConfig?.transferSecurityLevel === 'number'
+
   const contractKind = `${collection?.contractKind?.toUpperCase()}${
     hasSecurityConfig ? 'C' : ''
   }`

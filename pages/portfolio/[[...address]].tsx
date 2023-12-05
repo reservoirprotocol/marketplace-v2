@@ -165,7 +165,7 @@ const IndexPage: NextPage = () => {
       router.query.tab = tabValue
       router.push(router, undefined, { shallow: true })
     }
-  }, [tabValue])
+  }, [tabValue, router])
 
   if (!isMounted) {
     return null
