@@ -25,7 +25,6 @@ import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
 import LoadingSpinner from 'components/common/LoadingSpinner'
-import { MintTypeOption } from 'components/common/MintTypeSelector'
 import MintsPeriodDropdown, {
   MintsSortingOption,
 } from 'components/common/MintsPeriodDropdown'
@@ -305,6 +304,8 @@ const Home: NextPage<any> = ({ ssr }) => {
     </Layout>
   )
 }
+
+let t: paths['/collections/top-selling/v2']['get']['responses']['200']['schema']
 
 type trendingCollectionsSchema =
   paths['/collections/trending/v1']['get']['responses']['200']['schema']

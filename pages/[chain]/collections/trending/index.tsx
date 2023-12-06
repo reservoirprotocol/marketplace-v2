@@ -21,7 +21,6 @@ import {
   useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useIntersectionObserver } from 'usehooks-ts'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
 import { NORMALIZE_ROYALTIES } from '../../../_app'
@@ -34,8 +33,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
-  const [offset, setOffset] = useState<number>(20)
-  const [isOffsetting, setIsOffsetting] = useState<boolean>(false)
 
   let collectionQuery: Parameters<typeof useTrendingCollections>['0'] = {
     limit: 1000,
@@ -58,9 +55,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     }
   }, [router.query])
 
-  const loadMoreRef = useRef<HTMLDivElement>(null)
-  const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
   const { data, isValidating } = useTrendingCollections(
     collectionQuery,
     chain.id,
@@ -68,17 +62,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       fallbackData: [ssr.collection],
     }
   )
-
-  useEffect(() => {
-    let isVisible = !!loadMoreObserver?.isIntersecting
-    if (isVisible && (!isValidating || !isOffsetting)) {
-      setIsOffsetting(true)
-      setTimeout(() => {
-        setOffset(offset + 20)
-        setIsOffsetting(false)
-      }, 500)
-    }
-  }, [loadMoreObserver?.isIntersecting, isValidating])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
@@ -144,20 +127,13 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
           </Flex>
           {isSSR || !isMounted ? null : (
             <CollectionRankingsTable
-              offset={offset}
               collections={collections}
               volumeKey={volumeKey}
               loading={isValidating}
             />
           )}
-          <Box
-            ref={loadMoreRef}
-            css={{
-              display: isValidating && !isOffsetting ? 'none' : 'block',
-            }}
-          ></Box>
         </Flex>
-        {(isValidating || isOffsetting) && (
+        {isValidating && (
           <Flex align="center" justify="center" css={{ py: '$4' }}>
             <LoadingSpinner />
           </Flex>

@@ -5,6 +5,7 @@ import { Box, Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import Img from 'components/primitives/Img'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
+import { ActiveMintTooltip } from './ActiveMintTooltip'
 
 type TrendingCollections = ReturnType<typeof useTrendingCollections>['data']
 
@@ -136,14 +137,18 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
                         },
                       }}
                     >
-                      <Text
-                        style="h6"
-                        as="h6"
-                        ellipsify
-                        css={{ flex: 1, mb: 16 }}
+                      <Flex
+                        align="center"
+                        css={{
+                          width: 'fit-content',
+                          mb: 16,
+                          gap: '$2',
+                        }}
                       >
-                        {collection?.name}
-                      </Text>
+                        <Text style="h6" as="h6" ellipsify>
+                          {collection?.name}
+                        </Text>
+                      </Flex>
                       <Flex>
                         <Box css={{ mr: '$5' }}>
                           <Text
@@ -152,7 +157,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
                             as="p"
                             css={{ mb: 2 }}
                           >
-                            FLOOR
+                            Floor
                           </Text>
                           <FormatCryptoCurrency
                             amount={
@@ -168,7 +173,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
 
                         <Box css={{ mr: '$4' }}>
                           <Text style="subtitle2" color="subtle" as="p">
-                            6H SALES
+                            6h Sales
                           </Text>
                           <Text style="h6" as="h4" css={{ mt: 2 }}>
                             {collection.count?.toLocaleString()}
