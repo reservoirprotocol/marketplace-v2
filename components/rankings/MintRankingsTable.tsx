@@ -302,7 +302,7 @@ const headings = [
   'Mint Price',
   'Floor Price',
   'Total Mints',
-  '1H Mints',
+  '1h Mints',
   '6h Mints',
   'Recent Mints',
 ]
