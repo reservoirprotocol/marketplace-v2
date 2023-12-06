@@ -35,6 +35,12 @@ const ChainContextProvider: FC<any> = ({ children }) => {
         (chain) => chain.id === +savedChainId
       )
     }
+
+    if (!router.query.chain && selectedChain) {
+      router.query.chain = selectedChain.routePrefix
+      router.push(router, undefined, { shallow: true })
+    }
+
     const id = selectedChain?.id || DefaultChain.id
     setGlobalChainId(id)
     localStorage.setItem('reservoir.chainId', `${id}`)
