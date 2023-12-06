@@ -30,17 +30,17 @@ type Props = {
   volumeKey: keyof NonNullable<TrendingCollections[0]['collectionVolume']>
 }
 const gridColumns = {
-  gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
+  gridTemplateColumns: '520px repeat(5, 0.5fr) 250px',
   '@md': {
     gridTemplateColumns: '420px 1fr 1fr 1fr',
   },
 
   '@lg': {
-    gridTemplateColumns: '360px repeat(6, 0.5fr) 250px',
+    gridTemplateColumns: '360px repeat(5, 0.5fr) 250px',
   },
 
   '@xl': {
-    gridTemplateColumns: '520px repeat(6, 0.5fr) 250px',
+    gridTemplateColumns: '520px repeat(5, 0.5fr) 250px',
   },
 }
 
@@ -169,7 +169,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               />
             </Flex>
           </Box>
-
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
             <FormatCryptoCurrency
               amount={collection?.collectionVolume?.[volumeKey]}
@@ -264,19 +263,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           </Flex>
         </TableCell>
         <TableCell>
-          <Flex>
-            {/**
-             *             <FormatCryptoCurrency
-              amount={collection?.price?.amount?.decimal}
-              textStyle="subtitle1"
-              logoHeight={14}
-              address={collection?.topBid?.price?.currency?.contract}
-            />
-             */}
-            0
-          </Flex>
-        </TableCell>
-        <TableCell>
           <Flex
             direction="column"
             align="start"
@@ -290,27 +276,23 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             />
           </Flex>
         </TableCell>
-
         <TableCell desktopOnly>
           <PercentChange
             style="subtitle1"
             value={collection?.volumeChange?.['1day'] ?? 0}
           />
         </TableCell>
-
         <TableCell desktopOnly>
           <PercentChange
             style="subtitle1"
             value={collection?.volumeChange?.['7day'] ?? 0}
           />
         </TableCell>
-
         <TableCell desktopOnly>
           <Text style="subtitle1">
             {Number(collection?.tokenCount)?.toLocaleString()}
           </Text>
         </TableCell>
-
         <TableCell desktopOnly>
           <Flex
             css={{
@@ -352,7 +334,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
 const headings = [
   'Collection',
   'Floor Price',
-  'Top Offer',
   'Volume',
   '1D Change',
   '7D Change',
@@ -374,7 +355,7 @@ const TableHeading = () => (
   >
     {headings.map((heading, i) => (
       <TableCell
-        desktopOnly={i > 3}
+        desktopOnly={i > 2}
         key={heading}
         css={{ textAlign: i === headings.length - 1 ? 'right' : 'left' }}
       >
