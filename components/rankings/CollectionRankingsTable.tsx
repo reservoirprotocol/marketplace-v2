@@ -50,7 +50,7 @@ export const CollectionRankingsTable: FC<Props> = ({
   volumeKey,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  if (!collections) return null
+
   return (
     <>
       {!loading && collections.length === 0 ? (
