@@ -290,6 +290,19 @@ const BatchListings: FC<Props> = ({
     })
   }, [listings])
 
+  const applyTopTraitDisabled = useMemo(
+    () =>
+      listings.every(
+        (listing) =>
+          (listing?.exchange?.paymentTokens?.length &&
+            listing.exchange.paymentTokens.length > 0) ||
+          listing.token.token?.attributes?.every(
+            (attribute) => !attribute.floorAskPrice
+          )
+      ),
+    [listings]
+  )
+
   const applyTopTraitPrice = useCallback(() => {
     setListings((prevListings) => {
       return prevListings.map((listing) => {
@@ -367,15 +380,17 @@ const BatchListings: FC<Props> = ({
                 >
                   Floor
                 </Button>
-                <Button
-                  color="gray3"
-                  corners="pill"
-                  size="large"
-                  css={{ minWidth: 'max-content' }}
-                  onClick={applyTopTraitPrice}
-                >
-                  Top Trait
-                </Button>
+                {!applyTopTraitDisabled && (
+                  <Button
+                    color="gray3"
+                    corners="pill"
+                    size="large"
+                    css={{ minWidth: 'max-content' }}
+                    onClick={applyTopTraitPrice}
+                  >
+                    Top Trait
+                  </Button>
+                )}
               </Flex>
             ) : null}
             <Flex align="center" css={{ gap: '$3' }}>
