@@ -132,41 +132,24 @@ const Navbar = () => {
             <Link href={`/${routePrefix}`}>
               <NavItem>Explore</NavItem>
             </Link>
-            <Link href={`/${routePrefix}/collections/trending`}>
-              <NavItem>Trending</NavItem>
-            </Link>
 
-            {/* <HoverCard.Root openDelay={200}>
+            <HoverCard.Root openDelay={200}>
               <HoverCard.Trigger>
-                <Link href={`/${routePrefix}/collection-rankings`}>
-                  <NavItem
-                    active={router.pathname.includes('collection-rankings')}
-                  >
-                    NFTs
-                  </NavItem>
-                </Link>
+                <NavItem>Trending</NavItem>
               </HoverCard.Trigger>
               <HoverCard.Content sideOffset={24} align="start">
-                <Card css={{ p: 24, width: 240 }}>
+                <Card css={{ p: 24, width: 240, border: '1px solid $gray4' }}>
                   <Flex css={{ gap: '$4' }} direction="column">
-                    <Link href={`/${routePrefix}/collection-rankings`}>
-                      <NavItem
-                        active={router.pathname.includes('collection-rankings')}
-                      >
-                        Trending Collections
-                      </NavItem>
+                    <Link href={`/${routePrefix}/collections/trending`}>
+                      <NavItem>Collections</NavItem>
                     </Link>
-                    <Link href={`/${routePrefix}/collection-rankings`}>
-                      <NavItem
-                        active={router.pathname.includes('collection-rankings')}
-                      >
-                        Trending Mints
-                      </NavItem>
+                    <Link href={`/${routePrefix}/mints/trending`}>
+                      <NavItem>Mints</NavItem>
                     </Link>
                   </Flex>
                 </Card>
               </HoverCard.Content>
-            </HoverCard.Root> */}
+            </HoverCard.Root>
 
             {false && (
               <Link href={`/${routePrefix}/collections/minting`}>
