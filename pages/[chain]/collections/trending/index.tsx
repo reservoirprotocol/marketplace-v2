@@ -17,7 +17,6 @@ import {
   ComponentPropsWithoutRef,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
