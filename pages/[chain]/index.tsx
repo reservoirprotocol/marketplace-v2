@@ -305,8 +305,6 @@ const Home: NextPage<any> = ({ ssr }) => {
   )
 }
 
-let t: paths['/collections/top-selling/v2']['get']['responses']['200']['schema']
-
 type trendingCollectionsSchema =
   paths['/collections/trending/v1']['get']['responses']['200']['schema']
 type trendingMintsSchema =

@@ -5,7 +5,6 @@ import { Box, Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import Img from 'components/primitives/Img'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
-import { ActiveMintTooltip } from './ActiveMintTooltip'
 
 type TrendingCollections = ReturnType<typeof useTrendingCollections>['data']
 
