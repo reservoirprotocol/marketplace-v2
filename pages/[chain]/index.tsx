@@ -94,7 +94,7 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
-      fallbackData: [ssr.collection],
+      fallbackData: [ssr?.trendingCollections?.collections],
     }
   )
 
@@ -109,13 +109,13 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
-      fallbackData: [ssr.collection],
+      fallbackData: [ssr?.trendingCollections?.collections],
     }
   )
 
   const { data: trendingMints, isValidating: isTrendingMintsValidating } =
     useTrendingMints({ ...mintsQuery }, chain.id, {
-      fallbackData: [],
+      fallbackData: [ssr?.trendingMints?.mints],
     })
 
   let volumeKey: ComponentPropsWithoutRef<
@@ -310,13 +310,16 @@ type trendingCollectionsSchema =
 type trendingMintsSchema =
   paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
 
-type ChainTrendingMints = Record<string, trendingMintsSchema>
-type ChainTrendingCollections = Record<string, trendingCollectionsSchema>
+type ChainTrendingMints = Record<string, trendingMintsSchema['mints']>
+type ChainTrendingCollections = Record<
+  string,
+  trendingCollectionsSchema['collections']
+>
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    trendingMints: ChainTrendingMints
-    trendingCollections: ChainTrendingCollections
+    trendingMints: ChainTrendingMints[number]
+    trendingCollections: ChainTrendingCollections[number]
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
@@ -348,7 +351,7 @@ export const getServerSideProps: GetServerSideProps<{
       }
     )
 
-    trendingCollections[chain.id] = trendingMintsData
+    trendingMints[chain.id] = trendingMintsData
 
     res.setHeader(
       'Cache-Control',
@@ -357,7 +360,12 @@ export const getServerSideProps: GetServerSideProps<{
   } catch (e) {}
 
   return {
-    props: { ssr: { trendingCollections, trendingMints } },
+    props: {
+      ssr: {
+        trendingCollections: trendingCollections[chain.id],
+        trendingMints: trendingMints[chain.id],
+      },
+    },
   }
 }
 
