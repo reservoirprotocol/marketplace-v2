@@ -13,7 +13,7 @@ import MobileSearch from './MobileSearch'
 import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from '../../hooks'
-import { useAccount } from 'wagmi'
+import { Address, useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
@@ -27,8 +27,9 @@ const Navbar = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
-  const { isConnected, address } = useAccount()
+  const { isConnected, address: wagmiAddress } = useAccount()
   const { wallet } = usePrivyWagmi()
+  const address = wallet ? (wallet?.address as Address) : wagmiAddress
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -237,8 +238,8 @@ const Navbar = () => {
             ))}
         </Flex>
 
-        {isConnected || wallet ? (
-          <AccountSidebar />
+        {isConnected && address ? (
+          <AccountSidebar address={address} />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
             <PrivyConnectButton />

@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react'
 import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
-import { useAccount, useDisconnect } from 'wagmi'
+import { Address, useDisconnect } from 'wagmi'
 import { useENSResolver } from 'hooks'
-import { Box, Button, Flex, Grid, Text } from 'components/primitives'
+import { Button, Flex, Grid, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
 import ThemeSwitcher from './ThemeSwitcher'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
@@ -16,17 +16,22 @@ import {
   faCopy,
   faHand,
   faList,
-  faRightFromBracket,
   faStore,
 } from '@fortawesome/free-solid-svg-icons'
 import CopyText from 'components/common/CopyText'
 import Link from 'next/link'
 import Wallet from './Wallet'
 import { useRouter } from 'next/router'
+import { usePrivy } from '@privy-io/react-auth'
 
-export const AccountSidebar: FC = () => {
-  const { address } = useAccount()
+type Props = {
+  address: Address
+}
+
+export const AccountSidebar: FC<Props> = ({ address }) => {
   const { disconnect } = useDisconnect()
+  const { logout } = usePrivy()
+
   const router = useRouter()
   const {
     avatar: ensAvatar,
@@ -169,7 +174,10 @@ export const AccountSidebar: FC = () => {
                     </CopyText>
                   </Flex>
                   <Grid css={{ gridTemplateColumns: '1fr 1fr', mt: 32 }}>
-                    <Link href={`/portfolio/${address || ''}?tab=items`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=items`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -183,7 +191,10 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">My Items</Text>
                       </Flex>
                     </Link>
-                    <Link href={`/portfolio/${address || ''}?tab=listings`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=listings`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -197,7 +208,10 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">Listings</Text>
                       </Flex>
                     </Link>
-                    <Link href={`/portfolio/${address || ''}?tab=offers`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=offers`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -211,7 +225,10 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">Offers Made</Text>
                       </Flex>
                     </Link>
-                    <Link href={`/portfolio/${address || ''}?tab=activity`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=activity`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -242,7 +259,10 @@ export const AccountSidebar: FC = () => {
                     size="large"
                     css={{ my: '$4', justifyContent: 'center' }}
                     color="gray3"
-                    onClick={() => disconnect()}
+                    onClick={() => {
+                      disconnect()
+                      logout()
+                    }}
                   >
                     Disconnect Wallet
                   </Button>
