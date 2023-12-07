@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
-import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
+import { MintStep, MintModal } from '@reservoir0x/reservoir-kit-ui'
 import { useMarketplaceChain } from 'hooks'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
@@ -23,7 +23,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
-  openState?: ComponentPropsWithoutRef<typeof CollectModal>['openState']
+  openState?: ComponentPropsWithoutRef<typeof MintModal>['openState']
 }
 
 const Mint: FC<Props> = ({
@@ -38,6 +38,8 @@ const Mint: FC<Props> = ({
   const { login } = usePrivy()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
+  const contract = collectionId?.split(':')?.[0]
+  const token = tokenId ? `${contract}:${tokenId}` : undefined
 
   const { data: wallet } = useWalletClient()
 
@@ -46,15 +48,14 @@ const Mint: FC<Props> = ({
   }, [wallet, adaptPrivyWallet])
 
   return (
-    <CollectModal
+    <MintModal
       trigger={
         <Button css={buttonCss} color="primary" {...buttonProps}>
           {buttonChildren}
         </Button>
       }
       collectionId={collectionId}
-      tokenId={tokenId}
-      mode={'mint'}
+      token={token}
       openState={openState}
       walletClient={privyWallet}
       feesOnTopUsd={feesOnTop}
@@ -63,17 +64,7 @@ const Mint: FC<Props> = ({
         login?.()
       }}
       onClose={(data, currentStep) => {
-        if (mutate && currentStep == CollectStep.Complete) mutate()
-      }}
-      onPointerDownOutside={(e) => {
-        const privyLayer = document.getElementById('privy-dialog')
-
-        const clickedInsidePrivyLayer =
-          privyLayer && e.target ? privyLayer.contains(e.target as Node) : false
-
-        if (clickedInsidePrivyLayer) {
-          e.preventDefault()
-        }
+        if (mutate && currentStep == MintStep.Complete) mutate()
       }}
     />
   )
