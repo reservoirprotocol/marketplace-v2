@@ -10,8 +10,9 @@ import {
 import { mainnet, polygon, optimism } from 'wagmi/chains'
 import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
 import { useMemo, useState } from 'react'
-import { zeroAddress, formatUnits } from 'viem'
+import { zeroAddress, formatUnits, Address } from 'viem'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
+import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -84,7 +85,10 @@ const currencyCoingeckoIds = currencies
 
 const Wallet = () => {
   const [viewAll, setViewAll] = useState(false)
-  const { address } = useAccount()
+  const { address: wagmiAddress } = useAccount()
+  const { wallet } = usePrivyWagmi()
+  const address = wallet ? (wallet?.address as Address) : wagmiAddress
+
   const { data: nonNativeBalances } = useContractReads({
     contracts: nonNativeCurrencies.map((currency) => ({
       abi: erc20ABI,

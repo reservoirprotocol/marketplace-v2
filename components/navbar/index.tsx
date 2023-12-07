@@ -18,16 +18,17 @@ import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
 import * as HoverCard from '@radix-ui/react-hover-card'
+import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
-  const { isConnected } = useAccount({})
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
-  const { address } = useAccount()
+  const { isConnected, address } = useAccount()
+  const { wallet } = usePrivyWagmi()
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -243,16 +244,17 @@ const Navbar = () => {
               </HoverCard.Content>
             </HoverCard.Root>
           </Box>
-          {isConnected && (
-            <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
-              <Box css={{ mr: '$2' }}>
-                <NavItem>Portfolio</NavItem>
-              </Box>
-            </Link>
-          )}
+          {isConnected ||
+            (wallet && (
+              <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
+                <Box css={{ mr: '$2' }}>
+                  <NavItem>Portfolio</NavItem>
+                </Box>
+              </Link>
+            ))}
         </Flex>
 
-        {isConnected ? (
+        {isConnected || wallet ? (
           <AccountSidebar />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
