@@ -194,8 +194,7 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            // marketplaceFee: 250,
-            // marketplaceFeeRecipient: "0xabc"
+            marketplaceFees: ['0x03508bB71268BBA25ECaCC8F620e01866650532c:250'],
           }}
           theme={reservoirKitTheme}
         >
