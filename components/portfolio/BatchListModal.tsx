@@ -44,7 +44,6 @@ type BatchListModalStepData = {
 type Props = {
   listings: BatchListing[]
   disabled: boolean
-  currency: Currency
   selectedMarketplaces: Marketplace[]
   onChainRoyalties: ReturnType<typeof useOnChainRoyalties>['data']
   onCloseComplete?: () => void
@@ -56,7 +55,6 @@ const orderFees = orderFee ? [orderFee] : []
 const BatchListModal: FC<Props> = ({
   listings,
   disabled,
-  currency,
   selectedMarketplaces,
   onChainRoyalties,
   onCloseComplete,
@@ -165,25 +163,19 @@ const BatchListModal: FC<Props> = ({
 
       const convertedListing: Listing = {
         token: token,
+        currency: listing.currency.contract,
         weiPrice: (
-          parseUnits(`${+listing.price}`, currency.decimals || 18) *
+          parseUnits(`${+listing.price}`, listing.currency.decimals || 18) *
           BigInt(listing.quantity)
         ).toString(),
         orderbook: listing.orderbook,
         orderKind: listing.orderKind,
         quantity: listing.quantity,
-      }
-
-      if (listing.orderbook === 'reservoir') {
-        convertedListing.fees = orderFees
+        fees: orderFees,
       }
 
       if (expirationTime) {
         convertedListing.expirationTime = expirationTime
-      }
-
-      if (currency && currency.contract != zeroAddress) {
-        convertedListing.currency = currency.contract
       }
 
       const onChainRoyalty =
