@@ -94,6 +94,7 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
+      keepPreviousData: true,
       revalidateOnMount: true,
       refreshInterval: 300000,
       fallbackData: ssr.trendingCollections[marketplaceChain.id]
@@ -115,6 +116,7 @@ const Home: NextPage<any> = ({ ssr }) => {
     chain.id,
     {
       revalidateOnMount: true,
+      keepPreviousData: true,
       refreshInterval: 300000,
       fallbackData: ssr.trendingCollections[marketplaceChain.id]
         ?.trendingCollections
@@ -126,6 +128,7 @@ const Home: NextPage<any> = ({ ssr }) => {
   const { data: trendingMints, isValidating: isTrendingMintsValidating } =
     useTrendingMints({ ...mintsQuery }, chain.id, {
       revalidateOnMount: true,
+      keepPreviousData: true,
       refreshInterval: 300000,
       fallbackData: ssr.trendingMints[marketplaceChain.id]?.mints
         ? ssr.trendingMints[marketplaceChain.id]
