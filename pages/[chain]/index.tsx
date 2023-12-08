@@ -5,7 +5,7 @@ import { Footer } from 'components/home/Footer'
 import { Box, Button, Flex, Text } from 'components/primitives'
 import { ChainContext } from 'context/ChainContextProvider'
 import { useMarketplaceChain, useMounted } from 'hooks'
-import { GetServerSideProps, NextPage } from 'next'
+import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import Link from 'next/link'
 import {
   ComponentPropsWithoutRef,
@@ -35,11 +35,13 @@ import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useMediaQuery } from 'react-responsive'
-import { basicFetcher as fetcher } from 'utils/fetcher'
+import fetcher from 'utils/fetcher'
 
 type TabValue = 'collections' | 'mints'
 
-const Home: NextPage<any> = ({ ssr }) => {
+type Props = InferGetServerSidePropsType<typeof getServerSideProps>
+
+const Home: NextPage<Props> = ({ ssr }) => {
   const router = useRouter()
   const marketplaceChain = useMarketplaceChain()
   const isMounted = useMounted()
@@ -94,7 +96,8 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
-      fallbackData: [ssr.collection],
+      fallbackData: ssr.trendingCollections,
+      keepPreviousData: true,
     }
   )
 
@@ -109,13 +112,15 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
-      fallbackData: [ssr.collection],
+      fallbackData: ssr.featuredCollections,
+      keepPreviousData: true,
     }
   )
 
   const { data: trendingMints, isValidating: isTrendingMintsValidating } =
     useTrendingMints({ ...mintsQuery }, chain.id, {
-      fallbackData: [],
+      fallbackData: ssr.trendingMints,
+      keepPreviousData: true,
     })
 
   let volumeKey: ComponentPropsWithoutRef<
@@ -173,11 +178,6 @@ const Home: NextPage<any> = ({ ssr }) => {
             }}
           >
             <FeaturedCards collections={featuredCollections} />
-            {isFeaturedCollectionsValidating && (
-              <Flex align="center" justify="center" css={{ py: '$4' }}>
-                <LoadingSpinner />
-              </Flex>
-            )}
           </Box>
         </Box>
 
@@ -259,11 +259,6 @@ const Home: NextPage<any> = ({ ssr }) => {
                   }}
                 ></Box>
               </Flex>
-              {isTrendingCollectionsValidating && (
-                <Flex align="center" justify="center" css={{ py: '$4' }}>
-                  <LoadingSpinner />
-                </Flex>
-              )}
             </Box>
           </TabsContent>
           <TabsContent value="mints">
@@ -285,11 +280,6 @@ const Home: NextPage<any> = ({ ssr }) => {
                   }}
                 ></Box>
               </Flex>
-              {isTrendingMintsValidating && (
-                <Flex align="center" justify="center" css={{ py: '$4' }}>
-                  <LoadingSpinner />
-                </Flex>
-              )}
             </Box>
           </TabsContent>
         </Tabs.Root>
@@ -305,18 +295,16 @@ const Home: NextPage<any> = ({ ssr }) => {
   )
 }
 
-type trendingCollectionsSchema =
+type TrendingCollectionsSchema =
   paths['/collections/trending/v1']['get']['responses']['200']['schema']
-type trendingMintsSchema =
+type TrendingMintsSchema =
   paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
-
-type ChainTrendingMints = Record<string, trendingMintsSchema>
-type ChainTrendingCollections = Record<string, trendingCollectionsSchema>
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    trendingMints: ChainTrendingMints
-    trendingCollections: ChainTrendingCollections
+    trendingMints: TrendingMintsSchema
+    trendingCollections: TrendingCollectionsSchema
+    featuredCollections: TrendingCollectionsSchema
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
@@ -324,40 +312,79 @@ export const getServerSideProps: GetServerSideProps<{
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
-  const trendingCollections: ChainTrendingCollections = {}
-  const trendingMints: ChainTrendingMints = {}
+  const headers: RequestInit = {
+    headers: {
+      'x-api-key': process.env.RESERVOIR_API_KEY || '',
+    },
+  }
 
-  try {
-    const { data: trendingCollectionsData } = await fetcher(
-      `${chain.reservoirBaseUrl}/collections/trending/v1?period=24h&includeRecentSales=true&limit=9&fillType=sale`,
-      {
-        headers: {
-          'x-api-key': process.env.RESERVOIR_API_KEY || '',
-        },
-      }
-    )
+  let trendingCollectionsQuery: paths['/collections/trending/v1']['get']['parameters']['query'] =
+    {
+      period: '24h',
+      limit: 20,
+      sortBy: 'volume',
+    }
 
-    trendingCollections[chain.id] = trendingCollectionsData
+  const trendingCollectionsPromise = fetcher(
+    `${chain.reservoirBaseUrl}/collections/trending/v1`,
+    trendingCollectionsQuery,
+    headers
+  )
 
-    const { data: trendingMintsData } = await fetcher(
-      `${chain.reservoirBaseUrl}/collections/trending-mints/v1?period=24h&limit=25`,
-      {
-        headers: {
-          'x-api-key': process.env.RESERVOIR_API_KEY || '',
-        },
-      }
-    )
+  let featuredCollectionQuery: paths['/collections/trending/v1']['get']['parameters']['query'] =
+    {
+      period: '24h',
+      limit: 20,
+      sortBy: 'sales',
+    }
 
-    trendingCollections[chain.id] = trendingMintsData
+  const featuredCollectionsPromise = fetcher(
+    `${chain.reservoirBaseUrl}/collections/trending/v1`,
+    featuredCollectionQuery,
+    headers
+  )
 
-    res.setHeader(
-      'Cache-Control',
-      'public, s-maxage=120, stale-while-revalidate=180'
-    )
-  } catch (e) {}
+  let trendingMintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
+    {
+      period: '24h',
+      limit: 20,
+      type: 'any',
+    }
+
+  const trendingMintsPromise = fetcher(
+    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
+    trendingMintsQuery,
+    headers
+  )
+
+  const promises = await Promise.allSettled([
+    trendingCollectionsPromise,
+    featuredCollectionsPromise,
+    trendingMintsPromise,
+  ]).catch((e) => {
+    console.error(e)
+  })
+  const trendingCollections: Props['ssr']['trendingCollections'] =
+    promises?.[0].status === 'fulfilled' && promises[0].value.data
+      ? (promises[0].value.data as Props['ssr']['trendingCollections'])
+      : {}
+  const featuredCollections: Props['ssr']['featuredCollections'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['featuredCollections'])
+      : {}
+
+  const trendingMints: Props['ssr']['trendingMints'] =
+    promises?.[1].status === 'fulfilled' && promises[1].value.data
+      ? (promises[1].value.data as Props['ssr']['trendingMints'])
+      : {}
+
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=120, stale-while-revalidate=180'
+  )
 
   return {
-    props: { ssr: { trendingCollections, trendingMints } },
+    props: { ssr: { trendingCollections, trendingMints, featuredCollections } },
   }
 }
 
