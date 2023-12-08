@@ -94,7 +94,12 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
-      fallbackData: [ssr?.trendingCollections?.collections],
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+      fallbackData: ssr.trendingCollections[marketplaceChain.id]
+        ?.trendingCollections
+        ? ssr.trendingCollections[marketplaceChain.id]
+        : null,
     }
   )
 
@@ -109,13 +114,22 @@ const Home: NextPage<any> = ({ ssr }) => {
     },
     chain.id,
     {
-      fallbackData: [ssr?.trendingCollections?.collections],
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+      fallbackData: ssr.trendingCollections[marketplaceChain.id]
+        ?.trendingCollections
+        ? ssr.trendingCollections[marketplaceChain.id]
+        : null,
     }
   )
 
   const { data: trendingMints, isValidating: isTrendingMintsValidating } =
     useTrendingMints({ ...mintsQuery }, chain.id, {
-      fallbackData: [ssr?.trendingMints?.mints],
+      revalidateOnMount: true,
+      refreshInterval: 300000,
+      fallbackData: ssr.trendingMints[marketplaceChain.id]?.mints
+        ? ssr.trendingMints[marketplaceChain.id]
+        : null,
     })
 
   let volumeKey: ComponentPropsWithoutRef<
@@ -318,8 +332,8 @@ type ChainTrendingCollections = Record<
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    trendingMints: ChainTrendingMints[number]
-    trendingCollections: ChainTrendingCollections[number]
+    trendingMints: ChainTrendingMints
+    trendingCollections: ChainTrendingCollections
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
@@ -362,8 +376,8 @@ export const getServerSideProps: GetServerSideProps<{
   return {
     props: {
       ssr: {
-        trendingCollections: trendingCollections[chain.id],
-        trendingMints: trendingMints[chain.id],
+        trendingCollections,
+        trendingMints,
       },
     },
   }
