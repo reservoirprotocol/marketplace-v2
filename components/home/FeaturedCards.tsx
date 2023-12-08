@@ -41,6 +41,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
           css={{
             width: '100%',
             overflowY: 'scroll',
+            padding: '10px 5px',
             gap: '12px',
           }}
         >
@@ -70,7 +71,7 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
                     cursor: 'pointer',
                     background: '$neutralBgSubtle',
                     $$shadowColor: '$colors$panelShadow',
-                    boxShadow: '0 0px 12px 0px $$shadowColor',
+                    boxShadow: '0px 0px 12px 0px $$shadowColor',
                     p: '16px',
                   }}
                 >
