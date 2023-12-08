@@ -34,7 +34,6 @@ const nameForSortingOption = (
   option: CollectionsSortingOption,
   compact: boolean
 ) => {
-  console.log(option)
   switch (option) {
     case '30d':
       return compact ? '30d' : '30 days'
