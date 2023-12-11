@@ -73,15 +73,6 @@ const Home: NextPage<Props> = ({ ssr }) => {
   const { chain, switchCurrentChain } = useContext(ChainContext)
 
   useEffect(() => {
-    const t = watchNetwork((network) => {
-      console.log(network.chain?.id)
-    })
-    return () => {
-      t()
-    }
-  }, [])
-
-  useEffect(() => {
     if (router.query.chain) {
       let chainIndex: number | undefined
       for (let i = 0; i < supportedChains.length; i++) {

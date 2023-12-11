@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { watchNetwork } from '@wagmi/core'
+import { useNetwork } from 'wagmi'
 
 interface Chain {
   name: string
@@ -18,15 +18,13 @@ export default () => {
   const [unsupportedChain, setUnsupportedChain] = useState<
     { name: string; chainId: number } | undefined
   >(undefined)
-  useEffect(() => {
-    const unsubscribeNetworkWatch = watchNetwork((network) => {
-      setUnsupportedChain(
-        UNSUPPORTED_CHAINS.find(({ chainId }) => network.chain?.id == chainId)
-      )
-    })
+  const { chain } = useNetwork()
 
-    return unsubscribeNetworkWatch
-  }, [])
+  useEffect(() => {
+    setUnsupportedChain(
+      UNSUPPORTED_CHAINS.find(({ chainId }) => chain?.id === chainId)
+    )
+  }, [chain])
   return {
     unsupportedChain,
   }

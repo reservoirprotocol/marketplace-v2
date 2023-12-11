@@ -1,13 +1,16 @@
 import Link from 'next/link'
 import { Flex, Text } from './primitives'
 import { useIsUnsupportedChain } from 'hooks'
+import { useTheme } from 'next-themes'
 
-const IS_TESTNET_DEPLOYMENT = process.env.NEXT_PUBLIC_HOST_URL?.includes(
-  'testnets.reservoir.tools'
+const IS_TESTNET_DEPLOYMENT = !process.env.NEXT_PUBLIC_HOST_URL?.includes(
+  'explorer.reservoir.tools'
 )
 
 const UnsupportedChainBanner = (): JSX.Element => {
   const { unsupportedChain } = useIsUnsupportedChain()
+
+  const { theme } = useTheme()
 
   return (
     <>
@@ -17,7 +20,7 @@ const UnsupportedChainBanner = (): JSX.Element => {
             px: '40px',
             py: '12px',
             alignItems: 'center',
-            background: '$violet9',
+            background: theme === 'dark' ? '$violet6' : '$violet9',
           }}
         >
           <Text
