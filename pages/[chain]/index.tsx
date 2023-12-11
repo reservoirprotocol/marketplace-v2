@@ -36,6 +36,7 @@ import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
+import { watchNetwork, watchAccount, watchPublicClient } from '@wagmi/core'
 
 type TabValue = 'collections' | 'mints'
 
@@ -70,6 +71,15 @@ const Home: NextPage<Props> = ({ ssr }) => {
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
+
+  useEffect(() => {
+    const t = watchNetwork((network) => {
+      console.log(network.chain?.id)
+    })
+    return () => {
+      t()
+    }
+  }, [])
 
   useEffect(() => {
     if (router.query.chain) {
