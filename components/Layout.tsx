@@ -1,8 +1,7 @@
 import { Box } from 'components/primitives'
 import { FC, ReactNode } from 'react'
 import Navbar from './navbar'
-import { useIsTestnetChain } from 'hooks'
-import TestnetChainBanner from './TestnetChainBanner'
+import UnsupportedChainBanner from './UnsupportedChainBanner'
 
 type Props = {
   children: ReactNode
@@ -21,7 +20,7 @@ const Layout: FC<Props> = ({ children }) => {
       >
         <Box css={{ maxWidth: 4500, mx: 'auto' }}>
           <Navbar />
-          <TestnetChainBanner />
+          <UnsupportedChainBanner />
           <main>{children}</main>
         </Box>
       </Box>
