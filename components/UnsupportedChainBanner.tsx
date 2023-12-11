@@ -3,8 +3,8 @@ import { Flex, Text } from './primitives'
 import { useIsUnsupportedChain } from 'hooks'
 import { useTheme } from 'next-themes'
 
-const IS_TESTNET_DEPLOYMENT = !process.env.NEXT_PUBLIC_HOST_URL?.includes(
-  'explorer.reservoir.tools'
+const IS_TESTNET_DEPLOYMENT = process.env.NEXT_PUBLIC_HOST_URL?.includes(
+  'testnets.reservoir.tools'
 )
 
 const UnsupportedChainBanner = (): JSX.Element => {
