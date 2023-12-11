@@ -12,6 +12,7 @@ const TESTNET_CHAINS: Chain[] = [
   { name: 'Polygon Mumbai', chainId: 80001 },
   { name: 'BaseGoerli', chainId: 84531 },
   { name: 'Scroll Testnet', chainId: 534352 },
+  { name: 'Zora Testnet', chainId: 999999999 },
 ]
 
 export default () => {
