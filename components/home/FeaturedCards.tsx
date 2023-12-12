@@ -83,24 +83,31 @@ export const FeaturedCards: React.FC<FeaturedCardsProps> = ({
                       position: 'relative',
                     }}
                   >
-                    <Img
-                      src={bannerImage as string}
-                      alt={collection.name as string}
-                      height={150}
-                      width={300}
-                      style={{
-                        objectFit: 'cover',
+                    <Flex
+                      css={{
                         height: '150px',
                         width: '300px',
-                        borderRadius: 8,
                       }}
-                    />
+                    >
+                      <Img
+                        src={bannerImage as string}
+                        alt={collection.name as string}
+                        height={150}
+                        width={300}
+                        style={{
+                          objectFit: 'cover',
+                          borderRadius: 8,
+                        }}
+                      />
+                    </Flex>
                     <Img
                       src={collectionImage as string}
                       alt={collection.name as string}
                       height={50}
                       width={50}
                       css={{
+                        height: '50px',
+                        width: '50px',
                         position: 'absolute',
                         inset: '95px 0px 5px 5px',
                         border: '2px solid white',
