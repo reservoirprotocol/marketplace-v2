@@ -64,7 +64,7 @@ export const TokenFilters: FC<Props> = ({
         css={{
           position: 'sticky',
           top: 16 + 80,
-          height: `calc(100vh - ${NAVBAR_HEIGHT}px - ${isOwner ? 90 : 32})`,
+          height: `calc(100vh - ${NAVBAR_HEIGHT}px - ${isOwner ? 90 : 32}px)`,
           overflow: 'auto',
         }}
       >
