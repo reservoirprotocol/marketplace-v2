@@ -170,7 +170,6 @@ const Home: NextPage<Props> = ({ ssr }) => {
             <Text style="h4" as="h4">
               Featured
             </Text>
-            <ChainToggle />
           </Flex>
           <Box
             css={{
