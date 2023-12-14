@@ -28,9 +28,15 @@ const MAINNET_CHAINS: Chain[] = [
   reservoirChains.scroll,
 ]
 
-const IS_TESTNET_DEPLOYMENT = process.env.NEXT_PUBLIC_HOST_URL?.includes(
-  'testnets.reservoir.tools'
-)
+const MAINNET_DEPLOYMENT_URLS = [
+  'explorer.reservoir.tools',
+  'explorer-dev.reservoir.tools',
+]
+
+const IS_TESTNET_DEPLOYMENT =
+  !MAINNET_DEPLOYMENT_URLS.includes(
+    process.env.NEXT_PUBLIC_HOST_URL as string
+  ) && process.env.NEXT_PUBLIC_HOST_URL === 'testnets.reservoir.tools'
 
 export default () => {
   const [unsupportedChain, setUnsupportedChain] = useState<Chain | undefined>(
