@@ -125,7 +125,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
+  >['volumeKey'] = '1day'
 
   switch (sortByTime) {
     case '30d':
@@ -135,6 +135,9 @@ const Home: NextPage<Props> = ({ ssr }) => {
       volumeKey = '7day'
       break
     case '1d':
+      volumeKey = '1day'
+      break
+    case '24h':
       volumeKey = '1day'
       break
   }
