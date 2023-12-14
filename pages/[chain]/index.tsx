@@ -36,7 +36,6 @@ import { useTheme } from 'next-themes'
 import { useRouter } from 'next/router'
 import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
-import { watchNetwork, watchAccount, watchPublicClient } from '@wagmi/core'
 
 type TabValue = 'collections' | 'mints'
 
