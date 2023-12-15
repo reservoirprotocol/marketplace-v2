@@ -277,16 +277,24 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           </Flex>
         </TableCell>
         <TableCell desktopOnly>
-          <PercentChange
-            style="subtitle1"
-            value={collection?.volumeChange?.['1day'] ?? 0}
-          />
+          {collection?.volumeChange?.['1day'] ? (
+            <PercentChange
+              style="subtitle1"
+              value={collection?.volumeChange?.['1day']}
+            />
+          ) : (
+            '-'
+          )}
         </TableCell>
         <TableCell desktopOnly>
-          <PercentChange
-            style="subtitle1"
-            value={collection?.volumeChange?.['7day'] ?? 0}
-          />
+          {collection?.volumeChange?.['7day'] ? (
+            <PercentChange
+              style="subtitle1"
+              value={collection?.volumeChange?.['7day']}
+            />
+          ) : (
+            '-'
+          )}
         </TableCell>
         <TableCell desktopOnly>
           <Text style="subtitle1">
