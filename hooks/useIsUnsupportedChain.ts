@@ -54,5 +54,6 @@ export default () => {
   }, [chain])
   return {
     unsupportedChain,
+    isTestnetDeployment: !IS_TESTNET_DEPLOYMENT,
   }
 }
