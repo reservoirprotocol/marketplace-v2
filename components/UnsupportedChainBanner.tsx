@@ -3,12 +3,8 @@ import { Flex, Text } from './primitives'
 import { useIsUnsupportedChain } from 'hooks'
 import { useTheme } from 'next-themes'
 
-const IS_TESTNET_DEPLOYMENT = process.env.NEXT_PUBLIC_HOST_URL?.includes(
-  'testnets.reservoir.tools'
-)
-
 const UnsupportedChainBanner = (): JSX.Element => {
-  const { unsupportedChain } = useIsUnsupportedChain()
+  const { unsupportedChain, isTestnetDeployment } = useIsUnsupportedChain()
 
   const { theme } = useTheme()
 
@@ -30,12 +26,12 @@ const UnsupportedChainBanner = (): JSX.Element => {
           >
             <>
               Your wallet is currently connected to the{' '}
-              {IS_TESTNET_DEPLOYMENT ? 'testnet' : 'mainnet'}{' '}
+              {isTestnetDeployment ? 'testnet' : 'mainnet'}{' '}
               {unsupportedChain.name}. To trade on a{' '}
-              {IS_TESTNET_DEPLOYMENT ? 'testnet' : 'mainnet'}, switch to{' '}
+              {isTestnetDeployment ? 'testnet' : 'mainnet'}, switch to{' '}
               <Link
                 href={
-                  IS_TESTNET_DEPLOYMENT
+                  isTestnetDeployment
                     ? 'https://testnets.reservoir.tools/'
                     : 'https://explorer.reservoir.tools/'
                 }
@@ -47,7 +43,7 @@ const UnsupportedChainBanner = (): JSX.Element => {
                   }}
                   style="body2"
                 >
-                  {IS_TESTNET_DEPLOYMENT
+                  {isTestnetDeployment
                     ? 'testnets.reservoir.tools'
                     : 'explorer.reservoir.tools'}
                 </Text>
