@@ -46,12 +46,6 @@ export default () => {
   const { chain } = useNetwork()
 
   useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_HOST_URL)
-    console.log(
-      !MAINNET_DEPLOYMENT_URLS.includes(
-        process.env.NEXT_PUBLIC_HOST_URL as string
-      )
-    )
     setUnsupportedChain(
       (IS_TESTNET_DEPLOYMENT ? MAINNET_CHAINS : TESTNET_CHAINS).find(
         ({ id }) => chain?.id === id
