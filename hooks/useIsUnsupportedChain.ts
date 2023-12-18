@@ -37,7 +37,7 @@ const MAINNET_DEPLOYMENT_URLS = [
 const IS_TESTNET_DEPLOYMENT =
   !MAINNET_DEPLOYMENT_URLS.includes(
     process.env.NEXT_PUBLIC_HOST_URL as string
-  ) && process.env.NEXT_PUBLIC_HOST_URL === 'https://testnets.reservoir.tools'
+  ) && process.env.NEXT_PUBLIC_HOST_URL == 'https://testnets.reservoir.tools'
 
 export default () => {
   const [unsupportedChain, setUnsupportedChain] = useState<Chain | undefined>(
@@ -53,7 +53,7 @@ export default () => {
       )
     )
     setUnsupportedChain(
-      (IS_TESTNET_DEPLOYMENT ? TESTNET_CHAINS : MAINNET_CHAINS).find(
+      (IS_TESTNET_DEPLOYMENT ? MAINNET_CHAINS : TESTNET_CHAINS).find(
         ({ id }) => chain?.id === id
       )
     )
