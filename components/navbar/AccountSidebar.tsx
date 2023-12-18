@@ -260,8 +260,8 @@ export const AccountSidebar: FC<Props> = ({ address }) => {
                     css={{ my: '$4', justifyContent: 'center' }}
                     color="gray3"
                     onClick={() => {
-                      disconnect()
                       logout()
+                      disconnect()
                     }}
                   >
                     Disconnect Wallet
