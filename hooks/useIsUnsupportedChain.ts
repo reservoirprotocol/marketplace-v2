@@ -37,8 +37,7 @@ const MAINNET_DEPLOYMENT_URLS = [
 const IS_TESTNET_DEPLOYMENT =
   !MAINNET_DEPLOYMENT_URLS.includes(
     process.env.NEXT_PUBLIC_HOST_URL as string
-  ) &&
-  process.env.NEXT_PUBLIC_HOST_URL === 'https://explorer-vpn.reservoir.tools'
+  ) && process.env.NEXT_PUBLIC_HOST_URL === 'https://testnets.reservoir.tools'
 
 export default () => {
   const [unsupportedChain, setUnsupportedChain] = useState<Chain | undefined>(
