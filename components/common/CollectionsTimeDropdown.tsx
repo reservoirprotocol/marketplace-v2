@@ -22,7 +22,7 @@ export type CollectionsSortingOption = NonNullable<
 const sortingOptions: CollectionsSortingOption[] = [
   '30d',
   '7d',
-  '1d',
+  '24h',
   '6h',
   '30m',
   '10m',
@@ -38,8 +38,8 @@ const nameForSortingOption = (
       return compact ? '30d' : '30 days'
     case '7d':
       return compact ? '7d' : '7 days'
-    case '1d':
-      return compact ? '1d' : '1 day'
+    case '24h':
+      return compact ? '24h' : '24 hours'
     case '6h':
       return compact ? '6h' : '6 hours'
     case '1h':

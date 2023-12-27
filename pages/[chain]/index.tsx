@@ -59,7 +59,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
   const isSmallDevice = useMediaQuery({ query: '(max-width: 800px)' })
 
   const [tab, setTab] = useState<TabValue>('collections')
-  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
+  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('24h')
 
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
@@ -134,7 +134,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
     case '7d':
       volumeKey = '7day'
       break
-    case '1d':
+    case '24h':
       volumeKey = '1day'
       break
   }
