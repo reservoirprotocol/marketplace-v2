@@ -137,9 +137,6 @@ const Home: NextPage<Props> = ({ ssr }) => {
     case '1d':
       volumeKey = '1day'
       break
-    case '24h':
-      volumeKey = '1day'
-      break
   }
 
   return (
