@@ -123,9 +123,9 @@ const Home: NextPage<Props> = ({ ssr }) => {
       keepPreviousData: true,
     })
 
-  let volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey'] = '1day'
+  let volumeKey:
+    | ComponentPropsWithoutRef<typeof CollectionRankingsTable>['volumeKey']
+    | null = '1day'
 
   switch (sortByTime) {
     case '30d':
@@ -136,6 +136,13 @@ const Home: NextPage<Props> = ({ ssr }) => {
       break
     case '24h':
       volumeKey = '1day'
+      break
+    case '6h':
+    case '1h':
+    case '30m':
+    case '10m':
+    case '5m':
+      volumeKey = null
       break
   }
 

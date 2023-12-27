@@ -27,7 +27,9 @@ type TrendingCollections = NonNullable<
 type Props = {
   collections: TrendingCollections
   loading?: boolean
-  volumeKey: keyof NonNullable<TrendingCollections[0]['collectionVolume']>
+  volumeKey:
+    | keyof NonNullable<TrendingCollections[0]['collectionVolume']>
+    | null
 }
 const gridColumns = {
   gridTemplateColumns: '520px repeat(5, 0.5fr) 250px',
@@ -170,17 +172,18 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             </Flex>
           </Box>
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            <FormatCryptoCurrency
-              amount={collection?.collectionVolume?.[volumeKey]}
-              maximumFractionDigits={1}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
-            {volumeKey !== 'allTime' && (
-              <PercentChange
-                value={collection?.collectionVolume?.[volumeKey]}
-                decimals={1}
+            {volumeKey ? (
+              <FormatCryptoCurrency
+                amount={collection?.collectionVolume?.[volumeKey]}
+                maximumFractionDigits={1}
+                logoHeight={16}
+                textStyle="subtitle1"
               />
+            ) : (
+              '-'
+            )}
+            {volumeKey && volumeKey !== 'allTime' && (
+              <PercentChange value={collection?.volumeChange?.[volumeKey]} />
             )}
           </Flex>
         </Flex>
@@ -269,11 +272,15 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
-            <FormatCryptoCurrency
-              amount={collection?.collectionVolume?.[volumeKey]}
-              textStyle="subtitle1"
-              logoHeight={14}
-            />
+            {volumeKey ? (
+              <FormatCryptoCurrency
+                amount={collection?.collectionVolume?.[volumeKey]}
+                textStyle="subtitle1"
+                logoHeight={14}
+              />
+            ) : (
+              '-'
+            )}
           </Flex>
         </TableCell>
         <TableCell desktopOnly>
