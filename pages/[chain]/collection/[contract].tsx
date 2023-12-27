@@ -331,8 +331,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   )
 
   const hasSecurityConfig =
-    collection?.securityConfig &&
-    Object.values(collection.securityConfig).some(Boolean)
+    typeof collection?.securityConfig?.transferSecurityLevel === 'number'
+
   const contractKind = `${collection?.contractKind?.toUpperCase()}${
     hasSecurityConfig ? 'C' : ''
   }`

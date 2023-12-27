@@ -1,28 +1,26 @@
-import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { Head } from 'components/Head'
 import Layout from 'components/Layout'
 import ChainToggle from 'components/common/ChainToggle'
-import CollectionsTimeDropdown, {
-  CollectionsSortingOption,
-} from 'components/common/CollectionsTimeDropdown'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import MintTypeSelector, {
+  MintTypeOption,
+} from 'components/common/MintTypeSelector'
+import MintsPeriodDropdown, {
+  MintsSortingOption,
+} from 'components/common/MintsPeriodDropdown'
 import { Box, Flex, Text } from 'components/primitives'
-import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
+import { MintRankingsTable } from 'components/rankings/MintRankingsTable'
 import { ChainContext } from 'context/ChainContextProvider'
 import { useMounted } from 'hooks'
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { useRouter } from 'next/router'
-import {
-  ComponentPropsWithoutRef,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { NORMALIZE_ROYALTIES } from 'pages/_app'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../../../_app'
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 
@@ -31,11 +29,15 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
-  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
+  const isSmallDevice = useMediaQuery({ maxWidth: 600 })
 
-  let collectionQuery: Parameters<typeof useTrendingCollections>['0'] = {
-    limit: 1000,
-    period: sortByTime,
+  const [mintType, setMintType] = useState<MintTypeOption>('any')
+  const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
+
+  let mintQuery: Parameters<typeof useTrendingMints>['0'] = {
+    limit: 20,
+    period: sortByPeriod,
+    type: mintType,
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
@@ -54,31 +56,11 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     }
   }, [router.query])
 
-  const { data, isValidating } = useTrendingCollections(
-    collectionQuery,
-    chain.id,
-    {
-      fallbackData: [ssr.collection],
-    }
-  )
+  const { data, isValidating } = useTrendingMints(mintQuery, chain.id, {
+    fallbackData: [ssr.mints],
+  })
 
-  let volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
-
-  switch (sortByTime) {
-    case '30d':
-      volumeKey = '30day'
-      break
-    case '7d':
-      volumeKey = '7day'
-      break
-    case '1d':
-      volumeKey = '1day'
-      break
-  }
-
-  const collections = data || []
+  let mints = data || []
 
   return (
     <Layout>
@@ -111,25 +93,33 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" as="h4">
-              Trending Collections
+              Trending Mints
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
-              <CollectionsTimeDropdown
+              {!isSmallDevice && (
+                <MintTypeSelector
+                  option={mintType}
+                  onOptionSelected={setMintType}
+                />
+              )}
+              <MintsPeriodDropdown
                 compact={compactToggleNames && isMounted}
-                option={sortByTime}
+                option={sortByPeriod}
                 onOptionSelected={(option) => {
-                  setSortByTime(option)
+                  setSortByPeriod(option)
                 }}
               />
               <ChainToggle />
             </Flex>
+            {isSmallDevice && (
+              <MintTypeSelector
+                option={mintType}
+                onOptionSelected={setMintType}
+              />
+            )}
           </Flex>
           {isSSR || !isMounted ? null : (
-            <CollectionRankingsTable
-              collections={collections}
-              volumeKey={volumeKey}
-              loading={isValidating}
-            />
+            <MintRankingsTable mints={mints} loading={isValidating} />
           )}
         </Flex>
         {isValidating && (
@@ -142,32 +132,30 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
-type CollectionSchema =
-  paths['/collections/v7']['get']['responses']['200']['schema']
+type MintsSchema =
+  paths['/collections/trending-mints/v1']['get']['responses']['200']['schema']
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection: CollectionSchema
+    mints: MintsSchema
   }
 }> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
+  const mintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
     {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 20,
+      period: '24h',
+      limit: 50,
     }
+
   const chainPrefix = params?.chain || ''
+
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
-  const query = { ...collectionQuery }
-  if (chain.collectionSetId) {
-    query.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    query.community = chain.community
-  }
+
+  const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
+
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v7`,
+    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
     query,
     {
       headers: {
@@ -182,7 +170,7 @@ export const getServerSideProps: GetServerSideProps<{
   )
 
   return {
-    props: { ssr: { collection: response.data } },
+    props: { ssr: { mints: response.data } },
   }
 }
 

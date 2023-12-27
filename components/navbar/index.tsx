@@ -28,8 +28,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
-  const { address } = useAccount();
-
+  const { address } = useAccount()
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -151,9 +150,34 @@ const Navbar = () => {
             <Link href={`/${routePrefix}`}>
               <NavItem>Explore</NavItem>
             </Link>
-            <Link href={`/${routePrefix}/collections/trending`}>
-              <NavItem>Trending</NavItem>
-            </Link>
+            <HoverCard.Root openDelay={200}>
+              <HoverCard.Trigger>
+                <NavItem>Trending</NavItem>
+              </HoverCard.Trigger>
+              <HoverCard.Content sideOffset={24} align="start">
+                <Card css={{ p: 24, width: 240, border: '1px solid $gray4' }}>
+                  <Flex css={{ gap: '$4' }} direction="column">
+                    <Link href={`/${routePrefix}/collections/trending`}>
+                      <NavItem>Collections</NavItem>
+                    </Link>
+                    <Link href={`/${routePrefix}/mints/trending`}>
+                      <NavItem>Mints</NavItem>
+                    </Link>
+                  </Flex>
+                </Card>
+              </HoverCard.Content>
+            </HoverCard.Root>
+
+            {false && (
+              <Link href={`/${routePrefix}/collections/minting`}>
+                <NavItem>Mints</NavItem>
+              </Link>
+            )}
+            {false && (
+              <Link href="/swap">
+                <NavItem>Tokens</NavItem>
+              </Link>
+            )}
             <Link href="https://blog.nftcanyon.io">
               <NavItem>Blog</NavItem>
             </Link>
@@ -224,7 +248,7 @@ const Navbar = () => {
             </HoverCard.Root>
           </Box>
           {isConnected && (
-            <Link href={`/portfolio/${address || ''}`}>
+            <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
               <Box css={{ mr: '$2' }}>
                 <NavItem>Portfolio</NavItem>
               </Box>

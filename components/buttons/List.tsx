@@ -47,7 +47,7 @@ const List: FC<Props> = ({
   const listingCurrencies: ListingCurrencies =
     marketplaceChain.listingCurrencies
   const tokenId = token?.token?.tokenId
-  const contract = token?.token?.contract
+  const collectionId = token?.token?.collection?.id
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
@@ -69,7 +69,7 @@ const List: FC<Props> = ({
     return (
       <ListModal
         trigger={trigger}
-        collectionId={contract}
+        collectionId={collectionId}
         tokenId={tokenId}
         feesBps={orderFees}
         enableOnChainRoyalties={true}
@@ -90,6 +90,18 @@ const List: FC<Props> = ({
             title: 'Could not list token',
             description: 'The transaction was not completed.',
           })
+        }}
+        onPointerDownOutside={(e) => {
+          const privyLayer = document.getElementById('privy-dialog')
+
+          const clickedInsidePrivyLayer =
+            privyLayer && e.target
+              ? privyLayer.contains(e.target as Node)
+              : false
+
+          if (clickedInsidePrivyLayer) {
+            e.preventDefault()
+          }
         }}
       />
     )

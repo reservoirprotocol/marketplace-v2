@@ -1,6 +1,6 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useTrendingCollections } from '@reservoir0x/reservoir-kit-ui'
+import { useTrendingMints } from '@reservoir0x/reservoir-kit-ui'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import {
@@ -13,22 +13,17 @@ import {
   Text,
 } from 'components/primitives'
 import Img from 'components/primitives/Img'
-import { PercentChange } from 'components/primitives/PercentChange'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
-import { ComponentPropsWithoutRef, FC, useMemo } from 'react'
+import { FC, useMemo } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import optimizeImage from 'utils/optimizeImage'
 
-type TrendingCollections = NonNullable<
-  ReturnType<typeof useTrendingCollections>['data']
->
-
 type Props = {
-  collections: TrendingCollections
+  mints: NonNullable<ReturnType<typeof useTrendingMints>['data']>
   loading?: boolean
-  volumeKey: keyof NonNullable<TrendingCollections[0]['collectionVolume']>
 }
+
 const gridColumns = {
   gridTemplateColumns: '520px repeat(5, 0.5fr) 250px',
   '@md': {
@@ -44,16 +39,12 @@ const gridColumns = {
   },
 }
 
-export const CollectionRankingsTable: FC<Props> = ({
-  collections,
-  loading,
-  volumeKey,
-}) => {
+export const MintRankingsTable: FC<Props> = ({ mints, loading }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   return (
     <>
-      {!loading && collections.length === 0 ? (
+      {!loading && mints && mints.length === 0 ? (
         <Flex
           direction="column"
           align="center"
@@ -62,7 +53,7 @@ export const CollectionRankingsTable: FC<Props> = ({
           <Text css={{ color: '$gray11' }}>
             <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
           </Text>
-          <Text css={{ color: '$gray11' }}>No collections found</Text>
+          <Text css={{ color: '$gray11' }}>No mints found</Text>
         </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
@@ -75,23 +66,16 @@ export const CollectionRankingsTable: FC<Props> = ({
                 Collection
               </Text>
               <Text style="subtitle3" color="subtle">
-                Volume
+                Total Mints
               </Text>
             </Flex>
           ) : (
             <TableHeading />
           )}
           <Flex direction="column" css={{ position: 'relative' }}>
-            {collections.map((collection, i) => {
-              return (
-                <RankingsTableRow
-                  key={collection.id}
-                  collection={collection}
-                  rank={i + 1}
-                  volumeKey={volumeKey}
-                />
-              )
-            })}
+            {mints?.map((mint, i) => (
+              <RankingsTableRow mint={mint} rank={(i += 1)} />
+            ))}
           </Flex>
         </Flex>
       )}
@@ -100,31 +84,28 @@ export const CollectionRankingsTable: FC<Props> = ({
 }
 
 type RankingsTableRowProps = {
-  collection: TrendingCollections[0]
+  mint: NonNullable<ReturnType<typeof useTrendingMints>['data']>[0]
   rank: number
-  volumeKey: ComponentPropsWithoutRef<
-    typeof CollectionRankingsTable
-  >['volumeKey']
 }
 
-const RankingsTableRow: FC<RankingsTableRowProps> = ({
-  collection,
-  rank,
-  volumeKey,
-}) => {
+const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
   const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   const collectionImage = useMemo(() => {
-    return optimizeImage(collection.image as string, 250)
-  }, [collection.image])
+    return optimizeImage(mint?.image || mint?.sampleImages?.[0], 250)
+  }, [mint.image])
+
+  const mintPrice = mint.mintPrice?.toString()
+
+  const sampleImages: string[] = mint?.sampleImages || []
 
   if (isSmallDevice) {
     return (
       <Link
-        href={`/${routePrefix}/collection/${collection.id}`}
+        href={`/${routePrefix}/collection/${mint.id}`}
         style={{ display: 'inline-block', minWidth: 0, marginBottom: 24 }}
-        key={collection.id}
+        key={mint.id}
       >
         <Flex align="center" css={{ cursor: 'pointer' }}>
           <Text css={{ mr: '$4', minWidth: 20 }} style="h6" color="subtle">
@@ -147,22 +128,18 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 style="subtitle1"
                 ellipsify
               >
-                {collection?.name}
+                {mint?.name}
               </Text>
               <OpenSeaVerified
-                openseaVerificationStatus={
-                  collection?.openseaVerificationStatus
-                }
+                openseaVerificationStatus={mint?.openseaVerificationStatus}
               />
             </Flex>
             <Flex align="center">
-              <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
-                Floor
-              </Text>
+              <Text css={{ mr: '$1', color: '$gray11' }} style="body3"></Text>
               <FormatCryptoCurrency
-                amount={collection?.floorAsk?.price?.amount?.decimal}
-                address={collection?.floorAsk?.price?.currency?.contract}
-                decimals={collection?.floorAsk?.price?.currency?.decimals}
+                amount={mint?.floorAsk?.price?.amount?.decimal}
+                address={mint?.floorAsk?.price?.currency?.contract}
+                decimals={mint?.floorAsk?.price?.currency?.decimals}
                 logoHeight={16}
                 maximumFractionDigits={2}
                 textStyle="subtitle2"
@@ -170,18 +147,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             </Flex>
           </Box>
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            <FormatCryptoCurrency
-              amount={collection?.collectionVolume?.[volumeKey]}
-              maximumFractionDigits={1}
-              logoHeight={16}
-              textStyle="subtitle1"
-            />
-            {volumeKey !== 'allTime' && (
-              <PercentChange
-                value={collection?.collectionVolume?.[volumeKey]}
-                decimals={1}
-              />
-            )}
+            <Text style="subtitle1">{mint?.mintCount?.toLocaleString()}</Text>
           </Flex>
         </Flex>
       </Link>
@@ -189,14 +155,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   } else {
     return (
       <TableRow
-        key={collection.id}
+        key={mint.id}
         css={{
           ...gridColumns,
         }}
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link
-            href={`/${routePrefix}/collection/${collection.id}`}
+            href={`/${routePrefix}/collection/${mint.id}`}
             style={{ display: 'inline-block', width: '100%', minWidth: 0 }}
           >
             <Flex
@@ -235,12 +201,10 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   style="h6"
                   ellipsify
                 >
-                  {collection?.name}
+                  {mint?.name}
                 </Text>
                 <OpenSeaVerified
-                  openseaVerificationStatus={
-                    collection?.openseaVerificationStatus
-                  }
+                  openseaVerificationStatus={mint?.openseaVerificationStatus}
                 />
               </Flex>
             </Flex>
@@ -253,10 +217,23 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
+            {mintPrice !== '0' ? (
+              <FormatCryptoCurrency
+                amount={mintPrice}
+                textStyle="subtitle1"
+                logoHeight={14}
+              />
+            ) : (
+              '-'
+            )}
+          </Flex>
+        </TableCell>
+        <TableCell>
+          <Flex>
             <FormatCryptoCurrency
-              amount={collection?.floorAsk?.price?.amount?.decimal}
-              address={collection?.floorAsk?.price?.currency?.contract}
-              decimals={collection?.floorAsk?.price?.currency?.decimals}
+              amount={mint?.floorAsk?.price?.amount?.decimal}
+              address={mint?.floorAsk?.price?.currency?.contract}
+              decimals={mint?.floorAsk?.price?.currency?.decimals}
               textStyle="subtitle1"
               logoHeight={14}
             />
@@ -269,38 +246,18 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
-            <FormatCryptoCurrency
-              amount={collection?.collectionVolume?.[volumeKey]}
-              textStyle="subtitle1"
-              logoHeight={14}
-            />
+            <Text style="subtitle1">{mint?.mintCount?.toLocaleString()}</Text>
           </Flex>
         </TableCell>
+
         <TableCell desktopOnly>
-          {collection?.volumeChange?.['1day'] ? (
-            <PercentChange
-              style="subtitle1"
-              value={collection?.volumeChange?.['1day']}
-            />
-          ) : (
-            '-'
-          )}
+          <Text style="subtitle1">{mint?.oneHourCount?.toLocaleString()}</Text>
         </TableCell>
+
         <TableCell desktopOnly>
-          {collection?.volumeChange?.['7day'] ? (
-            <PercentChange
-              style="subtitle1"
-              value={collection?.volumeChange?.['7day']}
-            />
-          ) : (
-            '-'
-          )}
+          <Text style="subtitle1">{mint?.sixHourCount?.toLocaleString()}</Text>
         </TableCell>
-        <TableCell desktopOnly>
-          <Text style="subtitle1">
-            {Number(collection?.tokenCount)?.toLocaleString()}
-          </Text>
-        </TableCell>
+
         <TableCell desktopOnly>
           <Flex
             css={{
@@ -309,7 +266,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             }}
             justify={'end'}
           >
-            {collection?.sampleImages?.map((image, i) => {
+            {/** */}
+            {sampleImages.map((image: string, i) => {
               if (image) {
                 return (
                   <img
@@ -341,12 +299,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
 
 const headings = [
   'Collection',
+  'Mint Price',
   'Floor Price',
-  'Volume',
-  '1D Change',
-  '7D Change',
-  'Supply',
-  'Sample Tokens',
+  'Total Mints',
+  '1h Mints',
+  '6h Mints',
+  'Recent Mints',
 ]
 
 const TableHeading = () => (
@@ -363,7 +321,7 @@ const TableHeading = () => (
   >
     {headings.map((heading, i) => (
       <TableCell
-        desktopOnly={i > 2}
+        desktopOnly={i > 3}
         key={heading}
         css={{ textAlign: i === headings.length - 1 ? 'right' : 'left' }}
       >
