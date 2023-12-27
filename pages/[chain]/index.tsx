@@ -227,13 +227,20 @@ const Home: NextPage<Props> = ({ ssr }) => {
               }}
             >
               <Flex align="center" css={{ gap: '$4' }}>
-                <CollectionsTimeDropdown
-                  compact={isSmallDevice && isMounted}
-                  option={sortByTime}
-                  onOptionSelected={(option) => {
-                    setSortByTime(option)
-                  }}
-                />
+                {tab === 'collections' ? (
+                  <CollectionsTimeDropdown
+                    compact={isSmallDevice && isMounted}
+                    option={sortByTime}
+                    onOptionSelected={(option) => {
+                      setSortByTime(option)
+                    }}
+                  />
+                ) : (
+                  <MintsPeriodDropdown
+                    option={sortByPeriod}
+                    onOptionSelected={setSortByPeriod}
+                  />
+                )}
                 <ChainToggle />
               </Flex>
             </Flex>
