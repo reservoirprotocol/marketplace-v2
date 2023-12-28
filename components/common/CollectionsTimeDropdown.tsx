@@ -24,6 +24,7 @@ const sortingOptions: CollectionsSortingOption[] = [
   '7d',
   '24h',
   '6h',
+  '1h',
   '30m',
   '10m',
   '5m',
