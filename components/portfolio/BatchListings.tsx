@@ -313,7 +313,7 @@ const BatchListings: FC<Props> = ({
           // Find the highest floor price
           let topTraitPrice = Math.max(
             ...listing.token.token.attributes.map(
-              (attribute) => attribute.floorAskPrice ?? 0
+              (attribute) => attribute.floorAskPrice?.amount?.decimal ?? 0
             )
           )
           if (topTraitPrice && topTraitPrice > 0) {
