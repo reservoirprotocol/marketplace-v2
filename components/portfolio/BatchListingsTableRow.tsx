@@ -32,7 +32,6 @@ import { formatNumber } from 'utils/numbers'
 type BatchListingsTableRowProps = {
   listing: BatchListing
   listings: BatchListing[]
-  onChainRoyaltiesBps: number
   displayQuantity: boolean
   gridTemplateColumns: string
   globalExpirationOption: ExpirationOption
@@ -41,7 +40,7 @@ type BatchListingsTableRowProps = {
   selectedItems: UserToken[]
   currencies: Currency[]
   setSelectedItems: Dispatch<SetStateAction<UserToken[]>>
-  setListings: Dispatch<SetStateAction<BatchListing[]>>
+  setListings: Dispatch<SetStateAction<BatchListing[] | null>>
   updateListing: (updatedListing: BatchListing) => void
 }
 
@@ -51,7 +50,6 @@ const MAXIMUM_AMOUNT = Infinity
 export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   listing,
   listings,
-  onChainRoyaltiesBps,
   selectedItems,
   displayQuantity,
   gridTemplateColumns,
@@ -107,8 +105,8 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
   )
 
   const creatorRoyalties =
-    (onChainRoyaltiesBps ||
-      listing?.token?.token?.collection?.royaltiesBps ||
+    (listing?.token?.token?.collection?.royaltiesBps ||
+      listing.marketplace.royalties?.maxBps ||
       0) / 10000
 
   const marketplaceFee = (listing.marketplace?.fee?.bps || 0) / 10000
@@ -124,7 +122,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
     // Find the highest floor price
     return Math.max(
       ...listing.token.token.attributes.map(
-        (attribute) => attribute.floorAskPrice ?? 0
+        (attribute) => attribute.floorAskPrice?.amount?.decimal ?? 0
       )
     )
   }, [])
