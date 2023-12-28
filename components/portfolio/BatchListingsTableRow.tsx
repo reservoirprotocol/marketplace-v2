@@ -124,7 +124,7 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
     // Find the highest floor price
     return Math.max(
       ...listing.token.token.attributes.map(
-        (attribute) => attribute.floorAskPrice ?? 0
+        (attribute) => attribute.floorAskPrice?.amount?.decimal ?? 0
       )
     )
   }, [])
