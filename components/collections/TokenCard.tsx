@@ -293,10 +293,10 @@ export default ({
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    const url = `${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
+                    const url = `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
                     window.open(url, '_blank')
                   }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+                  src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
                 />
               ) : null}
             </Flex>

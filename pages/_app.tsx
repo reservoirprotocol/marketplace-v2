@@ -200,9 +200,8 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   const appProps = await NextApp.getInitialProps(appContext)
   let baseUrl = ''
 
-  if (appContext.ctx.req?.headers.host) {
-    const host = appContext.ctx.req?.headers.host
-    baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
+  if (process.env.NEXT_PUBLIC_PROXY_URL) {
+    baseUrl = process.env.NEXT_PUBLIC_PROXY_URL
   } else if (process.env.NEXT_PUBLIC_HOST_URL) {
     baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }

@@ -339,7 +339,7 @@ export default ({
                     height: 20,
                     borderRadius: '50%',
                   }}
-                  src={`${proxyApi}/redirect/sources/${token?.ownership?.floorAsk?.source?.domain}/logo/v2`}
+                  src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.ownership?.floorAsk?.source?.domain}/logo/v2`}
                 />
               )}
             </>
@@ -470,7 +470,7 @@ export default ({
                 }
                 setIsRefreshing(true)
                 fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/tokens/refresh/v1`,
                   undefined,
                   {
                     method: 'POST',
