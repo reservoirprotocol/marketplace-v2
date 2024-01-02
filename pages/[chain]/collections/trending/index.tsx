@@ -31,7 +31,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
-  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
+  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('24h')
 
   let collectionQuery: Parameters<typeof useTrendingCollections>['0'] = {
     limit: 1000,
@@ -64,7 +64,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
+  >['volumeKey'] = '1day'
 
   switch (sortByTime) {
     case '30d':
@@ -73,7 +73,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     case '7d':
       volumeKey = '7day'
       break
-    case '1d':
+    case '24h':
       volumeKey = '1day'
       break
   }
