@@ -510,6 +510,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 <Flex css={{ alignItems: 'center', gap: '$3' }}>
                   {collection?.floorAsk?.price?.amount?.raw && sweepSymbol ? (
                     <Sweep
+                      contract={id}
                       collectionId={collection.id}
                       openState={isSweepRoute ? sweepOpenState : undefined}
                       buttonChildren={

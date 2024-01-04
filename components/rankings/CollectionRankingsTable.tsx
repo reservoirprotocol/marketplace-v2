@@ -75,11 +75,12 @@ export const CollectionRankingsTable: FC<Props> = ({
                 Collection
               </Text>
               <Text style="subtitle3" color="subtle">
+                {`${volumeKey.replace('day', 'D')} `}
                 Volume
               </Text>
             </Flex>
           ) : (
-            <TableHeading />
+            <TableHeading volumeKey={volumeKey} />
           )}
           <Flex direction="column" css={{ position: 'relative' }}>
             {collections.map((collection, i) => {
@@ -178,7 +179,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             />
             {volumeKey !== 'allTime' && (
               <PercentChange
-                value={collection?.collectionVolume?.[volumeKey]}
+                value={collection?.volumeChange?.[volumeKey]}
                 decimals={1}
               />
             )}
@@ -349,7 +350,7 @@ const headings = [
   'Sample Tokens',
 ]
 
-const TableHeading = () => (
+const TableHeading: React.FC<Pick<Props, 'volumeKey'>> = ({ volumeKey }) => (
   <HeaderRow
     css={{
       display: 'none',
@@ -368,6 +369,7 @@ const TableHeading = () => (
         css={{ textAlign: i === headings.length - 1 ? 'right' : 'left' }}
       >
         <Text style="subtitle3" color="subtle">
+          {heading === 'Volume' && `${volumeKey.replace('day', 'D')} `}
           {heading}
         </Text>
       </TableCell>

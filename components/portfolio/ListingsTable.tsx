@@ -272,7 +272,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
           ) : (
             <BuyNow
               tokenId={listing?.criteria?.data?.token?.tokenId}
-              collectionId={listing?.criteria?.data?.collection?.id}
+              contract={listing?.contract}
               orderId={listing?.id}
               mutate={mutate}
               buttonCss={{
@@ -410,7 +410,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
           ) : (
             <BuyNow
               tokenId={listing?.criteria?.data?.token?.tokenId}
-              collectionId={listing?.criteria?.data?.collection?.id}
+              contract={listing?.contract}
               orderId={listing?.id}
               mutate={mutate}
               buttonCss={{
