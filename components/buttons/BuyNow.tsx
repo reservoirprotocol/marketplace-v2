@@ -15,7 +15,7 @@ import { ReferralContext } from '../../context/ReferralContextProvider'
 
 type Props = {
   tokenId?: string
-  collectionId?: string
+  contract?: string
   orderId?: string
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
@@ -26,7 +26,7 @@ type Props = {
 
 const BuyNow: FC<Props> = ({
   tokenId,
-  collectionId,
+  contract,
   orderId = undefined,
   mutate,
   buttonCss,
@@ -45,8 +45,7 @@ const BuyNow: FC<Props> = ({
           {buttonChildren}
         </Button>
       }
-      tokenId={tokenId}
-      collectionId={collectionId}
+      token={`${contract}:${tokenId}`}
       orderId={orderId}
       openState={openState}
       onConnectWallet={() => {

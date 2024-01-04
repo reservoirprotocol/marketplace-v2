@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from 'react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
+import { SweepModal, SweepStep } from '@reservoir0x/reservoir-kit-ui'
 import { useMarketplaceChain } from 'hooks'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
@@ -20,7 +20,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
-  openState?: ComponentPropsWithoutRef<typeof CollectModal>['openState']
+  openState?: ComponentPropsWithoutRef<typeof SweepModal>['openState']
 }
 
 const Sweep: FC<Props> = ({
@@ -35,17 +35,16 @@ const Sweep: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
-
+  const contract = collectionId?.split(':')?.[0]
   return (
-    <CollectModal
+    <SweepModal
       trigger={
         <Button css={buttonCss} color="primary" {...buttonProps}>
           {buttonChildren}
         </Button>
       }
       collectionId={collectionId}
-      tokenId={tokenId}
-      mode={'trade'}
+      token={tokenId ? `${contract}:${tokenId}` : undefined}
       openState={openState}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
@@ -57,7 +56,7 @@ const Sweep: FC<Props> = ({
         openConnectModal?.()
       }}
       onClose={(data, currentStep) => {
-        if (mutate && currentStep == CollectStep.Complete) mutate()
+        if (mutate && currentStep == SweepStep.Complete) mutate()
       }}
       onPointerDownOutside={(e) => {
         const privyLayer = document.getElementById('privy-dialog')
