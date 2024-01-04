@@ -14,7 +14,6 @@ import { SWRResponse } from 'swr'
 import { ReferralContext } from 'context/ReferralContextProvider'
 
 type Props = {
-  contract?: string
   collectionId?: string
   tokenId?: string
   buttonCss?: CSS
@@ -25,7 +24,6 @@ type Props = {
 }
 
 const Sweep: FC<Props> = ({
-  contract,
   collectionId,
   tokenId,
   buttonCss,
@@ -37,7 +35,7 @@ const Sweep: FC<Props> = ({
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const { feesOnTop } = useContext(ReferralContext)
-
+  const contract = collectionId?.split(':')?.[0]
   return (
     <SweepModal
       trigger={
@@ -46,7 +44,7 @@ const Sweep: FC<Props> = ({
         </Button>
       }
       collectionId={collectionId}
-      token={`${contract}:${tokenId}`}
+      token={tokenId ? `${contract}:${tokenId}` : undefined}
       openState={openState}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
       // apply to native orders (using the reservoir order book) and not to external orders (opensea, blur etc)
