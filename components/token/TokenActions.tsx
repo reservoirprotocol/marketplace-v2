@@ -124,7 +124,7 @@ export const TokenActions: FC<Props> = ({
           >
             <BuyNow
               tokenId={token.token?.tokenId}
-              collectionId={token.token?.collection?.id}
+              contract={token.token?.contract}
               buttonCss={{ flex: 1, justifyContent: 'center' }}
               buttonProps={{ corners: 'square' }}
               buttonChildren="Buy Now"
