@@ -249,7 +249,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
           {!isOwner && !is1155 ? (
             <BuyNow
               tokenId={listing.criteria?.data?.token?.tokenId || tokenId}
-              collectionId={listing.criteria?.data?.collection?.id || contract}
+              contract={contract}
               orderId={listing.id}
               buttonChildren="Buy"
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
