@@ -11,6 +11,7 @@ const TESTNET_CHAINS: Chain[] = [
   reservoirChains.baseGoerli,
   reservoirChains.scrollTestnet,
   reservoirChains.zoraTestnet,
+  reservoirChains.frameTestnet,
 ]
 
 const MAINNET_CHAINS: Chain[] = [

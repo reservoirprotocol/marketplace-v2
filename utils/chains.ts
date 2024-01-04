@@ -8,7 +8,7 @@ import {
   Chain,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
-import { reservoirChains } from '@reservoir0x/reservoir-sdk'
+import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import usdcContracts from './usdcContracts'
 import wrappedContracts from './wrappedContracts'
@@ -158,5 +158,17 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_ZORA_TESTNET_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ZORA_TESTNET_COMMUNITY,
     checkPollingInterval: reservoirChains.zoraTestnet.checkPollingInterval,
+  },
+  {
+    ...customChains.frameTestnet,
+    // lightIconUrl: '/icons/zora-testnet-icon-dark.svg',
+    // darkIconUrl: '/icons/zora-testnet-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.frameTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/frametestnet',
+    routePrefix: 'frame-testnet',
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_FRAME_TESTNET_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_FRAME_TESTNET_COMMUNITY,
+    checkPollingInterval: reservoirChains.frameTestnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
