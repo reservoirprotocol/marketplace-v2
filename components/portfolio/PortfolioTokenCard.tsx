@@ -86,7 +86,7 @@ export default ({
 
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  const mediaType = extractMediaType(dynamicToken?.token)
+  const mediaType = extractMediaType(dynamicToken?.token?.media)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
@@ -376,7 +376,7 @@ export default ({
         >
           <BuyNow
             tokenId={token.token?.tokenId}
-            collectionId={token.token?.collection?.id}
+            contract={token.token?.contract}
             mutate={mutate}
             buttonCss={{
               justifyContent: 'center',

@@ -48,6 +48,8 @@ const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 
+const DISABLE_PROXY =
+  process.env.NEXT_PUBLIC_DISABLE_PROXY === 'true' ? true : false
 const configureChainsConfig = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
@@ -159,12 +161,14 @@ function MyApp({
                 name,
                 checkPollingInterval,
               }) => {
+                let proxy = !DISABLE_PROXY && proxyApi ? proxyApi : null
                 return {
                   id,
                   name,
-                  baseApiUrl: proxyApi
+                  baseApiUrl: proxy
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,
+                  proxyApi: proxy,
                   active: marketplaceChain.id === id,
                   checkPollingInterval: checkPollingInterval,
                   paymentTokens: chainPaymentTokensMap[id],

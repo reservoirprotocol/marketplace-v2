@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
-import { CollectModal, CollectStep } from '@reservoir0x/reservoir-kit-ui'
+import { SweepModal, SweepStep } from '@reservoir0x/reservoir-kit-ui'
 import { useMarketplaceChain } from 'hooks'
 import { CSS } from '@stitches/react'
 import { Button } from 'components/primitives'
@@ -23,7 +23,7 @@ type Props = {
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
   mutate?: SWRResponse['mutate']
-  openState?: ComponentPropsWithoutRef<typeof CollectModal>['openState']
+  openState?: ComponentPropsWithoutRef<typeof SweepModal>['openState']
 }
 
 const Sweep: FC<Props> = ({
@@ -45,16 +45,16 @@ const Sweep: FC<Props> = ({
     return wallet ? adaptPrivyWallet(wallet) : undefined
   }, [wallet, adaptPrivyWallet])
 
+  const contract = collectionId?.split(':')?.[0]
   return (
-    <CollectModal
+    <SweepModal
       trigger={
         <Button css={buttonCss} color="primary" {...buttonProps}>
           {buttonChildren}
         </Button>
       }
       collectionId={collectionId}
-      tokenId={tokenId}
-      mode={'trade'}
+      token={tokenId ? `${contract}:${tokenId}` : undefined}
       openState={openState}
       walletClient={privyWallet}
       //CONFIGURABLE: set any fees on top of orders, note that these will only
@@ -67,7 +67,7 @@ const Sweep: FC<Props> = ({
         login?.()
       }}
       onClose={(data, currentStep) => {
-        if (mutate && currentStep == CollectStep.Complete) mutate()
+        if (mutate && currentStep == SweepStep.Complete) mutate()
       }}
       onPointerDownOutside={(e) => {
         const privyLayer = document.getElementById('privy-dialog')
