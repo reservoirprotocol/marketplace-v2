@@ -199,7 +199,7 @@ function MyApp({
             source: source,
             disablePoweredByReservoir: true,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
-            marketplaceFees: ["0xe0C5123B0FD1A7D94bB8D84bBAF1026B699C6dC6:250"]
+            marketplaceFees: ["0xe0C5123B0FD1A7D94bB8D84bBAF1026B699C6dC6:200"]
           }}
           theme={reservoirKitTheme}
         >

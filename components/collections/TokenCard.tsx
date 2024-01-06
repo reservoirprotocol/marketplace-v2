@@ -49,7 +49,7 @@ export default ({
     mediaType === 'm4a' ||
     mediaType === 'wav' ||
     mediaType === 'mov'
-  const { routePrefix, proxyApi } = useMarketplaceChain()
+  const { routePrefix, proxyApi, reservoirBaseUrl } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
 
@@ -292,10 +292,10 @@ export default ({
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    const url = `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
+                    const url = `${reservoirBaseUrl}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
                     window.open(url, '_blank')
                   }}
-                  src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+                  src={`${reservoirBaseUrl}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
                 />
               ) : null}
             </Flex>
