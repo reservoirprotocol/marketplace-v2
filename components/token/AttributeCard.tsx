@@ -46,7 +46,7 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
             {attribute.value}
           </Text>
           <FormatCryptoCurrency
-            amount={attribute.floorAskPrice}
+            amount={attribute.floorAskPrice?.amount?.decimal}
             logoHeight={14}
             textStyle="subtitle1"
             maximumFractionDigits={2}
