@@ -161,8 +161,8 @@ export default [
   },
   {
     ...customChains.frameTestnet,
-    // lightIconUrl: '/icons/zora-testnet-icon-dark.svg',
-    // darkIconUrl: '/icons/zora-testnet-icon-light.svg',
+    lightIconUrl: '/icons/frame-testnet-icon-dark.svg',
+    darkIconUrl: '/icons/frame-testnet-icon-light.svg',
     reservoirBaseUrl: reservoirChains.frameTestnet.baseApiUrl,
     proxyApi: '/api/reservoir/frametestnet',
     routePrefix: 'frame-testnet',
