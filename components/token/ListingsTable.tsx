@@ -171,6 +171,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
     listingSourceDomain || listingSourceName
   }/logo/v2`
 
+  const isBlurSource = listingSourceName === 'Blur'
+  const intentFillingEnabled = !is1155 && isBlurSource
+
   return (
     <TableRow
       css={{
@@ -251,6 +254,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               tokenId={listing.criteria?.data?.token?.tokenId || tokenId}
               contract={contract}
               orderId={listing.id}
+              executionMethod={intentFillingEnabled ? 'intent' : undefined}
               buttonChildren="Buy"
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
               mutate={mutate}

@@ -119,6 +119,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   const isOracleOrder = listing?.isNativeOffChainCancellable
 
+  const is1155 = listing?.contractKind === 'erc1155'
+  const isBlurSource = listing?.source?.['name'] === 'Blur'
+
+  const intentFillingEnabled = !is1155 && isBlurSource
+
   let criteriaData = listing?.criteria?.data
 
   const imageSrc = useMemo(() => {
@@ -274,6 +279,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               tokenId={listing?.criteria?.data?.token?.tokenId}
               contract={listing?.contract}
               orderId={listing?.id}
+              executionMethod={intentFillingEnabled ? 'intent' : undefined}
               mutate={mutate}
               buttonCss={{
                 minWidth: '150px',
@@ -412,6 +418,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
               tokenId={listing?.criteria?.data?.token?.tokenId}
               contract={listing?.contract}
               orderId={listing?.id}
+              executionMethod={intentFillingEnabled ? 'intent' : undefined}
               mutate={mutate}
               buttonCss={{
                 minWidth: '150px',

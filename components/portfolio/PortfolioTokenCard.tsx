@@ -98,6 +98,10 @@ export default ({
   const isOracleOrder =
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
 
+  const is1155 = token?.token?.kind === 'erc1155'
+  const isBlurSource = token?.ownership?.floorAsk?.source?.name === 'Blur'
+  const intentFillingEnabled = !is1155 && isBlurSource
+
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]
     : undefined
@@ -377,6 +381,7 @@ export default ({
           <BuyNow
             tokenId={token.token?.tokenId}
             contract={token.token?.contract}
+            executionMethod={intentFillingEnabled ? 'intent' : undefined}
             mutate={mutate}
             buttonCss={{
               justifyContent: 'center',
