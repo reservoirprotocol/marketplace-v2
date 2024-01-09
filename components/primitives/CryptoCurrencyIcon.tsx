@@ -1,8 +1,8 @@
 import React, { FC } from 'react'
 import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
-import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
 import { zeroAddress } from 'viem'
+import { useMarketplaceChain } from 'hooks'
 
 type Props = {
   address: string
@@ -16,14 +16,11 @@ const CryptoCurrencyIcon: FC<Props> = ({
   chainId,
   css,
 }) => {
-  const client = useReservoirClient()
-  const chain = client?.chains?.find((chain) =>
-    chainId !== undefined ? chain.id === chainId : chain.active
-  )
+  const { proxyApi } = useMarketplaceChain()
 
   return (
     <StyledImg
-      src={`${chain?.baseApiUrl}/redirect/currency/${address}/icon/v1`}
+      src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/currency/${address}/icon/v1`}
       css={css}
     />
   )
