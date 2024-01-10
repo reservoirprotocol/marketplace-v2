@@ -1,14 +1,18 @@
-import { useCollections, useDynamicTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  Marketplace,
+  useCollections,
+  useDynamicTokens,
+  useMarketplaceConfigs,
+} from '@reservoir0x/reservoir-kit-ui'
 import CollectionActions from 'components/collections/CollectionActions'
 import TokenCard from 'components/collections/TokenCard'
-import { Box, Flex, Text } from 'components/primitives'
-import { useChainCurrency, useMarketplaceChain } from 'hooks'
+import { Box, Flex, Text, Tooltip } from 'components/primitives'
+import { useChainCurrency } from 'hooks'
 import { useRouter } from 'next/router'
-import { FC, useState, useRef, useEffect } from 'react'
+import { FC, useState, useRef, useEffect, useMemo } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { styled } from 'stitches.config'
 import optimizeImage from 'utils/optimizeImage'
-import titleCase from 'utils/titleCase'
 import { truncateAddress } from 'utils/truncate'
 import supportedChains, { DefaultChain } from 'utils/chains'
 
@@ -58,9 +62,29 @@ export const CollectionDetails: FC<Props> = ({
       (chain) => router.query?.chain === chain.routePrefix
     ) || DefaultChain
 
+  const { data: marketplaceConfigs } = useMarketplaceConfigs(
+    collectionId,
+    collection?.chainId,
+    undefined,
+    collection?.royalties?.bps === undefined
+  )
+
+  const reservoirMarketplace: Marketplace = useMemo(
+    () =>
+      // @ts-ignore @TODO: Remove when RK is updated
+      marketplaceConfigs?.marketplaces?.find(
+        // @ts-ignore
+        (marketplace) => marketplace?.orderbook === 'reservoir'
+      ),
+    [marketplaceConfigs]
+  )
+
   let creatorRoyalties = collection?.royalties?.bps
     ? collection?.royalties?.bps * 0.01
-    : 0
+    : reservoirMarketplace?.royalties?.maxBps
+    ? reservoirMarketplace?.royalties?.maxBps * 0.01
+    : undefined
+
   let chainName = collectionChain?.name
 
   let rareTokenQuery: Parameters<typeof useDynamicTokens>['0'] = {
@@ -177,7 +201,32 @@ export const CollectionDetails: FC<Props> = ({
             { label: 'Chain', value: chainName },
             {
               label: 'Creator Earning',
-              value: creatorRoyalties + '%',
+              value: creatorRoyalties ? (
+                creatorRoyalties + '%'
+              ) : (
+                <Tooltip
+                  content={
+                    <Text
+                      style="body3"
+                      css={{
+                        maxWidth: 130,
+                        display: 'block',
+                        textAlign: 'center',
+                      }}
+                    >
+                      This collection has mixed royalties, with the royalty
+                      varying from token to token.
+                    </Text>
+                  }
+                  side="top"
+                >
+                  <Flex>
+                    <Text style="body1" css={{ fontWeight: 600 }}>
+                      Mixed
+                    </Text>
+                  </Flex>
+                </Tooltip>
+              ),
             },
             { label: 'Total Supply', value: collection?.tokenCount },
           ].map((data) => (
