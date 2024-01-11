@@ -1,7 +1,7 @@
-import { ReservoirChain, paths } from '@reservoir0x/reservoir-sdk'
-import useMarketplaceChain from 'hooks/useMarketplaceChain'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import { useMemo } from 'react'
 import useSWR from 'swr/immutable'
+import useMarketplaceChain from './useMarketplaceChain'
 
 type MarketplaceConfigurationsResponse =
   paths['/collections/{collection}/marketplace-configurations/v1']['get']['responses']['200']['schema']
@@ -24,17 +24,12 @@ const fetcher = async (urls: string[]) => {
   )
 }
 
-export default function (
-  collectionIds: string[],
-  chain?: ReservoirChain | null | undefined,
-  enabled: boolean = true
-) {
-  const marketplaceChain = useMarketplaceChain()
+export default function (collectionIds: string[], enabled: boolean = true) {
+  const { proxyApi } = useMarketplaceChain()
+
   const urls = collectionIds.map(
     (id) =>
-      `${
-        chain?.baseApiUrl || marketplaceChain.reservoirBaseUrl
-      }/collections/${id}/marketplace-configurations/v1`
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/${id}/marketplace-configurations/v1`
   )
   const { data, error } = useSWR<MarketplaceConfigurationsResponse[]>(
     enabled ? urls : null,
