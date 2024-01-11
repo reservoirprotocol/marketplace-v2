@@ -615,7 +615,7 @@ export const getServerSideProps: GetServerSideProps<{
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
   const id = assetId[1]
-  const { reservoirBaseUrl } =
+  const { proxyApi } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
 
@@ -640,7 +640,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   try {
     const tokensPromise = fetcher(
-      `${reservoirBaseUrl}/tokens/v6`,
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/tokens/v6`,
       tokensQuery,
       headers
     )
@@ -657,7 +657,7 @@ export const getServerSideProps: GetServerSideProps<{
       }
 
     const collectionsPromise = fetcher(
-      `${reservoirBaseUrl}/collections/v7`,
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7`,
       collectionQuery,
       headers
     )
