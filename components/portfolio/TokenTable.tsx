@@ -112,7 +112,7 @@ export const TokenTable = forwardRef<TokenTableRef, Props>(
       collection: filterCollection,
       includeTopBid: true,
       includeRawData: true,
-      includeAttributes: true,
+      includeAttributes: false,
       excludeSpam: hideSpam,
     }
 
