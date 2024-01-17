@@ -69,11 +69,9 @@ export const CollectionDetails: FC<Props> = ({
     collection?.royalties?.bps === undefined
   )
 
-  const reservoirMarketplace: Marketplace = useMemo(
+  const reservoirMarketplace = useMemo(
     () =>
-      // @ts-ignore @TODO: Remove when RK is updated
       marketplaceConfigs?.marketplaces?.find(
-        // @ts-ignore
         (marketplace) => marketplace?.orderbook === 'reservoir'
       ),
     [marketplaceConfigs]
