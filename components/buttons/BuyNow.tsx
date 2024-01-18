@@ -12,11 +12,13 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { ReferralContext } from '../../context/ReferralContextProvider'
+import { BuyTokenBodyParameters } from '@reservoir0x/reservoir-sdk'
 
 type Props = {
   tokenId?: string
   contract?: string
   orderId?: string
+  executionMethod?: BuyTokenBodyParameters['executionMethod']
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
@@ -28,6 +30,7 @@ const BuyNow: FC<Props> = ({
   tokenId,
   contract,
   orderId = undefined,
+  executionMethod,
   mutate,
   buttonCss,
   buttonProps = {},
@@ -48,6 +51,7 @@ const BuyNow: FC<Props> = ({
       token={`${contract}:${tokenId}`}
       orderId={orderId}
       openState={openState}
+      executionMethod={executionMethod}
       onConnectWallet={() => {
         openConnectModal?.()
       }}
