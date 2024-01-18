@@ -1,4 +1,9 @@
-import { useCollections, useTokens } from '@reservoir0x/reservoir-kit-ui'
+import {
+  Marketplace,
+  useCollections,
+  useMarketplaceConfigs,
+  useTokens,
+} from '@reservoir0x/reservoir-kit-ui'
 import { Anchor, Button, Flex, Text, Tooltip } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useRef, useState, useMemo } from 'react'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -38,6 +43,27 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
     ) || DefaultChain
 
   let chainName = collectionChain?.name
+
+  const { data: marketplaceConfigs } = useMarketplaceConfigs(
+    collection?.id,
+    collection?.chainId,
+    { tokenId: token?.token?.tokenId },
+    collection?.royalties?.bps === undefined
+  )
+
+  const reservoirMarketplace = useMemo(
+    () =>
+      marketplaceConfigs?.marketplaces?.find(
+        (marketplace) => marketplace?.orderbook === 'reservoir'
+      ),
+    [marketplaceConfigs]
+  )
+
+  let creatorRoyalties = collection?.royalties?.bps
+    ? collection?.royalties?.bps * 0.01
+    : reservoirMarketplace?.royalties?.maxBps
+    ? reservoirMarketplace?.royalties?.maxBps * 0.01
+    : 0
 
   const hasSecurityConfig =
     typeof collection?.securityConfig?.transferSecurityLevel === 'number'
@@ -278,12 +304,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 </Text>
               </Tooltip>
             </Flex>
-            <Text style="subtitle1">
-              {collection?.royalties?.bps
-                ? collection?.royalties?.bps * 0.01
-                : 0}
-              %
-            </Text>
+            <Text style="subtitle1">{creatorRoyalties}%</Text>
           </Flex>
         </Flex>
       </Flex>
