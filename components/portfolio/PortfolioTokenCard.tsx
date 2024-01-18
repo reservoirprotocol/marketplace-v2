@@ -99,8 +99,11 @@ export default ({
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
 
   const is1155 = token?.token?.kind === 'erc1155'
+  const isBelowSolverCapacity =
+    BigInt(token?.ownership?.floorAsk?.price?.amount?.raw || 0) <
+    25000000000000000000n
   const isBlurSource = token?.ownership?.floorAsk?.source?.name === 'Blur'
-  const intentFillingEnabled = !is1155 && isBlurSource
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
 
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]

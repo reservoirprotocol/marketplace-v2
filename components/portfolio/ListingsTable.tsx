@@ -120,9 +120,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
   const isOracleOrder = listing?.isNativeOffChainCancellable
 
   const is1155 = listing?.contractKind === 'erc1155'
+  const isBelowSolverCapacity =
+    BigInt(listing?.price?.amount?.raw || 0) < 25000000000000000000n
   const isBlurSource = listing?.source?.['name'] === 'Blur'
 
-  const intentFillingEnabled = !is1155 && isBlurSource
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
 
   let criteriaData = listing?.criteria?.data
 

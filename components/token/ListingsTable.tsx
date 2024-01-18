@@ -171,8 +171,10 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
     listingSourceDomain || listingSourceName
   }/logo/v2`
 
+  const isBelowSolverCapacity =
+    BigInt(listing?.price?.amount?.raw || 0) < 25000000000000000000n
   const isBlurSource = listingSourceName === 'Blur'
-  const intentFillingEnabled = !is1155 && isBlurSource
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
 
   return (
     <TableRow

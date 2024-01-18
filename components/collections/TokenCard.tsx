@@ -56,7 +56,10 @@ export default ({
   const is1155 = token?.token?.kind === 'erc1155'
 
   const isBlurSource = token?.market?.floorAsk?.source?.name === 'Blur'
-  const intentFillingEnabled = !is1155 && isBlurSource
+  const isBelowSolverCapacity =
+    BigInt(token?.market?.floorAsk?.price?.amount?.raw || 0) <
+    25000000000000000000n
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
 
   return (
     <Box
