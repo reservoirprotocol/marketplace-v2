@@ -59,7 +59,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
   const isSmallDevice = useMediaQuery({ query: '(max-width: 800px)' })
 
   const [tab, setTab] = useState<TabValue>('collections')
-  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('1d')
+  const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('24h')
 
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
 
@@ -125,7 +125,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
+  >['volumeKey'] = '1day'
 
   switch (sortByTime) {
     case '30d':
@@ -134,7 +134,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
     case '7d':
       volumeKey = '7day'
       break
-    case '1d':
+    case '24h':
       volumeKey = '1day'
       break
   }
@@ -170,7 +170,6 @@ const Home: NextPage<Props> = ({ ssr }) => {
             <Text style="h4" as="h4">
               Featured
             </Text>
-            <ChainToggle />
           </Flex>
           <Box
             css={{
@@ -228,13 +227,20 @@ const Home: NextPage<Props> = ({ ssr }) => {
               }}
             >
               <Flex align="center" css={{ gap: '$4' }}>
-                <CollectionsTimeDropdown
-                  compact={isSmallDevice && isMounted}
-                  option={sortByTime}
-                  onOptionSelected={(option) => {
-                    setSortByTime(option)
-                  }}
-                />
+                {tab === 'collections' ? (
+                  <CollectionsTimeDropdown
+                    compact={isSmallDevice && isMounted}
+                    option={sortByTime}
+                    onOptionSelected={(option) => {
+                      setSortByTime(option)
+                    }}
+                  />
+                ) : (
+                  <MintsPeriodDropdown
+                    option={sortByPeriod}
+                    onOptionSelected={setSortByPeriod}
+                  />
+                )}
                 <ChainToggle />
               </Flex>
             </Flex>

@@ -171,6 +171,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
     listingSourceDomain || listingSourceName
   }/logo/v2`
 
+  const isBelowSolverCapacity =
+    BigInt(listing?.price?.amount?.raw || 0) < 25000000000000000000n
+  const isBlurSource = listingSourceName === 'Blur'
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
+
   return (
     <TableRow
       css={{
@@ -249,8 +254,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
           {!isOwner && !is1155 ? (
             <BuyNow
               tokenId={listing.criteria?.data?.token?.tokenId || tokenId}
-              collectionId={listing.criteria?.data?.collection?.id || contract}
+              contract={contract}
               orderId={listing.id}
+              executionMethod={intentFillingEnabled ? 'intent' : undefined}
               buttonChildren="Buy"
               buttonCss={{ fontSize: 14, px: '$4', py: '$2', minHeight: 36 }}
               mutate={mutate}

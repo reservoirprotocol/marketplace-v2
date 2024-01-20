@@ -15,11 +15,13 @@ import { useMarketplaceChain } from 'hooks'
 import { ReferralContext } from '../../context/ReferralContextProvider'
 import { useWalletClient } from 'wagmi'
 import { adaptPrivyWallet } from 'utils/privyAdapter'
+import { BuyTokenBodyParameters } from '@reservoir0x/reservoir-sdk'
 
 type Props = {
   tokenId?: string
-  collectionId?: string
+  contract?: string
   orderId?: string
+  executionMethod?: BuyTokenBodyParameters['executionMethod']
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
   buttonChildren?: ReactNode
@@ -29,8 +31,9 @@ type Props = {
 
 const BuyNow: FC<Props> = ({
   tokenId,
-  collectionId,
+  contract,
   orderId = undefined,
+  executionMethod,
   mutate,
   buttonCss,
   buttonProps = {},
@@ -54,10 +57,10 @@ const BuyNow: FC<Props> = ({
           {buttonChildren}
         </Button>
       }
-      tokenId={tokenId}
-      collectionId={collectionId}
+      token={`${contract}:${tokenId}`}
       orderId={orderId}
       openState={openState}
+      executionMethod={executionMethod}
       onConnectWallet={() => {
         login?.()
       }}

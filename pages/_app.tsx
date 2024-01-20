@@ -48,7 +48,14 @@ const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 
+<<<<<<< HEAD
 const configureChainsConfig = configureChains(supportedChains, [
+=======
+const DISABLE_PROXY =
+  process.env.NEXT_PUBLIC_DISABLE_PROXY === 'true' ? true : false
+
+const { chains, publicClient } = configureChains(supportedChains, [
+>>>>>>> 735b04803c5e8bb37a7e9e139a8bb4a61e23e312
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
@@ -159,12 +166,14 @@ function MyApp({
                 name,
                 checkPollingInterval,
               }) => {
+                let proxy = !DISABLE_PROXY && proxyApi ? proxyApi : null
                 return {
                   id,
                   name,
-                  baseApiUrl: proxyApi
+                  baseApiUrl: proxy
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,
+                  proxyApi: proxy,
                   active: marketplaceChain.id === id,
                   checkPollingInterval: checkPollingInterval,
                   paymentTokens: chainPaymentTokensMap[id],
@@ -176,8 +185,7 @@ function MyApp({
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            // marketplaceFee: 250,
-            // marketplaceFeeRecipient: "0xabc"
+            marketplaceFees: ['0x03508bB71268BBA25ECaCC8F620e01866650532c:250'],
           }}
           theme={reservoirKitTheme}
         >
@@ -201,9 +209,8 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   const appProps = await NextApp.getInitialProps(appContext)
   let baseUrl = ''
 
-  if (appContext.ctx.req?.headers.host) {
-    const host = appContext.ctx.req?.headers.host
-    baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
+  if (process.env.NEXT_PUBLIC_PROXY_URL) {
+    baseUrl = process.env.NEXT_PUBLIC_PROXY_URL
   } else if (process.env.NEXT_PUBLIC_HOST_URL) {
     baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }

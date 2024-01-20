@@ -86,7 +86,7 @@ export default ({
 
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
-  const mediaType = extractMediaType(dynamicToken?.token)
+  const mediaType = extractMediaType(dynamicToken?.token?.media)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
@@ -97,6 +97,13 @@ export default ({
 
   const isOracleOrder =
     token?.ownership?.floorAsk?.rawData?.isNativeOffChainCancellable
+
+  const is1155 = token?.token?.kind === 'erc1155'
+  const isBelowSolverCapacity =
+    BigInt(token?.ownership?.floorAsk?.price?.amount?.raw || 0) <
+    25000000000000000000n
+  const isBlurSource = token?.ownership?.floorAsk?.source?.name === 'Blur'
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
 
   const contract = token.token?.collection?.id
     ? token.token?.collection.id?.split(':')[0]
@@ -339,7 +346,7 @@ export default ({
                     height: 20,
                     borderRadius: '50%',
                   }}
-                  src={`${proxyApi}/redirect/sources/${token?.ownership?.floorAsk?.source?.domain}/logo/v2`}
+                  src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.ownership?.floorAsk?.source?.domain}/logo/v2`}
                 />
               )}
             </>
@@ -376,7 +383,8 @@ export default ({
         >
           <BuyNow
             tokenId={token.token?.tokenId}
-            collectionId={token.token?.collection?.id}
+            contract={token.token?.contract}
+            executionMethod={intentFillingEnabled ? 'intent' : undefined}
             mutate={mutate}
             buttonCss={{
               justifyContent: 'center',
@@ -470,7 +478,7 @@ export default ({
                 }
                 setIsRefreshing(true)
                 fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
+                  `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/tokens/refresh/v1`,
                   undefined,
                   {
                     method: 'POST',

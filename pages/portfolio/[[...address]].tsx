@@ -85,6 +85,7 @@ const IndexPage: NextPage = () => {
   let collectionQuery: Parameters<typeof useUserCollections>['1'] = {
     limit: 100,
     excludeSpam: hideSpam,
+    sortBy: 'totalValue',
   }
 
   const { chain } = useContext(ChainContext)

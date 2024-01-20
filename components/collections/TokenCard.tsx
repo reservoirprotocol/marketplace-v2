@@ -14,7 +14,6 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
-import { formatUnits } from 'viem'
 import { Address } from 'wagmi'
 
 type TokenCardProps = {
@@ -43,7 +42,7 @@ export default ({
   showSource = true,
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
-  const mediaType = extractMediaType(token?.token)
+  const mediaType = extractMediaType(token?.token?.media)
   const showMedia =
     mediaType === 'mp4' ||
     mediaType === 'mp3' ||
@@ -55,6 +54,12 @@ export default ({
   const isOwner = token?.token?.owner?.toLowerCase() !== address?.toLowerCase()
 
   const is1155 = token?.token?.kind === 'erc1155'
+
+  const isBlurSource = token?.market?.floorAsk?.source?.name === 'Blur'
+  const isBelowSolverCapacity =
+    BigInt(token?.market?.floorAsk?.price?.amount?.raw || 0) <
+    25000000000000000000n
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
 
   return (
     <Box
@@ -293,10 +298,10 @@ export default ({
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    const url = `${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
+                    const url = `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
                     window.open(url, '_blank')
                   }}
-                  src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
+                  src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
                 />
               ) : null}
             </Flex>
@@ -333,7 +338,8 @@ export default ({
         >
           <BuyNow
             tokenId={token.token?.tokenId}
-            collectionId={token.token?.collection?.id}
+            contract={token.token?.contract}
+            executionMethod={intentFillingEnabled ? 'intent' : undefined}
             mutate={mutate}
             buttonCss={{
               justifyContent: 'center',
