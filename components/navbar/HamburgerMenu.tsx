@@ -17,9 +17,11 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver, useMarketplaceChain } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import Wallet from 'components/navbar/Wallet'
+import { usePrivy } from '@privy-io/react-auth'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
+  const { logout, ready, authenticated } = usePrivy()
   const {
     avatar: ensAvatar,
     shortAddress,
@@ -87,7 +89,7 @@ const HamburgerMenu = () => {
             </Flex>
           </RadixDialog.Close>
         </Flex>
-        {isConnected ? (
+        {isConnected && ready && authenticated && address ? (
           <Flex
             css={{
               flexDirection: 'column',
@@ -162,7 +164,6 @@ const HamburgerMenu = () => {
               </Text>
             </Link>
 
-
             <Anchor
               href="https://docs.reservoir.tools/docs"
               target="_blank"
@@ -201,7 +202,10 @@ const HamburgerMenu = () => {
                 alignItems: 'center',
                 borderBottom: '1px solid $gray4',
               }}
-              onClick={() => disconnect()}
+              onClick={() => {
+                logout()
+                disconnect()
+              }}
             >
               <Text
                 style="subtitle1"

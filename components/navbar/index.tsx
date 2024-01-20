@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import { Box, Flex, Card } from '../primitives'
+import { useEffect, useRef } from 'react'
+import { Box, Flex, Card, Button } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -19,6 +19,7 @@ import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
 import * as HoverCard from '@radix-ui/react-hover-card'
 import { usePrivyWagmi } from '@privy-io/wagmi-connector'
+import { usePrivy } from '@privy-io/react-auth'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -28,6 +29,7 @@ const Navbar = () => {
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
   const { isConnected, address: wagmiAddress } = useAccount()
+  const { ready, authenticated } = usePrivy()
   const { wallet } = usePrivyWagmi()
   const address = wallet ? (wallet?.address as Address) : wagmiAddress
 
@@ -237,8 +239,7 @@ const Navbar = () => {
               </Link>
             ))}
         </Flex>
-
-        {isConnected && address ? (
+        {isConnected && ready && authenticated && address ? (
           <AccountSidebar address={address} />
         ) : (
           <Box css={{ maxWidth: '185px' }}>

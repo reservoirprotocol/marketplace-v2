@@ -48,14 +48,10 @@ const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
 const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 
-<<<<<<< HEAD
-const configureChainsConfig = configureChains(supportedChains, [
-=======
 const DISABLE_PROXY =
   process.env.NEXT_PUBLIC_DISABLE_PROXY === 'true' ? true : false
 
-const { chains, publicClient } = configureChains(supportedChains, [
->>>>>>> 735b04803c5e8bb37a7e9e139a8bb4a61e23e312
+const configureChainsConfig = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
