@@ -4,7 +4,7 @@ import AnalyticsProvider, {
 initializeAnalytics()
 import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 
-import { Inter } from '@next/font/google'
+import { Inter } from "next/font/google"
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
@@ -51,6 +51,9 @@ export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
 
 const WALLET_CONNECT_PROJECT_ID =
   process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+
+const DISABLE_PROXY =
+  process.env.NEXT_PUBLIC_DISABLE_PROXY === 'true' ? true : false
 
 const { chains, publicClient } = configureChains(supportedChains, [
   alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
@@ -177,12 +180,14 @@ function MyApp({
                 name,
                 checkPollingInterval,
               }) => {
+                let proxy = !DISABLE_PROXY && proxyApi ? proxyApi : null
                 return {
                   id,
                   name,
-                  baseApiUrl: proxyApi
+                  baseApiUrl: proxy
                     ? `${baseUrl}${proxyApi}`
                     : reservoirBaseUrl,
+                  proxyApi: proxy,
                   active: marketplaceChain.id === id,
                   checkPollingInterval: checkPollingInterval,
                   paymentTokens: chainPaymentTokensMap[id],
@@ -224,9 +229,8 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   const appProps = await NextApp.getInitialProps(appContext)
   let baseUrl = ''
 
-  if (appContext.ctx.req?.headers.host) {
-    const host = appContext.ctx.req?.headers.host
-    baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
+  if (process.env.NEXT_PUBLIC_PROXY_URL) {
+    baseUrl = process.env.NEXT_PUBLIC_PROXY_URL
   } else if (process.env.NEXT_PUBLIC_HOST_URL) {
     baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }

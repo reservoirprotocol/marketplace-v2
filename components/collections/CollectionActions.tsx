@@ -110,7 +110,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
         }
         setIsRefreshing(true)
         fetcher(
-          `${window.location.origin}/${marketplaceChain.proxyApi}/collections/refresh/v2`,
+          `${process.env.NEXT_PUBLIC_PROXY_URL}${marketplaceChain.proxyApi}/collections/refresh/v2`,
           undefined,
           {
             method: 'POST',

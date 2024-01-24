@@ -75,6 +75,7 @@ export const CollectionRankingsTable: FC<Props> = ({
                 Collection
               </Text>
               <Text style="subtitle3" color="subtle">
+                {`${volumeKey.replace('day', 'D')} `}
                 Volume
               </Text>
             </Flex>
@@ -178,7 +179,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             />
             {volumeKey !== 'allTime' && (
               <PercentChange
-                value={collection?.collectionVolume?.[volumeKey]}
+                value={collection?.volumeChange?.[volumeKey]}
                 decimals={1}
               />
             )}
