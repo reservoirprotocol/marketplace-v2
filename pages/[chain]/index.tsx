@@ -314,7 +314,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
-  const chain =
+  const { proxyApi } =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
@@ -332,7 +332,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const trendingCollectionsPromise = fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending/v1`,
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending/v1`,
     trendingCollectionsQuery,
     headers
   )
@@ -345,7 +345,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const featuredCollectionsPromise = fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending/v1`,
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending/v1`,
     featuredCollectionQuery,
     headers
   )
@@ -358,7 +358,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const trendingMintsPromise = fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending-mints/v1`,
     trendingMintsQuery,
     headers
   )

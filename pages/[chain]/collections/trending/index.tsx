@@ -167,7 +167,7 @@ export const getServerSideProps: GetServerSideProps<{
     query.community = chain.community
   }
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/v7`,
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${chain.proxyApi}/collections/v7`,
     query,
     {
       headers: {
