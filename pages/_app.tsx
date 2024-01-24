@@ -4,7 +4,7 @@ import AnalyticsProvider, {
 initializeAnalytics()
 import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 
-import { Inter } from '@next/font/google'
+import { Inter } from "next/font/google"
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
