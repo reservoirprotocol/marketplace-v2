@@ -146,7 +146,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
   mutate,
 }) => {
   const { displayName: fromDisplayName } = useENSResolver(offer.maker)
-  const { reservoirBaseUrl } = useMarketplaceChain()
+  const { proxyApi } = useMarketplaceChain()
   const expiration = useTimeSince(offer?.expiration)
   const expirationText = expiration ? `Expires ${expiration}` : null
 
@@ -158,9 +158,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({
 
   const offerSourceName = offer?.source?.name
   const offerSourceDomain = offer?.source?.domain
-  const offerSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
-    offerSourceDomain || offerSourceName
-  }/logo/v2`
+  const offerSourceLogo = `${
+    process.env.NEXT_PUBLIC_PROXY_URL
+  }${proxyApi}/redirect/sources/${offerSourceDomain || offerSourceName}/logo/v2`
 
   return (
     <TableRow

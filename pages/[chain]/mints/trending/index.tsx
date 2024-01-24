@@ -148,14 +148,14 @@ export const getServerSideProps: GetServerSideProps<{
 
   const chainPrefix = params?.chain || ''
 
-  const chain =
+  const { proxyApi } =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
   const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
 
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending-mints/v1`,
     query,
     {
       headers: {

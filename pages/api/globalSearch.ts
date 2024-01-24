@@ -67,7 +67,7 @@ export default async function handler(req: Request) {
 }
 
 async function searchSingleChain(chain: ReservoirChain, query: string) {
-  const { reservoirBaseUrl, collectionSetId, community } = chain
+  const { collectionSetId, community, proxyApi } = chain
   const headers = {
     headers: {
       'x-api-key': process.env.RESERVOIR_API_KEY || '',
@@ -88,7 +88,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
   }
 
   const promise = fetcher(
-    `${reservoirBaseUrl}/search/collections/v1`,
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/search/collections/v1`,
     queryData,
     headers
   )
@@ -99,7 +99,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
 
   if (isAddress) {
     const { data } = await fetcher(
-      `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7?contract=${query}&limit=6`,
       {},
       headers
     )
@@ -207,7 +207,7 @@ async function searchAllChains(query: string) {
     }
 
   supportedChains.forEach(async (chain) => {
-    const { reservoirBaseUrl, collectionSetId, community } = chain
+    const { collectionSetId, community, proxyApi } = chain
     const headers = {
       headers: {
         'x-api-key': process.env.RESERVOIR_API_KEY || '',
@@ -222,7 +222,7 @@ async function searchAllChains(query: string) {
     }
 
     const promise = fetcher(
-      `${reservoirBaseUrl}/search/collections/v1`,
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/search/collections/v1`,
       query,
       headers
     )
@@ -234,14 +234,14 @@ async function searchAllChains(query: string) {
 
   if (isAddress) {
     const promises = supportedChains.map(async (chain) => {
-      const { reservoirBaseUrl } = chain
+      const { proxyApi } = chain
       const headers = {
         headers: {
           'x-api-key': process.env.RESERVOIR_API_KEY || '',
         },
       }
       const { data } = await fetcher(
-        `${reservoirBaseUrl}collections/v7?contract=${query}&limit=6`,
+        `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7?contract=${query}&limit=6`,
         {},
         headers
       )
