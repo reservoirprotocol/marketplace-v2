@@ -67,7 +67,7 @@ export default async function handler(req: Request) {
 }
 
 async function searchSingleChain(chain: ReservoirChain, query: string) {
-  const { collectionSetId, community, proxyApi } = chain
+  const { collectionSetId, community, reservoirBaseUrl } = chain
   const headers = {
     headers: {
       'x-api-key': process.env.RESERVOIR_API_KEY || '',
@@ -86,9 +86,8 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
   } else if (community) {
     queryData.community = community
   }
-
   const promise = fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/search/collections/v1`,
+    `${reservoirBaseUrl}/search/collections/v1`,
     queryData,
     headers
   )
@@ -99,7 +98,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
 
   if (isAddress) {
     const { data } = await fetcher(
-      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7?contract=${query}&limit=6`,
+      `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
       {},
       headers
     )
@@ -207,7 +206,7 @@ async function searchAllChains(query: string) {
     }
 
   supportedChains.forEach(async (chain) => {
-    const { collectionSetId, community, proxyApi } = chain
+    const { collectionSetId, community, reservoirBaseUrl } = chain
     const headers = {
       headers: {
         'x-api-key': process.env.RESERVOIR_API_KEY || '',
@@ -222,7 +221,7 @@ async function searchAllChains(query: string) {
     }
 
     const promise = fetcher(
-      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/search/collections/v1`,
+      `${reservoirBaseUrl}/search/collections/v1`,
       query,
       headers
     )
@@ -234,14 +233,14 @@ async function searchAllChains(query: string) {
 
   if (isAddress) {
     const promises = supportedChains.map(async (chain) => {
-      const { proxyApi } = chain
+      const { reservoirBaseUrl } = chain
       const headers = {
         headers: {
           'x-api-key': process.env.RESERVOIR_API_KEY || '',
         },
       }
       const { data } = await fetcher(
-        `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7?contract=${query}&limit=6`,
+        `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
         {},
         headers
       )
