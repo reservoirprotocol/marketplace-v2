@@ -1,7 +1,7 @@
-import { ReservoirChain, paths } from '@reservoir0x/reservoir-sdk'
-import useMarketplaceChain from 'hooks/useMarketplaceChain'
+import { paths } from '@reservoir0x/reservoir-sdk'
 import { useMemo } from 'react'
 import useSWR from 'swr/immutable'
+import useMarketplaceChain from './useMarketplaceChain'
 import { setParams } from '@reservoir0x/reservoir-sdk'
 
 type MarketplaceConfigurationsResponse =
@@ -27,20 +27,14 @@ const fetcher = async (urls: string[]) => {
   )
 }
 
-export default function (
-  tokens: string[],
-  chain?: ReservoirChain | null | undefined,
-  enabled: boolean = true
-) {
-  const marketplaceChain = useMarketplaceChain()
+export default function (tokens: string[], enabled: boolean = true) {
+  const { proxyApi } = useMarketplaceChain()
   const urls = tokens.map((id) => {
     const pieces = id.split(':')
     const tokenId = pieces[pieces.length - 1]
     const collectionId = pieces.slice(0, -1).join(':')
     let url = new URL(
-      `${
-        chain?.baseApiUrl || marketplaceChain.reservoirBaseUrl
-      }/collections/${collectionId}/marketplace-configurations/v1`
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/${collectionId}/marketplace-configurations/v1`
     )
     setParams(url, {
       tokenId,
