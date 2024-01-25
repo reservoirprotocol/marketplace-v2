@@ -3,7 +3,6 @@ import { WebsocketContext } from 'context/WebsocketContextProvider'
 import useChainWebsocket from 'hooks/useChainWebsocket'
 import { useContext, useEffect } from 'react'
 import { Options } from 'react-use-websocket'
-import { JsonObject } from 'react-use-websocket/dist/lib/types'
 import chains, { DefaultChain } from 'utils/chains'
 import validateEvent from 'utils/validateEvent'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
@@ -74,11 +73,11 @@ export default (contract: string, chainId?: number, options: Options = {}) => {
       },
     ]
 
-    const sendSubscribeMessages = (message: JsonObject) => {
+    const sendSubscribeMessages = (message: any) => {
       websocket.sendJsonMessage(message)
     }
 
-    const sendUnsubscribeMessages = (message: JsonObject) => {
+    const sendUnsubscribeMessages = (message: any) => {
       websocket.sendJsonMessage(message)
     }
 

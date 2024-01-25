@@ -2,6 +2,7 @@ import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import useSWR, { SWRConfiguration } from 'swr'
 import { setParams } from '@reservoir0x/reservoir-sdk'
+import useMarketplaceChain from './useMarketplaceChain'
 
 export type TopSellingCollectionv2Data = {
   collections: NonNullable<
@@ -9,18 +10,13 @@ export type TopSellingCollectionv2Data = {
   >
 }
 
-export default function (
-  options?: any,
-  swrOptions: SWRConfiguration = {},
-  chainId?: number
-) {
+export default function (options?: any, swrOptions: SWRConfiguration = {}) {
   const client = useReservoirClient()
-  const chain =
-    chainId !== undefined
-      ? client?.chains.find((chain) => chain.id === chainId)
-      : client?.currentChain()
+  const { proxyApi } = useMarketplaceChain()
 
-  const path = new URL(`${chain?.baseApiUrl}/collections/top-selling/v2`)
+  const path = new URL(
+    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/top-selling/v2`
+  )
 
   if (options) {
     setParams(path, options)
