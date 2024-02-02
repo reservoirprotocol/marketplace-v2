@@ -615,7 +615,7 @@ export const getServerSideProps: GetServerSideProps<{
   const assetId = params?.assetId ? params.assetId.toString().split(':') : []
   let collectionId = assetId[0]
   const id = assetId[1]
-  const { proxyApi } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
 
@@ -640,7 +640,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   try {
     const tokensPromise = fetcher(
-      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/tokens/v6`,
+      `${reservoirBaseUrl}/tokens/v6`,
       tokensQuery,
       headers
     )
@@ -657,7 +657,7 @@ export const getServerSideProps: GetServerSideProps<{
       }
 
     const collectionsPromise = fetcher(
-      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7`,
+      `${reservoirBaseUrl}/collections/v7`,
       collectionQuery,
       headers
     )
@@ -671,7 +671,9 @@ export const getServerSideProps: GetServerSideProps<{
       'Cache-Control',
       'public, s-maxage=30, stale-while-revalidate=60'
     )
-  } catch (e) {}
+  } catch (e) {
+    console.log(e)
+  }
 
   return {
     props: {

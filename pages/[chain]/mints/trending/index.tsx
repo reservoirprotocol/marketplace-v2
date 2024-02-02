@@ -142,20 +142,21 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async ({ res, params }) => {
   const mintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
     {
+      limit: 20,
       period: '24h',
-      limit: 50,
+      type: 'any',
     }
 
   const chainPrefix = params?.chain || ''
 
-  const { proxyApi } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
   const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
 
   const response = await fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending-mints/v1`,
+    `${reservoirBaseUrl}/collections/trending-mints/v1`,
     query,
     {
       headers: {
