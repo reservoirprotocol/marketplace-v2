@@ -921,7 +921,7 @@ export const getServerSideProps: GetServerSideProps<{
   id: string | undefined
 }> = async ({ params, res }) => {
   const id = params?.contract?.toString()
-  const { proxyApi } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => params?.chain === chain.routePrefix) ||
     DefaultChain
   const headers: RequestInit = {
@@ -938,7 +938,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const collectionsPromise = fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/v7`,
+    `${reservoirBaseUrl}/collections/v7`,
     collectionQuery,
     headers
   )
@@ -956,7 +956,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   const tokensPromise = fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/tokens/v6`,
+    `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
     headers
   )
