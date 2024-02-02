@@ -370,7 +370,7 @@ export const getServerSideProps: GetServerSideProps<{
   ]).catch((e) => {
     console.error(e)
   })
-  console.log(promises)
+
   const trendingCollections: Props['ssr']['trendingCollections'] =
     promises?.[0].status === 'fulfilled' && promises[0].value.data
       ? (promises[0].value.data as Props['ssr']['trendingCollections'])
