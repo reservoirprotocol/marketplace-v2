@@ -58,7 +58,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery,
     chain.id,
     {
-      fallbackData: [ssr.collection],
+      fallbackData: [ssr.collections],
     }
   )
 
@@ -142,32 +142,28 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
-type CollectionSchema =
-  paths['/collections/v7']['get']['responses']['200']['schema']
+type TrendingCollectionsResponse =
+  paths['/collections/trending/v1']['get']['responses']['200']['schema']
 
 export const getServerSideProps: GetServerSideProps<{
   ssr: {
-    collection: CollectionSchema
+    collections: TrendingCollectionsResponse
   }
 }> = async ({ res, params }) => {
-  const collectionQuery: paths['/collections/v7']['get']['parameters']['query'] =
+  let collectionQuery: paths['/collections/trending/v1']['get']['parameters']['query'] =
     {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 20,
+      limit: 1000,
+      period: '24h',
     }
+
   const chainPrefix = params?.chain || ''
   const chain =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
   const query = { ...collectionQuery }
-  if (chain.collectionSetId) {
-    query.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    query.community = chain.community
-  }
+
   const response = await fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${chain.proxyApi}/collections/v7`,
+    `${chain.reservoirBaseUrl}/collections/trending/v1`,
     query,
     {
       headers: {
@@ -182,7 +178,7 @@ export const getServerSideProps: GetServerSideProps<{
   )
 
   return {
-    props: { ssr: { collection: response.data } },
+    props: { ssr: { collections: response.data } },
   }
 }
 
