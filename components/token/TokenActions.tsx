@@ -46,6 +46,12 @@ export const TokenActions: FC<Props> = ({
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
   const is1155 = token?.token?.kind === 'erc1155'
 
+  const isBelowSolverCapacity =
+    BigInt(token?.market?.floorAsk?.price?.amount?.raw || 0) <
+    25000000000000000000n
+  const isBlurSource = token?.market?.floorAsk?.source?.name === 'Blur'
+  const intentFillingEnabled = !is1155 && isBlurSource && isBelowSolverCapacity
+
   const showAcceptOffer =
     !is1155 &&
     token?.market?.topBid?.id !== null &&
@@ -125,6 +131,7 @@ export const TokenActions: FC<Props> = ({
             <BuyNow
               tokenId={token.token?.tokenId}
               contract={token.token?.contract}
+              executionMethod={intentFillingEnabled ? 'intent' : undefined}
               buttonCss={{ flex: 1, justifyContent: 'center' }}
               buttonProps={{ corners: 'square' }}
               buttonChildren="Buy Now"

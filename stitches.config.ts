@@ -21,7 +21,7 @@ import {
 import { createStitches } from '@stitches/react'
 import type * as Stitches from '@stitches/react'
 import { reset } from 'utils/css/reset'
-import { Inter } from '@next/font/google'
+import { Inter } from "next/font/google"
 
 const inter = Inter({
   subsets: ['latin'],
