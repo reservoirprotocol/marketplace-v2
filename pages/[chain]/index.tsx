@@ -314,7 +314,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
-  const { proxyApi } =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
@@ -332,7 +332,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const trendingCollectionsPromise = fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending/v1`,
+    `${reservoirBaseUrl}/collections/trending/v1`,
     trendingCollectionsQuery,
     headers
   )
@@ -345,7 +345,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const featuredCollectionsPromise = fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending/v1`,
+    `${reservoirBaseUrl}/collections/trending/v1`,
     featuredCollectionQuery,
     headers
   )
@@ -358,7 +358,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const trendingMintsPromise = fetcher(
-    `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/trending-mints/v1`,
+    `${reservoirBaseUrl}/collections/trending-mints/v1`,
     trendingMintsQuery,
     headers
   )
@@ -370,6 +370,7 @@ export const getServerSideProps: GetServerSideProps<{
   ]).catch((e) => {
     console.error(e)
   })
+  console.log(promises)
   const trendingCollections: Props['ssr']['trendingCollections'] =
     promises?.[0].status === 'fulfilled' && promises[0].value.data
       ? (promises[0].value.data as Props['ssr']['trendingCollections'])
