@@ -1570,10 +1570,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@1.25.1":
-  version "1.25.1"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-1.25.1.tgz#da7f3b8a7368a62a6c56920899b8cc8bab942d53"
-  integrity sha512-a1jKAZ/wSxpwGXJvJMzERqqRZRtxzV4JhA8MnRAZO2a8eJ+OMM4/X29HnJ3Fyn/h4vcU4nQi2HOv42YzKvQ4og==
+"@reservoir0x/reservoir-kit-ui@1.25.4":
+  version "1.25.4"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-1.25.4.tgz#c73fc62875aa2dc16a9d42b681122208c4a148b0"
+  integrity sha512-fjG8pz7nydUjlNnx8yOcJ19Uzn0AvnR2kbq8LV3d/ZF2kbwjyN/PRtA2TzynZjUKJK7hXis6tMivPGBdCUlxZQ==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
@@ -1589,7 +1589,7 @@
     "@radix-ui/react-toggle-group" "1.0.4"
     "@radix-ui/react-tooltip" "1.0.6"
     "@react-hookz/web" "^19.2.0"
-    "@reservoir0x/reservoir-sdk" "1.12.10"
+    "@reservoir0x/reservoir-sdk" "1.12.12"
     "@stitches/react" "1.3.1-1"
     dayjs "^1.11.4"
     flatpickr "^4.6.13"
@@ -1597,10 +1597,10 @@
     react-flatpickr "^3.10.13"
     swr "2.0.1"
 
-"@reservoir0x/reservoir-sdk@1.12.10":
-  version "1.12.10"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-1.12.10.tgz#fef82bdd086255fee13dff06db9b7a3c002d10f6"
-  integrity sha512-NDXh50hyw6o3pMa9DmHxeXP4AHKKnFiTOs1vl/bqzr3jvbS069/juRNTow8DODMk913UQuPv/6CCyhmRwaSlQQ==
+"@reservoir0x/reservoir-sdk@1.12.12":
+  version "1.12.12"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-1.12.12.tgz#cbd5baf130c39c1856d5380270efbad8500244f8"
+  integrity sha512-azkveLQUESP9H6WlWR2MPbAX8isCK5NY/LKIzf9w7asavzIVPF6LZraKD5J3lgXSBatqemukwWGoz4vhKbREQw==
   dependencies:
     axios "^0.27.2"
 
