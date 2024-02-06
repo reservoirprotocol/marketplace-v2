@@ -6,18 +6,20 @@ export const config = {
   runtime: 'edge',
 }
 
+const loadFont = (font: string): Promise<ArrayBuffer> =>
+  fetch(new URL(`../../../../public/fonts/${font}`, import.meta.url)).then(
+    (res) => res.arrayBuffer()
+  )
+
 export default async function handler(request: NextRequest) {
   const { searchParams } = request.nextUrl
 
   const base64EncodedToken = searchParams.get('token')
 
-  const fontData = await fetch(
-    new URL('../../../../public/fonts/Inter-Black.ttf', import.meta.url)
-  ).then((res) => res.arrayBuffer())
-
-  const fontReguluar = await fetch(
-    new URL('../../../../public/fonts/Inter-Regular.ttf', import.meta.url)
-  ).then((res) => res.arrayBuffer())
+  const [blackFont, regularFont] = await Promise.all([
+    loadFont('Inter-Black.ttf'),
+    loadFont('Inter-Regular.ttf'),
+  ])
 
   if (!base64EncodedToken) {
     return new ImageResponse(
@@ -159,13 +161,13 @@ export default async function handler(request: NextRequest) {
       height: 630,
       fonts: [
         {
-          name: 'Inter',
-          data: fontData,
+          name: 'Black',
+          data: blackFont,
           style: 'normal',
         },
         {
-          name: 'Normal',
-          data: fontReguluar,
+          name: 'Regular',
+          data: regularFont,
           style: 'normal',
         },
       ],
