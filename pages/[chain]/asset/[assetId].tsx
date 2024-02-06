@@ -237,6 +237,12 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         title={pageTitle}
         description={collection?.description as string}
       />
+      <meta
+        name="twitter:image"
+        content={`/api/og/token?token=${encodeURIComponent(
+          base64EncodedToken
+        )}`}
+      />
       <Flex
         justify="center"
         css={{
