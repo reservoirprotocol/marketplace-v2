@@ -49,10 +49,75 @@ export default async function handler(request: NextRequest) {
           width: '100%',
           height: '100%',
           color: 'white',
-          backgroundImage: `url("${process.env.NEXT_PUBLIC_HOST_URL}/og-token.png")`,
-          backgroundSize: 'cover',
         }}
       >
+        <svg
+          style={{
+            position: 'absolute',
+            top: '0',
+            bottom: '0',
+            left: '0',
+            right: '0',
+            zIndex: '-99999',
+          }}
+          xmlns="http://www.w3.org/2000/svg"
+          width="100%"
+          height="100%"
+          viewBox="0 0 2048 1152"
+          fill="none"
+        >
+          <g clip-path="url(#clip0_1207_77)">
+            <rect width="2048" height="1152" fill="black" />
+            <g opacity="0.9" filter="url(#filter0_f_1207_77)">
+              <rect
+                x="-415"
+                y="-249.398"
+                width="2914"
+                height="1639.24"
+                fill="url(#paint0_angular_1207_77)"
+              />
+            </g>
+          </g>
+          <defs>
+            <filter
+              id="filter0_f_1207_77"
+              x="-821.983"
+              y="-656.382"
+              width="3727.97"
+              height="2453.21"
+              filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB"
+            >
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend
+                mode="normal"
+                in="SourceGraphic"
+                in2="BackgroundImageFix"
+                result="shape"
+              />
+              <feGaussianBlur
+                stdDeviation="203.492"
+                result="effect1_foregroundBlur_1207_77"
+              />
+            </filter>
+            <radialGradient
+              id="paint0_angular_1207_77"
+              cx="0"
+              cy="0"
+              r="1"
+              gradientUnits="userSpaceOnUse"
+              gradientTransform="translate(1042 570.221) rotate(107.623) scale(952.739 1693.64)"
+            >
+              <stop stop-color="#C171FF" />
+              <stop offset="0.432292" stop-color="#7000FF" />
+              <stop offset="0.65625" stop-color="#80D8FF" />
+              <stop offset="1" stop-color="#354FFF" />
+            </radialGradient>
+            <clipPath id="clip0_1207_77">
+              <rect width="2048" height="1152" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
         <div
           style={{
             display: 'flex',
