@@ -13,16 +13,10 @@ export default async function handler(request: NextRequest) {
 
   const [blackFont, regularFont] = await Promise.all([
     fetch(
-      new URL(
-        `https://github.com/reservoirprotocol/marketplace-v2/raw/dev/public/fonts/Inter-Black.ttf`,
-        import.meta.url
-      )
+      `https://github.com/reservoirprotocol/marketplace-v2/raw/dev/public/fonts/Inter-Black.ttf`
     ).then((res) => res.arrayBuffer()),
     fetch(
-      new URL(
-        `https://github.com/reservoirprotocol/marketplace-v2/raw/dev/public/fonts/Inter-Regular.ttf`,
-        import.meta.url
-      )
+      `https://github.com/reservoirprotocol/marketplace-v2/raw/dev/public/fonts/Inter-Regular.ttf`
     ).then((res) => res.arrayBuffer()),
   ])
 
