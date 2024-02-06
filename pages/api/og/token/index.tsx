@@ -1,5 +1,5 @@
+import { Token } from '@reservoir0x/reservoir-kit-ui'
 import { ImageResponse } from '@vercel/og'
-import { floor } from 'lodash'
 import { NextRequest } from 'next/server'
 
 export const config = {
@@ -9,15 +9,19 @@ export const config = {
 export default async function handler(request: NextRequest) {
   const { searchParams } = request.nextUrl
 
-  const imageUrl = searchParams.get('imageUrl')
-  const floorPrice = searchParams.get('floorPrice')
+  const base64EncodedToken = searchParams.get('token')
 
-  const tokenId = searchParams.get('tokenId')
-  const collection = searchParams.get('collection')
+  const fontData = await fetch(
+    new URL('../../../../public/fonts/Inter-Black.ttf', import.meta.url)
+  ).then((res) => res.arrayBuffer())
 
-  if (!imageUrl || !tokenId || !collection) {
+  const fontReguluar = await fetch(
+    new URL('../../../../public/fonts/Inter-Regular.ttf', import.meta.url)
+  ).then((res) => res.arrayBuffer())
+
+  if (!base64EncodedToken) {
     return new ImageResponse(
-      <img src="https://explorer.reservoir.tools/og-image.png" />,
+      <img src={`${process.env.NEXT_PUBLIC_HOST_URL}/og-image.png`} />,
       {
         width: 1200,
         height: 630,
@@ -25,114 +29,64 @@ export default async function handler(request: NextRequest) {
     )
   }
 
+  const token = JSON.parse(atob(base64EncodedToken)) as Token
+
   return new ImageResponse(
     (
       <div
         style={{
           display: 'flex',
-          background: '#18181a',
-          width: '100%',
-          color: 'white',
-          height: '100%',
           justifyContent: 'space-around',
           alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          color: 'white',
+          backgroundImage: `url("${process.env.NEXT_PUBLIC_HOST_URL}/og-token.png")`,
+          backgroundSize: 'cover',
         }}
       >
         <div
           style={{
             display: 'flex',
-            position: 'absolute',
-            top: '25',
-            left: '25',
+            justifyContent: 'center',
+            gap: '50px',
+            width: '100%',
+            maxWidth: '525px',
+            height: 'auto',
           }}
         >
           <img
-            height="80"
-            width="72"
-            src="http://localhost:3000/reservoirLogo.svg"
+            src={token.token?.imageSmall as string}
+            alt={token.token?.name}
+            style={{
+              width: '450px',
+              height: '450px',
+              borderRadius: '8px',
+            }}
           />
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            width: '100%',
-            justifyContent: 'center',
-            gap: '100px',
-            maxWidth: '625px',
-            height: '456px',
-            alignContent: 'center',
-          }}
-        >
+
           <div
             style={{
               display: 'flex',
-              borderRadius: '10px',
-              backgroundColor: '#27282d',
-              padding: '25px',
+              flexDirection: 'column',
+              justifyContent: 'center',
             }}
           >
-            <img
-              style={{
-                width: '450px',
-                height: '100%',
-                borderRadius: '8px',
-              }}
-              src={imageUrl}
-            />
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
-              textAlign: 'left',
-              width: '100%',
-              maxWidth: '350px',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                flexGrow: 1,
-                flexBasis: '100%',
-                alignItems: 'center',
-                gap: '10px',
-              }}
-            >
-              <div
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <p
                 style={{
-                  flexGrow: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
+                  margin: '0',
+                  padding: '0',
+                  fontSize: '50px',
+                  fontWeight: '800',
                 }}
               >
-                <p
-                  style={{
-                    margin: '0',
-                    padding: '0',
-                    fontSize: '38px',
-                    fontWeight: '800',
-                  }}
-                >
-                  {collection}
-                </p>
-                <p
-                  style={{
-                    margin: '0',
-                    padding: '0',
-                    fontSize: '36px',
-                    fontWeight: '800',
-                  }}
-                >
-                  #{tokenId}
-                </p>
-              </div>
+                {token.token?.name}
+              </p>
             </div>
             <div
               style={{
-                flexGrow: 1,
+                marginTop: '10px',
                 display: 'flex',
                 flexDirection: 'column',
               }}
@@ -141,12 +95,50 @@ export default async function handler(request: NextRequest) {
                 style={{
                   margin: '0',
                   padding: '0',
-                  fontSize: '32px',
-                  fontWeight: '500',
+                  fontSize: '33px',
+                  fontFamily: 'Normal',
                 }}
               >
                 Floor Price
               </p>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginTop: '5px',
+                  fontSize: '38px',
+                  fontWeight: '800',
+                }}
+              >
+                <img
+                  src="https://explorer.reservoir.tools/icons/currency/no-padding-eth.png"
+                  alt="Currency"
+                  style={{
+                    height: '50px',
+                    width: '35px',
+                    marginRight: '15px',
+                  }}
+                />
+                {token.market?.floorAsk?.price?.amount?.native}{' '}
+                {token.market?.floorAsk?.price?.currency?.symbol?.toUpperCase()}
+              </div>
+            </div>
+            <div
+              style={{
+                marginTop: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+              }}
+            >
+              <img
+                src={token.market?.floorAsk?.source?.icon as string}
+                alt="Market Source"
+                style={{
+                  height: '50px',
+                  width: '50px',
+                }}
+              />
               <p
                 style={{
                   margin: '0',
@@ -155,7 +147,7 @@ export default async function handler(request: NextRequest) {
                   fontWeight: '800',
                 }}
               >
-                {floorPrice}
+                {token.market?.floorAsk?.source?.name}
               </p>
             </div>
           </div>
@@ -165,6 +157,18 @@ export default async function handler(request: NextRequest) {
     {
       width: 1200,
       height: 630,
+      fonts: [
+        {
+          name: 'Inter',
+          data: fontData,
+          style: 'normal',
+        },
+        {
+          name: 'Normal',
+          data: fontReguluar,
+          style: 'normal',
+        },
+      ],
     }
   )
 }
