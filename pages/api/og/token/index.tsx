@@ -1,4 +1,5 @@
 import { ImageResponse } from '@vercel/og'
+import { floor } from 'lodash'
 import { NextRequest } from 'next/server'
 
 export const config = {
@@ -7,12 +8,21 @@ export const config = {
 
 export default async function handler(request: NextRequest) {
   const { searchParams } = request.nextUrl
-  const username = searchParams.get('username')
-  if (!username) {
-    return new ImageResponse(<>Visit with &quot;?username=vercel&quot;</>, {
-      width: 1200,
-      height: 630,
-    })
+
+  const imageUrl = searchParams.get('imageUrl')
+  const floorPrice = searchParams.get('floorPrice')
+
+  const tokenId = searchParams.get('tokenId')
+  const collection = searchParams.get('collection')
+
+  if (!imageUrl || !tokenId || !collection) {
+    return new ImageResponse(
+      <img src="https://explorer.reservoir.tools/og-image.png" />,
+      {
+        width: 1200,
+        height: 630,
+      }
+    )
   }
 
   return new ImageResponse(
@@ -20,8 +30,9 @@ export default async function handler(request: NextRequest) {
       <div
         style={{
           display: 'flex',
-          background: '#FFFFFF',
+          background: '#18181a',
           width: '100%',
+          color: 'white',
           height: '100%',
           justifyContent: 'space-around',
           alignItems: 'center',
@@ -30,21 +41,45 @@ export default async function handler(request: NextRequest) {
         <div
           style={{
             display: 'flex',
+            position: 'absolute',
+            top: '25',
+            left: '25',
+          }}
+        >
+          <img
+            height="80"
+            width="72"
+            src="http://localhost:3000/reservoirLogo.svg"
+          />
+        </div>
+        <div
+          style={{
+            display: 'flex',
             width: '100%',
             justifyContent: 'center',
             gap: '100px',
-            maxWidth: '650px',
+            maxWidth: '625px',
             height: '456px',
             alignContent: 'center',
           }}
         >
-          <img
+          <div
             style={{
-              width: '450px',
-              height: '100%',
+              display: 'flex',
+              borderRadius: '10px',
+              backgroundColor: '#27282d',
+              padding: '25px',
             }}
-            src="https://img.reservoir.tools/images/v2/mainnet/7%2FrdF%2Fe%2F0iXY8HduhRCoIehkmFeXPeOQQFbbmIPfjCbCXKLsuDt18p3OulhLKv8TKaZCI41o2WCoOirix6cHssQr5TqH0O8S4M3MynFOJRr7Hi1wjgLGu8azbkPk7vuTma41f4HVr6Z8EEGAJwY7KVAbKelk1p6F59czib0n2lU%3D.png?width=512"
-          />
+          >
+            <img
+              style={{
+                width: '450px',
+                height: '100%',
+                borderRadius: '8px',
+              }}
+              src={imageUrl}
+            />
+          </div>
           <div
             style={{
               display: 'flex',
@@ -77,21 +112,21 @@ export default async function handler(request: NextRequest) {
                   style={{
                     margin: '0',
                     padding: '0',
-                    fontSize: '14px',
-                    fontWeight: '500',
+                    fontSize: '38px',
+                    fontWeight: '800',
                   }}
                 >
-                  Bored Ape Yacht Club
+                  {collection}
                 </p>
                 <p
                   style={{
                     margin: '0',
                     padding: '0',
-                    fontSize: '24px',
+                    fontSize: '36px',
                     fontWeight: '800',
                   }}
                 >
-                  #1234
+                  #{tokenId}
                 </p>
               </div>
             </div>
@@ -106,7 +141,7 @@ export default async function handler(request: NextRequest) {
                 style={{
                   margin: '0',
                   padding: '0',
-                  fontSize: '14px',
+                  fontSize: '32px',
                   fontWeight: '500',
                 }}
               >
@@ -116,11 +151,11 @@ export default async function handler(request: NextRequest) {
                 style={{
                   margin: '0',
                   padding: '0',
-                  fontSize: '28px',
+                  fontSize: '34px',
                   fontWeight: '800',
                 }}
               >
-                24.488
+                {floorPrice}
               </p>
             </div>
           </div>
