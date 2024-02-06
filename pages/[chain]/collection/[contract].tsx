@@ -353,15 +353,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   let sweepSymbol = collection?.floorAsk?.price?.currency?.symbol
   let topBidPrice = collection?.topBid?.price?.amount?.native
 
-  const encodedImageUrl = collection.image
-    ? encodeURIComponent(collection.image as string)
-    : ''
-
   return (
     <Layout>
       <Head
-        ogImage={`/api/og/collection?imageUrl=${encodedImageUrl}&floorPrice=${collection?.floorAsk?.price?.amount?.decimal}`} //floorPrice=${collection?.floorAsk?.price?.amount?.decimal}&
-        // ogImage={ssr?.collection?.collections?.[0]?.banner}
+        //ogImage={`/api/og/collection?imageUrl=${encodedImageUrl}&floorPrice=${collection?.floorAsk?.price?.amount?.decimal}`} //floorPrice=${collection?.floorAsk?.price?.amount?.decimal}&
+        ogImage={ssr?.collection?.collections?.[0]?.banner}
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
       />
