@@ -6,19 +6,18 @@ export const config = {
   runtime: 'edge',
 }
 
-const loadFont = (font: string): Promise<ArrayBuffer> =>
-  fetch(new URL(`../../../../public/fonts/${font}`, import.meta.url)).then(
-    (res) => res.arrayBuffer()
-  )
-
 export default async function handler(request: NextRequest) {
   const { searchParams } = request.nextUrl
 
   const base64EncodedToken = searchParams.get('token')
 
   const [blackFont, regularFont] = await Promise.all([
-    loadFont('Inter-Black.ttf'),
-    loadFont('Inter-Regular.ttf'),
+    fetch(
+      new URL(`../../../../public/fonts/Inter-Black.ttf`, import.meta.url)
+    ).then((res) => res.arrayBuffer()),
+    fetch(
+      new URL(`../../../../public/fonts/Inter-Regular.ttf`, import.meta.url)
+    ).then((res) => res.arrayBuffer()),
   ])
 
   if (!base64EncodedToken) {
@@ -37,6 +36,7 @@ export default async function handler(request: NextRequest) {
     (
       <div
         style={{
+          opacity: 0.9,
           display: 'flex',
           justifyContent: 'space-around',
           alignItems: 'center',
@@ -98,7 +98,7 @@ export default async function handler(request: NextRequest) {
                   margin: '0',
                   padding: '0',
                   fontSize: '33px',
-                  fontFamily: 'Normal',
+                  fontFamily: 'Regular',
                 }}
               >
                 Floor Price
@@ -121,8 +121,7 @@ export default async function handler(request: NextRequest) {
                     marginRight: '15px',
                   }}
                 />
-                {token.market?.floorAsk?.price?.amount?.native}{' '}
-                {token.market?.floorAsk?.price?.currency?.symbol?.toUpperCase()}
+                {token.market?.floorAsk?.price?.amount?.native}
               </div>
             </div>
             <div
