@@ -229,7 +229,15 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   return (
     <Layout>
       <Head
-        ogImage={token?.token?.image || collection?.banner}
+        ogImage={`/api/og/token?tokenId=${encodeURIComponent(
+          token?.token?.tokenId as string
+        )}&collection=${encodeURIComponent(
+          collection?.name as string
+        )}&imageUrl=${encodeURIComponent(
+          token?.token?.image as string
+        )}&floorPrice=${encodeURIComponent(
+          collection?.floorAsk?.price?.amount?.usd?.toString() as string
+        )}`}
         title={pageTitle}
         description={collection?.description as string}
       />
