@@ -9,9 +9,11 @@ const TESTNET_CHAINS: Chain[] = [
   reservoirChains.sepolia,
   reservoirChains.mumbai,
   reservoirChains.baseGoerli,
+  reservoirChains.baseSepolia,
   reservoirChains.scrollTestnet,
   reservoirChains.zoraTestnet,
   reservoirChains.frameTestnet,
+  reservoirChains.ancient8Testnet,
 ]
 
 const MAINNET_CHAINS: Chain[] = [
@@ -37,20 +39,20 @@ const MAINNET_DEPLOYMENT_URLS = [
 
 const IS_TESTNET_DEPLOYMENT =
   !MAINNET_DEPLOYMENT_URLS.includes(
-    process.env.NEXT_PUBLIC_HOST_URL as string
+    process.env.NEXT_PUBLIC_HOST_URL as string,
   ) && process.env.NEXT_PUBLIC_HOST_URL == 'https://testnets.reservoir.tools'
 
 export default () => {
   const [unsupportedChain, setUnsupportedChain] = useState<Chain | undefined>(
-    undefined
+    undefined,
   )
   const { chain } = useNetwork()
 
   useEffect(() => {
     setUnsupportedChain(
       (IS_TESTNET_DEPLOYMENT ? MAINNET_CHAINS : TESTNET_CHAINS).find(
-        ({ id }) => chain?.id === id
-      )
+        ({ id }) => chain?.id === id,
+      ),
     )
   }, [chain])
   return {

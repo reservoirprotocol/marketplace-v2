@@ -5,6 +5,7 @@ import {
   baseGoerli,
   scrollTestnet,
   zoraTestnet,
+  baseSepolia,
   Chain,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
@@ -135,6 +136,16 @@ export default [
     checkPollingInterval: reservoirChains.baseGoerli.checkPollingInterval,
   },
   {
+    ...baseSepolia,
+    lightIconUrl: '/icons/base-goerli-icon-dark.svg',
+    darkIconUrl: '/icons/base-goerli-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.baseSepolia.baseApiUrl,
+    proxyApi: '/api/reservoir/base-sepolia',
+    routePrefix: 'base-sepolia',
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.baseSepolia.checkPollingInterval,
+  },
+  {
     ...scrollTestnet,
     lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
     darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
@@ -170,5 +181,15 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_FRAME_TESTNET_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_FRAME_TESTNET_COMMUNITY,
     checkPollingInterval: reservoirChains.frameTestnet.checkPollingInterval,
+  },
+  {
+    ...customChains.ancient8Testnet,
+    lightIconUrl: '/icons/ancient8-icon-dark.svg',
+    darkIconUrl: '/icons/ancient8-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.ancient8Testnet.baseApiUrl,
+    proxyApi: '/api/reservoir/ancient8-testnet',
+    routePrefix: 'ancient8-testnet',
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.ancient8Testnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
