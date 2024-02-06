@@ -64,6 +64,7 @@ export type ReservoirChain = Chain & {
   listingCurrencies?: Currency[]
   oracleBidsEnabled?: boolean
   checkPollingInterval?: number
+  paperContractId?: string
 }
 
 const nativeCurrencyBase = {
@@ -112,6 +113,7 @@ export const DefaultChain: ReservoirChain = {
   ],
   oracleBidsEnabled: true,
   checkPollingInterval: reservoirChains.mainnet.checkPollingInterval,
+  paperContractId: process.env.PAPER_ETHEREUM_CONTRACT_ID,
 }
 
 export default [
@@ -126,6 +128,7 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    paperContractId: process.env.PAPER_POLYGON_CONTRACT_ID,
     wssUrl: 'wss://ws-polygon.reservoir.tools',
     listingCurrencies: [
       {

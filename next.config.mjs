@@ -10,6 +10,9 @@ const sentryWebpackPluginOptions = {
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  images: {
+    unoptimized: true,
+  },
   sentry: {
     hideSourceMaps: false,
   },
