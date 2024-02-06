@@ -30,15 +30,13 @@ import BatchListModal from 'components/portfolio/BatchListModal'
 import { useMediaQuery } from 'react-responsive'
 import { BatchListingsTableHeading } from './BatchListingsTableHeading'
 import { BatchListingsTableRow } from './BatchListingsTableRow'
-import useOnChainRoyalties, {
-  OnChainRoyaltyReturnType,
-} from 'hooks/useOnChainRoyalties'
 import { formatUnits } from 'viem'
 import { useMultiMarketplaceConfigs } from '../../hooks'
 import {
   Exchange,
   Marketplace as MarketplaceConfig,
 } from 'hooks/useMultiMarketplaceConfigs'
+import LoadingSpinner from 'components/common/LoadingSpinner'
 
 export type BatchListing = {
   token: UserToken
@@ -78,7 +76,7 @@ const BatchListings: FC<Props> = ({
   setSelectedItems,
   setShowListingPage,
 }) => {
-  const [listings, setListings] = useState<BatchListing[]>([])
+  const [listings, setListings] = useState<BatchListing[] | null>(null)
 
   const [globalPrice, setGlobalPrice] = useState<string>('')
   const [globalExpirationOption, setGlobalExpirationOption] =
@@ -87,8 +85,10 @@ const BatchListings: FC<Props> = ({
   const isLargeDevice = useMediaQuery({ minWidth: 1400 })
 
   const chain = useMarketplaceChain()
-  const { collectionExchanges } = useMultiMarketplaceConfigs(
-    selectedItems.map((item) => item.token?.collection?.id as string)
+  const { tokenExchanges } = useMultiMarketplaceConfigs(
+    selectedItems.map(
+      (item) => `${item.token?.collection?.id}:${item.token?.tokenId}`
+    )
   )
 
   const chainCurrency = useChainCurrency()
@@ -99,53 +99,11 @@ const BatchListings: FC<Props> = ({
   }
   const currencies: ListingCurrencies = chain.listingCurrencies
 
-  const royaltyQuery: NonNullable<
-    Parameters<typeof useOnChainRoyalties>['0']['tokens']
-  > = useMemo(
-    () =>
-      listings
-        .filter((listing) => listing?.token?.token !== undefined)
-        .map((listing) => ({
-          contract: listing.token.token?.contract as string,
-          tokenId: listing.token.token?.tokenId as string,
-        })),
-    [listings]
-  )
-  const { data: onChainRoyalties } = useOnChainRoyalties({
-    tokens: royaltyQuery,
-    chainId: chain.id,
-    enabled: royaltyQuery.length > 0,
-  })
-
-  const onChainRoyaltiesMap = useMemo(
-    () =>
-      onChainRoyalties?.reduce((royalties, royaltyData, i) => {
-        if (
-          royaltyData.status === 'success' &&
-          (royaltyData.result as any)[0] &&
-          (royaltyData.result as any)[1]
-        ) {
-          const royaltyBpsList = (
-            royaltyData.result as OnChainRoyaltyReturnType
-          )[1]
-          const id = `${royaltyQuery[i].contract}:${royaltyQuery[i].tokenId}`
-          const totalRoyalty = royaltyBpsList
-            ? royaltyBpsList.reduce((total, feeBps) => {
-                total += parseFloat(formatUnits(feeBps, 18))
-                return total
-              }, 0)
-            : 0
-          if (totalRoyalty) {
-            royalties[id] = (totalRoyalty / 1) * 10000
-          }
-        }
-        return royalties
-      }, {} as Record<string, number>) || {},
-    [onChainRoyalties, chainCurrency]
-  )
-
   const displayQuantity = useMemo(
-    () => listings.some((listing) => listing?.token?.token?.kind === 'erc1155'),
+    () =>
+      listings?.some((listing) => listing?.token?.token?.kind === 'erc1155')
+        ? true
+        : false,
     [listings]
   )
 
@@ -161,12 +119,13 @@ const BatchListings: FC<Props> = ({
     const newListings: BatchListing[] = selectedItems
       .filter(
         (item) =>
-          collectionExchanges[item.token?.collection?.id as string] !==
-          undefined
+          tokenExchanges[
+            `${item.token?.collection?.id}:${item.token?.tokenId}`
+          ] !== undefined
       )
       .map((item) => {
         const { exchange, marketplace } =
-          collectionExchanges[item.token?.collection?.id as string]
+          tokenExchanges[`${item.token?.collection?.id}:${item.token?.tokenId}`]
 
         return {
           token: item,
@@ -186,49 +145,48 @@ const BatchListings: FC<Props> = ({
           exchange: exchange,
         }
       })
-    setListings(newListings)
-  }, [selectedItems, collectionExchanges])
+    setListings(newListings.length > 0 ? newListings : null)
+  }, [selectedItems, tokenExchanges])
 
   const totalProfit = useMemo(() => {
     return selectedItems.reduce((total, item) => {
       const itemId = `${item.token?.contract}:${item.token?.tokenId}`
-      const itemListings = listings.filter(
+      const itemListings = listings?.filter(
         (listing) =>
           `${listing.token.token?.contract}:${listing.token.token?.tokenId}` ===
           itemId
       )
 
-      const onChainRoyaltyBps = onChainRoyaltiesMap[itemId]
+      const profits =
+        itemListings?.map((listing) => {
+          const listingCreatorRoyalties =
+            (Number(listing.price) *
+              listing.quantity *
+              (listing?.token?.token?.collection?.royaltiesBps ||
+                listing.marketplace.royalties?.maxBps ||
+                0)) /
+            10000
+          const marketplaceFee =
+            ((listing.marketplace?.fee?.bps || 0) / 10000) *
+            Number(listing.price) *
+            listing.quantity
 
-      const profits = itemListings.map((listing) => {
-        const listingCreatorRoyalties =
-          (Number(listing.price) *
-            listing.quantity *
-            (onChainRoyaltyBps ||
-              listing?.token?.token?.collection?.royaltiesBps ||
-              0)) /
-          10000
-        const marketplaceFee =
-          ((listing.marketplace?.fee?.bps || 0) / 10000) *
-          Number(listing.price) *
-          listing.quantity
+          const profit =
+            Number(listing.price) * listing.quantity -
+            marketplaceFee -
+            listingCreatorRoyalties
 
-        const profit =
-          Number(listing.price) * listing.quantity -
-          marketplaceFee -
-          listingCreatorRoyalties
-
-        return profit
-      })
+          return profit
+        }) ?? []
 
       const highestProfit = Math.max(...profits)
 
       return total + highestProfit
     }, 0)
-  }, [listings, onChainRoyaltiesMap, globalPrice])
+  }, [listings, globalPrice])
 
   const listButtonDisabled = useMemo(() => {
-    const hasInvalidPrice = listings.some((listing) => {
+    const hasInvalidPrice = listings?.some((listing) => {
       const minimumAmount = listing.exchange?.minPriceRaw
         ? Number(
             formatUnits(
@@ -253,46 +211,50 @@ const BatchListings: FC<Props> = ({
         Number(listing.price) >= minimumAmount
       return !withinPricingBounds
     })
-    return hasInvalidPrice
+    return hasInvalidPrice ? true : false
   }, [listings])
 
   const updateListing = useCallback((updatedListing: BatchListing) => {
     setListings((prevListings) => {
-      return prevListings.map((listing) => {
-        if (
-          listing.token === updatedListing.token &&
-          listing.orderbook === updatedListing.orderbook
-        ) {
-          return updatedListing
-        }
-        return listing
-      })
+      return (
+        prevListings?.map((listing) => {
+          if (
+            listing.token === updatedListing.token &&
+            listing.orderbook === updatedListing.orderbook
+          ) {
+            return updatedListing
+          }
+          return listing
+        }) ?? null
+      )
     })
   }, [])
 
   const applyFloorPrice = useCallback(() => {
     setListings((prevListings) => {
-      return prevListings.map((listing) => {
-        if (
-          listing.token.token?.collection?.floorAskPrice?.amount?.decimal &&
-          listing.token.token?.collection?.floorAskPrice.currency
-        ) {
-          return {
-            ...listing,
-            price:
-              listing.token.token.collection.floorAskPrice.amount.decimal.toString(),
-            currency: listing.token.token?.collection?.floorAskPrice
-              .currency as Currency,
+      return (
+        prevListings?.map((listing) => {
+          if (
+            listing.token.token?.collection?.floorAskPrice?.amount?.decimal &&
+            listing.token.token?.collection?.floorAskPrice.currency
+          ) {
+            return {
+              ...listing,
+              price:
+                listing.token.token.collection.floorAskPrice.amount.decimal.toString(),
+              currency: listing.token.token?.collection?.floorAskPrice
+                .currency as Currency,
+            }
           }
-        }
-        return listing
-      })
+          return listing
+        }) ?? []
+      )
     })
   }, [listings])
 
   const applyTopTraitDisabled = useMemo(
     () =>
-      listings.every(
+      listings?.every(
         (listing) =>
           (listing?.exchange?.paymentTokens?.length &&
             listing.exchange.paymentTokens.length > 0) ||
@@ -305,32 +267,34 @@ const BatchListings: FC<Props> = ({
 
   const applyTopTraitPrice = useCallback(() => {
     setListings((prevListings) => {
-      return prevListings.map((listing) => {
-        if (
-          listing.token.token?.attributes &&
-          !listing.exchange?.paymentTokens?.length
-        ) {
-          // Find the highest floor price
-          let topTraitPrice = Math.max(
-            ...listing.token.token.attributes.map(
-              (attribute) => attribute.floorAskPrice?.amount?.decimal ?? 0
+      return (
+        prevListings?.map((listing) => {
+          if (
+            listing.token.token?.attributes &&
+            !listing.exchange?.paymentTokens?.length
+          ) {
+            // Find the highest floor price
+            let topTraitPrice = Math.max(
+              ...listing.token.token.attributes.map(
+                (attribute) => attribute.floorAskPrice?.amount?.decimal ?? 0
+              )
             )
-          )
-          if (topTraitPrice && topTraitPrice > 0) {
-            return {
-              ...listing,
-              price: topTraitPrice.toString(),
-              currency: defaultCurrency,
+            if (topTraitPrice && topTraitPrice > 0) {
+              return {
+                ...listing,
+                price: topTraitPrice.toString(),
+                currency: defaultCurrency,
+              }
             }
           }
-        }
 
-        return listing
-      })
+          return listing
+        }) ?? []
+      )
     })
   }, [listings, defaultCurrency])
 
-  const globalPriceEnabled = !listings.some(
+  const globalPriceEnabled = !listings?.some(
     (listing) =>
       listing.exchange.paymentTokens &&
       listing.exchange.paymentTokens.length > 0
@@ -338,7 +302,7 @@ const BatchListings: FC<Props> = ({
 
   const displayMaxProfit = useMemo(() => {
     const currencies: string[] = []
-    const mixedCurrencies = listings.find((listing) => {
+    const mixedCurrencies = listings?.find((listing) => {
       if (!currencies.includes(listing.currency.contract)) {
         currencies.push(listing.currency.contract)
       }
@@ -431,21 +395,16 @@ const BatchListings: FC<Props> = ({
           </Flex>
         </Flex>
       </Flex>
-      {listings.length > 0 ? (
+      {listings && listings?.length > 0 ? (
         <Flex direction="column" css={{ width: '100%', pb: 37 }}>
           <BatchListingsTableHeading
             displayQuantity={displayQuantity}
             gridTemplateColumns={gridTemplateColumns}
           />
-          {listings.map((listing, i) => (
+          {listings?.map((listing, i) => (
             <BatchListingsTableRow
               listing={listing}
               listings={listings}
-              onChainRoyaltiesBps={
-                onChainRoyaltiesMap[
-                  `${listing.token.token?.contract}:${listing.token.token?.tokenId}`
-                ]
-              }
               setListings={setListings}
               updateListing={updateListing}
               setSelectedItems={setSelectedItems}
@@ -490,14 +449,11 @@ const BatchListings: FC<Props> = ({
               ) : null}
               <BatchListModal
                 listings={listings}
-                onChainRoyalties={onChainRoyalties}
                 disabled={listButtonDisabled}
-                //TODO fix
-                selectedMarketplaces={[]}
                 onCloseComplete={() => {
                   setShowListingPage(false)
                   setSelectedItems([])
-                  setListings([])
+                  setListings(null)
                 }}
               />
             </Flex>
@@ -509,10 +465,16 @@ const BatchListings: FC<Props> = ({
           align="center"
           css={{ py: '$6', gap: '$4', width: '100%' }}
         >
-          <Text css={{ color: '$gray11' }}>
-            <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
-          </Text>
-          <Text css={{ color: '$gray11' }}>No items selected</Text>
+          {!listings ? (
+            <LoadingSpinner css={{ justifySelf: 'center' }} />
+          ) : (
+            <>
+              <Text css={{ color: '$gray11' }}>
+                <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
+              </Text>
+              <Text css={{ color: '$gray11' }}>No items selected</Text>
+            </>
+          )}
         </Flex>
       )}
     </Flex>
