@@ -236,12 +236,24 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         )}`}
         title={pageTitle}
         description={collection?.description as string}
-      />
-      <meta
-        name="twitter:image"
-        content={`/api/og/token?token=${encodeURIComponent(
-          base64EncodedToken
-        )}`}
+        metatags={
+          <>
+            <meta property="eth:nft:collection" content="Farcaster: Giraffe" />
+            <meta
+              property="eth:nft:contract_address"
+              content="0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df"
+            />
+            <meta
+              property="eth:nft:creator_address"
+              content="0xbc698ce1933afb2980d4a5a0f85fea1b02fbb1c9"
+            />
+            <meta property="eth:nft:schema" content="ERC1155" />
+            <meta
+              property="eth:nft:media_url"
+              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
+            />
+          </>
+        }
       />
       <Flex
         justify="center"
