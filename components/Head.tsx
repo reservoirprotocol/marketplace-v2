@@ -5,6 +5,7 @@ type Props = {
   ogImage?: string
   title?: string
   description?: string
+  metatags?: React.ReactNode
 }
 
 /**
