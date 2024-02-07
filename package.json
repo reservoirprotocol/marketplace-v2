@@ -32,6 +32,7 @@
     "@reservoir0x/reservoir-kit-ui": "1.25.4",
     "@sentry/nextjs": "^7.85.0",
     "@types/uuid": "^9.0.1",
+    "@vercel/og": "^0.5.20",
     "dayjs": "^1.11.6",
     "eslint-config-next": "^14.1.0",
     "framer-motion": "^6.3.6",
