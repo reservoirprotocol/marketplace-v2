@@ -250,18 +250,15 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <meta property="eth:nft:schema" content="ERC1155" />
             <meta
               property="eth:nft:media_url"
-              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
+              content={token?.token?.imageSmall}
             />
 
             <meta property="og:title" content="Farcaster: Giraffe" />
-            <meta
-              property="og:image"
-              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
-            />
+            <meta property="og:image" content={token?.token?.imageSmall} />
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
-              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
+              content={token?.token?.imageSmall}
             />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
