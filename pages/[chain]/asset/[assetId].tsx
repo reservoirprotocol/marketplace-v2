@@ -264,7 +264,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content="eip155:7777777:0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df<:1>"
+              content="eip155:7777777:0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df:1"
             />
           </>
         }
