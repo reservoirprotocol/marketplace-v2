@@ -229,7 +229,9 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   return (
     <Layout>
       <Head
-        ogImage={token?.token?.image || collection?.banner}
+        ogImage={encodeURIComponent(
+          (token?.token?.imageLarge as string) || (collection?.banner as string)
+        )}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
@@ -238,7 +240,10 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="og:title"
               content={`Farcaster: ${token?.token?.name}`}
             />
-            <meta property="og:image" content={token?.token?.image} />
+            <meta
+              property="og:image"
+              content={encodeURIComponent(token?.token?.imageLarge as string)}
+            />
 
             <meta
               property="eth:nft:collection"
@@ -256,12 +261,18 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="eth:nft:schema"
               content={token?.token?.kind?.toUpperCase()}
             />
-            <meta property="eth:nft:media_url" content={token?.token?.image} />
+            <meta
+              property="eth:nft:media_url"
+              content={encodeURIComponent(token?.token?.image as string)}
+            />
 
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
-              content={token?.token?.image || collection?.banner}
+              content={encodeURIComponent(
+                (token?.token?.image as string) ||
+                  (collection?.banner as string)
+              )}
             />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
