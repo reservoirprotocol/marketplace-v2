@@ -242,6 +242,26 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="og:title"
               content={`Farcaster: ${token?.token?.name}`}
             />
+            <meta property="og:image" content={token?.token?.image} />
+
+            <meta
+              property="eth:nft:collection"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta
+              property="eth:nft:contract_address"
+              content={token?.token?.contract}
+            />
+            <meta
+              property="eth:nft:creator_address"
+              content={token?.token?.collection?.creator}
+            />
+            <meta
+              property="eth:nft:schema"
+              content={token?.token?.kind?.toUpperCase()}
+            />
+            <meta property="eth:nft:media_url" content={token?.token?.image} />
+
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
