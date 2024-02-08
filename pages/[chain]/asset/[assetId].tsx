@@ -238,23 +238,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         description={collection?.description as string}
         metatags={
           <>
-            <meta property="eth:nft:collection" content="Farcaster: Giraffe" />
-            <meta
-              property="eth:nft:contract_address"
-              content="0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df"
-            />
-            <meta
-              property="eth:nft:creator_address"
-              content="0xbc698ce1933afb2980d4a5a0f85fea1b02fbb1c9"
-            />
-            <meta property="eth:nft:schema" content="erc1155" />
-            <meta
-              property="eth:nft:media_url"
-              content={token?.token?.imageSmall}
-            />
-
-            <meta property="og:title" content="Farcaster: Giraffe" />
-            <meta property="og:image" content={token?.token?.imageSmall} />
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
@@ -264,7 +247,32 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content="eip155:7777777:0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df:1"
+              content="eip155:7777777:0x2e92b5094c531257a9f427def7c05b412b9056bb:18"
+            />
+            <meta property="eth:nft:collection" content="taboo9" />
+            <meta property="eth:nft:status" content="live" />
+            <meta property="eth:nft:mint_count" content="1" />
+            <meta
+              property="eth:nft:creator_address"
+              content="0xf90665f14eefda57144441743816f4740cc89722"
+            />
+            <meta
+              property="eth:nft:contract_address"
+              content="0x2e92b5094c531257a9f427def7c05b412b9056bb"
+            />
+            <meta property="eth:nft:schema" content="ERC1155" />
+            <meta property="eth:nft:endtime" content="1709944871000" />
+            <meta property="og:image" content={token?.token?.imageSmall} />
+            <meta property="fc:frame" content="vNext" />
+            <meta property="fc:frame:button:1" content="View on Reservoir" />
+            <meta property="fc:frame:button:1:action" content="post_redirect" />
+            <meta
+              property="fc:frame:post_url"
+              content="https://explorer.reservoir.tools/"
+            />
+            <meta
+              property="fc:frame:image"
+              content={token?.token?.imageSmall}
             />
           </>
         }
