@@ -246,7 +246,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             />
             <meta
               property="eth:nft:creator_address"
-              content="0xbc698ce1933afb2980d4a5a0f85fea1b02fbb1c9"
+              content={`${token?.token?.collection?.creator}`}
             />
             <meta
               property="eth:nft:schema"
