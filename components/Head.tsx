@@ -38,20 +38,25 @@ export const Head: FC<Props> = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
 
-      {/* Open Graph */}
-      <meta property="og:type" content="website" />
-      <meta property="og:determiner" content="the" />
-      <meta property="og:locale" content="en" />
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
-      <meta property="og:image" content={ogImage} />
-      <meta property="og:image:type" content="image/png" />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="Reservoir NFT Explorer Banner" />
-
-      {/* Child Meta tags */}
-      {metatags && metatags}
+      {metatags ? (
+        metatags
+      ) : (
+        <>
+          <meta property="og:type" content="website" />
+          <meta property="og:determiner" content="the" />
+          <meta property="og:locale" content="en" />
+          <meta property="og:title" content={title} />
+          <meta property="og:description" content={description} />
+          <meta property="og:image" content={ogImage} />
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="1200" />
+          <meta property="og:image:height" content="630" />
+          <meta
+            property="og:image:alt"
+            content="Reservoir NFT Explorer Banner"
+          />
+        </>
+      )}
     </NextHead>
   )
 }
