@@ -231,47 +231,43 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   return (
     <Layout>
       <Head
-        //ogImage={`/api/og/token?token=${encodeURIComponent(base64EncodedToken)}`}
+        ogImage={`/api/og/token?token=${encodeURIComponent(
+          base64EncodedToken
+        )}`}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
           <>
-            <meta
-              property="eth:nft:collection"
-              content={`Farcaster: ${token?.token?.name}`}
-            />
+            <meta property="eth:nft:collection" content="Farcaster: Giraffe" />
             <meta
               property="eth:nft:contract_address"
-              content={`${token?.token?.contract}`}
+              content="0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df"
             />
             <meta
               property="eth:nft:creator_address"
-              content={`${token?.token?.collection?.creator}`}
+              content="0xbc698ce1933afb2980d4a5a0f85fea1b02fbb1c9"
             />
-            <meta
-              property="eth:nft:schema"
-              content={token?.token?.kind?.toUpperCase()}
-            />
+            <meta property="eth:nft:schema" content="ERC1155" />
             <meta
               property="eth:nft:media_url"
-              content={token?.token?.imageSmall}
+              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
             />
 
+            <meta property="og:title" content="Farcaster: Giraffe" />
+            <meta
+              property="og:image"
+              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
+            />
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
-              content={token?.token?.imageSmall}
+              content="https://remote-image.decentralized-content.com/image?url=https%3A%2F%2Fipfs.decentralized-content.com%2Fipfs%2Fbafybeiegrnialwu66u3nwzkn4gik4i2x2h4ip7y3w2dlymzlpxb5lrqbom&w=1920&q=75"
             />
-            <meta
-              property="og:title"
-              content={`Farcaster: ${token?.token?.name}`}
-            />
-            <meta property="og:image" content={token?.token?.name} />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content={`eip155:7777777:${token?.token?.contract}:${token?.token?.tokenId}`}
+              content="eip155:7777777:0x060f3edd18c47f59bd23d063bbeb9aa4a8fec6df<:1>"
             />
           </>
         }
