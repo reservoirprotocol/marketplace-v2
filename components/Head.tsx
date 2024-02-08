@@ -34,14 +34,6 @@ export const Head: FC<Props> = ({
 
       {/* Extra Metatas */}
       <>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={token?.token?.imageSmall} />
-        <meta property="fc:frame:button:1" content="Mint" />
-        <meta property="fc:frame:button:1:action" content="mint" />
-        <meta
-          property="fc:frame:button:1:target"
-          content="eip155:7777777:0x2e92b5094c531257a9f427def7c05b412b9056bb:18"
-        />
         <meta property="eth:nft:collection" content="taboo9" />
         <meta property="eth:nft:status" content="live" />
         <meta property="eth:nft:mint_count" content="1" />
@@ -54,16 +46,7 @@ export const Head: FC<Props> = ({
           content="0x2e92b5094c531257a9f427def7c05b412b9056bb"
         />
         <meta property="eth:nft:schema" content="ERC1155" />
-        <meta property="eth:nft:endtime" content="1709944871000" />
-        <meta property="og:image" content={token?.token?.imageSmall} />
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:button:1" content="View on Reservoir" />
-        <meta property="fc:frame:button:1:action" content="post_redirect" />
-        <meta
-          property="fc:frame:post_url"
-          content="https://explorer.reservoir.tools/"
-        />
-        <meta property="fc:frame:image" content={token?.token?.imageSmall} />
+        <meta property="og:image" content={token?.token?.image} />
       </>
     </NextHead>
   )
