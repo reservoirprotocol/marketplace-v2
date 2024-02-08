@@ -234,48 +234,9 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         ogImage={`/api/og/token?token=${encodeURIComponent(
           base64EncodedToken
         )}`}
+        token={token}
         title={pageTitle}
         description={collection?.description as string}
-        metatags={
-          <>
-            <meta property="fc:frame" content="vNext" />
-            <meta
-              property="fc:frame:image"
-              content={token?.token?.imageSmall}
-            />
-            <meta property="fc:frame:button:1" content="Mint" />
-            <meta property="fc:frame:button:1:action" content="mint" />
-            <meta
-              property="fc:frame:button:1:target"
-              content="eip155:7777777:0x2e92b5094c531257a9f427def7c05b412b9056bb:18"
-            />
-            <meta property="eth:nft:collection" content="taboo9" />
-            <meta property="eth:nft:status" content="live" />
-            <meta property="eth:nft:mint_count" content="1" />
-            <meta
-              property="eth:nft:creator_address"
-              content="0xf90665f14eefda57144441743816f4740cc89722"
-            />
-            <meta
-              property="eth:nft:contract_address"
-              content="0x2e92b5094c531257a9f427def7c05b412b9056bb"
-            />
-            <meta property="eth:nft:schema" content="ERC1155" />
-            <meta property="eth:nft:endtime" content="1709944871000" />
-            <meta property="og:image" content={token?.token?.imageSmall} />
-            <meta property="fc:frame" content="vNext" />
-            <meta property="fc:frame:button:1" content="View on Reservoir" />
-            <meta property="fc:frame:button:1:action" content="post_redirect" />
-            <meta
-              property="fc:frame:post_url"
-              content="https://explorer.reservoir.tools/"
-            />
-            <meta
-              property="fc:frame:image"
-              content={token?.token?.imageSmall}
-            />
-          </>
-        }
       />
       <Flex
         justify="center"
