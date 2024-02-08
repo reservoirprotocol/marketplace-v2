@@ -32,13 +32,6 @@ export const Head: FC<Props> = ({
       {/* Meta tags */}
       <meta name="description" content={description} />
 
-      {/* Twitter */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@reservoir0x" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={ogImage} />
-
       {/* Extra Metatas */}
       <>
         <meta property="fc:frame" content="vNext" />
