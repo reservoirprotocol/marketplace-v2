@@ -226,14 +226,10 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     ? token.token.name
     : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
 
-  const base64EncodedToken = btoa(JSON.stringify(token))
-
   return (
     <Layout>
       <Head
-        ogImage={`/api/og/token?token=${encodeURIComponent(
-          base64EncodedToken
-        )}`}
+        ogImage={token?.token?.image || collection?.banner}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
