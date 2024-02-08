@@ -1,5 +1,5 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
-import { reservoirChains } from '@reservoir0x/reservoir-sdk'
+import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import {
   arbitrum,
@@ -16,8 +16,36 @@ import {
   base,
   arbitrumNova,
   scroll,
+  opBNB,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
+
+export const ancient8Testnet = {
+  id: 2863311531,
+  name: 'Ancient8 Testnet',
+  network: 'ancient8',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+    public: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+    default: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+  },
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -209,6 +237,26 @@ export default [
     checkPollingInterval: reservoirChains.bsc.checkPollingInterval,
   },
   {
+    ...opBNB,
+    lightIconUrl: '/icons/bsc-icon-dark.svg',
+    darkIconUrl: '/icons/bsc-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.opBnb.baseApiUrl,
+    proxyApi: '/api/reservoir/opbnb',
+    routePrefix: 'opbnb',
+    coingeckoId: 'binancecoin',
+    checkPollingInterval: reservoirChains.opBnb.checkPollingInterval,
+  },
+  {
+    ...customChains.ancient8,
+    lightIconUrl: '/icons/ancient8-icon-dark.svg',
+    darkIconUrl: '/icons/ancient8-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.ancient8.baseApiUrl,
+    proxyApi: '/api/reservoir/ancient8',
+    routePrefix: 'ancient8',
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.ancient8.checkPollingInterval,
+  },
+  {
     ...avalanche,
     lightIconUrl: '/icons/avalanche-icon-dark.svg',
     darkIconUrl: '/icons/avalanche-icon-light.svg',
@@ -285,5 +333,17 @@ export default [
     collectionSetId: process.env.NEXT_PUBLIC_SCROLL_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
     checkPollingInterval: reservoirChains.scroll.checkPollingInterval,
+  },
+  {
+    ...ancient8Testnet,
+    lightIconUrl: '/icons/ancient8-icon-dark.svg',
+    darkIconUrl: '/icons/ancient8-icon-light.svg',
+    reservoirBaseUrl: 'https://api-ancient8-testnet.reservoir.tools',
+    proxyApi: '/api/reservoir/ancient8Testnet',
+    routePrefix: 'ancient8Testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ANCIENT8TESTNET_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_NCIENT8TESTNET_COMMUNITY,
   },
 ] as ReservoirChain[]
