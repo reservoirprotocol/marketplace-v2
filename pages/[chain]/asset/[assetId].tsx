@@ -234,7 +234,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         ogImage={`/api/og/token?token=${encodeURIComponent(
           base64EncodedToken
         )}`}
-        token={token}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
