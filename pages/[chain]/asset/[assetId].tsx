@@ -237,6 +237,25 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         token={token}
         title={pageTitle}
         description={collection?.description as string}
+        metatags={
+          <>
+            <meta
+              property="og:title"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta property="fc:frame" content="vNext" />
+            <meta
+              property="fc:frame:image"
+              content={token?.token?.image || collection?.banner}
+            />
+            <meta property="fc:frame:button:1" content="Mint" />
+            <meta property="fc:frame:button:1:action" content="mint" />
+            <meta
+              property="fc:frame:button:1:target"
+              content={`eip155:7777777:${token?.token?.contract}:${token?.token?.tokenId}`}
+            />
+          </>
+        }
       />
       <Flex
         justify="center"
