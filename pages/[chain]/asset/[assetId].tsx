@@ -229,7 +229,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   return (
     <Layout>
       <Head
-        ogImage={token?.token?.image || collection?.banner}
+        ogImage={token?.token?.imageSmall || collection?.banner}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
@@ -238,7 +238,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="og:title"
               content={`Farcaster: ${token?.token?.name}`}
             />
-            <meta property="og:image" content={token?.token?.image} />
+            <meta property="og:image" content={token?.token?.imageSmall} />
 
             <meta
               property="eth:nft:collection"
@@ -256,12 +256,15 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="eth:nft:schema"
               content={token?.token?.kind?.toUpperCase()}
             />
-            <meta property="eth:nft:media_url" content={token?.token?.image} />
+            <meta
+              property="eth:nft:media_url"
+              content={token?.token?.imageSmall}
+            />
 
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
-              content={token?.token?.image || collection?.banner}
+              content={token?.token?.imageSmall || collection?.banner}
             />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
