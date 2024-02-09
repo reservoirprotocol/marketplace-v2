@@ -1682,10 +1682,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@1.25.4":
-  version "1.25.4"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-1.25.4.tgz#c73fc62875aa2dc16a9d42b681122208c4a148b0"
-  integrity sha512-fjG8pz7nydUjlNnx8yOcJ19Uzn0AvnR2kbq8LV3d/ZF2kbwjyN/PRtA2TzynZjUKJK7hXis6tMivPGBdCUlxZQ==
+"@reservoir0x/reservoir-kit-ui@1.25.7":
+  version "1.25.7"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-1.25.7.tgz#bac393337bf10e2e943a19daad4c553656f3ebda"
+  integrity sha512-07T3CXqGL1hwlJOYoab1RWthzDJzvl2RKKtL7Io/HAJXsF0WBmYCHh6qO5oNMrF7vHlPee3yjMUqZeUapzTjcQ==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
@@ -1701,7 +1701,7 @@
     "@radix-ui/react-toggle-group" "1.0.4"
     "@radix-ui/react-tooltip" "1.0.6"
     "@react-hookz/web" "^19.2.0"
-    "@reservoir0x/reservoir-sdk" "1.12.12"
+    "@reservoir0x/reservoir-sdk" "1.12.13"
     "@stitches/react" "1.3.1-1"
     dayjs "^1.11.4"
     flatpickr "^4.6.13"
@@ -1709,12 +1709,12 @@
     react-flatpickr "^3.10.13"
     swr "2.0.1"
 
-"@reservoir0x/reservoir-sdk@1.12.12":
-  version "1.12.12"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-1.12.12.tgz#cbd5baf130c39c1856d5380270efbad8500244f8"
-  integrity sha512-azkveLQUESP9H6WlWR2MPbAX8isCK5NY/LKIzf9w7asavzIVPF6LZraKD5J3lgXSBatqemukwWGoz4vhKbREQw==
+"@reservoir0x/reservoir-sdk@1.12.13":
+  version "1.12.13"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-1.12.13.tgz#a69719ee7cb8beb904f78eee1eb5560894b19640"
+  integrity sha512-owXG4/HF9fuV/HiNWx1Qy72211RxkelRHCl91OoMbknxOch/+GfGGE5tyky2ryMStaGvEdxUzW50gjhfTENhzA==
   dependencies:
-    axios "^0.27.2"
+    axios "^1.6.7"
 
 "@rollup/plugin-commonjs@24.0.0":
   version "24.0.0"
@@ -3006,13 +3006,14 @@ axe-core@=4.7.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
 
-axios@^0.27.2:
-  version "0.27.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
+axios@^1.6.7:
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.7.tgz#7b48c2e27c96f9c68a2f8f31e2ab19f59b06b0a7"
+  integrity sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==
   dependencies:
-    follow-redirects "^1.14.9"
+    follow-redirects "^1.15.4"
     form-data "^4.0.0"
+    proxy-from-env "^1.1.0"
 
 axobject-query@^3.2.1:
   version "3.2.1"
@@ -4215,7 +4216,7 @@ flatpickr@^4.6.13, flatpickr@^4.6.2:
   resolved "https://registry.yarnpkg.com/flatpickr/-/flatpickr-4.6.13.tgz#8a029548187fd6e0d670908471e43abe9ad18d94"
   integrity sha512-97PMG/aywoYpB4IvbvUJi0RQi8vearvU0oov1WW3k0WZPBMrTQVqekSX5CjSG/M4Q3i6A/0FKXC7RyAoAUUSPw==
 
-follow-redirects@^1.14.9:
+follow-redirects@^1.15.4:
   version "1.15.5"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.5.tgz#54d4d6d062c0fa7d9d17feb008461550e3ba8020"
   integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
