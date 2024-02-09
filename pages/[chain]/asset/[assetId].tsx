@@ -232,6 +232,45 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
         ogImage={token?.token?.image || collection?.banner}
         title={pageTitle}
         description={collection?.description as string}
+        metatags={
+          <>
+            <meta
+              property="og:title"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta property="og:image" content={token?.token?.image} />
+
+            <meta
+              property="eth:nft:collection"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta
+              property="eth:nft:contract_address"
+              content={token?.token?.contract}
+            />
+            <meta
+              property="eth:nft:creator_address"
+              content={token?.token?.collection?.creator}
+            />
+            <meta
+              property="eth:nft:schema"
+              content={token?.token?.kind?.toUpperCase()}
+            />
+            <meta property="eth:nft:media_url" content={token?.token?.image} />
+
+            <meta property="fc:frame" content="vNext" />
+            <meta
+              property="fc:frame:image"
+              content={token?.token?.image || collection?.banner}
+            />
+            <meta property="fc:frame:button:1" content="Mint" />
+            <meta property="fc:frame:button:1:action" content="mint" />
+            <meta
+              property="fc:frame:button:1:target"
+              content={`eip155:7777777:${token?.token?.contract}:${token?.token?.tokenId}`}
+            />
+          </>
+        }
       />
       <Flex
         justify="center"
