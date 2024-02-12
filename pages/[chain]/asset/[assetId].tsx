@@ -226,17 +226,61 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     ? token.token.name
     : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
 
-  const base64EncodedToken = btoa(JSON.stringify(token))
+  const base64EncodedImage = btoa(
+    token?.token?.image || token?.token?.collection?.image || ''
+  )
 
   return (
     <Layout>
       <Head
-        ogImage={`/api/og/token?token=${encodeURIComponent(
-          base64EncodedToken
-        )}`}
-        token={token}
+        ogImage={token?.token?.image || collection?.banner}
         title={pageTitle}
         description={collection?.description as string}
+        metatags={
+          <>
+            <meta
+              property="og:title"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta
+              property="og:image"
+              content={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
+            />
+
+            <meta
+              property="eth:nft:collection"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta
+              property="eth:nft:contract_address"
+              content={token?.token?.contract}
+            />
+            <meta
+              property="eth:nft:creator_address"
+              content={token?.token?.collection?.creator}
+            />
+            <meta
+              property="eth:nft:schema"
+              content={token?.token?.kind?.toUpperCase()}
+            />
+            <meta
+              property="eth:nft:media_url"
+              content={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
+            />
+
+            <meta property="fc:frame" content="vNext" />
+            <meta
+              property="fc:frame:image"
+              content={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
+            />
+            <meta property="fc:frame:button:1" content="Mint" />
+            <meta property="fc:frame:button:1:action" content="mint" />
+            <meta
+              property="fc:frame:button:1:target"
+              content={`eip155:7777777:${token?.token?.contract}:${token?.token?.tokenId}`}
+            />
+          </>
+        }
       />
       <Flex
         justify="center"
