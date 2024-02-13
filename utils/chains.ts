@@ -339,7 +339,7 @@ export default [
     lightIconUrl: '/icons/ancient8-icon-dark.svg',
     darkIconUrl: '/icons/ancient8-icon-light.svg',
     reservoirBaseUrl: 'https://api-ancient8-testnet.reservoir.tools',
-    proxyApi: '/api/reservoir/ancient8Testnet',
+    proxyApi: '/api/reservoir/ancient8-testnet',
     routePrefix: 'ancient8Testnet',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
