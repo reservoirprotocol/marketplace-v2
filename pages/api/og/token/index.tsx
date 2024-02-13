@@ -38,7 +38,9 @@ export default async function handler(request: NextRequest) {
     )
   }
 
-  const token = JSON.parse(atob(base64EncodedToken)) as Token
+  const token = JSON.parse(
+    decodeURIComponent(atob(base64EncodedToken))
+  ) as Token
 
   return new ImageResponse(
     (
