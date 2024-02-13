@@ -233,7 +233,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
   return (
     <Layout>
       <Head
-        ogImage={token?.token?.image || collection?.banner}
+        ogImage={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
