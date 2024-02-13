@@ -226,14 +226,14 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     ? token.token.name
     : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
 
-  const base64EncodedImage = btoa(
-    token?.token?.image || token?.token?.collection?.image || ''
-  )
+  const base64EncodedToken = btoa(JSON.stringify(token))
 
   return (
     <Layout>
       <Head
-        ogImage={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
+        ogImage={`/api/og/token?token=${encodeURIComponent(
+          base64EncodedToken
+        )}`}
         title={pageTitle}
         description={collection?.description as string}
         metatags={
@@ -241,10 +241,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <meta
               property="og:title"
               content={`Farcaster: ${token?.token?.name}`}
-            />
-            <meta
-              property="og:image"
-              content={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
             />
 
             <meta
@@ -262,16 +258,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <meta
               property="eth:nft:schema"
               content={token?.token?.kind?.toUpperCase()}
-            />
-            <meta
-              property="eth:nft:media_url"
-              content={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
-            />
-
-            <meta property="fc:frame" content="vNext" />
-            <meta
-              property="fc:frame:image"
-              content={`${process.env.NEXT_PUBLIC_HOST_URL}/api/og/redirect?image=${base64EncodedImage}`}
             />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
