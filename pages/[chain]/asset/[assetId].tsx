@@ -228,7 +228,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
 
   const base64EncodedToken = btoa(JSON.stringify(token))
 
-  console.log(`/api/og/token?token=${encodeURIComponent(base64EncodedToken)}`)
   return (
     <Layout>
       <Head
