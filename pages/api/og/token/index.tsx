@@ -184,7 +184,7 @@ export default async function handler(request: NextRequest) {
                   fontSize: '32px',
                 }}
               >
-                ERC-721
+                {token.token?.kind?.toUpperCase()}
                 {'  '}
                 <span style={{ color: '#687076', fontSize: '32px' }}>
                   on
