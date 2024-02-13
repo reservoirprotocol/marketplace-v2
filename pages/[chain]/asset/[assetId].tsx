@@ -226,7 +226,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     ? token.token.name
     : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
 
-  const base64EncodedToken = btoa(JSON.stringify(token))
+  const base64EncodedToken = btoa(encodeURIComponent(JSON.stringify(token)))
 
   return (
     <Layout>
