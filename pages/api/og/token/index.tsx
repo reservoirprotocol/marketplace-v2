@@ -203,57 +203,61 @@ export default async function handler(request: NextRequest) {
                 gap: '50px',
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px',
-                  justifyContent: 'center',
-                }}
-              >
-                <span
+              {token.market?.floorAsk?.price?.amount?.native && (
+                <div
                   style={{
-                    fontSize: '32px',
-                    fontFamily: 'Regular',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px',
+                    justifyContent: 'center',
                   }}
                 >
-                  Floor
-                </span>
-                <span
+                  <span
+                    style={{
+                      fontSize: '32px',
+                      fontFamily: 'Regular',
+                    }}
+                  >
+                    Floor
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '40px',
+                    }}
+                  >
+                    {token.market?.floorAsk?.price?.amount?.native} {'  '}
+                    {token.market?.floorAsk?.price?.currency?.symbol?.toUpperCase()}
+                  </span>
+                </div>
+              )}
+              {token.market?.topBid?.price?.amount?.native && (
+                <div
                   style={{
-                    fontSize: '40px',
+                    display: 'flex',
+                    gap: '12px',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
                   }}
                 >
-                  {token.market?.floorAsk?.price?.amount?.native} {'  '}
-                  {token.market?.floorAsk?.price?.currency?.symbol?.toUpperCase()}
-                </span>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  gap: '12px',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: '32px',
-                    fontFamily: 'Regular',
-                  }}
-                >
-                  Best Offer
-                </span>
-                <span
-                  style={{
-                    fontSize: '40px',
-                  }}
-                >
-                  {token.market?.topBid?.price?.amount?.native?.toFixed(2)}{' '}
-                  {'  '}
-                  {token.market?.floorAsk?.price?.currency?.symbol?.toUpperCase()}
-                </span>
-              </div>
+                  <span
+                    style={{
+                      fontSize: '32px',
+                      fontFamily: 'Regular',
+                    }}
+                  >
+                    Best Offer
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '40px',
+                    }}
+                  >
+                    {token.market?.topBid?.price?.amount?.native?.toFixed(2)}
+                    {'  '}
+                    {token.market?.floorAsk?.price?.currency?.symbol?.toUpperCase()}
+                  </span>
+                </div>
+              )}
             </div>
             <div
               style={{
