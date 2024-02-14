@@ -32,7 +32,9 @@ export default async function handler(request: NextRequest) {
     )
   }
 
-  const token = JSON.parse(atob(base64EncodedToken)) as Token
+  const token = JSON.parse(
+    decodeURIComponent(atob(decodeURIComponent(base64EncodedToken)))
+  ) as Token
 
   return new ImageResponse(
     (
@@ -178,7 +180,7 @@ export default async function handler(request: NextRequest) {
                   fontSize: '32px',
                 }}
               >
-                ERC-721
+                {token.token?.kind?.toUpperCase()}
                 {'  '}
                 <span style={{ color: '#687076', fontSize: '32px' }}>
                   on
