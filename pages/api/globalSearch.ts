@@ -26,6 +26,26 @@ export const config = {
   runtime: 'edge',
 }
 
+const spamCollections: Record<number, string[]> = {
+  1: ['0x31fe9d95dde43cf9893b76160f63521a9e3d26b0'],
+}
+
+const locallyFilterSpam = (results: any[]) => {
+  return results.filter((result) => {
+    if (
+      result.data.collectionId &&
+      result.data.chainId &&
+      spamCollections[result.data.chainId]
+    ) {
+      return !spamCollections[result.data.chainId].includes(
+        result.data.collectionId,
+      )
+        ? true
+        : false
+    }
+  })
+}
+
 export default async function handler(req: Request) {
   const { searchParams } = new URL(req.url)
   const query = searchParams.get('query')
@@ -191,6 +211,8 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
       searchResults = processedSearchResults
     }
   }
+  //filter own known spam collections
+  searchResults = locallyFilterSpam(searchResults)
   return searchResults
 }
 
@@ -353,6 +375,9 @@ async function searchAllChains(query: string) {
         (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume,
       )
     }
+
+    //filter own known spam collections
+    searchResults = locallyFilterSpam(searchResults)
   }
 
   return searchResults
