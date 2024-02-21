@@ -38,10 +38,12 @@ const locallyFilterSpam = (results: any[]) => {
       spamCollections[result.data.chainId]
     ) {
       return !spamCollections[result.data.chainId].includes(
-        result.data.collectionId,
+        result.data.collectionId
       )
         ? true
         : false
+    } else {
+      return true
     }
   })
 }
@@ -59,7 +61,7 @@ export default async function handler(req: Request) {
 
   if (searchChain) {
     const chain = supportedChains.find(
-      (chain) => chain.routePrefix === searchChain,
+      (chain) => chain.routePrefix === searchChain
     )
 
     if (chain) {
@@ -82,7 +84,7 @@ export default async function handler(req: Request) {
         'content-type': 'application/json',
         'Cache-Control': 'maxage=0, s-maxage=3600 stale-while-revalidate',
       },
-    },
+    }
   )
 }
 
@@ -109,7 +111,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
   const promise = fetcher(
     `${reservoirBaseUrl}/search/collections/v1`,
     queryData,
-    headers,
+    headers
   )
   promise.catch((e: any) => console.warn('Failed to search', e))
 
@@ -120,7 +122,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
     const { data } = await fetcher(
       `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
       {},
-      headers,
+      headers
     )
     if (data.collections.length > 0) {
       const processedCollections = data.collections.map(
@@ -146,14 +148,14 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
             type: 'collection',
             data: processedCollection,
           }
-        },
+        }
       )
       searchResults = processedCollections
     }
     // if ethereum chain
     else if (chain.id === 1) {
       let ensData = await fetch(
-        `https://api.ensideas.com/ens/resolve/${query}`,
+        `https://api.ensideas.com/ens/resolve/${query}`
       ).then((res) => res.json())
       searchResults = [
         {
@@ -170,11 +172,11 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
   else if (
     chain.id === 1 &&
     /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(
-      query as string,
+      query as string
     )
   ) {
     let ensData = await fetch(
-      `https://api.ensideas.com/ens/resolve/${query}`,
+      `https://api.ensideas.com/ens/resolve/${query}`
     ).then((res) => res.json())
 
     if (ensData.address) {
@@ -206,7 +208,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
             tokenCount: collection.tokenCount,
             allTimeUsdVolume: collection.allTimeVolume,
           },
-        }),
+        })
       )
       searchResults = processedSearchResults
     }
@@ -245,7 +247,7 @@ async function searchAllChains(query: string) {
     const promise = fetcher(
       `${reservoirBaseUrl}/search/collections/v1`,
       query,
-      headers,
+      headers
     )
     promise.catch((e: any) => console.warn('Failed to search', e))
     promises.push(promise)
@@ -264,7 +266,7 @@ async function searchAllChains(query: string) {
       const { data } = await fetcher(
         `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
         {},
-        headers,
+        headers
       )
       return data.collections.map((collection: Collection) => {
         const processedCollection: SearchCollection = {
@@ -293,7 +295,7 @@ async function searchAllChains(query: string) {
     let results = await Promise.allSettled(promises).then((results) => {
       return results
         .filter(
-          (result) => result.status === 'fulfilled' && result.value.length > 0,
+          (result) => result.status === 'fulfilled' && result.value.length > 0
         )
         .flatMap((result) => (result as PromiseFulfilledResult<any>).value)
     })
@@ -302,7 +304,7 @@ async function searchAllChains(query: string) {
       searchResults = results
     } else {
       let ensData = await fetch(
-        `https://api.ensideas.com/ens/resolve/${query}`,
+        `https://api.ensideas.com/ens/resolve/${query}`
       ).then((res) => res.json())
       searchResults = [
         {
@@ -316,11 +318,11 @@ async function searchAllChains(query: string) {
     }
   } else if (
     /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi.test(
-      query as string,
+      query as string
     )
   ) {
     let ensData = await fetch(
-      `https://api.ensideas.com/ens/resolve/${query}`,
+      `https://api.ensideas.com/ens/resolve/${query}`
     ).then((res) => res.json())
 
     if (ensData.address) {
@@ -336,7 +338,7 @@ async function searchAllChains(query: string) {
   } else {
     // Get current usd prices for each chain
     const usdCoinPrices = await fetch(`${HOST_URL}/api/usdCoinConversion`).then(
-      (res) => res.json(),
+      (res) => res.json()
     )
 
     const responses = await Promise.allSettled(promises)
@@ -364,7 +366,7 @@ async function searchAllChains(query: string) {
                   usdCoinPrices?.prices?.[index]?.current_price) ||
               0,
           },
-        }),
+        })
       )
       searchResults = [...searchResults, ...chainSearchResults]
     })
@@ -372,7 +374,7 @@ async function searchAllChains(query: string) {
     // Sort results by all time usd volume only if usdCoinPrices is not null
     if (usdCoinPrices) {
       searchResults = searchResults.sort(
-        (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume,
+        (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
       )
     }
 
