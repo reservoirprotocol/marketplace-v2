@@ -19,7 +19,6 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
-import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
@@ -28,6 +27,7 @@ import Img from 'components/primitives/Img'
 import { BuyNow } from 'components/buttons'
 import optimizeImage from 'utils/optimizeImage'
 import { formatNumber } from 'utils/numbers'
+import { Address } from 'viem'
 
 type Props = {
   address: Address | undefined
