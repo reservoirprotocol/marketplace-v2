@@ -4,7 +4,7 @@ import AnalyticsProvider, {
 initializeAnalytics()
 import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 
-import { Inter } from "next/font/google"
+import { Inter } from 'next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
@@ -12,15 +12,12 @@ import { darkTheme, globalReset } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
 import {
   RainbowKitProvider,
+  getDefaultConfig,
   getDefaultWallets,
   darkTheme as rainbowDarkTheme,
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
-import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
-import { publicProvider } from 'wagmi/providers/public'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
-
 import {
   ReservoirKitProvider,
   darkTheme as reservoirDarkTheme,
@@ -39,6 +36,11 @@ import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
 import { chainPaymentTokensMap } from 'utils/paymentTokens'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { WagmiProvider, http } from 'wagmi'
+import { chainIdToAlchemyNetworkMap } from 'utils/chainIdToAlchemyNetworkMap'
+import { _transports } from '@rainbow-me/rainbowkit/dist/config/getDefaultConfig'
+import { Chain, mainnet } from 'viem/chains'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization/
 const inter = Inter({
@@ -55,22 +57,30 @@ const WALLET_CONNECT_PROJECT_ID =
 const DISABLE_PROXY =
   process.env.NEXT_PUBLIC_DISABLE_PROXY === 'true' ? true : false
 
-const { chains, publicClient } = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
-  publicProvider(),
-])
+const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 
-const { connectors } = getDefaultWallets({
+const wagmiConfig = getDefaultConfig({
   appName: 'Reservoir NFT Explorer',
   projectId: WALLET_CONNECT_PROJECT_ID,
-  chains,
+  chains: (supportedChains.length === 0 ? [mainnet] : supportedChains) as [
+    Chain,
+    ...Chain[]
+  ],
+  ssr: true,
+  transports: supportedChains.reduce((transportsConfig: _transports, chain) => {
+    const network = chainIdToAlchemyNetworkMap[chain.id]
+    if (network && ALCHEMY_API_KEY) {
+      transportsConfig[chain.id] = http(
+        `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
+      )
+    } else {
+      transportsConfig[chain.id] = http() // Fallback to default HTTP transport
+    }
+    return transportsConfig
+  }, {}),
 })
 
-const wagmiClient = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-})
+const queryClient = new QueryClient()
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
 const reservoirKitThemeOverrides = {
@@ -90,17 +100,19 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         light: 'light',
       }}
     >
-      <WagmiConfig config={wagmiClient}>
-        <ChainContextProvider>
-          <AnalyticsProvider>
-            <ErrorTrackingProvider>
-              <ReferralContextProvider>
-                <MyApp {...props} />
-              </ReferralContextProvider>
-            </ErrorTrackingProvider>
-          </AnalyticsProvider>
-        </ChainContextProvider>
-      </WagmiConfig>
+      <WagmiProvider config={wagmiConfig}>
+        <QueryClientProvider client={queryClient}>
+          <ChainContextProvider>
+            <AnalyticsProvider>
+              <ErrorTrackingProvider>
+                <ReferralContextProvider>
+                  <MyApp {...props} />
+                </ReferralContextProvider>
+              </ErrorTrackingProvider>
+            </AnalyticsProvider>
+          </ChainContextProvider>
+        </QueryClientProvider>
+      </WagmiProvider>
     </ThemeProvider>
   )
 }
@@ -206,11 +218,7 @@ function MyApp({
           <CartProvider feesOnTopUsd={feesOnTop}>
             <WebsocketContextProvider>
               <Tooltip.Provider>
-                <RainbowKitProvider
-                  chains={chains}
-                  theme={rainbowKitTheme}
-                  modalSize="compact"
-                >
+                <RainbowKitProvider theme={rainbowKitTheme} modalSize="compact">
                   <ToastContextProvider>
                     <FunctionalComponent {...pageProps} />
                   </ToastContextProvider>

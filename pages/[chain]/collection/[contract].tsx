@@ -32,7 +32,6 @@ import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { useDebounce } from 'usehooks-ts'
-
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/common/ActivityFilters'
@@ -53,7 +52,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { Address, useAccount } from 'wagmi'
+import { useAccount } from 'wagmi'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
@@ -62,7 +61,7 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
-import { formatUnits } from 'viem'
+import { Address } from 'viem'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -396,6 +395,22 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             <meta
               property="fc:frame:button:1:target"
               content={`eip155:${collection.chainId}:${collection.primaryContract}`}
+            />
+
+            <meta
+              property="fc:frame:button:2"
+              content={
+                mintPrice
+                  ? `Mint ${mintPrice} ${mintCurrency?.toUpperCase()}`
+                  : `Collect ${
+                      collection.floorAsk?.price?.amount?.native
+                    } ${collection.floorAsk?.price?.currency?.symbol?.toUpperCase()}`
+              }
+            />
+            <meta property="fc:frame:button:2:action" content="link" />
+            <meta
+              property="fc:frame:button:2:target"
+              content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
             />
           </>
         }

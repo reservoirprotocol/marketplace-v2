@@ -19,7 +19,6 @@ import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
-import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
@@ -27,6 +26,7 @@ import { ChainContext } from 'context/ChainContextProvider'
 import Img from 'components/primitives/Img'
 import optimizeImage from 'utils/optimizeImage'
 import { formatNumber } from 'utils/numbers'
+import { Address } from 'viem'
 
 type Props = {
   address: Address | undefined
