@@ -388,10 +388,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               property="eth:nft:media_url"
               content={collection.banner || collection.image}
             />
-            <meta
-              property="eth:nft:chain"
-              content={client?.currentChain()?.name.toLowerCase()}
-            />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
