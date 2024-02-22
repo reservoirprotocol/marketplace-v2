@@ -23,7 +23,6 @@ import usdcContracts from './usdcContracts'
 export const ancient8Testnet = {
   id: 2863311531,
   name: 'Ancient8 Testnet',
-  network: 'ancient8',
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
   rpcUrls: {
     default: {
