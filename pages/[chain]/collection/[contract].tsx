@@ -363,38 +363,39 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         description={ssr?.collection?.collections?.[0]?.description as string}
         metatags={
           <>
-            <meta
-              property="og:title"
-              content={`Farcaster: ${collection?.name}`}
-            />
-
-            <meta
-              property="eth:nft:collection"
-              content={`Farcaster: ${collection?.name}`}
-            />
+            <meta property="eth:nft:collection" content={collection.name} />
             <meta
               property="eth:nft:contract_address"
-              content={collection?.primaryContract}
+              content={collection.primaryContract}
             />
             <meta
               property="eth:nft:creator_address"
-              content={collection?.creator}
+              content={collection.primaryContract}
             />
             <meta
               property="eth:nft:schema"
-              content={collection?.contractKind?.toUpperCase()}
+              content={collection.contractKind?.toLowerCase()}
             />
             <meta
-              property="eth:nft:media_url"
-              content={collection.banner || collection.image}
+              property="eth:nft:mint_status"
+              content={collection.isMinting ? 'live' : 'closed'}
             />
+            <meta
+              property="eth:nft:chain"
+              content={client?.currentChain()?.name}
+            />
+            <meta property="nft:chain" content={client?.currentChain()?.name} />
+            <meta property="fc:frame" content="vNext" />
+            <meta
+              property="fc:frame:image"
+              content={collection.image || collection.banner}
+            />
+            <meta property="fc:frame:image:aspect_ratio" content="1:1" />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content={`eip155:${
-                collection?.chainId
-              }:${collection.primaryContract?.toLowerCase()}`}
+              content={`eip155:${collection.chainId}:${collection.primaryContract}`}
             />
           </>
         }
