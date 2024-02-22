@@ -22,7 +22,6 @@ import {
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../../../_app'
 
 type Props = InferGetServerSidePropsType<typeof getServerSideProps>
 

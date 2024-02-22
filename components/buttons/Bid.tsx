@@ -9,10 +9,11 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useWalletClient, mainnet } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { mainnet } from 'wagmi/chains'
 
 type Props = {
   tokenId?: string | undefined
