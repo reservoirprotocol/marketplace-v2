@@ -3,6 +3,7 @@ import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
 import { zeroAddress } from 'viem'
 import { useMarketplaceChain } from 'hooks'
+import supportedChains, { DefaultChain } from 'utils/chains'
 
 type Props = {
   address: string
@@ -17,10 +18,11 @@ const CryptoCurrencyIcon: FC<Props> = ({
   css,
 }) => {
   const { proxyApi } = useMarketplaceChain()
+  const chain = supportedChains.find((chain) => chain.id === chainId)
 
   return (
     <StyledImg
-      src={`${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/redirect/currency/${address}/icon/v1`}
+      src={`${process.env.NEXT_PUBLIC_PROXY_URL}${chain?.proxyApi ?? proxyApi}/redirect/currency/${address}/icon/v1`}
       css={css}
     />
   )
