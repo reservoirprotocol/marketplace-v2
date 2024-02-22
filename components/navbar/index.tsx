@@ -13,12 +13,10 @@ import MobileSearch from './MobileSearch'
 import { useTheme } from 'next-themes'
 import { useMediaQuery } from 'react-responsive'
 import { useMarketplaceChain, useMounted } from '../../hooks'
-import { Address, useAccount } from 'wagmi'
+import { useAccount } from 'wagmi'
 import CartButton from './CartButton'
 import { AccountSidebar } from 'components/navbar/AccountSidebar'
-
 import * as HoverCard from '@radix-ui/react-hover-card'
-import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 import { usePrivy } from '@privy-io/react-auth'
 
 export const NAVBAR_HEIGHT = 81
@@ -28,10 +26,8 @@ const Navbar = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
-  const { isConnected, address: wagmiAddress } = useAccount()
+  const { isConnected, address } = useAccount()
   const { ready, authenticated } = usePrivy()
-  const { wallet } = usePrivyWagmi()
-  const address = wallet ? (wallet?.address as Address) : wagmiAddress
 
   let searchRef = useRef<HTMLInputElement>(null)
 
@@ -231,7 +227,7 @@ const Navbar = () => {
             </HoverCard.Root>
           </Box>
           {isConnected ||
-            (wallet && (
+            (address && (
               <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
                 <Box css={{ mr: '$2' }}>
                   <NavItem>Portfolio</NavItem>

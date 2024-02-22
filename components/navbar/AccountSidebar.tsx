@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { AnimatedOverlay, Content } from 'components/primitives/Dialog'
-import { Address, useDisconnect } from 'wagmi'
+import { useDisconnect } from 'wagmi'
 import { useENSResolver } from 'hooks'
 import { Button, Flex, Grid, Text } from 'components/primitives'
 import { Avatar } from 'components/primitives/Avatar'
@@ -23,6 +23,7 @@ import Link from 'next/link'
 import Wallet from './Wallet'
 import { useRouter } from 'next/router'
 import { usePrivy } from '@privy-io/react-auth'
+import { Address } from 'viem'
 
 type Props = {
   address: Address

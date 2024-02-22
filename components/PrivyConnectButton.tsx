@@ -1,5 +1,4 @@
-import { usePrivy, useWallets } from '@privy-io/react-auth'
-import { usePrivyWagmi } from '@privy-io/wagmi-connector'
+import { usePrivy } from '@privy-io/react-auth'
 import { Button } from './primitives'
 
 export const PrivyConnectButton = () => {
