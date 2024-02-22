@@ -260,20 +260,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               content={token?.token?.kind?.toUpperCase()}
             />
             <meta property="eth:nft:media_url" content={token?.token?.image} />
-
-            <meta property="fc:frame" content="vNext" />
-            <meta
-              property="fc:frame:image"
-              content={token?.token?.image || collection?.banner}
-            />
-            <meta property="fc:frame:button:1" content="Mint" />
-            <meta property="fc:frame:button:1:action" content="mint" />
-            <meta
-              property="fc:frame:button:1:target"
-              content={`${token?.token?.kind?.toUpperCase()}:${
-                token?.token?.chainId
-              }:${token?.token?.contract}:${token?.token?.tokenId}`}
-            />
           </>
         }
       />
