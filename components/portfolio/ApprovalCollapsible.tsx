@@ -29,14 +29,12 @@ const Img = styled('img', {
 type Props = {
   item: NonNullable<NonNullable<Execute['steps']>[0]['items']>[0]
   batchListingData: BatchListingData[]
-  selectedMarketplaces: Marketplace[]
   open?: boolean
 }
 
 export const ApprovalCollapsible: FC<Props> = ({
   item,
   batchListingData,
-  selectedMarketplaces,
   open,
 }) => {
   const [collapsibleOpen, setCollapsibleOpen] = useState(false)
@@ -44,37 +42,6 @@ export const ApprovalCollapsible: FC<Props> = ({
   let isComplete = item.status == 'complete'
 
   const orderIndexes = item?.orderIndexes || []
-
-  const marketplacesSeekingApproval = useMemo(() => {
-    let uniqueMarketplaces: Marketplace[] = []
-
-    orderIndexes.forEach((orderIndex) => {
-      if (batchListingData[orderIndex]) {
-        const listing = batchListingData[orderIndex].listing
-
-        const marketplace = selectedMarketplaces.find(
-          (m) => m.orderbook === listing.orderbook
-        )
-
-        if (
-          marketplace &&
-          !uniqueMarketplaces.find(
-            (uniqueMarketplace) =>
-              uniqueMarketplace.orderbook === marketplace.orderbook
-          )
-        ) {
-          uniqueMarketplaces.push(marketplace)
-        }
-      }
-    })
-    return uniqueMarketplaces
-  }, [orderIndexes, item, batchListingData])
-
-  const marketplaceNames = useMemo(() => {
-    return marketplacesSeekingApproval
-      .map((marketplace) => marketplace.name)
-      .join(' and ')
-  }, [marketplacesSeekingApproval])
 
   const collectionImage: string = useMemo(() => {
     const token = batchListingData[orderIndexes[0]]?.token?.token
@@ -166,12 +133,9 @@ export const ApprovalCollapsible: FC<Props> = ({
           <Flex css={{ gap: '$2' }}>
             <Flex align="center">
               <Img src={collectionImage} />
-              {marketplacesSeekingApproval.map((marketplace) => (
-                <Img src={marketplace.imageUrl} />
-              ))}
             </Flex>
             <Text style="body3" ellipsify>
-              Approve {collectionName} on {marketplaceNames}
+              Approve {collectionName}
             </Text>
           </Flex>
           <Flex>
