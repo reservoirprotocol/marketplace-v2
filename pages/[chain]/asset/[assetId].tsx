@@ -263,7 +263,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content={`${token?.token?.kind}:${token?.token?.chainId}:${token?.token?.contract}:${token?.token?.tokenId}`}
+              content={`eip155:${token?.token?.chainId}:${token?.token?.contract}:${token?.token?.tokenId}`}
             />
           </>
         }
