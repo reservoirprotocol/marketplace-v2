@@ -61,6 +61,7 @@ const wagmiConfig = createConfig({
     ...Chain[]
   ],
   ssr: true,
+  multiInjectedProviderDiscovery: false,
   transports: supportedChains.reduce((transportsConfig: _transports, chain) => {
     const network = chainIdToAlchemyNetworkMap[chain.id]
     if (network && ALCHEMY_API_KEY) {
@@ -108,7 +109,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         }}
       >
         <QueryClientProvider client={queryClient}>
-          <WagmiProvider config={wagmiConfig}>
+          <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
             <ChainContextProvider>
               <AnalyticsProvider>
                 <ErrorTrackingProvider>

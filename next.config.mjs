@@ -10,6 +10,7 @@ const sentryWebpackPluginOptions = {
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  transpilePackages: ['@privy-io/wagmi'],
   images: {
     unoptimized: true,
   },
