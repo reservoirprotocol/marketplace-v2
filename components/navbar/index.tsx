@@ -26,7 +26,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery({ query: '(max-width: 960px' })
   const isMounted = useMounted()
   const { routePrefix } = useMarketplaceChain()
-  const { isConnected, address } = useAccount()
+  const { address } = useAccount()
   const { ready, authenticated } = usePrivy()
 
   let searchRef = useRef<HTMLInputElement>(null)
@@ -226,16 +226,15 @@ const Navbar = () => {
               </HoverCard.Content>
             </HoverCard.Root>
           </Box>
-          {isConnected ||
-            (address && (
-              <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
-                <Box css={{ mr: '$2' }}>
-                  <NavItem>Portfolio</NavItem>
-                </Box>
-              </Link>
-            ))}
+          {address && (
+            <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
+              <Box css={{ mr: '$2' }}>
+                <NavItem>Portfolio</NavItem>
+              </Box>
+            </Link>
+          )}
         </Flex>
-        {isConnected && ready && authenticated && address ? (
+        {ready && authenticated && address ? (
           <AccountSidebar address={address} />
         ) : (
           <Box css={{ maxWidth: '185px' }}>
