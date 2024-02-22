@@ -396,7 +396,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content={`${collection?.contractKind?.toLowerCase()}:${
+              content={`eip155:${
                 collection?.chainId
               }:${collection.primaryContract?.toLowerCase()}`}
             />
