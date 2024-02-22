@@ -1,6 +1,6 @@
 import { reservoirChains } from '@reservoir0x/reservoir-sdk'
 import { useEffect, useState } from 'react'
-import { useNetwork } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 type Chain = Omit<(typeof reservoirChains)['mainnet'], 'websocketUrl'>
 
@@ -47,7 +47,7 @@ export default () => {
   const [unsupportedChain, setUnsupportedChain] = useState<Chain | undefined>(
     undefined,
   )
-  const { chain } = useNetwork()
+  const { chain } = useAccount()
 
   useEffect(() => {
     setUnsupportedChain(
