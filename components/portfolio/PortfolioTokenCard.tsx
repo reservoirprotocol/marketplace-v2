@@ -48,9 +48,9 @@ import { useMediaQuery } from 'react-responsive'
 import fetcher from 'utils/fetcher'
 import { formatNumber } from 'utils/numbers'
 import { DATE_REGEX, timeTill } from 'utils/till'
-import { Address } from 'wagmi'
 import Image from 'next/image'
 import optimizeImage from 'utils/optimizeImage'
+import { Address } from 'viem'
 
 type PortfolioTokenCardProps = {
   token: ReturnType<typeof useUserTokens>['data'][0]

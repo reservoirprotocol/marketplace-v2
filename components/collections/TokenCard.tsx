@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
-import { Address } from 'wagmi'
+import { Address } from 'viem'
 
 type TokenCardProps = {
   token: ReturnType<typeof useDynamicTokens>['data'][0]

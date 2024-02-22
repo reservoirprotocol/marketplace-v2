@@ -14,7 +14,6 @@ import {
   useState,
 } from 'react'
 import supportedChains, { DefaultChain } from 'utils/chains'
-
 import * as Tabs from '@radix-ui/react-tabs'
 import {
   useTrendingCollections,
@@ -24,7 +23,6 @@ import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
-import LoadingSpinner from 'components/common/LoadingSpinner'
 import MintsPeriodDropdown, {
   MintsSortingOption,
 } from 'components/common/MintsPeriodDropdown'
