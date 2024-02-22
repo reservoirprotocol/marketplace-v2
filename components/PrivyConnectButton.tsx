@@ -1,8 +1,18 @@
-import { usePrivy } from '@privy-io/react-auth'
+import { useLogin, usePrivy, useWallets } from '@privy-io/react-auth'
+import { useSetActiveWallet } from '@privy-io/wagmi'
 import { Button } from './primitives'
 
 export const PrivyConnectButton = () => {
-  const { login, logout, ready, authenticated } = usePrivy()
+  const { logout, ready, authenticated } = usePrivy()
+  const { wallets } = useWallets()
+  const { setActiveWallet } = useSetActiveWallet()
+
+  const { login } = useLogin({
+    onComplete: (user, isNewUser, wasAlreadyAuthenticated) => {
+      console.log('Login complete')
+      setActiveWallet(wallets[0])
+    },
+  })
 
   if (!ready) return null
 

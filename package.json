@@ -1,6 +1,5 @@
 {
   "private": true,
-  "type": "commonjs",
   "scripts": {
     "dev": "yarn prebuild && next",
     "build": "yarn prebuild && next build",
