@@ -1,5 +1,5 @@
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
-import { reservoirChains } from '@reservoir0x/reservoir-sdk'
+import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import {
   arbitrum,
@@ -17,6 +17,7 @@ import {
   arbitrumNova,
   scroll,
   goerli,
+  opBNB,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
@@ -208,6 +209,26 @@ export default [
       },
     ],
     checkPollingInterval: reservoirChains.bsc.checkPollingInterval,
+  },
+  {
+    ...opBNB,
+    lightIconUrl: '/icons/bsc-icon-dark.svg',
+    darkIconUrl: '/icons/bsc-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.opBnb.baseApiUrl,
+    proxyApi: '/api/reservoir/opbnb',
+    routePrefix: 'opbnb',
+    coingeckoId: 'binancecoin',
+    checkPollingInterval: reservoirChains.opBnb.checkPollingInterval,
+  },
+  {
+    ...customChains.ancient8,
+    lightIconUrl: '/icons/ancient8-icon-dark.svg',
+    darkIconUrl: '/icons/ancient8-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.ancient8.baseApiUrl,
+    proxyApi: '/api/reservoir/ancient8',
+    routePrefix: 'ancient8',
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.ancient8.checkPollingInterval,
   },
   {
     ...avalanche,
