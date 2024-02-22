@@ -397,6 +397,22 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               property="fc:frame:button:1:target"
               content={`eip155:${collection.chainId}:${collection.primaryContract}`}
             />
+
+            <meta
+              property="fc:frame:button:2"
+              content={
+                mintPrice
+                  ? `Mint ${mintPrice} ${mintCurrency?.toUpperCase()}`
+                  : `Collect ${
+                      collection.floorAsk?.price?.amount?.native
+                    } ${collection.floorAsk?.price?.currency?.symbol?.toUpperCase()}`
+              }
+            />
+            <meta property="fc:frame:button:2:action" content="link" />
+            <meta
+              property="fc:frame:button:2:target"
+              content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
+            />
           </>
         }
       />
