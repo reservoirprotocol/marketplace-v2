@@ -13,7 +13,6 @@ import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
 import { Anchor, Flex } from 'components/primitives'
 import { v4 as uuidv4 } from 'uuid'
 import { Execute } from '@reservoir0x/reservoir-sdk'
-import { useNetwork } from 'wagmi'
 import * as allChains from 'wagmi/chains'
 import { customChains } from '@reservoir0x/reservoir-sdk'
 

@@ -11,7 +11,7 @@ import {
   useMemo,
   useState,
 } from 'react'
-import { mainnet, useAccount, useWalletClient } from 'wagmi'
+import { useAccount, useWalletClient } from 'wagmi'
 import { useCollections } from '@reservoir0x/reservoir-kit-ui'
 import { SWRResponse } from 'swr'
 import { CSS } from '@stitches/react'
@@ -19,6 +19,7 @@ import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { adaptPrivyWallet } from 'utils/privyAdapter'
+import { mainnet } from 'wagmi/chains'
 
 type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]

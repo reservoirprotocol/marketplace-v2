@@ -4,18 +4,13 @@ import AnalyticsProvider, {
 initializeAnalytics()
 import ErrorTrackingProvider from 'components/ErrorTrackingProvider'
 
-import { Inter } from '@next/font/google'
+import { Inter } from 'next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
 import { darkTheme, globalReset } from 'stitches.config'
-import { configureChains, mainnet } from 'wagmi'
-import { PrivyProvider } from '@privy-io/react-auth'
-import { PrivyWagmiConnector, usePrivyWagmi } from '@privy-io/wagmi-connector'
+import '@rainbow-me/rainbowkit/styles.css'
 import * as Tooltip from '@radix-ui/react-tooltip'
-import { publicProvider } from 'wagmi/providers/public'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
-
 import {
   ReservoirKitProvider,
   darkTheme as reservoirDarkTheme,
@@ -34,6 +29,13 @@ import ReferralContextProvider, {
   ReferralContext,
 } from 'context/ReferralContextProvider'
 import { chainPaymentTokensMap } from 'utils/paymentTokens'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { http } from 'wagmi'
+import { chainIdToAlchemyNetworkMap } from 'utils/chainIdToAlchemyNetworkMap'
+import { _transports } from '@rainbow-me/rainbowkit/dist/config/getDefaultConfig'
+import { Chain, mainnet } from 'viem/chains'
+import { PrivyProvider } from '@privy-io/react-auth'
+import { createConfig, WagmiProvider } from '@privy-io/wagmi'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -51,10 +53,28 @@ const PRIVY_APP_ID = process.env.NEXT_PUBLIC_PRIVY_APP_ID || ''
 const DISABLE_PROXY =
   process.env.NEXT_PUBLIC_DISABLE_PROXY === 'true' ? true : false
 
-const configureChainsConfig = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
-  publicProvider(),
-])
+const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
+
+const wagmiConfig = createConfig({
+  chains: (supportedChains.length === 0 ? [mainnet] : supportedChains) as [
+    Chain,
+    ...Chain[]
+  ],
+  ssr: true,
+  transports: supportedChains.reduce((transportsConfig: _transports, chain) => {
+    const network = chainIdToAlchemyNetworkMap[chain.id]
+    if (network && ALCHEMY_API_KEY) {
+      transportsConfig[chain.id] = http(
+        `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
+      )
+    } else {
+      transportsConfig[chain.id] = http() // Fallback to default HTTP transport
+    }
+    return transportsConfig
+  }, {}),
+})
+
+const queryClient = new QueryClient()
 
 //CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
 const reservoirKitThemeOverrides = {
@@ -81,23 +101,25 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
             createOnLogin: 'all-users',
             requireUserPasswordOnCreate: false,
           },
-          supportedChains: [...configureChainsConfig.chains],
+          supportedChains: [...supportedChains],
           appearance: {
             theme: 'dark',
           },
         }}
       >
-        <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}>
-          <ChainContextProvider>
-            <AnalyticsProvider>
-              <ErrorTrackingProvider>
-                <ReferralContextProvider>
-                  <MyApp {...props} />
-                </ReferralContextProvider>
-              </ErrorTrackingProvider>
-            </AnalyticsProvider>
-          </ChainContextProvider>
-        </PrivyWagmiConnector>
+        <QueryClientProvider client={queryClient}>
+          <WagmiProvider config={wagmiConfig}>
+            <ChainContextProvider>
+              <AnalyticsProvider>
+                <ErrorTrackingProvider>
+                  <ReferralContextProvider>
+                    <MyApp {...props} />
+                  </ReferralContextProvider>
+                </ErrorTrackingProvider>
+              </AnalyticsProvider>
+            </ChainContextProvider>
+          </WagmiProvider>
+        </QueryClientProvider>
       </PrivyProvider>
     </ThemeProvider>
   )

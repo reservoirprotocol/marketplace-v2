@@ -8,11 +8,10 @@ import {
   Text,
 } from 'components/primitives'
 import { mainnet, polygon, optimism } from 'wagmi/chains'
-import { useAccount, useContractReads, erc20ABI, useBalance } from 'wagmi'
+import { useAccount, useBalance, useReadContracts } from 'wagmi'
 import { useMemo, useState } from 'react'
-import { zeroAddress, formatUnits, Address } from 'viem'
+import { zeroAddress, formatUnits, erc20Abi } from 'viem'
 import { useCoinConversion } from '@reservoir0x/reservoir-kit-ui'
-import { usePrivyWagmi } from '@privy-io/wagmi-connector'
 
 //CONFIGURABLE: Here you may configure currencies that you want to display in the wallet menu. Native currencies,
 //like ETH/MATIC etc need to be fetched in a different way. Configure them below
@@ -85,22 +84,22 @@ const currencyCoingeckoIds = currencies
 
 const Wallet = () => {
   const [viewAll, setViewAll] = useState(false)
-  const { address: wagmiAddress } = useAccount()
-  const { wallet } = usePrivyWagmi()
-  const address = wallet ? (wallet?.address as Address) : wagmiAddress
+  const { address } = useAccount()
 
-  const { data: nonNativeBalances } = useContractReads({
-    contracts: nonNativeCurrencies.map((currency) => ({
-      abi: erc20ABI,
-      address: currency.address as `0x${string}`,
-      chainId: currency.chain.id,
-      functionName: 'balanceOf',
-      args: [address as any],
-    })),
-    watch: true,
-    enabled: address ? true : false,
-    allowFailure: false,
-  })
+  const { data: nonNativeBalances, queryKey: nonNativeBalancesQueryKey } =
+    useReadContracts({
+      contracts: nonNativeCurrencies.map((currency) => ({
+        abi: erc20Abi,
+        address: currency.address as `0x${string}`,
+        chainId: currency.chain.id,
+        functionName: 'balanceOf',
+        args: [address as any],
+      })),
+      allowFailure: false,
+      query: {
+        enabled: address ? true : false,
+      },
+    })
 
   //CONFIGURABLE: Configure these by just changing the chainId to fetch native balance info, in addition to changing this
   // also make sure you change the enhancedCurrencies function to take into account for these new balances

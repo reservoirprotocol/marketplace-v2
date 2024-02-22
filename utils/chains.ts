@@ -38,6 +38,7 @@ export type ReservoirChain = Chain & {
   listingCurrencies?: Currency[]
   oracleBidsEnabled?: boolean
   checkPollingInterval?: number
+  paperContractId?: string
 }
 
 const nativeCurrencyBase = {
@@ -86,6 +87,7 @@ export const DefaultChain: ReservoirChain = {
   ],
   oracleBidsEnabled: true,
   checkPollingInterval: reservoirChains.mainnet.checkPollingInterval,
+  paperContractId: process.env.PAPER_ETHEREUM_CONTRACT_ID,
 }
 
 export default [
@@ -100,6 +102,7 @@ export default [
     coingeckoId: 'matic-network',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_COMMUNITY,
+    paperContractId: process.env.PAPER_POLYGON_CONTRACT_ID,
     wssUrl: 'wss://ws-polygon.reservoir.tools',
     listingCurrencies: [
       {
@@ -143,16 +146,16 @@ export default [
     checkPollingInterval: reservoirChains.arbitrum.checkPollingInterval,
   },
   {
-    ...arbitrumNova,
-    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
-    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
-    reservoirBaseUrl: reservoirChains.arbitrumNova.baseApiUrl,
-    proxyApi: '/api/reservoir/arbitrum-nova',
-    routePrefix: 'arbitrum-nova',
+    ...base,
+    lightIconUrl: '/icons/base-icon-dark.svg',
+    darkIconUrl: '/icons/base-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.base.baseApiUrl,
+    proxyApi: '/api/reservoir/base',
+    routePrefix: 'base',
     coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
-    checkPollingInterval: reservoirChains.arbitrumNova.checkPollingInterval,
+    collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
+    checkPollingInterval: reservoirChains.base.checkPollingInterval,
   },
   {
     ...optimism,
@@ -219,16 +222,16 @@ export default [
     checkPollingInterval: reservoirChains.avalanche.checkPollingInterval,
   },
   {
-    ...base,
-    lightIconUrl: '/icons/base-icon-dark.svg',
-    darkIconUrl: '/icons/base-icon-light.svg',
-    reservoirBaseUrl: reservoirChains.base.baseApiUrl,
-    proxyApi: '/api/reservoir/base',
-    routePrefix: 'base',
+    ...arbitrumNova,
+    lightIconUrl: '/icons/arbitrum-nova-icon-dark.svg',
+    darkIconUrl: '/icons/arbitrum-nova-icon-light.svg',
+    reservoirBaseUrl: reservoirChains.arbitrumNova.baseApiUrl,
+    proxyApi: '/api/reservoir/arbitrum-nova',
+    routePrefix: 'arbitrum-nova',
     coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
-    checkPollingInterval: reservoirChains.base.checkPollingInterval,
+    collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
+    checkPollingInterval: reservoirChains.arbitrumNova.checkPollingInterval,
   },
   {
     ...linea,

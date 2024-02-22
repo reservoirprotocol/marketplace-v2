@@ -23,7 +23,29 @@ type Collection = NonNullable<
 >[0]
 
 export const config = {
-  runtime: 'experimental-edge',
+  runtime: 'edge',
+}
+
+const spamCollections: Record<number, string[]> = {
+  1: ['0x31fe9d95dde43cf9893b76160f63521a9e3d26b0'],
+}
+
+const locallyFilterSpam = (results: any[]) => {
+  return results.filter((result) => {
+    if (
+      result.data.collectionId &&
+      result.data.chainId &&
+      spamCollections[result.data.chainId]
+    ) {
+      return !spamCollections[result.data.chainId].includes(
+        result.data.collectionId
+      )
+        ? true
+        : false
+    } else {
+      return true
+    }
+  })
 }
 
 export default async function handler(req: Request) {
@@ -67,7 +89,7 @@ export default async function handler(req: Request) {
 }
 
 async function searchSingleChain(chain: ReservoirChain, query: string) {
-  const { reservoirBaseUrl, collectionSetId, community } = chain
+  const { collectionSetId, community, reservoirBaseUrl } = chain
   const headers = {
     headers: {
       'x-api-key': process.env.RESERVOIR_API_KEY || '',
@@ -86,7 +108,6 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
   } else if (community) {
     queryData.community = community
   }
-
   const promise = fetcher(
     `${reservoirBaseUrl}/search/collections/v1`,
     queryData,
@@ -192,6 +213,8 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
       searchResults = processedSearchResults
     }
   }
+  //filter own known spam collections
+  searchResults = locallyFilterSpam(searchResults)
   return searchResults
 }
 
@@ -207,7 +230,7 @@ async function searchAllChains(query: string) {
     }
 
   supportedChains.forEach(async (chain) => {
-    const { reservoirBaseUrl, collectionSetId, community } = chain
+    const { collectionSetId, community, reservoirBaseUrl } = chain
     const headers = {
       headers: {
         'x-api-key': process.env.RESERVOIR_API_KEY || '',
@@ -241,7 +264,7 @@ async function searchAllChains(query: string) {
         },
       }
       const { data } = await fetcher(
-        `${reservoirBaseUrl}collections/v7?contract=${query}&limit=6`,
+        `${reservoirBaseUrl}/collections/v7?contract=${query}&limit=6`,
         {},
         headers
       )
@@ -269,7 +292,6 @@ async function searchAllChains(query: string) {
         }
       })
     })
-
     let results = await Promise.allSettled(promises).then((results) => {
       return results
         .filter(
@@ -355,6 +377,9 @@ async function searchAllChains(query: string) {
         (a, b) => b.data.allTimeUsdVolume - a.data.allTimeUsdVolume
       )
     }
+
+    //filter own known spam collections
+    searchResults = locallyFilterSpam(searchResults)
   }
 
   return searchResults

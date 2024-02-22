@@ -14,7 +14,6 @@ import {
   useState,
 } from 'react'
 import supportedChains, { DefaultChain } from 'utils/chains'
-
 import * as Tabs from '@radix-ui/react-tabs'
 import {
   useTrendingCollections,
@@ -24,7 +23,6 @@ import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
-import LoadingSpinner from 'components/common/LoadingSpinner'
 import MintsPeriodDropdown, {
   MintsSortingOption,
 } from 'components/common/MintsPeriodDropdown'
@@ -314,7 +312,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 }> = async ({ params, res }) => {
   const chainPrefix = params?.chain || ''
-  const chain =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
@@ -332,7 +330,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const trendingCollectionsPromise = fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending/v1`,
+    `${reservoirBaseUrl}/collections/trending/v1`,
     trendingCollectionsQuery,
     headers
   )
@@ -345,7 +343,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const featuredCollectionsPromise = fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending/v1`,
+    `${reservoirBaseUrl}/collections/trending/v1`,
     featuredCollectionQuery,
     headers
   )
@@ -358,7 +356,7 @@ export const getServerSideProps: GetServerSideProps<{
     }
 
   const trendingMintsPromise = fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
+    `${reservoirBaseUrl}/collections/trending-mints/v1`,
     trendingMintsQuery,
     headers
   )
@@ -370,6 +368,7 @@ export const getServerSideProps: GetServerSideProps<{
   ]).catch((e) => {
     console.error(e)
   })
+
   const trendingCollections: Props['ssr']['trendingCollections'] =
     promises?.[0].status === 'fulfilled' && promises[0].value.data
       ? (promises[0].value.data as Props['ssr']['trendingCollections'])

@@ -17,7 +17,7 @@ import { useMounted } from 'hooks'
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { NORMALIZE_ROYALTIES } from 'pages/_app'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import fetcher from 'utils/fetcher'
@@ -142,20 +142,21 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async ({ res, params }) => {
   const mintsQuery: paths['/collections/trending-mints/v1']['get']['parameters']['query'] =
     {
+      limit: 20,
       period: '24h',
-      limit: 50,
+      type: 'any',
     }
 
   const chainPrefix = params?.chain || ''
 
-  const chain =
+  const { reservoirBaseUrl } =
     supportedChains.find((chain) => chain.routePrefix === chainPrefix) ||
     DefaultChain
 
   const query = { ...mintsQuery, normalizeRoyalties: NORMALIZE_ROYALTIES }
 
   const response = await fetcher(
-    `${chain.reservoirBaseUrl}/collections/trending-mints/v1`,
+    `${reservoirBaseUrl}/collections/trending-mints/v1`,
     query,
     {
       headers: {

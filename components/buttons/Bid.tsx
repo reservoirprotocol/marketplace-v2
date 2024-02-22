@@ -10,11 +10,12 @@ import {
 } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
-import { useAccount, useWalletClient, mainnet } from 'wagmi'
 import { usePrivy } from '@privy-io/react-auth'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useMarketplaceChain } from 'hooks'
 import { adaptPrivyWallet } from 'utils/privyAdapter'
+import { useAccount, useWalletClient } from 'wagmi'
+import { useMarketplaceChain } from 'hooks'
+import { mainnet } from 'wagmi/chains'
 
 type Props = {
   tokenId?: string | undefined

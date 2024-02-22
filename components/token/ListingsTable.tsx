@@ -155,7 +155,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
   mutate,
 }) => {
   const { displayName: fromDisplayName } = useENSResolver(listing.maker)
-  const { reservoirBaseUrl } = useMarketplaceChain()
+  const { proxyApi } = useMarketplaceChain()
   const expiration = useTimeSince(listing?.expiration)
   const expirationText = expiration ? `Expires ${expiration}` : null
 
@@ -167,7 +167,9 @@ const ListingTableRow: FC<ListingTableRowProps> = ({
 
   const listingSourceName = listing?.source?.name
   const listingSourceDomain = listing?.source?.domain
-  const listingSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
+  const listingSourceLogo = `${
+    process.env.NEXT_PUBLIC_PROXY_URL
+  }${proxyApi}/redirect/sources/${
     listingSourceDomain || listingSourceName
   }/logo/v2`
 
