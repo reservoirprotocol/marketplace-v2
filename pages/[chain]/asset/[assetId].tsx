@@ -226,12 +226,60 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
     ? token.token.name
     : `${token?.token?.tokenId} - ${token?.token?.collection?.name}`
 
+  const base64EncodedToken = btoa(encodeURIComponent(JSON.stringify(token)))
+
   return (
     <Layout>
       <Head
-        ogImage={token?.token?.image || collection?.banner}
+        ogImage={`/api/og/token?token=${encodeURIComponent(
+          base64EncodedToken
+        )}`}
         title={pageTitle}
         description={collection?.description as string}
+        metatags={
+          <>
+            <meta
+              property="og:title"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+
+            <meta
+              property="eth:nft:collection"
+              content={`Farcaster: ${token?.token?.name}`}
+            />
+            <meta
+              property="eth:nft:contract_address"
+              content={token?.token?.contract}
+            />
+            <meta
+              property="eth:nft:creator_address"
+              content={token?.token?.collection?.creator}
+            />
+            <meta
+              property="eth:nft:schema"
+              content={token?.token?.kind?.toUpperCase()}
+            />
+            <meta property="eth:nft:media_url" content={token?.token?.image} />
+
+            <meta property="fc:frame" content="vNext" />
+            <meta
+              property="fc:frame:image"
+              content={token?.token?.image || collection?.banner}
+            />
+            <meta property="fc:frame:button:1" content="Mint" />
+            <meta property="fc:frame:button:1:action" content="mint" />
+            <meta
+              property="fc:frame:button:1:target"
+              content={`eip155:${token?.token?.chainId}:${token?.token?.contract}:${token?.token?.tokenId}`}
+            />
+          </>
+        }
+      />
+      <meta
+        name="twitter:image"
+        content={`/api/og/token?token=${encodeURIComponent(
+          base64EncodedToken
+        )}`}
       />
       <Flex
         justify="center"
