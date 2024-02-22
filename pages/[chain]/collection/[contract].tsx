@@ -12,6 +12,7 @@ import {
   useCollectionActivity,
   useDynamicTokens,
   useAttributes,
+  useReservoirClient,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -81,6 +82,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
   const chainCurrency = useChainCurrency()
+  const client = useReservoirClient()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([
@@ -359,6 +361,43 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         ogImage={ssr?.collection?.collections?.[0]?.banner}
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
+        metatags={
+          <>
+            <meta
+              property="og:title"
+              content={`Farcaster: ${collection?.name}`}
+            />
+
+            <meta
+              property="eth:nft:collection"
+              content={`Farcaster: ${collection?.name}`}
+            />
+            <meta
+              property="eth:nft:contract_address"
+              content={collection?.primaryContract}
+            />
+            <meta
+              property="eth:nft:creator_address"
+              content={collection?.creator}
+            />
+            <meta
+              property="eth:nft:schema"
+              content={collection?.contractKind?.toUpperCase()}
+            />
+            <meta
+              property="eth:nft:media_url"
+              content={collection.banner || collection.image}
+            />
+            <meta property="fc:frame:button:1" content="Mint" />
+            <meta property="fc:frame:button:1:action" content="mint" />
+            <meta
+              property="fc:frame:button:1:target"
+              content={`eip155:${
+                collection?.chainId
+              }:${collection.primaryContract?.toLowerCase()}`}
+            />
+          </>
+        }
       />
       <Tabs.Root
         defaultValue="items"
