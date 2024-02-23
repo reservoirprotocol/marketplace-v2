@@ -362,28 +362,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         description={ssr?.collection?.collections?.[0]?.description as string}
         metatags={
           <>
-            <meta property="eth:nft:collection" content={collection.name} />
-            <meta
-              property="eth:nft:contract_address"
-              content={collection.primaryContract}
-            />
-            <meta
-              property="eth:nft:creator_address"
-              content={collection.primaryContract}
-            />
-            <meta
-              property="eth:nft:schema"
-              content={collection.contractKind?.toLowerCase()}
-            />
-            <meta
-              property="eth:nft:mint_status"
-              content={collection.isMinting ? 'live' : 'closed'}
-            />
-            <meta
-              property="eth:nft:chain"
-              content={client?.currentChain()?.name}
-            />
-            <meta property="nft:chain" content={client?.currentChain()?.name} />
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
@@ -408,7 +386,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 <meta property="fc:frame:button:2:action" content="link" />
                 <meta
                   property="fc:frame:button:2:target"
-                  content={`${process.env.PUBLIC_NEXT_HOST_URL}${router.asPath}`}
+                  content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
                 />
               </>
             )}

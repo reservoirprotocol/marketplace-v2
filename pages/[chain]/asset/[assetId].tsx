@@ -242,23 +242,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="og:title"
               content={`Farcaster: ${token?.token?.name}`}
             />
-
-            <meta
-              property="eth:nft:collection"
-              content={`Farcaster: ${token?.token?.name}`}
-            />
-            <meta
-              property="eth:nft:contract_address"
-              content={token?.token?.contract}
-            />
-            <meta
-              property="eth:nft:creator_address"
-              content={token?.token?.collection?.creator}
-            />
-            <meta
-              property="eth:nft:schema"
-              content={token?.token?.kind?.toUpperCase()}
-            />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
@@ -277,7 +260,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                 <meta property="fc:frame:button:2:action" content="link" />
                 <meta
                   property="fc:frame:button:2:target"
-                  content={`${process.env.PUBLIC_NEXT_HOST_URL}${router.asPath}`}
+                  content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
                 />
               </>
             )}
