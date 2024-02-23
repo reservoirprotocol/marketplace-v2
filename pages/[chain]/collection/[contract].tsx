@@ -707,7 +707,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             css={{ pl: 42 }}
                             placeholder="Search by token name"
                             onChange={(e) => {
-                              resetCache()
                               setTokenSearchQuery(e.target.value)
                             }}
                             value={tokenSearchQuery}
