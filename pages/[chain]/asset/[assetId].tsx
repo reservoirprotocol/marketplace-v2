@@ -265,6 +265,22 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
               property="fc:frame:button:1:target"
               content={`eip155:${token?.token?.chainId}:${token?.token?.contract}:${token?.token?.tokenId}`}
             />
+
+            {token?.market?.floorAsk?.price?.amount?.native && (
+              <>
+                <meta
+                  property="fc:frame:button:2"
+                  content={`Buy ${
+                    token.market.floorAsk.price.amount.native
+                  } ${token.market.floorAsk.price.currency?.symbol?.toUpperCase()}`}
+                />
+                <meta property="fc:frame:button:2:action" content="link" />
+                <meta
+                  property="fc:frame:button:2:target"
+                  content={`${process.env.PUBLIC_NEXT_HOST_URL}${router.asPath}`}
+                />
+              </>
+            )}
           </>
         }
       />
