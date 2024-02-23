@@ -264,9 +264,16 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                 />
               </>
             )}
+            <meta
+              name="twitter:image"
+              content={`/api/og/token?token=${encodeURIComponent(
+                base64EncodedToken
+              )}`}
+            />
           </>
         }
       />
+
       <Flex
         justify="center"
         css={{
