@@ -72,7 +72,6 @@ const List: FC<Props> = ({
         collectionId={collectionId}
         tokenId={tokenId}
         feesBps={orderFees}
-        enableOnChainRoyalties={true}
         currencies={listingCurrencies}
         chainId={marketplaceChain.id}
         onClose={(data, stepData, currentStep) => {
