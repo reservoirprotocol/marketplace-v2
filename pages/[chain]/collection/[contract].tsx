@@ -12,6 +12,7 @@ import {
   useCollectionActivity,
   useDynamicTokens,
   useAttributes,
+  useReservoirClient,
 } from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
@@ -31,7 +32,6 @@ import { useMediaQuery } from 'react-responsive'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import { useDebounce } from 'usehooks-ts'
-
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { CollectionActivityTable } from 'components/collections/CollectionActivityTable'
 import { ActivityFilters } from 'components/common/ActivityFilters'
@@ -52,7 +52,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import supportedChains, { DefaultChain } from 'utils/chains'
 import { Head } from 'components/Head'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import { Address, useAccount } from 'wagmi'
+import { useAccount } from 'wagmi'
 import Img from 'components/primitives/Img'
 import Sweep from 'components/buttons/Sweep'
 import Mint from 'components/buttons/Mint'
@@ -61,7 +61,7 @@ import CopyText from 'components/common/CopyText'
 import { CollectionDetails } from 'components/collections/CollectionDetails'
 import useTokenUpdateStream from 'hooks/useTokenUpdateStream'
 import LiveState from 'components/common/LiveState'
-import { formatUnits } from 'viem'
+import { Address } from 'viem'
 
 type ActivityTypes = Exclude<
   NonNullable<
@@ -81,6 +81,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [tokenSearchQuery, setTokenSearchQuery] = useState<string>('')
   const chainCurrency = useChainCurrency()
+  const client = useReservoirClient()
   const debouncedSearch = useDebounce(tokenSearchQuery, 500)
   const [socketState, setSocketState] = useState<SocketState>(null)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([
@@ -359,6 +360,38 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         ogImage={ssr?.collection?.collections?.[0]?.banner}
         title={ssr?.collection?.collections?.[0]?.name}
         description={ssr?.collection?.collections?.[0]?.description as string}
+        metatags={
+          <>
+            <meta property="fc:frame" content="vNext" />
+            <meta
+              property="fc:frame:image"
+              content={collection.image || collection.banner}
+            />
+            <meta property="fc:frame:image:aspect_ratio" content="1:1" />
+            <meta property="fc:frame:button:1" content="Mint" />
+            <meta property="fc:frame:button:1:action" content="mint" />
+            <meta
+              property="fc:frame:button:1:target"
+              content={`eip155:${collection.chainId}:${collection.primaryContract}`}
+            />
+
+            {collection.floorAsk?.price?.amount?.native && (
+              <>
+                <meta
+                  property="fc:frame:button:2"
+                  content={`Collect ${
+                    collection.floorAsk.price.amount.native
+                  } ${collection.floorAsk.price.currency?.symbol?.toUpperCase()}`}
+                />
+                <meta property="fc:frame:button:2:action" content="link" />
+                <meta
+                  property="fc:frame:button:2:target"
+                  content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
+                />
+              </>
+            )}
+          </>
+        }
       />
       <Tabs.Root
         defaultValue="items"
@@ -674,7 +707,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             css={{ pl: 42 }}
                             placeholder="Search by token name"
                             onChange={(e) => {
-                              resetCache()
                               setTokenSearchQuery(e.target.value)
                             }}
                             value={tokenSearchQuery}

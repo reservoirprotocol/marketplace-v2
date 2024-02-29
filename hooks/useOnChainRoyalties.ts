@@ -1,5 +1,5 @@
 import { parseUnits } from 'viem'
-import { useContractReads } from 'wagmi'
+import { useReadContracts } from 'wagmi'
 import { mainnet, goerli } from 'wagmi/chains'
 
 type Props = {
@@ -77,7 +77,7 @@ export default function ({ tokens, enabled, chainId = mainnet.id }: Props) {
 
   const amount = parseUnits('1', 18)
 
-  return useContractReads({
+  return useReadContracts({
     contracts: tokens?.map(({ tokenId, contract }) => ({
       chainId: chainId,
       address: manifoldContract as any,
@@ -85,10 +85,12 @@ export default function ({ tokens, enabled, chainId = mainnet.id }: Props) {
       args: [contract as any, tokenId as any, amount as any],
       functionName: 'getRoyaltyView',
     })),
-    enabled:
-      manifoldContract.length > 0 && enabled && tokens && tokens?.length > 0
-        ? true
-        : false,
-    cacheTime: 60 * 1000,
+    query: {
+      enabled:
+        manifoldContract.length > 0 && enabled && tokens && tokens?.length > 0
+          ? true
+          : false,
+      gcTime: 60 * 1000,
+    },
   })
 }

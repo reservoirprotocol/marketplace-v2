@@ -17,7 +17,7 @@ import dayjs from 'dayjs'
 import { useMarketplaceChain } from 'hooks'
 import { UserToken } from 'pages/portfolio/[[...address]]'
 import { FC, useCallback, useEffect, useState } from 'react'
-import { useNetwork, useWalletClient, useSwitchNetwork } from 'wagmi'
+import { useAccount, useWalletClient, useSwitchChain, useConfig } from 'wagmi'
 import { ApprovalCollapsible } from './ApprovalCollapsible'
 import { formatUnits, parseUnits, zeroAddress } from 'viem'
 import useOnChainRoyalties, {
@@ -54,11 +54,9 @@ const BatchListModal: FC<Props> = ({ listings, disabled, onCloseComplete }) => {
   const [open, setOpen] = useState(false)
   const { data: wallet } = useWalletClient()
   const { openConnectModal } = useConnectModal()
-  const { chain: activeChain } = useNetwork()
+  const { chain: activeChain } = useAccount()
   const marketplaceChain = useMarketplaceChain()
-  const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
-  })
+  const { switchChainAsync } = useSwitchChain()
   const isInTheWrongNetwork = Boolean(
     wallet && activeChain?.id !== marketplaceChain.id
   )
@@ -226,8 +224,10 @@ const BatchListModal: FC<Props> = ({ listings, disabled, onCloseComplete }) => {
       <Button
         disabled={disabled}
         onClick={async () => {
-          if (isInTheWrongNetwork && switchNetworkAsync) {
-            const chain = await switchNetworkAsync(marketplaceChain.id)
+          if (isInTheWrongNetwork && switchChainAsync) {
+            const chain = await switchChainAsync({
+              chainId: marketplaceChain.id,
+            })
             if (chain.id !== marketplaceChain.id) {
               return false
             }

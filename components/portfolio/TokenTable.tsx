@@ -45,7 +45,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
-import { Address } from 'wagmi'
 import { useMarketplaceChain } from 'hooks'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import Checkbox from 'components/primitives/Checkbox'
@@ -63,6 +62,7 @@ import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { ItemView } from './ViewToggle'
 import PortfolioTokenCard from './PortfolioTokenCard'
 import optimizeImage from 'utils/optimizeImage'
+import { Address } from 'viem'
 
 type Props = {
   address: Address | undefined
