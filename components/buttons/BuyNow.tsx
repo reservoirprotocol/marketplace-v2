@@ -51,13 +51,7 @@ const BuyNow: FC<Props> = ({
       token={`${contract}:${tokenId}`}
       orderId={orderId}
       openState={openState}
-      executeBuyOptions={
-        executionMethod
-          ? {
-              executionMethod: executionMethod,
-            }
-          : undefined
-      }
+      executeBuyOptions={executionMethod ? { executionMethod } : undefined}
       onConnectWallet={() => {
         openConnectModal?.()
       }}
