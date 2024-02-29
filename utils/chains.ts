@@ -192,4 +192,14 @@ export default [
     coingeckoId: 'ethereum',
     checkPollingInterval: reservoirChains.ancient8Testnet.checkPollingInterval,
   },
+  {
+    ...customChains.blastSepolia,
+    lightIconUrl: '/icons/blast-sepolia-icon-light.svg',
+    darkIconUrl: '/icons/blast-sepolia-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.blastSepolia.baseApiUrl,
+    proxyApi: '/api/reservoir/blast-sepolia',
+    routePrefix: 'blast-sepolia',
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.blastSepolia.checkPollingInterval,
+  },
 ] as ReservoirChain[]
