@@ -19,6 +19,8 @@ const wrappedContracts: Record<number, string> = {
   11155111: '0x7b79995e5f793a07bc00c21412e50ecae098e7f9', //sepolia
   70700: '0x77684A04145a5924eFCE0D92A7c4a2A2E8C359de', //Apex Pop
   168587773: '0x4200000000000000000000000000000000000006', //blast sepolia
+  81457: '0x4300000000000000000000000000000000000004', //blast
+  3776: '0x81ECac0D6Be0550A00FF064a4f9dd2400585FE9c', // astar zkEVM
 }
 
 export default wrappedContracts
