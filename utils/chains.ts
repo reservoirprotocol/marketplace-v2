@@ -366,7 +366,7 @@ export default [
     lightIconUrl: '/icons/astar-zkevm-icon-light.svg',
     darkIconUrl: '/icons/astar-zkevm-icon-dark.svg',
     reservoirBaseUrl: reservoirChains.astarZkEVM.baseApiUrl,
-    proxyApi: '/api/reservoir/blast',
+    proxyApi: '/api/reservoir/astar-zkevm',
     routePrefix: 'astar-zkevm',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
