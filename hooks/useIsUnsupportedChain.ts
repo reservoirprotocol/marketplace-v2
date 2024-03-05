@@ -14,6 +14,7 @@ const TESTNET_CHAINS: Chain[] = [
   reservoirChains.zoraTestnet,
   reservoirChains.frameTestnet,
   reservoirChains.ancient8Testnet,
+  reservoirChains.frameTestnet,
   reservoirChains.blastSepolia,
 ]
 
@@ -28,6 +29,7 @@ const MAINNET_CHAINS: Chain[] = [
   reservoirChains.base,
   reservoirChains.linea,
   reservoirChains.zkSync,
+  reservoirChains.apexPop,
   reservoirChains.polygonZkEvm,
   reservoirChains.scroll,
   reservoirChains.opBnb,
