@@ -1,10 +1,13 @@
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useMemo } from 'react'
 import useSWR from 'swr/immutable'
+import { setParams } from '@reservoir0x/reservoir-sdk'
 import useMarketplaceChain from './useMarketplaceChain'
 
 type MarketplaceConfigurationsResponse =
   paths['/collections/{collection}/marketplace-configurations/v1']['get']['responses']['200']['schema']
+type MarketplaceConfigurationsParams =
+  paths['/collections/{collection}/marketplace-configurations/v1']['get']['parameters']['query']
 export type Marketplace = NonNullable<
   NonNullable<MarketplaceConfigurationsResponse['marketplaces']>[0]
 >
@@ -24,19 +27,26 @@ const fetcher = async (urls: string[]) => {
   )
 }
 
-export default function (collectionIds: string[], enabled: boolean = true) {
-  const { proxyApi } = useMarketplaceChain()
-
-  const urls = collectionIds.map(
-    (id) =>
-      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/${id}/marketplace-configurations/v1`
-  )
+export default function (tokens: string[], enabled: boolean = true) {
+  const marketplaceChain = useMarketplaceChain()
+  const urls = tokens.map((id) => {
+    const pieces = id.split(':')
+    const tokenId = pieces[pieces.length - 1]
+    const collectionId = pieces.slice(0, -1).join(':')
+    let url = new URL(
+      `${marketplaceChain.reservoirBaseUrl}/collections/${collectionId}/marketplace-configurations/v1`
+    )
+    setParams(url, {
+      tokenId,
+    } as MarketplaceConfigurationsParams)
+    return url.href
+  })
   const { data, error } = useSWR<MarketplaceConfigurationsResponse[]>(
     enabled ? urls : null,
     fetcher
   )
 
-  const collectionExchanges = useMemo(() => {
+  const tokenExchanges = useMemo(() => {
     return (
       data?.reduce((exchanges, data, i) => {
         const reservoirMarketplace = data?.marketplaces?.find(
@@ -50,7 +60,7 @@ export default function (collectionIds: string[], enabled: boolean = true) {
             bps: 250,
           }
 
-          const key = collectionIds[i]
+          const key = tokens[i]
 
           exchanges[key] = {
             exchange: Object.values(reservoirMarketplace?.exchanges || {}).find(
@@ -68,7 +78,7 @@ export default function (collectionIds: string[], enabled: boolean = true) {
 
   return {
     data: data,
-    collectionExchanges,
+    tokenExchanges,
     isError: !!error,
     isLoading: !data && !error,
   }

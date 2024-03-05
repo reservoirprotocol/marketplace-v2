@@ -320,4 +320,18 @@ export default [
     community: process.env.NEXT_PUBLIC_APEX_COMMUNITY,
     checkPollingInterval: reservoirChains.apexPop.checkPollingInterval,
   },
+  {
+    ...customChains.blast,
+    name: 'Blast',
+    lightIconUrl: '/icons/blast-icon-light.svg',
+    darkIconUrl: '/icons/blast-icon-dark.svg',
+    reservoirBaseUrl: 'https://api-blast.reservoir.tools',
+    proxyApi: '/api/reservoir/blast',
+    routePrefix: 'blast',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_BLAST_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_BLAST_COMMUNITY,
+    checkPollingInterval: reservoirChains.blast.checkPollingInterval,
+  },
 ] as ReservoirChain[]
