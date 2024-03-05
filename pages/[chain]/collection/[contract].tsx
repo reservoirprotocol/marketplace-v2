@@ -362,28 +362,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         description={ssr?.collection?.collections?.[0]?.description as string}
         metatags={
           <>
-            <meta property="eth:nft:collection" content={collection.name} />
-            <meta
-              property="eth:nft:contract_address"
-              content={collection.primaryContract}
-            />
-            <meta
-              property="eth:nft:creator_address"
-              content={collection.primaryContract}
-            />
-            <meta
-              property="eth:nft:schema"
-              content={collection.contractKind?.toLowerCase()}
-            />
-            <meta
-              property="eth:nft:mint_status"
-              content={collection.isMinting ? 'live' : 'closed'}
-            />
-            <meta
-              property="eth:nft:chain"
-              content={client?.currentChain()?.name}
-            />
-            <meta property="nft:chain" content={client?.currentChain()?.name} />
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
@@ -397,21 +375,21 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               content={`eip155:${collection.chainId}:${collection.primaryContract}`}
             />
 
-            <meta
-              property="fc:frame:button:2"
-              content={
-                mintPrice
-                  ? `Mint ${mintPrice} ${mintCurrency?.toUpperCase()}`
-                  : `Collect ${
-                      collection.floorAsk?.price?.amount?.native
-                    } ${collection.floorAsk?.price?.currency?.symbol?.toUpperCase()}`
-              }
-            />
-            <meta property="fc:frame:button:2:action" content="link" />
-            <meta
-              property="fc:frame:button:2:target"
-              content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
-            />
+            {collection.floorAsk?.price?.amount?.native && (
+              <>
+                <meta
+                  property="fc:frame:button:2"
+                  content={`Collect ${
+                    collection.floorAsk.price.amount.native
+                  } ${collection.floorAsk.price.currency?.symbol?.toUpperCase()}`}
+                />
+                <meta property="fc:frame:button:2:action" content="link" />
+                <meta
+                  property="fc:frame:button:2:target"
+                  content={`${process.env.NEXT_PUBLIC_HOST_URL}${router.asPath}`}
+                />
+              </>
+            )}
           </>
         }
       />

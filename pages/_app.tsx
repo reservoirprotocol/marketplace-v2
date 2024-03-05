@@ -139,13 +139,6 @@ function MyApp({
     ReservoirKitTheme | undefined
   >()
 
-  useEffect(() => {
-    if (theme == 'dark') {
-      setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
-    } else {
-      setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
-    }
-  }, [theme])
   const { feesOnTop } = useContext(ReferralContext)
 
   const FunctionalComponent = Component as FC
