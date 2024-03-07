@@ -34,6 +34,8 @@ const MAINNET_CHAINS: Chain[] = [
   reservoirChains.scroll,
   reservoirChains.opBnb,
   reservoirChains.ancient8,
+  reservoirChains.astarZkEVM,
+  reservoirChains.blast,
 ]
 
 const MAINNET_DEPLOYMENT_URLS = [

@@ -202,4 +202,18 @@ export default [
     coingeckoId: 'ethereum',
     checkPollingInterval: reservoirChains.blastSepolia.checkPollingInterval,
   },
+  {
+    ...customChains.astarZkEVM,
+    name: 'Astar ZkEVM',
+    lightIconUrl: '/icons/astar-zkevm-icon-light.svg',
+    darkIconUrl: '/icons/astar-zkevm-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.astarZkEVM.baseApiUrl,
+    proxyApi: '/api/reservoir/astar-zkevm',
+    routePrefix: 'astar-zkevm',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COMMUNITY,
+    checkPollingInterval: reservoirChains.astarZkEVM.checkPollingInterval,
+  },
 ] as ReservoirChain[]
