@@ -1888,10 +1888,10 @@
   dependencies:
     merge-options "^3.0.4"
 
-"@reservoir0x/reservoir-kit-ui@2.3.7":
-  version "2.3.7"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-2.3.7.tgz#33ecdf5ed57922ba999e1902268ea9cba1c826cb"
-  integrity sha512-ns+vtkBOB2lrj1GUW0yiX4/M/8GWZhG97f3q4htWY5laRuSLF5Nhx6tdiu2BEHL0v6yJLeQG3JPdJ4nxSXkfMA==
+"@reservoir0x/reservoir-kit-ui@2.3.8":
+  version "2.3.8"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-2.3.8.tgz#a0774bfb579b093ceac8e24867a7f62a585e0db7"
+  integrity sha512-Ga8osHLIki/pLl0bR1WPN0Zk+lloUzsuhQByAGS10BzvZHn26xZFnrZvkxE21PCj83EpMwm+TnhPQ0bWyvLN+Q==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
