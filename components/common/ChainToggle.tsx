@@ -33,14 +33,15 @@ const ChainToggle: FC = () => {
     (chainOption: (typeof supportedChains)[0]) => {
       if (router.query.chain) {
         Object.keys(router.query).forEach((param) => delete router.query[param])
-        router.replace(
+
+        /*  router.replace(
           {
             pathname: router.pathname,
             query: router.query,
           },
           undefined,
           { shallow: true }
-        )
+        ) */
       }
       switchCurrentChain(chainOption.id)
     },
@@ -59,6 +60,7 @@ const ChainToggle: FC = () => {
             color="gray3"
             css={{
               px: '14px',
+              display: 'none',
               justifyContent: 'space-between',
               width: 'auto',
               minWidth: 'max-content',

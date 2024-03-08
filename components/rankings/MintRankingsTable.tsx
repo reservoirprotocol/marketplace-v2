@@ -108,12 +108,20 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
         key={mint.id}
       >
         <Flex align="center" css={{ cursor: 'pointer' }}>
-          <Text css={{ mr: '$4', minWidth: 20 }} style="h6" color="subtle">
+          <Text css={{ mr: '$4', minWidth: 20 }} style="h5" color="subtle">
             {rank}
           </Text>
           <Img
             src={collectionImage}
-            css={{ borderRadius: 8, width: 52, height: 52, objectFit: 'cover' }}
+            css={{
+              borderRadius: 8,
+              minWidth: 72,
+              minHeight: 72,
+              height: 72,
+              width: 72,
+              border: '1px solid #eee',
+              objectFit: 'cover',
+            }}
             alt="Collection Image"
             width={48}
             height={48}
@@ -181,14 +189,18 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
               <Img
                 src={collectionImage}
                 css={{
-                  borderRadius: 8,
-                  width: 52,
+                  borderRadius: '8px',
+                  minWidth: 52,
+                  minHeight: 52,
                   height: 52,
+                  width: 52,
+                  border: '1px solid #eee',
+
                   objectFit: 'cover',
                 }}
                 alt="Collection Image"
-                width={52}
-                height={52}
+                width={72}
+                height={72}
                 unoptimized
               />
 
@@ -325,7 +337,7 @@ const TableHeading = () => (
         key={heading}
         css={{ textAlign: i === headings.length - 1 ? 'right' : 'left' }}
       >
-        <Text style="subtitle3" color="subtle">
+        <Text style="subtitle2" color="subtle">
           {heading}
         </Text>
       </TableCell>

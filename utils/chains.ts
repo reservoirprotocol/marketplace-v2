@@ -56,42 +56,53 @@ const usdcCurrencyBase = {
 }
 
 export const DefaultChain: ReservoirChain = {
-  ...mainnet,
-  // Any url to display the logo of the chain in light mode
-  lightIconUrl: '/icons/eth-icon-dark.svg',
-  // Any url to display the logo of the chain in dark mode
-  darkIconUrl: '/icons/eth-icon-light.svg',
-  // The base url of the reservoir api, this is used in the app when
-  // directly interacting with the reservoir indexer servers (in the api proxy for example)
-  // or when prefetching server side rendered data
-  reservoirBaseUrl: reservoirChains.mainnet.baseApiUrl,
-  // Used on the client side portions of the marketplace that need an api key added
-  // Prevents the api key from being leaked in the clientside requests
-  // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
-  // Doing so will omit the api key unless further changes are made
-  proxyApi: '/api/reservoir/ethereum',
-  // A prefix used in the asset specific routes on the app (tokens/collections)
-  routePrefix: 'ethereum',
-  // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
-  // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
+  ...base,
+  lightIconUrl: '/icons/base-icon-dark.svg',
+  darkIconUrl: '/icons/base-icon-light.svg',
+  reservoirBaseUrl: reservoirChains.base.baseApiUrl,
+  proxyApi: '/api/reservoir/base',
+  routePrefix: 'base',
   coingeckoId: 'ethereum',
-  collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
-  community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
-  wssUrl: 'wss://ws.reservoir.tools',
-  listingCurrencies: [
-    nativeCurrencyBase,
-    {
-      ...usdcCurrencyBase,
-      contract: usdcContracts[mainnet.id],
-    },
-  ],
-  oracleBidsEnabled: true,
-  checkPollingInterval: reservoirChains.mainnet.checkPollingInterval,
-  paperContractId: process.env.PAPER_ETHEREUM_CONTRACT_ID,
+  collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
+  community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
+  checkPollingInterval: reservoirChains.base.checkPollingInterval,
 }
 
 export default [
-  DefaultChain,
+  {
+    ...mainnet,
+    // Any url to display the logo of the chain in light mode
+    lightIconUrl: '/icons/eth-icon-dark.svg',
+    // Any url to display the logo of the chain in dark mode
+    darkIconUrl: '/icons/eth-icon-light.svg',
+    // The base url of the reservoir api, this is used in the app when
+    // directly interacting with the reservoir indexer servers (in the api proxy for example)
+    // or when prefetching server side rendered data
+    reservoirBaseUrl: reservoirChains.mainnet.baseApiUrl,
+    // Used on the client side portions of the marketplace that need an api key added
+    // Prevents the api key from being leaked in the clientside requests
+    // If you'd like to disable proxying you can just change the proxyApi to the reservoirBaseUrl
+    // Doing so will omit the api key unless further changes are made
+    proxyApi: '/api/reservoir/ethereum',
+    // A prefix used in the asset specific routes on the app (tokens/collections)
+    routePrefix: 'ethereum',
+    // Coingecko id, used to convert the chain's native prices to usd. Can be found here:
+    // https://www.coingecko.com/en/api/documentation#operations-coins-get_coins_list
+    coingeckoId: 'ethereum',
+    collectionSetId: process.env.NEXT_PUBLIC_ETH_COLLECTION_SET_ID,
+    community: process.env.NEXT_PUBLIC_ETH_COMMUNITY,
+    wssUrl: 'wss://ws.reservoir.tools',
+    listingCurrencies: [
+      nativeCurrencyBase,
+      {
+        ...usdcCurrencyBase,
+        contract: usdcContracts[mainnet.id],
+      },
+    ],
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.mainnet.checkPollingInterval,
+    paperContractId: process.env.PAPER_ETHEREUM_CONTRACT_ID,
+  },
   {
     ...polygon,
     lightIconUrl: '/icons/polygon-icon-dark.svg',

@@ -21,7 +21,7 @@ import {
 import { createStitches } from '@stitches/react'
 import type * as Stitches from '@stitches/react'
 import { reset } from 'utils/css/reset'
-import { Inter } from "next/font/google"
+import { Inter } from 'next/font/google'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -50,18 +50,18 @@ export const { createTheme, keyframes, styled, globalCss, getCssText } =
         ...indigo,
 
         //Aliases
-        primary1: '$iris1',
-        primary2: '$iris2',
-        primary3: '$iris3',
-        primary4: '$iris4',
-        primary5: '$iris5',
-        primary6: '$iris6',
-        primary7: '$iris7',
-        primary8: '$iris8',
-        primary9: '$iris9',
-        primary10: '$iris10',
-        primary11: '$iris11',
-        primary12: '$iris12',
+        primary1: '$indigo1',
+        primary2: '$indigo2',
+        primary3: '$indigo3',
+        primary4: '$indigo4',
+        primary5: '$indigo5',
+        primary6: '$indigo6',
+        primary7: '$indigo7',
+        primary8: '$indigo8',
+        primary9: '#0052fc',
+        primary10: '$indigo10',
+        primary11: '$indigo11',
+        primary12: '$indigo12',
 
         //Secondary
         secondary1: '$violetA1',

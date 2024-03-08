@@ -11,7 +11,7 @@ const TabsList = styled(TabsPrimitive.List, {
 
 const TabsTrigger = styled(TabsPrimitive.Trigger, {
   fontWeight: '700',
-  pb: '$3',
+  pb: '$2',
   '&[data-state="active"]': {
     boxShadow:
       'inset 0 -2px 0 0 var(--colors-primary9), 0 2px 0 0 var(--colors-primary9)',

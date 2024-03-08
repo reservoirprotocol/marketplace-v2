@@ -56,7 +56,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isSmallDevice = useMediaQuery({ query: '(max-width: 800px)' })
 
-  const [tab, setTab] = useState<TabValue>('collections')
+  const [tab, setTab] = useState<TabValue>('mints')
   const [sortByTime, setSortByTime] = useState<CollectionsSortingOption>('24h')
 
   const [sortByPeriod, setSortByPeriod] = useState<MintsSortingOption>('24h')
@@ -68,20 +68,6 @@ const Home: NextPage<Props> = ({ ssr }) => {
   }
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
-
-  useEffect(() => {
-    if (router.query.chain) {
-      let chainIndex: number | undefined
-      for (let i = 0; i < supportedChains.length; i++) {
-        if (supportedChains[i].routePrefix == router.query.chain) {
-          chainIndex = supportedChains[i].id
-        }
-      }
-      if (chainIndex !== -1 && chainIndex) {
-        switchCurrentChain(chainIndex)
-      }
-    }
-  }, [router.query])
 
   const {
     data: trendingCollections,
@@ -154,7 +140,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
       >
         <Box
           css={{
-            mb: 64,
+            mb: 18 * 2,
           }}
         >
           <Flex
@@ -162,13 +148,9 @@ const Home: NextPage<Props> = ({ ssr }) => {
             align="start"
             css={{
               gap: 24,
-              mb: '$4',
+              mb: 0,
             }}
-          >
-            <Text style="h4" as="h4">
-              Featured
-            </Text>
-          </Flex>
+          ></Flex>
           <Box
             css={{
               height: '100%',
@@ -180,12 +162,18 @@ const Home: NextPage<Props> = ({ ssr }) => {
 
         <Tabs.Root
           onValueChange={(tab) => setTab(tab as TabValue)}
-          defaultValue="collections"
+          defaultValue="mints"
         >
-          <Flex justify="between" align="start" css={{ mb: '$3' }}>
-            <Text style="h4" as="h4">
-              Trending
-            </Text>
+          <Flex justify="between" align="start" css={{ mb: '$4' }}>
+            <TabsList css={{ mt: 0, mb: 0, borderBottom: 'none' }}>
+              <TabsTrigger value="mints">
+                <Text style="h5">Mints</Text>
+              </TabsTrigger>
+              <TabsTrigger value="collections">
+                {' '}
+                <Text style="h5">Collections</Text>
+              </TabsTrigger>
+            </TabsList>
             {!isSmallDevice && (
               <Flex
                 align="center"
@@ -211,10 +199,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
               </Flex>
             )}
           </Flex>
-          <TabsList css={{ mb: 24, mt: 0, borderBottom: 'none' }}>
-            <TabsTrigger value="collections">Collections</TabsTrigger>
-            <TabsTrigger value="mints">Mints</TabsTrigger>
-          </TabsList>
+
           {isSmallDevice && (
             <Flex
               justify="between"
@@ -239,7 +224,6 @@ const Home: NextPage<Props> = ({ ssr }) => {
                     onOptionSelected={setSortByPeriod}
                   />
                 )}
-                <ChainToggle />
               </Flex>
             </Flex>
           )}
@@ -294,7 +278,7 @@ const Home: NextPage<Props> = ({ ssr }) => {
         </Box>
       </Box>
 
-      <Footer />
+      {false && <Footer />}
     </Layout>
   )
 }

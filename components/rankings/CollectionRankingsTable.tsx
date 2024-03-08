@@ -128,15 +128,23 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
         key={collection.id}
       >
         <Flex align="center" css={{ cursor: 'pointer' }}>
-          <Text css={{ mr: '$4', minWidth: 20 }} style="h6" color="subtle">
+          <Text css={{ mr: '$4', minWidth: 20 }} style="h5" color="subtle">
             {rank}
           </Text>
           <Img
             src={collectionImage}
-            css={{ borderRadius: 8, width: 52, height: 52, objectFit: 'cover' }}
+            css={{
+              borderRadius: 8,
+              minWidth: 72,
+              minHeight: 72,
+              height: 72,
+              width: 72,
+              objectFit: 'cover',
+              border: '1px solid #eee',
+            }}
             alt="Collection Image"
-            width={48}
-            height={48}
+            width={72}
+            height={72}
             unoptimized
           />
           <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
@@ -145,7 +153,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 css={{
                   display: 'inline-block',
                 }}
-                style="subtitle1"
+                style="h6"
                 ellipsify
               >
                 {collection?.name}
@@ -157,7 +165,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               />
             </Flex>
             <Flex align="center">
-              <Text css={{ mr: '$1', color: '$gray11' }} style="body3">
+              <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
                 Floor
               </Text>
               <FormatCryptoCurrency
@@ -368,7 +376,7 @@ const TableHeading: React.FC<Pick<Props, 'volumeKey'>> = ({ volumeKey }) => (
         key={heading}
         css={{ textAlign: i === headings.length - 1 ? 'right' : 'left' }}
       >
-        <Text style="subtitle3" color="subtle">
+        <Text style="subtitle2" color="subtle">
           {heading === 'Volume' && `${volumeKey.replace('day', 'D')} `}
           {heading}
         </Text>

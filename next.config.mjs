@@ -35,11 +35,6 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/',
-        destination: `/${DefaultChain.routePrefix}`,
-        permanent: false,
-      },
-      {
         source: '/collection/:chain/:collection',
         destination: '/:chain/collection/:collection',
         permanent: true,

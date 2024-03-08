@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { Box, Flex, Card } from '../primitives'
+import { Box, Flex, Card, Text } from '../primitives'
 import GlobalSearch from './GlobalSearch'
 import { useRouter } from 'next/router'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -19,7 +19,7 @@ import { AccountSidebar } from 'components/navbar/AccountSidebar'
 
 import * as HoverCard from '@radix-ui/react-hover-card'
 
-export const NAVBAR_HEIGHT = 81
+export const NAVBAR_HEIGHT = 72
 export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
@@ -64,14 +64,23 @@ const Navbar = () => {
       <Box css={{ flex: 1 }}>
         <Flex align="center">
           <Link href={`/${routePrefix}`}>
-            <Box css={{ width: 46, cursor: 'pointer' }}>
-              <Image
-                src="/reservoirLogo.svg"
-                width={36}
-                height={36}
-                alt="Reservoir"
-              />
-            </Box>
+            <Flex>
+              <Text
+                style="h5"
+                css={{
+                  color: '$primary9',
+                  fontWeight: 900,
+                }}
+              >
+                Base
+              </Text>
+              <Text
+                style="h5"
+                css={{ color: '$gray12', opacity: 0.8, fontWeight: 900 }}
+              >
+                Market
+              </Text>
+            </Flex>
           </Link>
         </Flex>
       </Box>
@@ -112,14 +121,25 @@ const Navbar = () => {
         }}
       >
         <Flex align="center">
-          <Link href={`/${routePrefix}`}>
+          <Link href={`/`}>
             <Box css={{ cursor: 'pointer' }}>
-              <Image
-                src="/reservoirLogo.svg"
-                width={36}
-                height={36}
-                alt="Reservoir"
-              />
+              <Flex>
+                <Text
+                  style="h5"
+                  css={{
+                    color: '$primary9',
+                    fontWeight: 900,
+                  }}
+                >
+                  Base
+                </Text>
+                <Text
+                  style="h5"
+                  css={{ color: '$gray12', opacity: 0.8, fontWeight: 900 }}
+                >
+                  Market
+                </Text>
+              </Flex>
             </Box>
           </Link>
           <Flex
@@ -129,33 +149,36 @@ const Navbar = () => {
               ml: '$5',
             }}
           >
-            <Link href={`/${routePrefix}`}>
-              <NavItem>Explore</NavItem>
+            {false && (
+              <HoverCard.Root openDelay={200}>
+                <HoverCard.Trigger>
+                  <NavItem>Trending</NavItem>
+                </HoverCard.Trigger>
+                <HoverCard.Content sideOffset={24} align="start">
+                  <Card css={{ p: 24, width: 240, border: '1px solid $gray4' }}>
+                    <Flex css={{ gap: '$4' }} direction="column">
+                      <Link href={`/${routePrefix}/collections/trending`}>
+                        <NavItem>Collections</NavItem>
+                      </Link>
+                      <Link href={`/${routePrefix}/mints/trending`}>
+                        <NavItem>Mints</NavItem>
+                      </Link>
+                    </Flex>
+                  </Card>
+                </HoverCard.Content>
+              </HoverCard.Root>
+            )}
+
+            <Link href={`/${routePrefix}/mints/trending`}>
+              <NavItem>Mints</NavItem>
             </Link>
 
-            <HoverCard.Root openDelay={200}>
-              <HoverCard.Trigger>
-                <NavItem>Trending</NavItem>
-              </HoverCard.Trigger>
-              <HoverCard.Content sideOffset={24} align="start">
-                <Card css={{ p: 24, width: 240, border: '1px solid $gray4' }}>
-                  <Flex css={{ gap: '$4' }} direction="column">
-                    <Link href={`/${routePrefix}/collections/trending`}>
-                      <NavItem>Collections</NavItem>
-                    </Link>
-                    <Link href={`/${routePrefix}/mints/trending`}>
-                      <NavItem>Mints</NavItem>
-                    </Link>
-                  </Flex>
-                </Card>
-              </HoverCard.Content>
-            </HoverCard.Root>
-
-            {false && (
-              <Link href={`/${routePrefix}/collections/minting`}>
-                <NavItem>Mints</NavItem>
-              </Link>
-            )}
+            <Link href={`/${routePrefix}/collections/trending`}>
+              <NavItem>Collections</NavItem>
+            </Link>
+            <a href={`https://relay.link/bridge/base`} target="_blank">
+              <NavItem>Bridge</NavItem>
+            </a>
             {false && (
               <Link href="/swap">
                 <NavItem>Tokens</NavItem>
@@ -185,48 +208,50 @@ const Navbar = () => {
         align="center"
       >
         <Flex css={{ gap: '$5', mr: 12 }}>
-          <Box>
-            <HoverCard.Root openDelay={120}>
-              <HoverCard.Trigger>
-                <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
-                  <NavItem>Developers</NavItem>
-                </a>
-              </HoverCard.Trigger>
-              <HoverCard.Content sideOffset={24} align="start">
-                <Card css={{ p: 24, width: 240 }}>
-                  <Flex css={{ gap: '$4' }} direction="column">
-                    <a target="_blank" href={`https://reservoir.tools`}>
-                      <NavItem>About Reservoir</NavItem>
-                    </a>
-                    <a
-                      target="_blank"
-                      href={`https://docs.reservoir.tools/docs`}
-                    >
-                      <NavItem>Docs</NavItem>
-                    </a>
+          {false && (
+            <Box>
+              <HoverCard.Root openDelay={120}>
+                <HoverCard.Trigger>
+                  <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
+                    <NavItem>Developers</NavItem>
+                  </a>
+                </HoverCard.Trigger>
+                <HoverCard.Content sideOffset={24} align="start">
+                  <Card css={{ p: 24, width: 240 }}>
+                    <Flex css={{ gap: '$4' }} direction="column">
+                      <a target="_blank" href={`https://reservoir.tools`}>
+                        <NavItem>About Reservoir</NavItem>
+                      </a>
+                      <a
+                        target="_blank"
+                        href={`https://docs.reservoir.tools/docs`}
+                      >
+                        <NavItem>Docs</NavItem>
+                      </a>
 
-                    <a
-                      target="_blank"
-                      href={`https://docs.reservoir.tools/reference/overview`}
-                    >
-                      <NavItem>API Reference</NavItem>
-                    </a>
+                      <a
+                        target="_blank"
+                        href={`https://docs.reservoir.tools/reference/overview`}
+                      >
+                        <NavItem>API Reference</NavItem>
+                      </a>
 
-                    <a
-                      target="_blank"
-                      href={`https://github.com/reservoirprotocol`}
-                    >
-                      <NavItem>Github</NavItem>
-                    </a>
+                      <a
+                        target="_blank"
+                        href={`https://github.com/reservoirprotocol`}
+                      >
+                        <NavItem>Github</NavItem>
+                      </a>
 
-                    <a href={`https://testnets.reservoir.tools`}>
-                      <NavItem>Testnet Explorer</NavItem>
-                    </a>
-                  </Flex>
-                </Card>
-              </HoverCard.Content>
-            </HoverCard.Root>
-          </Box>
+                      <a href={`https://testnets.reservoir.tools`}>
+                        <NavItem>Testnet Explorer</NavItem>
+                      </a>
+                    </Flex>
+                  </Card>
+                </HoverCard.Content>
+              </HoverCard.Root>
+            </Box>
+          )}
           {isConnected && (
             <Link href={`/portfolio/${address || ''}?chain=${routePrefix}`}>
               <Box css={{ mr: '$2' }}>

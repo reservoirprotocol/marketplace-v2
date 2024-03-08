@@ -372,10 +372,12 @@ const GlobalSearch = forwardRef<
               width: '100%',
             }}
           >
-            <SearchChainSwitcher
-              searchChain={searchChain}
-              setSearchChain={setSearchChain}
-            />
+            {false && (
+              <SearchChainSwitcher
+                searchChain={searchChain}
+                setSearchChain={setSearchChain}
+              />
+            )}
             {hasRecentResults && !hasResults && search.length <= 3 && (
               <Flex direction="column" css={{ pt: '$2' }}>
                 <Text css={{ ml: '$2' }} style="subtitle2" color="subtle">
