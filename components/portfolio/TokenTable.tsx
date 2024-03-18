@@ -395,12 +395,14 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
               Floor
             </Text>
             <FormatCryptoCurrency
-              amount={token?.token?.collection?.floorAskPrice?.amount?.decimal}
+              amount={
+                token?.token?.collection?.floorAsk?.price?.amount?.decimal
+              }
               address={
-                token?.token?.collection?.floorAskPrice?.currency?.contract
+                token?.token?.collection?.floorAsk?.price?.currency?.contract
               }
               decimals={
-                token?.token?.collection?.floorAskPrice?.currency?.decimals
+                token?.token?.collection?.floorAsk?.price?.currency?.decimals
               }
               textStyle="subtitle2"
               logoHeight={14}
@@ -789,9 +791,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={token?.token?.collection?.floorAskPrice?.amount?.decimal}
-          address={token?.token?.collection?.floorAskPrice?.currency?.contract}
-          decimals={token?.token?.collection?.floorAskPrice?.currency?.decimals}
+          amount={token?.token?.collection?.floorAsk?.price?.amount?.decimal}
+          address={
+            token?.token?.collection?.floorAsk?.price?.currency?.contract
+          }
+          decimals={
+            token?.token?.collection?.floorAsk?.price?.currency?.decimals
+          }
           textStyle="subtitle1"
           logoHeight={14}
         />
