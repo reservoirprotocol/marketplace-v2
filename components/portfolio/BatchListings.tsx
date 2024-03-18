@@ -235,14 +235,14 @@ const BatchListings: FC<Props> = ({
       return (
         prevListings?.map((listing) => {
           if (
-            listing.token.token?.collection?.floorAskPrice?.amount?.decimal &&
-            listing.token.token?.collection?.floorAskPrice.currency
+            listing.token.token?.collection?.floorAsk?.price?.amount?.decimal &&
+            listing.token.token?.collection?.floorAsk?.price?.currency
           ) {
             return {
               ...listing,
               price:
-                listing.token.token.collection.floorAskPrice.amount.decimal.toString(),
-              currency: listing.token.token?.collection?.floorAskPrice
+                listing.token.token.collection?.floorAsk?.price?.amount.decimal.toString(),
+              currency: listing.token.token?.collection?.floorAsk?.price
                 .currency as Currency,
             }
           }
