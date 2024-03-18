@@ -290,26 +290,26 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                   size="large"
                   css={{ minWidth: 'max-content', minHeight: 48, py: 14 }}
                   disabled={
-                    !listing.token?.token?.collection?.floorAskPrice?.amount
+                    !listing.token?.token?.collection?.floorAsk?.price?.amount
                       ?.decimal
                   }
                   onClick={() => {
                     if (
-                      listing.token?.token?.collection?.floorAskPrice?.amount
+                      listing.token?.token?.collection?.floorAsk?.price?.amount
                         ?.decimal
                     ) {
                       handlePriceChange(
-                        listing.token?.token?.collection?.floorAskPrice?.amount?.decimal?.toString()
+                        listing.token?.token?.collection?.floorAsk?.price?.amount?.decimal?.toString()
                       )
                     }
                   }}
                 >
                   Floor
                 </Button>
-                {listing.token?.token?.collection?.floorAskPrice?.amount
+                {listing.token?.token?.collection?.floorAsk?.price?.amount
                   ?.decimal ? (
                   <Text style="subtitle3" color="subtle">
-                    {`${listing.token?.token?.collection?.floorAskPrice?.amount?.decimal} ${listing.token?.token?.collection?.floorAskPrice?.currency?.symbol}`}
+                    {`${listing.token?.token?.collection?.floorAsk?.price?.amount?.decimal} ${listing.token?.token?.collection?.floorAsk?.price?.currency?.symbol}`}
                   </Text>
                 ) : null}
               </Flex>
@@ -330,8 +330,8 @@ export const BatchListingsTableRow: FC<BatchListingsTableRowProps> = ({
                   <Text style="subtitle3" color="subtle">
                     {topTraitPrice}{' '}
                     {
-                      listing.token?.token?.collection?.floorAskPrice?.currency
-                        ?.symbol
+                      listing.token?.token?.collection?.floorAsk?.price
+                        ?.currency?.symbol
                     }
                   </Text>
                 ) : null}
