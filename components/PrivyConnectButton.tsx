@@ -10,7 +10,9 @@ export const PrivyConnectButton = () => {
   const { login } = useLogin({
     onComplete: (user, isNewUser, wasAlreadyAuthenticated) => {
       console.log('Login complete')
-      setActiveWallet(wallets[0])
+      if (wallets[0]) {
+        setActiveWallet(wallets[0])
+      }
     },
   })
 

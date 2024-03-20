@@ -143,10 +143,25 @@
     "@babel/helper-validator-identifier" "^7.22.20"
     to-fast-properties "^2.0.0"
 
-"@coinbase/wallet-sdk@3.9.1", "@coinbase/wallet-sdk@^3.9.0":
+"@coinbase/wallet-sdk@3.9.1":
   version "3.9.1"
   resolved "https://registry.yarnpkg.com/@coinbase/wallet-sdk/-/wallet-sdk-3.9.1.tgz#503a14671bb392d653623ef2340934e213ac971f"
   integrity sha512-cGUE8wm1/cMI8irRMVOqbFWYcnNugqCtuy2lnnHfgloBg+GRLs9RsrkOUDMdv/StfUeeKhCDyYudsXXvcL1xIA==
+  dependencies:
+    bn.js "^5.2.1"
+    buffer "^6.0.3"
+    clsx "^1.2.1"
+    eth-block-tracker "^7.1.0"
+    eth-json-rpc-filters "^6.0.0"
+    eventemitter3 "^5.0.1"
+    keccak "^3.0.3"
+    preact "^10.16.0"
+    sha.js "^2.4.11"
+
+"@coinbase/wallet-sdk@^3.9.2":
+  version "3.9.3"
+  resolved "https://registry.yarnpkg.com/@coinbase/wallet-sdk/-/wallet-sdk-3.9.3.tgz#daf10cb0c85d0363315b7270cb3f02bedc408aab"
+  integrity sha512-N/A2DRIf0Y3PHc1XAMvbBUu4zisna6qAdqABMZwBMNEfWrXpAwx16pZGkYCLGE+Rvv1edbcB2LYDRnACNcmCiw==
   dependencies:
     bn.js "^5.2.1"
     buffer "^6.0.3"
@@ -1224,12 +1239,12 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@privy-io/react-auth@^1.56.2":
-  version "1.56.2"
-  resolved "https://registry.yarnpkg.com/@privy-io/react-auth/-/react-auth-1.56.2.tgz#681f3e2e0b7a343c5a37a06e3674270500de6d63"
-  integrity sha512-8dLSsUIbufqYCRpOb30P8bsf6mwCRHJStN/P3fGkxV9alpUx2M2YkVw66OoF18tFaCRGlryXzxCnClcK/Z4l+w==
+"@privy-io/react-auth@^1.59.5":
+  version "1.59.5"
+  resolved "https://registry.yarnpkg.com/@privy-io/react-auth/-/react-auth-1.59.5.tgz#a45daa970ddd25f87e13f2d6e5cebff0e1447bfe"
+  integrity sha512-bLuzvPmqOJhw5H9hVyXqpDVjc6rvm0l5zEWCC8paoq+8jfVL6WMGIV23juCB8A4SOu/1v42IL3LSTGru0zT9MQ==
   dependencies:
-    "@coinbase/wallet-sdk" "^3.9.0"
+    "@coinbase/wallet-sdk" "^3.9.2"
     "@ethersproject/abstract-signer" "^5.7.0"
     "@ethersproject/address" "^5.7.0"
     "@ethersproject/bignumber" "^5.7.0"
@@ -1251,7 +1266,7 @@
     encoding "^0.1.13"
     eventemitter3 "^5.0.1"
     fast-password-entropy "^1.1.1"
-    jose "^4.11.2"
+    jose "^4.15.5"
     js-cookie "^3.0.5"
     libphonenumber-js "^1.10.14"
     lokijs "^1.5.12"
@@ -1269,10 +1284,10 @@
     web3-core "^1.8.0"
     web3-core-helpers "^1.8.0"
 
-"@privy-io/wagmi@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@privy-io/wagmi/-/wagmi-0.1.0.tgz#6ab2975cc99dd9033b8ceb4082fffff29aa78793"
-  integrity sha512-AarsY5XYz7ihASTZbyP2QVjiHKcDu0ul2nr2ClXUy9Z1X7/R74J6+63xogcf8Huvtzto00FyUz1R/z4yPZKfMQ==
+"@privy-io/wagmi@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@privy-io/wagmi/-/wagmi-0.2.1.tgz#92f32918a8ec2336403a257923438d8b9b30183f"
+  integrity sha512-jQcMCDYNkSomcROpsLU9LXNP2vXqR+Bwlnt8HkH5GOetOrljC4gSP2lOCm1fPStEASv+0D0UJfuEjQ8rxJicow==
 
 "@radix-ui/colors@^0.1.8":
   version "0.1.9"
@@ -5245,10 +5260,10 @@ jiti@^1.21.0:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.21.0.tgz#7c97f8fe045724e136a397f7340475244156105d"
   integrity sha512-gFqAIbuKyyso/3G2qhiO2OM6shY6EPP/R0+mkDbyspxKazh8BXDC5FiFsUjlczgdNz/vfra0da2y+aHrusLG/Q==
 
-jose@^4.11.2:
-  version "4.15.4"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.4.tgz#02a9a763803e3872cf55f29ecef0dfdcc218cc03"
-  integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
+jose@^4.15.5:
+  version "4.15.5"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.5.tgz#6475d0f467ecd3c630a1b5dadd2735a7288df706"
+  integrity sha512-jc7BFxgKPKi94uOvEmzlSWFFe2+vASyXaKUpdQKatWAESU2MWjDfFf0fdfc83CDKcA5QecabZeNLyfhe3yKNkg==
 
 joycon@^3.1.1:
   version "3.1.1"
@@ -8182,6 +8197,7 @@ which@^2.0.1, which@^2.0.2:
     isexe "^2.0.0"
 
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0", wrap-ansi@^7.0.0:
+  name wrap-ansi-cjs
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
   integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
