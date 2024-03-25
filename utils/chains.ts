@@ -203,6 +203,16 @@ export default [
     checkPollingInterval: reservoirChains.blastSepolia.checkPollingInterval,
   },
   {
+    ...customChains.apexPopTestnet,
+    lightIconUrl: '/icons/apex-pop-icon-light.svg',
+    darkIconUrl: '/icons/apex-pop-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.apexPopTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/apex-testnet',
+    routePrefix: 'apex-testnet',
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.apexPop.checkPollingInterval,
+  },
+  {
     ...customChains.astarZkEVM,
     name: 'Astar ZkEVM',
     lightIconUrl: '/icons/astar-zkevm-icon-light.svg',
