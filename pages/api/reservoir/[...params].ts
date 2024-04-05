@@ -31,14 +31,19 @@ export default async function handler(
       'x-api-key': process.env.RESERVOIR_API_KEY ?? '',
     }
 
-    // build the reservoir api call url, include query params
     const url = new URL(`${host}/${path}`)
+    // add the query parameters to the url
     Object.entries(queryParams).forEach(([key, value]) => {
       url.searchParams.append(key, value as string)
     })
 
+    // if the request is not a GET or HEAD request, we need to forward the request body.
+    const body = !['GET', 'HEAD'].includes(req.method ?? 'GET')
+      ? JSON.stringify(req.body)
+      : undefined
+
     // fetch the data from the reservoir api
-    const response = await fetch(url, { headers })
+    const response = await fetch(url, { headers, method: req.method, body })
     const contentType = response.headers.get('content-type')
 
     if (contentType?.startsWith('image/')) {
