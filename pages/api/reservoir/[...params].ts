@@ -5,7 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { params } = req.query
+  const { params, ...queryParams } = req.query
   // expect that chain is an array of strings, the first element is the chain name
   // the rest of the elements are the rest of the path
   if (!params || !Array.isArray(params) || params.length === 0) {
@@ -31,8 +31,14 @@ export default async function handler(
       'x-api-key': process.env.RESERVOIR_API_KEY ?? '',
     }
 
+    // build the reservoir api call url, include query params
+    const url = new URL(`${host}/${path}`)
+    Object.entries(queryParams).forEach(([key, value]) => {
+      url.searchParams.append(key, value as string)
+    })
+
     // fetch the data from the reservoir api
-    const response = await fetch(`${host}/${path}`, { headers })
+    const response = await fetch(url, { headers })
     const contentType = response.headers.get('content-type')
 
     if (contentType?.startsWith('image/')) {
