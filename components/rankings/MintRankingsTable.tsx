@@ -96,7 +96,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
     return optimizeImage(mint?.image || mint?.sampleImages?.[0], 250)
   }, [mint.image])
 
-  const mintPrice = mint.mintPrice?.toString()
+  const mintPrice = mint.mintPrice
 
   const sampleImages: string[] = mint?.sampleImages || []
 
@@ -217,7 +217,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({ mint, rank }) => {
             justify="start"
             css={{ height: '100%' }}
           >
-            {mintPrice !== '0' ? (
+            {mintPrice ? (
               <FormatCryptoCurrency
                 amount={mintPrice}
                 textStyle="subtitle1"
