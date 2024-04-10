@@ -169,6 +169,7 @@ export default [
         contract: usdcContracts[arbitrum.id],
       },
     ],
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.arbitrum.checkPollingInterval,
   },
   {
@@ -181,6 +182,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BASE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BASE_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.base.checkPollingInterval,
   },
   {
@@ -202,6 +204,7 @@ export default [
         contract: usdcContracts[optimism.id],
       },
     ],
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.optimism.checkPollingInterval,
   },
   {
@@ -213,6 +216,7 @@ export default [
     proxyApi: '/api/reservoir/zora',
     routePrefix: 'zora',
     coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zora.checkPollingInterval,
   },
   {
@@ -233,6 +237,7 @@ export default [
         contract: usdcContracts[bsc.id],
       },
     ],
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.bsc.checkPollingInterval,
   },
   {
@@ -243,6 +248,7 @@ export default [
     proxyApi: '/api/reservoir/opbnb',
     routePrefix: 'opbnb',
     coingeckoId: 'binancecoin',
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.opBnb.checkPollingInterval,
   },
   {
@@ -253,6 +259,7 @@ export default [
     proxyApi: '/api/reservoir/ancient8',
     routePrefix: 'ancient8',
     coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.ancient8.checkPollingInterval,
   },
   {
@@ -265,6 +272,7 @@ export default [
     coingeckoId: 'avalanche-2',
     collectionSetId: process.env.NEXT_PUBLIC_AVALANCHE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_AVALANCHE_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.avalanche.checkPollingInterval,
   },
   {
@@ -277,6 +285,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ARBITRUM_NOVA_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.arbitrumNova.checkPollingInterval,
   },
   {
@@ -289,6 +298,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_LINEA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.linea.checkPollingInterval,
   },
   {
@@ -302,6 +312,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.polygonZkEvm.checkPollingInterval,
   },
   {
@@ -316,6 +327,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ZKSYNC_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ZKSYNC_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zkSync.checkPollingInterval,
   },
   {
@@ -330,6 +342,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_SCROLL_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.scroll.checkPollingInterval,
   },
   {
@@ -344,6 +357,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_APE_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_APEX_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.apexPop.checkPollingInterval,
   },
   {
@@ -358,6 +372,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_BLAST_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_BLAST_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.blast.checkPollingInterval,
   },
   {
@@ -372,6 +387,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.astarZkEVM.checkPollingInterval,
   },
 ] as ReservoirChain[]
