@@ -90,6 +90,7 @@ const List: FC<Props> = ({
             description: 'The transaction was not completed.',
           })
         }}
+        oracleEnabled={marketplaceChain.oracleBidsEnabled}
         onPointerDownOutside={(e) => {
           const privyLayer = document.getElementById('privy-dialog')
 
