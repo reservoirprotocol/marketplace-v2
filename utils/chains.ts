@@ -115,6 +115,7 @@ export default [
         decimals: 18,
       },
     ],
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.sepolia.checkPollingInterval,
   },
   DefaultChain,
