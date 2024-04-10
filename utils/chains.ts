@@ -224,6 +224,7 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.astarZkEVM.checkPollingInterval,
   },
 ] as ReservoirChain[]
