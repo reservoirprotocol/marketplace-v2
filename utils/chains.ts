@@ -6,6 +6,7 @@ import {
   scrollTestnet,
   zoraTestnet,
   baseSepolia,
+  berachainTestnet,
   Chain,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
@@ -226,5 +227,18 @@ export default [
     community: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.astarZkEVM.checkPollingInterval,
+  },
+  {
+    ...berachainTestnet,
+    name: 'Berachain Testnet',
+    lightIconUrl: '/icons/berachain-testnet-icon-light.svg',
+    darkIconUrl: '/icons/berachain-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.berachainTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/berachain-testnet',
+    routePrefix: 'berachain-testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.berachainTestnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
