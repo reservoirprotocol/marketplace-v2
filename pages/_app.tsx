@@ -63,14 +63,14 @@ const wagmiConfig = getDefaultConfig({
   projectId: WALLET_CONNECT_PROJECT_ID,
   chains: (supportedChains.length === 0 ? [mainnet] : supportedChains) as [
     Chain,
-    ...Chain[],
+    ...Chain[]
   ],
   ssr: true,
   transports: supportedChains.reduce((transportsConfig: _transports, chain) => {
     const network = chainIdToAlchemyNetworkMap[chain.id]
     if (network && ALCHEMY_API_KEY) {
       transportsConfig[chain.id] = http(
-        `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+        `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
       )
     } else {
       transportsConfig[chain.id] = http() // Fallback to default HTTP transport
@@ -141,14 +141,14 @@ function MyApp({
       setRainbowKitTheme(
         rainbowDarkTheme({
           borderRadius: 'small',
-        }),
+        })
       )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
         rainbowLightTheme({
           borderRadius: 'small',
-        }),
+        })
       )
     }
   }, [theme])
@@ -203,14 +203,14 @@ function MyApp({
                   checkPollingInterval: checkPollingInterval,
                   paymentTokens: chainPaymentTokensMap[id],
                 }
-              },
+              }
             ),
             logLevel: 4,
             source: source,
             normalizeRoyalties: NORMALIZE_ROYALTIES,
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
-            marketplaceFees: ['0x03508bB71268BBA25ECaCC8F620e01866650532c:250'],
+            // marketplaceFees: ['0x03508bB71268BBA25ECaCC8F620e01866650532c:250'],
           }}
           theme={reservoirKitTheme}
         >
