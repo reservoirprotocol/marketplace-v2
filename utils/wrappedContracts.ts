@@ -1,6 +1,5 @@
 const wrappedContracts: Record<number, string> = {
   1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', //mainnet
-  5: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', //goerli
   10: '0x4200000000000000000000000000000000000006', //optimism
   56: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', //bnb
   137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //polygon
@@ -12,6 +11,7 @@ const wrappedContracts: Record<number, string> = {
   59144: '0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f', //linea
   999: '0x8a5027ea12f45a13deb6CB96A07913c6e192BE84', //zoratestnet
   80001: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', //mumbai
+  80002: '0x41Dc3C8eB8368bd9139Cec50434a0C294c8c1102',
   84531: '0x4200000000000000000000000000000000000006', //base goerli
   84532: '0x4200000000000000000000000000000000000006', //base goerli
   534353: '0xa1EA0B2354F5A344110af2b6AD68e75545009a03', //scrolltestnet
@@ -26,6 +26,7 @@ const wrappedContracts: Record<number, string> = {
   81457: '0x4300000000000000000000000000000000000004', //blast
   3776: '0xE9CC37904875B459Fa5D0FE37680d36F1ED55e38', // astar zkEVM
   80085: '0x5806e416da447b267cea759358cf22cc41fae80f', // berachain testnet
+  17069: '0x09d940117bd1df3165a22820517a946426605f60', // garnet
 }
 
 export default wrappedContracts
