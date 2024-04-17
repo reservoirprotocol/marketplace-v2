@@ -23,6 +23,7 @@ import CopyText from 'components/common/CopyText'
 import Link from 'next/link'
 import Wallet from './Wallet'
 import { useRouter } from 'next/router'
+import { AvatarFallback } from '@radix-ui/react-avatar'
 
 export const AccountSidebar: FC = () => {
   const { address } = useAccount()
@@ -49,7 +50,16 @@ export const AccountSidebar: FC = () => {
       color="gray3"
     >
       {ensAvatar ? (
-        <Avatar size="medium" src={ensAvatar} />
+        <Avatar
+          size="medium"
+          src={ensAvatar}
+          fallback={
+            <Jazzicon
+              diameter={44}
+              seed={jsNumberForAddress(address as string)}
+            />
+          }
+        />
       ) : (
         <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
       )}
@@ -169,7 +179,10 @@ export const AccountSidebar: FC = () => {
                     </CopyText>
                   </Flex>
                   <Grid css={{ gridTemplateColumns: '1fr 1fr', mt: 32 }}>
-                    <Link href={`/portfolio/${address || ''}?tab=items`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=items`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -183,7 +196,10 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">My Items</Text>
                       </Flex>
                     </Link>
-                    <Link href={`/portfolio/${address || ''}?tab=listings`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=listings`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -197,7 +213,10 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">Listings</Text>
                       </Flex>
                     </Link>
-                    <Link href={`/portfolio/${address || ''}?tab=offers`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=offers`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
@@ -211,7 +230,10 @@ export const AccountSidebar: FC = () => {
                         <Text style="body1">Offers Made</Text>
                       </Flex>
                     </Link>
-                    <Link href={`/portfolio/${address || ''}?tab=activity`} replace={true}>
+                    <Link
+                      href={`/portfolio/${address || ''}?tab=activity`}
+                      replace={true}
+                    >
                       <Flex
                         align="center"
                         css={{
