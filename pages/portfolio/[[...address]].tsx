@@ -66,7 +66,7 @@ const IndexPage: NextPage = () => {
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(false)
   const [hideSpam, setHideSpam] = useState<boolean>(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
-    undefined
+    undefined,
   )
   const [sortByType, setSortByType] =
     useState<PortfolioSortingOption>('acquiredAt')
@@ -115,7 +115,7 @@ const IndexPage: NextPage = () => {
           tokenId: item.token?.tokenId as string,
           collectionId: item.token?.collection?.id as string,
         })),
-    [selectedItems]
+    [selectedItems],
   )
 
   const tokenTableRef = useRef<TokenTableRef>(null)
@@ -212,7 +212,16 @@ const IndexPage: NextPage = () => {
                   >
                     <Flex align="center">
                       {ensAvatar ? (
-                        <Avatar size="xxl" src={ensAvatar} />
+                        <Avatar
+                          size="xxl"
+                          src={ensAvatar}
+                          fallback={
+                            <Jazzicon
+                              diameter={64}
+                              seed={jsNumberForAddress(address as string)}
+                            />
+                          }
+                        />
                       ) : (
                         <Jazzicon
                           diameter={64}

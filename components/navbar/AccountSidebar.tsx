@@ -24,6 +24,7 @@ import Wallet from './Wallet'
 import { useRouter } from 'next/router'
 import { usePrivy } from '@privy-io/react-auth'
 import { Address } from 'viem'
+import { AvatarFallback } from '@radix-ui/react-avatar'
 
 type Props = {
   address: Address
@@ -55,7 +56,16 @@ export const AccountSidebar: FC<Props> = ({ address }) => {
       color="gray3"
     >
       {ensAvatar ? (
-        <Avatar size="medium" src={ensAvatar} />
+        <Avatar
+          size="medium"
+          src={ensAvatar}
+          fallback={
+            <Jazzicon
+              diameter={44}
+              seed={jsNumberForAddress(address as string)}
+            />
+          }
+        />
       ) : (
         <Jazzicon diameter={44} seed={jsNumberForAddress(address as string)} />
       )}

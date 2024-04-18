@@ -110,7 +110,16 @@ const HamburgerMenu = () => {
               >
                 <Flex css={{ alignItems: 'center' }}>
                   {ensAvatar ? (
-                    <Avatar size="medium" src={ensAvatar} />
+                    <Avatar
+                      size="medium"
+                      src={ensAvatar}
+                      fallback={
+                        <Jazzicon
+                          diameter={36}
+                          seed={jsNumberForAddress(address as string)}
+                        />
+                      }
+                    />
                   ) : (
                     <Jazzicon
                       diameter={36}
