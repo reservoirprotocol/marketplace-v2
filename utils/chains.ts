@@ -109,7 +109,7 @@ export default [
     coingeckoId: 'matic-network',
     wssUrl: 'wss://ws-amoy.reservoir.tools',
     listingCurrencies: [
-      { ...nativeCurrencyBase, coinGeckoId: 'matic-network' },
+      { ...nativeCurrencyBase, symbol: 'MATIC', coinGeckoId: 'matic-network' },
     ],
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.polygonAmoy.checkPollingInterval,
