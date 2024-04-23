@@ -48,38 +48,6 @@ export const chainPaymentTokensMap = {
     },
   ],
 
-  // Goerli
-  5: [
-    {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 11155111,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Sepolia ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 5,
-      address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
-      symbol: 'WETH',
-      name: 'WETH',
-      decimals: 18,
-    },
-    {
-      chainId: 5,
-      address: '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6,
-    },
-  ],
-
   // Optimism
   10: [
     {
@@ -152,31 +120,6 @@ export const chainPaymentTokensMap = {
     {
       chainId: 137,
       address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6,
-    },
-  ],
-
-  // Mumbai
-  80001: [
-    {
-      chainId: 80001,
-      address: zeroAddress,
-      symbol: 'MATIC',
-      name: 'MATIC',
-      decimals: 18,
-    },
-    {
-      chainId: 80001,
-      address: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-      symbol: 'WMATIC',
-      name: 'WMATIC',
-      decimals: 18,
-    },
-    {
-      chainId: 80001,
-      address: '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
       symbol: 'USDC',
       name: 'USDC',
       decimals: 6,
@@ -378,37 +321,6 @@ export const chainPaymentTokensMap = {
     },
   ],
 
-  // Base Goerli
-  84531: [
-    {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 84531,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Base Goerli ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 84531,
-      address: '0x4200000000000000000000000000000000000006',
-      symbol: 'WETH',
-      name: 'WETH',
-      decimals: 18,
-    },
-    {
-      chainId: 84531,
-      address: '0xf175520c52418dfe19c8098071a252da48cd1c19',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6,
-    },
-  ],
   // Scroll Testnet
   534353: [
     {

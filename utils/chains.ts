@@ -1,9 +1,6 @@
 import {
-  goerli,
   sepolia,
-  polygonMumbai,
   polygonAmoy,
-  baseGoerli,
   scrollTestnet,
   zoraTestnet,
   baseSepolia,
@@ -14,7 +11,6 @@ import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import usdcContracts from './usdcContracts'
-import wrappedContracts from './wrappedContracts'
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -78,27 +74,6 @@ export const DefaultChain: ReservoirChain = {
 
 export default [
   DefaultChain,
-  {
-    ...polygonMumbai,
-    lightIconUrl: '/icons/polygon-icon-dark.svg',
-    darkIconUrl: '/icons/polygon-icon-light.svg',
-    reservoirBaseUrl: reservoirChains.mumbai.baseApiUrl,
-    proxyApi: '/api/reservoir/mumbai',
-    routePrefix: 'mumbai',
-    coingeckoId: 'matic-network',
-    collectionSetId: process.env.NEXT_PUBLIC_MUMBAI_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_MUMBAI_COMMUNITY,
-    wssUrl: 'wss://ws-mumbai.reservoir.tools',
-    listingCurrencies: [
-      { ...nativeCurrencyBase, coinGeckoId: 'matic-network' },
-      {
-        ...usdcCurrencyBase,
-        contract: usdcContracts[polygonMumbai.id],
-      },
-    ],
-    oracleBidsEnabled: true,
-    checkPollingInterval: reservoirChains.mumbai.checkPollingInterval,
-  },
   {
     ...polygonAmoy,
     lightIconUrl: '/icons/polygon-icon-dark.svg',
