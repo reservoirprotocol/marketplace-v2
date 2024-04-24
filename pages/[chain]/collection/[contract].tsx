@@ -106,7 +106,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const collectionChain =
     supportedChains.find(
-      (chain) => router.query?.chain === chain.routePrefix
+      (chain) => router.query?.chain === chain.routePrefix,
     ) || DefaultChain
 
   const scrollToTop = () => {
@@ -130,7 +130,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   let collection = collections && collections[0]
 
   const mintData = collection?.mintStages?.find(
-    (stage) => stage.kind === 'public'
+    (stage) => stage.kind === 'public',
   )
 
   const mintPriceDecimal = mintData?.price?.amount?.decimal
@@ -213,7 +213,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
         ? reservoirEvent.data?.market?.floorAskNormalized?.price?.amount?.native
         : reservoirEvent.data?.market?.floorAsk?.price?.amount?.native
       const tokenIndex = tokens.findIndex(
-        (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId
+        (token) => token.token?.tokenId === reservoirEvent?.data.token.tokenId,
       )
       const token = tokenIndex > -1 ? tokens[tokenIndex] : null
       if (token) {
@@ -226,7 +226,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
       if (!price) {
         if (token) {
           const endOfListingsIndex = tokens.findIndex(
-            (token) => !token.market?.floorAsk?.price?.amount?.native
+            (token) => !token.market?.floorAsk?.price?.amount?.native,
           )
           if (endOfListingsIndex === -1) {
             hasChange = true
@@ -235,8 +235,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               sortBy === 'rarity'
                 ? tokenIndex
                 : endOfListingsIndex > -1
-                ? endOfListingsIndex
-                : 0
+                  ? endOfListingsIndex
+                  : 0
             newTokens.splice(newTokenIndex, 0, {
               ...token,
               market: {
@@ -301,7 +301,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 tokens: newTokens,
               },
             ],
-          }
+          },
         )
       }
     },
@@ -315,7 +315,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
     return attributesData.data
       ?.filter(
-        (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
+        (attribute) => attribute.kind != 'number' && attribute.kind != 'range',
       )
       .sort((a, b) => a.key.localeCompare(b.key))
   }, [attributesData.data])
@@ -328,7 +328,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     collection?.tokenCount &&
       +collection.tokenCount >= 2 &&
       attributes &&
-      attributes?.length >= 2
+      attributes?.length >= 2,
   )
 
   const hasSecurityConfig =
@@ -365,17 +365,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             <meta property="fc:frame" content="vNext" />
             <meta
               property="fc:frame:image"
-              content={collection.image || collection.banner}
+              content={collection?.image || collection?.banner}
             />
             <meta property="fc:frame:image:aspect_ratio" content="1:1" />
             <meta property="fc:frame:button:1" content="Mint" />
             <meta property="fc:frame:button:1:action" content="mint" />
             <meta
               property="fc:frame:button:1:target"
-              content={`eip155:${collection.chainId}:${collection.primaryContract}`}
+              content={`eip155:${collection?.chainId}:${collection?.primaryContract}`}
             />
 
-            {collection.floorAsk?.price?.amount?.native && (
+            {collection?.floorAsk?.price?.amount?.native && (
               <>
                 <meta
                   property="fc:frame:button:2"
@@ -973,7 +973,7 @@ export const getServerSideProps: GetServerSideProps<{
   const collectionsPromise = fetcher(
     `${reservoirBaseUrl}/collections/v7`,
     collectionQuery,
-    headers
+    headers,
   )
 
   let tokensQuery: paths['/tokens/v6']['get']['parameters']['query'] = {
@@ -991,7 +991,7 @@ export const getServerSideProps: GetServerSideProps<{
   const tokensPromise = fetcher(
     `${reservoirBaseUrl}/tokens/v6`,
     tokensQuery,
-    headers
+    headers,
   )
 
   const promises = await Promise.allSettled([
@@ -1009,12 +1009,12 @@ export const getServerSideProps: GetServerSideProps<{
 
   const hasAttributes =
     tokens?.tokens?.some(
-      (token) => (token?.token?.attributes?.length || 0) > 0
+      (token) => (token?.token?.attributes?.length || 0) > 0,
     ) || false
 
   res.setHeader(
     'Cache-Control',
-    'public, s-maxage=30, stale-while-revalidate=60'
+    'public, s-maxage=30, stale-while-revalidate=60',
   )
 
   return {
