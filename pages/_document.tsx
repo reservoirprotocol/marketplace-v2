@@ -46,8 +46,8 @@ class MyDocument extends Document {
           content="/ethereum/asset/${contract}:${tokenId}"
         />
         <meta
-          property="reservoir:token-url-goerli"
-          content="/goerli/asset/${contract}:${tokenId}"
+          property="reservoir:token-url-sepolia"
+          content="/sepolia/asset/${contract}:${tokenId}"
         />
         <meta
           property="reservoir:token-url-polygon"

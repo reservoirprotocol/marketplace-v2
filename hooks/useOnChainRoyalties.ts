@@ -1,6 +1,6 @@
 import { parseUnits } from 'viem'
 import { useReadContracts } from 'wagmi'
-import { mainnet, goerli } from 'wagmi/chains'
+import { mainnet, sepolia } from 'wagmi/chains'
 
 type Props = {
   tokens?: {
@@ -64,7 +64,7 @@ export default function ({ tokens, enabled, chainId = mainnet.id }: Props) {
     case 80001:
       manifoldContract = '0x0a01E11887f727D1b1Cd81251eeEE9BEE4262D07'
       break
-    case goerli.id:
+    case sepolia.id:
     case 10:
     case 8435:
     case 42161:
