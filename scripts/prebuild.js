@@ -41,7 +41,7 @@ deleteAllFilesInDirectory('.cache').then(() => {
               const filenameWithoutExt = `./${filename.replace('.js', "'")}`
               modifiedContents = modifiedContents.replace(
                 filenameWithoutExt,
-                `${filenameWithoutExt.replace("'", '')}.mjs'`
+                `${filenameWithoutExt.replace("'", '')}.mjs'`,
               )
             })
             await fs.writeFileSync(originalPath, modifiedContents, 'utf-8')
@@ -51,6 +51,6 @@ deleteAllFilesInDirectory('.cache').then(() => {
         }
       }
       processFiles()
-    }
+    },
   )
 })
