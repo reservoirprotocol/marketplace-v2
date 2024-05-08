@@ -1,6 +1,5 @@
 const wrappedContracts: Record<number, string> = {
   1: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', //mainnet
-  5: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', //goerli
   10: '0x4200000000000000000000000000000000000006', //optimism
   56: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', //bnb
   137: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //polygon
@@ -11,8 +10,6 @@ const wrappedContracts: Record<number, string> = {
   42170: '0x722e8bdd2ce80a4422e880164f2079488e115365', //arbitrum nova
   59144: '0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f', //linea
   999: '0x8a5027ea12f45a13deb6CB96A07913c6e192BE84', //zoratestnet
-  80001: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', //mumbai
-  84531: '0x4200000000000000000000000000000000000006', //base goerli
   534353: '0xa1EA0B2354F5A344110af2b6AD68e75545009a03', //scrolltestnet
   534352: '0x5300000000000000000000000000000000000004', //scroll
   7777777: '0x4200000000000000000000000000000000000006', //zora
@@ -21,6 +18,7 @@ const wrappedContracts: Record<number, string> = {
   168587773: '0x4200000000000000000000000000000000000006', //blast sepolia
   81457: '0x4300000000000000000000000000000000000004', //blast
   3776: '0xE9CC37904875B459Fa5D0FE37680d36F1ED55e38', // astar zkEVM
+  666666666: '0xeb54dacb4c2ccb64f8074eceea33b5ebb38e5387', // degen
 }
 
 export default wrappedContracts
