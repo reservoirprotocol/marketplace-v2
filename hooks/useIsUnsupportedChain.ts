@@ -5,10 +5,7 @@ import { useAccount } from 'wagmi'
 type Chain = Omit<(typeof reservoirChains)['mainnet'], 'websocketUrl'>
 
 const TESTNET_CHAINS: Chain[] = [
-  reservoirChains.goerli,
   reservoirChains.sepolia,
-  reservoirChains.mumbai,
-  reservoirChains.baseGoerli,
   reservoirChains.scrollTestnet,
   reservoirChains.zoraTestnet,
   reservoirChains.baseSepolia,
