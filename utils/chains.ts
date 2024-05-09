@@ -417,6 +417,7 @@ export default [
     coingeckoId: 'degen-base',
     collectionSetId: process.env.NEXT_PUBLIC_DEGEN_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_DEGEN_COMMUNITY,
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.degen.checkPollingInterval,
   },
 ] as ReservoirChain[]
