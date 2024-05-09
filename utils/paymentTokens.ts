@@ -608,7 +608,7 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
     {
-      chainId: 81457,
+      chainId: 666666666,
       address: '0xeb54dacb4c2ccb64f8074eceea33b5ebb38e5387',
       symbol: 'WDEGEN',
       name: 'WDEGEN',
