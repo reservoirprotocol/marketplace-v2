@@ -607,19 +607,5 @@ export const chainPaymentTokensMap = {
       name: 'DEGEN',
       decimals: 18,
     },
-    {
-      chainId: 666666666,
-      address: '0xeb54dacb4c2ccb64f8074eceea33b5ebb38e5387',
-      symbol: 'WDEGEN',
-      name: 'WDEGEN',
-      decimals: 18,
-    },
-    {
-      chainId: 8453,
-      address: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
-      symbol: 'DEGEN',
-      name: 'Base DEGEN',
-      decimals: 18,
-    },
   ],
 } as Record<number, PaymentToken[]>
