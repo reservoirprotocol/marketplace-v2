@@ -26,6 +26,7 @@ const wrappedContracts: Record<number, string> = {
   3776: '0xE9CC37904875B459Fa5D0FE37680d36F1ED55e38', // astar zkEVM
   80085: '0x5806e416da447b267cea759358cf22cc41fae80f', // berachain testnet
   17069: '0x4200000000000000000000000000000000000006', // garnet
+  713715: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // sei testnet
 }
 
 export default wrappedContracts

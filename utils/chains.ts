@@ -207,4 +207,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.berachainTestnet.checkPollingInterval,
   },
+  {
+    ...customChains.seiTestnet,
+    name: 'Sei Testnet',
+    lightIconUrl: '/icons/eth-icon-light.svg',
+    darkIconUrl: '/icons/eth-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.seiTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/sei-testnet',
+    routePrefix: 'sei-testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'sei-network',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.seiTestnet.checkPollingInterval,
+  },
 ] as ReservoirChain[]
