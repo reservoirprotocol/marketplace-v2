@@ -210,8 +210,8 @@ export default [
   {
     ...customChains.seiTestnet,
     name: 'Sei Testnet',
-    lightIconUrl: '/icons/eth-icon-light.svg',
-    darkIconUrl: '/icons/eth-icon-dark.svg',
+    lightIconUrl: '/icons/sei-testnet-icon-light.svg',
+    darkIconUrl: '/icons/sei-testnet-icon-dark.svg',
     reservoirBaseUrl: reservoirChains.seiTestnet.baseApiUrl,
     proxyApi: '/api/reservoir/sei-testnet',
     routePrefix: 'sei-testnet',
