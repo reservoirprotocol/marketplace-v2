@@ -608,4 +608,21 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+  // cyber
+  7560: [
+    {
+      chainId: 7560,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Cyber ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7560,
+      address: '0x4200000000000000000000000000000000000006',
+      symbol: 'WETH',
+      name: 'Cyber WETH',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
