@@ -246,13 +246,6 @@ export const chainPaymentTokensMap = {
   // Sepolia
   11155111: [
     {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
       chainId: 11155111,
       address: zeroAddress,
       symbol: 'ETH',
@@ -462,13 +455,6 @@ export const chainPaymentTokensMap = {
 
   // Zora Testnet
   999: [
-    {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
     {
       chainId: 999,
       address: zeroAddress,
