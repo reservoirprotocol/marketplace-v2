@@ -608,4 +608,33 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Xai
+  660279: [
+    {
+      chainId: 660279,
+      address: zeroAddress,
+      symbol: 'XAI',
+      name: 'Xai',
+      decimals: 18,
+    },
+    {
+      chainId: 660279,
+      address: '0x3fb787101dc6be47cfe18aeee15404dcc842e6af',
+      symbol: 'WXAI',
+      name: 'WXAI',
+      decimals: 18,
+    },
+  ],
+
+  // Nebula
+  1482601649: [
+    {
+      chainId: 1482601649,
+      address: zeroAddress,
+      symbol: 'SFUEL',
+      name: 'SFUEL',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
