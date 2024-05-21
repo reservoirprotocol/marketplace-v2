@@ -598,6 +598,7 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
   // degen
   666666666: [
     {
@@ -608,6 +609,43 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // xai
+  660279: [
+    {
+      chainId: 660279,
+      address: zeroAddress,
+      symbol: 'XAI',
+      name: 'Xai',
+      decimals: 18,
+    },
+    {
+      chainId: 660279,
+      address: '0x3fb787101dc6be47cfe18aeee15404dcc842e6af',
+      symbol: 'WXAI',
+      name: 'WXAI',
+      decimals: 18,
+    },
+  ],
+
+  // nebula
+  1482601649: [
+    {
+      chainId: 1482601649,
+      address: zeroAddress,
+      symbol: 'SFUEL',
+      name: 'SFUEL',
+      decimals: 18,
+    },
+    {
+      chainId: 1482601649,
+      address: '0xab01bad2c86e24d371a13ed6367bdca819589c5d',
+      symbol: 'ETH',
+      name: 'Europa ETH',
+      decimals: 18,
+    },
+  ],
+
   // cyber
   7560: [
     {
@@ -622,6 +660,24 @@ export const chainPaymentTokensMap = {
       address: '0x4200000000000000000000000000000000000006',
       symbol: 'WETH',
       name: 'Cyber WETH',
+      decimals: 18,
+    },
+  ],
+
+  // bitlayer
+  200901: [
+    {
+      chainId: 200901,
+      address: zeroAddress,
+      symbol: 'BTC',
+      name: 'Bitcoin',
+      decimals: 18,
+    },
+    {
+      chainId: 200901,
+      address: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f',
+      symbol: 'WBTC',
+      name: 'Wrapped BTC',
       decimals: 18,
     },
   ],
