@@ -447,6 +447,15 @@ export default [
     coingeckoId: 'ethereum',
     collectionSetId: process.env.NEXT_PUBLIC_NEBULA_COLLECTION_SET_ID,
     community: process.env.NEXT_PUBLIC_NEBULA_COMMUNITY,
+    listingCurrencies: [
+      {
+        chainId: 1482601649,
+        address: '0xab01bad2c86e24d371a13ed6367bdca819589c5d',
+        symbol: 'ETH',
+        name: 'Europa ETH',
+        decimals: 18,
+      },
+    ],
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.nebula.checkPollingInterval,
   },
