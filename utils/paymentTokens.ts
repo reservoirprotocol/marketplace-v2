@@ -644,6 +644,20 @@ export const chainPaymentTokensMap = {
       name: 'Europa ETH',
       decimals: 18,
     },
+    {
+      chainId: 1482601649,
+      address: '0xcc205196288b7a26f6d43bbd68aaa98dde97276d',
+      symbol: 'USDC',
+      name: 'USDC',
+      decimals: 18,
+    },
+    {
+      chainId: 1482601649,
+      address: '0x7f73b66d4e6e67bcdeaf277b9962addcdabbfc4d',
+      symbol: 'SKL',
+      name: 'SKL',
+      decimals: 18,
+    },
   ],
 
   // cyber
