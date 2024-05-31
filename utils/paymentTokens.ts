@@ -632,13 +632,6 @@ export const chainPaymentTokensMap = {
   1482601649: [
     {
       chainId: 1482601649,
-      address: zeroAddress,
-      symbol: 'SFUEL',
-      name: 'SFUEL',
-      decimals: 18,
-    },
-    {
-      chainId: 1482601649,
       address: '0xab01bad2c86e24d371a13ed6367bdca819589c5d',
       symbol: 'ETH',
       name: 'Europa ETH',
@@ -692,6 +685,24 @@ export const chainPaymentTokensMap = {
       address: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f',
       symbol: 'WBTC',
       name: 'Wrapped BTC',
+      decimals: 18,
+    },
+  ],
+
+  // sei
+  1329: [
+    {
+      chainId: 1329,
+      address: zeroAddress,
+      symbol: 'SEI',
+      name: 'Sei',
+      decimals: 18,
+    },
+    {
+      chainId: 1329,
+      address: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7',
+      symbol: 'WSEI',
+      name: 'Wrapped Sei',
       decimals: 18,
     },
   ],
