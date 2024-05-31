@@ -688,4 +688,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // sei
+  1329: [
+    {
+      chainId: 1329,
+      address: zeroAddress,
+      symbol: 'SEI',
+      name: 'Sei',
+      decimals: 18,
+    },
+    {
+      chainId: 1329,
+      address: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7',
+      symbol: 'WSEI',
+      name: 'Wrapped Sei',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
