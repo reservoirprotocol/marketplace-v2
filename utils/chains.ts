@@ -17,6 +17,7 @@ import {
   arbitrumNova,
   scroll,
   opBNB,
+  skaleNebula,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
 
@@ -436,7 +437,7 @@ export default [
     checkPollingInterval: reservoirChains.xai.checkPollingInterval,
   },
   {
-    ...customChains.nebula,
+    ...skaleNebula,
     name: 'Nebula',
     lightIconUrl: '/icons/nebula-icon-light.svg',
     darkIconUrl: '/icons/nebula-icon-dark.svg',
