@@ -477,4 +477,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.bitlayer.checkPollingInterval,
   },
+  {
+    ...customChains.sei,
+    name: 'Sei',
+    lightIconUrl: '/icons/sei-icon-light.svg',
+    darkIconUrl: '/icons/sei-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.sei.baseApiUrl,
+    proxyApi: '/api/reservoir/sei',
+    routePrefix: 'sei',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'sei-network',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.sei.checkPollingInterval,
+  },
 ] as ReservoirChain[]
