@@ -490,4 +490,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.sei.checkPollingInterval,
   },
+  {
+    ...customChains.b3Testnet,
+    name: 'B3 Testnet',
+    lightIconUrl: '/icons/b3-testnet-icon-light.svg',
+    darkIconUrl: '/icons/b3-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.b3Testnet.baseApiUrl,
+    proxyApi: '/api/reservoir/b3Testnet',
+    routePrefix: 'b3Testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.sei.checkPollingInterval,
+  },
 ] as ReservoirChain[]
