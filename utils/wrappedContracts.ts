@@ -25,6 +25,7 @@ const wrappedContracts: Record<number, string> = {
   7560: '0x4200000000000000000000000000000000000006', // cyber
   200901: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f', // bitlayer
   1329: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7', // sei
+  1993: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3 testnet
 }
 
 export default wrappedContracts
