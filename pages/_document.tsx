@@ -42,29 +42,30 @@ class MyDocument extends Document {
         <meta property="reservoir:title" content="Reservoir NFT Explorer" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
-          property="reservoir:token-url-mainnet"
-          content="/ethereum/asset/${contract}:${tokenId}"
+          property="reservoir:token-url-goerli"
+          content="/goerli/asset/${contract}:${tokenId}"
         />
         <meta
           property="reservoir:token-url-sepolia"
           content="/sepolia/asset/${contract}:${tokenId}"
         />
         <meta
-          property="reservoir:token-url-polygon"
-          content="/polygon/asset/${contract}:${tokenId}"
+          property="reservoir:token-url-mumbai"
+          content="/mumbai/asset/${contract}:${tokenId}"
         />
         <meta
-          property="reservoir:token-url-arbitrum"
-          content="/arbitrum/asset/${contract}:${tokenId}"
+          property="reservoir:token-url-base-goerli"
+          content="/base-goerli/asset/${contract}:${tokenId}"
         />
         <meta
-          property="reservoir:token-url-optimism"
-          content="/optimism/asset/${contract}:${tokenId}"
+          property="reservoir:token-url-scroll-alpha"
+          content="/scroll-alpha/asset/${contract}:${tokenId}"
         />
         <meta
-          property="reservoir:token-url-zora"
-          content="/zora/asset/${contract}:${tokenId}"
+          property="reservoir:zora-testnet"
+          content="/zora-testnet/asset/${contract}:${tokenId}"
         />
+
         <body>
           <Main />
           <NextScript />

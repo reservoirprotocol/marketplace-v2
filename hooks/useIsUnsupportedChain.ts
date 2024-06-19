@@ -6,9 +6,10 @@ type Chain = Omit<(typeof reservoirChains)['mainnet'], 'websocketUrl'>
 
 const TESTNET_CHAINS: Chain[] = [
   reservoirChains.sepolia,
+  reservoirChains.baseSepolia,
   reservoirChains.scrollTestnet,
   reservoirChains.zoraTestnet,
-  reservoirChains.baseSepolia,
+  reservoirChains.frameTestnet,
   reservoirChains.ancient8Testnet,
   reservoirChains.frameTestnet,
   reservoirChains.blastSepolia,
