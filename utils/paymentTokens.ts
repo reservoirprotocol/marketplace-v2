@@ -599,13 +599,20 @@ export const chainPaymentTokensMap = {
     },
   ],
 
-  // degen
-  666666666: [
+  // Sei Testnet
+  713715: [
     {
-      chainId: 666666666,
+      chainId: 713715,
       address: zeroAddress,
-      symbol: 'DEGEN',
-      name: 'DEGEN',
+      symbol: 'SEI',
+      name: 'SEI',
+      decimals: 18,
+    },
+    {
+      chainId: 713715,
+      address: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4',
+      symbol: 'WSEI',
+      name: 'WSEI',
       decimals: 18,
     },
   ],
@@ -696,6 +703,28 @@ export const chainPaymentTokensMap = {
       address: zeroAddress,
       symbol: 'SEI',
       name: 'Sei',
+      decimals: 18,
+    },
+  ],
+
+  // b3 testnet
+  1993: [
+    {
+      chainId: 1993,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Ether',
+      decimals: 18,
+    },
+  ],
+
+  // flow previewnet
+  646: [
+    {
+      chainId: 646,
+      address: zeroAddress,
+      symbol: 'FLOW',
+      name: 'Flow',
       decimals: 18,
     },
   ],
