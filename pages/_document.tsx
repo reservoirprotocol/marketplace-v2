@@ -42,8 +42,8 @@ class MyDocument extends Document {
         <meta property="reservoir:title" content="Reservoir NFT Explorer" />
         <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
         <meta
-          property="reservoir:token-url-goerli"
-          content="/goerli/asset/${contract}:${tokenId}"
+          property="reservoir:token-url-mainnet"
+          content="/ethereum/asset/${contract}:${tokenId}"
         />
         <meta
           property="reservoir:token-url-sepolia"

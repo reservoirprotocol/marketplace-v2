@@ -26,6 +26,13 @@ const wrappedContracts: Record<number, string> = {
   3776: '0xE9CC37904875B459Fa5D0FE37680d36F1ED55e38', // astar zkEVM
   80085: '0x5806e416da447b267cea759358cf22cc41fae80f', // berachain testnet
   17069: '0x4200000000000000000000000000000000000006', // garnet
+  690: '0x4200000000000000000000000000000000000006', //redstone
+  666666666: '0xeb54dacb4c2ccb64f8074eceea33b5ebb38e5387', // degen
+  660279: '0x3fb787101dc6be47cfe18aeee15404dcc842e6af', // xai
+  1482601649: '0xab01bad2c86e24d371a13ed6367bdca819589c5d', // nebula
+  7560: '0x4200000000000000000000000000000000000006', // cyber
+  200901: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f', // bitlayer
+  1329: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7', // sei
 }
 
 export default wrappedContracts
