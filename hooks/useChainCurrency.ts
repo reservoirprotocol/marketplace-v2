@@ -1,10 +1,10 @@
-import { mainnet, goerli } from 'wagmi/chains'
+import { mainnet, sepolia } from 'wagmi/chains'
 import { useMarketplaceChain } from 'hooks'
 import { zeroAddress } from 'viem'
 
 export default function () {
   const chain = useMarketplaceChain()
-  const ETHChains: number[] = [mainnet.id, goerli.id]
+  const ETHChains: number[] = [mainnet.id, sepolia.id]
 
   if (!chain || !chain.nativeCurrency || ETHChains.includes(chain.id)) {
     return {

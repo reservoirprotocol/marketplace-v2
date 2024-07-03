@@ -48,38 +48,6 @@ export const chainPaymentTokensMap = {
     },
   ],
 
-  // Goerli
-  5: [
-    {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 11155111,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Sepolia ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 5,
-      address: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
-      symbol: 'WETH',
-      name: 'WETH',
-      decimals: 18,
-    },
-    {
-      chainId: 5,
-      address: '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6,
-    },
-  ],
-
   // Optimism
   10: [
     {
@@ -152,31 +120,6 @@ export const chainPaymentTokensMap = {
     {
       chainId: 137,
       address: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6,
-    },
-  ],
-
-  // Mumbai
-  80001: [
-    {
-      chainId: 80001,
-      address: zeroAddress,
-      symbol: 'MATIC',
-      name: 'MATIC',
-      decimals: 18,
-    },
-    {
-      chainId: 80001,
-      address: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-      symbol: 'WMATIC',
-      name: 'WMATIC',
-      decimals: 18,
-    },
-    {
-      chainId: 80001,
-      address: '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
       symbol: 'USDC',
       name: 'USDC',
       decimals: 6,
@@ -303,13 +246,6 @@ export const chainPaymentTokensMap = {
   // Sepolia
   11155111: [
     {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
       chainId: 11155111,
       address: zeroAddress,
       symbol: 'ETH',
@@ -378,37 +314,6 @@ export const chainPaymentTokensMap = {
     },
   ],
 
-  // Base Goerli
-  84531: [
-    {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 84531,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Base Goerli ETH',
-      decimals: 18,
-    },
-    {
-      chainId: 84531,
-      address: '0x4200000000000000000000000000000000000006',
-      symbol: 'WETH',
-      name: 'WETH',
-      decimals: 18,
-    },
-    {
-      chainId: 84531,
-      address: '0xf175520c52418dfe19c8098071a252da48cd1c19',
-      symbol: 'USDC',
-      name: 'USDC',
-      decimals: 6,
-    },
-  ],
   // Scroll Testnet
   534353: [
     {
@@ -551,13 +456,6 @@ export const chainPaymentTokensMap = {
   // Zora Testnet
   999: [
     {
-      chainId: 5,
-      address: zeroAddress,
-      symbol: 'ETH',
-      name: 'Goerli ETH',
-      decimals: 18,
-    },
-    {
       chainId: 999,
       address: zeroAddress,
       symbol: 'ETH',
@@ -697,6 +595,107 @@ export const chainPaymentTokensMap = {
       address: zeroAddress,
       symbol: 'ETH',
       name: 'Zora ETH',
+      decimals: 18,
+    },
+  ],
+
+  // degen
+  666666666: [
+    {
+      chainId: 666666666,
+      address: zeroAddress,
+      symbol: 'DEGEN',
+      name: 'DEGEN',
+      decimals: 18,
+    },
+  ],
+
+  // xai
+  660279: [
+    {
+      chainId: 660279,
+      address: zeroAddress,
+      symbol: 'XAI',
+      name: 'Xai',
+      decimals: 18,
+    },
+    {
+      chainId: 660279,
+      address: '0x3fb787101dc6be47cfe18aeee15404dcc842e6af',
+      symbol: 'WXAI',
+      name: 'WXAI',
+      decimals: 18,
+    },
+  ],
+
+  // nebula
+  1482601649: [
+    {
+      chainId: 1482601649,
+      address: '0xab01bad2c86e24d371a13ed6367bdca819589c5d',
+      symbol: 'ETH',
+      name: 'Europa ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 1482601649,
+      address: '0xcc205196288b7a26f6d43bbd68aaa98dde97276d',
+      symbol: 'USDC',
+      name: 'USDC',
+      decimals: 18,
+    },
+    {
+      chainId: 1482601649,
+      address: '0x7f73b66d4e6e67bcdeaf277b9962addcdabbfc4d',
+      symbol: 'SKL',
+      name: 'SKL',
+      decimals: 18,
+    },
+  ],
+
+  // cyber
+  7560: [
+    {
+      chainId: 7560,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Cyber ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7560,
+      address: '0x4200000000000000000000000000000000000006',
+      symbol: 'WETH',
+      name: 'Cyber WETH',
+      decimals: 18,
+    },
+  ],
+
+  // bitlayer
+  200901: [
+    {
+      chainId: 200901,
+      address: zeroAddress,
+      symbol: 'BTC',
+      name: 'Bitcoin',
+      decimals: 18,
+    },
+    {
+      chainId: 200901,
+      address: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f',
+      symbol: 'WBTC',
+      name: 'Wrapped BTC',
+      decimals: 18,
+    },
+  ],
+
+  // sei
+  1329: [
+    {
+      chainId: 1329,
+      address: zeroAddress,
+      symbol: 'SEI',
+      name: 'Sei',
       decimals: 18,
     },
   ],
