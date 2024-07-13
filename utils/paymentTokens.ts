@@ -487,6 +487,34 @@ export const chainPaymentTokensMap = {
       name: 'WETH',
       decimals: 18,
     },
+    {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 10,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 8453,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Base ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42161,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum ETH',
+      decimals: 18,
+    },
   ],
 
   // polygonZkEvm
