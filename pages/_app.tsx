@@ -39,7 +39,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { WagmiProvider, http } from 'wagmi'
 import { chainIdToAlchemyNetworkMap } from 'utils/chainIdToAlchemyNetworkMap'
 import { _transports } from '@rainbow-me/rainbowkit/dist/config/getDefaultConfig'
-import { Chain, mainnet } from 'viem/chains'
+import { Chain, mainnet, skaleNebula } from 'viem/chains'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -63,14 +63,14 @@ const wagmiConfig = getDefaultConfig({
   projectId: WALLET_CONNECT_PROJECT_ID,
   chains: (supportedChains.length === 0 ? [mainnet] : supportedChains) as [
     Chain,
-    ...Chain[],
+    ...Chain[]
   ],
   ssr: true,
   transports: supportedChains.reduce((transportsConfig: _transports, chain) => {
     const network = chainIdToAlchemyNetworkMap[chain.id]
     if (network && ALCHEMY_API_KEY) {
       transportsConfig[chain.id] = http(
-        `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+        `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
       )
     } else {
       transportsConfig[chain.id] = http() // Fallback to default HTTP transport
@@ -141,14 +141,14 @@ function MyApp({
       setRainbowKitTheme(
         rainbowDarkTheme({
           borderRadius: 'small',
-        }),
+        })
       )
     } else {
       setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
         rainbowLightTheme({
           borderRadius: 'small',
-        }),
+        })
       )
     }
   }, [theme])
@@ -203,7 +203,7 @@ function MyApp({
                   checkPollingInterval: checkPollingInterval,
                   paymentTokens: chainPaymentTokensMap[id],
                 }
-              },
+              }
             ),
             logLevel: 4,
             source: source,
@@ -211,6 +211,20 @@ function MyApp({
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
             // marketplaceFees: ['0x03508bB71268BBA25ECaCC8F620e01866650532c:250'],
+            convertLink:
+              marketplaceChain.id === skaleNebula.id
+                ? {
+                    customUrl: ({ toCurrency }) => {
+                      if (!toCurrency || toCurrency.symbol === 'ETH') {
+                        return 'https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=eth&type=eth'
+                      } else if (toCurrency) {
+                        return `https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=${toCurrency.symbol}&type=erc20`
+                      } else {
+                        return 'https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola'
+                      }
+                    },
+                  }
+                : undefined,
           }}
           theme={reservoirKitTheme}
         >
