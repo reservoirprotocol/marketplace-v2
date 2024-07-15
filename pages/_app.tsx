@@ -33,9 +33,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { http } from 'wagmi'
 import { chainIdToAlchemyNetworkMap } from 'utils/chainIdToAlchemyNetworkMap'
 import { _transports } from '@rainbow-me/rainbowkit/dist/config/getDefaultConfig'
-import { Chain, mainnet } from 'viem/chains'
 import { PrivyProvider } from '@privy-io/react-auth'
 import { createConfig, WagmiProvider } from '@privy-io/wagmi'
+import { Chain, mainnet, skaleNebula } from 'viem/chains'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({
@@ -198,6 +198,20 @@ function MyApp({
             //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
             // Note that this impacts orders created on your marketplace (offers/listings)
             // marketplaceFees: ['0x03508bB71268BBA25ECaCC8F620e01866650532c:250'],
+            convertLink:
+              marketplaceChain.id === skaleNebula.id
+                ? {
+                    customUrl: ({ toCurrency }) => {
+                      if (!toCurrency || toCurrency.symbol === 'ETH') {
+                        return 'https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=eth&type=eth'
+                      } else if (toCurrency) {
+                        return `https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola&token=${toCurrency.symbol}&type=erc20`
+                      } else {
+                        return 'https://portal.skale.space/bridge?from=mainnet&to=green-giddy-denebola'
+                      }
+                    },
+                  }
+                : undefined,
           }}
           theme={reservoirKitTheme}
         >
