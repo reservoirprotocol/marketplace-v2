@@ -1,7 +1,6 @@
 import {
   sepolia,
   polygonAmoy,
-  scrollTestnet,
   zoraTestnet,
   baseSepolia,
   Chain,
@@ -98,19 +97,6 @@ export default [
     routePrefix: 'base-sepolia',
     coingeckoId: 'ethereum',
     checkPollingInterval: reservoirChains.baseSepolia.checkPollingInterval,
-  },
-  {
-    ...scrollTestnet,
-    lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
-    darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
-    reservoirBaseUrl: reservoirChains.scrollTestnet.baseApiUrl,
-    proxyApi: '/api/reservoir/scroll-alpha',
-    routePrefix: 'scroll-alpha',
-    coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COMMUNITY,
-    name: 'Scroll Alpha',
-    checkPollingInterval: reservoirChains.scrollTestnet.checkPollingInterval,
   },
   {
     ...zoraTestnet,
