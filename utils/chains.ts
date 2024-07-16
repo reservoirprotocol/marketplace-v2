@@ -4,8 +4,8 @@ import {
   scrollTestnet,
   zoraTestnet,
   baseSepolia,
-  berachainTestnet,
   Chain,
+  berachainTestnetbArtio,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
@@ -195,7 +195,7 @@ export default [
     checkPollingInterval: reservoirChains.garnet.checkPollingInterval,
   },
   {
-    ...berachainTestnet,
+    ...berachainTestnetbArtio,
     name: 'Berachain Testnet',
     lightIconUrl: '/icons/berachain-testnet-icon-light.svg',
     darkIconUrl: '/icons/berachain-testnet-icon-dark.svg',
