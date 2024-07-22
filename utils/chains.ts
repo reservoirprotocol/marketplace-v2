@@ -1,11 +1,10 @@
 import {
   sepolia,
   polygonAmoy,
-  scrollTestnet,
   zoraTestnet,
   baseSepolia,
-  berachainTestnet,
   Chain,
+  berachainTestnetbArtio,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
@@ -100,19 +99,6 @@ export default [
     checkPollingInterval: reservoirChains.baseSepolia.checkPollingInterval,
   },
   {
-    ...scrollTestnet,
-    lightIconUrl: '/icons/scroll-testnet-icon-dark.svg',
-    darkIconUrl: '/icons/scroll-testnet-icon-light.svg',
-    reservoirBaseUrl: reservoirChains.scrollTestnet.baseApiUrl,
-    proxyApi: '/api/reservoir/scroll-alpha',
-    routePrefix: 'scroll-alpha',
-    coingeckoId: 'ethereum',
-    collectionSetId: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COLLECTION_SET_ID,
-    community: process.env.NEXT_PUBLIC_SCROLL_ALPHA_COMMUNITY,
-    name: 'Scroll Alpha',
-    checkPollingInterval: reservoirChains.scrollTestnet.checkPollingInterval,
-  },
-  {
     ...zoraTestnet,
     lightIconUrl: '/icons/zora-testnet-icon-dark.svg',
     darkIconUrl: '/icons/zora-testnet-icon-light.svg',
@@ -195,7 +181,7 @@ export default [
     checkPollingInterval: reservoirChains.garnet.checkPollingInterval,
   },
   {
-    ...berachainTestnet,
+    ...berachainTestnetbArtio,
     name: 'Berachain Testnet',
     lightIconUrl: '/icons/berachain-testnet-icon-light.svg',
     darkIconUrl: '/icons/berachain-testnet-icon-dark.svg',
@@ -245,5 +231,31 @@ export default [
     coingeckoId: 'flow',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.flowPreviewnet.checkPollingInterval,
+  },
+  {
+    ...customChains.cloud,
+    name: 'Cloud',
+    lightIconUrl: '/icons/cloud-icon-light.svg',
+    darkIconUrl: '/icons/cloud-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.cloud.baseApiUrl,
+    proxyApi: '/api/reservoir/cloud',
+    routePrefix: 'cloud',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.cloud.checkPollingInterval,
+  },
+  {
+    ...customChains.game7Testnet,
+    name: 'Game7 Testnet',
+    lightIconUrl: '/icons/game7-testnet-icon-light.svg',
+    darkIconUrl: '/icons/game7-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.game7Testnet.baseApiUrl,
+    proxyApi: '/api/reservoir/game7-testnet',
+    routePrefix: 'game7-testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'game7',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.game7Testnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
