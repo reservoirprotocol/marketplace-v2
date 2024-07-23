@@ -539,4 +539,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.flowPreviewnet.checkPollingInterval,
   },
+  {
+    ...customChains.boss,
+    name: 'Boss',
+    lightIconUrl: '/icons/apex-pop-icon-light.svg',
+    darkIconUrl: '/icons/apex-pop-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.boss.baseApiUrl,
+    proxyApi: '/api/reservoir/boss',
+    routePrefix: 'boss',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.boss.checkPollingInterval,
+  },
 ] as ReservoirChain[]
