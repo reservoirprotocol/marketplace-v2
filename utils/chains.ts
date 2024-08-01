@@ -258,4 +258,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.game7Testnet.checkPollingInterval,
   },
+  {
+    ...customChains.formaSketchpad,
+    name: 'Forma Sketchpad',
+    lightIconUrl: '/icons/forma-icon-light.svg',
+    darkIconUrl: '/icons/forma-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.formaSketchpad.baseApiUrl,
+    proxyApi: '/api/reservoir/forma-sketchpad',
+    routePrefix: 'forma-sketchpad',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'celestia',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.formaSketchpad.checkPollingInterval,
+  },
 ] as ReservoirChain[]

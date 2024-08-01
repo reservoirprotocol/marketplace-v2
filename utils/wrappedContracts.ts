@@ -38,6 +38,7 @@ const wrappedContracts: Record<number, string> = {
   646: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // flow previewnet
   70805: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // cloud
   13746: '0x6b885d96916d18cd78e44b42c6489ca6f8794565', // game7 testnet
+  984123: '0xd5eace1274dbf70960714f513db207433615a263', // forma sketchpad
 }
 
 export default wrappedContracts
