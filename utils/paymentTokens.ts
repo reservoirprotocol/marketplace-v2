@@ -728,6 +728,28 @@ export const chainPaymentTokensMap = {
     },
   ],
 
+  // b3 testnet
+  1993: [
+    {
+      chainId: 1993,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Ether',
+      decimals: 18,
+    },
+  ],
+
+  // flow previewnet
+  646: [
+    {
+      chainId: 646,
+      address: zeroAddress,
+      symbol: 'FLOW',
+      name: 'Flow',
+      decimals: 18,
+    },
+  ],
+  
   // forma
   984122: [
     {
@@ -742,7 +764,6 @@ export const chainPaymentTokensMap = {
       address: '0xd5eace1274dbf70960714f513db207433615a263',
       symbol: 'WTIA',
       name: 'WTIA',
-      decimals: 18,
     },
   ],
 } as Record<number, PaymentToken[]>

@@ -17,8 +17,35 @@ import {
   arbitrumNova,
   scroll,
   opBNB,
+  skaleNebula,
 } from 'wagmi/chains'
 import usdcContracts from './usdcContracts'
+
+export const ancient8Testnet = {
+  id: 2863311531,
+  name: 'Ancient8 Testnet',
+  nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+    public: {
+      http: ['https://rpc-testnet.ancient8.gg'],
+      webSocket: ['https://rpc-testnet.ancient8.gg'],
+    },
+  },
+  blockExplorers: {
+    etherscan: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+    default: {
+      name: 'a8scan',
+      url: 'https://testnet.a8scan.io/',
+    },
+  },
+} as const satisfies Chain
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -410,7 +437,7 @@ export default [
     checkPollingInterval: reservoirChains.xai.checkPollingInterval,
   },
   {
-    ...customChains.nebula,
+    ...skaleNebula,
     name: 'Nebula',
     lightIconUrl: '/icons/nebula-icon-light.svg',
     darkIconUrl: '/icons/nebula-icon-dark.svg',
@@ -485,6 +512,45 @@ export default [
     coingeckoId: 'sei-network',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.sei.checkPollingInterval,
+  },
+  {
+    ...customChains.b3Testnet,
+    name: 'B3 Testnet',
+    lightIconUrl: '/icons/b3-testnet-icon-light.svg',
+    darkIconUrl: '/icons/b3-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.b3Testnet.baseApiUrl,
+    proxyApi: '/api/reservoir/b3Testnet',
+    routePrefix: 'b3Testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.b3Testnet.checkPollingInterval,
+  },
+  {
+    ...customChains.flowPreviewnet,
+    name: 'Flow Previewnet',
+    lightIconUrl: '/icons/flow-previewnet-icon-light.svg',
+    darkIconUrl: '/icons/flow-previewnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.flowPreviewnet.baseApiUrl,
+    proxyApi: '/api/reservoir/flowPreviewnet',
+    routePrefix: 'flowPreviewnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'flow',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.flowPreviewnet.checkPollingInterval,
+  },
+  {
+    ...customChains.boss,
+    name: 'Boss',
+    lightIconUrl: '/icons/apex-pop-icon-light.svg',
+    darkIconUrl: '/icons/apex-pop-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.boss.baseApiUrl,
+    proxyApi: '/api/reservoir/boss',
+    routePrefix: 'boss',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.boss.checkPollingInterval,
   },
   {
     ...customChains.forma,

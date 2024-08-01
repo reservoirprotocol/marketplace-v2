@@ -93,6 +93,7 @@ async function searchSingleChain(chain: ReservoirChain, query: string) {
   const headers = {
     headers: {
       'x-api-key': process.env.RESERVOIR_API_KEY || '',
+      origin: HOST_URL || '',
     },
   }
 
@@ -234,6 +235,7 @@ async function searchAllChains(query: string) {
     const headers = {
       headers: {
         'x-api-key': process.env.RESERVOIR_API_KEY || '',
+        origin: HOST_URL || '',
       },
     }
 
@@ -261,6 +263,7 @@ async function searchAllChains(query: string) {
       const headers = {
         headers: {
           'x-api-key': process.env.RESERVOIR_API_KEY || '',
+          origin: HOST_URL || '',
         },
       }
       const { data } = await fetcher(

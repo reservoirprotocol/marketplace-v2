@@ -19,22 +19,22 @@ const fetcher = async (urls: string[]) => {
   const fetches = urls.map((url) =>
     fetch(url)
       .then((r) => r.json())
-      .catch(() => undefined)
+      .catch(() => undefined),
   )
   const results = await Promise.allSettled(fetches)
   return results.map((result) =>
-    result.status === 'fulfilled' ? result.value : undefined
+    result.status === 'fulfilled' ? result.value : undefined,
   )
 }
 
 export default function (tokens: string[], enabled: boolean = true) {
-  const marketplaceChain = useMarketplaceChain()
+  const { proxyApi } = useMarketplaceChain()
   const urls = tokens.map((id) => {
     const pieces = id.split(':')
     const tokenId = pieces[pieces.length - 1]
     const collectionId = pieces.slice(0, -1).join(':')
     let url = new URL(
-      `${marketplaceChain.reservoirBaseUrl}/collections/${collectionId}/marketplace-configurations/v1`
+      `${process.env.NEXT_PUBLIC_PROXY_URL}${proxyApi}/collections/${collectionId}/marketplace-configurations/v1`,
     )
     setParams(url, {
       tokenId,
@@ -43,36 +43,38 @@ export default function (tokens: string[], enabled: boolean = true) {
   })
   const { data, error } = useSWR<MarketplaceConfigurationsResponse[]>(
     enabled ? urls : null,
-    fetcher
+    fetcher,
   )
 
   const tokenExchanges = useMemo(() => {
     return (
-      data?.reduce((exchanges, data, i) => {
-        const reservoirMarketplace = data?.marketplaces?.find(
-          (marketplace) => marketplace.orderbook === 'reservoir'
-        )
+      data?.reduce(
+        (exchanges, data, i) => {
+          const reservoirMarketplace = data?.marketplaces?.find(
+            (marketplace) => marketplace.orderbook === 'reservoir',
+          )
 
-        if (reservoirMarketplace) {
-          //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
-          // Note that this impacts orders created on your marketplace (offers/listings)
-          reservoirMarketplace.fee = {
-            bps: 250,
+          if (reservoirMarketplace) {
+            //CONFIGURABLE: Set your marketplace fee and recipient, (fee is in BPS)
+            // Note that this impacts orders created on your marketplace (offers/listings)
+            reservoirMarketplace.fee = {
+              bps: 250,
+            }
+
+            const key = tokens[i]
+
+            exchanges[key] = {
+              exchange: Object.values(
+                reservoirMarketplace?.exchanges || {},
+              ).find((exchange) => exchange?.enabled) as Exchange,
+              marketplace: reservoirMarketplace,
+            }
           }
 
-          const key = tokens[i]
-
-          exchanges[key] = {
-            exchange: Object.values(reservoirMarketplace?.exchanges || {}).find(
-              (exchange) => exchange?.enabled
-            ) as Exchange,
-            marketplace: reservoirMarketplace,
-          }
-        }
-
-        return exchanges
-      }, {} as Record<string, { exchange: Exchange; marketplace: Marketplace }>) ||
-      {}
+          return exchanges
+        },
+        {} as Record<string, { exchange: Exchange; marketplace: Marketplace }>,
+      ) || {}
     )
   }, [data])
 

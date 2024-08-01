@@ -296,7 +296,6 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
           </>
         }
       />
-
       <Flex
         justify="center"
         css={{
