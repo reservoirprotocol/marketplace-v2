@@ -486,4 +486,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.sei.checkPollingInterval,
   },
+  {
+    ...customChains.b3,
+    name: 'B3',
+    lightIconUrl: '/icons/b3-icon-light.svg',
+    darkIconUrl: '/icons/b3-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.b3.baseApiUrl,
+    proxyApi: '/api/reservoir/b3',
+    routePrefix: 'b3',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.b3.checkPollingInterval,
+  },
 ] as ReservoirChain[]
