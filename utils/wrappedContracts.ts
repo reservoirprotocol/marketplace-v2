@@ -28,6 +28,7 @@ const wrappedContracts: Record<number, string> = {
   1993: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3 testnet
   646: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // flow previewnet
   984122: '0xd5eace1274dbf70960714f513db207433615a263', // forma
+  8333: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3
 }
 
 export default wrappedContracts
