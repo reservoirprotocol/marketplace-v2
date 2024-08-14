@@ -1757,6 +1757,7 @@
   version "2.7.12"
   resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-2.7.12.tgz#76ecb6085ad6d03cf7cc3d3d35bac0fd7b07df95"
   integrity sha512-AdaS8mTCwBnlM9jFMalBTX+PaIbJ+uBnTxm1EOuvemSPxDtY0cgMwsxq9Bvj1uwq/VFLEMZ1HiAlYrXQehXvNQ==
+
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
