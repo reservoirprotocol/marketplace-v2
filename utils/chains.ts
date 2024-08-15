@@ -512,4 +512,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.b3.checkPollingInterval,
   },
+  {
+    ...customChains.forma,
+    name: 'Forma',
+    lightIconUrl: '/icons/forma-icon-light.svg',
+    darkIconUrl: '/icons/forma-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.forma.baseApiUrl,
+    proxyApi: '/api/reservoir/forma',
+    routePrefix: 'forma',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'celestia',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.forma.checkPollingInterval,
+  },
 ] as ReservoirChain[]
