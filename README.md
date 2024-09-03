@@ -68,6 +68,8 @@ Reservoir Market v2 is lightly configurable with the configurations below. You c
 | NEXT_PUBLIC_DATADOG_CLIENT_TOKEN | `false` | Datadog client token for configuring analytics. | pubdaddswww4dad449dadas12ada123bae |
 | NEXT_PUBLIC_DATADOG_APPLICATION_ID | `false` | Datadog application id for configuring analytics. | 123cccbb-1234-1111-4411-abc12345612afgds |
 | NEXT_PUBLIC_MARKETPLACE_SOURCE | `false` | Marketplace source, used to attribute a source to orders. Must be a valid domain | reservoir.tools |
+| NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID | `true` | WalletConnect project ID required for wallet connectivity. | d3f452b37a8f91ca7732e89bd3f67c12 |
+
 
 In addition to the configuration above we've also added comments prefixed with `CONFIGURABLE:` throughout the app pointing out some pieces of code where you could customize functionality. After cloning the app make sure to search the repo for the aforementioned prefix.
 
