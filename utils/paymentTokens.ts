@@ -750,23 +750,6 @@ export const chainPaymentTokensMap = {
     },
   ],
   
-  // forma
-  984122: [
-    {
-      chainId: 984122,
-      address: zeroAddress,
-      symbol: 'TIA',
-      name: 'TIA',
-      decimals: 18,
-    },
-    {
-      chainId: 984122,
-      address: '0xd5eace1274dbf70960714f513db207433615a263',
-      symbol: 'WTIA',
-      name: 'WTIA',
-    }
-  ],
-
   // b3
   8333: [
     {
@@ -781,6 +764,42 @@ export const chainPaymentTokensMap = {
       address: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4',
       symbol: 'WETH',
       name: 'B3 WETH',
+      decimals: 18,
+    },
+  ],
+
+  // forma
+  984122: [
+    {
+      chainId: 984122,
+      address: zeroAddress,
+      symbol: 'TIA',
+      name: 'TIA',
+      decimals: 18,
+    },
+    {
+      chainId: 984122,
+      address: '0xd5eace1274dbf70960714f513db207433615a263',
+      symbol: 'WTIA',
+      name: 'WTIA',
+      decimals: 18,
+    },
+  ],
+
+  // Apechain
+  33139: [
+    {
+      chainId: 33139,
+      address: zeroAddress,
+      symbol: 'APE',
+      name: 'APE',
+      decimals: 18,
+    },
+    {
+      chainId: 33139,
+      address: '0x8073b2158aa023dd7f8d4799c883b65daf6baa57',
+      symbol: 'WAPE',
+      name: 'WAPE',
       decimals: 18,
     },
   ],
