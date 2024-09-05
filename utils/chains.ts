@@ -525,4 +525,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.forma.checkPollingInterval,
   },
+  {
+    ...customChains.apechain,
+    name: 'Apechain',
+    lightIconUrl: '/icons/apechain-icon-light.svg',
+    darkIconUrl: '/icons/apechain-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.apechain.baseApiUrl,
+    proxyApi: '/api/reservoir/apechain',
+    routePrefix: 'apechain',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'apecoin',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.apechain.checkPollingInterval,
+  },
 ] as ReservoirChain[]
