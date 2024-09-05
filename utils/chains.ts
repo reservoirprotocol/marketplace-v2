@@ -538,4 +538,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.apechain.checkPollingInterval,
   },
+  {
+    ...customChains.shape,
+    name: 'Shape',
+    lightIconUrl: '/icons/shape-icon-light.svg',
+    darkIconUrl: '/icons/shape-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.shape.baseApiUrl,
+    proxyApi: '/api/reservoir/shape',
+    routePrefix: 'shape',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.shape.checkPollingInterval,
+  },
 ] as ReservoirChain[]
