@@ -27,6 +27,7 @@ const wrappedContracts: Record<number, string> = {
   1329: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7', // sei
   8333: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3
   984122: '0xd5eace1274dbf70960714f513db207433615a263', // forma
+  2911: '0x2b1499d631bffb29eed7749b12cba754273d6da7', // hychain
 }
 
 export default wrappedContracts

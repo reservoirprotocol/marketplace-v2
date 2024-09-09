@@ -745,7 +745,7 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
-  
+
   // forma
   984122: [
     {
@@ -760,6 +760,24 @@ export const chainPaymentTokensMap = {
       address: '0xd5eace1274dbf70960714f513db207433615a263',
       symbol: 'WTIA',
       name: 'WTIA',
+      decimals: 18,
+    },
+  ],
+
+  // Hychain
+  2911: [
+    {
+      chainId: 2911,
+      address: zeroAddress,
+      symbol: 'TOPIA',
+      name: 'Hychain',
+      decimals: 18,
+    },
+    {
+      chainId: 2911,
+      address: '0x2b1499d631bffb29eed7749b12cba754273d6da7',
+      symbol: 'WTOPIA',
+      name: 'Wrapped TOPIA',
       decimals: 18,
     },
   ],
