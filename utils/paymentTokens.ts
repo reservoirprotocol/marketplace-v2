@@ -846,4 +846,58 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Abstract Testnet
+  11124: [
+    {
+      chainId: 11124,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 11124,
+      address: '0x924c922c60c5066667b63fd311880741cb4111cd',
+      symbol: 'WETH',
+      name: 'WETH',
+      decimals: 18,
+    },
+  ],
+
+  // Minato
+  1946: [
+    {
+      chainId: 1946,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 1946,
+      address: '0x4200000000000000000000000000000000000006',
+      symbol: 'WETH',
+      name: 'WETH',
+      decimals: 18,
+    },
+  ],
+
+  // Hychain Testnet
+  29112: [
+    {
+      chainId: 29112,
+      address: zeroAddress,
+      symbol: 'TOPIA',
+      name: 'Hychain',
+      decimals: 18,
+    },
+    {
+      chainId: 29112,
+      address: '0x2549584be33491340eee6762992055cda05b2581',
+      symbol: 'WTOPIA',
+      name: 'Wrapped TOPIA',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
