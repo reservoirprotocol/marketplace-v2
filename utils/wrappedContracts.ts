@@ -31,6 +31,7 @@ const wrappedContracts: Record<number, string> = {
   8333: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3
   33139: '0x8073b2158aa023dd7f8d4799c883b65daf6baa57', // apechain
   360: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // shape
+  2911: '0x2b1499d631bffb29eed7749b12cba754273d6da7', // hychain
 }
 
 export default wrappedContracts
