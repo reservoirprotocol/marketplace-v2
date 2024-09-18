@@ -39,7 +39,7 @@ const wrappedContracts: Record<number, string> = {
   70805: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // cloud
   13746: '0x6b885d96916d18cd78e44b42c6489ca6f8794565', // game7 testnet
   984123: '0xd5eace1274dbf70960714f513db207433615a263', // forma sketchpad
-  33111: '0x34b097b133bf3fe3b7dad0d65e8f18dd5bf1a57b', // curtis
+  33111: '0x8643a49363e80c7a15790703b915d1b0b6b71d56', // curtis
   11011: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // shape sepolia
   11124: '0x924c922c60c5066667b63fd311880741cb4111cd', // abstract testnet
   1946: '0x4200000000000000000000000000000000000006', // minato
