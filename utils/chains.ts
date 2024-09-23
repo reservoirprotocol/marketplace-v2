@@ -591,4 +591,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.hychain.checkPollingInterval,
   },
+  {
+    ...customChains.flow,
+    name: 'Flow',
+    lightIconUrl: '/icons/flow-icon-light.svg',
+    darkIconUrl: '/icons/flow-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.flow.baseApiUrl,
+    proxyApi: '/api/reservoir/flow',
+    routePrefix: 'flow',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'flow',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.flow.checkPollingInterval,
+  },
 ] as ReservoirChain[]
