@@ -261,6 +261,17 @@ export const chainPaymentTokensMap = {
     },
   ],
 
+  // Base Sepolia
+  84532: [
+    {
+      chainId: 84532,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Base Sepolia ETH',
+      decimals: 18,
+    },
+  ],
+
   // Base
   8453: [
     {
