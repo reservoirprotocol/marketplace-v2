@@ -25,6 +25,11 @@ const wrappedContracts: Record<number, string> = {
   7560: '0x4200000000000000000000000000000000000006', // cyber
   200901: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f', // bitlayer
   1329: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7', // sei
+  8333: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3
+  984122: '0xd5eace1274dbf70960714f513db207433615a263', // forma
+  33139: '0x8643a49363e80c7a15790703b915d1b0b6b71d56', // apechain
+  360: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // shape
+  747: '0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e', // flow
 }
 
 export default wrappedContracts
