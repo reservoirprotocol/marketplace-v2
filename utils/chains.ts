@@ -39,6 +39,7 @@ export type ReservoirChain = Chain & {
   oracleBidsEnabled?: boolean
   checkPollingInterval?: number
   paperContractId?: string
+  seaportV15?: boolean
 }
 
 const nativeCurrencyBase = {
@@ -224,6 +225,7 @@ export default [
     coingeckoId: 'binancecoin',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.opBnb.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.ancient8,
@@ -235,6 +237,7 @@ export default [
     coingeckoId: 'ethereum',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.ancient8.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...avalanche,
@@ -274,6 +277,7 @@ export default [
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.linea.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...polygonZkEvm,
@@ -288,6 +292,7 @@ export default [
     community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.polygonZkEvm.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...zkSync,
@@ -318,6 +323,7 @@ export default [
     community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.scroll.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.apexPop,
@@ -333,6 +339,7 @@ export default [
     community: process.env.NEXT_PUBLIC_APEX_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.apexPop.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.blast,
@@ -363,6 +370,7 @@ export default [
     community: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.astarZkEVM.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.redstone,
@@ -378,6 +386,7 @@ export default [
     community: process.env.NEXT_PUBLIC_REDSTONE_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.redstone.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.degen,
@@ -393,6 +402,7 @@ export default [
     community: process.env.NEXT_PUBLIC_DEGEN_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.degen.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.xai,
@@ -442,6 +452,7 @@ export default [
     ],
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.nebula.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.cyber,
@@ -472,6 +483,7 @@ export default [
     community: process.env.NEXT_PUBLIC_BITLAYER_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.bitlayer.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.sei,
