@@ -83,6 +83,9 @@ const List: FC<Props> = ({
         feesBps={orderFees}
         currencies={listingCurrencies}
         chainId={marketplaceChain.id}
+        orderKind={
+          marketplaceChain.seaportV15 ? 'seaport-v1.5' : 'seaport-v1.6'
+        }
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == ListStep.Complete) mutate()
         }}

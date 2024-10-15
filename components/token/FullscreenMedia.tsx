@@ -121,6 +121,7 @@ const FullscreenMedia: FC<Props> = ({ token }) => {
                         height: 'auto',
                         padding: '4px',
                       }}
+                      disableOnChainRendering={true}
                     />
                   </Flex>
                 </motion.div>

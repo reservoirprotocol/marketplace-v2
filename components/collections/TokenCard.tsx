@@ -192,6 +192,7 @@ export default ({
                 description: 'Request to refresh this token was accepted.',
               })
             }}
+            disableOnChainRendering={true}
           />
         </Box>
       </Link>
