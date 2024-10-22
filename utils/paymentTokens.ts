@@ -775,7 +775,7 @@ export const chainPaymentTokensMap = {
     },
     {
       chainId: 33139,
-      address: '0x8643a49363e80c7a15790703b915d1b0b6b71d56',
+      address: '0x48b62137edfa95a428d35c09e44256a739f6b557',
       symbol: 'WAPE',
       name: 'WAPE',
       decimals: 18,
