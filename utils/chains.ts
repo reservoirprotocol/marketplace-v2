@@ -308,6 +308,7 @@ export default [
     community: process.env.NEXT_PUBLIC_ZKSYNC_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zkSync.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...scroll,
