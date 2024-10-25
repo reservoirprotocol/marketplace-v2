@@ -378,6 +378,7 @@ const IndexPage: NextPage<Props> = ({ assetId, ssr }) => {
                   description: 'Request to refresh this token was accepted.',
                 })
               }}
+              disableOnChainRendering={true}
             />
             <FullscreenMedia token={token} />
           </Box>
