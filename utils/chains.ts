@@ -329,4 +329,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.hychainTestnet.checkPollingInterval,
   },
+  {
+    ...customChains.zeroTestnet,
+    name: 'Zero Testnet',
+    lightIconUrl: '/icons/zero-icon-light.svg',
+    darkIconUrl: '/icons/zero-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.zeroTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/zero-testnet',
+    routePrefix: 'zeroTestnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.zeroTestnet.checkPollingInterval,
+  },
 ] as ReservoirChain[]

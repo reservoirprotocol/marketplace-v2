@@ -1059,4 +1059,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Zero Testnet
+  43210: [
+    {
+      chainId: 43210,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 43210,
+      address: '0xee6b04fcd07a54d78a7a23f353f2b4a0bfb4a78c',
+      symbol: 'WETH',
+      name: 'WETH',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>

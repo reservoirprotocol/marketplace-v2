@@ -44,6 +44,7 @@ const wrappedContracts: Record<number, string> = {
   11124: '0x9edcde0257f2386ce177c3a7fcdd97787f0d841d', // abstract testnet
   1946: '0x4200000000000000000000000000000000000006', // minato
   29112: '0x2549584be33491340eee6762992055cda05b2581', // hychain testnet
+  43210: '0xee6b04fcd07a54d78a7a23f353f2b4a0bfb4a78c', // zero testnet
 }
 
 export default wrappedContracts
