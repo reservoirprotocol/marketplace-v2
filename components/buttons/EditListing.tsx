@@ -76,7 +76,7 @@ const EditListing: FC<Props> = ({
             return
           }
           addToast?.({
-            title: 'Could not edit listing',
+            title: 'Could not edit donation',
             description: 'The transaction was not completed.',
           })
         }}

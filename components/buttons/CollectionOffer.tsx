@@ -100,8 +100,8 @@ const CollectionOffer: FC<Props> = ({
       {buttonChildren
         ? buttonChildren
         : isAttributeModal
-        ? 'Attribute Offer'
-        : 'Collection Offer'}
+        ? 'Attribute Donation'
+        : 'Collection Donation'}
     </Button>
   )
 
@@ -119,8 +119,8 @@ const CollectionOffer: FC<Props> = ({
         {buttonChildren
           ? buttonChildren
           : isAttributeModal
-          ? 'Attribute Offer'
-          : 'Collection Offer'}
+          ? 'Attribute Donation'
+          : 'Collection Donation'}
       </Button>
     )
   } else
@@ -152,7 +152,7 @@ const CollectionOffer: FC<Props> = ({
                 }
               }
               addToast?.({
-                title: 'Could not place bid',
+                title: 'Could not place donation',
                 description: 'The transaction was not completed.',
               })
             }}

@@ -66,10 +66,10 @@ const Navbar = () => {
           <Link href={`/${routePrefix}`}>
             <Box css={{ width: 46, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/githubLogo.svg"
                 width={36}
                 height={36}
-                alt="Reservoir"
+                alt="GitHub"
               />
             </Box>
           </Link>
@@ -115,10 +115,10 @@ const Navbar = () => {
           <Link href={`/${routePrefix}`}>
             <Box css={{ cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/githubLogo.svg"
                 width={36}
                 height={36}
-                alt="Reservoir"
+                alt="GitHub"
               />
             </Box>
           </Link>
@@ -188,39 +188,36 @@ const Navbar = () => {
           <Box>
             <HoverCard.Root openDelay={120}>
               <HoverCard.Trigger>
-                <a target="_blank" href={`https://docs.reservoir.tools/docs`}>
+                <a target="_blank" href={`https://docs.github.com`}>
                   <NavItem>Developers</NavItem>
                 </a>
               </HoverCard.Trigger>
               <HoverCard.Content sideOffset={24} align="start">
                 <Card css={{ p: 24, width: 240 }}>
                   <Flex css={{ gap: '$4' }} direction="column">
-                    <a target="_blank" href={`https://reservoir.tools`}>
-                      <NavItem>About Reservoir</NavItem>
+                    <a target="_blank" href={`https://github.com/about`}>
+                      <NavItem>About GitHub</NavItem>
                     </a>
-                    <a
-                      target="_blank"
-                      href={`https://docs.reservoir.tools/docs`}
-                    >
+                    <a target="_blank" href={`https://docs.github.com`}>
                       <NavItem>Docs</NavItem>
                     </a>
 
                     <a
                       target="_blank"
-                      href={`https://docs.reservoir.tools/reference/overview`}
+                      href={`https://docs.github.com/en/rest`}
                     >
                       <NavItem>API Reference</NavItem>
                     </a>
 
                     <a
                       target="_blank"
-                      href={`https://github.com/reservoirprotocol`}
+                      href={`https://github.com/github`}
                     >
                       <NavItem>Github</NavItem>
                     </a>
 
-                    <a href={`https://testnets.reservoir.tools`}>
-                      <NavItem>Testnet Explorer</NavItem>
+                    <a href={`https://github.com/explore`}>
+                      <NavItem>Explore</NavItem>
                     </a>
                   </Flex>
                 </Card>

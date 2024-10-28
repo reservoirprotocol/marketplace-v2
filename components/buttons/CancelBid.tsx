@@ -38,14 +38,14 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
       chainId={marketplaceChain.id}
       onCancelComplete={(data: any) => {
         addToast?.({
-          title: 'User canceled bid',
-          description: 'You have canceled the bid.',
+          title: 'User canceled donation',
+          description: 'You have canceled the donation.',
         })
       }}
       onCancelError={(error: any, data: any) => {
-        console.log('Bid Cancel Error', error, data)
+        console.log('Donation Cancel Error', error, data)
         addToast?.({
-          title: 'Could not cancel bid',
+          title: 'Could not cancel donation',
           description: 'The transaction was not completed.',
         })
       }}

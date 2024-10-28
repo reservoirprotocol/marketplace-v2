@@ -68,6 +68,7 @@ const Sweep: FC<Props> = ({
           e.preventDefault()
         }
       }}
+      buttonText="Donate"
     />
   )
 }

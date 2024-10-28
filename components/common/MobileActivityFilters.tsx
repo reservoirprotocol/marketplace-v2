@@ -231,6 +231,25 @@ export const MobileActivityFilters: FC<Props> = ({
             </Flex>
           ))}
         </Flex>
+        <Button
+          css={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            justifyItems: 'center',
+            position: 'fixed',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            px: '$6',
+            py: '$3',
+          }}
+          type="button"
+          size="small"
+          corners="pill"
+          color="primary"
+        >
+          Donate
+        </Button>
       </Flex>
     </FullscreenModal>
   )

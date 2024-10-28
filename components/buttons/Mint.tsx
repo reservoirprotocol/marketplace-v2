@@ -56,6 +56,7 @@ const Mint: FC<Props> = ({
       onClose={(data, currentStep) => {
         if (mutate && currentStep == MintStep.Complete) mutate()
       }}
+      buttonText="Donate"
     />
   )
 }

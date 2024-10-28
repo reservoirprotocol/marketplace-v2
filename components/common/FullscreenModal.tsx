@@ -39,6 +39,7 @@ export const FullscreenModal: FC<Props> = ({
           }}
         >
           {children}
+          <button>Donate</button>
         </Content>
       </DialogPortal>
     </DialogRoot>

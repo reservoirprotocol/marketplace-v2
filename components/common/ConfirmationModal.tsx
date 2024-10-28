@@ -62,7 +62,7 @@ export const ConfirmationModal: FC<Props> = ({
             }}
           >
             <Text style="subtitle2" css={{ color: 'inherit' }}>
-              Cancel
+              Cancel Donation
             </Text>
           </Button>
         </Flex>

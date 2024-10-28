@@ -16,9 +16,12 @@ const Layout: FC<Props> = ({ children }) => {
           height: '100%',
           minHeight: '100vh',
           pt: 80,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        <Box css={{ maxWidth: 4500, mx: 'auto' }}>
+        <Box css={{ width: '100%', maxWidth: 1200, px: '$4' }}>
           <Navbar />
           <UnsupportedChainBanner />
           <main>{children}</main>

@@ -73,7 +73,7 @@ const EditBid: FC<Props> = ({
             return
           }
           addToast?.({
-            title: 'Could not edit offer',
+            title: 'Could not edit donation',
             description: 'The transaction was not completed.',
           })
         }}

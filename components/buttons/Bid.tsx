@@ -48,7 +48,7 @@ const Bid: FC<Props> = ({
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
-      Make Offer
+      Make Donation
     </Button>
   )
 
@@ -107,7 +107,7 @@ const Bid: FC<Props> = ({
             }
           }
           addToast?.({
-            title: 'Could not place bid',
+            title: 'Could not place donation',
             description: 'The transaction was not completed.',
           })
         }}

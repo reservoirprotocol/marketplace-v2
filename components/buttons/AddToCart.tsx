@@ -65,6 +65,7 @@ const AddToCart: FC<Props> = ({
             width="16"
             height="16"
           />
+          {orderIsInCart ? 'Remove Donation' : 'Add Donation'}
         </Button>
         <ConfirmationModal
           title="Could not add item to cart"
@@ -133,6 +134,7 @@ const AddToCart: FC<Props> = ({
           width="16"
           height="16"
         />
+        {isInCart ? 'Remove Donation' : 'Add Donation'}
       </Button>
 
       <ConfirmationModal

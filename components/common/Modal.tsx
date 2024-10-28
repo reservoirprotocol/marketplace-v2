@@ -121,6 +121,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
             </Text>
           </Anchor>
         </Flex>
+        <Button>Donate</Button>
       </Dialog>
     )
   }

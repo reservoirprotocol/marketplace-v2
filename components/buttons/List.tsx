@@ -87,7 +87,7 @@ const List: FC<Props> = ({
             return
           }
           addToast?.({
-            title: 'Could not list token',
+            title: 'Could not list donation',
             description: 'The transaction was not completed.',
           })
         }}

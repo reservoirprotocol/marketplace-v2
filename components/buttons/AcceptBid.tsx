@@ -87,8 +87,8 @@ const AcceptBid: FC<Props> = ({
         onBidAcceptError={(error: any) => {
           if (error?.type === 'price mismatch') {
             addToast?.({
-              title: 'Could not accept offer',
-              description: 'Offer was lower than expected.',
+              title: 'Could not accept donation',
+              description: 'Donation was lower than expected.',
             })
             return
           }
@@ -101,7 +101,7 @@ const AcceptBid: FC<Props> = ({
             return
           }
           addToast?.({
-            title: 'Could not accept offer',
+            title: 'Could not accept donation',
             description: 'The transaction was not completed.',
           })
         }}

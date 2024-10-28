@@ -46,14 +46,14 @@ const CancelListing: FC<Props> = ({
       chainId={marketplaceChain.id}
       onCancelComplete={(data: any) => {
         addToast?.({
-          title: 'User canceled listing',
-          description: 'You have canceled the listing.',
+          title: 'User canceled donation',
+          description: 'You have canceled the donation.',
         })
       }}
       onCancelError={(error: any, data: any) => {
-        console.log('Listing Cancel Error', error, data)
+        console.log('Donation Cancel Error', error, data)
         addToast?.({
-          title: 'Could not cancel listing',
+          title: 'Could not cancel donation',
           description: 'The transaction was not completed.',
         })
       }}
