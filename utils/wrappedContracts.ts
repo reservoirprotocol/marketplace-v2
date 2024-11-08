@@ -34,6 +34,7 @@ const wrappedContracts: Record<number, string> = {
   360: '0x4200000000000000000000000000000000000006', // shape
   747: '0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e', // flow
   543210: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c', // zero
+  2741: '0x3439153eb7af838ad19d56e1571fbd09333c2809', // abstract
 }
 
 export default wrappedContracts
