@@ -589,5 +589,18 @@ export default [
     coingeckoId: 'hytopia',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.hychain.checkPollingInterval,
-  }
+  },
+  {
+    ...customChains.zero,
+    name: 'Zero',
+    lightIconUrl: '/icons/zero-icon-light.svg',
+    darkIconUrl: '/icons/zero-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.zero.baseApiUrl,
+    proxyApi: '/api/reservoir/zero',
+    routePrefix: 'zero',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.zero.checkPollingInterval,
+  },
 ] as ReservoirChain[]

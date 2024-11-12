@@ -31,6 +31,7 @@ const wrappedContracts: Record<number, string> = {
   360: '0x4200000000000000000000000000000000000006', // shape
   747: '0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e', // flow
   2911: '0x2b1499d631bffb29eed7749b12cba754273d6da7', // hychain
+  543210: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c', // zero
 }
 
 export default wrappedContracts

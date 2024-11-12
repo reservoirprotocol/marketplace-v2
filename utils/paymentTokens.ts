@@ -983,4 +983,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Zero
+  543210: [
+    {
+      chainId: 543210,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 543210,
+      address: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c',
+      symbol: 'WETH',
+      name: 'WETH',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
