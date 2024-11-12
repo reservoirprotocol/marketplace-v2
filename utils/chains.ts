@@ -39,6 +39,7 @@ export type ReservoirChain = Chain & {
   oracleBidsEnabled?: boolean
   checkPollingInterval?: number
   paperContractId?: string
+  seaportV15?: boolean
 }
 
 const nativeCurrencyBase = {
@@ -224,6 +225,7 @@ export default [
     coingeckoId: 'binancecoin',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.opBnb.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.ancient8,
@@ -235,6 +237,7 @@ export default [
     coingeckoId: 'ethereum',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.ancient8.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...avalanche,
@@ -274,6 +277,7 @@ export default [
     community: process.env.NEXT_PUBLIC_LINEA_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.linea.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...polygonZkEvm,
@@ -288,6 +292,7 @@ export default [
     community: process.env.NEXT_PUBLIC_POLYGON_ZKEVM_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.polygonZkEvm.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...zkSync,
@@ -303,6 +308,7 @@ export default [
     community: process.env.NEXT_PUBLIC_ZKSYNC_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zkSync.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...scroll,
@@ -318,6 +324,7 @@ export default [
     community: process.env.NEXT_PUBLIC_SCROLL_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.scroll.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.apexPop,
@@ -333,6 +340,7 @@ export default [
     community: process.env.NEXT_PUBLIC_APEX_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.apexPop.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.blast,
@@ -363,6 +371,7 @@ export default [
     community: process.env.NEXT_PUBLIC_ASTAR_ZKEVM_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.astarZkEVM.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.redstone,
@@ -378,6 +387,7 @@ export default [
     community: process.env.NEXT_PUBLIC_REDSTONE_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.redstone.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.degen,
@@ -393,6 +403,7 @@ export default [
     community: process.env.NEXT_PUBLIC_DEGEN_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.degen.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.xai,
@@ -442,6 +453,7 @@ export default [
     ],
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.nebula.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.cyber,
@@ -472,6 +484,7 @@ export default [
     community: process.env.NEXT_PUBLIC_BITLAYER_COMMUNITY,
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.bitlayer.checkPollingInterval,
+    seaportV15: true,
   },
   {
     ...customChains.sei,
@@ -526,6 +539,45 @@ export default [
     checkPollingInterval: reservoirChains.forma.checkPollingInterval,
   },
   {
+    ...customChains.apechain,
+    name: 'Apechain',
+    lightIconUrl: '/icons/apechain-icon-light.svg',
+    darkIconUrl: '/icons/apechain-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.apechain.baseApiUrl,
+    proxyApi: '/api/reservoir/apechain',
+    routePrefix: 'apechain',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'apecoin',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.apechain.checkPollingInterval,
+  },
+  {
+    ...customChains.shape,
+    name: 'Shape',
+    lightIconUrl: '/icons/shape-icon-light.svg',
+    darkIconUrl: '/icons/shape-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.shape.baseApiUrl,
+    proxyApi: '/api/reservoir/shape',
+    routePrefix: 'shape',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.shape.checkPollingInterval,
+  },
+  {
+    ...customChains.flow,
+    name: 'Flow',
+    lightIconUrl: '/icons/flow-icon-light.svg',
+    darkIconUrl: '/icons/flow-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.flow.baseApiUrl,
+    proxyApi: '/api/reservoir/flow',
+    routePrefix: 'flow',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'flow',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.flow.checkPollingInterval,
+  },
+  {
     ...customChains.hychain,
     name: 'Hychain',
     lightIconUrl: '/icons/hychain-icon-light.svg',
@@ -537,5 +589,5 @@ export default [
     coingeckoId: 'hytopia',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.hychain.checkPollingInterval,
-  },
+  }
 ] as ReservoirChain[]

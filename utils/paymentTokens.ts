@@ -764,6 +764,208 @@ export const chainPaymentTokensMap = {
     },
   ],
 
+  // Apechain
+  33139: [
+    {
+      chainId: 33139,
+      address: zeroAddress,
+      symbol: 'APE',
+      name: 'APE',
+      decimals: 18,
+    },
+    {
+      chainId: 33139,
+      address: '0x48b62137edfa95a428d35c09e44256a739f6b557',
+      symbol: 'WAPE',
+      name: 'WAPE',
+      decimals: 18,
+    },
+  ],
+
+  // shape
+  360: [
+    {
+      chainId: 360,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Shape ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 360,
+      address: '0x4200000000000000000000000000000000000006',
+      symbol: 'WETH',
+      name: 'Shape WETH',
+      decimals: 18,
+    },
+  ],
+
+  // Flow
+  747: [
+    {
+      chainId: 747,
+      address: zeroAddress,
+      symbol: 'FLOW',
+      name: 'Flow',
+      decimals: 18,
+    },
+    {
+      chainId: 747,
+      address: '0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e',
+      symbol: 'WFLOW',
+      name: 'WFLOW',
+      decimals: 18,
+    },
+  ],
+
+  // Apex
+  70700: [
+    {
+      chainId: 70700,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Apex ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 70701,
+      address: '0x77684A04145a5924eFCE0D92A7c4a2A2E8C359de',
+      symbol: 'WETH',
+      name: 'Apex WETH',
+      decimals: 18,
+    },
+    {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 10,
+      address: zeroAddress,
+      symbol: 'Optimism ETH',
+      name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42161,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7777777,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Zora ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 8453,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Base ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42170,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum Nova ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 70701,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Boss ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 81457,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Blast ETH',
+      decimals: 18,
+    },
+  ],
+
+  // Boss
+  70701: [
+    {
+      chainId: 70701,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Boss ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 70701,
+      address: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4',
+      symbol: 'WETH',
+      name: 'Boss WETH',
+      decimals: 18,
+    },
+    {
+      chainId: 1,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 10,
+      address: zeroAddress,
+      symbol: 'Optimism ETH',
+      name: 'Optimism ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42161,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 7777777,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Zora ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 8453,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Base ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 42170,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Arbitrum Nova ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 70700,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Apex ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 81457,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Blast ETH',
+      decimals: 18,
+    },
+  ],
+
   // Hychain
   2911: [
     {

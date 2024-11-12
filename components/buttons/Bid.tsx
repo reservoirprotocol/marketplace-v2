@@ -89,6 +89,7 @@ const Bid: FC<Props> = ({
         currencies={bidCurrencies}
         oracleEnabled={marketplaceChain.oracleBidsEnabled}
         chainId={marketplaceChain.id}
+        orderKind={marketplaceChain.seaportV15 ? 'seaport' : 'seaport-v1.6'}
         onClose={(data, stepData, currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}
