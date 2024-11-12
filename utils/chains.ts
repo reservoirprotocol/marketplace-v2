@@ -577,4 +577,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.flow.checkPollingInterval,
   },
+  {
+    ...customChains.hychain,
+    name: 'Hychain',
+    lightIconUrl: '/icons/hychain-icon-light.svg',
+    darkIconUrl: '/icons/hychain-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.hychain.baseApiUrl,
+    proxyApi: '/api/reservoir/hychain',
+    routePrefix: 'hychain',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'hytopia',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.hychain.checkPollingInterval,
+  }
 ] as ReservoirChain[]

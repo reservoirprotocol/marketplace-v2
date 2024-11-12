@@ -965,4 +965,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Hychain
+  2911: [
+    {
+      chainId: 2911,
+      address: zeroAddress,
+      symbol: 'TOPIA',
+      name: 'Hychain',
+      decimals: 18,
+    },
+    {
+      chainId: 2911,
+      address: '0x2b1499d631bffb29eed7749b12cba754273d6da7',
+      symbol: 'WTOPIA',
+      name: 'Wrapped TOPIA',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
