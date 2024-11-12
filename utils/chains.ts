@@ -342,4 +342,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zeroTestnet.checkPollingInterval,
   },
+  {
+    ...customChains.animeTestnet,
+    name: 'Anime Testnet',
+    lightIconUrl: '/icons/anime-icon-light.svg',
+    darkIconUrl: '/icons/anime-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.animeTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/anime-testnet',
+    routePrefix: 'animeTestnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.animeTestnet.checkPollingInterval,
+  },
 ] as ReservoirChain[]

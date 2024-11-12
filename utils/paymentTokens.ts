@@ -1077,4 +1077,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Anime Testnet
+  6900: [
+    {
+      chainId: 6900,
+      address: zeroAddress,
+      symbol: 'ANIME',
+      name: 'ANIME',
+      decimals: 18,
+    },
+    {
+      chainId: 6900,
+      address: '0x8f3e2785985aa4005c63f97f7cc89ce91a948267',
+      symbol: 'WANIME',
+      name: 'WANIME',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
