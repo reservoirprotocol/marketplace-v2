@@ -1095,4 +1095,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Monad Devnet
+  41454: [
+    {
+      chainId: 41454,
+      address: zeroAddress,
+      symbol: 'MON',
+      name: 'MON',
+      decimals: 18,
+    },
+    {
+      chainId: 41454,
+      address: '0x3c6dd29e612b28c10f3ee9bacf0f4af5f17b3f3e',
+      symbol: 'WMON',
+      name: 'WMON',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
