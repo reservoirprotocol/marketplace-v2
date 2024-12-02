@@ -602,4 +602,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zero.checkPollingInterval,
   },
+  {
+    ...customChains.game7,
+    name: 'game7',
+    lightIconUrl: '/icons/game7-icon-light.svg',
+    darkIconUrl: '/icons/game7-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.game7.baseApiUrl,
+    proxyApi: '/api/reservoir/game7',
+    routePrefix: 'game7',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.game7.checkPollingInterval,
+  },
 ] as ReservoirChain[]
