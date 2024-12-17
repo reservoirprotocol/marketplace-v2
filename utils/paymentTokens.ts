@@ -1008,7 +1008,7 @@ export const chainPaymentTokensMap = {
       chainId: 4654,
       address: zeroAddress,
       symbol: 'ETH',
-      name: 'Creator Testnet ETH',
+      name: 'ETH',
       decimals: 18,
     },
     {
