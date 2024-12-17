@@ -10,10 +10,6 @@ import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import usdcContracts from './usdcContracts'
 
-const berachainTestnetbArtio = (customChains as any).berachainTestnet as Chain
-
-const berachainTestnetbArtio = customChains.berachainTestnet
-
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
 // They are an extension of the wagmi chain objects
@@ -177,8 +173,24 @@ export default [
     seaportV15: true,
   },
   {
-    ...(customChains as any).berachainTestnet as Chain,
+    id: 4654,
     name: 'Berachain Testnet',
+    network: 'berachain-testnet',
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: {
+      default: { http: ['https://artio.rpc.berachain.com'] },
+      public: { http: ['https://artio.rpc.berachain.com'] },
+    },
+    blockExplorers: {
+      default: {
+        name: 'Berachain Explorer',
+        url: 'https://artio.beratrail.io',
+      },
+    },
     lightIconUrl: '/icons/berachain-testnet-icon-light.svg',
     darkIconUrl: '/icons/berachain-testnet-icon-dark.svg',
     reservoirBaseUrl: reservoirChains.berachainTestnet.baseApiUrl,
