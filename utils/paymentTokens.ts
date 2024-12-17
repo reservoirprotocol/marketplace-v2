@@ -1001,4 +1001,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Creator Testnet
+  4654: [
+    {
+      chainId: 4654,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'Creator Testnet ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 4654,
+      address: '0x34AF38Ec07708dBC01C5A814fc418D3840448fce',
+      symbol: 'WETH',
+      name: 'WETH',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
