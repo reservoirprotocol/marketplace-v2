@@ -602,4 +602,26 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.zero.checkPollingInterval,
   },
+  {
+    ...customChains.creatorTestnet,
+    name: 'Creator Testnet',
+    lightIconUrl: '/icons/creator-testnet-icon-light.svg',
+    darkIconUrl: '/icons/creator-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.creatorTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/creator-testnet',
+    routePrefix: 'creator-testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
+    listingCurrencies: [
+      { ...nativeCurrencyBase },
+      {
+        contract: '0x34AF38Ec07708dBC01C5A814fc418D3840448fce',
+        symbol: 'WETH',
+        decimals: 18,
+        coinGeckoId: 'weth',
+      },
+    ],
+  },
 ] as ReservoirChain[]

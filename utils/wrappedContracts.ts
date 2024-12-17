@@ -32,6 +32,7 @@ const wrappedContracts: Record<number, string> = {
   747: '0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e', // flow
   2911: '0x2b1499d631bffb29eed7749b12cba754273d6da7', // hychain
   543210: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c', // zero
+  4654: '0x34AF38Ec07708dBC01C5A814fc418D3840448fce', // creator testnet
 }
 
 export default wrappedContracts
