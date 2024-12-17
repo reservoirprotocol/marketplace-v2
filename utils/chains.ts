@@ -4,7 +4,7 @@ import {
   zoraTestnet,
   baseSepolia,
   Chain,
-  berachainTestnet,
+  berachainTestnetbArtio,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
@@ -174,7 +174,7 @@ export default [
     seaportV15: true,
   },
   {
-    ...berachainTestnet,
+    ...berachainTestnetbArtio,
     name: 'Berachain Testnet',
     lightIconUrl: '/icons/berachain-testnet-icon-light.svg',
     darkIconUrl: '/icons/berachain-testnet-icon-dark.svg',
@@ -392,3 +392,4 @@ export default [
     coingeckoId: 'ethereum',
     checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
   },
+] as ReservoirChain[]
