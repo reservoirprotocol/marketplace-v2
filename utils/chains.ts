@@ -4,12 +4,15 @@ import {
   zoraTestnet,
   baseSepolia,
   Chain,
-  berachainTestnetbArtio,
 } from 'wagmi/chains'
 import { Currency } from '@reservoir0x/reservoir-kit-ui'
 import { reservoirChains, customChains } from '@reservoir0x/reservoir-sdk'
 import { zeroAddress } from 'viem'
 import usdcContracts from './usdcContracts'
+
+const berachainTestnetbArtio = (customChains as any).berachainTestnet as Chain
+
+const berachainTestnetbArtio = customChains.berachainTestnet
 
 //CONFIGURABLE: The default export controls the supported chains for the marketplace. Removing
 // or adding chains will result in adding more or less chains to the marketplace.
@@ -174,7 +177,7 @@ export default [
     seaportV15: true,
   },
   {
-    ...berachainTestnetbArtio,
+    ...(customChains as any).berachainTestnet as Chain,
     name: 'Berachain Testnet',
     lightIconUrl: '/icons/berachain-testnet-icon-light.svg',
     darkIconUrl: '/icons/berachain-testnet-icon-dark.svg',
@@ -194,7 +197,6 @@ export default [
     reservoirBaseUrl: reservoirChains.seiTestnet.baseApiUrl,
     proxyApi: '/api/reservoir/sei-testnet',
     routePrefix: 'sei-testnet',
-    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'sei-network',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.seiTestnet.checkPollingInterval,
