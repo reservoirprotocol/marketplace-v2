@@ -391,6 +391,4 @@ export default [
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
     checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
-    seaportV15: true,
   },
-] as ReservoirChain[]
