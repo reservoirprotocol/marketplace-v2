@@ -1001,4 +1001,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  //game7
+  2187: [
+    {
+      chainId: 2187,
+      address: zeroAddress,
+      symbol: 'G7',
+      name: 'Game7',
+      decimals: 18,
+    },
+    {
+      chainId: 2187,
+      address: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac',
+      symbol: 'Wrapped Game7',
+      name: 'WG7',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
