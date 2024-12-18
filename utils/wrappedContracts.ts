@@ -33,6 +33,7 @@ const wrappedContracts: Record<number, string> = {
   2911: '0x2b1499d631bffb29eed7749b12cba754273d6da7', // hychain
   543210: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c', // zero
   2187: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac', // game7
+  1868: '0x4200000000000000000000000000000000000006', // soneium
 }
 
 export default wrappedContracts
