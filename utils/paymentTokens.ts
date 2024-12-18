@@ -1534,6 +1534,23 @@ export const chainPaymentTokensMap = {
       address: '0x3439153eb7af838ad19d56e1571fbd09333c2809',
       symbol: 'WETH',
       name: 'WETH',
+    },
+  ],
+
+  //game7
+  2187: [
+    {
+      chainId: 2187,
+      address: zeroAddress,
+      symbol: 'G7',
+      name: 'Game7',
+      decimals: 18,
+    },
+    {
+      chainId: 2187,
+      address: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac',
+      symbol: 'WG7',
+      name: 'Wrapped Game7',
       decimals: 18,
     },
   ],
