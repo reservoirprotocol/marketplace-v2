@@ -207,7 +207,7 @@ export default [
     },
     lightIconUrl: '/icons/creator-testnet-icon-light.svg',
     darkIconUrl: '/icons/creator-testnet-icon-dark.svg',
-    reservoirBaseUrl: 'https://api-creator.reservoir.tools',
+    reservoirBaseUrl: reservoirChains.creatorTestnet.baseApiUrl,
     proxyApi: '/api/reservoir/creator-testnet',
     routePrefix: 'creator-testnet',
     apiKey: process.env.RESERVOIR_API_KEY,
