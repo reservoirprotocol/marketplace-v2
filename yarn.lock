@@ -1723,13 +1723,6 @@
   dependencies:
     axios "^1.6.7"
 
-"@reservoir0x/reservoir-sdk@^2.4.33":
-  version "2.4.33"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-2.4.33.tgz#0c9a25ad8709c93d7f83e943664e09864f905cc4"
-  integrity sha512-BYCxpyBAsLh0L83WUwtj5s1KecXzjcXS8rStMR8vr1QcyCHoK3EPmOlZpgC2bC633dvTOjy+qK3NtDrRlntu+g==
-  dependencies:
-    axios "^1.6.7"
-
 "@resvg/resvg-wasm@2.6.0":
   version "2.6.0"
   resolved "https://registry.yarnpkg.com/@resvg/resvg-wasm/-/resvg-wasm-2.6.0.tgz#fa4db659b8c2519715f7f7dacfbb327aad193935"
