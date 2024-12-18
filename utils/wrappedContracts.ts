@@ -22,6 +22,20 @@ const wrappedContracts: Record<number, string> = {
   666666666: '0xeb54dacb4c2ccb64f8074eceea33b5ebb38e5387', // degen
   660279: '0x3fb787101dc6be47cfe18aeee15404dcc842e6af', // xai
   1482601649: '0xab01bad2c86e24d371a13ed6367bdca819589c5d', // nebula
+  7560: '0x4200000000000000000000000000000000000006', // cyber
+  200901: '0xff204e2681a6fa0e2c3fade68a1b28fb90e4fc5f', // bitlayer
+  1329: '0xE30feDd158A2e3b13e9badaeABaFc5516e95e8C7', // sei
+  1993: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3 testnet
+  646: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // flow previewnet
+  984122: '0xd5eace1274dbf70960714f513db207433615a263', // forma
+  8333: '0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4', // b3
+  33139: '0x48b62137edfa95a428d35c09e44256a739f6b557', // apechain
+  360: '0x4200000000000000000000000000000000000006', // shape
+  747: '0xd3bf53dac106a0290b0483ecbc89d40fcc961f3e', // flow
+  2911: '0x2b1499d631bffb29eed7749b12cba754273d6da7', // hychain
+  543210: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c', // zero
+  2741: '0x3439153eb7af838ad19d56e1571fbd09333c2809', // abstract
+  2187: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac', // game7
 }
 
 export default wrappedContracts

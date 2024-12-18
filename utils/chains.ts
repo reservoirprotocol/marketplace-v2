@@ -23,6 +23,8 @@ export type ReservoirChain = Chain & {
   listingCurrencies?: Currency[]
   oracleBidsEnabled?: boolean
   checkPollingInterval?: number
+  paperContractId?: string
+  seaportV15?: boolean
 }
 
 const nativeCurrencyBase = {
