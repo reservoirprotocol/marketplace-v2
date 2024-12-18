@@ -397,27 +397,16 @@ export default [
     checkPollingInterval: reservoirChains.monadDevnet.checkPollingInterval,
   },
   {
-    id: 4654,
+    ...customChains.creatorTestnet,
     name: 'Creator Testnet',
-    network: 'creator-testnet',
-    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-    rpcUrls: {
-      default: { http: ['https://rpc.creator.xyz'] },
-      public: { http: ['https://rpc.creator.xyz'] },
-    },
-    blockExplorers: {
-      default: {
-        name: 'Creator Testnet Explorer',
-        url: 'https://explorer.creator.xyz',
-      },
-    },
     lightIconUrl: '/icons/creator-testnet-icon-light.svg',
     darkIconUrl: '/icons/creator-testnet-icon-dark.svg',
     reservoirBaseUrl: reservoirChains.creatorTestnet.baseApiUrl,
     proxyApi: '/api/reservoir/creator-testnet',
-    routePrefix: 'creator-testnet',
+    routePrefix: 'creatorTestnet',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
