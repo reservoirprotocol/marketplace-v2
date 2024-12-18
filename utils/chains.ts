@@ -187,6 +187,35 @@ export default [
     checkPollingInterval: reservoirChains.berachainTestnet.checkPollingInterval,
   },
   {
+    id: 4654,
+    name: 'Creator Testnet',
+    network: 'creator-testnet',
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: {
+      default: { http: ['https://rpc.creator.xyz'] },
+      public: { http: ['https://rpc.creator.xyz'] },
+    },
+    blockExplorers: {
+      default: {
+        name: 'Creator Explorer',
+        url: 'https://explorer.creator.xyz',
+      },
+    },
+    lightIconUrl: '/icons/creator-testnet-icon-light.svg',
+    darkIconUrl: '/icons/creator-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.creatorTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/creator-testnet',
+    routePrefix: 'creator-testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: 10000,
+  },
+  {
     ...customChains.seiTestnet,
     name: 'Sei Testnet',
     lightIconUrl: '/icons/sei-testnet-icon-light.svg',
@@ -194,7 +223,6 @@ export default [
     reservoirBaseUrl: reservoirChains.seiTestnet.baseApiUrl,
     proxyApi: '/api/reservoir/sei-testnet',
     routePrefix: 'sei-testnet',
-    apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'sei-network',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.seiTestnet.checkPollingInterval,
@@ -367,5 +395,29 @@ export default [
     coingeckoId: 'monad',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.monadDevnet.checkPollingInterval,
+  },
+  {
+    id: 4654,
+    name: 'Creator Testnet',
+    network: 'creator-testnet',
+    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+      default: { http: ['https://rpc.creator.xyz'] },
+      public: { http: ['https://rpc.creator.xyz'] },
+    },
+    blockExplorers: {
+      default: {
+        name: 'Creator Testnet Explorer',
+        url: 'https://explorer.creator.xyz',
+      },
+    },
+    lightIconUrl: '/icons/creator-testnet-icon-light.svg',
+    darkIconUrl: '/icons/creator-testnet-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.creatorTestnet.baseApiUrl,
+    proxyApi: '/api/reservoir/creator-testnet',
+    routePrefix: 'creator-testnet',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
   },
 ] as ReservoirChain[]
