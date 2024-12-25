@@ -6,7 +6,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { Anchor, Button, Flex, Text, Tooltip } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useRef, useState, useMemo } from 'react'
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faDiscord, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faExternalLink,
   faGlobe,
@@ -110,7 +110,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
     marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/token/${token?.token?.contract}?a=${token?.token?.tokenId}`
   const twitterLink = collection?.twitterUsername
-    ? `https://twitter.com/${collection?.twitterUsername}`
+    ? `https://x.com/${collection?.twitterUsername}`
     : null
 
   const expandedCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
@@ -199,7 +199,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           {twitterLink && (
             <a href={twitterLink} target="_blank" rel="noopener noreferrer">
               <CollectionAction>
-                <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
+                <FontAwesomeIcon icon={faXTwitter} width={16} height={16} />
               </CollectionAction>
             </a>
           )}
