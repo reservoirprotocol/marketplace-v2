@@ -1,4 +1,4 @@
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { faDiscord, faXTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faEllipsis,
   faGlobe,
@@ -75,7 +75,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
     marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/address/${collection?.id}`
   const twitterLink = collection?.twitterUsername
-    ? `https://twitter.com/${collection?.twitterUsername}`
+    ? `https://x.com/${collection?.twitterUsername}`
     : null
 
   const containerCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
@@ -168,7 +168,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       {twitterLink && (
         <a href={twitterLink} target="_blank" rel="noopener noreferrer">
           <CollectionAction>
-            <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
+            <FontAwesomeIcon icon={faXTwitter} width={16} height={16} />
           </CollectionAction>
         </a>
       )}
