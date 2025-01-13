@@ -1131,4 +1131,20 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+  1516: [
+    {
+      chainId: 1516,
+      address: zeroAddress,
+      symbol: 'IP',
+      name: 'IP',
+      decimals: 18,
+    },
+    {
+      chainId: 1516,
+      address: '0x1516000000000000000000000000000000000000',
+      symbol: 'WIP',
+      name: 'WIP',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
