@@ -380,4 +380,18 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
   },
+,
+  {
+    ...customChains.storyOdyssey,
+    name: 'Story Odyssey',
+    lightIconUrl: '/icons/story-odyssey-icon-light.svg',
+    darkIconUrl: '/icons/story-odyssey-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.storyOdyssey.baseApiUrl,
+    proxyApi: '/api/reservoir/story-odyssey',
+    routePrefix: 'storyOdyssey',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.storyOdyssey.checkPollingInterval,
+  },
 ] as ReservoirChain[]
