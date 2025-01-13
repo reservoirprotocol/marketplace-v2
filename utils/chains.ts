@@ -380,7 +380,6 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.creatorTestnet.checkPollingInterval,
   },
-,
   {
     ...customChains.storyOdyssey,
     name: 'Story Odyssey',
