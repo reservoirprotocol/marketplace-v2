@@ -1716,7 +1716,7 @@
     react-flatpickr "^3.10.13"
     swr "2.0.1"
 
-"@reservoir0x/reservoir-sdk@2.4.39":
+"@reservoir0x/reservoir-sdk@2.4.39", "@reservoir0x/reservoir-sdk@^2.4.39":
   version "2.4.39"
   resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-2.4.39.tgz#0f4a2c188d0cf710ccfe4d700ce4ff917da044ef"
   integrity sha512-QjOKprMX36NsSgtyMBLjBn6x47I254AcZKFmPdTlpqCPRLvmEUDK9+JRVmvMI16c6QQw4YjNSP29F/chcUBj8g==
