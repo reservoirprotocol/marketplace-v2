@@ -648,4 +648,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.game7.checkPollingInterval,
   },
+  {
+    ...customChains.soneium,
+    name: 'Soneium',
+    lightIconUrl: '/icons/soneium-icon-light.svg',
+    darkIconUrl: '/icons/soneium-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.soneium.baseApiUrl,
+    proxyApi: '/api/reservoir/soneium',
+    routePrefix: 'soneium',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.soneium.checkPollingInterval,
+  },
 ] as ReservoirChain[]

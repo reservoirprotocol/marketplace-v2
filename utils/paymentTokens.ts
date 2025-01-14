@@ -1019,4 +1019,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Soneium
+  1868: [
+    {
+      chainId: 1868,
+      address: zeroAddress,
+      symbol: 'ETH',
+      name: 'ETH',
+      decimals: 18,
+    },
+    {
+      chainId: 1868,
+      address: '0x4200000000000000000000000000000000000006',
+      symbol: 'WETH',
+      name: 'WETH',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
