@@ -1689,10 +1689,10 @@
   dependencies:
     "@react-hookz/deep-equal" "^1.0.3"
 
-"@reservoir0x/reservoir-kit-ui@^2.7.49":
-  version "2.7.49"
-  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-2.7.49.tgz#06ce9d37a324e3e0e8e9ae346ea2ee68d1f1451f"
-  integrity sha512-N3hpJ9Rz07R2RxFi7x2wrRvV0FUm2/kTZDm6qdH2w4IcUzWUEl5g1zo4T+Na9XxKfhZs0e3gU4dcj7XtIB+j3g==
+"@reservoir0x/reservoir-kit-ui@^2.7.50":
+  version "2.7.50"
+  resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-kit-ui/-/reservoir-kit-ui-2.7.50.tgz#a580956517dcc9d4a5694971f6ca94ae98860349"
+  integrity sha512-gQozano9FueRGfses/PgYNGaJU3Erpr/0V2C/tumQtIyD2RDhByU4Es5HtalWHTLwjdYze+bGDrUQV2GqFbHow==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.1"
     "@fortawesome/free-solid-svg-icons" "^6.1.1"
@@ -1716,7 +1716,7 @@
     react-flatpickr "^3.10.13"
     swr "2.0.1"
 
-"@reservoir0x/reservoir-sdk@2.4.39", "@reservoir0x/reservoir-sdk@^2.4.39":
+"@reservoir0x/reservoir-sdk@2.4.39":
   version "2.4.39"
   resolved "https://registry.yarnpkg.com/@reservoir0x/reservoir-sdk/-/reservoir-sdk-2.4.39.tgz#0f4a2c188d0cf710ccfe4d700ce4ff917da044ef"
   integrity sha512-QjOKprMX36NsSgtyMBLjBn6x47I254AcZKFmPdTlpqCPRLvmEUDK9+JRVmvMI16c6QQw4YjNSP29F/chcUBj8g==
