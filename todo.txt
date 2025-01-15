@@ -1,0 +1,32 @@
+Chain Configuration Todo List:
+
+1. [x] Create utils/chains directory and add chain configuration
+   - Chain name: Monad Testnet
+   - Chain ID: 10143
+   - Use spread operator for network, rpc urls, blockExplorers from customChains
+   - routePrefix in camelCase
+   - Configure Reservoir API URL: https://api-monad-testnet.reservoir.tools
+
+2. [x] Configure wrapped contract
+   - Address: 0x760afe86e5de5fa0ee542fc7b7b713e1c5425701
+   - Name: Wrapped Monad
+   - Symbol: WMON
+
+3. [x] Configure payment tokens
+   - Native token (MON):
+     * Name: Monad
+     * Symbol: MON
+     * Address: 0x0000000000000000000000000000000000000000
+   - Wrapped token (WMON):
+     * Name: Wrapped Monad
+     * Symbol: WMON
+     * Address: 0x760afe86e5de5fa0ee542fc7b7b713e1c5425701
+
+4. [x] Configure icon URLs in chain configuration
+   - lightIconUrl: monad-icon-light.svg
+   - darkIconUrl: monad-icon-dark.svg
+
+Notes:
+- Implementation should follow example PR: #539
+- All changes should be made in testnets branch
+- Do not hardcode network, rpc urls, or blockExplorers

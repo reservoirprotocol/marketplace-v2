@@ -49,6 +49,7 @@ const wrappedContracts: Record<number, string> = {
   41454: '0x3c6dd29e612b28c10f3ee9bacf0f4af5f17b3f3e', // monad devnet
   4654: '0x34AF38Ec07708dBC01C5A814fc418D3840448fce', // creator testnet
   1516: '0x1516000000000000000000000000000000000000', // story odyssey
+  10143: '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // monad testnet
 }
 
 export default wrappedContracts
