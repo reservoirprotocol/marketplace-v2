@@ -671,6 +671,7 @@ export default [
     routePrefix: 'ink',
     apiKey: process.env.RESERVOIR_API_KEY,
     coingeckoId: 'ethereum',
+    wrappedContract: '0x4200000000000000000000000000000000000006',
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.ink.checkPollingInterval,
   },
