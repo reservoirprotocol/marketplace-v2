@@ -661,4 +661,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.soneium.checkPollingInterval,
   },
+  {
+    ...customChains.ink,
+    name: 'Ink',
+    lightIconUrl: '/icons/ink-icon-light.svg',
+    darkIconUrl: '/icons/ink-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.ink.baseApiUrl,
+    proxyApi: '/api/reservoir/ink',
+    routePrefix: 'ink',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.ink.checkPollingInterval,
+  },
 ] as ReservoirChain[]
