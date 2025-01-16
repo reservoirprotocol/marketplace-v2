@@ -380,17 +380,4 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.storyOdyssey.checkPollingInterval,
   },
-  {
-    ...customChains.monadTestnet,
-    name: 'Monad Testnet',
-    lightIconUrl: '/icons/monad-icon-light.svg',
-    darkIconUrl: '/icons/monad-icon-dark.svg',
-    reservoirBaseUrl: reservoirChains.monadTestnet.baseApiUrl,
-    proxyApi: '/api/reservoir/monad-testnet',
-    routePrefix: 'monadTestnet',
-    apiKey: process.env.RESERVOIR_API_KEY,
-    coingeckoId: 'monad',
-    oracleBidsEnabled: true,
-    checkPollingInterval: reservoirChains.monadTestnet.checkPollingInterval,
-  },
 ] as ReservoirChain[]
