@@ -37,6 +37,8 @@ const wrappedContracts: Record<number, string> = {
   2741: '0x3439153eb7af838ad19d56e1571fbd09333c2809', // abstract
   2187: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac', // game7
   1868: '0x4200000000000000000000000000000000000006', // soneium
+  57073: '0x4200000000000000000000000000000000000006', // ink
+  10143: '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // monad testnet
 }
 
 export default wrappedContracts
