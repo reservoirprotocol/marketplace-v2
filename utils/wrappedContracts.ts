@@ -46,9 +46,9 @@ const wrappedContracts: Record<number, string> = {
   29112: '0x2549584be33491340eee6762992055cda05b2581', // hychain testnet
   43210: '0xee6b04fcd07a54d78a7a23f353f2b4a0bfb4a78c', // zero testnet
   6900: '0x8f3e2785985aa4005c63f97f7cc89ce91a948267', // anime testnet
-  41454: '0x3c6dd29e612b28c10f3ee9bacf0f4af5f17b3f3e', // monad devnet
   4654: '0x34AF38Ec07708dBC01C5A814fc418D3840448fce', // creator testnet
   1516: '0x1516000000000000000000000000000000000000', // story odyssey
+  10143: '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // monad testnet
 }
 
 export default wrappedContracts
