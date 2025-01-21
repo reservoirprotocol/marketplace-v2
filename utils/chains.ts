@@ -382,6 +382,14 @@ export default [
   },
   {
     ...customChains.monadTestnet,
+    rpcUrls: {
+      default: {
+        http: [process.env.NEXT_PUBLIC_RPC_MONAD_TESTNET],
+      },
+      public: {
+        http: [process.env.NEXT_PUBLIC_RPC_MONAD_TESTNET],
+      },
+    },
     name: 'Monad Testnet',
     lightIconUrl: '/icons/monad-icon-light.svg',
     darkIconUrl: '/icons/monad-icon-dark.svg',
