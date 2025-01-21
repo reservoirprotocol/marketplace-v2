@@ -661,4 +661,25 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.soneium.checkPollingInterval,
   },
+  {
+    ...customChains.abstract,
+    rpcUrls: {
+      default: {
+        http: [process.env.NEXT_PUBLIC_RPC_ABSTRACT_MAINNET],
+      },
+      public: {
+        http: [process.env.NEXT_PUBLIC_RPC_ABSTRACT_MAINNET],
+      },
+    },
+    name: 'Abstract',
+    lightIconUrl: '/icons/abstract-icon-light.svg',
+    darkIconUrl: '/icons/abstract-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.abstract.baseApiUrl,
+    proxyApi: '/api/reservoir/abstract',
+    routePrefix: 'abstract',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'ethereum',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.abstract.checkPollingInterval,
+  },
 ] as ReservoirChain[]
