@@ -1590,4 +1590,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Monad Testnet
+  10143: [
+    {
+      chainId: 10143,
+      address: zeroAddress,
+      symbol: 'MON',
+      name: 'Monad',
+      decimals: 18,
+    },
+    {
+      chainId: 10143,
+      address: '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701',
+      symbol: 'WMON',
+      name: 'Wrapped Monad',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>
