@@ -34,6 +34,7 @@ const wrappedContracts: Record<number, string> = {
   543210: '0xac98b49576b1c892ba6bfae08fe1bb0d80cf599c', // zero
   2187: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac', // game7
   1868: '0x4200000000000000000000000000000000000006', // soneium
+  2741: '0x3439153eb7af838ad19d56e1571fbd09333c2809', // abstract
 }
 
 export default wrappedContracts
