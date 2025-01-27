@@ -1038,6 +1038,7 @@ export const chainPaymentTokensMap = {
     },
   ],
 
+  
   // Abstract
   2741: [
     {
