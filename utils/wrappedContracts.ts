@@ -35,6 +35,7 @@ const wrappedContracts: Record<number, string> = {
   2187: '0xfa3ed70386b9255fC04aA008A8ad1B0CDa816Fac', // game7
   1868: '0x4200000000000000000000000000000000000006', // soneium
   2741: '0x3439153eb7af838ad19d56e1571fbd09333c2809', // abstract
+  80094: '0x6969696969696969696969696969696969696969', // berachain
 }
 
 export default wrappedContracts

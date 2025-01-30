@@ -1038,7 +1038,6 @@ export const chainPaymentTokensMap = {
     },
   ],
 
-  
   // Abstract
   2741: [
     {
@@ -1053,6 +1052,24 @@ export const chainPaymentTokensMap = {
       address: '0x3439153eb7af838ad19d56e1571fbd09333c2809',
       symbol: 'WETH',
       name: 'WETH',
+      decimals: 18,
+    },
+  ],
+
+  // Berachain
+  80094: [
+    {
+      chainId: 80094,
+      address: zeroAddress,
+      symbol: 'BERA',
+      name: 'BERA',
+      decimals: 18,
+    },
+    {
+      chainId: 80094,
+      address: '0x6969696969696969696969696969696969696969',
+      symbol: 'WBERA',
+      name: 'WBERA',
       decimals: 18,
     },
   ],
