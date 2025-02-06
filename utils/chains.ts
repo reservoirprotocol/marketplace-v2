@@ -674,4 +674,17 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.abstract.checkPollingInterval,
   },
+  {
+    ...customChains.berachain,
+    name: 'Berachain',
+    lightIconUrl: '/icons/berachain-icon-light.svg',
+    darkIconUrl: '/icons/berachain-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.berachain.baseApiUrl,
+    proxyApi: '/api/reservoir/berachain',
+    routePrefix: 'berachain',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'berachain-bera',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.berachain.checkPollingInterval,
+  },
 ] as ReservoirChain[]
