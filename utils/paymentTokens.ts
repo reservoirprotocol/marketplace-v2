@@ -1072,5 +1072,12 @@ export const chainPaymentTokensMap = {
       name: 'WBERA',
       decimals: 18,
     },
+    {
+      chainId: 80094,
+      address: '0xfcbd14dc51f0a4d49d5e53c2e0950e0bc26d0dce',
+      symbol: 'HONEY',
+      name: 'Honey',
+      decimals: 18,
+    },
   ],
 } as Record<number, PaymentToken[]>
