@@ -676,24 +676,6 @@ export default [
   },
   {
     ...customChains.berachain,
-    rpcUrls: {
-      default: {
-        http: [process.env.NEXT_PUBLIC_RPC_BERACHAIN],
-      },
-      public: {
-        http: [process.env.NEXT_PUBLIC_RPC_BERACHAIN],
-      },
-    },
-    blockExplorers: {
-      etherscan: {
-        name: 'Berachain Explorer',
-        url: process.env.NEXT_PUBLIC_EXPLORER_BERACHAIN,
-      },
-      default: {
-        name: 'Berachain Explorer',
-        url: process.env.NEXT_PUBLIC_EXPLORER_BERACHAIN,
-      },
-    },
     name: 'Berachain',
     lightIconUrl: '/icons/berachain-icon-light.svg',
     darkIconUrl: '/icons/berachain-icon-dark.svg',
