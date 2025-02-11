@@ -1080,4 +1080,22 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Anime
+  69000: [
+    {
+      chainId: 69000,
+      address: zeroAddress,
+      symbol: 'ANIME',
+      name: 'ANIME',
+      decimals: 18,
+    },
+    {
+      chainId: 69000,
+      address: '0x021b4eb025aff42298331739c2564abde4bae3eb',
+      symbol: 'WANIME',
+      name: 'WANIME',
+      decimals: 18,
+    },
+  ],
 } as Record<number, PaymentToken[]>

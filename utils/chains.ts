@@ -687,4 +687,35 @@ export default [
     oracleBidsEnabled: true,
     checkPollingInterval: reservoirChains.berachain.checkPollingInterval,
   },
+  {
+    ...customChains.anime,
+    rpcUrls: {
+      default: {
+        http: [process.env.NEXT_PUBLIC_RPC_ANIME],
+      },
+      public: {
+        http: [process.env.NEXT_PUBLIC_RPC_ANIME],
+      },
+    },
+    blockExplorers: {
+      etherscan: {
+        name: 'Anime Explorer',
+        url: process.env.NEXT_PUBLIC_EXPLORER_ANIME,
+      },
+      default: {
+        name: 'Anime Explorer',
+        url: process.env.NEXT_PUBLIC_EXPLORER_ANIME,
+      },
+    },
+    name: 'Anime',
+    lightIconUrl: '/icons/anime-icon-light.svg',
+    darkIconUrl: '/icons/anime-icon-dark.svg',
+    reservoirBaseUrl: reservoirChains.anime.baseApiUrl,
+    proxyApi: '/api/reservoir/anime',
+    routePrefix: 'anime',
+    apiKey: process.env.RESERVOIR_API_KEY,
+    coingeckoId: 'anime',
+    oracleBidsEnabled: true,
+    checkPollingInterval: reservoirChains.anime.checkPollingInterval,
+  },
 ] as ReservoirChain[]
