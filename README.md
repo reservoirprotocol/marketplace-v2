@@ -32,7 +32,7 @@ Reservoir Market v2 is an open source marketplace built with Reservoir APIs that
 
 ### Installation
 
-Fork this repo and follow these instructions to install dependancies.
+Fork this repo and follow these instructions to install dependencies.
 
 With yarn:
 
