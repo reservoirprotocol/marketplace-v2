@@ -1113,6 +1113,8 @@ export const chainPaymentTokensMap = {
       decimals: 18,
     },
   ],
+
+  // Story Odyssey
   1516: [
     {
       chainId: 1516,
@@ -1126,6 +1128,23 @@ export const chainPaymentTokensMap = {
       address: '0x1516000000000000000000000000000000000000',
       symbol: 'WIP',
       name: 'WIP',
+      decimals: 18,
+    },
+  ],
+
+  10143: [
+    {
+      chainId: 10143,
+      address: zeroAddress,
+      symbol: 'MON',
+      name: 'Monad',
+      decimals: 18,
+    },
+    {
+      chainId: 10143,
+      address: '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701',
+      symbol: 'WMON',
+      name: 'Wrapped Monad',
       decimals: 18,
     },
   ],

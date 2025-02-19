@@ -48,6 +48,7 @@ const wrappedContracts: Record<number, string> = {
   6900: '0x8f3e2785985aa4005c63f97f7cc89ce91a948267', // anime testnet
   4654: '0x34AF38Ec07708dBC01C5A814fc418D3840448fce', // creator testnet
   1516: '0x1516000000000000000000000000000000000000', // story odyssey
+  10143: '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // monad testnet
 }
 
 export default wrappedContracts
