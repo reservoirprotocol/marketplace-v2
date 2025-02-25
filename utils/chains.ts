@@ -77,7 +77,7 @@ export const DefaultChain: ReservoirChain = {
     },
   ],
   oracleBidsEnabled: true,
-  checkPollingInterval: reservoirChains.goerli.checkPollingInterval,
+  checkPollingInterval: reservoirChains.sepolia.checkPollingInterval,
 }
 
 export default [
