@@ -83,6 +83,11 @@ export const DefaultChain: ReservoirChain = {
 export default [
   {
     ...sepolia,
+    rpcUrls: {
+      default: {
+        http: ['https://ethereum-sepolia-rpc.publicnode.com'],
+      },
+    },
     // Any url to display the logo of the chain in light mode
     lightIconUrl: '/icons/goerli-icon-dark.svg',
     // Any url to display the logo of the chain in dark mode
