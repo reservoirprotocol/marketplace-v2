@@ -1089,7 +1089,7 @@ export const chainPaymentTokensMap = {
     },
     {
       chainId: 6900,
-      address: '0x8f3e2785985aa4005c63f97f7cc89ce91a948267',
+      address: '0x164906a76f1a2ea933366c446ae0ec6a37062c42',
       symbol: 'WANIME',
       name: 'WANIME',
       decimals: 18,
